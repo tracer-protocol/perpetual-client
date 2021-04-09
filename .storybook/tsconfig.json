@@ -1,0 +1,4 @@
+{
+  "exclude": ["../libs/**/*" ],
+  "include": ["../components/**/*"]
+}

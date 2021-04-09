@@ -1,0 +1,248 @@
+@font-face {font-family: "Akkurat";
+    src: url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.eot"); /* IE9*/
+    src: url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.woff2") format("woff2"), /* chrome firefox */
+    url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.woff") format("woff"), /* chrome firefox */
+    url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.ttf") format("truetype"), /* chrome firefox opera Safari, Android, iOS 4.2+*/
+    url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.svg#Akkurat") format("svg"); /* iOS 4.1- */
+}
+
+body, html {
+  font-family: "Akkurat";
+  background-color: #F2F2F2;
+  color: black;
+}
+
+a {
+  color: inherit;
+}
+
+a:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus {
+  color: inherit;
+  text-decoration: none;
+}
+
+button:focus {
+  border: none;
+}
+
+/* Scroll bar stuff */
+/* width */
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;              /* height of horizontal scrollbar ← You're missing this */
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    display: none;
+
+  }
+
+  /* Corner piece */
+  ::-webkit-scrollbar-corner {
+      display: none;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #E5E5F8;
+    cursor: pointer;
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #0000bd;
+  }
+
+a {
+    color: #0000bd;
+}
+
+.increased-hit-box{
+    height: 5vh;
+    width: 5vh;
+    position: absolute;
+    background-color: black;
+}
+
+.box-shadow {
+  box-shadow: 0px 5px 30px #0000BD29;
+  border-radius: 16px !important;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+input {
+    background: transparent;
+}
+
+/* input[type="search"]::-webkit-search-cancel-button {
+  /* Remove default */
+  /* -webkit-appearance: none;
+  
+  color: #0000bd;
+  background: #0000bd;
+} */
+
+.OrderBook table tbody td {
+    padding: 5px;
+}
+
+.OrderBook table tbody td.fill-bid {
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-image: linear-gradient(to left, #adf1cf 100%, white 0%);
+  background-size: 0%;
+}
+
+.OrderBook table tbody td.fill-ask {
+  background-repeat: no-repeat;
+  background-position: 100% 100%;
+  background-image: linear-gradient(to left, #ffcccc 100%, white 0%);
+  background-size: 0%;
+}
+
+.OrderBook tr.ask:last-of-type,
+.OrderBook tr.bid:first-of-type {
+  font-weight: bold;
+}
+
+@keyframes countdown {
+    from { height: 100%; } to { height: 0% }
+}
+
+
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+.button {
+    @apply border-2 cursor-pointer border-blue-100  rounded-xxl p-4 transform bg-blue-300 text-blue-100;
+}
+
+.button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #0000bd;
+}
+
+/** Used if you want custom sizing but the transform*/
+.button-grow {
+    @apply border-2 cursor-pointer transform;
+}
+
+.button-grow:hover {
+    transform: translateY(-0.1rem);
+    @apply appearance-none duration-100 shadow;
+}
+
+.button-grow:focus {
+    outline:none;
+}
+
+.button:hover {
+    transform: translateY(-0.1rem);
+    @apply appearance-none border-blue-100 rounded-xxl duration-100 shadow;
+}
+
+.button-inactive {
+  @apply border-2 cursor-pointer rounded-xxl p-4 opacity-50 bg-blue-300 text-blue-100 border-blue-100;
+}
+
+.button-disabled {
+    @apply border-2 cursor-not-allowed rounded-xxl p-4 opacity-50 bg-blue-300 text-blue-100 border-blue-100;
+}
+
+.card {
+    @apply rounded-lg bg-white box-shadow;
+}
+
+.secondary-button {
+    border: 1px solid #707070;
+    border-radius: 10px;
+    @apply bg-white px-1 py-1 transform cursor-pointer;
+}
+
+.secondary-button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #707070;
+}
+
+.secondary-button:hover {
+    @apply appearance-none bg-blue-200 duration-100;
+}
+
+/** Table css */
+.cCell {
+    @apply p-3;
+} 
+
+.cRow {
+    @apply border-b-2 border-blue-300 cursor-pointer;
+}
+
+.cRow:hover {
+    @apply bg-blue-300;
+}
+
+.aCell {
+    @apply w-1/2 text-blue-100 rounded h-10 flex flex-row;
+}
+
+.aCell:hover {
+    @apply bg-blue-200;
+}
+
+
+.page {
+    @apply h-screen flex flex-col;
+}
+
+/** Fonts */
+
+h1 {
+    @apply text-blue-100 font-bold text-2xl py-5;
+}
+
+h4 {
+    @apply text-blue-100 text-base;
+}
+
+.advanced-card {
+    @apply rounded-lg shadow-2xl bg-white my-1 mx-3;
+}
+
+.advanced-card .title {
+    @apply bg-blue-200 px-3;
+}
+
+.advanced-card .body {
+    @apply px-3 py-2;
+}
+
+.OrderBook table tbody td {
+    padding: 5px;
+}
