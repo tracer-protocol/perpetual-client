@@ -24,8 +24,8 @@ To make it easier to onboard and develop components and view components in isola
 ```
 
 ## Contracts
-Although you can run them in isolation using node package links, we have a (tracer-workspace)[https://github.com/lions-mane/tracer-workspace] repositiory designed to make this easier using leara. Lerna handles building and compiling the contracts. You will still have to run a local chain and run yarn migrate from within the 
-(tracer-protocol)[https://github.com/tracer-protocol/tracer-protocol] repository.
+Although you can run them in isolation using node package links, we have a [tracer-workspace](https://github.com/lions-mane/tracer-workspace) repositiory designed to make this easier using leara. Lerna handles building and compiling the contracts. You will still have to run a local chain and run yarn migrate from within the 
+[tracer-protocol](https://github.com/tracer-protocol/tracer-protocol) repository.
 
 ### Contract Addresses
 To make development easier, all contract addresses come from ENV vars. The web3-redux store will create instances of those contracts automatically. 
@@ -44,7 +44,7 @@ Create a .env.local in your root directory and set the contract addresses
 
 
 ## Subgraph
-Checkout (tracer-graphs)[https://github.com/lions-mane/tracer-graphs] to deploy the respective tracer-subgraphs.
+Checkout [tracer-graphs](https://github.com/lions-mane/tracer-graphs) to deploy the respective tracer-subgraphs.
 
 
 ## Running
