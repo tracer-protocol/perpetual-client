@@ -1,11 +1,12 @@
 import React, { useState, useContext } from 'react';
 import LightWeightChart from '@components/Charts/LightWeightChart';
-import { OrderContext } from 'context';
+import { OrderContext, TracerContext } from 'context';
 import LeverageSlider from '@components/Trade/LeverageSlider';
 import TracerSelect from '@components/Trade/TracerSelect';
 
 import { OrderInfo } from '@components/SummaryInfo';
 import { OrderSummaryButtons, OrderSubmit, SlideSelect } from '@components/Buttons';
+import { UserBalance } from '@components/types';
 
 const Positions: React.FC<{ className: string }> = ({ className }: { className: string }) => {
     const { order, orderDispatch } = useContext(OrderContext);
@@ -13,10 +14,10 @@ const Positions: React.FC<{ className: string }> = ({ className }: { className: 
     return (
         <div className={'flex w-full px-5 ' + className}>
             <SlideSelect
-                onClick={(index, _e) => 
-                    orderDispatch 
+                onClick={(index, _e) =>
+                    orderDispatch
                         ? orderDispatch({ type: 'setPosition', value: index })
-                        : console.error("Order dispatch function not set")
+                        : console.error('Order dispatch function not set')
                 }
                 value={order?.position ?? 0}
             >
@@ -57,6 +58,7 @@ const BasicPlaceOrder: React.FC<{ setSummary: (bool: boolean) => void }> = ({
 };
 
 const BasicOrderSummary: React.FC = () => {
+    const { selectedTracer } = useContext(TracerContext);
     return (
         <React.Fragment>
             <div className="flex w-full  border-b-2 border-gray-100">
@@ -72,7 +74,7 @@ const BasicOrderSummary: React.FC = () => {
                     <div className="h-full border-b-2 border-gray-100">
                         <LightWeightChart />
                     </div>
-                    <OrderSummaryButtons />
+                    <OrderSummaryButtons balances={selectedTracer?.balances as UserBalance} />
                 </div>
             </div>
         </React.Fragment>

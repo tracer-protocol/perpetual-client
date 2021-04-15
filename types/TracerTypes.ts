@@ -13,7 +13,7 @@ export type UserBalance = {
     deposited: number;
     totalLeveragedValue: number;
     lastUpdatedGasPrice: number;
-    walletBalance: number;
+    tokenBalance: number;
 };
 
 export type FundingRate = {
@@ -31,9 +31,4 @@ export type TracerInfo = {
     tracerBaseToken: string;
     oraclePrice: number;
     priceMultiplier: number;
-};
-
-export type Tracer = {
-    address: string; // Tracer contract address
-    marketId: string; // Tracer ticker
 };

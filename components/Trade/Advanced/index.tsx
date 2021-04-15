@@ -1,17 +1,17 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { TracerContext } from 'context';
+import { TracerContext, Web3Context } from 'context';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 import { SubNavBar } from '@components/Nav';
 
 import Timer from '@components/Timer';
 import OrderBook from '@components/OrderBook/OrderBook';
-import TradingPanel from './TradingPanel';
+import { MarketSelect, TradingInput, WalletConnect } from './TradingPanel';
 import { getOrders } from '@components/libs/Ome';
 import Web3 from 'web3';
-import { Tracer } from 'types';
+import Tracer from '@libs/Tracer';
 
-const parseRes = (res: any, multiplier:number) => {
-    const parseOrders = (orders:any) => {
+const parseRes = (res: any, multiplier: number) => {
+    const parseOrders = (orders: any) => {
         const sections = Object.values(orders);
         const flattenedOrders = sections.map((orders: any) =>
             orders.reduce(
@@ -28,13 +28,14 @@ const parseRes = (res: any, multiplier:number) => {
     };
 
     return {
-        askOrders: parseOrders(res.asks),
-        bidOrders: parseOrders(res.bids),
+        askOrders: parseOrders(res?.asks ?? {}),
+        bidOrders: parseOrders(res?.bids ?? {}),
     };
 };
 
-const useOrders = (trigger: boolean, selectedTracer: Tracer | undefined, priceMultiplier: number) => {
+const useOrders = (trigger: boolean, selectedTracer: Tracer | undefined) => {
     const market = selectedTracer?.address;
+    const priceMultiplier = selectedTracer?.priceMultiplier ?? 0;
     const [response, setResponse] = useState<any>({
         askOrders: [],
         bidOrders: [],
@@ -55,8 +56,7 @@ const useOrders = (trigger: boolean, selectedTracer: Tracer | undefined, priceMu
 };
 
 const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
-    const { tracerInfo } = useContext(TracerContext)
-    const orders = useOrders(true, selectedTracer, tracerInfo?.priceMultiplier ?? 0);
+    const orders = useOrders(true, selectedTracer);
     return (
         <div className="advanced-card">
             <div className="bg-blue-200">
@@ -90,11 +90,14 @@ const TradingSummary: React.FC<{ tracerId: string }> = ({ tracerId }: { tracerId
 };
 
 const Advanced: React.FC = () => {
+    const { account } = useContext(Web3Context);
     const { tracerId, selectedTracer } = useContext(TracerContext);
     return (
         <div className="flex h-full">
             <div className="w-1/4 flex flex-col max-h-screen/90">
-                <TradingPanel tracerId={tracerId ?? ''} />
+                <MarketSelect />
+                <WalletConnect balances={selectedTracer?.balances} account={account ?? ''} />
+                <TradingInput selectedTracer={selectedTracer} />
             </div>
             <div className="w-3/4 flex flex-col max-h-screen/90">
                 <TradingView selectedTracer={selectedTracer} />

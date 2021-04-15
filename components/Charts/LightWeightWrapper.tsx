@@ -3,7 +3,7 @@ import { createChart } from 'lightweight-charts';
 
 import equal from 'fast-deep-equal';
 
-const addSeriesFunctions:Record<string, any> = {
+const addSeriesFunctions: Record<string, any> = {
     candlestick: 'addCandlestickSeries',
     line: 'addLineSeries',
     area: 'addAreaSeries',

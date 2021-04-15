@@ -7,7 +7,6 @@ import { OrderState } from '@context/OrderContext';
 
 import { useMarketPairs } from '../../hooks';
 import { MarginDeposit } from '../Buttons';
-import { TracerInfo } from '@components/types';
 
 export const WalletBalance: React.FC<{ marginBalance: number }> = ({ marginBalance }: { marginBalance: number }) => {
     const { orderDispatch } = useContext(OrderContext);
@@ -45,8 +44,7 @@ type TSProps = {
 
 const TracerSelect: React.FC<TSProps> = ({ className, inputSize }: TSProps) => {
     const { exposure, tradePrice, order, orderDispatch } = useContext(OrderContext);
-    const { tracerInfo } = useContext(TracerContext);
-    const balance = (tracerInfo as TracerInfo).balance;
+    const { selectedTracer } = useContext(TracerContext);
     const { rMargin, market, collateral, price } = order as OrderState;
     const marketPairs = useMarketPairs();
 
@@ -110,7 +108,7 @@ const TracerSelect: React.FC<TSProps> = ({ className, inputSize }: TSProps) => {
                         </a>
                     </Dropdown>
                 </div>
-                <WalletBalance marginBalance={balance?.margin ?? 0} />
+                <WalletBalance marginBalance={selectedTracer?.balances.margin ?? 0} />
             </div>
 
             {/* MARKET EXPOSURE */}

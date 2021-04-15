@@ -5,22 +5,11 @@ import Fortmatic from 'fortmatic';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { Children } from 'types';
 import { FactoryStore } from './FactoryContext';
-
-import { 
-    useDispatch, 
-    // useSelector 
-} from 'react-redux';
 import { useMachine } from '@xstate/react';
 
 import { web3Machine } from '@machines/Web3Machine';
 
 import { networkConfig, Network as NetworkType } from './Web3Context.Config';
-
-import { 
-    Contract, 
-    Web3Redux,
-    // Network
-} from '@lions-mane/web3-redux';
 
 export const initModal = async () => {
     return new Web3Modal({
@@ -63,6 +52,7 @@ interface ContextProps {
     web3: Web3 | undefined;
     provider: any;
     config: NetworkType;
+    updateGlobal: () => void | undefined;
 }
 
 export const Web3Context = React.createContext<Partial<ContextProps>>({
@@ -75,8 +65,6 @@ export const Web3Context = React.createContext<Partial<ContextProps>>({
 //  - new block header, should trigger a page update
 //  - pending transaction should place the account in a loading state
 export const Web3Store: React.FC<Children> = ({ children }: Children) => {
-    const reduxDispatch = useDispatch();
-
     // @ts-ignore
     const [trigger, setTrigger] = useState(false);
 
@@ -95,20 +83,6 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
     });
 
     useEffect(() => {
-        // this initialises the redux store on all networks and listed contracts
-        reduxDispatch(Web3Redux.initialize());
-        Object.keys(networkConfig).map((networkId) => {
-            const config: NetworkType = networkConfig[parseInt(networkId)];
-            Object.values(config.contracts).map((c) => {
-                reduxDispatch(
-                    Contract.create({
-                        networkId: networkId,
-                        address: c.address ? Web3.utils.toChecksumAddress(c.address) : '',
-                        abi: c.abi,
-                    }),
-                );
-            });
-        });
         send('INIT_CONTRACTS');
     }, []);
 
@@ -151,6 +125,10 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
         }
     }, [state.context.provider]);
 
+    const updateGlobal = () => {
+        setTrigger(!trigger);
+    };
+
     console.debug(`State: ${JSON.stringify(state.value)}`);
 
     // const network: Network.Network | undefined = useSelector((state) =>
@@ -163,6 +141,7 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
             value={{
                 connect,
                 updateTrigger: trigger,
+                updateGlobal,
                 ...state.context,
                 state: state,
                 config,

@@ -13,7 +13,7 @@
  */
 import { SignedOrder } from '@tracer-protocol/tracer-utils';
 import {  OrderUpdatePayload } from 'types/OrderTypes';
-import { Tracer } from 'types';
+import Tracer from '@libs/Tracer';
 
 const BASE_URL = process.env.NEXT_PUBLIC_OME_BASE_URL || 'http://localhost:8989';
 

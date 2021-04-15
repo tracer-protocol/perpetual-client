@@ -1,7 +1,8 @@
 import React, { useEffect, useContext, useReducer } from 'react';
 import { TracerContext, Web3Context } from './';
 import { useCalcExposure, useTracerOrders } from '@hooks/TracerHooks';
-import { Children, OpenOrder, OpenOrders, TakenOrder, Tracer } from 'types';
+import { Children, OpenOrder, OpenOrders, TakenOrder } from 'types';
+import Tracer from '@libs/Tracer';
 
 export const OrderTypeMapping: Record<number, string> = {
     0: 'market',
@@ -42,7 +43,7 @@ export type OrderAction =
     | { type: 'setCollateral'; value: string }
     | { type: 'setRMargin'; value: number }
     | { type: 'setLeverage'; value: number }
-    | { type: 'setPosition'; value: number}
+    | { type: 'setPosition'; value: number }
     | { type: 'setPrice'; value: number }
     | { type: 'setOrderType'; value: number }
     | { type: 'setMatchingEngine'; value: number }

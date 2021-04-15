@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { Section, LiquidationPrice, FundingRate, PoolHealth } from './';
-import { TracerContext } from '@components/context';
+import { InsuranceContext, TracerContext } from '@components/context';
 
 export const OrderInfo: React.FC = () => {
-    const { tracerInfo } = useContext(TracerContext);
+    const { selectedTracer } = useContext(TracerContext);
+    const { health } = useContext(InsuranceContext);
     return (
         <>
             <Section label={'Margin Ratio'}></Section>
@@ -11,12 +12,11 @@ export const OrderInfo: React.FC = () => {
                 <LiquidationPrice />
             </Section>
             <Section label={'Funding Rate'}>
-                <FundingRate rate={tracerInfo?.fundingRate ?? 0} />
+                <FundingRate rate={selectedTracer?.feeRate ?? 0} />
             </Section>
-            <Section label={'Matching Fee'}>{tracerInfo?.matchingFee}</Section>
             <Section label={'Insurance Pool Health'}>
                 <div className="m-auto">
-                    <PoolHealth />
+                    <PoolHealth health={health ?? 100} />
                 </div>
             </Section>
             <Section label={'Order filling mechanism'}>AMM</Section>

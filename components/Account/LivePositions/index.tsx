@@ -3,7 +3,7 @@ import PositionTable from './LivePositionTable';
 import { TracerContext } from '@context/TracerContext';
 import { MarketInfo, AccountMarginInfo, PnLInfo } from '@components/SummaryInfo';
 
-import { Children, TracerInfo } from 'types';
+import { Children } from 'types';
 import { MarginButtons } from '@components/Buttons';
 
 import { FactoryContext } from 'context';
@@ -27,21 +27,20 @@ const Card: React.FC<CProps> = ({ title, classes, children }: CProps) => {
 };
 
 const LivePositions: React.FC = () => {
-    const { tracerId, tracerInfo } = useContext(TracerContext);
-    const { balance, fundingRate } = tracerInfo as TracerInfo;
+    const { tracerId, selectedTracer } = useContext(TracerContext);
     const { tracers } = useContext(FactoryContext);
 
     return (
         <div className="h-full px-12 flex flex-col">
             <div className={`my-4 w-full h-screen/40 card`}>
-                <PositionTable tracers={tracers} />
+                <PositionTable tracers={tracers ?? {}} />
             </div>
             <div className="w-full h-screen/40 flex mt-auto">
                 <Card title={`${tracerId} Market Details`}>
-                    <MarketInfo fundingRate={fundingRate ?? 0} />
+                    <MarketInfo fundingRate={selectedTracer?.feeRate ?? 0} />
                 </Card>
                 <Card title={`My ${tracerId} Margin Account`} classes={`mx-12 flex flex-col card`}>
-                    <AccountMarginInfo balance={balance} marginRatio={0} />
+                    <AccountMarginInfo balance={selectedTracer?.balances} marginRatio={0} />
                     <div className="mt-auto">
                         <MarginButtons />
                     </div>

@@ -3,11 +3,9 @@ import { useToasts } from 'react-toast-notifications';
 import TracerModal from '@components/Modals';
 import { OrderState, OrderTypeMapping } from '@context/OrderContext';
 import { TracerContext, Web3Context, OrderContext, ErrorContext } from 'context';
-import { signOrders, orderToOMEOrder, OrderData } from '@tracer-protocol/tracer-utils';
 import AlertInfo from '@components/Notifications/AlertInfo';
 import { ConnectButton, MarginDeposit } from '@components/Buttons';
-import { createOrder } from '@libs/Ome';
-import { TracerInfo } from 'types';
+import { UserBalance } from 'types';
 
 type POBProps = {
     balance: number; // users wallets margin balance
@@ -39,17 +37,15 @@ export const OrderSubmit: React.FC<OSProps> = ({ setSummary }: OSProps) => {
 
 // TODO change these requirements to not use balance.margin
 // balance.margin is not the right value for this need to calculated available margin in the account
-export const OrderSummaryButtons: React.FC = () => {
-    const { tracerInfo } = useContext(TracerContext);
-    const { balance } = tracerInfo as TracerInfo;
+export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balances }) => {
     const { show, text, variant, setError } = useContext(ErrorContext);
     const { order } = useContext(OrderContext);
     const rMargin = order?.rMargin ?? 0;
 
     useEffect(() => {
-        if (!!balance) {
+        if (!!balances) {
             // Margin is greater than margin in account
-            balance.margin < rMargin && balance.margin >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
+            balances?.margin < rMargin && balances?.margin >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
         }
     }, [rMargin]);
 
@@ -59,7 +55,7 @@ export const OrderSummaryButtons: React.FC = () => {
                 <AlertInfo show={show} text={text} variant={variant} />
             </div>
             <div className="py-5 flex">
-                {balance?.margin === 0 ? (
+                {balances?.margin === 0 ? (
                     <div className="m-auto w-1/2">
                         <MarginDeposit />
                     </div>
@@ -67,97 +63,50 @@ export const OrderSummaryButtons: React.FC = () => {
                     ''
                 )}
                 <div className="m-auto w-1/2 flex justify-center">
-                    <PlaceOrderButton balance={balance?.margin ?? 0} />
+                    <PlaceOrderButton balance={balances?.margin ?? 0} />
                 </div>
             </div>
         </div>
     );
 };
 
-export const AdvancedOrderButton: React.FC = () => {
-    const { tracerInfo } = useContext(TracerContext);
-    const { balance } = tracerInfo as TracerInfo;
+export const AdvancedOrderButton: React.FC<{ balances: UserBalance | undefined }> = ({ balances }) => {
     const { setError } = useContext(ErrorContext);
     const { order } = useContext(OrderContext);
     const rMargin = order?.rMargin ?? 0;
 
     useEffect(() => {
-        if (!!balance) {
+        if (!!balances) {
             // Margin is greater than margin in account
-            balance.margin < rMargin && balance.margin >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
+            balances?.margin < rMargin && balances?.margin >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
         }
     }, [rMargin]);
 
     return (
         <div className="w-full flex">
             <div className="m-auto w-3/4 flex justify-center">
-                <PlaceOrderButton balance={balance?.margin ?? 0} />
+                <PlaceOrderButton balance={balances?.margin ?? 0} />
             </div>
         </div>
     );
 };
 
 export const PlaceOrderButton: React.FC<POBProps> = ({ balance }: POBProps) => {
-    const { account, web3, config } = useContext(Web3Context);
-    const { addToast } = useToasts();
-    const { selectedTracer, tracerInfo, takeOrders, makeOrder } = useContext(TracerContext);
+    const { placeOrder } = useContext(TracerContext);
     const { takenOrders, order } = useContext(OrderContext);
-    const { priceMultiplier } = tracerInfo as TracerInfo;
-    const { rMargin, price, orderType, position, matchingEngine } = order as OrderState;
-
+    const { rMargin, price, orderType } = order as OrderState;
+    const { addToast } = useToasts();
     const [validOrder, setValidOrder] = useState(false);
     const [showOrder, setShowOrder] = useState(false);
     const [loading, setLoading] = useState(false);
 
-    const placeOrder = async (_e: any) => {
+    const handleOrder = async (_e: any) => {
         if (validOrder) {
             setLoading(true);
-            let res;
-            if (matchingEngine === 1) {
-                // OME order
-                const parsedPrice = price * priceMultiplier;
-                const amount = web3?.utils.toWei(rMargin.toString()) ?? 0;
-                const expiration = new Date().getTime() + 604800;
-                const makes: OrderData[] = [
-                    {
-                        amount: amount,
-                        price: parsedPrice.toString(),
-                        side: position === 0,
-                        user: account ?? '',
-                        expiration: expiration,
-                        targetTracer:
-                            selectedTracer?.address && web3 ? web3.utils.toChecksumAddress(selectedTracer.address) : '',
-                        nonce: 5101,
-                    },
-                ];
-                const signedMakes = await signOrders(web3, makes, config?.contracts.trader.address as string);
-                const order = orderToOMEOrder(web3, await signedMakes[0]);
-                await createOrder(selectedTracer?.address as string, order);
-                res = { status: 'success' }; // TODO add error check
-            } else if (matchingEngine === 0) {
-                // On-chain
-                if (orderType === 0) {
-                    res = takeOrders
-                        ? await takeOrders(takenOrders ?? [])
-                        : {
-                              status: 'error',
-                              message: 'Take order function is undefined',
-                          };
-                } else if (orderType === 1) {
-                    res = makeOrder
-                        ? await makeOrder(rMargin, Math.round(price * 1000000), position === 0)
-                        : {
-                              status: 'error',
-                              message: 'Make order function is undefined',
-                          };
-                }
-            }
-            if (res?.status === 'error') {
-                addToast(`Transaction cancelled. ${res?.error}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
-            }
+            placeOrder
+                ? await placeOrder(order as OrderState, takenOrders ?? [])
+                : console.error('Error placing order: Place order function is not defined');
+            setLoading(false);
             setShowOrder(false);
         } else {
             addToast('Invalid order', {
@@ -200,7 +149,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ balance }: POBProps) => {
                             <h3>{message()}</h3>
                         </div>
                         <div className="flex mt-5">
-                            <button className="button m-auto" onClick={placeOrder}>
+                            <button className="button m-auto" onClick={handleOrder}>
                                 Confirm
                             </button>
                         </div>
