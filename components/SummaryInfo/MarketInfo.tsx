@@ -15,7 +15,7 @@ export const MarketInfo: React.FC<MIProps> = ({ fundingRate }: MIProps) => {
                 <FundingRate rate={fundingRate} />
             </Section>
             <Section label={'Insurance Pool Health'} fontSize={'text-lg'}>
-                <PoolHealth health={80}/>
+                <PoolHealth health={80} />
             </Section>
         </div>
     );

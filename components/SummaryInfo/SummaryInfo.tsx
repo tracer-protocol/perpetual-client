@@ -26,9 +26,9 @@ export const FundingRate: React.FC<{ rate: number }> = ({ rate }: { rate: number
 };
 
 /**
- * 
+ *
  * @param health as an integer representation of a percentage
- * @returns 
+ * @returns
  */
 export const PoolHealth: React.FC<{ health: number }> = ({ health }) => {
     return (

@@ -25,7 +25,11 @@ export const MarginButton: React.FC<BProps> = ({ variant, type, children }: BPro
         const t = type.toLowerCase();
         withdraw && deposit && handleTransaction
             ? handleTransaction(t === 'withdraw' ? withdraw : deposit, [amount])
-            : console.error(`Failed to ${t  === 'withdraw' ? 'withdraw from' : 'deposit into' } insurance pool: No ${t} function found`);
+            : console.error(
+                  `Failed to ${
+                      t === 'withdraw' ? 'withdraw from' : 'deposit into'
+                  } insurance pool: No ${t} function found`,
+              );
         setShowModal(false);
     };
 

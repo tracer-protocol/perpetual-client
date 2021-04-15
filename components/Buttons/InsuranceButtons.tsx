@@ -26,7 +26,7 @@ export const InsuranceButton: React.FC<BProps> = ({ type, children }: BProps) =>
             setLoading(true);
             const callback = () => {
                 setLoading(false);
-            }
+            };
             const t = type.toLowerCase();
             withdraw && deposit && handleTransaction
                 ? handleTransaction(t === 'withdraw' ? withdraw : deposit, [amount], callback)
@@ -34,7 +34,7 @@ export const InsuranceButton: React.FC<BProps> = ({ type, children }: BProps) =>
         } catch (err) {
             console.error(`Failed to deposit into insurance pool: ${err}`);
         }
-    }
+    };
 
     return (
         <>

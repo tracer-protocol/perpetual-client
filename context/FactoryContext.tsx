@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useRef } from 'react';
 import { useAllTracers } from '@hooks/GraphHooks/Tracer';
 import { Children } from 'types';
-import Tracer from '@libs/Tracer'
+import Tracer from '@libs/Tracer';
 import { Web3Context } from './Web3Context';
 
 type LabelledTracers = Record<string, Tracer>;
@@ -23,7 +23,7 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
                 const labelledTracers: LabelledTracers = tracers.reduce(
                     (o: any, t: { marketId: string; id: string }) => ({
                         ...o,
-                        [t.marketId]: new Tracer(web3, t.id, t.marketId)
+                        [t.marketId]: new Tracer(web3, t.id, t.marketId),
                     }),
                     {},
                 );

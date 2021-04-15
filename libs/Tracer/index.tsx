@@ -65,9 +65,9 @@ export default class Tracer {
             totalLeveragedValue: 0,
             lastUpdatedGasPrice: 0,
             tokenBalance: 0,
-        }
+        };
         this.oraclePrice = 0;
-        this.initialised = this.init(web3)
+        this.initialised = this.init(web3);
     }
 
     /**
@@ -79,34 +79,35 @@ export default class Tracer {
         const tokenAddr = this._instance.methods.tracerBaseToken().call();
         const priceMultiplier = this._instance.methods.priceMultiplier().call();
         const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
-        const maxLeverage = this._instance.methods.maxLeverage().call()
-        const fundingRateSensitivity = this._instance.methods.FUNDING_RATE_SENSITIVITY().call()
-        const feeRate = this._instance.methods.feeRate().call()
+        const maxLeverage = this._instance.methods.maxLeverage().call();
+        const fundingRateSensitivity = this._instance.methods.FUNDING_RATE_SENSITIVITY().call();
+        const feeRate = this._instance.methods.feeRate().call();
         return Promise.all([
-                priceMultiplier, 
-                liquidationGasCost,
-                tokenAddr,
-                oracleAddress,
-                maxLeverage,
-                fundingRateSensitivity,
-                feeRate,
-            ]).then((res) => {
-                let priceMultiplier_ =  parseInt(res[0]);
+            priceMultiplier,
+            liquidationGasCost,
+            tokenAddr,
+            oracleAddress,
+            maxLeverage,
+            fundingRateSensitivity,
+            feeRate,
+        ])
+            .then((res) => {
+                const priceMultiplier_ = parseInt(res[0]);
                 this.priceMultiplier = priceMultiplier_;
                 this.liquidationGasCost = parseInt(res[1]);
                 this.token = (new web3.eth.Contract(ERC20.abi as AbiItem[], res[2]) as unknown) as Erc20Type;
-                this._oracle = (new web3.eth.Contract(oracleJSON.abi as AbiItem[], res[3]) as unknown) as Oracle,
-                
-                this.maxLeverage = parseFloat(Web3.utils.fromWei(res[4]));
+                (this._oracle = (new web3.eth.Contract(oracleJSON.abi as AbiItem[], res[3]) as unknown) as Oracle),
+                    (this.maxLeverage = parseFloat(Web3.utils.fromWei(res[4])));
                 this.fundingRateSensitivity = parseInt(res[5]) / priceMultiplier_;
                 this.feeRate = parseInt(res[6]) / priceMultiplier_;
 
                 this.updateOraclePrice();
                 return true;
-            }).catch((err) => {
+            })
+            .catch((err) => {
                 console.error(err);
                 return false;
-            })
+            });
     };
 
     /**
@@ -274,18 +275,18 @@ export default class Tracer {
      *  margin, position, totalLeveragedValue,
      *  deposited, lastUpdatedGasPrice, lastUpdatedIndex
      */
-    updateUserBalance: (account: string) => Promise<boolean> = async (account) => {
-        // let address = this.web3.eth.currentProvider.selectedAddress;
+    updateUserBalance: (account: string | undefined) => Promise<boolean> = async (account) => {
         try {
-            const balance = await this.account.methods.getBalance(account.toString(), this.address.toString()).call();
-            const walletBalance = await this.token?.methods.balanceOf(account).call();
+            // if accounts is undefined the catch should get it
+            const balance = await this.account.methods.getBalance(account ?? '', this.address.toString()).call();
+            const walletBalance = await this.token?.methods.balanceOf(account ?? '').call();
             const parsedBalances = {
                 margin: parseFloat(Web3.utils.fromWei(balance[0])),
                 position: parseFloat(Web3.utils.fromWei(balance[1])),
                 deposited: parseFloat(Web3.utils.fromWei(balance[3])),
                 totalLeveragedValue: parseFloat(Web3.utils.fromWei(balance[2])),
                 lastUpdatedGasPrice: parseFloat(Web3.utils.fromWei(balance[4])),
-                tokenBalance: walletBalance ? parseInt(Web3.utils.fromWei(walletBalance)) : 0
+                tokenBalance: walletBalance ? parseInt(Web3.utils.fromWei(walletBalance)) : 0,
             };
             console.info(`Fetched user balances: ${parsedBalances}`);
             this.balances = parsedBalances;
@@ -309,10 +310,10 @@ export default class Tracer {
             const price = await this._oracle?.methods.latestAnswer().call();
             this.oraclePrice = parseFloat(price ?? '0');
         } catch (err) {
-            console.error("Failed to fetch oracle price", err)
+            console.error('Failed to fetch oracle price', err);
             this.oraclePrice = 0;
         }
-    }
+    };
 
     /**
      * Gets the tracers ID ie BTC/USD
@@ -334,7 +335,7 @@ export default class Tracer {
      */
     updateFeeRate: () => Promise<void> = async () => {
         const feeRate = await this._instance.methods.feeRate().call();
-        let set = parseInt(feeRate) / (this.priceMultiplier ?? 1)
+        const set = parseInt(feeRate) / (this.priceMultiplier ?? 1);
         this.feeRate = set;
     };
 

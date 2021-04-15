@@ -2,8 +2,9 @@ import React, { createContext } from 'react';
 import { AppearanceTypes, useToasts } from 'react-toast-notifications';
 import { Children, Result } from 'types';
 
-type HandleTransactionType = ((
-    callMethod: (...args: any) => Result | Promise<Result>,
+type HandleTransactionType =
+    | ((
+          callMethod: (...args: any) => Result | Promise<Result>,
     params: any[], // eslint-disable-line 
     callback?: () => any, // eslint-disable-line 
 ) => void ) | undefined;

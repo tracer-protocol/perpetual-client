@@ -18,34 +18,34 @@ export const AccountContext = React.createContext<Partial<ContextProps>>({});
 type StoreProps = Children;
 
 export const AccountStore: React.FC<StoreProps> = ({ children }: StoreProps) => {
-    const { account, networkId: _networkId, web3, updateGlobal} = useContext(Web3Context);
+    const { account, networkId: _networkId, web3, updateGlobal } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
-    const [contract, setContract] = useState<Account>()
+    const [contract, setContract] = useState<Account>();
 
     useEffect(() => {
         if (web3) {
-            setContract(
-                (new web3.eth.Contract(accountJSON.abi as AbiItem[], accountAddress) as unknown
-                ) as Account 
-            )
+            setContract((new web3.eth.Contract(accountJSON.abi as AbiItem[], accountAddress) as unknown) as Account);
         }
-    }, [web3])
+    }, [web3]);
 
     /**
      *
      * @param amount the amount to deposit
-    */
+     */
     const deposit: (amount: number) => Promise<Result> = async (amount) => {
         try {
-            const err = await checkAllowance(selectedTracer.token, account, accountAddress, amount);
+            if (!selectedTracer?.address) {
+                return { status: 'error', message: 'Failed to deposit: Selected tracer address cannot be undefined' };
+            }
+            const err = await checkAllowance(selectedTracer?.token, account, accountAddress, amount);
             if (err?.error) {
                 return err;
             }
             await contract?.methods
-                .deposit(Web3.utils.toWei(amount.toString()), selectedTracer.address.toString())
+                .deposit(Web3.utils.toWei(amount.toString()), selectedTracer.address)
                 .send({ from: account });
             await selectedTracer?.updateUserBalance(account);
-            updateGlobal ? updateGlobal() : console.error("Global update function not set");
+            updateGlobal ? updateGlobal() : console.error('Global update function not set');
             return { status: 'success', message: 'Successfully made deposit request' };
         } catch (err) {
             console.error(err);
@@ -54,11 +54,14 @@ export const AccountStore: React.FC<StoreProps> = ({ children }: StoreProps) => 
     };
 
     const withdraw: (amount: number) => Promise<Result> = async (amount) => {
+        if (!selectedTracer?.address) {
+            return { status: 'error', message: 'Failed to withdraw: Selected tracer address cannot be undefined' };
+        }
         const result = await contract?.methods
-            .withdraw(Web3.utils.toWei(amount.toString()), selectedTracer.address)
-            .send({ from: account })
+            .withdraw(Web3.utils.toWei(amount.toString()), selectedTracer?.address)
+            .send({ from: account });
         await selectedTracer?.updateUserBalance(account);
-        updateGlobal ? updateGlobal() : console.error("Global update function not set");
+        updateGlobal ? updateGlobal() : console.error('Global update function not set');
         return { status: 'success', message: `Successfully withdrew from insurance pool, ${result?.transactionHash}` };
     };
 

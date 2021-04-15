@@ -8,9 +8,9 @@ import OrderBook from '@components/OrderBook/OrderBook';
 import { MarketSelect, TradingInput, WalletConnect } from './TradingPanel';
 import { getOrders } from '@components/libs/Ome';
 import Web3 from 'web3';
-import { Tracer } from 'types';
+import Tracer from '@libs/Tracer';
 
-const parseRes = (res: any, multiplier:number) => {
+const parseRes = (res: any, multiplier: number) => {
     const parseOrders = (orders: any) => {
         const sections = Object.values(orders);
         const flattenedOrders = sections.map((orders: any) =>
@@ -35,7 +35,7 @@ const parseRes = (res: any, multiplier:number) => {
 
 const useOrders = (trigger: boolean, selectedTracer: Tracer | undefined) => {
     const market = selectedTracer?.address;
-    const priceMultiplier = selectedTracer?.priceMultipler ?? 0
+    const priceMultiplier = selectedTracer?.priceMultiplier ?? 0;
     const [response, setResponse] = useState<any>({
         askOrders: [],
         bidOrders: [],
@@ -90,13 +90,13 @@ const TradingSummary: React.FC<{ tracerId: string }> = ({ tracerId }: { tracerId
 };
 
 const Advanced: React.FC = () => {
-    const { account } = useContext(Web3Context)
+    const { account } = useContext(Web3Context);
     const { tracerId, selectedTracer } = useContext(TracerContext);
     return (
         <div className="flex h-full">
             <div className="w-1/4 flex flex-col max-h-screen/90">
                 <MarketSelect />
-                <WalletConnect balances={selectedTracer?.balances} account={account ?? ''}/>
+                <WalletConnect balances={selectedTracer?.balances} account={account ?? ''} />
                 <TradingInput selectedTracer={selectedTracer} />
             </div>
             <div className="w-3/4 flex flex-col max-h-screen/90">

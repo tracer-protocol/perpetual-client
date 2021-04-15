@@ -71,17 +71,21 @@ const borders: (target: number, userBalance: number, liquidty: number) => string
 };
 
 const Ticker = styled(({ className, children, onClick }) => {
-    return <div onClick={onClick} className={className}>{children}</div>
+    return (
+        <div onClick={onClick} className={className}>
+            {children}
+        </div>
+    );
 })`
     padding: 5px;
-    border: solid 2px ${props => props.color};
+    border: solid 2px ${(props) => props.color};
     border-radius: 5px;
-    color: ${props => props.color};
+    color: ${(props) => props.color};
     position: absolute;
     max-width: fit-content;
     bottom: -75%;
     white-space: nowrap;
-    left: ${props => props.position}%;
+    left: ${(props) => props.position}%;
     margin-top: 50px;
     z-index: 1;
 
@@ -93,13 +97,13 @@ const Ticker = styled(({ className, children, onClick }) => {
         content: '';
         width: 2px;
         height: 100%;
-        background: ${props => props.color};
+        background: ${(props) => props.color};
         position: absolute;
         bottom: 100%;
         left: 50%;
         margin-left: -2px;
     }
-`
+`;
 
 type Section = {
     title: string;
@@ -107,30 +111,30 @@ type Section = {
     width: number;
     colour: string;
     border?: string;
-    color: string
+    color: string;
 };
 const PoolBar: React.FC<InsurancePoolInfo> = ({ userBalance, liquidity, target, market }: InsurancePoolInfo) => {
     const [info, setInfo] = useState<InfoType>('USER_BALANCE');
 
     const userBalanceWidth = () => {
         if (liquidity < target) {
-            return userBalance / target
+            return userBalance / target;
         } else {
-            return  userBalance / liquidity // else
+            return userBalance / liquidity; // else
         }
-    }
+    };
 
     const poolBalanceWidth = () => {
         if (userBalance >= liquidity) {
-            return 0 // 0%
+            return 0; // 0%
         } else {
             if (liquidity > target) {
-                return (liquidity - userBalance) / liquidity
+                return (liquidity - userBalance) / liquidity;
             } else {
-                return (liquidity - userBalance) / target
+                return (liquidity - userBalance) / target;
             }
         }
-    }
+    };
     const sections: Section[] = [
         {
             title: !!userBalance ? 'My Balance' : '',
@@ -141,7 +145,7 @@ const PoolBar: React.FC<InsurancePoolInfo> = ({ userBalance, liquidity, target, 
             border: userBalance >= liquidity && target <= liquidity ? 'rounded-l-lg rounded-r-lg' : 'rounded-l-lg',
         },
         {
-            title: (liquidity - userBalance > 0) ? 'Total Pool Balance' : '',
+            title: liquidity - userBalance > 0 ? 'Total Pool Balance' : '',
             type: 'POOL_BALANCE',
             width: poolBalanceWidth(),
             colour: 'blue-100',
@@ -158,7 +162,8 @@ const PoolBar: React.FC<InsurancePoolInfo> = ({ userBalance, liquidity, target, 
         },
     ];
 
-    const barItem = 'z-10 relative text-xs text-center text-black transform duration-100 transition cursor-pointer flex';
+    const barItem =
+        'z-10 relative text-xs text-center text-black transform duration-100 transition cursor-pointer flex';
     const selected = 'z-20';
 
     return (
@@ -186,20 +191,20 @@ const PoolBar: React.FC<InsurancePoolInfo> = ({ userBalance, liquidity, target, 
                                     width: `${section.width * 100}%`,
                                     minWidth: 'fit-content',
                                 }}
-                            >   
-                                {section.title
-                                    ? <span className={`m-auto text-blue-200`}>{section.title}</span>
-                                    : null
-                                }
+                            >
+                                {section.title ? <span className={`m-auto text-blue-200`}>{section.title}</span> : null}
                             </span>
                         );
                     })}
-                    {!!target && target - liquidity < 0
-                        ? <Ticker color={'#F57979'} position={(target / liquidity) * 100} onClick={() => setInfo('POOL_TARGET')}>
+                    {!!target && target - liquidity < 0 ? (
+                        <Ticker
+                            color={'#F57979'}
+                            position={(target / liquidity) * 100}
+                            onClick={() => setInfo('POOL_TARGET')}
+                        >
                             Target
                         </Ticker>
-                        : null
-                    }
+                    ) : null}
                 </div>
             </div>
         </div>

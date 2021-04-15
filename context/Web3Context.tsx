@@ -52,7 +52,7 @@ interface ContextProps {
     web3: Web3 | undefined;
     provider: any;
     config: NetworkType;
-    updateGlobal: () => void | undefined
+    updateGlobal: () => void | undefined;
 }
 
 export const Web3Context = React.createContext<Partial<ContextProps>>({
@@ -127,7 +127,7 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
 
     const updateGlobal = () => {
         setTrigger(!trigger);
-    }
+    };
 
     console.debug(`State: ${JSON.stringify(state.value)}`);
 

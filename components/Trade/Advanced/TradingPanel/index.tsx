@@ -40,7 +40,10 @@ export const MarketSelect: React.FC = () => {
     );
 };
 
-export const WalletConnect: React.FC<{ balances: UserBalance, account: string }> = ({ balances, account }) => {
+export const WalletConnect: React.FC<{ balances: UserBalance | undefined; account: string }> = ({
+    balances,
+    account,
+}) => {
     const sButton = 'button-grow rounded border-blue-100 p-1 text-center text-sm';
 
     return account === '' ? (
@@ -55,7 +58,7 @@ export const WalletConnect: React.FC<{ balances: UserBalance, account: string }>
             <h4 className="title">Your available margin</h4>
             <div className="body">
                 <div className="border-b-2 border-gray-100">
-                    <Section label="Balance">{balances?.margin}</Section>
+                    <Section label="Balance">{balances?.margin ?? 0}</Section>
                     <Section label="Collateralisation ratio">{5}%</Section>
                 </div>
                 <div className="flex pt-2">
@@ -71,7 +74,7 @@ export const WalletConnect: React.FC<{ balances: UserBalance, account: string }>
     );
 };
 
-export const TradingInput: React.FC<{ selectedTracer: Tracer }> = ({ selectedTracer }: { selectedTracer: Tracer}) => {
+export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
     const { order } = useContext(OrderContext);
     return (
         <div className="advanced-card h-full overflow-scroll">
@@ -90,7 +93,11 @@ export const TradingInput: React.FC<{ selectedTracer: Tracer }> = ({ selectedTra
                 </div>
 
                 {/* Quanity and Price Inputs */}
-                <InputSelects amount={order?.rMargin ?? 0} price={order?.price || 0} tracerId={selectedTracer?.marketId ?? ''} />
+                <InputSelects
+                    amount={order?.rMargin ?? 0}
+                    price={order?.price || 0}
+                    tracerId={selectedTracer?.marketId ?? ''}
+                />
 
                 {/* Dont display these if it is a limit order*/}
                 {order?.orderType !== 1 ? (
@@ -111,7 +118,7 @@ export const TradingInput: React.FC<{ selectedTracer: Tracer }> = ({ selectedTra
 
                 {/* Place Order */}
                 <div className="py-1">
-                    <AdvancedOrderButton balances={selectedTracer?.balances}/>
+                    <AdvancedOrderButton balances={selectedTracer?.balances} />
                 </div>
             </div>
         </div>
@@ -134,7 +141,7 @@ const MatchingEngineSelect: React.FC<SProps> = ({ selected }: SProps) => {
             onClick={(index, _e) => {
                 orderDispatch
                     ? orderDispatch({ type: 'setMatchingEngine', value: index })
-                    : console.error('Order dispatch function not set')
+                    : console.error('Order dispatch function not set');
             }}
         >
             <MatchingEngine title="AMM" subTitle="On-chain" />

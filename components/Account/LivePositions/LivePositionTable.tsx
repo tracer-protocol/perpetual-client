@@ -9,7 +9,7 @@ import { useClosePosition, useTracerOrders } from '@hooks/TracerHooks';
 import Link from 'next/link';
 import Web3 from 'web3';
 import { accountGain } from '@libs/utils';
-import { Tracer } from '@components/types';
+import { Tracer } from '@components/libs';
 
 type PCProps = {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -114,13 +114,13 @@ const TradeButtons: React.FC<{ tracer: string }> = ({ tracer }) => {
 type RProps = {
     tracer: Tracer;
     setTracerId: ((tracerId: string) => any) | undefined;
-    selected: boolean
+    selected: boolean;
 };
 
 const Row_: React.FC<RProps> = ({ tracer, selected, setTracerId }) => {
     const balance = tracer?.balances;
-    const price = tracer?.oraclePrice / tracer?.priceMultiplier;
-    const marketId = tracer?.marketId
+    const price = tracer?.oraclePrice / (tracer?.priceMultiplier ?? 0);
+    const marketId = tracer?.marketId;
     return (
         <TableRow
             key={marketId}
@@ -161,11 +161,7 @@ const PositionTable: React.FC<PTProps> = ({ tracers }: PTProps) => {
         <div className="p-6 overflow-scroll">
             <Table headings={headings}>
                 {Object.keys(tracers).map((marketId) => (
-                    <Row_
-                        tracer={tracers[marketId]}
-                        setTracerId={setTracerId}
-                        selected={tracerId === marketId}
-                    />
+                    <Row_ tracer={tracers[marketId]} setTracerId={setTracerId} selected={tracerId === marketId} />
                 ))}
             </Table>
         </div>

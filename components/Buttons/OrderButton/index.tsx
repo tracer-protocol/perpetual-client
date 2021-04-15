@@ -70,7 +70,7 @@ export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balan
     );
 };
 
-export const AdvancedOrderButton: React.FC<{ balances: UserBalance }> = ({ balances }) => {
+export const AdvancedOrderButton: React.FC<{ balances: UserBalance | undefined }> = ({ balances }) => {
     const { setError } = useContext(ErrorContext);
     const { order } = useContext(OrderContext);
     const rMargin = order?.rMargin ?? 0;
@@ -105,7 +105,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ balance }: POBProps) => {
             setLoading(true);
             placeOrder
                 ? await placeOrder(order as OrderState, takenOrders ?? [])
-                : console.error("Error placing order: Place order function is not defined")
+                : console.error('Error placing order: Place order function is not defined');
             setLoading(false);
             setShowOrder(false);
         } else {
@@ -114,7 +114,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ balance }: POBProps) => {
                 autoDismiss: true,
             });
         }
-    }
+    };
 
     useEffect(() => {
         // TODO calc what a valid order is

@@ -16,9 +16,15 @@ export const checkAllowance: (
     amount: number,
 ) => Promise<Result> = async (token, from, contractAddress, amount) => {
     const max = Number.MAX_SAFE_INTEGER;
-    if (!from) return { status: 'error', message: 'From address undefined' }
-    if (!contractAddress) return { status: 'error', message: 'Contract address undefined' }
-    if (!token) return { status: 'error', message: 'Token cannot be undefined'}
+    if (!from) {
+        return { status: 'error', message: 'From address undefined' };
+    }
+    if (!contractAddress) {
+        return { status: 'error', message: 'Contract address undefined' };
+    }
+    if (!token) {
+        return { status: 'error', message: 'Token cannot be undefined' };
+    }
     try {
         let result;
         const currentAllowed = await token.methods.allowance(from, contractAddress).call();
@@ -29,7 +35,7 @@ export const checkAllowance: (
                 .send({ from: from });
             return result;
         } //else
-        return { status: 'success', message: 'User allowance > 0'}
+        return { status: 'success', message: 'User allowance > 0' };
     } catch (e) {
         return e;
     }
