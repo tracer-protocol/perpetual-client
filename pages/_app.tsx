@@ -7,10 +7,9 @@ import 'antd/dist/antd.css';
 import '../styles/index.css';
 import { ToastProvider } from 'react-toast-notifications';
 import { Web3Store } from '@context/Web3Context';
-import ReduxStore from '@context/ReduxStore';
 import GraphProvider from '@libs/Graph';
 import { Notification } from '@components/Notifications/Notification';
-import Transactions from '@components/components/Notifications/Transactions';
+import { TransactionStore } from '@components/context/TransactionContext';
 
 const App = ({ Component, pageProps }: AppProps) => {  // eslint-disable-line
     return (
@@ -19,12 +18,11 @@ const App = ({ Component, pageProps }: AppProps) => {  // eslint-disable-line
             </Head> */}
             <ToastProvider components={{ Toast: Notification }}>
                 <GraphProvider graphUri={process.env.NEXT_PUBLIC_GRAPH_URI ?? ''}>
-                    <ReduxStore>
-                        <Web3Store>
-                            <Transactions />
+                    <Web3Store>
+                        <TransactionStore>
                             <Component {...pageProps} />
-                        </Web3Store>
-                    </ReduxStore>
+                        </TransactionStore>
+                    </Web3Store>
                 </GraphProvider>
             </ToastProvider>
         </div>

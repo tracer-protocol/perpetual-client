@@ -1,93 +1,139 @@
-import React, { useEffect, useContext, useRef } from 'react';
-import { usePool } from '@hooks/InsuranceHooks';
-import { Children, InsurancePoolInfo, Result, Tracer } from 'types';
-import { TracerContext } from './TracerContext';
+import React, { useEffect, useContext, useState, useReducer } from 'react';
+import { Children, InsurancePoolInfo, Result } from 'types';
 import { Web3Context } from './Web3Context';
-import { Contract } from '@lions-mane/web3-redux';
 import Web3 from 'web3';
-import { networkConfig } from './Web3Context.Config';
-import { useDispatch, useSelector } from 'react-redux';
-
+import { AbiItem } from 'web3-utils';
+import { Insurance } from '@tracer-protocol/contracts/types/web3-v1-contracts/Insurance';
+import insuranceJSON from '@tracer-protocol/contracts/build/contracts/Insurance.json';
+import { TracerContext } from './TracerContext';
+import { checkAllowance } from '@components/libs/web3/utils';
+const insuranceAddress = process.env.NEXT_PUBLIC_INSURANCE_ADDRESS;
 interface ContextProps {
     poolInfo: InsurancePoolInfo;
-    deposit: (amount: number, tracer: Tracer | undefined) => Promise<Result>;
-    withdraw: (amount: number, tracer: Tracer | undefined) => Promise<Result>;
+    deposit: (amount: number) => Promise<Result>;
+    withdraw: (amount: number) => Promise<Result>;
+    contract: Insurance;
 }
 
 /**
- *
+ * 
  */
 export const InsuranceContext = React.createContext<Partial<ContextProps>>({});
 
 export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
-    const reduxDispatch = useDispatch();
-    const { account, networkId: _networkId } = useContext(Web3Context);
-    const { tracerId, selectedTracer, tracerInfo } = useContext(TracerContext);
-    const initiated = useRef(false);
-    const tracer = selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer?.address) : '';
-    const insuranceAddress = networkConfig[_networkId ?? 0]?.contracts.insurance.address;
+    const { account, networkId: _networkId, web3 } = useContext(Web3Context);
+    const { selectedTracer } = useContext(TracerContext);
+    const [contract, setContract] = useState<Insurance>()
 
-    const contract = useSelector((state) => Contract.selectSingle(state, `${_networkId}-${insuranceAddress}`));
-    // const contractId: string = contract?.id ?? '';
-    const networkId: string = contract?.networkId ?? '';
-    // const address: string = contract?.address ?? '';
+    const initialState = {
+        market: selectedTracer?.marketId,
+        userBalance: 0,
+        target: 0,
+        liquidity: 0,
+        rewards: 0,
+    } as InsurancePoolInfo;
 
-    const ready = !!contract && !!account && !!tracer && !!networkId && !!insuranceAddress;
+    const reducer = (state: InsurancePoolInfo, action: any) => {
+        switch (action.type) {
+            case 'setUserBalance':
+                return {
+                    ...state,
+                    userBalance: action.balance
+                };
+            case 'setAll':
+            return {
+                ...action.state
+            };
+            default:
+            throw new Error();
+        }
+    }
+
+    const [state, dispatch] = useReducer(reducer, initialState);
+
 
     useEffect(() => {
-        if (ready && !initiated.current) {
-            initiated.current = true;
-            reduxDispatch(
-                Contract.callSynced({
-                    networkId: networkId?.toString() as string,
-                    address: insuranceAddress as string,
-                    method: 'getPoolUserBalance',
-                    sync: false,
-                    args: [tracer, account],
-                    from: account,
-                }),
-            );
-            // reduxDispatch(
-            //     Contract.callSynced({
-            //         networkId: networkId?.toString() as string,
-            //         address: insuranceAddress as string,
-            //         method: 'getPoolTarget',
-            //         sync: Contract.CALL_TRANSACTION_SYNC,
-            //         options: {
-            //             args: [tracer]
-            //         },
-            //         args: [tracer],
-            //         from: account
-            //     }),
-            // );
-            // reduxDispatch(
-            //     Contract.callSynced({
-            //         networkId: networkId?.toString() as string,
-            //         address: insuranceAddress as string,
-            //         method: 'getPoolHoldings',
-            //         sync: Contract.CALL_TRANSACTION_SYNC,
-            //         args: [tracer],
-            //         from: account
-            //     }),
-            // );
+        if (web3) {
+            setContract(
+                (new web3.eth.Contract(insuranceJSON.abi as AbiItem[], insuranceAddress) as unknown
+                ) as Insurance
+            )
         }
-    });
+    }, [web3])
 
-    const { deposit, withdraw, poolInfo } = usePool(
-        {
-            token: tracerInfo?.tracerBaseToken ?? '',
-            address: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer?.address) : '',
-            id: tracerId ?? '',
-        },
-        insuranceAddress as string,
-    );
+    /**
+     *
+     * @param amount the amount to deposit
+    */
+    const deposit: (amount: number) => Promise<Result> = async (amount) => {
+        try {
+            const err = await checkAllowance(selectedTracer.token, account, insuranceAddress, amount);
+            if (err.error) {
+                return err;
+            }
+            await contract?.methods
+                .stake(Web3.utils.toWei(amount.toString()), selectedTracer.address.toString())
+                .send({ from: account });
+            updatePoolBalance();
+            return { status: 'success', message: 'Transaction success: Successfully made deposit' };
+        } catch (err) {
+            console.error(err);
+            return { status: 'error', message: err, error: err };
+        }
+    };
+
+    const withdraw: (amount: number) => Promise<Result> = async (amount) => {
+        const result = await contract?.methods
+            .withdraw(Web3.utils.toWei(amount.toString()), selectedTracer.address)
+            .send({ from: account });
+        updatePoolBalance();
+        return { status: 'success', message: `Transaction success: Successfully withdrew from insurance pool, ${result?.transactionHash}` };
+    };
+
+    /**
+     *
+     * @param tracerId tracer ID of the market, eg TEST/USD, only used as a label identifier
+     * @param market tracer contract address
+     * @param user account address
+    */
+    const getPoolData: () => Promise<void> = async () => {
+        const userBalance = contract?.methods.getPoolUserBalance(selectedTracer.address, account as string).call();
+        const rewards = contract?.methods.getRewardsPerToken(selectedTracer.address).call();
+        const target = contract?.methods.getPoolTarget(selectedTracer.address).call();
+        const liquidity = contract?.methods.getPoolHoldings(selectedTracer.address).call();
+        const res = await Promise.all([userBalance, rewards, target, liquidity]);
+
+        dispatch({ type: 'setAll', state: {
+            market: selectedTracer.marketId,
+            userBalance: res[0] ? parseFloat(Web3.utils.fromWei(res[0])) : 0,
+            target: res[2] ? parseFloat(Web3.utils.fromWei(res[2])) : 0,
+            liquidity: res[3] ? parseFloat(Web3.utils.fromWei(res[3])) : 0,
+            rewards: res[1] ? parseFloat(Web3.utils.fromWei(res[1])) : 0,
+        }})
+    };
+
+    const updatePoolBalance: () => void = () => {
+        Promise.resolve(
+            contract?.methods.getPoolUserBalance(selectedTracer.address, account as string).call()
+        ).then((res) => {
+            dispatch({ type: 'setUserBalance', balance: res ? parseFloat(Web3.utils.fromWei(res)) : 0})
+        }).catch((err) => {
+            console.error(err)
+        })
+    }
+
+
+    useEffect(() => {
+        if (contract && account && selectedTracer?.address) getPoolData()
+    }, [contract, account, selectedTracer]) // eslint-disable-line
 
     return (
         <InsuranceContext.Provider
             value={{
-                poolInfo,
+                poolInfo: state,
                 deposit,
                 withdraw,
+                contract
             }}
         >
             {children}

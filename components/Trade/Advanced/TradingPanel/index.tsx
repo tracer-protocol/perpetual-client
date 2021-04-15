@@ -1,5 +1,5 @@
 import React, { useContext, useState, ChangeEvent } from 'react';
-import { OrderContext, TracerContext, Web3Context } from 'context';
+import { OrderContext, TracerContext } from 'context';
 import { useAdvancedTradingMarkets } from '@hooks/TracerHooks';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { MatchingEngine, Option } from '@components/Buttons/SlideSelect';
@@ -8,8 +8,10 @@ import { OrderInfo, Section } from '@components/SummaryInfo';
 import { SearchableTable } from '@components/Tables/SearchableTable';
 import { DefaultSlider } from '@components/Trade/LeverageSlider';
 import InputSelects from './Inputs';
+import { Tracer } from '@components/libs';
+import { UserBalance } from '@components/types';
 
-const MarketSelect: React.FC = () => {
+export const MarketSelect: React.FC = () => {
     const { setTracerId } = useContext(TracerContext);
     const markets = useAdvancedTradingMarkets();
     const [filter, setFilter] = useState('');
@@ -38,12 +40,7 @@ const MarketSelect: React.FC = () => {
     );
 };
 
-const WalletConnect: React.FC = () => {
-    const { account } = useContext(Web3Context);
-    const {
-        tracerInfo
-    } = useContext(TracerContext);
-
+export const WalletConnect: React.FC<{ balances: UserBalance, account: string }> = ({ balances, account }) => {
     const sButton = 'button-grow rounded border-blue-100 p-1 text-center text-sm';
 
     return account === '' ? (
@@ -58,7 +55,7 @@ const WalletConnect: React.FC = () => {
             <h4 className="title">Your available margin</h4>
             <div className="body">
                 <div className="border-b-2 border-gray-100">
-                    <Section label="Balance">{tracerInfo?.balance?.margin}</Section>
+                    <Section label="Balance">{balances?.margin}</Section>
                     <Section label="Collateralisation ratio">{5}%</Section>
                 </div>
                 <div className="flex pt-2">
@@ -74,7 +71,7 @@ const WalletConnect: React.FC = () => {
     );
 };
 
-const TradingInput: React.FC<{ tracerId: string }> = ({ tracerId }: { tracerId: string }) => {
+export const TradingInput: React.FC<{ selectedTracer: Tracer }> = ({ selectedTracer }: { selectedTracer: Tracer}) => {
     const { order } = useContext(OrderContext);
     return (
         <div className="advanced-card h-full overflow-scroll">
@@ -93,7 +90,7 @@ const TradingInput: React.FC<{ tracerId: string }> = ({ tracerId }: { tracerId: 
                 </div>
 
                 {/* Quanity and Price Inputs */}
-                <InputSelects amount={order?.rMargin ?? 0} price={order?.price || 0} tracerId={tracerId} />
+                <InputSelects amount={order?.rMargin ?? 0} price={order?.price || 0} tracerId={selectedTracer?.marketId ?? ''} />
 
                 {/* Dont display these if it is a limit order*/}
                 {order?.orderType !== 1 ? (
@@ -114,7 +111,7 @@ const TradingInput: React.FC<{ tracerId: string }> = ({ tracerId }: { tracerId: 
 
                 {/* Place Order */}
                 <div className="py-1">
-                    <AdvancedOrderButton />
+                    <AdvancedOrderButton balances={selectedTracer?.balances}/>
                 </div>
             </div>
         </div>
@@ -255,15 +252,3 @@ const Leverage: React.FC<LProps> = ({ leverage }: LProps) => {
         </div>
     );
 };
-
-const TradingPanel: React.FC<{ tracerId: string }> = ({ tracerId }: { tracerId: string }) => {
-    return (
-        <>
-            <MarketSelect />
-            <WalletConnect />
-            <TradingInput tracerId={tracerId} />
-        </>
-    );
-};
-
-export default TradingPanel;

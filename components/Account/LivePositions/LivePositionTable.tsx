@@ -4,12 +4,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import Table, { TableRow } from '@components/Tables';
 import TracerModal from '@components/Modals';
-import { useClosePosition, useTracer, useTracerOrders } from '@hooks/TracerHooks';
+import { useClosePosition, useTracerOrders } from '@hooks/TracerHooks';
 
 import Link from 'next/link';
 import Web3 from 'web3';
 import { accountGain } from '@libs/utils';
-import { Tracer, TracerInfo } from '@components/types';
+import { Tracer } from '@components/types';
 
 type PCProps = {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,8 +18,7 @@ type PCProps = {
 
 const PositionClose: ({ setLoading, setShow }: PCProps) => any = ({ setLoading, setShow }: PCProps) => {
     const { web3 } = useContext(Web3Context);
-    const { tracerInfo, selectedTracer, tracerId } = useContext(TracerContext);
-    const { balance } = tracerInfo as TracerInfo;
+    const { selectedTracer, tracerId, balance } = useContext(TracerContext);
     const openOrders = useTracerOrders(web3 as Web3, selectedTracer as Tracer);
     const closingOrders = useClosePosition(balance?.position ?? 0, openOrders);
     console.debug(closingOrders);
@@ -113,28 +112,28 @@ const TradeButtons: React.FC<{ tracer: string }> = ({ tracer }) => {
 };
 
 type RProps = {
-    tracer: string;
-    marketId: string;
+    tracer: Tracer;
     setTracerId: ((tracerId: string) => any) | undefined;
-    tracerId: string | undefined;
+    selected: boolean
 };
 
-const Row_: React.FC<RProps> = ({ tracer, marketId, setTracerId, tracerId }) => {
-    const info = useTracer(Web3.utils.toChecksumAddress(tracer));
-    const price = info?.oraclePrice / info?.priceMultiplier;
+const Row_: React.FC<RProps> = ({ tracer, selected, setTracerId }) => {
+    const balance = tracer?.balances;
+    const price = tracer?.oraclePrice / tracer?.priceMultiplier;
+    const marketId = tracer?.marketId
     return (
         <TableRow
             key={marketId}
             onClick={() => (setTracerId ? setTracerId(marketId) : console.error('Failed to set tracer'))}
-            rowSelected={tracerId === marketId}
+            rowSelected={selected}
             rowData={[
                 marketId,
                 `$${price}`,
-                `$${accountGain(info?.balance.margin, info?.balance.deposited)}`,
+                `$${accountGain(balance?.margin, balance?.deposited)}`,
                 '-',
-                `$${info?.balance.margin}`,
-                info?.balance.position === 0 ? 'NO POSITION' : info?.balance.position < 0 ? 'SHORT' : 'LONG',
-                `$${Math.abs(info?.balance.position) * price}`,
+                `$${balance.margin}`,
+                balance.position === 0 ? 'NO POSITION' : balance.position < 0 ? 'SHORT' : 'LONG',
+                `$${Math.abs(balance.position) * price}`,
                 '',
             ]}
         >
@@ -144,7 +143,7 @@ const Row_: React.FC<RProps> = ({ tracer, marketId, setTracerId, tracerId }) => 
 };
 
 type PTProps = {
-    tracers: any;
+    tracers: Record<string, Tracer>;
 };
 //TODO: MAKE THIS COMPONENT MORE MODULAR BY TAKING IN ROWS AND COLUMNS
 const PositionTable: React.FC<PTProps> = ({ tracers }: PTProps) => {
@@ -158,16 +157,14 @@ const PositionTable: React.FC<PTProps> = ({ tracers }: PTProps) => {
         'Position Value (USD)',
     ];
     const { tracerId, setTracerId } = useContext(TracerContext);
-
     return (
         <div className="p-6 overflow-scroll">
             <Table headings={headings}>
                 {Object.keys(tracers).map((marketId) => (
                     <Row_
-                        tracer={tracers[marketId].address}
-                        marketId={marketId}
+                        tracer={tracers[marketId]}
                         setTracerId={setTracerId}
-                        tracerId={tracerId}
+                        selected={tracerId === marketId}
                     />
                 ))}
             </Table>

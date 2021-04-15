@@ -2,7 +2,8 @@ import React, { useContext, useState } from 'react';
 import { TracerContext, AccountContext } from 'context';
 import TracerModal, { ModalContent } from '@components/Modals';
 import { Section } from '@components/SummaryInfo';
-import { Children, TracerInfo } from 'types';
+import { Children } from 'types';
+import { TransactionContext } from '@components/context/TransactionContext';
 
 type ButtonType = 'Deposit' | 'Withdraw';
 
@@ -14,20 +15,17 @@ type BProps = {
 } & Children;
 
 export const MarginButton: React.FC<BProps> = ({ variant, type, children }: BProps) => {
-    const { tracerInfo } = useContext(TracerContext);
-    const { balance: tracerBalance, baseTokenBalance } = tracerInfo as TracerInfo;
     const [showModal, setShowModal] = useState(false);
-    const balance = type === 'Deposit' ? baseTokenBalance : tracerBalance?.margin;
-    const { tracerId } = useContext(TracerContext);
-
+    const { tracerId, selectedTracer } = useContext(TracerContext);
+    const balance = type === 'Deposit' ? selectedTracer?.balances?.tokenBalance : selectedTracer?.balances?.margin;
     const { deposit, withdraw } = useContext(AccountContext);
+    const { handleTransaction } = useContext(TransactionContext);
 
-    const submit = (amount: number) => {
-        if (type.toLowerCase() === 'withdraw') {
-            withdraw ? withdraw(amount) : console.error('Withdraw function not set');
-        } else {
-            deposit ? deposit(amount) : console.error('Deposit function not set');
-        }
+    const submit = async (amount: number) => {
+        const t = type.toLowerCase();
+        withdraw && deposit && handleTransaction
+            ? handleTransaction(t === 'withdraw' ? withdraw : deposit, [amount])
+            : console.error(`Failed to ${t  === 'withdraw' ? 'withdraw from' : 'deposit into' } insurance pool: No ${t} function found`);
         setShowModal(false);
     };
 

@@ -7,7 +7,7 @@ type MIProps = {
 };
 
 export const MarketInfo: React.FC<MIProps> = ({ fundingRate }: MIProps) => {
-    return !fundingRate ? (
+    return fundingRate !== 0 ? (
         <TracerLoading />
     ) : (
         <div className="px-5 border-t-2 h-full border-gray-100">
@@ -15,16 +15,7 @@ export const MarketInfo: React.FC<MIProps> = ({ fundingRate }: MIProps) => {
                 <FundingRate rate={fundingRate} />
             </Section>
             <Section label={'Insurance Pool Health'} fontSize={'text-lg'}>
-                <PoolHealth />
-            </Section>
-            <Section label={'High'} fontSize={'text-lg'}>
-                XX
-            </Section>
-            <Section label={'Low'} fontSize={'text-lg'}>
-                XX
-            </Section>
-            <Section label={'Open'} fontSize={'text-lg'}>
-                XX
+                <PoolHealth health={80}/>
             </Section>
         </div>
     );

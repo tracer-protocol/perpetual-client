@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import LightWeightChart from '@components/Charts/LightWeightChart';
-import { OrderContext } from 'context';
+import { OrderContext, TracerContext } from 'context';
 import LeverageSlider from '@components/Trade/LeverageSlider';
 import TracerSelect from '@components/Trade/TracerSelect';
 
@@ -57,6 +57,7 @@ const BasicPlaceOrder: React.FC<{ setSummary: (bool: boolean) => void }> = ({
 };
 
 const BasicOrderSummary: React.FC = () => {
+    const { selectedTracer } = useContext(TracerContext);
     return (
         <React.Fragment>
             <div className="flex w-full  border-b-2 border-gray-100">
@@ -72,7 +73,7 @@ const BasicOrderSummary: React.FC = () => {
                     <div className="h-full border-b-2 border-gray-100">
                         <LightWeightChart />
                     </div>
-                    <OrderSummaryButtons />
+                    <OrderSummaryButtons balances={selectedTracer?.balances}/>
                 </div>
             </div>
         </React.Fragment>

@@ -3,7 +3,8 @@ import { TracerContext } from '@context/TracerContext';
 import { InsuranceContext } from '@context/InsuranceContext';
 import TracerModal, { ModalContent } from '@components/Modals';
 import { Section } from '@components/SummaryInfo';
-import { Children, TracerInfo } from 'types';
+import { Children } from 'types';
+import { TransactionContext } from '@components/context/TransactionContext';
 
 type BProps = {
     type: 'Deposit' | 'Withdraw';
@@ -11,33 +12,34 @@ type BProps = {
 
 export const InsuranceButton: React.FC<BProps> = ({ type, children }: BProps) => {
     const { poolInfo, deposit, withdraw } = useContext(InsuranceContext);
-    const { selectedTracer, tracerId, tracerInfo } = useContext(TracerContext);
-    const { baseTokenBalance } = tracerInfo as TracerInfo;
+    const [loading, setLoading] = useState(false);
+    const { tracerId, selectedTracer } = useContext(TracerContext);
+    const tracerBalance = selectedTracer?.balances;
+    const { handleTransaction } = useContext(TransactionContext);
+
     const [showModal, setShowModal] = useState(false);
 
-    const balance = type === 'Deposit' ? baseTokenBalance : poolInfo?.userBalance;
+    const balance = type === 'Deposit' ? tracerBalance?.tokenBalance : poolInfo?.userBalance;
 
     const submit = async (amount: number) => {
         try {
-            if (type === 'Deposit') {
-                deposit
-                    ? deposit(amount, selectedTracer)
-                    : console.error('Failed to deposit into insurance pool: No deposit function found');
-            } else {
-                // withdraw
-                withdraw
-                    ? withdraw(amount, selectedTracer)
-                    : console.error('Failed to withdraw from insurance pool: No withdraw function found');
+            setLoading(true);
+            const callback = () => {
+                setLoading(false);
             }
+            const t = type.toLowerCase();
+            withdraw && deposit && handleTransaction
+                ? handleTransaction(t === 'withdraw' ? withdraw : deposit, [amount], callback)
+                : console.error(`Failed to ${t} from insurance pool: No deposit function found`);
         } catch (err) {
             console.error(`Failed to deposit into insurance pool: ${err}`);
         }
-    };
+    }
 
     return (
         <>
             <TracerModal
-                loading={false}
+                loading={loading}
                 show={showModal}
                 onClose={() => setShowModal(false)}
                 title={type === 'Deposit' ? 'Add Insurance' : 'Withdraw Insurance'}

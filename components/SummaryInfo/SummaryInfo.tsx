@@ -25,10 +25,15 @@ export const FundingRate: React.FC<{ rate: number }> = ({ rate }: { rate: number
     return <FundingRateGraphic rate={rate} />;
 };
 
-export const PoolHealth: React.FC = () => {
+/**
+ * 
+ * @param health as an integer representation of a percentage
+ * @returns 
+ */
+export const PoolHealth: React.FC<{ health: number }> = ({ health }) => {
     return (
         <span className="w-3/4">
-            <ProgressBar percent={80} />
+            <ProgressBar percent={health} />
         </span>
     );
 };
