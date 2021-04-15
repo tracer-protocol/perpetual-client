@@ -18,7 +18,7 @@ export const AccountContext = React.createContext<Partial<ContextProps>>({});
 type StoreProps = Children;
 
 export const AccountStore: React.FC<StoreProps> = ({ children }: StoreProps) => {
-    const { account, networkId: _networkId, web3, updateGlobal } = useContext(Web3Context);
+    const { account, web3, updateGlobal } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     const [contract, setContract] = useState<Account>();
 

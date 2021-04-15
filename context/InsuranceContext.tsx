@@ -22,7 +22,7 @@ interface ContextProps {
 export const InsuranceContext = React.createContext<Partial<ContextProps>>({});
 
 export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
-    const { account, networkId: _networkId, web3 } = useContext(Web3Context);
+    const { account, web3 } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     const [contract, setContract] = useState<Insurance>();
 
