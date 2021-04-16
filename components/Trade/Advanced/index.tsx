@@ -79,7 +79,6 @@ const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selecte
 };
 
 const TradingSummary: React.FC<{ selectedTracer: Tracer | undefined}> = ({ selectedTracer }) => {
-    const orders = useOrders(true, selectedTracer);
     const [tab, setTab] = useState(0);
     const tabs = [`My ${selectedTracer?.marketId} Position`, `My ${selectedTracer?.marketId} Orders`, `My ${selectedTracer?.marketId} Fills`];
     const content = () =>  {

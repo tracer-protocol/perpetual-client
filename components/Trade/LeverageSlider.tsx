@@ -7,7 +7,7 @@ import { OrderContext } from '../../context';
  * @param leverage
  */
 export const DefaultSlider: React.FC<DSProps> = ({ leverage }: DSProps) => {
-    const { orderDispatch } = useContext(OrderContext);
+    const { orderDispatch } = useContext(OrderContext); // TODO update to generic onChange
 
     const marks = {
         1: 1,
@@ -52,14 +52,14 @@ export const DefaultSlider: React.FC<DSProps> = ({ leverage }: DSProps) => {
  * Wrapped slider with different sizing
  * @param className custom classes
  */
-const LeverageSlider: React.FC<{ className?: string }> = ({ className }: { className?: string }) => {
-    const { order } = useContext(OrderContext);
-
+const LeverageSlider: React.FC<{ className?: string, leverage: number }> = ({ 
+    className, leverage 
+}) => {
     return (
         <div className={'flex flex-col px-5 ' + className}>
             <div className="mr-auto px-3 text-blue-100 font-bold">LEVERAGE</div>
             <div className="w-full m-auto py-5 px-5">
-                <DefaultSlider leverage={order?.leverage ?? 1} />
+                <DefaultSlider leverage={leverage ?? 1} />
             </div>
         </div>
     );

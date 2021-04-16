@@ -17,10 +17,6 @@ export const Section: React.FC<SProps> = ({ classes, label, children }: SProps) 
     );
 };
 
-export const LiquidationPrice: React.FC = () => {
-    return <div>X</div>;
-};
-
 export const FundingRate: React.FC<{ rate: number }> = ({ rate }: { rate: number }) => {
     return <FundingRateGraphic rate={rate} />;
 };
