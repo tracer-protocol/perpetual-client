@@ -78,6 +78,33 @@ export const calcLiquidationPrice: (
     }
 };
 
+/**
+ * A function that returns the liquidation price for a given account
+ * @param value
+ */
+export const calcProfitableLiquidationPrice: (
+    base: number, 
+    quote: number,
+    fairPrice: number,
+    maxLeverage: number
+) => number = (base, quote, fairPrice,  maxLeverage, ) => {
+    const margin = totalMargin(quote, base, fairPrice);
+    const borrowed = calcBorrowed(base, quote, fairPrice)
+    if (borrowed > 0 || margin < 0) {
+        return (
+            base > 0 // case 1
+                ? (maxLeverage * (quote - ((RYAN_6 * LIQUIDATION_GAS_COST) - LIQUIDATION_GAS_COST)) / (base - (maxLeverage * base)))
+                : 0
+            + 
+            base < 0 // case 2
+                ? (-1 * (quote * (maxLeverage - ((RYAN_6 * LIQUIDATION_GAS_COST - LIQUIDATION_GAS_COST) * maxLeverage)) / (maxLeverage * base + base)))
+                : 0
+        )
+    } else {
+        return 0;
+    }
+};
+
 export const accountGain: (margin: number, deposited: number) => number = (margin, deposited) => {
     return margin - deposited;
 };

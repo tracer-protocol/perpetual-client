@@ -11,10 +11,10 @@ export const MarketInfo: React.FC<MIProps> = ({ fundingRate }: MIProps) => {
         <TracerLoading />
     ) : (
         <div className="px-5 border-t-2 h-full border-gray-100">
-            <Section label={'Funding Rate'} fontSize={'text-lg'}>
+            <Section label={'Funding Rate'} classes={'text-lg'}>
                 <FundingRate rate={fundingRate} />
             </Section>
-            <Section label={'Insurance Pool Health'} fontSize={'text-lg'}>
+            <Section label={'Insurance Pool Health'} classes={'text-lg'}>
                 <PoolHealth health={80} />
             </Section>
         </div>
