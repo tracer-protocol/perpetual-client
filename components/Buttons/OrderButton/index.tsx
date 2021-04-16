@@ -35,8 +35,8 @@ export const OrderSubmit: React.FC<OSProps> = ({ setSummary }: OSProps) => {
     );
 };
 
-// TODO change these requirements to not use balance.margin
-// balance.margin is not the right value for this need to calculated available margin in the account
+// TODO change these requirements to not use balance.base
+// balance.base is not the right value for this need to calculated available margin in the account
 export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balances }) => {
     const { show, text, variant, setError } = useContext(ErrorContext);
     const { order } = useContext(OrderContext);
@@ -45,7 +45,7 @@ export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balan
     useEffect(() => {
         if (!!balances) {
             // Margin is greater than margin in account
-            balances?.margin < rMargin && balances?.margin >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
+            balances?.base < rMargin && balances?.base >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
         }
     }, [rMargin]);
 
@@ -55,7 +55,7 @@ export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balan
                 <AlertInfo show={show} text={text} variant={variant} />
             </div>
             <div className="py-5 flex">
-                {balances?.margin === 0 ? (
+                {balances?.base === 0 ? (
                     <div className="m-auto w-1/2">
                         <MarginDeposit />
                     </div>
@@ -63,7 +63,7 @@ export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balan
                     ''
                 )}
                 <div className="m-auto w-1/2 flex justify-center">
-                    <PlaceOrderButton balance={balances?.margin ?? 0} />
+                    <PlaceOrderButton balance={balances?.base ?? 0} />
                 </div>
             </div>
         </div>
@@ -78,14 +78,14 @@ export const AdvancedOrderButton: React.FC<{ balances: UserBalance | undefined }
     useEffect(() => {
         if (!!balances) {
             // Margin is greater than margin in account
-            balances?.margin < rMargin && balances?.margin >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
+            balances?.base < rMargin && balances?.base >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
         }
     }, [rMargin]);
 
     return (
         <div className="w-full flex">
             <div className="m-auto w-3/4 flex justify-center">
-                <PlaceOrderButton balance={balances?.margin ?? 0} />
+                <PlaceOrderButton balance={balances?.base ?? 0} />
             </div>
         </div>
     );

@@ -58,7 +58,7 @@ export const WalletConnect: React.FC<{ balances: UserBalance | undefined; accoun
             <h4 className="title">Your available margin</h4>
             <div className="body">
                 <div className="border-b-2 border-gray-100">
-                    <Section label="Balance">{balances?.margin ?? 0}</Section>
+                    <Section label="Balance">{balances?.base ?? 0}</Section>
                     <Section label="Collateralisation ratio">{5}%</Section>
                 </div>
                 <div className="flex pt-2">

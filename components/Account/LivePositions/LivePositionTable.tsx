@@ -8,7 +8,7 @@ import { useClosePosition, useTracerOrders } from '@hooks/TracerHooks';
 
 import Link from 'next/link';
 import Web3 from 'web3';
-import { accountGain } from '@libs/utils';
+import { calcLiquidationPrice, toApproxCurrency, totalMargin } from '@libs/utils';
 import { Tracer } from '@components/libs';
 
 type PCProps = {
@@ -20,7 +20,7 @@ const PositionClose: ({ setLoading, setShow }: PCProps) => any = ({ setLoading, 
     const { web3 } = useContext(Web3Context);
     const { selectedTracer, tracerId, balance } = useContext(TracerContext);
     const openOrders = useTracerOrders(web3 as Web3, selectedTracer as Tracer);
-    const closingOrders = useClosePosition(balance?.position ?? 0, openOrders);
+    const closingOrders = useClosePosition(balance?.quote ?? 0, openOrders);
     console.debug(closingOrders);
 
     const close = async () => {
@@ -32,8 +32,8 @@ const PositionClose: ({ setLoading, setShow }: PCProps) => any = ({ setLoading, 
         <div className="p-6 h-full flex-auto">
             <div className="h-full flex flex-col">
                 <p>
-                    Are you sure you want to close your {balance?.position ?? 0 < 0 ? 'short' : 'long'} position of{' '}
-                    {Math.abs(balance?.position ?? 0)} {tracerId?.split('/')[0]}?
+                    Are you sure you want to close your {balance?.quote ?? 0 < 0 ? 'short' : 'long'} position of{' '}
+                    {Math.abs(balance?.quote ?? 0)} {tracerId?.split('/')[0]}?
                 </p>
                 <p>
                     This trade will be made at the best available market price.
@@ -128,12 +128,11 @@ const Row_: React.FC<RProps> = ({ tracer, selected, setTracerId }) => {
             rowSelected={selected}
             rowData={[
                 marketId,
-                `$${price}`,
-                `$${accountGain(balance?.margin, balance?.deposited)}`,
-                '-',
-                `$${balance.margin}`,
-                balance.position === 0 ? 'NO POSITION' : balance.position < 0 ? 'SHORT' : 'LONG',
-                `$${Math.abs(balance.position) * price}`,
+                `${toApproxCurrency(price)}`,
+                `${toApproxCurrency(totalMargin(balance.quote, balance.base, price))}`,
+                balance.quote === 0 ? 'NO POSITION' : balance.quote < 0 ? 'SHORT' : 'LONG',
+                `${toApproxCurrency(Math.abs(balance.quote) * price)}`,
+                `${toApproxCurrency(calcLiquidationPrice(balance.base, balance.quote, price, tracer?.maxLeverage ?? 1 ))}`,
                 '',
             ]}
         >
@@ -150,11 +149,10 @@ const PositionTable: React.FC<PTProps> = ({ tracers }: PTProps) => {
     const headings = [
         'Trace',
         'Market Price',
-        'Gain (USD)',
-        'Liquidation Price',
-        'Tracer Margin (USD)',
+        'Total Account Value (USD)',
         'Position',
-        'Position Value (USD)',
+        'Position Notional (USD)',
+        'Liquidation Price',
     ];
     const { tracerId, setTracerId } = useContext(TracerContext);
     return (

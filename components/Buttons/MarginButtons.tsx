@@ -17,7 +17,7 @@ type BProps = {
 export const MarginButton: React.FC<BProps> = ({ variant, type, children }: BProps) => {
     const [showModal, setShowModal] = useState(false);
     const { tracerId, selectedTracer } = useContext(TracerContext);
-    const balance = type === 'Deposit' ? selectedTracer?.balances?.tokenBalance : selectedTracer?.balances?.margin;
+    const balance = type === 'Deposit' ? selectedTracer?.balances?.tokenBalance : selectedTracer?.balances?.base;
     const { deposit, withdraw } = useContext(AccountContext);
     const { handleTransaction } = useContext(TransactionContext);
 

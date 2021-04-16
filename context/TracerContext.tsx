@@ -21,6 +21,7 @@ interface ContextProps {
     placeOrder: (order: OrderState, takenOrders: TakenOrder[]) => Promise<Result | undefined>;
 }
 
+
 export const TracerContext = React.createContext<Partial<ContextProps>>({});
 
 type TracerState = {
@@ -41,9 +42,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         tracerId: tracer || 'TEST0/USD',
         selectedTracer: undefined,
         balance: {
-            margin: 0,
-            position: 0,
-            deposited: 0,
+            base: 0,
+            quote: 0,
             totalLeveragedValue: 0,
             lastUpdatedGasPrice: 0,
             tokenBalance: 0,
