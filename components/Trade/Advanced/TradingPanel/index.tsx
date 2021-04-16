@@ -4,7 +4,7 @@ import { useAdvancedTradingMarkets } from '@hooks/TracerHooks';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { MatchingEngine, Option } from '@components/Buttons/SlideSelect';
 import { SearchBar } from '@components/Nav';
-import { OrderInfo, Section } from '@components/SummaryInfo';
+import { Section } from '@components/SummaryInfo';
 import { SearchableTable } from '@components/Tables/SearchableTable';
 import { DefaultSlider } from '@components/Trade/LeverageSlider';
 import InputSelects from './Inputs';
@@ -58,7 +58,7 @@ export const WalletConnect: React.FC<{ balances: UserBalance | undefined; accoun
             <h4 className="title">Your available margin</h4>
             <div className="body">
                 <div className="border-b-2 border-gray-100">
-                    <Section label="Balance">{balances?.margin ?? 0}</Section>
+                    <Section label="Balance">{balances?.base ?? 0}</Section>
                     <Section label="Collateralisation ratio">{5}%</Section>
                 </div>
                 <div className="flex pt-2">
@@ -76,6 +76,7 @@ export const WalletConnect: React.FC<{ balances: UserBalance | undefined; accoun
 
 export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
     const { order } = useContext(OrderContext);
+
     return (
         <div className="advanced-card h-full overflow-scroll">
             <div className="body text-xs">
@@ -111,10 +112,6 @@ export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({
                     <></>
                 )}
 
-                {/* Order Summary */}
-                <div className="px-3 mt-2 pt-2 border-t-2 border-gray-100">
-                    <OrderInfo />
-                </div>
 
                 {/* Place Order */}
                 <div className="py-1">

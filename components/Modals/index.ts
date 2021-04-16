@@ -1,2 +1,2 @@
 export { default } from './Modal';
-export { ModalContent, InsuranceModalContent } from './AccountModals';
+export { ModalContent } from './AccountModals';

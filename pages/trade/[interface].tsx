@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import NavBar, { SubNavBar } from '@components/Nav';
 import { Basic, Advanced } from '@components/Trade';
 import { OrderStore, ErrorInfo, SelectedTracerStore } from 'context';
+import { InsuranceStore } from '@context/InsuranceContext';
 
 const Trade: React.FC = () => {
     const subTabs = ['Basic', 'Advanced'];
@@ -25,9 +26,11 @@ const Trade: React.FC = () => {
             <NavBar />
             <SubNavBar setTab={setTab} tabs={subTabs} selected={advanced ? 1 : 0} />
             <SelectedTracerStore tracer={query.tracer as string}>
-                <ErrorInfo>
-                    <OrderStore>{advanced ? <Advanced /> : <Basic />}</OrderStore>
-                </ErrorInfo>
+                <InsuranceStore>
+                    <ErrorInfo>
+                        <OrderStore>{advanced ? <Advanced /> : <Basic />}</OrderStore>
+                    </ErrorInfo>
+                </InsuranceStore>
             </SelectedTracerStore>
         </div>
     );

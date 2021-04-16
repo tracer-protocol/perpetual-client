@@ -6,7 +6,7 @@ interface IProps {
 }
 
 const ProgressBar: React.FC<IProps> = ({ percent }: IProps) => {
-    return <Progress percent={percent} strokeColor="#55D31D" />;
+    return <Progress percent={percent} strokeColor="#55D31D" status="normal"/>;
 };
 
 export default ProgressBar;

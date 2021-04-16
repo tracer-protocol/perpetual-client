@@ -108,7 +108,7 @@ const TracerSelect: React.FC<TSProps> = ({ className, inputSize }: TSProps) => {
                         </a>
                     </Dropdown>
                 </div>
-                <WalletBalance marginBalance={selectedTracer?.balances.margin ?? 0} />
+                <WalletBalance marginBalance={selectedTracer?.balances.base ?? 0} />
             </div>
 
             {/* MARKET EXPOSURE */}

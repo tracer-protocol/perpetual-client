@@ -8,9 +8,8 @@ export interface TracerData {
 }
 
 export type UserBalance = {
-    margin: number; // the accounts deposited margin
-    position: number; // the position the user is currently in
-    deposited: number;
+    base: number; // the accounts deposited base
+    quote: number; // the position the user is currently in
     totalLeveragedValue: number;
     lastUpdatedGasPrice: number;
     tokenBalance: number;

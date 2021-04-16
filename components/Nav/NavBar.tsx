@@ -106,7 +106,7 @@ const NavBar: React.FC = () => {
                     </Link>
                 </li>
             </ul>
-            <div className="flex-1 py-4 px-5 flex flex-rowitems-center">
+            <div className="flex-1 sm:py-2 2xl:py-3 px-5 flex flex-rowitems-center">
                 <button
                     onClick={() => handleConnect()}
                     className="group ml-auto flex border-2 border-blue-200 border-solid rounded-xxl w-48 focus:outline-none hover:shadow-xl hover:bg-white"

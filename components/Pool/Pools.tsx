@@ -9,13 +9,13 @@ import { ConnectButton } from '@components/Buttons';
 const PoolSummary: React.FC = () => {
     return (
         <>
-            <Section label={'Last price'} fontSize={'text-lg'}>
+            <Section label={'Last price'} classes={'text-lg'}>
                 11, 200 USDC
             </Section>
-            <Section label={'Available margin'} fontSize={'text-lg'}>
+            <Section label={'Available margin'} classes={'text-lg'}>
                 1200 USDC
             </Section>
-            <Section label={'APY'} fontSize={'text-lg'}>
+            <Section label={'APY'} classes={'text-lg'}>
                 XX
             </Section>
         </>

@@ -40,7 +40,11 @@ const LivePositions: React.FC = () => {
                     <MarketInfo fundingRate={selectedTracer?.feeRate ?? 0} />
                 </Card>
                 <Card title={`My ${tracerId} Margin Account`} classes={`mx-12 flex flex-col card`}>
-                    <AccountMarginInfo balance={selectedTracer?.balances} marginRatio={0} />
+                    <AccountMarginInfo 
+                        balance={selectedTracer?.balances} 
+                        fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
+                        maxLeverage={selectedTracer?.maxLeverage ?? 1}
+                    />
                     <div className="mt-auto">
                         <MarginButtons />
                     </div>

@@ -43,37 +43,3 @@ export const ModalContent: React.FC<MCProps> = ({ type, submit, balance, childre
         </div>
     );
 };
-
-/**
- *
- * @param submit is the function handler called when the bottom modal button is clicked
- * @param type either "Deposit" or "Withdraw"
- * @param balance balance of the respective asset you are either trying to deposit or withdraw
- */
-export const InsuranceModalContent: React.FC<MCProps> = ({ type, children, submit, balance }: MCProps) => {
-    const [valid, setValid] = useState(false);
-    const [amount, setAmount] = useState(0); // The amount within the input
-    const { tracerId } = useContext(TracerContext);
-
-    useEffect(() => {
-        setValid(amount > 0 && amount <= balance);
-    }, [balance, amount]);
-
-    return (
-        <div className="p-6 flex-auto">
-            <NumberSelect
-                unit={tracerId?.split('/')[1] ?? 'NO_ID'}
-                balance={balance}
-                title={'Amount'}
-                amount={amount}
-                setAmount={setAmount}
-            />
-            {children}
-            <div className="flex items-center justify-center p-6 rounded-b">
-                <Button disabled={valid} onClick={() => submit(amount)}>
-                    {type}
-                </Button>
-            </div>
-        </div>
-    );
-};

@@ -25,5 +25,5 @@ export const toApproxCurrency: (str: string | number) => string = (str) => {
             style: 'currency',
             currency: 'USD',
         })
-        .replace('-', '~');
+        // .replace('-', '~');
 };

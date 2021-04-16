@@ -1,12 +1,13 @@
 import React, { useState, useContext } from 'react';
 import LightWeightChart from '@components/Charts/LightWeightChart';
-import { OrderContext, TracerContext } from 'context';
+import { InsuranceContext, OrderContext, TracerContext } from 'context';
 import LeverageSlider from '@components/Trade/LeverageSlider';
 import TracerSelect from '@components/Trade/TracerSelect';
 
 import { OrderInfo } from '@components/SummaryInfo';
 import { OrderSummaryButtons, OrderSubmit, SlideSelect } from '@components/Buttons';
 import { UserBalance } from '@components/types';
+import Tracer from '@libs/Tracer';
 
 const Positions: React.FC<{ className: string }> = ({ className }: { className: string }) => {
     const { order, orderDispatch } = useContext(OrderContext);
@@ -28,15 +29,21 @@ const Positions: React.FC<{ className: string }> = ({ className }: { className: 
     );
 };
 
-const OrderSummary = () => {
+const OrderSummary:React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
+    const { order } = useContext(OrderContext);
+    const { health } = useContext(InsuranceContext);
     return (
         <div>
             <Positions className="pt-5 pb-5" />
             <TracerSelect className="px-5 pb-5" inputSize={'text-lg'} />
-            <LeverageSlider />
+            <LeverageSlider leverage={order?.leverage ?? 1} />
             <div className="px-5 mt-2 p-5 border-t-2 border-gray-100 text-sm">
                 <div className="text-blue-100 font-bold">Order Summary</div>
-                <OrderInfo />
+                <OrderInfo 
+                    feeRate={selectedTracer?.feeRate}
+                    health={health}
+                    engine={order?.matchingEngine === 0 ? 'AMM' : 'OME'}
+                />
             </div>
         </div>
     );
@@ -47,11 +54,12 @@ const BasicPlaceOrder: React.FC<{ setSummary: (bool: boolean) => void }> = ({
 }: {
     setSummary: (bool: boolean) => void;
 }) => {
+    const { order } = useContext(OrderContext);
     return (
         <div className="px-24">
             <Positions className="pt-12 pb-16" />
             <TracerSelect className="px-5 pb-16" inputSize={'text-5xl'} />
-            <LeverageSlider className="pb-12" />
+            <LeverageSlider className="pb-12" leverage={order?.leverage ?? 1}/>
             <OrderSubmit setSummary={setSummary} />
         </div>
     );
@@ -68,7 +76,7 @@ const BasicOrderSummary: React.FC = () => {
             </div>
             <div className="flex w-full">
                 <div className="w-1/2 border-r-2 border-gray-100">
-                    <OrderSummary />
+                    <OrderSummary selectedTracer={selectedTracer}/>
                 </div>
                 <div className="w-1/2 flex flex-col">
                     <div className="h-full border-b-2 border-gray-100">
