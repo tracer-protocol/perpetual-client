@@ -156,6 +156,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     }, [selectedTracer]);
 
+    console.log(selectedTracer?.balances)
+
     const [quoteAsset, baseAsset] = tracerId.split('/');
 
     return (

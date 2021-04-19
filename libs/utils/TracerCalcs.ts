@@ -61,16 +61,15 @@ export const calcLiquidationPrice: (
     fairPrice: number,
     maxLeverage: number
 ) => number = (base, quote, fairPrice,  maxLeverage, ) => {
-    const margin = totalMargin(quote, base, fairPrice);
     const borrowed = calcBorrowed(base, quote, fairPrice)
-    if (borrowed > 0 || margin < 0) {
+    if (borrowed > 0 || quote < 0) {
         return (
-            base > 0 // case 1
-                ? (maxLeverage * (quote - (RYAN_6 * LIQUIDATION_GAS_COST)) / (base - (maxLeverage * base)))
+            quote > 0 // case 1
+                ? (maxLeverage * (base - RYAN_6 * LIQUIDATION_GAS_COST) / (quote - maxLeverage * quote))
                 : 0
             + 
-            base < 0 // case 2
-                ? (-1 * (quote * (maxLeverage - (RYAN_6 * LIQUIDATION_GAS_COST * maxLeverage)) / (maxLeverage * base + base)))
+            quote < 0 // case 2
+                ? (-1 * (base * maxLeverage - RYAN_6 * LIQUIDATION_GAS_COST * maxLeverage) / (maxLeverage * quote + quote))
                 : 0
         )
     } else {
@@ -141,13 +140,13 @@ export const calcMinimumMargin: (
 ) => number = (base, quote, fairPrice, maxLeverage) => {
     const margin = totalMargin(quote, base, fairPrice)
     if (margin > 0 || quote < 0) {
-        return (LIQUIDATION_GAS_COST * RYAN_6) + (calcNotionalValue(quote, fairPrice) / maxLeverage)
+        return LIQUIDATION_GAS_COST * RYAN_6 + calcNotionalValue(quote, fairPrice) / maxLeverage
     } else return 0;
 }
 
 export const totalMargin: (
     quote: number, base: number, fairPrice: number
-) => number = (quote, base, fairPrice) => quote + (base * fairPrice)
+) => number = (quote, base, fairPrice) => base + (quote * fairPrice)
 
 // order prices are in cents * 1000
 // so converstion is fromCents(price / (100 * 1000))

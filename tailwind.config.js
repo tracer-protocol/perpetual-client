@@ -38,8 +38,8 @@ module.exports = {
                 50: '#FFEBE6', // ultra light red
                 100: '#FEB6B6', // very light red
                 200: '#F57979', // light red
-                500: 'FF5630', // red red
-                800: 'BF2600', // dark-red
+                500: '#FF5630', // red red
+                800: '#BF2600', // dark-red
                 900:'#FF0000' // all red
             },
             error: {
