@@ -38,7 +38,7 @@ export const useAccountData: (user: string | undefined) => any = (user) => { // 
     });
 
     return {
-        userData: data?.TracerData || ref.current,
+        userData: data || ref.current,
         error,
         loading,
         refetch,
