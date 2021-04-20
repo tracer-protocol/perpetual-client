@@ -1,10 +1,10 @@
 import React, { useContext, useState, ChangeEvent } from 'react';
-import { InsuranceContext, OrderContext, TracerContext } from 'context';
+import { OrderContext, TracerContext } from 'context';
 import { useAdvancedTradingMarkets } from '@hooks/TracerHooks';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { MatchingEngine, Option } from '@components/Buttons/SlideSelect';
 import { SearchBar } from '@components/Nav';
-import { OrderInfo, Section } from '@components/SummaryInfo';
+import { Section } from '@components/SummaryInfo';
 import { SearchableTable } from '@components/Tables/SearchableTable';
 import { DefaultSlider } from '@components/Trade/LeverageSlider';
 import InputSelects from './Inputs';
@@ -76,7 +76,6 @@ export const WalletConnect: React.FC<{ balances: UserBalance | undefined; accoun
 
 export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
     const { order } = useContext(OrderContext);
-    const { health } = useContext(InsuranceContext);
 
     return (
         <div className="advanced-card h-full overflow-scroll">
@@ -113,14 +112,6 @@ export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({
                     <></>
                 )}
 
-                {/* Order Summary */}
-                <div className="px-3 mt-2 pt-2 border-t-2 border-gray-100">
-                    <OrderInfo 
-                        feeRate={selectedTracer?.feeRate}
-                        health={health}
-                        engine={order?.matchingEngine === 0 ? 'AMM' : 'OME'}
-                    />
-                </div>
 
                 {/* Place Order */}
                 <div className="py-1">

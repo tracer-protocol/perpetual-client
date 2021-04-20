@@ -10,6 +10,7 @@ import { getOrders } from '@components/libs/Ome';
 import Web3 from 'web3';
 import Tracer from '@libs/Tracer';
 import { PositionDetails } from '@components/components/SummaryInfo/PositionDetails';
+import { InsuranceInfo } from '@components/components/SummaryInfo/InsuranceInfo';
 
 const parseRes = (res: any, multiplier: number) => {
     const parseOrders = (orders: any) => {
@@ -69,6 +70,9 @@ const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selecte
                     <LightWeightChart />
                 </div>
                 <div className="w-1/4 border-l-2 border-gray-100 flex flex-col">
+                    <div className="p-3">
+                        <InsuranceInfo />
+                    </div>
                     <h4 className="border-b-2 border-gray-100 px-3">Order Book</h4>
                     <Timer />
                     <OrderBook askOrders={orders.askOrders} bidOrders={orders.bidOrders} />

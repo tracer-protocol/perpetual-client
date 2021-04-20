@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TracerContext, AccountContext } from 'context';
-import TracerModal, { ModalContent } from '@components/Modals';
+import TracerModal from '@components/Modals';
 import { Section } from '@components/SummaryInfo';
-import { Children, UserBalance } from 'types';
+import { Children } from 'types';
 import { TransactionContext } from '@components/context/TransactionContext';
 import NumberSelect from '../Input/NumberSelect';
 import { Button } from '.';

@@ -1,5 +1,5 @@
-import React from 'react';
 import { Section, FundingRate, PoolHealth } from './';
+
 
 export const OrderInfo: React.FC<{
     feeRate: number | undefined,

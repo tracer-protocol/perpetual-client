@@ -11,7 +11,7 @@ type SProps = {
 export const Section: React.FC<SProps> = ({ classes, label, children }: SProps) => {
     return (
         <div className={`w-full flex pt-1 ${classes}`}>
-            <span className={`text-left w-1/2 font-bold`}>{label}</span>
+            <span className={`text-left w-1/2`}>{label}</span>
             {children ? <span className={`text-right w-1/2`}>{children}</span> : ''}
         </div>
     );
