@@ -1,5 +1,5 @@
 import React from 'react';
-import { toApproxCurrency, calcLiquidationPrice, calcLeverage, calcNotionalValue, calcProfitableLiquidationPrice } from '@libs/utils';
+import { toApproxCurrency, calcLiquidationPrice, calcLeverage, calcNotionalValue, calcProfitableLiquidationPrice, calcBorrowed, calcWithdrawable } from '@libs/utils';
 import { Section } from './';
 import { UserBalance } from '@components/types';
 
@@ -41,3 +41,42 @@ export const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, maxLever
         );
     }
 };
+
+export const PostTradeDetails: React.FC<{
+    balances: UserBalance,
+    position: number,
+    exposure: number,
+    fairPrice: number,
+    maxLeverage: number
+}> = ( { balances, position, exposure, fairPrice, maxLeverage }) => {
+    const newQuote = position === 0 
+        ? balances.quote - (exposure ?? 0) // short
+        : balances.quote + (exposure ?? 0) // long
+    const newBase = position === 0 
+        ? balances.base + (calcNotionalValue(exposure ?? 0, fairPrice)) // short
+        : balances.base - (calcNotionalValue(exposure ?? 0, fairPrice)) // long
+    return (
+        <>
+        <Section label={'Liquidation Price'}>
+            {toApproxCurrency(calcLiquidationPrice(balances.base, balances.quote, fairPrice, maxLeverage ?? 1))}
+            {`  -->  `}
+            {toApproxCurrency(calcLiquidationPrice(newBase, newQuote, fairPrice, maxLeverage ?? 1))}
+        </Section>
+        <Section label={'Borrowed'}>
+            {toApproxCurrency(calcBorrowed(balances.quote, balances.base, fairPrice))}
+            {`  -->  `}
+            {toApproxCurrency(calcBorrowed(newQuote, newBase, fairPrice))}
+        </Section>
+        <Section label={'Withdrawable'}>
+            {toApproxCurrency(calcWithdrawable(balances.quote, balances.base, fairPrice, maxLeverage ?? 1))}
+            {`  -->  `}
+            {toApproxCurrency(calcWithdrawable(newQuote, newBase, fairPrice, maxLeverage ?? 1))}
+        </Section>
+        <Section label={'Leverage'}>
+            {calcLeverage(balances.quote, balances.base, fairPrice)}
+            {`  -->  `}
+            {calcLeverage(newQuote, newBase, fairPrice)}
+        </Section>
+        </>
+    )
+}

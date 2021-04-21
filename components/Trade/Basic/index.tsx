@@ -1,13 +1,15 @@
 import React, { useState, useContext } from 'react';
 import LightWeightChart from '@components/Charts/LightWeightChart';
-import { InsuranceContext, OrderContext, TracerContext } from 'context';
+import { OrderContext, TracerContext } from 'context';
 import LeverageSlider from '@components/Trade/LeverageSlider';
 import TracerSelect from '@components/Trade/TracerSelect';
 
-import { OrderInfo } from '@components/SummaryInfo';
+import { Section } from '@components/SummaryInfo';
 import { OrderSummaryButtons, OrderSubmit, SlideSelect } from '@components/Buttons';
 import { UserBalance } from '@components/types';
 import Tracer from '@libs/Tracer';
+import { calcBorrowed, calcLeverage, calcLiquidationPrice, calcNotionalValue, calcWithdrawable, toApproxCurrency, totalMargin } from '@components/libs/utils';
+import { PostTradeDetails } from '@components/components/SummaryInfo/PositionDetails';
 
 const Positions: React.FC<{ className: string }> = ({ className }: { className: string }) => {
     const { order, orderDispatch } = useContext(OrderContext);
@@ -30,8 +32,8 @@ const Positions: React.FC<{ className: string }> = ({ className }: { className: 
 };
 
 const OrderSummary:React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
-    const { order } = useContext(OrderContext);
-    const { health } = useContext(InsuranceContext);
+    const { order, exposure } = useContext(OrderContext);
+
     return (
         <div>
             <Positions className="pt-5 pb-5" />
@@ -39,10 +41,14 @@ const OrderSummary:React.FC<{ selectedTracer: Tracer | undefined }> = ({ selecte
             <LeverageSlider leverage={order?.leverage ?? 1} />
             <div className="px-5 mt-2 p-5 border-t-2 border-gray-100 text-sm">
                 <div className="text-blue-100 font-bold">Order Summary</div>
-                <OrderInfo 
-                    feeRate={selectedTracer?.feeRate}
-                    health={health}
-                    engine={order?.matchingEngine === 0 ? 'AMM' : 'OME'}
+                <PostTradeDetails 
+                    fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
+                    balances={selectedTracer?.balances ?? { 
+                        quote: 0, base: 0, totalLeveragedValue: 0, lastUpdatedGasPrice: 0, tokenBalance: 0
+                    }}
+                    exposure={exposure ?? 0}
+                    position={order?.position ?? 0}
+                    maxLeverage={selectedTracer?.maxLeverage ?? 1}
                 />
             </div>
         </div>

@@ -10,6 +10,7 @@ import { DefaultSlider } from '@components/Trade/LeverageSlider';
 import InputSelects from './Inputs';
 import { Tracer } from '@components/libs';
 import { UserBalance } from '@components/types';
+import { PostTradeDetails } from '@components/components/SummaryInfo/PositionDetails';
 
 export const MarketSelect: React.FC = () => {
     const { setTracerId } = useContext(TracerContext);
@@ -75,7 +76,7 @@ export const WalletConnect: React.FC<{ balances: UserBalance | undefined; accoun
 };
 
 export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
-    const { order } = useContext(OrderContext);
+    const { order, exposure } = useContext(OrderContext);
 
     return (
         <div className="advanced-card h-full overflow-scroll">
@@ -112,6 +113,16 @@ export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({
                     <></>
                 )}
 
+                <PostTradeDetails 
+                    fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
+                    balances={selectedTracer?.balances ?? { 
+                        quote: 0, base: 0, totalLeveragedValue: 0, lastUpdatedGasPrice: 0, tokenBalance: 0
+                    }}
+                    exposure={exposure ?? 0}
+                    position={order?.position ?? 0}
+                    maxLeverage={selectedTracer?.maxLeverage ?? 1}
+                />
+                
 
                 {/* Place Order */}
                 <div className="py-1">
@@ -149,7 +160,7 @@ const MatchingEngineSelect: React.FC<SProps> = ({ selected }: SProps) => {
 
 const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
     const { orderDispatch } = useContext(OrderContext);
-    const colour = `${selected ? 'red' : 'green'}`;
+    const colour = `${selected === 0 ? 'red' : 'green'}`; // red short
     return (
         <SlideSelect
             sClasses={`border-b-4 border-${colour}-200 text-${colour}-200 font-bold shadow-lg shadow-gray-100 `}
@@ -163,8 +174,8 @@ const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
             }
             value={selected}
         >
-            <Option>BUY/LONG</Option>
             <Option>SELL/SHORT</Option>
+            <Option>BUY/LONG</Option>
         </SlideSelect>
     );
 };
