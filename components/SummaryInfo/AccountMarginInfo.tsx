@@ -35,7 +35,7 @@ export const AccountMarginInfo: React.FC<IProps> = ({ balance, fairPrice, maxLev
                     {toApproxCurrency(calcLiquidationPrice(base, quote, fairPrice, maxLeverage))}
                 </Section>
                 <Section label={'Leverage'} classes={'text-sm'}>
-                    {calcLeverage(base, quote, fairPrice)}
+                    {`${calcLeverage(base, quote, fairPrice)}`}
                 </Section>
                 <Section label={'Borrowed'} classes={'text-sm'}>
                     {toApproxCurrency(totalLeveragedValue)}

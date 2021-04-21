@@ -10,6 +10,7 @@ import Link from 'next/link';
 import Web3 from 'web3';
 import { calcLiquidationPrice, toApproxCurrency, totalMargin } from '@libs/utils';
 import { Tracer } from '@components/libs';
+import { TransactionContext } from '@components/context/TransactionContext';
 
 type PCProps = {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,23 +18,35 @@ type PCProps = {
 };
 
 const PositionClose: ({ setLoading, setShow }: PCProps) => any = ({ setLoading, setShow }: PCProps) => {
-    const { web3 } = useContext(Web3Context);
-    const { selectedTracer, tracerId, balance } = useContext(TracerContext);
+    const { web3, account } = useContext(Web3Context);
+    const { selectedTracer, tracerId } = useContext(TracerContext);
+    const { handleTransaction } = useContext(TransactionContext);
+    const balances =  selectedTracer?.balances ?? { quote: 0 }
     const openOrders = useTracerOrders(web3 as Web3, selectedTracer as Tracer);
-    const closingOrders = useClosePosition(balance?.quote ?? 0, openOrders);
-    console.debug(closingOrders);
+    const closingOrders = useClosePosition(balances.quote ?? 0, openOrders);
 
     const close = async () => {
         setLoading(true);
-        setShow(false);
+        if (selectedTracer) {
+            const callBack = async () => {
+                await selectedTracer?.updateUserBalance(account)
+                setLoading(false);
+                setShow(false);
+            }
+            handleTransaction
+                ? await handleTransaction(selectedTracer?.takeOrders, [closingOrders ?? [], account], callBack)
+                : console.error('Failed to make order: Handle transaction function undefined');
+        } else {
+            console.error("Failed to make order: No selected Tracer")
+        }
     };
 
     return (
         <div className="p-6 h-full flex-auto">
             <div className="h-full flex flex-col">
                 <p>
-                    Are you sure you want to close your {balance?.quote ?? 0 < 0 ? 'short' : 'long'} position of{' '}
-                    {Math.abs(balance?.quote ?? 0)} {tracerId?.split('/')[0]}?
+                    Are you sure you want to close your {balances?.quote ?? 0 < 0 ? 'short' : 'long'} position of{' '}
+                    {Math.abs(balances?.quote ?? 0)} {tracerId?.split('/')[0]}?
                 </p>
                 <p>
                     This trade will be made at the best available market price.

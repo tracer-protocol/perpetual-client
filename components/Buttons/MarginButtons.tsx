@@ -85,9 +85,9 @@ export const MarginButton: React.FC<BProps> = ({ variant, type }: BProps) => {
                                     {toApproxCurrency(calcLiquidationPrice(newBase, quote, fairPrice, maxLeverage))}
                                 </Section>
                                 <Section label={`Leverage`}>
-                                    {calcLeverage(base, quote, fairPrice).toFixed(3)} 
+                                    {`${calcLeverage(base, quote, fairPrice)}`}
                                     {'  ->  '} 
-                                    {calcLeverage(newBase, quote, fairPrice).toFixed(3)} 
+                                    {`${calcLeverage(base, quote, fairPrice)}`}
                                 </Section>
                                 <Section label={`Borrowed`}>
                                     {toApproxCurrency(calcBorrowed(base, quote, fairPrice))}

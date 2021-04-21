@@ -48,8 +48,12 @@ export const safeCalcTradeMargin: (
 
 export const calcLeverage: (
     base: number, quote: number, fairPrice: number
-) => number = (base, quote, fairPrice) =>  
-    calcNotionalValue(quote, fairPrice) / totalMargin(quote, base, fairPrice)
+) => number = (base, quote, fairPrice) =>   {
+    if (calcNotionalValue(quote, fairPrice) < 0.000001) { // TODO update this since highly likely for something like BTC/USD
+        return 0;
+    }
+    return calcNotionalValue(quote, fairPrice) / totalMargin(quote, base, fairPrice)
+}
 
 /**
  * A function that returns the liquidation price for a given account
@@ -61,6 +65,9 @@ export const calcLiquidationPrice: (
     fairPrice: number,
     maxLeverage: number
 ) => number = (base, quote, fairPrice,  maxLeverage, ) => {
+    if (calcNotionalValue(quote, fairPrice) < 0.000001) { // TODO update this since highly likely for something like BTC/USD
+        return 0;
+    }
     const borrowed = calcBorrowed(base, quote, fairPrice)
     if (borrowed > 0 || quote < 0) {
         return (
@@ -115,8 +122,16 @@ export const calcBorrowed: (
 
 export const calcWithdrawable: (
     quote: number, base: number, fairPrice: number, maxLeverage: number
-) => number = (quote, base, fairPrice, maxLeverage) => 
-    totalMargin(quote, base, fairPrice) - (quote !== 0 ? LIQUIDATION_GAS_COST * RYAN_6 + calcNotionalValue(quote, fairPrice) / maxLeverage : 0)
+) => number = (quote, base, fairPrice, maxLeverage) =>  {
+    const notional = calcNotionalValue(quote, fairPrice);
+    const margin = totalMargin(quote, base, fairPrice) 
+    if (notional < 0.0001) {
+        // TODO this is an error when the users position is so small its negligable
+        return margin - 0.0001; // ignore the liquidation cost
+    }
+    return margin - (quote !== 0 ? LIQUIDATION_GAS_COST * RYAN_6 + calcNotionalValue(quote, fairPrice) / maxLeverage : 0)
+
+}
 
 /**
  * Calculates the notional value of the position
@@ -139,6 +154,9 @@ export const calcMinimumMargin: (
     base:number, quote: number, fairPrice: number, maxLeverage: number
 ) => number = (base, quote, fairPrice, maxLeverage) => {
     const margin = totalMargin(quote, base, fairPrice)
+    if (calcNotionalValue(quote, fairPrice) < 0.000001) { // TODO update this since highly likely for something like BTC/USD
+        return 0;
+    }
     if (margin > 0 || quote < 0) {
         return LIQUIDATION_GAS_COST * RYAN_6 + calcNotionalValue(quote, fairPrice) / maxLeverage
     } else return 0;

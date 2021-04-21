@@ -48,8 +48,7 @@ export const AccountStore: React.FC<StoreProps> = ({ children }: StoreProps) => 
             updateGlobal ? updateGlobal() : console.error('Global update function not set');
             return { status: 'success', message: 'Successfully made deposit request' };
         } catch (err) {
-            console.error(err);
-            return { status: 'error', error: err };
+            return { status: 'error', message: `Failed to withdraw from margin account: ${err.message}` }
         }
     };
 
@@ -57,12 +56,16 @@ export const AccountStore: React.FC<StoreProps> = ({ children }: StoreProps) => 
         if (!selectedTracer?.address) {
             return { status: 'error', message: 'Failed to withdraw: Selected tracer address cannot be undefined' };
         }
-        const result = await contract?.methods
-            .withdraw(Web3.utils.toWei(amount.toString()), selectedTracer?.address)
-            .send({ from: account });
-        await selectedTracer?.updateUserBalance(account);
-        updateGlobal ? updateGlobal() : console.error('Global update function not set');
-        return { status: 'success', message: `Successfully withdrew from insurance pool, ${result?.transactionHash}` };
+        try {
+            const result = await contract?.methods
+                .withdraw(Web3.utils.toWei(amount.toString()), selectedTracer?.address)
+                .send({ from: account });
+            await selectedTracer?.updateUserBalance(account);
+            updateGlobal ? updateGlobal() : console.error('Global update function not set');
+            return { status: 'success', message: `Successfully withdrew from margin account, ${result?.transactionHash}` };
+        } catch (err) {
+            return { status: 'error', message: `Failed to withdraw from margin account: ${err.message}`}
+        }
     };
 
     // useEffect(() => contract && account && selectedTracer?.address && getAccountData(), [contract, account, selectedTracer]) // eslint-disable-line

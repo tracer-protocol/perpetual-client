@@ -12,7 +12,7 @@ export const Section: React.FC<SProps> = ({ classes, label, children }: SProps) 
     return (
         <div className={`w-full flex pt-1 ${classes}`}>
             <span className={`text-left whitespace-nowrap`}>{label}</span>
-            {children ? <span className={`text-right w-full`}>{children}</span> : ''}
+            {children ? <span className={`text-right w-full pl-4`}>{children}</span> : ''}
         </div>
     );
 };

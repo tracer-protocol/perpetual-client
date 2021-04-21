@@ -3,12 +3,9 @@ import LightWeightChart from '@components/Charts/LightWeightChart';
 import { OrderContext, TracerContext } from 'context';
 import LeverageSlider from '@components/Trade/LeverageSlider';
 import TracerSelect from '@components/Trade/TracerSelect';
-
-import { Section } from '@components/SummaryInfo';
 import { OrderSummaryButtons, OrderSubmit, SlideSelect } from '@components/Buttons';
 import { UserBalance } from '@components/types';
 import Tracer from '@libs/Tracer';
-import { calcBorrowed, calcLeverage, calcLiquidationPrice, calcNotionalValue, calcWithdrawable, toApproxCurrency, totalMargin } from '@components/libs/utils';
 import { PostTradeDetails } from '@components/components/SummaryInfo/PositionDetails';
 
 const Positions: React.FC<{ className: string }> = ({ className }: { className: string }) => {

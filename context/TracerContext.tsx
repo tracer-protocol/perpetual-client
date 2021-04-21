@@ -120,8 +120,9 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                         message: 'Failed to take order: Take order function is undefined',
                     } as Result;
                 } else {
+                    console.log("Taking orders", takenOrders)
                     handleTransaction
-                        ? handleTransaction(selectedTracer.takeOrders, [takenOrders ?? [], account])
+                        ? await handleTransaction(selectedTracer.takeOrders, [takenOrders ?? [], account])
                         : console.error('Failed to make order: Handle transaction function undefined');
                 }
             } else if (orderType === 1) {
@@ -132,7 +133,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                     } as Result;
                 } else {
                     handleTransaction
-                        ? handleTransaction(selectedTracer.makeOrder, [
+                        ? await handleTransaction(selectedTracer.makeOrder, [
                               rMargin,
                               Math.round(price * 1000000),
                               position === 0,
@@ -142,6 +143,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             }
         }
     };
+
 
     useEffect(() => {
         if (account) {
@@ -155,8 +157,6 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             selectedTracer?.updateFeeRate();
         }
     }, [selectedTracer]);
-
-    console.log(selectedTracer?.balances)
 
     const [quoteAsset, baseAsset] = tracerId.split('/');
 

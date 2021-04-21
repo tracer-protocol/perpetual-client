@@ -148,7 +148,6 @@ export default class Tracer {
      */
     takeOrders: (orders: TakenOrder[], from: string) => Promise<Result> = async (orders, from) => {
         try {
-            console.log(orders)
             const ARBITRARY_AMOUNT = 420;
             await checkAllowance(this.token, from, process.env.NEXT_PUBLIC_ACCOUNT_ADDRESS, ARBITRARY_AMOUNT);
             for (const order of orders) {
