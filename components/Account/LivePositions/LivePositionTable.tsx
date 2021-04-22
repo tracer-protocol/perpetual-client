@@ -134,6 +134,7 @@ const Row_: React.FC<RProps> = ({ tracer, selected, setTracerId }) => {
     const balance = tracer?.balances;
     const price = tracer?.oraclePrice / (tracer?.priceMultiplier ?? 0);
     const marketId = tracer?.marketId;
+    console.log(JSON.stringify(tracer?.balances))
     return (
         <TableRow
             key={marketId}

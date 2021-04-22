@@ -137,6 +137,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                               rMargin,
                               Math.round(price * 1000000),
                               position === 0,
+                              account
                           ])
                         : console.error('Failed to create order: Handle transaction function undefined');
                 }
@@ -146,9 +147,11 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
 
     useEffect(() => {
-        if (account) {
-            selectedTracer?.updateUserBalance(account);
+        const fetch = async () => {
+            const balance = await selectedTracer?.updateUserBalance(account);
+            tracerDispatch({ type: 'setUserBalance', value: balance });
         }
+        fetch();
     }, [account]);
 
     useEffect(() => {

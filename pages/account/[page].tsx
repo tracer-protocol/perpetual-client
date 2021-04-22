@@ -5,7 +5,8 @@ import LivePositions from '@components/Account/LivePositions';
 import History from '@components/Account/History';
 import { SubNavBar } from '@components/Nav';
 import { SelectedTracerStore } from '@context/TracerContext';
-import { AccountStore } from '@components/context';
+import { InsuranceStore } from '@context/InsuranceContext';
+import { AccountStore } from '@context/AccountContext';
 
 const Account: React.FC = () => {
     // const [tab, setTab] = useState(0);
@@ -39,7 +40,9 @@ const Account: React.FC = () => {
             <NavBar />
             <SubNavBar setTab={setTab} tabs={subTabs} selected={tab} />
             <SelectedTracerStore>
-                <AccountStore>{renderContent(tab)}</AccountStore>
+                <InsuranceStore>
+                    <AccountStore>{renderContent(tab)}</AccountStore>
+                </InsuranceStore>
             </SelectedTracerStore>
         </div>
     );

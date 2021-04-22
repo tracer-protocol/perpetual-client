@@ -28,4 +28,6 @@ export type InsurancePoolInfo = {
     target: number;
     userBalance: number;
     rewards: number;
+    health: number;
+    apy: number;
 };

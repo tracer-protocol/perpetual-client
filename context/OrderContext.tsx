@@ -130,10 +130,12 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [tradePrice]);
 
-    // Handles changing the order time to limit if the user changes the order price
+    // Handles changing the order type to limit if the user changes the order price
     useEffect(() => {
         if (order.price !== tradePrice && tradePrice) {
             orderDispatch({ type: 'setOrderType', value: 1 });
+        } else if (order.price === tradePrice && order.orderType === 1) {
+            orderDispatch({ type: 'setOrderType', value: 0 });
         }
     }, [order.price]);
 

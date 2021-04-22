@@ -104,6 +104,9 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
                 if (accounts.length === 0) {
                     //disconnecting
                     send('DISCONNECT');
+                    send('UPDATE_ACCOUNT', {
+                        account: ''
+                    });
                 } else {
                     send('UPDATE_ACCOUNT', {
                         account: Web3.utils.toChecksumAddress(accounts[0]),

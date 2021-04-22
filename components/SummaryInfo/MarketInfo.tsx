@@ -4,9 +4,10 @@ import TracerLoading from '@components/TracerLoading';
 
 type MIProps = {
     fundingRate: number;
+    health: number
 };
 
-export const MarketInfo: React.FC<MIProps> = ({ fundingRate }: MIProps) => {
+export const MarketInfo: React.FC<MIProps> = ({ fundingRate, health }: MIProps) => {
     return fundingRate !== 0 ? (
         <TracerLoading />
     ) : (
@@ -15,7 +16,7 @@ export const MarketInfo: React.FC<MIProps> = ({ fundingRate }: MIProps) => {
                 <FundingRate rate={fundingRate} />
             </Section>
             <Section label={'Insurance Pool Health'} classes={'text-lg'}>
-                <PoolHealth health={80} />
+                <PoolHealth health={health} />
             </Section>
         </div>
     );

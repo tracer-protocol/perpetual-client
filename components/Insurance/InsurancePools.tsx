@@ -7,18 +7,19 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { SearchBar } from '@components/Nav/SearchBar';
 import { useAllPools } from '@hooks/GraphHooks/Insurance';
 import { TracerContext, InsuranceContext } from 'context';
-import { InsurancePool, InsurancePoolInfo as InsurancePoolInfoType } from 'types';
+import { InsurancePoolInfo as InsurancePoolInfoType } from 'types';
 import PoolBar from './PoolBar';
 import PoolContributors from './PoolContributors';
+import { toApproxCurrency } from '@components/libs/utils';
 
-const parseData: (data: InsurancePool[]) => string[][] = (data) => {
-    return data.map((tracePool) => [
-        tracePool.tracer.marketId, // marketId
-        tracePool.liquidity !== 0 ? (tracePool.target / tracePool.liquidity).toString() : '0', // health
-        tracePool.target, // target
-        tracePool.liquidity, // liquidity
-        tracePool.userBalance, // userShare
-        tracePool.apy, // apy of pool
+const parseData: (data: InsurancePoolInfoType[]) => string[][] = (data) => {
+    return data.map((pool) => [
+        pool.market, // marketId
+        `${pool.health}%`, // health
+        `${toApproxCurrency(pool.target ?? 0)}`, // target
+        `${toApproxCurrency(pool.liquidity ?? 0)}`, // liquidity
+        `${toApproxCurrency(pool.userBalance ?? 0)}`, // userShare
+        `${toApproxCurrency(pool.apy ?? 0)}`, // apy of pool
     ]) as string[][];
 };
 
@@ -53,6 +54,8 @@ const InsurancePoolInfo: React.FC<{ tracer: string }> = ({ tracer }: { tracer: s
                         liquidity={liquidity ?? 0}
                         target={target ?? 0}
                         rewards={0}
+                        apy={0}
+                        health={0}
                     />
                 </div>
                 <div className="w-1/2 flex">
@@ -78,8 +81,8 @@ const InsurancePoolInfo: React.FC<{ tracer: string }> = ({ tracer }: { tracer: s
 
 const InsurancePoolsTable: React.FC<{
     handleClick: (tracerId: string) => void;
-    pools: Record<string, InsurancePool>;
-}> = ({ handleClick, pools }: { handleClick: (tracerId: string) => void; pools: Record<string, InsurancePool> }) => {
+    pools: Record<string, InsurancePoolInfoType>;
+}> = ({ handleClick, pools }: { handleClick: (tracerId: string) => void; pools: Record<string, InsurancePoolInfoType> }) => {
     const headings = ['Trace', 'Health', 'Target Value', 'Liquidity', 'My Share', 'APY'];
     const [filter, setFilter] = useState('');
     const [rows, setRows] = useState<string[][]>([]);
@@ -115,6 +118,7 @@ const InsurancePoolsTable: React.FC<{
  */
 const Insurance: React.FC = () => {
     const { tracerId, setTracerId } = useContext(TracerContext);
+    const { pools, poolInfo } = useContext(InsuranceContext);
     const { insurancePools } = useAllPools();
 
     console.debug(insurancePools, 'Insurance Graph data');
@@ -147,14 +151,14 @@ const Insurance: React.FC = () => {
             <div className="card h-full flex flex-col">
                 <PoolContributors
                     holdings={insurancePools[tracerId]?.holders}
-                    liquidity={insurancePools[tracerId]?.liquidity}
+                    liquidity={poolInfo?.liquidity ?? 0}
                 />
             </div>
         </div>
     ) : (
         <div className="h-full w-full p-12 flex flex-col">
             <div className={`w-full h-full card flex flex-col`}>
-                <InsurancePoolsTable pools={insurancePools} handleClick={handleClick} />
+                <InsurancePoolsTable pools={pools ?? {}} handleClick={handleClick} />
             </div>
         </div>
     );

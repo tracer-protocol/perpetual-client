@@ -6,7 +6,7 @@ import { MarketInfo, AccountMarginInfo, PnLInfo } from '@components/SummaryInfo'
 import { Children } from 'types';
 import { MarginButtons } from '@components/Buttons';
 
-import { FactoryContext } from 'context';
+import { FactoryContext, InsuranceContext } from 'context';
 
 export const PositionsContext = React.createContext(null);
 
@@ -27,8 +27,9 @@ const Card: React.FC<CProps> = ({ title, classes, children }: CProps) => {
 };
 
 const LivePositions: React.FC = () => {
-    const { tracerId, selectedTracer } = useContext(TracerContext);
     const { tracers } = useContext(FactoryContext);
+    const { tracerId, selectedTracer } = useContext(TracerContext);
+    const { poolInfo } = useContext(InsuranceContext);
 
     return (
         <div className="h-full px-12 flex flex-col">
@@ -37,7 +38,7 @@ const LivePositions: React.FC = () => {
             </div>
             <div className="w-full h-screen/40 flex mt-auto">
                 <Card title={`${tracerId} Market Details`}>
-                    <MarketInfo fundingRate={selectedTracer?.feeRate ?? 0} />
+                    <MarketInfo fundingRate={selectedTracer?.feeRate ?? 0} health={poolInfo?.health ?? 0}/>
                 </Card>
                 <Card title={`My ${tracerId} Margin Account`} classes={`mx-12 flex flex-col card`}>
                     <AccountMarginInfo 

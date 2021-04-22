@@ -1,4 +1,4 @@
-import React, { useContext, useState, ChangeEvent } from 'react';
+import React, { useContext, useState } from 'react';
 import { OrderContext, TracerContext } from 'context';
 import { useAdvancedTradingMarkets } from '@hooks/TracerHooks';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
@@ -11,6 +11,7 @@ import InputSelects from './Inputs';
 import { Tracer } from '@components/libs';
 import { UserBalance } from '@components/types';
 import { PostTradeDetails } from '@components/components/SummaryInfo/PositionDetails';
+import { MarginButton } from '@components/components/Buttons/MarginButtons';
 
 export const MarketSelect: React.FC = () => {
     const { setTracerId } = useContext(TracerContext);
@@ -60,14 +61,14 @@ export const WalletConnect: React.FC<{ balances: UserBalance | undefined; accoun
             <div className="body">
                 <div className="border-b-2 border-gray-100">
                     <Section label="Balance">{balances?.base ?? 0}</Section>
-                    <Section label="Collateralisation ratio">{5}%</Section>
+                    {/* <Section label="Collateralisation ratio">{5}%</Section> */}
                 </div>
                 <div className="flex pt-2">
                     <div className="w-2/6 mr-auto">
-                        <div className={`${sButton}`}>Deposit</div>
+                        <MarginButton type="Deposit" />
                     </div>
                     <div className="w-2/6 ml-auto">
-                        <div className={`${sButton}`}>Withdraw</div>
+                        <MarginButton type="Withdraw" />
                     </div>
                 </div>
             </div>
@@ -105,7 +106,7 @@ export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({
                 {order?.orderType !== 1 ? (
                     <>
                         {/* Slippage select */}
-                        <Slippage />
+                        {/* <Slippage /> */}
                         {/* Leverage select */}
                         <Leverage leverage={order?.leverage ?? 1} />
                     </>
@@ -199,57 +200,6 @@ const OrderTypeSelect: React.FC<SProps> = ({ selected }: SProps) => {
             <Option>LIMIT</Option>
             <Option>SPOT</Option>
         </SlideSelect>
-    );
-};
-
-const Slippage: React.FC = () => {
-    const [maxSlippage, setMaxSlippage] = useState(0);
-    const [custom, setCustom] = useState('');
-    const sButton = 'button-grow border-blue-100 h-8 mx-1 p-1 rounded ';
-    const active = 'bg-blue-200 shadow-md shadow-grey-100';
-    const sInput =
-        'appearance-none flex max-w-full focus:border-none focus:outline-none focus:shadow-none text-md text-right ' +
-        (maxSlippage === 2 ? 'bg-blue-200 w-4/6 ' : '');
-
-    const handleClick = (id: number) => {
-        setMaxSlippage(id);
-    };
-
-    const handleInput = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = parseInt(e.target.value.replace('%', ''));
-        if (!value) {
-            setCustom('');
-        } else if (value <= 5 && value > 0) {
-            setCustom(e.target.value);
-        } // else do nothing
-    };
-
-    return (
-        <div className="p-3 flex text-blue-100 ">
-            <a className="w-1/4 m-auto">Max Slippage</a>
-            <div className="flex w-3/4 justify-end">
-                <div key="0" onClick={(_e) => handleClick(0)} className={sButton + (maxSlippage === 0 ? active : '')}>
-                    0.5%
-                </div>
-                <div onClick={(_e) => handleClick(1)} className={sButton + (maxSlippage === 1 ? active : '')}>
-                    1.0%
-                </div>
-                <div
-                    onClick={(_e) => handleClick(2)}
-                    className={sButton + 'w-2/6 justify-end flex ' + (maxSlippage === 2 ? active : '')}
-                >
-                    <input
-                        className={sInput}
-                        id="username"
-                        type="number"
-                        placeholder="Custom"
-                        onChange={handleInput}
-                        value={custom && maxSlippage === 2 ? custom : ''}
-                    />
-                    <div>{custom && maxSlippage === 2 ? '%' : ''}</div>
-                </div>
-            </div>
-        </div>
     );
 };
 

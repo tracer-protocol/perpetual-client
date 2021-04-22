@@ -127,15 +127,7 @@ export const MarginButtons: React.FC = () => {
         <div className="mt-auto flex w-full">
             <MarginDeposit />
             
-            <MarginButton type="Withdraw">
-                <div>
-                    <h3 className="mt-10 text-left text-blue-100 text-lg">Margin Deposit Summary</h3>
-                    <div>
-                        <Section label={`My Shares`}>24 USDC {'->'} 30 USDC</Section>
-                        <Section label={`Anticipated rewards`}>X% {'->'} X%</Section>
-                    </div>
-                </div>
-            </MarginButton>
+            <MarginButton type="Withdraw" />
         </div>
     );
 };
