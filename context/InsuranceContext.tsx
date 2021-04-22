@@ -9,7 +9,6 @@ import { TracerContext } from './TracerContext';
 import { checkAllowance } from '@components/libs/web3/utils';
 import { FactoryContext } from '.';
 import { Tracer } from '@components/libs';
-const insuranceAddress = process.env.NEXT_PUBLIC_INSURANCE_ADDRESS;
 interface ContextProps {
     poolInfo: InsurancePoolInfo;
     deposit: (amount: number) => Promise<Result>;
@@ -28,10 +27,11 @@ interface State {
 export const InsuranceContext = React.createContext<Partial<ContextProps>>({});
 
 export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
-    const { account, web3 } = useContext(Web3Context);
+    const { account, web3, config } = useContext(Web3Context);
     const { tracers } = useContext(FactoryContext);
     const { selectedTracer } = useContext(TracerContext);
     const [contract, setContract] = useState<Insurance>();
+    const insuranceAddress = config?.contracts.insurance.address ?? ''
 
     const initialState = {
         pools: {
@@ -76,12 +76,13 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
-        if (web3) {
+        if (web3 && insuranceAddress) {
+            console.log(insuranceAddress, "Insurance Address")
             setContract(
                 (new web3.eth.Contract(insuranceJSON.abi as AbiItem[], insuranceAddress) as unknown) as Insurance,
             );
         }
-    }, [web3]);
+    }, [web3, insuranceAddress]);
 
     const fetchPoolData = async () => {
         Promise.all(

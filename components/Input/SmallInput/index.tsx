@@ -17,7 +17,7 @@ const SmallInput: React.FC<SIProps> = ({ title, amount, onChange, unit }) => (
             type="number"
             placeholder="0.0"
             onChange={onChange}
-            value={amount > 0 ? amount : ''}
+            value={amount}
         />
         <a className="px-1 opacity-25">{unit}</a>
     </div>

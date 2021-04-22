@@ -138,7 +138,6 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
     //     Network.selectSingle(state, state.context?.networkId ?? ''),
     // );
     const config = networkConfig[state.context.networkId ?? '1337'];
-
     return (
         <Web3Context.Provider
             value={{

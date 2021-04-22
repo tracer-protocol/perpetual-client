@@ -7,7 +7,6 @@ import { TracerContext } from './TracerContext';
 import { Account } from '@tracer-protocol/contracts/types/web3-v1-contracts/Account';
 import accountJSON from '@tracer-protocol/contracts/build/contracts/Account.json';
 import { checkAllowance } from '@components/libs/web3/utils';
-const accountAddress = process.env.NEXT_PUBLIC_ACCOUNT_ADDRESS;
 interface ContextProps {
     deposit: (amount: number) => any;
     withdraw: (amount: number) => any;
@@ -18,15 +17,17 @@ export const AccountContext = React.createContext<Partial<ContextProps>>({});
 type StoreProps = Children;
 
 export const AccountStore: React.FC<StoreProps> = ({ children }: StoreProps) => {
-    const { account, web3, updateGlobal } = useContext(Web3Context);
+    const { account, web3, updateGlobal, config } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     const [contract, setContract] = useState<Account>();
+    const accountAddress = config?.contracts.account.address ?? ''
 
     useEffect(() => {
-        if (web3) {
+        console.log(accountAddress, "Account Address")
+        if (web3 && accountAddress) {
             setContract((new web3.eth.Contract(accountJSON.abi as AbiItem[], accountAddress) as unknown) as Account);
         }
-    }, [web3]);
+    }, [web3, accountAddress]);
 
     /**
      *

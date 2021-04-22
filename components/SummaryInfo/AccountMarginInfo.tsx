@@ -23,7 +23,7 @@ export const AccountMarginInfo: React.FC<IProps> = ({ balance, fairPrice, maxLev
         return (
             <div className="border-t-2 border-gray-100">
                 <Section label={'Account Margin'} classes={`text-sm ${invalid}`}>
-                    {toApproxCurrency(totalMargin(base, quote, fairPrice))}
+                    {toApproxCurrency(totalMargin(quote, base, fairPrice))}
                 </Section>
                 <Section label={'Minimum Margin'} classes={`text-sm ${invalid}`}>
                     {toApproxCurrency(calcMinimumMargin(base, quote, fairPrice, maxLeverage))}
