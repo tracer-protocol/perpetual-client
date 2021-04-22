@@ -1,6 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import NavBar from '@components/Nav/NavBar';
+import NavBar from '@components/components/Nav/Navbar';
 import LivePositions from '@components/Account/LivePositions';
 import History from '@components/Account/History';
 import { SubNavBar } from '@components/Nav';
