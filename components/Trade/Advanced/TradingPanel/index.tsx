@@ -1,17 +1,17 @@
 import React, { useContext, useState } from 'react';
-import { OrderContext, TracerContext } from 'context';
-import { useAdvancedTradingMarkets } from '@hooks/TracerHooks';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { MatchingEngine, Option } from '@components/Buttons/SlideSelect';
 import { SearchBar } from '@components/Nav';
 import { Section } from '@components/SummaryInfo';
 import { SearchableTable } from '@components/Tables/SearchableTable';
 import { DefaultSlider } from '@components/Trade/LeverageSlider';
+import { PostTradeDetails } from '@components/SummaryInfo/PositionDetails';
+import { MarginButton } from '@components/Buttons/MarginButtons';
+import { useAdvancedTradingMarkets } from '@hooks/TracerHooks';
+import { OrderContext, TracerContext } from 'context';
 import InputSelects from './Inputs';
-import { Tracer } from '@components/libs';
-import { UserBalance } from '@components/types';
-import { PostTradeDetails } from '@components/components/SummaryInfo/PositionDetails';
-import { MarginButton } from '@components/components/Buttons/MarginButtons';
+import { Tracer } from 'libs';
+import { UserBalance } from 'types';
 
 export const MarketSelect: React.FC = () => {
     const { setTracerId } = useContext(TracerContext);
@@ -46,7 +46,6 @@ export const WalletConnect: React.FC<{ balances: UserBalance | undefined; accoun
     balances,
     account,
 }) => {
-    const sButton = 'button-grow rounded border-blue-100 p-1 text-center text-sm';
 
     return account === '' ? (
         <div className="advanced-card shadow-gray-100">
@@ -61,7 +60,6 @@ export const WalletConnect: React.FC<{ balances: UserBalance | undefined; accoun
             <div className="body">
                 <div className="border-b-2 border-gray-100">
                     <Section label="Balance">{balances?.base ?? 0}</Section>
-                    {/* <Section label="Collateralisation ratio">{5}%</Section> */}
                 </div>
                 <div className="flex pt-2">
                     <div className="w-2/6 mr-auto">
