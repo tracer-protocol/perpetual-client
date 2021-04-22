@@ -31,7 +31,8 @@ import { TakenOrder, OpenOrder, Result, UserBalance } from 'types';
 export default class Tracer {
     _instance: TracerType;
     _web3: Web3;
-    private account: AccountType;
+    public account: AccountType | undefined;
+    public accountAddress: string | undefined;
     public address: string;
     public marketId: string;
     _oracle: Oracle | undefined;
@@ -50,10 +51,6 @@ export default class Tracer {
             (tracerJSON.abi as unknown) as AbiItem,
             address,
         ) as unknown) as TracerType;
-        this.account = (new web3.eth.Contract(
-            (accountJSON.abi as unknown) as AbiItem,
-            process.env.NEXT_PUBLIC_ACCOUNT_ADDRESS,
-        ) as unknown) as AccountType;
         this._web3 = web3;
         this.address = address;
         this.marketId = marketId;
@@ -81,6 +78,7 @@ export default class Tracer {
         const maxLeverage = this._instance.methods.maxLeverage().call();
         const fundingRateSensitivity = this._instance.methods.FUNDING_RATE_SENSITIVITY().call();
         const feeRate = this._instance.methods.feeRate().call();
+        const accountAddress = this._instance.methods.accountContract().call();
         return Promise.all([
             priceMultiplier,
             liquidationGasCost,
@@ -89,6 +87,7 @@ export default class Tracer {
             maxLeverage,
             fundingRateSensitivity,
             feeRate,
+            accountAddress
         ])
             .then((res) => {
                 const priceMultiplier_ = parseInt(res[0]);
@@ -99,7 +98,11 @@ export default class Tracer {
                 this.maxLeverage = parseFloat(res[4]) / 10000;
                 this.fundingRateSensitivity = parseInt(res[5]) / priceMultiplier_;
                 this.feeRate = parseInt(res[6]) / priceMultiplier_;
-
+                this.account = (new web3.eth.Contract(
+                    accountJSON.abi as AbiItem[],
+                    res[7],
+                ) as unknown) as AccountType;
+                this.accountAddress = res[7]
                 this.updateOraclePrice();
                 return true;
             })
@@ -149,7 +152,7 @@ export default class Tracer {
     takeOrders: (orders: TakenOrder[], from: string) => Promise<Result> = async (orders, from) => {
         try {
             const ARBITRARY_AMOUNT = 420;
-            await checkAllowance(this.token, from, process.env.NEXT_PUBLIC_ACCOUNT_ADDRESS, ARBITRARY_AMOUNT);
+            await checkAllowance(this.token, from, this.accountAddress, ARBITRARY_AMOUNT);
             for (const order of orders) {
                 await this._instance.methods
                     .takeOrder(order.id, Web3.utils.toWei(order.amount.toString()))
@@ -168,40 +171,6 @@ export default class Tracer {
         } catch (err) {
             console.error(err);
             return { status: 'error', error: err };
-        }
-    };
-
-    /*
-     * Increases the margin of a given account for this tracer.
-     * @dev enforces the transfer of tokens to the tracer contract for escrow. Users must have approved
-     *  this transfer before calling this method using the ERC20 approve function.
-     * @param amount the value to increase this accounts margin by
-     */
-    deposit: (amount: number, from: string) => Promise<Result> = async (amount, from) => {
-        try {
-            await checkAllowance(this.token, from, process.env.NEXT_PUBLIC_ACCOUNT_ADDRESS, amount);
-            await this.account.methods.deposit(Web3.utils.toWei(amount.toString()), this.address).send({ from: from });
-            return { status: 'success', message: 'Successfully made deposit request' };
-        } catch (err) {
-            return { status: 'error', error: err };
-        }
-    };
-
-    /**
-     * Withdraws from a users margin account
-     * @dev enforces that the token transfer succeeds before updating balances.
-     * @param amount the amount of tokens to withdraw
-     */
-    withdraw: (amount: number, from: string) => Promise<Result> = async (amount, from) => {
-        try {
-            await checkAllowance(this.token, from, process.env.NEXT_PUBLIC_ACCOUNT_ADDRESS, amount);
-            await this.account.methods.withdraw(Web3.utils.toWei(amount.toString()), this.address).send({ from: from });
-            return { status: 'success', message: `Withdrawal of ${amount} was successful.` };
-        } catch (err) {
-            return {
-                status: 'error',
-                error: err,
-            };
         }
     };
 
@@ -241,34 +210,6 @@ export default class Tracer {
     };
 
     /**
-     * Gets all open orders related to a specific user
-     * @return an array of order objects {order amount, amount filled, price and the side of an order}
-     */
-    // getUserOrders: (address: string) => Promise<OpenOrder[]> = async (
-    //     address,
-    // ) => {
-    //     // let address = this.web3.eth.currentProvider.selectedAddress;
-    //     const count = await this._instance.methods.orderCounter().call();
-    //     const orders: OpenOrder[] = [];
-    //     for (let i = 0; i < parseInt(count); i++) {
-    //         const rawOrder = await this._instance.methods.getOrder(i).call();
-    //         if (rawOrder[4].toLowerCase() === address.toLowerCase()) {
-    //             const order = {
-    //                 tracerId: this.marketId,
-    //                 amount: new BN(Web3.utils.fromWei(rawOrder[0])),
-    //                 filled: new BN(parseFloat(Web3.utils.fromWei(rawOrder[1]))),
-    //                 price: fromCents(parseFloat(rawOrder[2])),
-    //                 side: rawOrder[3],
-    //                 maker: rawOrder[4],
-    //                 id: i,
-    //             } as OpenOrder;
-    //             orders.push(order);
-    //         }
-    //     }
-    //     return orders;
-    // };
-
-    /**
      * Gets the users total margin and position balances
      * returns in order
      *  margin, position, totalLeveragedValue,
@@ -281,6 +222,7 @@ export default class Tracer {
      */
     updateUserBalance: (account: string | undefined) => Promise<boolean> = async (account) => {
         try {
+            if (!this.account) return Promise.resolve(false)
             // if accounts is undefined the catch should get it
             const balance = await this.account.methods.getBalance(account ?? '', this.address.toString()).call();
             const walletBalance = await this.token?.methods.balanceOf(account ?? '').call();

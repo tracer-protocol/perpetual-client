@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useContext } from 'react';
+import { useEffect, useState,  useContext } from 'react';
 import { FactoryContext } from '@context/FactoryContext';
 import { ErrorContext } from '@context/ErrorInfoContext';
 import { AbiItem } from 'web3-utils';
@@ -8,6 +8,7 @@ import Web3 from 'web3';
 import { fromCents } from '@libs/utils';
 import tracerJSON from '@tracer-protocol/contracts/build/contracts/Tracer.json';
 import { Tracer } from '@components/libs';
+import { Tracer as TracerType } from '@tracer-protocol/contracts/types/web3-v1-contracts/Tracer';
 
 /**
  * Calculates a theoretical market exposure if it took all the 'best' orders it could
@@ -178,7 +179,13 @@ export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record
     web3,
     tracer,
 ) => {
-    const contract = useRef<any>();
+    const [contract, setContract] = useState<TracerType>();
+
+    useEffect(() => {
+        if (web3 && tracer) {
+            setContract((new web3.eth.Contract(tracerJSON.abi as AbiItem[], tracer.address) as unknown) as TracerType);
+        }
+    }, [web3, tracer]);
     const [openOrders, setOpenOrders] = useState<Record<string, OpenOrder[]>>({ longOrders: [], shortOrders: [] });
 
     /**
@@ -187,12 +194,15 @@ export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record
      * @return an array of order objects {order amount, amount filled, price and the side of an order, address, id}
      */
     const getOpenOrders: () => Promise<Record<string, OpenOrder[]>> = async () => {
+        if (!contract) {
+            return Promise.resolve({});
+        }
         const shortOrders = [];
         const longOrders = [];
         // This is really annoying to do with the web3-redux store so just initiated a contract instance
-        const count = await contract?.current?.methods.orderCounter().call();
+        const count = await contract.methods.orderCounter().call();
         for (let i = 0; i < parseInt(count); i++) {
-            const rawOrder = await contract?.current?.methods.getOrder(i).call();
+            const rawOrder = await contract.methods.getOrder(i).call();
 
             // Amount = filled, not open
             // TODO if the amount not filled is very small this will fail
@@ -218,15 +228,8 @@ export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record
     };
 
     useEffect(() => {
-        if (web3?.eth && !contract.current && tracer) {
-            console.info(tracer, 'Found tracer');
-            contract.current = new web3.eth.Contract(tracerJSON.abi as AbiItem[], tracer.address);
-        }
-    }, [web3, tracer]);
-
-    useEffect(() => {
         let mounted = true;
-        if (tracer) {
+        if (contract) {
             getOpenOrders().then((orders) => {
                 if (mounted) {
                     setOpenOrders(orders);
@@ -236,7 +239,7 @@ export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record
         return function cleanup() {
             mounted = false;
         };
-    }, [tracer]);
+    }, [contract]);
 
     return openOrders;
 };
