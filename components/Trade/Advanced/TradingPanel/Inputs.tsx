@@ -21,7 +21,7 @@ export const Inputs: React.FC<ISProps> = ({ tracerId, amount, price }: ISProps) 
                             : console.error('No dispatch function set')
                     }
                     unit={tracerId.split('/')[0]}
-                    amount={amount > 0 ? amount : 0}
+                    amount={amount}
                 />
             </div>
             <div className="w-1/2 p-3">
@@ -33,7 +33,7 @@ export const Inputs: React.FC<ISProps> = ({ tracerId, amount, price }: ISProps) 
                             : console.error('No dispatch function set')
                     }
                     unit={tracerId.split('/')[1]}
-                    amount={price > 0 ? price : 0}
+                    amount={price}
                 />
             </div>
         </div>
