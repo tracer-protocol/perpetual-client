@@ -118,7 +118,7 @@ const Advanced: React.FC = () => {
         <div className="flex h-full">
             <div className="w-1/4 flex flex-col max-h-screen/90">
                 <MarketSelect />
-                <WalletConnect balances={selectedTracer?.balances} account={account ?? ''} />
+                <WalletConnect selectedTracer={selectedTracer} account={account ?? ''} />
                 <TradingInput selectedTracer={selectedTracer} />
             </div>
             <div className="w-3/4 flex flex-col max-h-screen/90">

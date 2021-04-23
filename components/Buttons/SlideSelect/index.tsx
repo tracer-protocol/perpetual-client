@@ -1,49 +1,68 @@
 import React from 'react';
 import { Children } from 'types';
+import styled from 'styled-components';
 
 type TSSProps = {
     onClick: (index: number, e: any) => any;
     value: number;
-    bClasses?: string;
-    sClasses?: string; // classes for selected items
-    uClasses?: string; // classes for unselected items
-    cClasses?: string; // container classes\
+    className?: string
 } & Children;
 
-const SlideSelect: React.FC<TSSProps> = ({
+const SlideSelect: React.FC<TSSProps> = styled(({
     onClick,
     value,
-    bClasses,
     children,
-    sClasses,
-    uClasses,
-    cClasses,
+    className
 }: TSSProps) => {
     return (
         <>
-            <div className={cClasses}>
+            <div className={className}>
                 {React.Children.toArray(children).map((child, index) => {
                     return (
-                        <div
+                        <SlideOption
                             onClick={(e) => onClick(index, e)}
-                            className={bClasses + `${index === value ? sClasses : uClasses}`}
+                            className={`${index === value ? 'selected' : ''}`}
                         >
                             {child}
-                        </div>
+                        </SlideOption>
                     );
                 })}
             </div>
         </>
     );
-};
+})`
+
+    display: flex;
+    margin: auto;
+    border: 1px solid #3DA8F5;
+    border-radius: 20px;
+`
+
+export const SlideOption = styled.div`
+    display: flex;
+    border-radius: 20px;
+    font-size: 16px;
+    text-align: center;
+    width: 100%;
+    padding: 10px 0;
+    color: #3DA8F5;
+
+    transition: background 0.3;
+
+    &:hover {
+        cursor: pointer
+    }
+
+    &.selected {
+        background: #3DA8F5;
+        color: #fff;
+        border: 1px solid #3DA8F5;
+    }
+`
 
 SlideSelect.defaultProps = {
     onClick: () => undefined,
     value: 0,
-    cClasses: 'flex w-3/4 m-auto border-2 border-gray-100 rounded-full ',
-    bClasses: 'flex w-1/2 h-12 cursor-pointer rounded-full transition duration-500 ',
-    sClasses: 'border-2 border-blue-100 text-blue-100 bg-blue-300 shadow-lg shadow-gray-100 ',
-    uClasses: 'border-gray-100 text-gray-100 ',
 };
 
 export * from './Options';

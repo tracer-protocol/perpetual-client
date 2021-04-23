@@ -14,10 +14,9 @@ export type ButtonVariant = 'button' | 'secondary-button';
 
 type BProps = {
     type: ButtonType;
-    variant?: ButtonVariant;
 } & Children;
 
-export const MarginButton: React.FC<BProps> = ({ variant, type }: BProps) => {
+export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
     const [showModal, setShowModal] = useState(false);
     const { tracerId, selectedTracer } = useContext(TracerContext);
     const { quote, base, tokenBalance } = selectedTracer?.balances ?? {
@@ -104,8 +103,8 @@ export const MarginButton: React.FC<BProps> = ({ variant, type }: BProps) => {
                     </div>
                 </div>
             </TracerModal>
-            <div className="min-w-1/2 flex" onClick={() => setShowModal(true)}>
-                <button className={`w-3/4 m-auto ${variant ? variant : 'button'}`}>{type}</button>
+            <div onClick={() => setShowModal(true)}>
+                {children}
             </div>
         </>
     );
@@ -115,9 +114,9 @@ export const MarginButton: React.FC<BProps> = ({ variant, type }: BProps) => {
 /**
  *  This is seperated such that it can be used from the deposit page with the Button variant passed in
  */
-export const MarginDeposit: React.FC<{ variant?: ButtonVariant }> = ({ variant }: { variant?: ButtonVariant }) => {
+export const MarginDeposit: React.FC = () => {
     return (
-        <MarginButton variant={variant} type="Deposit">
+        <MarginButton type="Deposit">
         </MarginButton>
     );
 };

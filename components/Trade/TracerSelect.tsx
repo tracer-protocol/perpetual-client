@@ -17,7 +17,7 @@ export const WalletBalance: React.FC<{ marginBalance: number }> = ({ marginBalan
             </p>
             <span className="mt-auto mb-auto ml-auto w-full flex justify-end">
                 {marginBalance <= 0 ? (
-                    <MarginDeposit variant="secondary-button" />
+                    <MarginDeposit />
                 ) : (
                     // max rMargin will be walletBalance - 10%
                     <button

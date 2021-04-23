@@ -5,11 +5,12 @@ import { OrderState, OrderTypeMapping } from '@context/OrderContext';
 import { TracerContext, Web3Context, OrderContext, ErrorContext } from 'context';
 import AlertInfo from '@components/Notifications/AlertInfo';
 import { ConnectButton, MarginDeposit } from '@components/Buttons';
-import { UserBalance } from 'types';
+import { Children, UserBalance } from 'types';
+import styled from 'styled-components';
 
 type POBProps = {
     balance: number; // users wallets margin balance
-};
+} & Children;
 
 type OSProps = {
     setSummary: (bool: boolean) => void;
@@ -70,7 +71,28 @@ export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balan
     );
 };
 
-export const AdvancedOrderButton: React.FC<{ balances: UserBalance | undefined }> = ({ balances }) => {
+
+const TradeButton = styled.div`
+    letter-spacing: -0.32px;
+    color: #FFFFFF;
+    width: 100%;
+    font-size: 16px;
+    text-align: center;
+    border: 1px solid #3DA8F5;
+    border-radius: 10px;
+    padding: 10px 0;
+    background: #03065E;
+    color: #3DA8F5;
+    transition: 0.3s;
+    &:hover {
+        background: #3DA8F5;
+        color: #fff;
+        cursor: pointer;
+    }
+`
+export const AdvancedOrderButton: React.FC<{ 
+    balances: UserBalance | undefined 
+}> = ({ balances }: { balances: UserBalance | undefined}) => {
     const { setError } = useContext(ErrorContext);
     const { order } = useContext(OrderContext);
     const rMargin = order?.rMargin ?? 0;
@@ -84,14 +106,17 @@ export const AdvancedOrderButton: React.FC<{ balances: UserBalance | undefined }
 
     return (
         <div className="w-full flex">
-            <div className="m-auto w-3/4 flex justify-center">
-                <PlaceOrderButton balance={balances?.base ?? 0} />
-            </div>
+            <PlaceOrderButton balance={balances?.base ?? 0}>
+                <TradeButton>
+                    Place Trade
+                </TradeButton>
+            </PlaceOrderButton>
         </div>
     );
-};
+}
 
-export const PlaceOrderButton: React.FC<POBProps> = ({ balance }: POBProps) => {
+
+export const PlaceOrderButton: React.FC<POBProps> = ({ balance, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
     const { takenOrders, order } = useContext(OrderContext);
     const { rMargin, price, orderType } = order as OrderState;
@@ -157,12 +182,12 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ balance }: POBProps) => {
                         </div>
                     </div>
                 </TracerModal>
-                <button className="button" onClick={() => setShowOrder(true)}>
-                    Place Order
-                </button>
+                <div className="w-full" onClick={() => setShowOrder(true)}>
+                    { children}
+                </div>
             </>
         );
     } else {
-        return <button className="button-disabled">Place Order</button>;
+        return <div className="button-disabled">{children}</div>;
     }
 };

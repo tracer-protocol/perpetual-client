@@ -111,6 +111,7 @@ export const calcProfitableLiquidationPrice: (
     }
 };
 
+
 export const accountGain: (margin: number, deposited: number) => number = (margin, deposited) => {
     return margin - deposited;
 };
