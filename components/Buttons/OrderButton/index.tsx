@@ -118,8 +118,10 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ balance }: POBProps) => {
 
     useEffect(() => {
         // TODO calc what a valid order is
-        if (balance > 0 && balance >= rMargin && takenOrders?.length) {
-            setValidOrder(true);
+        if (balance > 0 && balance >= rMargin) {
+            if (!(takenOrders?.length && order?.orderType === 0)) {
+                setValidOrder(true);
+            }
         } else {
             setValidOrder(false);
         }

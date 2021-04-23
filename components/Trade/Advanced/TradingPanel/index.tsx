@@ -159,7 +159,7 @@ const MatchingEngineSelect: React.FC<SProps> = ({ selected }: SProps) => {
 
 const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
     const { orderDispatch } = useContext(OrderContext);
-    const colour = `${selected === 0 ? 'red' : 'green'}`; // red short
+    const colour = `${!selected ? 'red' : 'green'}`; // red short
     return (
         <SlideSelect
             sClasses={`border-b-4 border-${colour}-200 text-${colour}-200 font-bold shadow-lg shadow-gray-100 `}

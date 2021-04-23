@@ -105,6 +105,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const [order, orderDispatch] = useReducer(reducer, initialState);
 
     const openOrders = useTracerOrders(web3, selectedTracer as Tracer);
+    console.log(openOrders)
     const oppositeOrders = order.position ? openOrders.shortOrders : openOrders.longOrders;
 
     useEffect(() => {
@@ -126,9 +127,9 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     useEffect(() => {
         if (order.orderType === 0) {
             orderDispatch({ type: 'setPrice', value: tradePrice });
-            orderDispatch({ type: 'setOrderType', value: 0 });
+            // orderDispatch({ type: 'setOrderType', value: 0 });
         }
-    }, [tradePrice]);
+    }, [order.orderType, tradePrice]);
 
     // Handles changing the order type to limit if the user changes the order price
     useEffect(() => {

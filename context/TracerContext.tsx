@@ -136,7 +136,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                         ? await handleTransaction(selectedTracer.makeOrder, [
                               rMargin,
                               Math.round(price * 1000000),
-                              position === 0,
+                              position === 1, // if === 1 then long else false short
                               account
                           ])
                         : console.error('Failed to create order: Handle transaction function undefined');
