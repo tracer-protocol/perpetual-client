@@ -1,6 +1,7 @@
 import React, { ChangeEvent } from 'react';
 import { Children } from '@components/types';
 import styled from 'styled-components';
+import { NumberInput } from '@components/components/General';
 
 
 const InputContainer = styled.div`
@@ -9,9 +10,11 @@ const InputContainer = styled.div`
     display: flex;
     padding: 5px 10px;
     width: 250px;
+    position: relative;
 
     > .max {
         margin: auto 0;
+        margin-left: 20px;
         letter-spacing: -0.32px;
         font-size: 16px;
     }
@@ -31,6 +34,12 @@ const InputContainer = styled.div`
             outline: none;
             shadow: none;
         }
+    }
+    > input[type=number]::-webkit-inner-spin-button, 
+    > input[type=number]::-webkit-outer-spin-button {  
+
+    -webkit-appearance: "Always Show Up/Down Arrows";
+
     }
     > .unit {
         letter-spacing: -0.4px;
@@ -60,10 +69,11 @@ const SmallInput: React.FC<SIProps> = styled(({
             <a className={`max ${!setMax ? 'hide' : ''}`} onClick={setMax}>
                 Max
             </a>
-            <input
+            <NumberInput
                 id="margin"
                 type="number"
                 placeholder="0.0"
+                min="0"
                 onChange={onChange}
                 value={amount}
             />

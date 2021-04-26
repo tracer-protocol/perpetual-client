@@ -93,14 +93,14 @@ const TradeButton = styled.div`
 export const AdvancedOrderButton: React.FC<{ 
     balances: UserBalance | undefined 
 }> = ({ balances }: { balances: UserBalance | undefined}) => {
-    const { setError } = useContext(ErrorContext);
+    // const { setError } = useContext(ErrorContext);
     const { order } = useContext(OrderContext);
     const rMargin = order?.rMargin ?? 0;
 
     useEffect(() => {
         if (!!balances) {
             // Margin is greater than margin in account
-            balances?.base < rMargin && balances?.base >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
+            // balances?.base < rMargin && balances?.base >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
         }
     }, [rMargin]);
 
@@ -147,7 +147,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ balance, children }: POBP
             if (!(takenOrders?.length && order?.orderType === 0)) {
                 setValidOrder(true);
             }
-        } else {
+        } else if (validOrder) {
             setValidOrder(false);
         }
     }, [rMargin, balance, takenOrders]);

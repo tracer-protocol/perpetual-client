@@ -21,7 +21,7 @@ export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISP
             <div className="w-full p-3">
                 <SmallInput
                     title={'Amount'}
-                    onChange={(e) =>
+                    onChange={(e) => 
                         orderDispatch
                             ? orderDispatch({ type: 'setRMargin', value: parseFloat(e.target.value) })
                             : console.error('No dispatch function set')
