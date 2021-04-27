@@ -99,33 +99,6 @@ const OrderBookContainer = styled.div`
 
 const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
     const orders = useOrders(true, selectedTracer);
-    // const testOrders = [
-    //     {
-    //         cumulative: 5,
-    //         quantity: 5,
-    //         price: 1,
-    //     },
-    //     {
-    //         cumulative: 5,
-    //         quantity: 5,
-    //         price: 1.1,
-    //     },
-    //     {
-    //         cumulative: 5,
-    //         quantity: 5,
-    //         price: 1.2,
-    //     },
-    //     {
-    //         cumulative: 5,
-    //         quantity: 5,
-    //         price: 1.3,
-    //     },
-    //     {
-    //         cumulative: 5,
-    //         quantity: 5,
-    //         price: 1.4,
-    //     },
-    // ]
     const testTrades = [
         {
             amount: 1,

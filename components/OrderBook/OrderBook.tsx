@@ -10,7 +10,43 @@ interface OProps {
     className?: string;
 }
 
-
+interface MCProps {
+    className?: string;
+    amount: number;
+}
+const MarketChange: React.FC<MCProps> = styled(({ className, amount }: MCProps) => 
+    <td className={className}>
+        <div className={amount >= 0 ? 'arrow-up' : 'arrow-down'} />
+        <p className={amount >= 0 ? 'up' : 'down'}>20%</p>
+    </td>
+)`
+    display: flex;
+    .up {
+        color: #21DD53;
+    }
+    .down {
+        color: #F15025;
+    }
+    
+    .arrow-up {
+        margin: auto 0;
+        margin-right: 10px;
+        height: 0;
+        width: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 8px solid #21DD53;
+    }
+    .arrow-down {
+        margin: auto 0;
+        margin-right: 10px;
+        height: 0;
+        width: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid #F15025;
+    }
+`
 
 const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className}: OProps) => {
     const sumQuantities = (orders: OMEOrder[]) => {
@@ -50,7 +86,7 @@ const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className}: 
                     <tr>
                         <td>Market</td>
                         <td />
-                        <td className="market-swing"></td>
+                        <MarketChange amount={1}/>
                     </tr>
                 </tbody>
                 <tbody>{renderOrders(true, bidOrdersCopy)}</tbody>
