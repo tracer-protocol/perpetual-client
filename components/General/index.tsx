@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 export const Box: React.FC<{ className?: string }> = styled.div`
-    border: 2px solid #0C3586;
+    border: 1px solid #0C3586;
     display: flex;
     padding: 20px;
 `

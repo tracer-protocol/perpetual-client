@@ -1,22 +1,31 @@
 import React from 'react';
+import styled from 'styled-components';
 
-const Timer: React.FC = () => {
+const Timer: React.FC = styled(({ className }) => {
     return (
-        <div className="h-1 bg-blue-200 w-full relative">
-            <div id="refetchLoader" className={`h-1 absolute bg-blue-100 transition right-0`} />
-            <style>
-                {`
-                @keyframes countdown-width {
-                    from { width: 100%; } to { width: 0% }
-                }
-
-                #refetchLoader {
-                    animation: countdown-width 5s linear infinite;
-                }
-            `}
-            </style>
+        <div className={className}>
+            <div id="refetchLoader" />
         </div>
     );
-};
+})`
+    height: 0.25rem;
+    width: 100%;
+    position relative;
+    background: #3DA8F5;
+
+    @keyframes countdown-width {
+        from { width: 100%; } to { width: 0% }
+    }
+
+    #refetchLoader {
+        animation: countdown-width 5s linear infinite;
+        background: #002886;
+        position: absolute; 
+        height: 0.25rem;
+        right: 0;
+    }
+
+
+`
 
 export default Timer;

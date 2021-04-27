@@ -106,27 +106,13 @@ input {
   background: #0000bd;
 } */
 
-.OrderBook table tbody td {
-    padding: 5px;
+/** GLOBAL TABLE STYLES */
+.bid {
+  color: #00FF08;
 }
 
-.OrderBook table tbody td.fill-bid {
-  background-repeat: no-repeat;
-  background-position: 100% 100%;
-  background-image: linear-gradient(to left, #adf1cf 100%, white 0%);
-  background-size: 0%;
-}
-
-.OrderBook table tbody td.fill-ask {
-  background-repeat: no-repeat;
-  background-position: 100% 100%;
-  background-image: linear-gradient(to left, #ffcccc 100%, white 0%);
-  background-size: 0%;
-}
-
-.OrderBook tr.ask:last-of-type,
-.OrderBook tr.bid:first-of-type {
-  font-weight: bold;
+.ask {
+  color: #F15025
 }
 
 @keyframes countdown {
@@ -173,7 +159,7 @@ input {
 }
 
 .button-disabled {
-    @apply cursor-not-allowed opacity-50
+    @apply cursor-not-allowed opacity-50 w-full
 }
 
 .card {
@@ -243,6 +229,3 @@ h4 {
     @apply px-3 py-2;
 }
 
-.OrderBook table tbody td {
-    padding: 5px;
-}

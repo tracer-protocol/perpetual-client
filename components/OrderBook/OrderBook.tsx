@@ -1,14 +1,18 @@
 import { OMEOrder } from '@components/types/OrderTypes';
 import React from 'react';
 
-import { AskOrder, BidOrder } from './Orders';
-
+import { Order } from './Orders';
+import styled from 'styled-components';
+import { TradingTable } from '../Tables/TradingTable';
 interface OProps {
     askOrders: OMEOrder[]; //TODO change these
     bidOrders: OMEOrder[];
+    className?: string;
 }
 
-const OrderBook: React.FC<OProps> = ({ askOrders, bidOrders }: OProps) => {
+
+
+const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className}: OProps) => {
     const sumQuantities = (orders: OMEOrder[]) => {
         return orders.reduce((total, order) => total + order.quantity, 0);
     };
@@ -23,32 +27,40 @@ const OrderBook: React.FC<OProps> = ({ askOrders, bidOrders }: OProps) => {
     const askOrdersCopy = deepCopyArrayOfObj(askOrders).sort((a, b) => a.price - b.price); // ascending order
     const bidOrdersCopy = deepCopyArrayOfObj(bidOrders).sort((a, b) => b.price - a.price); // descending order
 
-    const renderOrders = (ComponentClass: typeof AskOrder | typeof BidOrder, orders: OMEOrder[]) => {
+    const renderOrders = (bid: boolean, orders: OMEOrder[]) => {
         let cumulative = 0;
         return orders.map((order: OMEOrder, index: number) => {
             order.cumulative = cumulative += order.quantity;
             order.maxCumulative = maxCumulative;
-            return <ComponentClass key={index} {...order} />;
+            return <Order bid={bid} key={index} {...order} />;
         });
     };
-
-    // <thead className="border-b-2 border-blue-300">
-    //     <tr className="text-blue-100 font-bold w-full"></tr>
     return (
-        <div className="OrderBook overflow-scroll relative">
-            <table className="text-xs border-collapse table-fixed text-center w-full">
-                <thead className="border-b-2 border-blue-300">
-                    <tr className="text-blue-100 font-bold">
-                        <th>Quantity</th>
+        <div className={className}>
+            <TradingTable>
+                <thead>
+                    <tr>
                         <th>Price</th>
+                        <th>Quantity</th>
                         <th>Cumulative</th>
                     </tr>
                 </thead>
-                <tbody>{renderOrders(AskOrder, askOrdersCopy).reverse()}</tbody>
-                <tbody>{renderOrders(BidOrder, bidOrdersCopy)}</tbody>
-            </table>
+                <tbody>{renderOrders(false, askOrdersCopy).reverse()}</tbody>
+                <tbody>
+                    <tr>
+                        <td>Market</td>
+                        <td />
+                        <td className="market-swing"></td>
+                    </tr>
+                </tbody>
+                <tbody>{renderOrders(true, bidOrdersCopy)}</tbody>
+            </TradingTable>
         </div>
     );
-};
+})`
+    position: relative; 
+    overflow-y: scroll;
+
+`
 
 export default OrderBook;

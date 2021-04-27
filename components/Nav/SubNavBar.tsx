@@ -1,4 +1,49 @@
 import React from 'react';
+import styled from 'styled-components';
+
+
+
+export const SNav = styled.div`
+    letter-spacing: -0.36px;
+    font-size: 18px;
+    // border-top: 2px solid #03065e;
+    border-bottom: 2px solid #0C3586;
+    display: flex;
+`
+
+export const SNavItem = styled.div`
+    color: #005EA4;
+    transition: 0.3s;
+    border-right: 2px solid #0C3586;
+    text-align: center;
+    padding: 15px;
+    width: 125px;
+    &.selected {
+        background: #002886;
+        color: #fff;
+    }
+
+    &:hover {
+        cursor:pointer;
+    }
+`
+export const SubNav: React.FC<SNBProps> = (props: SNBProps) => {
+    const { tabs, selected, setTab } = props;
+    return (
+        <SNav>
+            {tabs.map((tab_, index) => 
+                <SNavItem 
+                    className={index === selected ? 'selected' : ''}
+                    onClick={(e) => { e.preventDefault(); setTab(index)}}
+                >
+                    {tab_}
+                </SNavItem>
+            )}
+        </SNav>
+    )
+
+}
+
 
 interface SNBProps {
     selected: number;
@@ -8,6 +53,7 @@ interface SNBProps {
     position?: 'end' | 'start';
 }
 
+// TODO remove
 export const SubNavBar: React.FC<SNBProps> = (props: SNBProps) => {
     const background = `${props.background ? `bg-${props.background}` : 'bg-blue-200'} `;
     const position = `${props.position ? `justify-${props.position} ` : 'justify-center '}`;

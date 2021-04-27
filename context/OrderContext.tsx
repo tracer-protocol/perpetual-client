@@ -105,7 +105,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const [order, orderDispatch] = useReducer(reducer, initialState);
 
     const openOrders = useTracerOrders(web3, selectedTracer as Tracer);
-    console.log(openOrders)
     const oppositeOrders = order.position ? openOrders.shortOrders : openOrders.longOrders;
 
     useEffect(() => {

@@ -89,6 +89,9 @@ const TradeButton = styled.div`
         color: #fff;
         cursor: pointer;
     }
+    .button-disabled &:hover {
+        cursor: not-allowed;
+    }
 `
 export const AdvancedOrderButton: React.FC<{ 
     balances: UserBalance | undefined 

@@ -120,7 +120,6 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                         message: 'Failed to take order: Take order function is undefined',
                     } as Result;
                 } else {
-                    console.log("Taking orders", takenOrders)
                     handleTransaction
                         ? await handleTransaction(selectedTracer.takeOrders, [takenOrders ?? [], account])
                         : console.error('Failed to make order: Handle transaction function undefined');

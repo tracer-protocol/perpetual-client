@@ -15,32 +15,32 @@ export const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, maxLever
         quote: 0, base: 0, totalLeveragedValue: 0
     };
     const l = calcLeverage(base, quote, fairPrice);
-    if (!balance) {
-        return <div>Loading</div>;
-    } else {
-        return (
-            <div className="mx-2 my-4 bg-blue-300 rounded-lg p-2">
-                <Section label={'Eligible Liquidation Price'} classes={'text-sm border-b-2 border-blue-200'}>
-                    {toApproxCurrency(calcLiquidationPrice(base, quote, fairPrice, maxLeverage))}
-                </Section>
-                <Section label={'Rational Liquidation Price'} classes={'text-sm border-b-2 border-blue-200'}>
-                    {toApproxCurrency(calcProfitableLiquidationPrice(base, quote, fairPrice, maxLeverage))}
-                </Section>
-                <Section label={'Positions'}classes={'text-sm border-b-2 border-blue-200'}>
-                    {quote}
-                </Section>
-                <Section label={'Position Notional Value'}classes={'text-sm border-b-2 border-blue-200'}>
-                    {toApproxCurrency(calcNotionalValue(quote, fairPrice))}
-                </Section>
-                <Section label={'Leverage Multiplier'}classes={'text-sm border-b-2 border-blue-200'}>
-                    {l > 1 ? `${l}` : '0'}
-                </Section>
-                <Section label={'Borrowed Amount'}classes={'text-sm border-b-2 border-blue-200'}>
-                    {toApproxCurrency(totalLeveragedValue)}
-                </Section>
-            </div>
-        );
-    }
+    return (
+        <div className="flex">
+        <div className="w-1/2 p-3">
+            <Section label={'Eligible liquidation price (exc. gas)'}>
+                {toApproxCurrency(calcLiquidationPrice(base, quote, fairPrice, maxLeverage))}
+            </Section>
+            <Section label={'Likely Liquidation Price (incl. gas)'}>
+                {toApproxCurrency(calcProfitableLiquidationPrice(base, quote, fairPrice, maxLeverage))}
+            </Section>
+            <Section label={'Positions'}classes={'text-sm'}>
+                {quote}
+            </Section>
+        </div>
+        <div className="w-1/2 p-3"> 
+            <Section label={'Notional Value'}>
+                {toApproxCurrency(calcNotionalValue(quote, fairPrice))}
+            </Section>
+            <Section label={'Leverage Multiplier'}>
+                {l > 1 ? `${l}` : '0'}
+            </Section>
+            <Section label={'Borrowed Amount'}>
+                {toApproxCurrency(totalLeveragedValue)}
+            </Section>
+        </div>
+        </div>
+    );
 };
 
 interface PTDProps {

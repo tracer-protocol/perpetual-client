@@ -1,16 +1,44 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { TracerContext, Web3Context } from 'context';
 import LightWeightChart from '@components/Charts/LightWeightChart';
-import { SubNavBar } from '@components/Nav';
-
 import Timer from '@components/Timer';
 import OrderBook from '@components/OrderBook/OrderBook';
 import { MarketSelect, TradingInput, WalletConnect } from './TradingPanel';
 import { getOrders } from '@components/libs/Ome';
 import Web3 from 'web3';
 import Tracer from '@libs/Tracer';
-import { PositionDetails } from '@components/components/SummaryInfo/PositionDetails';
-import { InsuranceInfo } from '@components/components/SummaryInfo/InsuranceInfo';
+import { PositionDetails } from '@components/SummaryInfo/PositionDetails';
+import { InsuranceInfo } from '@components/SummaryInfo/InsuranceInfo';
+import { SubNav } from '@components/Nav/SubNavBar';
+import { Box } from '@components/General';
+import styled from 'styled-components';
+import RecentTrades from './RecentTrades';
+
+const GraphWrap = styled.div`
+    height: 500px;
+    width: calc(100% - 40px);
+    margin-bottom: 20px;
+    padding: 20px;
+`
+
+
+const Graphs = () => {
+    const [tab, setTab] = useState(0)
+    const tabs = ['Price', 'Depth', 'Funding', 'Insurance'];
+    return (
+        <div className="3/4">
+            <SubNav 
+                tabs={tabs}
+                setTab={setTab}
+                selected={tab}
+            />
+            <GraphWrap>
+                <LightWeightChart />
+            </GraphWrap>
+        </div>
+
+    ) 
+}
 
 const parseRes = (res: any, multiplier: number) => {
     const parseOrders = (orders: any) => {
@@ -57,34 +85,108 @@ const useOrders = (trigger: boolean, selectedTracer: Tracer | undefined) => {
     return response;
 };
 
+const OrderBookContainer = styled.div`
+    border-top: 1px solid #002886;
+    padding: 10px;
+    h3 {
+        letter-spacing: -0.4px;
+        color: #FFFFFF;
+        text-transform: capitalize;
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+`
+
 const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
     const orders = useOrders(true, selectedTracer);
+    // const testOrders = [
+    //     {
+    //         cumulative: 5,
+    //         quantity: 5,
+    //         price: 1,
+    //     },
+    //     {
+    //         cumulative: 5,
+    //         quantity: 5,
+    //         price: 1.1,
+    //     },
+    //     {
+    //         cumulative: 5,
+    //         quantity: 5,
+    //         price: 1.2,
+    //     },
+    //     {
+    //         cumulative: 5,
+    //         quantity: 5,
+    //         price: 1.3,
+    //     },
+    //     {
+    //         cumulative: 5,
+    //         quantity: 5,
+    //         price: 1.4,
+    //     },
+    // ]
+    const testTrades = [
+        {
+            amount: 1,
+            bid: false,
+            price: 59852,
+            time: '14:03'
+        },
+        {
+            amount: 5,
+            bid: true,
+            price: 59852,
+            time: '14:02'
+        },
+        {
+            amount: 4,
+            bid: false,
+            price: 59852,
+            time: '14:01'
+        },
+    ]
     return (
-        <div className="advanced-card">
+        <div>
             <div className="bg-blue-200">
                 <h4 className="px-3">{selectedTracer?.marketId}</h4>
             </div>
-            <div className="flex h-screen/50">
-
-                <div className="w-3/4">
-                    <LightWeightChart />
-                </div>
-                <div className="w-1/4 border-l-2 border-gray-100 flex flex-col">
-                    <div className="p-3">
-                        <InsuranceInfo />
-                    </div>
-                    <h4 className="border-b-2 border-gray-100 px-3">Order Book</h4>
-                    <Timer />
-                    <OrderBook askOrders={orders.askOrders} bidOrders={orders.bidOrders} />
-                </div>
+            <div className="flex">
+                <Box className="w-3/4 flex flex-col p-0">
+                    <Graphs />
+                    <TradingSummary selectedTracer={selectedTracer} />
+                </Box>
+                <Box className="w-1/4 flex flex-col p-0">
+                    <InsuranceInfo />
+                    <OrderBookContainer>
+                        <h3>Order Book</h3>
+                        {orders.askOrders?.length || orders.bidOrders?.length 
+                            ? <>
+                                <Timer />
+                                <OrderBook askOrders={orders.askOrders} bidOrders={orders.bidOrders} />
+                            </>
+                            : <p>
+                                No open orders
+                            </p>
+                        }
+                    </ OrderBookContainer>
+                    <RecentTrades trades={testTrades}/>
+                </Box>
             </div>
         </div>
     );
 };
 
-const TradingSummary: React.FC<{ selectedTracer: Tracer | undefined}> = ({ selectedTracer }) => {
+type TSProps = {
+    selectedTracer: Tracer | undefined,
+    className?: string
+}
+
+const TradingSummary: React.FC<TSProps> = styled(({
+        selectedTracer, className
+    }: TSProps) => {
     const [tab, setTab] = useState(0);
-    const tabs = [`My ${selectedTracer?.marketId} Position`, `My ${selectedTracer?.marketId} Orders`, `My ${selectedTracer?.marketId} Fills`];
+    const tabs = [`Position`, `Orders`, `Fills`];
     const content = () =>  {
         switch (tab) {
             case 0:
@@ -95,35 +197,35 @@ const TradingSummary: React.FC<{ selectedTracer: Tracer | undefined}> = ({ selec
                         maxLeverage={selectedTracer?.maxLeverage ?? 1}
                     />
                 )
-                
         }
     }
     return (
-        <div className="advanced-card h-full flex">
-            <div className="w-3/4">
-                <SubNavBar position={'start'} tabs={tabs} setTab={setTab} selected={tab} background="blue-200" />
-                {content()}
-            </div>
-            <div className="w-1/4 border-l-2 border-gray-100">
-                <h4 className="border-b-2 border-gray-100 px-3">Recent Trades</h4>
-            </div>
+        <div className={className}>
+            <SubNav 
+                tabs={tabs}
+                setTab={setTab}
+                selected={tab}
+            />
+            {content()}
         </div>
     );
-};
+})`
+    border-top: 1px solid #0C3586;
+    
+`
 
 const Advanced: React.FC = () => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     return (
         <div className="flex h-full">
-            <div className="w-1/4 flex flex-col max-h-screen/90">
+            <div className="w-1/4 flex flex-col min-h-screen/90">
                 <MarketSelect />
                 <WalletConnect selectedTracer={selectedTracer} account={account ?? ''} />
                 <TradingInput selectedTracer={selectedTracer} />
             </div>
-            <div className="w-3/4 flex flex-col max-h-screen/90">
+            <div className="w-3/4 flex flex-col min-h-screen/90">
                 <TradingView selectedTracer={selectedTracer} />
-                <TradingSummary selectedTracer={selectedTracer}/>
             </div>
         </div>
     );

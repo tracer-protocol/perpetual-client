@@ -77,7 +77,6 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     useEffect(() => {
         if (web3 && insuranceAddress) {
-            console.log(insuranceAddress, "Insurance Address")
             setContract(
                 (new web3.eth.Contract(insuranceJSON.abi as AbiItem[], insuranceAddress) as unknown) as Insurance,
             );

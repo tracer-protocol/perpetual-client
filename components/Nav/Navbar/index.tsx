@@ -233,7 +233,6 @@ const NavBar: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
     const route = routes[1]
     const secondaryRoute = routes[2]
-    console.log(secondaryRoute)
     const { connect, account } = useContext(Web3Context);
     const ensName = useEnsName(account ?? '');
     const { addToast } = useToasts();

@@ -15,18 +15,44 @@ const setGraphOptions: () => Record<string, unknown> = () => {
                 lockVisibleTimeRangeOnResize: true,
                 rightBarStaysOnScroll: true,
                 borderVisible: false,
-                borderColor: '#d5d5d5',
+                borderColor: '#0C3586',
                 visible: true,
                 timeVisible: true,
                 secondsVisible: false,
                 autoScale: true,
             },
+            grid: {
+                vertLines: {
+                    color: 'rgba(12, 53, 134, 1)',
+                    style: 1,
+                    visible: true,
+                },
+                horzLines: {
+                    color: 'rgba(12, 53, 134, 1)',
+                    style: 1,
+                    visible: true,
+                },
+            },
+            crosshair: {
+                vertLine: {
+                    color: '#37B1F6'
+                },
+                horzLine: {
+                    color: '#37B1F6'
+                }
+            },
             priceScale: {
-                borderColor: '#d5d5d5',
+                borderColor: '#37B1F6',
+                position: 'left'
+            },
+            // @ts-ignore
+            timeScale: {
+                borderColor: '#37B1F6',
             },
             layout: {
                 textColor: '#696969',
                 fontFamily: 'Akkurat',
+                backgroundColor: '#03065E',
             },
         },
         candlestickSeries: [
