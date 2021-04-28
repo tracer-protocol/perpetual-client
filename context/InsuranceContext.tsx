@@ -18,7 +18,7 @@ interface ContextProps {
 }
 
 interface State {
-    pools: Record<string, InsurancePoolInfo>
+    pools: Record<string, InsurancePoolInfo>;
 }
 
 /**
@@ -31,7 +31,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     const { tracers } = useContext(FactoryContext);
     const { selectedTracer } = useContext(TracerContext);
     const [contract, setContract] = useState<Insurance>();
-    const insuranceAddress = config?.contracts.insurance.address ?? ''
+    const insuranceAddress = config?.contracts.insurance.address ?? '';
 
     const initialState = {
         pools: {
@@ -40,12 +40,12 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 userBalance: 0,
                 target: 0,
                 liquidity: 0,
-                rewards: 0, 
+                rewards: 0,
                 health: 0,
-                apy: 0
-            } as InsurancePoolInfo
-        }
-    } 
+                apy: 0,
+            } as InsurancePoolInfo,
+        },
+    };
 
     const reducer = (state: State, action: any) => {
         switch (action.type) {
@@ -55,18 +55,18 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     pools: {
                         [action.marketId]: {
                             ...state.pools[action.marketId ?? 'undefined'],
-                            userBalance: action.balance
-                        }
-                    }
+                            userBalance: action.balance,
+                        },
+                    },
                 };
             case 'setAll':
                 return {
                     ...state,
                     pools: {
                         [action.marketId]: {
-                            ...action.state
-                        }
-                    }
+                            ...action.state,
+                        },
+                    },
                 };
             default:
                 throw new Error();
@@ -77,7 +77,6 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     useEffect(() => {
         if (web3 && insuranceAddress) {
-            console.log(insuranceAddress, "Insurance Address")
             setContract(
                 (new web3.eth.Contract(insuranceJSON.abi as AbiItem[], insuranceAddress) as unknown) as Insurance,
             );
@@ -86,8 +85,10 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     const fetchPoolData = async () => {
         Promise.all(
-            Object.values(tracers as Record<string, Tracer>).map((tracer: Tracer) => getPoolData(tracer.address, tracer.marketId)
-        ))
+            Object.values(tracers as Record<string, Tracer>).map((tracer: Tracer) =>
+                getPoolData(tracer.address, tracer.marketId),
+            ),
+        );
     };
 
     /**
@@ -140,8 +141,8 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
      */
     const getPoolData: (tracerAddress: string, marketId: string) => Promise<void> = async (tracerAddress, marketId) => {
         if (tracerAddress) {
-            const userBalance_ = account 
-                ? contract?.methods.getPoolUserBalance(tracerAddress, account as string).call() 
+            const userBalance_ = account
+                ? contract?.methods.getPoolUserBalance(tracerAddress, account as string).call()
                 : Promise.resolve('0'); // we dont want it all to fail if account isnt connected
             const rewards_ = contract?.methods.getRewardsPerToken(tracerAddress).call();
             const target_ = contract?.methods.getPoolTarget(tracerAddress).call();
@@ -160,7 +161,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     liquidity: liquidity,
                     rewards: res[1] ? parseFloat(Web3.utils.fromWei(res[1])) : 0,
                     health: health < 1 ? health * 100 : 100,
-                    apy: 0
+                    apy: 0,
                 },
             });
         } // else
@@ -173,7 +174,11 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         }
         Promise.resolve(contract?.methods.getPoolUserBalance(selectedTracer?.address, account as string).call())
             .then((res) => {
-                dispatch({ type: 'setUserBalance', marketId: selectedTracer?.marketId, balance: res ? parseFloat(Web3.utils.fromWei(res)) : 0 });
+                dispatch({
+                    type: 'setUserBalance',
+                    marketId: selectedTracer?.marketId,
+                    balance: res ? parseFloat(Web3.utils.fromWei(res)) : 0,
+                });
             })
             .catch((err) => {
                 console.error(err);
@@ -181,12 +186,16 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     };
 
     useEffect(() => {
-        if (tracers && contract) fetchPoolData();
-    }, [tracers, contract])
+        if (tracers && contract) {
+            fetchPoolData();
+        }
+    }, [tracers, contract]);
 
     useEffect(() => {
-        if (tracers && contract && account) updatePoolBalance()
-    }, [selectedTracer, account])
+        if (tracers && contract && account) {
+            updatePoolBalance();
+        }
+    }, [selectedTracer, account]);
 
     useEffect(() => {
         if (contract && account && selectedTracer?.address) {
@@ -194,18 +203,20 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [contract, account, selectedTracer]) // eslint-disable-line
 
-    const selectedPool: InsurancePoolInfo = (state.pools as Record<string, InsurancePoolInfo>)[selectedTracer?.marketId as string]
+    const selectedPool: InsurancePoolInfo = (state.pools as Record<string, InsurancePoolInfo>)[
+        selectedTracer?.marketId as string
+    ];
 
     return (
         <InsuranceContext.Provider
             value={{
                 poolInfo: {
-                    ...selectedPool
+                    ...selectedPool,
                 },
                 deposit,
                 withdraw,
                 contract,
-                pools: state.pools
+                pools: state.pools,
             }}
         >
             {children}

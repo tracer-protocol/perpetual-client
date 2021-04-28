@@ -28,7 +28,7 @@ const Positions: React.FC<{ className: string }> = ({ className }: { className: 
     );
 };
 
-const OrderSummary:React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
+const OrderSummary: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
     const { order, exposure } = useContext(OrderContext);
 
     return (
@@ -38,11 +38,17 @@ const OrderSummary:React.FC<{ selectedTracer: Tracer | undefined }> = ({ selecte
             <LeverageSlider leverage={order?.leverage ?? 1} />
             <div className="px-5 mt-2 p-5 border-t-2 border-gray-100 text-sm">
                 <div className="text-blue-100 font-bold">Order Summary</div>
-                <PostTradeDetails 
+                <PostTradeDetails
                     fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
-                    balances={selectedTracer?.balances ?? { 
-                        quote: 0, base: 0, totalLeveragedValue: 0, lastUpdatedGasPrice: 0, tokenBalance: 0
-                    }}
+                    balances={
+                        selectedTracer?.balances ?? {
+                            quote: 0,
+                            base: 0,
+                            totalLeveragedValue: 0,
+                            lastUpdatedGasPrice: 0,
+                            tokenBalance: 0,
+                        }
+                    }
                     exposure={exposure ?? 0}
                     position={order?.position ?? 0}
                     maxLeverage={selectedTracer?.maxLeverage ?? 1}
@@ -62,7 +68,7 @@ const BasicPlaceOrder: React.FC<{ setSummary: (bool: boolean) => void }> = ({
         <div className="px-24">
             <Positions className="pt-12 pb-16" />
             <TracerSelect className="px-5 pb-16" inputSize={'text-5xl'} />
-            <LeverageSlider className="pb-12" leverage={order?.leverage ?? 1}/>
+            <LeverageSlider className="pb-12" leverage={order?.leverage ?? 1} />
             <OrderSubmit setSummary={setSummary} />
         </div>
     );
@@ -79,7 +85,7 @@ const BasicOrderSummary: React.FC = () => {
             </div>
             <div className="flex w-full">
                 <div className="w-1/2 border-r-2 border-gray-100">
-                    <OrderSummary selectedTracer={selectedTracer}/>
+                    <OrderSummary selectedTracer={selectedTracer} />
                 </div>
                 <div className="w-1/2 flex flex-col">
                     <div className="h-full border-b-2 border-gray-100">

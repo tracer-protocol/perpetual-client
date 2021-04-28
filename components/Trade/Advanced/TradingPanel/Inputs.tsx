@@ -2,17 +2,28 @@ import React from 'react';
 import { OrderContext } from 'context';
 import { useContext } from 'react';
 import SmallInput from '@components/Input/SmallInput';
+import { calcWithdrawable } from '@components/libs/utils';
+import { Tracer } from '@components/libs';
 interface ISProps {
-    tracerId: string;
+    selectedTracer: Tracer | undefined;
     amount: number;
     price: number;
 }
 
-export const Inputs: React.FC<ISProps> = ({ tracerId, amount, price }: ISProps) => {
+export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISProps) => {
     const { orderDispatch } = useContext(OrderContext);
+    const tracerId = selectedTracer?.marketId ?? '';
+    const balances = selectedTracer?.balances;
+    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0);
+    const maxMargin = calcWithdrawable(
+        balances?.quote ?? 0,
+        balances?.base ?? 0,
+        fairPrice,
+        selectedTracer?.maxLeverage ?? 1,
+    );
     return (
-        <div className="flex flex-wrap">
-            <div className="w-1/2 p-3">
+        <div className="flex flex-wrap text-white">
+            <div className="w-full p-3">
                 <SmallInput
                     title={'Amount'}
                     onChange={(e) =>
@@ -20,11 +31,17 @@ export const Inputs: React.FC<ISProps> = ({ tracerId, amount, price }: ISProps) 
                             ? orderDispatch({ type: 'setRMargin', value: parseFloat(e.target.value) })
                             : console.error('No dispatch function set')
                     }
+                    setMax={(e) => {
+                        e.preventDefault();
+                        orderDispatch
+                            ? orderDispatch({ type: 'setRMargin', value: maxMargin })
+                            : console.error('No dispatch function set');
+                    }}
                     unit={tracerId.split('/')[0]}
                     amount={amount}
                 />
             </div>
-            <div className="w-1/2 p-3">
+            <div className="w-full p-3">
                 <SmallInput
                     title={'Price'}
                     onChange={(e) =>

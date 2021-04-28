@@ -21,7 +21,6 @@ interface ContextProps {
     placeOrder: (order: OrderState, takenOrders: TakenOrder[]) => Promise<Result | undefined>;
 }
 
-
 export const TracerContext = React.createContext<Partial<ContextProps>>({});
 
 type TracerState = {
@@ -120,7 +119,6 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                         message: 'Failed to take order: Take order function is undefined',
                     } as Result;
                 } else {
-                    console.log("Taking orders", takenOrders)
                     handleTransaction
                         ? await handleTransaction(selectedTracer.takeOrders, [takenOrders ?? [], account])
                         : console.error('Failed to make order: Handle transaction function undefined');
@@ -137,7 +135,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                               rMargin,
                               Math.round(price * 1000000),
                               position === 1, // if === 1 then long else false short
-                              account
+                              account,
                           ])
                         : console.error('Failed to create order: Handle transaction function undefined');
                 }
@@ -145,12 +143,11 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     };
 
-
     useEffect(() => {
         const fetch = async () => {
             const balance = await selectedTracer?.updateUserBalance(account);
             tracerDispatch({ type: 'setUserBalance', value: balance });
-        }
+        };
         fetch();
     }, [account]);
 

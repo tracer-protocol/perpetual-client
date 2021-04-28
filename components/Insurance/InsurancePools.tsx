@@ -82,7 +82,13 @@ const InsurancePoolInfo: React.FC<{ tracer: string }> = ({ tracer }: { tracer: s
 const InsurancePoolsTable: React.FC<{
     handleClick: (tracerId: string) => void;
     pools: Record<string, InsurancePoolInfoType>;
-}> = ({ handleClick, pools }: { handleClick: (tracerId: string) => void; pools: Record<string, InsurancePoolInfoType> }) => {
+}> = ({
+    handleClick,
+    pools,
+}: {
+    handleClick: (tracerId: string) => void;
+    pools: Record<string, InsurancePoolInfoType>;
+}) => {
     const headings = ['Trace', 'Health', 'Target Value', 'Liquidity', 'My Share', 'APY'];
     const [filter, setFilter] = useState('');
     const [rows, setRows] = useState<string[][]>([]);
@@ -149,10 +155,7 @@ const Insurance: React.FC = () => {
                 <InsurancePoolInfo tracer={tracerId} />
             </div>
             <div className="card h-full flex flex-col">
-                <PoolContributors
-                    holdings={insurancePools[tracerId]?.holders}
-                    liquidity={poolInfo?.liquidity ?? 0}
-                />
+                <PoolContributors holdings={insurancePools[tracerId]?.holders} liquidity={poolInfo?.liquidity ?? 0} />
             </div>
         </div>
     ) : (

@@ -1,12 +1,18 @@
 import React, { useContext } from 'react';
 import Slider from 'antd/lib/slider';
-import { OrderContext } from '../../context';
+import { OrderContext } from 'context';
+import styled from 'styled-components';
+
+interface DSProps {
+    leverage: number;
+    className?: string;
+}
 
 /**
  * Basic slider with no styling
  * @param leverage
  */
-export const DefaultSlider: React.FC<DSProps> = ({ leverage }: DSProps) => {
+export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }: DSProps) => {
     const { orderDispatch } = useContext(OrderContext); // TODO update to generic onChange
 
     const marks = {
@@ -29,9 +35,10 @@ export const DefaultSlider: React.FC<DSProps> = ({ leverage }: DSProps) => {
                 marks={marks}
                 defaultValue={0}
                 step={1}
+                className={className}
                 tooltipVisible={false}
-                trackStyle={{ backgroundColor: '#0000bd' }}
-                handleStyle={{ borderColor: '#0000bd' }}
+                trackStyle={{ backgroundColor: '#3DA8F5' }}
+                handleStyle={{ borderColor: '#3DA8F5' }}
                 onChange={(num: number) =>
                     orderDispatch
                         ? orderDispatch({ type: 'setLeverage', value: num })
@@ -39,22 +46,25 @@ export const DefaultSlider: React.FC<DSProps> = ({ leverage }: DSProps) => {
                 }
                 value={leverage}
             />
-            <style>{`
-            .ant-slider-dot-active {
-                border-color: #0000bd;
-            }
-        `}</style>
         </>
     );
-};
+})`
+    * > .ant-slider {
+        color: #3da8f5;
+    }
+    * > .ant-slider-dot-active {
+        border-color: #3da8f5;
+    }
+    * > .ant-slider-mark-text {
+        color: #3da8f5;
+    }
+`;
 
 /**
  * Wrapped slider with different sizing
  * @param className custom classes
  */
-const LeverageSlider: React.FC<{ className?: string, leverage: number }> = ({ 
-    className, leverage 
-}) => {
+const LeverageSlider: React.FC<{ className?: string; leverage: number }> = ({ className, leverage }) => {
     return (
         <div className={'flex flex-col px-5 ' + className}>
             <div className="mr-auto px-3 text-blue-100 font-bold">LEVERAGE</div>
@@ -64,9 +74,4 @@ const LeverageSlider: React.FC<{ className?: string, leverage: number }> = ({
         </div>
     );
 };
-
-interface DSProps {
-    leverage: number;
-}
-
 export default LeverageSlider;

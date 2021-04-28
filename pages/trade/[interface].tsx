@@ -1,30 +1,18 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import NavBar, { SubNavBar } from '@components/Nav';
+import NavBar from '@components/Nav';
 import { Basic, Advanced } from '@components/Trade';
 import { OrderStore, ErrorInfo, SelectedTracerStore } from 'context';
 import { InsuranceStore } from '@context/InsuranceContext';
+import styled from 'styled-components';
 
-const Trade: React.FC = () => {
-    const subTabs = ['Basic', 'Advanced'];
+const Trade: React.FC = styled(({ className }) => {
     const router = useRouter();
     const { query } = router;
     const advanced = query.interface === 'advanced';
-
-    const setTab = (tab: number) => {
-        switch (tab) {
-            case 1:
-                router.push('/trade/advanced');
-                break;
-            case 0:
-            default:
-                router.push('/trade/basic');
-        }
-    };
     return (
-        <div className="min-h-screen h-screen flex flex-col">
+        <div className={className}>
             <NavBar />
-            <SubNavBar setTab={setTab} tabs={subTabs} selected={advanced ? 1 : 0} />
             <SelectedTracerStore tracer={query.tracer as string}>
                 <InsuranceStore>
                     <ErrorInfo>
@@ -34,6 +22,12 @@ const Trade: React.FC = () => {
             </SelectedTracerStore>
         </div>
     );
-};
+})`
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: #03065e;
+    color: #fff;
+`;
 
 export default Trade;

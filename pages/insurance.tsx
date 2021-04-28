@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBar from '@components/Nav/NavBar';
+import NavBar from '@components/components/Nav/Navbar';
 import InsurancePools from '@components/Insurance';
 import Loading from '@components/Loading/Loading';
 import { InsuranceStore } from '@context/InsuranceContext';

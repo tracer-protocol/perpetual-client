@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useGlobalLoadingState } from '@libs/Graph';
 
-const Loading = () => {
+const Loading: React.FC = () => {
     const loading = useGlobalLoadingState();
     const [state, setState] = useState('WAITING');
 

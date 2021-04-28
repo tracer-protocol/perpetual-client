@@ -1,14 +1,54 @@
 import { OMEOrder } from '@components/types/OrderTypes';
 import React from 'react';
 
-import { AskOrder, BidOrder } from './Orders';
-
+import { Order } from './Orders';
+import styled from 'styled-components';
+import { TradingTable } from '../Tables/TradingTable';
 interface OProps {
     askOrders: OMEOrder[]; //TODO change these
     bidOrders: OMEOrder[];
+    className?: string;
 }
 
-const OrderBook: React.FC<OProps> = ({ askOrders, bidOrders }: OProps) => {
+interface MCProps {
+    className?: string;
+    amount: number;
+}
+const MarketChange: React.FC<MCProps> = styled(({ className, amount }: MCProps) => (
+    <td className={className}>
+        <div className={amount >= 0 ? 'arrow-up' : 'arrow-down'} />
+        <p className={amount >= 0 ? 'up' : 'down'}>20%</p>
+    </td>
+))`
+    display: flex;
+    .up {
+        color: #21dd53;
+    }
+    .down {
+        color: #f15025;
+    }
+
+    .arrow-up {
+        margin: auto 0;
+        margin-right: 10px;
+        height: 0;
+        width: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 8px solid #21dd53;
+    }
+    .arrow-down {
+        margin: auto 0;
+        margin-right: 10px;
+        height: 0;
+        width: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-top: 8px solid #f15025;
+    }
+`;
+
+const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className }: OProps) => {
     const sumQuantities = (orders: OMEOrder[]) => {
         return orders.reduce((total, order) => total + order.quantity, 0);
     };
@@ -23,32 +63,39 @@ const OrderBook: React.FC<OProps> = ({ askOrders, bidOrders }: OProps) => {
     const askOrdersCopy = deepCopyArrayOfObj(askOrders).sort((a, b) => a.price - b.price); // ascending order
     const bidOrdersCopy = deepCopyArrayOfObj(bidOrders).sort((a, b) => b.price - a.price); // descending order
 
-    const renderOrders = (ComponentClass: typeof AskOrder | typeof BidOrder, orders: OMEOrder[]) => {
+    const renderOrders = (bid: boolean, orders: OMEOrder[]) => {
         let cumulative = 0;
         return orders.map((order: OMEOrder, index: number) => {
             order.cumulative = cumulative += order.quantity;
             order.maxCumulative = maxCumulative;
-            return <ComponentClass key={index} {...order} />;
+            return <Order bid={bid} key={index} {...order} />;
         });
     };
-
-    // <thead className="border-b-2 border-blue-300">
-    //     <tr className="text-blue-100 font-bold w-full"></tr>
     return (
-        <div className="OrderBook overflow-scroll relative">
-            <table className="text-xs border-collapse table-fixed text-center w-full">
-                <thead className="border-b-2 border-blue-300">
-                    <tr className="text-blue-100 font-bold">
-                        <th>Quantity</th>
+        <div className={className}>
+            <TradingTable>
+                <thead>
+                    <tr>
                         <th>Price</th>
+                        <th>Quantity</th>
                         <th>Cumulative</th>
                     </tr>
                 </thead>
-                <tbody>{renderOrders(AskOrder, askOrdersCopy).reverse()}</tbody>
-                <tbody>{renderOrders(BidOrder, bidOrdersCopy)}</tbody>
-            </table>
+                <tbody>{renderOrders(false, askOrdersCopy).reverse()}</tbody>
+                <tbody>
+                    <tr>
+                        <td>Market</td>
+                        <td />
+                        <MarketChange amount={1} />
+                    </tr>
+                </tbody>
+                <tbody>{renderOrders(true, bidOrdersCopy)}</tbody>
+            </TradingTable>
         </div>
     );
-};
+})`
+    position: relative;
+    overflow-y: scroll;
+`;
 
 export default OrderBook;

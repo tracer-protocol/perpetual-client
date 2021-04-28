@@ -26,6 +26,8 @@ module.exports = {
         eqeqeq: 2,
         "react/prop-types": 0,
         '@typescript-eslint/no-unused-vars': [1, { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }],
+        '@typescript-eslint/no-explicit-any': [0],
+        '@typescript-eslint/ban-ts-comment': [0],
         'no-unreachable-loop': 1,
         'no-unreachable': 1,
         // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs

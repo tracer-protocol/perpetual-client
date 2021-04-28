@@ -38,11 +38,11 @@ const LivePositions: React.FC = () => {
             </div>
             <div className="w-full h-screen/40 flex mt-auto">
                 <Card title={`${tracerId} Market Details`}>
-                    <MarketInfo fundingRate={selectedTracer?.feeRate ?? 0} health={poolInfo?.health ?? 0}/>
+                    <MarketInfo fundingRate={selectedTracer?.feeRate ?? 0} health={poolInfo?.health ?? 0} />
                 </Card>
                 <Card title={`My ${tracerId} Margin Account`} classes={`mx-12 flex flex-col card`}>
-                    <AccountMarginInfo 
-                        balance={selectedTracer?.balances} 
+                    <AccountMarginInfo
+                        balance={selectedTracer?.balances}
                         fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
                         maxLeverage={selectedTracer?.maxLeverage ?? 1}
                     />

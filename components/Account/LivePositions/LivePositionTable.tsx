@@ -21,7 +21,7 @@ const PositionClose: ({ setLoading, setShow }: PCProps) => any = ({ setLoading, 
     const { web3, account } = useContext(Web3Context);
     const { selectedTracer, tracerId } = useContext(TracerContext);
     const { handleTransaction } = useContext(TransactionContext);
-    const balances =  selectedTracer?.balances ?? { quote: 0 }
+    const balances = selectedTracer?.balances ?? { quote: 0 };
     const openOrders = useTracerOrders(web3 as Web3, selectedTracer as Tracer);
     const closingOrders = useClosePosition(balances.quote ?? 0, openOrders);
 
@@ -29,15 +29,15 @@ const PositionClose: ({ setLoading, setShow }: PCProps) => any = ({ setLoading, 
         setLoading(true);
         if (selectedTracer) {
             const callBack = async () => {
-                await selectedTracer?.updateUserBalance(account)
+                await selectedTracer?.updateUserBalance(account);
                 setLoading(false);
                 setShow(false);
-            }
+            };
             handleTransaction
                 ? await handleTransaction(selectedTracer?.takeOrders, [closingOrders ?? [], account], callBack)
                 : console.error('Failed to make order: Handle transaction function undefined');
         } else {
-            console.error("Failed to make order: No selected Tracer")
+            console.error('Failed to make order: No selected Tracer');
         }
     };
 
@@ -145,7 +145,9 @@ const Row_: React.FC<RProps> = ({ tracer, selected, setTracerId }) => {
                 `${toApproxCurrency(totalMargin(balance.quote, balance.base, price))}`,
                 balance.quote === 0 ? 'NO POSITION' : balance.quote < 0 ? 'SHORT' : 'LONG',
                 `${toApproxCurrency(Math.abs(balance.quote) * price)}`,
-                `${toApproxCurrency(calcLiquidationPrice(balance.base, balance.quote, price, tracer?.maxLeverage ?? 1 ))}`,
+                `${toApproxCurrency(
+                    calcLiquidationPrice(balance.base, balance.quote, price, tracer?.maxLeverage ?? 1),
+                )}`,
                 '',
             ]}
         >
@@ -172,7 +174,12 @@ const PositionTable: React.FC<PTProps> = ({ tracers }: PTProps) => {
         <div className="p-6 overflow-scroll">
             <Table headings={headings}>
                 {Object.keys(tracers).map((marketId) => (
-                    <Row_ tracer={tracers[marketId]} setTracerId={setTracerId} selected={tracerId === marketId} />
+                    <Row_
+                        key={marketId}
+                        tracer={tracers[marketId]}
+                        setTracerId={setTracerId}
+                        selected={tracerId === marketId}
+                    />
                 ))}
             </Table>
         </div>

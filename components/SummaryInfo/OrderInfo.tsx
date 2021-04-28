@@ -1,11 +1,11 @@
+import React from 'react';
 import { Section, FundingRate, PoolHealth } from './';
 
-
 export const OrderInfo: React.FC<{
-    feeRate: number | undefined,
-    health: number | undefined,
-    engine: 'AMM' | 'OME' | undefined
-}> = ({ feeRate, health, engine}) => {
+    feeRate: number | undefined;
+    health: number | undefined;
+    engine: 'AMM' | 'OME' | undefined;
+}> = ({ feeRate, health, engine }) => {
     return (
         <>
             <Section label={'Funding Rate'}>

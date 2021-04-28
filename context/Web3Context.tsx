@@ -11,7 +11,7 @@ import { web3Machine } from '@machines/Web3Machine';
 
 import { networkConfig, Network as NetworkType } from './Web3Context.Config';
 
-export const initModal = async () => {
+export const initModal: () => Promise<Web3Modal> = async () => {
     return new Web3Modal({
         network: 'mainnet',
         theme: 'dark',
@@ -105,7 +105,7 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
                     //disconnecting
                     send('DISCONNECT');
                     send('UPDATE_ACCOUNT', {
-                        account: ''
+                        account: '',
                     });
                 } else {
                     send('UPDATE_ACCOUNT', {

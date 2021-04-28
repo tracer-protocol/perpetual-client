@@ -11,7 +11,17 @@ const ALL_TRACERS = gql`
     }
 `;
 
-export const useAllTracers = () => {
+type Tracers = {
+    tracers: {
+        id: string;
+        marketId: string;
+    }[];
+    error: any;
+    loading: any;
+    refetch: any;
+};
+
+export const useAllTracers: () => Tracers = () => {
     const ref = useRef([]);
     const { addToast } = useToasts();
     const { data, error, loading, refetch } = useQuery(ALL_TRACERS, {
