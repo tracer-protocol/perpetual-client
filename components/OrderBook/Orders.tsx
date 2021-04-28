@@ -18,22 +18,24 @@ interface BProps {
     className?: string;
 }
 
-export const Order: React.FC<BProps> = styled(({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
-    return (
-        <tr className={className}>
-            <td className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price)}</td>
-            <td>{quantity}</td>
-            <td
-                className={`fill-${bid ? 'bid' : 'ask'}`}
-                style={{ backgroundSize: getPercentage(cumulative, maxCumulative) + '% 100%' }}
-            >
-                {cumulative}
-            </td>
-        </tr>
-    );
-})`
+export const Order: React.FC<BProps> = styled(
+    ({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
+        return (
+            <tr className={className}>
+                <td className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price)}</td>
+                <td>{quantity}</td>
+                <td
+                    className={`fill-${bid ? 'bid' : 'ask'}`}
+                    style={{ backgroundSize: getPercentage(cumulative, maxCumulative) + '% 100%' }}
+                >
+                    {cumulative}
+                </td>
+            </tr>
+        );
+    },
+)`
     position: relative;
-    border-bottom: 2px solid #03065E;
+    border-bottom: 2px solid #03065e;
     text-align: left;
     font-size: 16px;
     letter-spacing: -0.32px;
@@ -41,14 +43,14 @@ export const Order: React.FC<BProps> = styled(({ className, cumulative, quantity
     .fill-bid {
         background-repeat: no-repeat;
         background-position: 100% 100%;
-        background-image: linear-gradient(to left, #F1502566 100%, white 0%);
+        background-image: linear-gradient(to left, #f1502566 100%, white 0%);
         background-size: 0%;
     }
 
     .fill-ask {
         background-repeat: no-repeat;
         background-position: 100% 100%;
-        background-image: linear-gradient(to left, #00FF0866 100%, white 0%);
+        background-image: linear-gradient(to left, #00ff0866 100%, white 0%);
         background-size: 0%;
     }
-`
+`;

@@ -26,6 +26,6 @@ const Timer: React.FC = styled(({ className }) => {
     }
 
 
-`
+`;
 
 export default Timer;

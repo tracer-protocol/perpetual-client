@@ -24,14 +24,12 @@ export const InsuranceButton: React.FC<BProps> = ({ type }: BProps) => {
     const [showModal, setShowModal] = useState(false);
 
     const poolBalance = poolInfo?.userBalance ?? 0;
-    const balance = type === 'Deposit' ? tracerBalance?.tokenBalance : poolBalance; 
+    const balance = type === 'Deposit' ? tracerBalance?.tokenBalance : poolBalance;
     const [valid, setValid] = useState(true);
     const [amount, setAmount] = useState(0); // The amount within the input
 
-    const amount_ = !Number.isNaN(amount) ? amount : 0
-    const newBalance = type === 'Deposit' 
-        ? poolBalance + amount_
-        : poolBalance - amount_
+    const amount_ = !Number.isNaN(amount) ? amount : 0;
+    const newBalance = type === 'Deposit' ? poolBalance + amount_ : poolBalance - amount_;
 
     useEffect(() => {
         setValid(amount > 0 && amount <= (balance ?? 0));
@@ -84,7 +82,7 @@ export const InsuranceButton: React.FC<BProps> = ({ type }: BProps) => {
                             <Section label={`Insurance Pool Health`}>
                                 {`${calcInsurancePoolHealth(poolInfo?.target, poolInfo?.liquidity) * 100}%`}
                                 {'  ->  '}
-                                {`${(poolInfo?.target, (poolInfo?.liquidity ?? 0 - amount_)) * 100}%`}
+                                {`${(poolInfo?.target, poolInfo?.liquidity ?? 0 - amount_) * 100}%`}
                             </Section>
                         </div>
                     </div>
@@ -105,15 +103,13 @@ export const InsuranceButton: React.FC<BProps> = ({ type }: BProps) => {
 export const InsuranceButtons: React.FC = () => {
     return (
         <div className="mt-auto flex w-full">
-            <InsuranceButton type="Deposit">
-            </InsuranceButton>
+            <InsuranceButton type="Deposit"></InsuranceButton>
             <InsuranceButton type="Withdraw">
                 <div className="">
                     <h3 className="mt-10 text-left text-blue-100 text-lg">Insurance pool withdraw summary</h3>
                     <div>
                         <Section label={`My Shares`}>
-
-                            {'  ->  '} 
+                            {'  ->  '}
                             30 USDC
                         </Section>
                         <Section label={`Anticipated rewards`}>X% {'->'} X%</Section>

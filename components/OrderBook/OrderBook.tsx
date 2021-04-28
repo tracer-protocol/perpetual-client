@@ -14,20 +14,20 @@ interface MCProps {
     className?: string;
     amount: number;
 }
-const MarketChange: React.FC<MCProps> = styled(({ className, amount }: MCProps) => 
+const MarketChange: React.FC<MCProps> = styled(({ className, amount }: MCProps) => (
     <td className={className}>
         <div className={amount >= 0 ? 'arrow-up' : 'arrow-down'} />
         <p className={amount >= 0 ? 'up' : 'down'}>20%</p>
     </td>
-)`
+))`
     display: flex;
     .up {
-        color: #21DD53;
+        color: #21dd53;
     }
     .down {
-        color: #F15025;
+        color: #f15025;
     }
-    
+
     .arrow-up {
         margin: auto 0;
         margin-right: 10px;
@@ -35,7 +35,7 @@ const MarketChange: React.FC<MCProps> = styled(({ className, amount }: MCProps) 
         width: 0;
         border-left: 5px solid transparent;
         border-right: 5px solid transparent;
-        border-bottom: 8px solid #21DD53;
+        border-bottom: 8px solid #21dd53;
     }
     .arrow-down {
         margin: auto 0;
@@ -44,11 +44,11 @@ const MarketChange: React.FC<MCProps> = styled(({ className, amount }: MCProps) 
         width: 0;
         border-left: 5px solid transparent;
         border-right: 5px solid transparent;
-        border-top: 8px solid #F15025;
+        border-top: 8px solid #f15025;
     }
-`
+`;
 
-const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className}: OProps) => {
+const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className }: OProps) => {
     const sumQuantities = (orders: OMEOrder[]) => {
         return orders.reduce((total, order) => total + order.quantity, 0);
     };
@@ -86,7 +86,7 @@ const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className}: 
                     <tr>
                         <td>Market</td>
                         <td />
-                        <MarketChange amount={1}/>
+                        <MarketChange amount={1} />
                     </tr>
                 </tbody>
                 <tbody>{renderOrders(true, bidOrdersCopy)}</tbody>
@@ -94,9 +94,8 @@ const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className}: 
         </div>
     );
 })`
-    position: relative; 
+    position: relative;
     overflow-y: scroll;
-
-`
+`;
 
 export default OrderBook;

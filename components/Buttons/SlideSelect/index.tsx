@@ -5,15 +5,10 @@ import styled from 'styled-components';
 type TSSProps = {
     onClick: (index: number, e: any) => any;
     value: number;
-    className?: string
+    className?: string;
 } & Children;
 
-const SlideSelect: React.FC<TSSProps> = styled(({
-    onClick,
-    value,
-    children,
-    className
-}: TSSProps) => {
+const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, className }: TSSProps) => {
     return (
         <>
             <div className={className}>
@@ -21,6 +16,7 @@ const SlideSelect: React.FC<TSSProps> = styled(({
                     return (
                         <SlideOption
                             onClick={(e) => onClick(index, e)}
+                            key={`slide-option-${index}`}
                             className={`${index === value ? 'selected' : ''}`}
                         >
                             {child}
@@ -31,12 +27,11 @@ const SlideSelect: React.FC<TSSProps> = styled(({
         </>
     );
 })`
-
     display: flex;
     margin: auto;
-    border: 1px solid #3DA8F5;
+    border: 1px solid #3da8f5;
     border-radius: 20px;
-`
+`;
 
 export const SlideOption = styled.div`
     display: flex;
@@ -45,20 +40,20 @@ export const SlideOption = styled.div`
     text-align: center;
     width: 100%;
     padding: 10px 0;
-    color: #3DA8F5;
+    color: #3da8f5;
 
     transition: background 0.3;
 
     &:hover {
-        cursor: pointer
+        cursor: pointer;
     }
 
     &.selected {
-        background: #3DA8F5;
+        background: #3da8f5;
         color: #fff;
-        border: 1px solid #3DA8F5;
+        border: 1px solid #3da8f5;
     }
-`
+`;
 
 SlideSelect.defaultProps = {
     onClick: () => undefined,

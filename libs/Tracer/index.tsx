@@ -87,7 +87,7 @@ export default class Tracer {
             maxLeverage,
             fundingRateSensitivity,
             feeRate,
-            accountAddress
+            accountAddress,
         ])
             .then((res) => {
                 const priceMultiplier_ = parseInt(res[0]);
@@ -98,11 +98,8 @@ export default class Tracer {
                 this.maxLeverage = parseFloat(res[4]) / 10000;
                 this.fundingRateSensitivity = parseInt(res[5]) / priceMultiplier_;
                 this.feeRate = parseInt(res[6]) / priceMultiplier_;
-                this.account = (new web3.eth.Contract(
-                    accountJSON.abi as AbiItem[],
-                    res[7],
-                ) as unknown) as AccountType;
-                this.accountAddress = res[7]
+                this.account = (new web3.eth.Contract(accountJSON.abi as AbiItem[], res[7]) as unknown) as AccountType;
+                this.accountAddress = res[7];
                 this.updateOraclePrice();
                 return true;
             })
@@ -222,7 +219,9 @@ export default class Tracer {
      */
     updateUserBalance: (account: string | undefined) => Promise<boolean> = async (account) => {
         try {
-            if (!this.account) return Promise.resolve(false)
+            if (!this.account) {
+                return Promise.resolve(false);
+            }
             // if accounts is undefined the catch should get it
             const balance = await this.account.methods.getBalance(account ?? '', this.address.toString()).call();
             const walletBalance = await this.token?.methods.balanceOf(account ?? '').call();

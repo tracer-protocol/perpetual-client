@@ -28,6 +28,6 @@ const Trade: React.FC = styled(({ className }) => {
     flex-direction: column;
     background-color: #03065e;
     color: #fff;
-`
+`;
 
 export default Trade;

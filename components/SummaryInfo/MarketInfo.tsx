@@ -4,7 +4,7 @@ import TracerLoading from '@components/TracerLoading';
 
 type MIProps = {
     fundingRate: number;
-    health: number
+    health: number;
 };
 
 export const MarketInfo: React.FC<MIProps> = ({ fundingRate, health }: MIProps) => {

@@ -35,15 +35,15 @@ const setGraphOptions: () => Record<string, unknown> = () => {
             },
             crosshair: {
                 vertLine: {
-                    color: '#37B1F6'
+                    color: '#37B1F6',
                 },
                 horzLine: {
-                    color: '#37B1F6'
-                }
+                    color: '#37B1F6',
+                },
             },
             priceScale: {
                 borderColor: '#37B1F6',
-                position: 'left'
+                position: 'left',
             },
             // @ts-ignore
             timeScale: {

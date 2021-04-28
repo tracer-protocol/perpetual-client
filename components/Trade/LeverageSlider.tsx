@@ -49,27 +49,22 @@ export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }:
         </>
     );
 })`
-
     * > .ant-slider {
-        color: #3DA8F5;
-    } 
+        color: #3da8f5;
+    }
     * > .ant-slider-dot-active {
-        border-color: #3DA8F5;
+        border-color: #3da8f5;
     }
     * > .ant-slider-mark-text {
-        color: #3DA8F5;
+        color: #3da8f5;
     }
-
-
-`
+`;
 
 /**
  * Wrapped slider with different sizing
  * @param className custom classes
  */
-const LeverageSlider: React.FC<{ className?: string, leverage: number }> = ({ 
-    className, leverage 
-}) => {
+const LeverageSlider: React.FC<{ className?: string; leverage: number }> = ({ className, leverage }) => {
     return (
         <div className={'flex flex-col px-5 ' + className}>
             <div className="mr-auto px-3 text-blue-100 font-bold">LEVERAGE</div>

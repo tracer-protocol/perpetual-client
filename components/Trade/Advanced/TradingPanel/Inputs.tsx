@@ -14,14 +14,19 @@ export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISP
     const { orderDispatch } = useContext(OrderContext);
     const tracerId = selectedTracer?.marketId ?? '';
     const balances = selectedTracer?.balances;
-    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)
-    const maxMargin = calcWithdrawable(balances?.quote ?? 0, balances?.base ?? 0, fairPrice, selectedTracer?.maxLeverage ?? 1)
+    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0);
+    const maxMargin = calcWithdrawable(
+        balances?.quote ?? 0,
+        balances?.base ?? 0,
+        fairPrice,
+        selectedTracer?.maxLeverage ?? 1,
+    );
     return (
         <div className="flex flex-wrap text-white">
             <div className="w-full p-3">
                 <SmallInput
                     title={'Amount'}
-                    onChange={(e) => 
+                    onChange={(e) =>
                         orderDispatch
                             ? orderDispatch({ type: 'setRMargin', value: parseFloat(e.target.value) })
                             : console.error('No dispatch function set')
@@ -29,8 +34,8 @@ export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISP
                     setMax={(e) => {
                         e.preventDefault();
                         orderDispatch
-                            ? orderDispatch({ type: 'setRMargin', value: maxMargin})
-                            : console.error('No dispatch function set')
+                            ? orderDispatch({ type: 'setRMargin', value: maxMargin })
+                            : console.error('No dispatch function set');
                     }}
                     unit={tracerId.split('/')[0]}
                     amount={amount}

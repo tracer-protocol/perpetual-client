@@ -1,20 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 
-
-
 export const SNav = styled.div`
     letter-spacing: -0.36px;
     font-size: 18px;
     // border-top: 2px solid #03065e;
-    border-bottom: 2px solid #0C3586;
+    border-bottom: 2px solid #0c3586;
     display: flex;
-`
+`;
 
 export const SNavItem = styled.div`
-    color: #005EA4;
+    color: #005ea4;
     transition: 0.3s;
-    border-right: 2px solid #0C3586;
+    border-right: 2px solid #0c3586;
     text-align: center;
     padding: 15px;
     width: 125px;
@@ -24,26 +22,28 @@ export const SNavItem = styled.div`
     }
 
     &:hover {
-        cursor:pointer;
+        cursor: pointer;
     }
-`
+`;
 export const SubNav: React.FC<SNBProps> = (props: SNBProps) => {
     const { tabs, selected, setTab } = props;
     return (
         <SNav>
-            {tabs.map((tab_, index) => 
-                <SNavItem 
+            {tabs.map((tab_, index) => (
+                <SNavItem
                     className={index === selected ? 'selected' : ''}
-                    onClick={(e) => { e.preventDefault(); setTab(index)}}
+                    key={`sub-nav-${index}`}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setTab(index);
+                    }}
                 >
                     {tab_}
                 </SNavItem>
-            )}
+            ))}
         </SNav>
-    )
-
-}
-
+    );
+};
 
 interface SNBProps {
     selected: number;

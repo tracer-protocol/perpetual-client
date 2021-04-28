@@ -20,7 +20,7 @@ export const AccountStore: React.FC<StoreProps> = ({ children }: StoreProps) => 
     const { account, web3, updateGlobal, config } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     const [contract, setContract] = useState<Account>();
-    const accountAddress = config?.contracts.account.address ?? ''
+    const accountAddress = config?.contracts.account.address ?? '';
 
     useEffect(() => {
         if (web3 && accountAddress) {
@@ -48,7 +48,7 @@ export const AccountStore: React.FC<StoreProps> = ({ children }: StoreProps) => 
             updateGlobal ? updateGlobal() : console.error('Global update function not set');
             return { status: 'success', message: 'Successfully made deposit request' };
         } catch (err) {
-            return { status: 'error', message: `Failed to withdraw from margin account: ${err.message}` }
+            return { status: 'error', message: `Failed to withdraw from margin account: ${err.message}` };
         }
     };
 
@@ -62,9 +62,12 @@ export const AccountStore: React.FC<StoreProps> = ({ children }: StoreProps) => 
                 .send({ from: account });
             await selectedTracer?.updateUserBalance(account);
             updateGlobal ? updateGlobal() : console.error('Global update function not set');
-            return { status: 'success', message: `Successfully withdrew from margin account, ${result?.transactionHash}` };
+            return {
+                status: 'success',
+                message: `Successfully withdrew from margin account, ${result?.transactionHash}`,
+            };
         } catch (err) {
-            return { status: 'error', message: `Failed to withdraw from margin account: ${err.message}`}
+            return { status: 'error', message: `Failed to withdraw from margin account: ${err.message}` };
         }
     };
 

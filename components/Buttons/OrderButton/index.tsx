@@ -71,31 +71,30 @@ export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balan
     );
 };
 
-
 const TradeButton = styled.div`
     letter-spacing: -0.32px;
-    color: #FFFFFF;
+    color: #ffffff;
     width: 100%;
     font-size: 16px;
     text-align: center;
-    border: 1px solid #3DA8F5;
+    border: 1px solid #3da8f5;
     border-radius: 10px;
     padding: 10px 0;
-    background: #03065E;
-    color: #3DA8F5;
+    background: #03065e;
+    color: #3da8f5;
     transition: 0.3s;
     &:hover {
-        background: #3DA8F5;
+        background: #3da8f5;
         color: #fff;
         cursor: pointer;
     }
     .button-disabled &:hover {
         cursor: not-allowed;
     }
-`
-export const AdvancedOrderButton: React.FC<{ 
-    balances: UserBalance | undefined 
-}> = ({ balances }: { balances: UserBalance | undefined}) => {
+`;
+export const AdvancedOrderButton: React.FC<{
+    balances: UserBalance | undefined;
+}> = ({ balances }: { balances: UserBalance | undefined }) => {
     // const { setError } = useContext(ErrorContext);
     const { order } = useContext(OrderContext);
     const rMargin = order?.rMargin ?? 0;
@@ -110,14 +109,11 @@ export const AdvancedOrderButton: React.FC<{
     return (
         <div className="w-full flex">
             <PlaceOrderButton balance={balances?.base ?? 0}>
-                <TradeButton>
-                    Place Trade
-                </TradeButton>
+                <TradeButton>Place Trade</TradeButton>
             </PlaceOrderButton>
         </div>
     );
-}
-
+};
 
 export const PlaceOrderButton: React.FC<POBProps> = ({ balance, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
@@ -186,7 +182,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ balance, children }: POBP
                     </div>
                 </TracerModal>
                 <div className="w-full" onClick={() => setShowOrder(true)}>
-                    { children}
+                    {children}
                 </div>
             </>
         );

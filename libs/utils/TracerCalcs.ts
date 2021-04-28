@@ -46,39 +46,35 @@ export const safeCalcTradeMargin: (
     return { margin: cMargin, position: cPosition };
 };
 
-export const calcLeverage: (
-    base: number, quote: number, fairPrice: number
-) => number = (base, quote, fairPrice) =>   {
-    if (calcNotionalValue(quote, fairPrice) < 0.000001) { // TODO update this since highly likely for something like BTC/USD
+export const calcLeverage: (base: number, quote: number, fairPrice: number) => number = (base, quote, fairPrice) => {
+    if (calcNotionalValue(quote, fairPrice) < 0.000001) {
+        // TODO update this since highly likely for something like BTC/USD
         return 0;
     }
-    return calcNotionalValue(quote, fairPrice) / totalMargin(quote, base, fairPrice)
-}
+    return calcNotionalValue(quote, fairPrice) / totalMargin(quote, base, fairPrice);
+};
 
 /**
  * A function that returns the liquidation price for a given account
  * @param value
  */
-export const calcLiquidationPrice: (
-    base: number, 
-    quote: number,
-    fairPrice: number,
-    maxLeverage: number
-) => number = (base, quote, fairPrice,  maxLeverage, ) => {
-    if (calcNotionalValue(quote, fairPrice) < 0.000001) { // TODO update this since highly likely for something like BTC/USD
+export const calcLiquidationPrice: (base: number, quote: number, fairPrice: number, maxLeverage: number) => number = (
+    base,
+    quote,
+    fairPrice,
+    maxLeverage,
+) => {
+    if (calcNotionalValue(quote, fairPrice) < 0.000001) {
+        // TODO update this since highly likely for something like BTC/USD
         return 0;
     }
-    const borrowed = calcBorrowed(base, quote, fairPrice)
+    const borrowed = calcBorrowed(base, quote, fairPrice);
     if (borrowed > 0 || quote < 0) {
-        return (
-            quote > 0 // case 1
-                ? (maxLeverage * (base - RYAN_6 * LIQUIDATION_GAS_COST) / (quote - maxLeverage * quote))
-                : 0
-            + 
-            quote < 0 // case 2
-                ? (-1 * (base * maxLeverage - RYAN_6 * LIQUIDATION_GAS_COST * maxLeverage) / (maxLeverage * quote + quote))
-                : 0
-        )
+        return quote > 0 // case 1
+            ? (maxLeverage * (base - RYAN_6 * LIQUIDATION_GAS_COST)) / (quote - maxLeverage * quote)
+            : 0 + quote < 0 // case 2
+            ? (-1 * (base * maxLeverage - RYAN_6 * LIQUIDATION_GAS_COST * maxLeverage)) / (maxLeverage * quote + quote)
+            : 0;
     } else {
         return 0;
     }
@@ -89,60 +85,60 @@ export const calcLiquidationPrice: (
  * @param value
  */
 export const calcProfitableLiquidationPrice: (
-    base: number, 
+    base: number,
     quote: number,
     fairPrice: number,
-    maxLeverage: number
-) => number = (base, quote, fairPrice,  maxLeverage, ) => {
+    maxLeverage: number,
+) => number = (base, quote, fairPrice, maxLeverage) => {
     const margin = totalMargin(quote, base, fairPrice);
-    const borrowed = calcBorrowed(base, quote, fairPrice)
+    const borrowed = calcBorrowed(base, quote, fairPrice);
     if (borrowed > 0 || margin < 0) {
-        return (
-            base > 0 // case 1
-                ? (maxLeverage * (quote - ((RYAN_6 * LIQUIDATION_GAS_COST) - LIQUIDATION_GAS_COST)) / (base - (maxLeverage * base)))
-                : 0
-            + 
-            base < 0 // case 2
-                ? (-1 * (quote * (maxLeverage - ((RYAN_6 * LIQUIDATION_GAS_COST - LIQUIDATION_GAS_COST) * maxLeverage)) / (maxLeverage * base + base)))
-                : 0
-        )
+        return base > 0 // case 1
+            ? (maxLeverage * (quote - (RYAN_6 * LIQUIDATION_GAS_COST - LIQUIDATION_GAS_COST))) /
+                  (base - maxLeverage * base)
+            : 0 + base < 0 // case 2
+            ? -1 *
+              ((quote * (maxLeverage - (RYAN_6 * LIQUIDATION_GAS_COST - LIQUIDATION_GAS_COST) * maxLeverage)) /
+                  (maxLeverage * base + base))
+            : 0;
     } else {
         return 0;
     }
 };
 
-
 export const accountGain: (margin: number, deposited: number) => number = (margin, deposited) => {
     return margin - deposited;
 };
 
-export const calcBorrowed: (
-    base: number, quote: number, fairPrice: number
-) => number = (base, quote, fairPrice) => Math.max(0, calcNotionalValue(quote, fairPrice) - totalMargin(quote, base, fairPrice))
+export const calcBorrowed: (base: number, quote: number, fairPrice: number) => number = (base, quote, fairPrice) =>
+    Math.max(0, calcNotionalValue(quote, fairPrice) - totalMargin(quote, base, fairPrice));
 
-
-export const calcWithdrawable: (
-    quote: number, base: number, fairPrice: number, maxLeverage: number
-) => number = (quote, base, fairPrice, maxLeverage) =>  {
+export const calcWithdrawable: (quote: number, base: number, fairPrice: number, maxLeverage: number) => number = (
+    quote,
+    base,
+    fairPrice,
+    maxLeverage,
+) => {
     const notional = calcNotionalValue(quote, fairPrice);
-    const margin = totalMargin(quote, base, fairPrice) 
+    const margin = totalMargin(quote, base, fairPrice);
     if (notional < 0.0001) {
         // TODO this is an error when the users position is so small its negligable
         return margin - 0.0001; // ignore the liquidation cost
     }
-    return margin - (quote !== 0 ? LIQUIDATION_GAS_COST * RYAN_6 + calcNotionalValue(quote, fairPrice) / maxLeverage : 0)
-
-}
+    return (
+        margin - (quote !== 0 ? LIQUIDATION_GAS_COST * RYAN_6 + calcNotionalValue(quote, fairPrice) / maxLeverage : 0)
+    );
+};
 
 /**
  * Calculates the notional value of the position
- * @param quote position amount in units of quote 
- * @param fairPrice fair price of quote 
- * @returns 
+ * @param quote position amount in units of quote
+ * @param fairPrice fair price of quote
+ * @returns
  */
 export const calcNotionalValue: (quote: number, fairPrice: number) => number = (quote, fairPrice) => {
     return Math.abs(quote) * fairPrice;
-}
+};
 
 /**
  * Calculates the minimum margin required for a given position and price
@@ -151,21 +147,26 @@ export const calcNotionalValue: (quote: number, fairPrice: number) => number = (
  * @param fairPrice the quote is being traded at
  * @returns the minimum margin required
  */
-export const calcMinimumMargin: (
-    base:number, quote: number, fairPrice: number, maxLeverage: number
-) => number = (base, quote, fairPrice, maxLeverage) => {
-    const margin = totalMargin(quote, base, fairPrice)
-    if (calcNotionalValue(quote, fairPrice) < 0.000001) { // TODO update this since highly likely for something like BTC/USD
+export const calcMinimumMargin: (base: number, quote: number, fairPrice: number, maxLeverage: number) => number = (
+    base,
+    quote,
+    fairPrice,
+    maxLeverage,
+) => {
+    const margin = totalMargin(quote, base, fairPrice);
+    if (calcNotionalValue(quote, fairPrice) < 0.000001) {
+        // TODO update this since highly likely for something like BTC/USD
         return 0;
     }
     if (margin > 0 || quote < 0) {
-        return LIQUIDATION_GAS_COST * RYAN_6 + calcNotionalValue(quote, fairPrice) / maxLeverage
-    } else return 0;
-}
+        return LIQUIDATION_GAS_COST * RYAN_6 + calcNotionalValue(quote, fairPrice) / maxLeverage;
+    } else {
+        return 0;
+    }
+};
 
-export const totalMargin: (
-    quote: number, base: number, fairPrice: number
-) => number = (quote, base, fairPrice) => base + (quote * fairPrice)
+export const totalMargin: (quote: number, base: number, fairPrice: number) => number = (quote, base, fairPrice) =>
+    base + quote * fairPrice;
 
 // order prices are in cents * 1000
 // so converstion is fromCents(price / (100 * 1000))

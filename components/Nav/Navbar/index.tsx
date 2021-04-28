@@ -49,40 +49,40 @@ const DropdownLogo = styled(({ className }) => {
         e.preventDefault();
         setShow(!show);
         const dropdown = document.querySelector('.dropdown-menu-list');
-        dropdown?.addEventListener('transitionend', () => { // add delay after open
+        dropdown?.addEventListener('transitionend', () => {
+            // add delay after open
             if (document.getElementById('menu')?.classList.contains('show')) {
                 dropdown?.classList.add('delayed-transition');
             }
         });
-        dropdown?.addEventListener('transitionend', () => { // remove delay after close
+        dropdown?.addEventListener('transitionend', () => {
+            // remove delay after close
             if (!document.getElementById('menu')?.classList.contains('show')) {
                 dropdown?.classList.remove('delayed-transition');
             }
         });
-    }
+    };
     return (
         <div id="menu" className={`${className} ${show ? 'show' : ''}`} onClick={handleClick}>
-            <img alt="Tracer Logo" className="logo" src="/img/logos/tracer_perps.svg"/>
+            <img alt="Tracer Logo" className="logo" src="/img/logos/tracer_perps.svg" />
             <img alt="down-arrow" className="down-arrow" src="/img/general/triangle_down.svg" />
             <div className="divide" />
             <div className={`dropdown-menu`}>
                 <ul className="dropdown-menu-list">
+                    <li className="nav-item">{/* <img alt="Tracer Logo" src="/img/logos/tracer_perps.svg"/> */}</li>
                     <li className="nav-item">
-                        {/* <img alt="Tracer Logo" src="/img/logos/tracer_perps.svg"/> */}
+                        <img alt="Tracer Logo" src="/img/logos/tracer_main.svg" />
                     </li>
                     <li className="nav-item">
-                        <img alt="Tracer Logo" src="/img/logos/tracer_main.svg"/>
+                        <img alt="Tracer Logo" src="/img/logos/tracer_govern.svg" />
                     </li>
                     <li className="nav-item">
-                        <img alt="Tracer Logo" src="/img/logos/tracer_govern.svg"/>
-                    </li>
-                    <li className="nav-item">
-                        <img alt="Tracer Logo" src="/img/logos/tracer_blog.svg"/>
+                        <img alt="Tracer Logo" src="/img/logos/tracer_blog.svg" />
                     </li>
                 </ul>
             </div>
         </div>
-    )
+    );
 })`
     height: 100%;
     display: flex;
@@ -99,7 +99,7 @@ const DropdownLogo = styled(({ className }) => {
         width: 100%;
         position: absolute;
         bottom: 20px;
-        background: #3DA8F5;
+        background: #3da8f5;
     }
 
     > .logo {
@@ -124,7 +124,6 @@ const DropdownLogo = styled(({ className }) => {
         margin-top: 10px;
     }
 
-
     > .dropdown-menu {
         opacity: 0;
         position: absolute;
@@ -144,7 +143,7 @@ const DropdownLogo = styled(({ className }) => {
         opacity: 0;
     }
     .delayed-transition {
-        transition-delay: 0.3s!important;
+        transition-delay: 0.3s !important;
     }
     > .dropdown-menu ul .nav-item {
         background: transparent;
@@ -184,12 +183,12 @@ const DropdownLogo = styled(({ className }) => {
         transition: all 0.3s ease-in-out 0.4s, background 0.5s ease;
     }
     &.show > .dropdown-menu ul .nav-item {
-        border-top: 1px solid #3DA8F5;
+        border-top: 1px solid #3da8f5;
         transform: translateX(0);
         opacity: 1;
         &:hover {
             cursor: pointer;
-            background-color: #3DA8F5;
+            background-color: #3da8f5;
         }
     }
 
@@ -206,9 +205,7 @@ const DropdownLogo = styled(({ className }) => {
         height: 400px;
         z-index: 1;
     }
-
-    
-`
+`;
 
 const ConnectButton: React.FC<any> = styled.button`
     display: flex;
@@ -216,23 +213,23 @@ const ConnectButton: React.FC<any> = styled.button`
     border-radius: 20px;
     width: 150px;
     height: 50px;
-    border: 2px solid #FFFFFF;
+    border: 2px solid #ffffff;
     transition: 0.2s;
     padding: 0 10px;
     margin: auto 20px;
-    
+
     &:focus {
         outline: none;
     }
     &:hover {
         background: #3da8f5;
     }
-`
+`;
 
 const NavBar: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
-    const route = routes[1]
-    const secondaryRoute = routes[2]
+    const route = routes[1];
+    const secondaryRoute = routes[2];
     const { connect, account } = useContext(Web3Context);
     const ensName = useEnsName(account ?? '');
     const { addToast } = useToasts();
@@ -254,7 +251,7 @@ const NavBar: React.FC = styled(({ className }) => {
 
     const buttonContent = () => {
         if (!account) {
-            return 'Connect Wallet'
+            return 'Connect Wallet';
         }
         if (ensName) {
             const len = ensName.length;
@@ -276,16 +273,12 @@ const NavBar: React.FC = styled(({ className }) => {
             <DropdownLogo />
             <ul>
                 <li className={linkStyles + (route === 'trade' ? ' selected' : '')}>
-                <span className='trade-toggle'>
+                    <span className="trade-toggle">
                         <Link href="/trade/basic">
-                            <div className={`${secondaryRoute === 'basic' ? 'selected' : ''}`}>
-                                    Basic
-                            </div>
+                            <div className={`${secondaryRoute === 'basic' ? 'selected' : ''}`}>Basic</div>
                         </Link>
                         <Link href="/trade/advanced">
-                            <div className={`${secondaryRoute === 'advanced' ? 'selected' : ''}`}>
-                                    Advanced
-                            </div>
+                            <div className={`${secondaryRoute === 'advanced' ? 'selected' : ''}`}>Advanced</div>
                         </Link>
                     </span>
                     <Link href="/trade/basic">
@@ -308,27 +301,23 @@ const NavBar: React.FC = styled(({ className }) => {
                     </Link>
                 </li>
             </ul>
-            <ConnectButton
-                onClick={() => handleConnect()}
-            >
+            <ConnectButton onClick={() => handleConnect()}>
                 <div className="m-auto flex text-sm font-bold">
                     <Identicon account={account ?? ''} />
-                    <div className="px-2">
-                        {buttonContent()}
-                    </div>
+                    <div className="px-2">{buttonContent()}</div>
                 </div>
             </ConnectButton>
         </nav>
     );
 })`
-    background-color: #03065E;
+    background-color: #03065e;
     display: flex;
     width: 100%;
     color: #fff;
     height: 10vh;
 
     > ul {
-        display: flex; 
+        display: flex;
         margin-left: auto;
         margin-bottom: 0;
         font-size: 14px;
@@ -341,15 +330,15 @@ const NavBar: React.FC = styled(({ className }) => {
         padding: 0 20px;
     }
     > ul li.selected {
-        color: #37B1F6;
+        color: #37b1f6;
     }
 
     > ul li:hover {
-        color: #37B1F6;
+        color: #37b1f6;
     }
 
     > ul li .trade-toggle {
-        display: none
+        display: none;
     }
     > ul li.selected .trade-toggle {
         display: flex;
@@ -366,11 +355,10 @@ const NavBar: React.FC = styled(({ className }) => {
         }
     }
     > ul li.selected .trade-toggle div.selected {
-        color: #03065E;
-        background-color: #3DA8F5;
+        color: #03065e;
+        background-color: #3da8f5;
         border-radius: 20px;
     }
-
-`
+`;
 
 export default NavBar;

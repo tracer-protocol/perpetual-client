@@ -16,17 +16,15 @@ import { calcMinimumMargin, toApproxCurrency, totalMargin } from '@components/li
 import { MarginButton } from '@components/components/Buttons/MarginButtons';
 
 const Market = styled.div`
-
     letter-spacing: -0.4px;
     font-size: 20px;
     color: #fff;
-
-`
+`;
 
 const Selector = styled.div`
     border-radius: 10px;
-    border: 1px solid #3DA8F5;
-    color: #3DA8F5;
+    border: 1px solid #3da8f5;
+    color: #3da8f5;
 
     &:hover {
         cursor: pointer;
@@ -35,22 +33,22 @@ const Selector = styled.div`
     a {
         padding-left: 10px;
     }
-`
+`;
 
 export const MarketSelect: React.FC = () => {
     const { tracers } = useContext(FactoryContext);
     const { setTracerId, tracerId } = useContext(TracerContext);
-    const marketsList = <Menu
+    const marketsList = (
+        <Menu
             onClick={({ key }) =>
-                setTracerId ?
-                    setTracerId(key as string)
-                    : console.error("Set tracer id function not set")
+                setTracerId ? setTracerId(key as string) : console.error('Set tracer id function not set')
             }
-            >
-                {Object.keys(tracers ?? {})?.map((marketId) => {
-                    return <Menu.Item key={marketId}>{marketId}</Menu.Item>;
-                })}
-            </Menu>
+        >
+            {Object.keys(tracers ?? {})?.map((marketId) => {
+                return <Menu.Item key={marketId}>{marketId}</Menu.Item>;
+            })}
+        </Menu>
+    );
     return (
         <Box>
             <Market>
@@ -66,10 +64,9 @@ export const MarketSelect: React.FC = () => {
             </div>
         </Box>
     );
-}
+};
 
 const Item = styled.div`
-
     width: 100%;
     font-size: 16px;
     margin-bottom: 10px;
@@ -82,31 +79,28 @@ const Item = styled.div`
     }
     > span a:nth-child(2) {
         margin-left: auto;
-        color: #21DD53;
+        color: #21dd53;
     }
     h3 {
         letter-spacing: -0.32px;
-        color: #3DA8F5;
+        color: #3da8f5;
         text-transform: capitalize;
         margin-bottom: 5px;
     }
-`
+`;
 
 const DepositButtons = styled.div`
     display: flex;
     justify-content: space-between;
-`
+`;
 
-export const WalletConnect: React.FC<{ 
-    selectedTracer: Tracer | undefined,
-    account: string,
-}> = ({
-    selectedTracer,
-    account,
-}) => {
+export const WalletConnect: React.FC<{
+    selectedTracer: Tracer | undefined;
+    account: string;
+}> = ({ selectedTracer, account }) => {
     const balances = selectedTracer?.balances;
     const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0);
-    const maxLeverage = (selectedTracer?.maxLeverage ?? 1)
+    const maxLeverage = selectedTracer?.maxLeverage ?? 1;
 
     return account === '' ? (
         <Box>
@@ -120,9 +114,7 @@ export const WalletConnect: React.FC<{
             <Item>
                 <h3>Total Margin</h3>
                 <span>
-                    <a>
-                        {toApproxCurrency(totalMargin(balances?.quote ?? 0, balances?.base ?? 0, fairPrice))}
-                    </a>
+                    <a>{toApproxCurrency(totalMargin(balances?.quote ?? 0, balances?.base ?? 0, fairPrice))}</a>
                     {/* <a>
                         {'>>>'} $2,498.72 USDC
                     </a> */}
@@ -132,7 +124,9 @@ export const WalletConnect: React.FC<{
                 <h3>Minimum Margin</h3>
                 <span>
                     <a>
-                        {toApproxCurrency(calcMinimumMargin(balances?.quote ?? 0, balances?.base ?? 0, fairPrice, maxLeverage))}
+                        {toApproxCurrency(
+                            calcMinimumMargin(balances?.quote ?? 0, balances?.base ?? 0, fairPrice, maxLeverage),
+                        )}
                     </a>
                     {/* <a>
                         {'>>>'} $2,498.72 USDC
@@ -141,14 +135,10 @@ export const WalletConnect: React.FC<{
             </Item>
             <DepositButtons>
                 <MarginButton type="Deposit">
-                    <Button className="primary">
-                        Deposit
-                    </Button>
+                    <Button className="primary">Deposit</Button>
                 </MarginButton>
                 <MarginButton type="Withdraw">
-                    <Button>
-                        Withdraw
-                    </Button>
+                    <Button>Withdraw</Button>
                 </MarginButton>
             </DepositButtons>
         </Box>
@@ -172,11 +162,7 @@ export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({
                 </div>
 
                 {/* Quanity and Price Inputs */}
-                <InputSelects
-                    amount={order?.rMargin ?? 0}
-                    price={order?.price || 0}
-                    selectedTracer={selectedTracer}
-                />
+                <InputSelects amount={order?.rMargin ?? 0} price={order?.price || 0} selectedTracer={selectedTracer} />
 
                 {/* Dont display these if it is a limit order*/}
                 {order?.orderType !== 1 ? (
@@ -188,16 +174,21 @@ export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({
                     <></>
                 )}
 
-                <PostTradeDetails 
+                <PostTradeDetails
                     fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
-                    balances={selectedTracer?.balances ?? { 
-                        quote: 0, base: 0, totalLeveragedValue: 0, lastUpdatedGasPrice: 0, tokenBalance: 0
-                    }}
+                    balances={
+                        selectedTracer?.balances ?? {
+                            quote: 0,
+                            base: 0,
+                            totalLeveragedValue: 0,
+                            lastUpdatedGasPrice: 0,
+                            tokenBalance: 0,
+                        }
+                    }
                     exposure={exposure ?? 0}
                     position={order?.position ?? 0}
                     maxLeverage={selectedTracer?.maxLeverage ?? 1}
                 />
-                
 
                 {/* Place Order */}
                 <div className="py-1">
@@ -266,8 +257,8 @@ const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
         margin: auto 0;
         font-size: 16px;
         letter-spacing: -0.32px;
-        color: #3DA8F5;
+        color: #3da8f5;
         margin-bottom: 35px; // this is because ant has a margin-bottom 28px on the slider
         margin-right: auto;
     }
-`
+`;

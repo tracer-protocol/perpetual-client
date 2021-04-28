@@ -20,10 +20,9 @@ export const round: (value: number) => number = (value) => {
  */
 
 export const toApproxCurrency: (str: string | number) => string = (str) => {
-    return str
-        .toLocaleString('en-us', {
-            style: 'currency',
-            currency: 'USD',
-        })
-        // .replace('-', '~');
+    return str.toLocaleString('en-us', {
+        style: 'currency',
+        currency: 'USD',
+    });
+    // .replace('-', '~');
 };

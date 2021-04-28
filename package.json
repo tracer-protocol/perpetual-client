@@ -42,7 +42,7 @@
         "build": "next build",
         "start": "next start",
         "export": "next export ",
-        "lint": "eslint '*/**/*.{js,ts,tsx}' --fix",
+        "lint": "eslint '*/**/*.{ts,tsx}' --fix",
         "lint-staged": "eslint '*/**/*.{js,ts,tsx}' --cache",
         "storybook": "start-storybook -p 6006",
         "storybook:build": "build-storybook"

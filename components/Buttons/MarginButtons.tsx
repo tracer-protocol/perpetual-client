@@ -6,7 +6,15 @@ import { Children } from 'types';
 import { TransactionContext } from '@components/context/TransactionContext';
 import NumberSelect from '../Input/NumberSelect';
 import { Button } from '.';
-import { calcBorrowed, calcLeverage, calcLiquidationPrice, calcMinimumMargin, calcWithdrawable, toApproxCurrency, totalMargin } from '@components/libs/utils';
+import {
+    calcBorrowed,
+    calcLeverage,
+    calcLiquidationPrice,
+    calcMinimumMargin,
+    calcWithdrawable,
+    toApproxCurrency,
+    totalMargin,
+} from '@components/libs/utils';
 
 type ButtonType = 'Deposit' | 'Withdraw';
 
@@ -20,9 +28,11 @@ export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
     const [showModal, setShowModal] = useState(false);
     const { tracerId, selectedTracer } = useContext(TracerContext);
     const { quote, base, tokenBalance } = selectedTracer?.balances ?? {
-        quote: 0, base: 0, tokenBalance: 0
+        quote: 0,
+        base: 0,
+        tokenBalance: 0,
     };
-    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)
+    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0);
     const maxLeverage = selectedTracer?.maxLeverage ?? 1;
     const balance = type === 'Deposit' ? tokenBalance : calcWithdrawable(quote, base, fairPrice, maxLeverage);
 
@@ -33,9 +43,9 @@ export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
     const [amount, setAmount] = useState(0);
 
     // add or subtract amount from the base
-    const newBase = base + ((type === 'Deposit' ? 1 : -1) * (Number.isNaN(amount) ? 0 : amount))
+    const newBase = base + (type === 'Deposit' ? 1 : -1) * (Number.isNaN(amount) ? 0 : amount);
     useEffect(() => {
-        setValid(amount > 0 && amount <= ( balance ?? 0));
+        setValid(amount > 0 && amount <= (balance ?? 0));
     }, [balance, amount]);
 
     const submit = async (amount: number) => {
@@ -71,11 +81,17 @@ export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
                         <div>
                             <h3 className="mt-10 text-left text-blue-100 text-lg">Margin {type} Summary</h3>
                             <div>
-                                <Section label={`Account Margin`} 
-                                    classes={calcMinimumMargin(base, quote, fairPrice, maxLeverage) > totalMargin(newBase, quote, fairPrice) ? 'text-red-500' : ''}
+                                <Section
+                                    label={`Account Margin`}
+                                    classes={
+                                        calcMinimumMargin(base, quote, fairPrice, maxLeverage) >
+                                        totalMargin(newBase, quote, fairPrice)
+                                            ? 'text-red-500'
+                                            : ''
+                                    }
                                 >
                                     {toApproxCurrency(totalMargin(quote, base, fairPrice))}
-                                    {'  ->  '} 
+                                    {'  ->  '}
                                     {toApproxCurrency(totalMargin(quote, newBase, fairPrice))}
                                 </Section>
                                 <Section label={`Liquidation Price`}>
@@ -85,7 +101,7 @@ export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
                                 </Section>
                                 <Section label={`Leverage`}>
                                     {`${calcLeverage(base, quote, fairPrice)}`}
-                                    {'  ->  '} 
+                                    {'  ->  '}
                                     {`${calcLeverage(base, quote, fairPrice)}`}
                                 </Section>
                                 <Section label={`Borrowed`}>
@@ -103,29 +119,23 @@ export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
                     </div>
                 </div>
             </TracerModal>
-            <div onClick={() => setShowModal(true)}>
-                {children}
-            </div>
+            <div onClick={() => setShowModal(true)}>{children}</div>
         </>
     );
 };
-
 
 /**
  *  This is seperated such that it can be used from the deposit page with the Button variant passed in
  */
 export const MarginDeposit: React.FC = () => {
-    return (
-        <MarginButton type="Deposit">
-        </MarginButton>
-    );
+    return <MarginButton type="Deposit"></MarginButton>;
 };
 
 export const MarginButtons: React.FC = () => {
     return (
         <div className="mt-auto flex w-full">
             <MarginDeposit />
-            
+
             <MarginButton type="Withdraw" />
         </div>
     );

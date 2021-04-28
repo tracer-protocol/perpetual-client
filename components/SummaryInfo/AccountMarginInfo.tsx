@@ -1,5 +1,12 @@
 import React from 'react';
-import { calcMinimumMargin, calcWithdrawable, toApproxCurrency, calcLiquidationPrice, calcLeverage, totalMargin } from '@libs/utils';
+import {
+    calcMinimumMargin,
+    calcWithdrawable,
+    toApproxCurrency,
+    calcLiquidationPrice,
+    calcLeverage,
+    totalMargin,
+} from '@libs/utils';
 import { Section } from './';
 import { UserBalance } from '@components/types';
 
@@ -11,12 +18,14 @@ interface IProps {
 
 export const AccountMarginInfo: React.FC<IProps> = ({ balance, fairPrice, maxLeverage }: IProps) => {
     const { quote, base, totalLeveragedValue } = balance ?? {
-        quote: 0, base: 0, totalLeveragedValue: 0
+        quote: 0,
+        base: 0,
+        totalLeveragedValue: 0,
     };
 
     const minMargin = calcMinimumMargin(base, quote, fairPrice, maxLeverage);
     const totalMargin_ = totalMargin(base, quote, fairPrice);
-    const invalid = minMargin > totalMargin_ ? 'text-red-500' : ''
+    const invalid = minMargin > totalMargin_ ? 'text-red-500' : '';
     if (!balance) {
         return <div>Loading</div>;
     } else {

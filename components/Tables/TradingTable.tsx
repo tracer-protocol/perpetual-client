@@ -10,7 +10,7 @@ export const TradingTable = styled.table`
     thead tr th {
         font-size: 16px;
         letter-spacing: -0.32px;
-        color: #FFFFFF;
+        color: #ffffff;
         text-transform: capitalize;
         text-align: left;
         font-weight: normal;
@@ -21,4 +21,4 @@ export const TradingTable = styled.table`
     > * tr.bid:first-of-type {
         font-weight: bold;
     }
-`
+`;
