@@ -115,9 +115,6 @@ const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selecte
     ];
     return (
         <div>
-            <div className="bg-blue-200">
-                <h4 className="px-3">{selectedTracer?.marketId}</h4>
-            </div>
             <div className="flex">
                 <Box className="w-3/4 flex flex-col p-0">
                     <Graphs />

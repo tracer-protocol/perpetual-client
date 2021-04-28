@@ -140,6 +140,8 @@ const DropdownLogo = styled(({ className }) => {
     > .dropdown-menu ul {
         margin-top: 3vh;
         transition: all 0.3s ease-in-out;
+        background: #3372e8;
+        border-radius: 10px;
         opacity: 0;
     }
     .delayed-transition {
