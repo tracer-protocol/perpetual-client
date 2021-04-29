@@ -89,7 +89,6 @@ export const NumberInput: React.FC<any> = styled((props: any) => {
     }
 `;
 
-
 export const Card = styled.div`
     background: #011772;
     box-shadow: 0px 5px 10px #00000029;
@@ -99,23 +98,21 @@ export const Card = styled.div`
     h1 {
         font-size: 20px;
         letter-spacing: -0.4px;
-        color: #FFFFFF;
+        color: #ffffff;
     }
-`
+`;
 
 const logos: Record<string, string> = {
-    'ETH': '/img/logos/currencies/eth_clear.svg'
-}
+    ETH: '/img/logos/currencies/eth_clear.svg',
+};
 type Ticker = 'ETH' | 'LINK';
 interface LProps {
     className?: string;
     ticker: Ticker;
 }
-export const Logo:React.FC<LProps> = styled(({ className, ticker }: LProps) => {
-    return (
-        <img className={className} src={logos[ticker]} />
-    )
+export const Logo: React.FC<LProps> = styled(({ className, ticker }: LProps) => {
+    return <img className={className} src={logos[ticker]} />;
 })`
     width: 30px;
     margin: 5px 0;
-`
+`;

@@ -1,14 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { OrderContext, TracerContext } from 'context';
+import { OrderContext, TracerContext, Web3Context } from 'context';
 import LeverageSlider from '@components/Trade/LeverageSlider';
 import TracerSelect from '@components/Trade/TracerSelect';
 import { SlideSelect, PlaceOrderButton } from '@components/Buttons';
 import { Card, Button } from '@components/General';
 import { OrderAction, OrderState } from '@context/OrderContext';
-import styled from 'styled-components'
+import styled from 'styled-components';
 import { calcLiquidationPrice, calcNotionalValue, toApproxCurrency } from '@libs/utils';
 import { Section } from '@components/SummaryInfo';
 import { UserBalance } from 'types';
+import Tooltip from 'antd/lib/tooltip';
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;
@@ -35,16 +36,15 @@ const Position: React.FC<PProps> = styled(({ className, dispatch, position }: PP
 })`
     width: 300px;
     margin-left: auto;
-`
+`;
 
 const Title = styled.h1`
     font-size: 20px;
     letter-spacing: -0.4px;
-    color: #FFFFFF;
+    color: #ffffff;
     font-weight: normal;
     padding: 0;
-`
-
+`;
 
 const SSection = styled(Section)`
     border-bottom: 1px solid #011772;
@@ -52,10 +52,10 @@ const SSection = styled(Section)`
     font-size: 16px;
     padding: 5px 10px;
     margin: 0;
-`
+`;
 
 const LiquidationPrice = styled(Section)`
-    background: #F15025;
+    background: #f15025;
     background-size: 100%;
     border-bottom: 1px solid #011772;
     letter-spacing: -0.32px;
@@ -69,12 +69,12 @@ const LiquidationPrice = styled(Section)`
     .content {
         padding-right: 10px;
     }
-`
+`;
 
 const PrevBalance = styled.span`
-    color: #005EA4;
+    color: #005ea4;
     margin-right: 5px;
-`
+`;
 interface SProps {
     balances: UserBalance;
     fairPrice: number;
@@ -83,9 +83,7 @@ interface SProps {
     maxLeverage: number;
     className?: string;
 }
-const Summary: React.FC<SProps> = styled(({ 
-    balances, fairPrice, order, maxLeverage, exposure, className
-}: SProps) => {
+const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLeverage, exposure, className }: SProps) => {
     const position = order?.position ?? 0;
     const newQuote =
         position === 0
@@ -98,14 +96,14 @@ const Summary: React.FC<SProps> = styled(({
     return (
         <div className={className}>
             <h3>Order Summary</h3>
-            <SSection label={'Order Type'}>
-                Market
-            </SSection>
+            <SSection label={'Order Type'}>Market</SSection>
             <SSection label={'Market Price'}>
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <LiquidationPrice label={'Liquidation Price'}>
-                {`${toApproxCurrency(calcLiquidationPrice(newBase, newQuote, fairPrice, maxLeverage ?? 1))} ${order?.collateral ?? ''}`}
+                {`${toApproxCurrency(calcLiquidationPrice(newBase, newQuote, fairPrice, maxLeverage ?? 1))} ${
+                    order?.collateral ?? ''
+                }`}
             </LiquidationPrice>
             <SSection label={'Slippage % Fees'}>
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
@@ -122,7 +120,7 @@ const Summary: React.FC<SProps> = styled(({
         </div>
     );
 })`
-    height: 0; 
+    height: 0;
     margin: 0;
     overflow: hidden;
     transition: height 0.5s ease-in-out, opacity 0.5s ease-in 0.2s;
@@ -139,7 +137,7 @@ const Summary: React.FC<SProps> = styled(({
         height: 260px;
         opacity: 1;
     }
-`
+`;
 
 const SCard = styled(Card)`
     width: 596px;
@@ -152,48 +150,70 @@ const SCard = styled(Card)`
     &.show {
         height: 85vh;
     }
-`
+`;
+
+const SButton = styled(Button)`
+    .button-disabled &:hover {
+        cursor: not-allowed;
+    }
+    #tooltip {
+        display: none;
+    }
+    .button-disabled #tooltip {
+        display: block;
+    }
+`;
+
+const STooltip = styled<any>(Tooltip)`
+    // * > * .ant-tooltip-content {
+    //     display: ${(props) => (props.connect ? 'none' : 'block')};
+    // }
+`;
 
 const Basic: React.FC = () => {
+    const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     const { order, exposure, orderDispatch } = useContext(OrderContext);
     const [showSummary, setShowSummary] = useState(false);
     const balances = selectedTracer?.balances;
+    console.log(account);
 
     useEffect(() => {
         if (order?.position) {
             setShowSummary(true);
         } else {
-            setShowSummary(false)
+            setShowSummary(false);
         }
-    }, [order?.position])
+    }, [order?.position]);
     return (
         <div className="container mx-auto mt-3 h-full flex">
             <SCard className={`${showSummary ? 'show' : ''}`}>
                 <div className="flex">
                     <Title>Basic Trade</Title>
-                    <Position
-                        dispatch={orderDispatch}
-                        position = {order?.position ?? 0}
-                    />
+                    <Position dispatch={orderDispatch} position={order?.position ?? 0} />
                 </div>
                 <TracerSelect />
                 <LeverageSlider leverage={order?.leverage ?? 1} />
-                <Summary 
-                    balances={balances ?? {
-                        base: 0, 
-                        quote: 0, 
-                        tokenBalance: 0,
-                        totalLeveragedValue: 0,
-                        lastUpdatedGasPrice:0
-                    } as UserBalance} 
+                <Summary
+                    balances={
+                        balances ??
+                        ({
+                            base: 0,
+                            quote: 0,
+                            tokenBalance: 0,
+                            totalLeveragedValue: 0,
+                            lastUpdatedGasPrice: 0,
+                        } as UserBalance)
+                    }
                     order={order}
                     maxLeverage={selectedTracer?.maxLeverage ?? 1}
                     fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
                     exposure={exposure ?? 0}
                 />
                 <PlaceOrderButton className="mt-auto" balance={balances?.base ?? 0}>
-                    <Button className="mx-auto">Place Trade</Button>
+                    <STooltip overlayClassName={`${!!account ? 'hidden' : ''}`} title="Please connect your wallet">
+                        <SButton className="mx-auto">Place Trade</SButton>
+                    </STooltip>
                 </PlaceOrderButton>
             </SCard>
         </div>

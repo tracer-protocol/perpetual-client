@@ -8,7 +8,6 @@ import { ConnectButton, MarginDeposit } from '@components/Buttons';
 import { Children, UserBalance } from 'types';
 import styled from 'styled-components';
 
-
 type OSProps = {
     setSummary: (bool: boolean) => void;
 };

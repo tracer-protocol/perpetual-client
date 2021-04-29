@@ -42,40 +42,40 @@ export const WalletBalance: React.FC<{ marginBalance: number }> = ({ marginBalan
 const SLabel = styled.h3`
     font-size: 16px;
     letter-spacing: -0.32px;
-    color: #3DA8F5;
+    color: #3da8f5;
     margin-right: auto;
-`
+`;
 
 const SSection = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
     margin: 10px 0;
-`
+`;
 
 const InputContainer = styled.div`
     width: full;
     display: flex;
     border-bottom: 1px solid #002886;
-`
+`;
 
 const MaxButton = styled(Button)`
     width: 60px;
     padding: 5px 0;
-`
+`;
 
 const Balance = styled.p`
     font-size: 16px;
     letter-spacing: -0.32px;
-    color: #3DA8F5;
+    color: #3da8f5;
     text-transform: capitalize;
     margin: auto 10px;
-`
+`;
 
 const SInput = styled.input`
     font-size: 60px;
     letter-spacing: 0px;
-    color: #FFFFFF;
+    color: #ffffff;
     width: 100%;
 
     &:focus {
@@ -83,37 +83,37 @@ const SInput = styled.input`
         outline: none;
         box-shadow: none;
     }
-`
+`;
 
 const SDropdown = styled(Dropdown)`
-    border: 1px solid #3DA8F5;
+    border: 1px solid #3da8f5;
     border-radius: 20px;
     min-height: 40px;
     min-width: 115px;
-    margin-top: auto; 
+    margin-top: auto;
     margin-bottom: 10px;
     &:hover {
         cursor: pointer;
     }
-`
+`;
 
 const DropDownContent = styled.div`
     display: flex;
     padding: 0 5px;
     text-align: center;
-`
+`;
 
 const SDownCaret = styled(CaretDownFilled)`
     color: rgb(61, 168, 245);
     padding: 0 5px;
     margin: auto 0;
-`
+`;
 
 const DropDownText = styled.div`
     margin: auto;
     margin-right: 0;
     font-size: 16px;
-`
+`;
 
 type TSProps = {
     className?: string;
@@ -180,9 +180,7 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                     <SDropdown overlay={markets} trigger={['click']}>
                         <DropDownContent>
                             <Logo ticker="ETH" />
-                            <DropDownText>
-                                {market}
-                            </DropDownText>
+                            <DropDownText>{market}</DropDownText>
                             <SDownCaret />
                         </DropDownContent>
                     </SDropdown>
@@ -193,9 +191,7 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
             <SSection>
                 <div className="flex">
                     <SLabel>Amount to pay</SLabel>
-                    <Balance>
-                        Balance: {selectedTracer?.balances?.tokenBalance ?? 0}
-                    </Balance>
+                    <Balance>Balance: {selectedTracer?.balances?.tokenBalance ?? 0}</Balance>
                     <MaxButton>Max</MaxButton>
                 </div>
                 <InputContainer>
@@ -215,9 +211,7 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                     />
                     <SDropdown overlay={collaterals} trigger={['click']}>
                         <DropDownContent>
-                            <DropDownText>
-                                {collateral}
-                            </DropDownText>
+                            <DropDownText>{collateral}</DropDownText>
                             <SDownCaret />
                         </DropDownContent>
                     </SDropdown>
@@ -228,6 +222,6 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
 })`
     display: flex;
     flex-direction: column;
-`
+`;
 
 export default TracerSelect;

@@ -66,7 +66,7 @@ export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }:
  */
 interface LSProps {
     className?: string;
-    leverage: number
+    leverage: number;
 }
 
 const LeverageSlider: React.FC<LSProps> = styled(({ className, leverage }: LSProps) => {
@@ -85,7 +85,7 @@ const LeverageSlider: React.FC<LSProps> = styled(({ className, leverage }: LSPro
     h3 {
         font-size: 16px;
         letter-spacing: -0.32px;
-        color: #3DA8F5;
+        color: #3da8f5;
     }
-`
+`;
 export default LeverageSlider;
