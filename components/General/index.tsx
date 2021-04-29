@@ -34,6 +34,7 @@ export const Button: React.FC<{ className?: string }> = styled.div`
         color: #3da8f5;
     }
 `;
+
 const Inc = styled.div`
     position: absolute;
     left: 5px;
@@ -49,6 +50,7 @@ const Inc = styled.div`
         opacity: 0.8;
     }
 `;
+
 const Dec = styled.div`
     position: absolute;
     left: 5px;
@@ -86,3 +88,34 @@ export const NumberInput: React.FC<any> = styled((props: any) => {
         -moz-appearance: textfield;
     }
 `;
+
+
+export const Card = styled.div`
+    background: #011772;
+    box-shadow: 0px 5px 10px #00000029;
+    border-radius: 5px;
+    transition: 0.3s;
+
+    h1 {
+        font-size: 20px;
+        letter-spacing: -0.4px;
+        color: #FFFFFF;
+    }
+`
+
+const logos: Record<string, string> = {
+    'ETH': '/img/logos/currencies/eth_clear.svg'
+}
+type Ticker = 'ETH' | 'LINK';
+interface LProps {
+    className?: string;
+    ticker: Ticker;
+}
+export const Logo:React.FC<LProps> = styled(({ className, ticker }: LProps) => {
+    return (
+        <img className={className} src={logos[ticker]} />
+    )
+})`
+    width: 30px;
+    margin: 5px 0;
+`

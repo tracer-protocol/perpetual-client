@@ -8,9 +8,6 @@ import { ConnectButton, MarginDeposit } from '@components/Buttons';
 import { Children, UserBalance } from 'types';
 import styled from 'styled-components';
 
-type POBProps = {
-    balance: number; // users wallets margin balance
-} & Children;
 
 type OSProps = {
     setSummary: (bool: boolean) => void;
@@ -38,6 +35,10 @@ export const OrderSubmit: React.FC<OSProps> = ({ setSummary }: OSProps) => {
 
 // TODO change these requirements to not use balance.base
 // balance.base is not the right value for this need to calculated available margin in the account
+type POBProps = {
+    balance: number; // users wallets margin balance
+    className?: string;
+} & Children;
 export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balances }) => {
     const { show, text, variant, setError } = useContext(ErrorContext);
     const { order } = useContext(OrderContext);
@@ -115,7 +116,7 @@ export const AdvancedOrderButton: React.FC<{
     );
 };
 
-export const PlaceOrderButton: React.FC<POBProps> = ({ balance, children }: POBProps) => {
+export const PlaceOrderButton: React.FC<POBProps> = ({ balance, className, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
     const { takenOrders, order } = useContext(OrderContext);
     const { rMargin, price, orderType } = order as OrderState;
@@ -181,12 +182,12 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ balance, children }: POBP
                         </div>
                     </div>
                 </TracerModal>
-                <div className="w-full" onClick={() => setShowOrder(true)}>
+                <div className={`w-full ${className}`} onClick={() => setShowOrder(true)}>
                     {children}
                 </div>
             </>
         );
     } else {
-        return <div className="button-disabled">{children}</div>;
+        return <div className={`button-disabled ${className}`}>{children}</div>;
     }
 };

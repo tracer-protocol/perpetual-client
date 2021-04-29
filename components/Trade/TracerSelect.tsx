@@ -1,12 +1,14 @@
 import React, { useContext } from 'react';
 import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
-import { DownOutlined } from '@ant-design/icons';
+import { CaretDownFilled } from '@ant-design/icons';
 import { OrderContext, TracerContext } from '../../context';
 import { OrderState } from '@context/OrderContext';
+import styled from 'styled-components';
 
 import { useMarketPairs } from '../../hooks';
 import { MarginDeposit } from '../Buttons';
+import { Button, Logo } from '@components/General';
 
 export const WalletBalance: React.FC<{ marginBalance: number }> = ({ marginBalance }: { marginBalance: number }) => {
     const { orderDispatch } = useContext(OrderContext);
@@ -37,12 +39,87 @@ export const WalletBalance: React.FC<{ marginBalance: number }> = ({ marginBalan
     );
 };
 
+const SLabel = styled.h3`
+    font-size: 16px;
+    letter-spacing: -0.32px;
+    color: #3DA8F5;
+    margin-right: auto;
+`
+
+const SSection = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+`
+
+const InputContainer = styled.div`
+    width: full;
+    display: flex;
+    border-bottom: 1px solid #002886;
+`
+
+const MaxButton = styled(Button)`
+    width: 60px;
+    padding: 5px 0;
+`
+
+const Balance = styled.p`
+    font-size: 16px;
+    letter-spacing: -0.32px;
+    color: #3DA8F5;
+    text-transform: capitalize;
+    margin: auto 10px;
+`
+
+const SInput = styled.input`
+    font-size: 60px;
+    letter-spacing: 0px;
+    color: #FFFFFF;
+    width: 100%;
+
+    &:focus {
+        border: none;
+        outline: none;
+        box-shadow: none;
+    }
+`
+
+const SDropdown = styled(Dropdown)`
+    border: 1px solid #3DA8F5;
+    border-radius: 20px;
+    min-height: 40px;
+    min-width: 115px;
+    margin-top: auto; 
+    margin-bottom: 10px;
+    &:hover {
+        cursor: pointer;
+    }
+`
+
+const DropDownContent = styled.div`
+    display: flex;
+    padding: 0 5px;
+    text-align: center;
+`
+
+const SDownCaret = styled(CaretDownFilled)`
+    color: rgb(61, 168, 245);
+    padding: 0 5px;
+    margin: auto 0;
+`
+
+const DropDownText = styled.div`
+    margin: auto;
+    margin-right: 0;
+    font-size: 16px;
+`
+
 type TSProps = {
     className?: string;
-    inputSize?: string;
 };
 
-const TracerSelect: React.FC<TSProps> = ({ className, inputSize }: TSProps) => {
+const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
     const { exposure, tradePrice, order, orderDispatch } = useContext(OrderContext);
     const { selectedTracer } = useContext(TracerContext);
     const { rMargin, market, collateral, price } = order as OrderState;
@@ -77,22 +154,21 @@ const TracerSelect: React.FC<TSProps> = ({ className, inputSize }: TSProps) => {
 
     //get market address -> using tracer factory helper function
     //pass in address and initialise Tracer -> get all open orders of the address
-    const selectContainer = 'w-full p-3 mr-5 flex';
-    const title = 'w-full p-3 flex text-blue-100 font-bold';
     return (
-        <div className={'flex ' + className}>
+        <div className={className}>
             {/* MARGIN DEPOSIT */}
-            <div className="w-1/2 flex flex-col">
-                <div className={title}>MARGIN USE</div>
-                <div className={selectContainer}>
-                    <input
-                        className={
-                            'appearance-none border-b-2 border-gray-100 w-full py-2 text-black leading-tight focus:border-none focus:outline-none focus:shadow-none ' +
-                            inputSize
-                        }
+            <SSection>
+                <div className="flex">
+                    <SLabel>Amount to buy</SLabel>
+                    <MaxButton>Max</MaxButton>
+                </div>
+                <InputContainer>
+                    <SInput
                         id="username"
                         type="number"
                         placeholder="0.0"
+                        autoComplete="off"
+                        min="0"
                         onChange={(e) => {
                             e.preventDefault();
                             orderDispatch
@@ -101,43 +177,57 @@ const TracerSelect: React.FC<TSProps> = ({ className, inputSize }: TSProps) => {
                         }}
                         value={rMargin > 0 ? rMargin : ''}
                     />
-
-                    <Dropdown overlay={collaterals} trigger={['click']}>
-                        <a className="border-b-2 border-gray-100 mt-auto flex text-gray-200">
-                            {collateral} <DownOutlined className="m-auto px-2" />
-                        </a>
-                    </Dropdown>
-                </div>
-                <WalletBalance marginBalance={selectedTracer?.balances.base ?? 0} />
-            </div>
+                    <SDropdown overlay={markets} trigger={['click']}>
+                        <DropDownContent>
+                            <Logo ticker="ETH" />
+                            <DropDownText>
+                                {market}
+                            </DropDownText>
+                            <SDownCaret />
+                        </DropDownContent>
+                    </SDropdown>
+                </InputContainer>
+            </SSection>
 
             {/* MARKET EXPOSURE */}
-            <div className="w-1/2 flex flex-col">
-                <div className={title}>MARKET EXPOSURE</div>
-                <div className={selectContainer}>
-                    <div
-                        className={
-                            'appearance-none border-b-2 border-gray-100 w-full py-2 text-gray-100 leading-tight focus:border-none focus:outline-none focus:shadow-none ' +
-                            inputSize
-                        }
-                    >
-                        {exposure ? exposure : '0.0'}
-                    </div>
-                    <Dropdown overlay={markets} trigger={['click']}>
-                        <a className="border-b-2 border-gray-100 mt-auto flex text-gray-200">
-                            {market} <DownOutlined className="m-auto px-2" />
-                        </a>
-                    </Dropdown>
+            <SSection>
+                <div className="flex">
+                    <SLabel>Amount to pay</SLabel>
+                    <Balance>
+                        Balance: {selectedTracer?.balances?.tokenBalance ?? 0}
+                    </Balance>
+                    <MaxButton>Max</MaxButton>
                 </div>
-                <div className="px-3 flex h-full">
-                    <p className="mb-auto mt-auto">
-                        {tradePrice ? `Trade Price: ${tradePrice}` : `Market Price: ${price}`}{' '}
-                        {`${market}/${collateral}`}
-                    </p>
-                </div>
-            </div>
+                <InputContainer>
+                    <SInput
+                        id="username"
+                        type="number"
+                        placeholder="0.0"
+                        autoComplete="off"
+                        min="0"
+                        onChange={(e) => {
+                            e.preventDefault();
+                            orderDispatch
+                                ? orderDispatch({ type: 'setRMargin', value: parseFloat(e.target.value) })
+                                : console.error('Order dispatch not set');
+                        }}
+                        value={rMargin > 0 ? rMargin : ''}
+                    />
+                    <SDropdown overlay={collaterals} trigger={['click']}>
+                        <DropDownContent>
+                            <DropDownText>
+                                {collateral}
+                            </DropDownText>
+                            <SDownCaret />
+                        </DropDownContent>
+                    </SDropdown>
+                </InputContainer>
+            </SSection>
         </div>
     );
-};
+})`
+    display: flex;
+    flex-direction: column;
+`
 
 export default TracerSelect;

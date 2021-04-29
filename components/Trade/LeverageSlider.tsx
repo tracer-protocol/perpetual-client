@@ -64,14 +64,28 @@ export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }:
  * Wrapped slider with different sizing
  * @param className custom classes
  */
-const LeverageSlider: React.FC<{ className?: string; leverage: number }> = ({ className, leverage }) => {
+interface LSProps {
+    className?: string;
+    leverage: number
+}
+
+const LeverageSlider: React.FC<LSProps> = styled(({ className, leverage }: LSProps) => {
     return (
-        <div className={'flex flex-col px-5 ' + className}>
-            <div className="mr-auto px-3 text-blue-100 font-bold">LEVERAGE</div>
+        <div className={className}>
+            <h3>Leverage</h3>
             <div className="w-full m-auto py-5 px-5">
                 <DefaultSlider leverage={leverage ?? 1} />
             </div>
         </div>
     );
-};
+})`
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    h3 {
+        font-size: 16px;
+        letter-spacing: -0.32px;
+        color: #3DA8F5;
+    }
+`
 export default LeverageSlider;
