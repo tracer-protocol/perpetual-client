@@ -21,9 +21,9 @@ const PositionClose: ({ setLoading, setShow }: PCProps) => any = ({ setLoading, 
     const { web3, account } = useContext(Web3Context);
     const { selectedTracer, tracerId } = useContext(TracerContext);
     const { handleTransaction } = useContext(TransactionContext);
-    const balances = selectedTracer?.balances ?? { quote: 0 };
+    const balances = selectedTracer?.balances ?? { base: 0 };
     const openOrders = useTracerOrders(web3 as Web3, selectedTracer as Tracer);
-    const closingOrders = useClosePosition(balances.quote ?? 0, openOrders);
+    const closingOrders = useClosePosition(balances.base ?? 0, openOrders);
 
     const close = async () => {
         setLoading(true);
@@ -45,8 +45,8 @@ const PositionClose: ({ setLoading, setShow }: PCProps) => any = ({ setLoading, 
         <div className="p-6 h-full flex-auto">
             <div className="h-full flex flex-col">
                 <p>
-                    Are you sure you want to close your {balances?.quote ?? 0 < 0 ? 'short' : 'long'} position of{' '}
-                    {Math.abs(balances?.quote ?? 0)} {tracerId?.split('/')[0]}?
+                    Are you sure you want to close your {balances?.base ?? 0 < 0 ? 'short' : 'long'} position of{' '}
+                    {Math.abs(balances?.base ?? 0)} {tracerId?.split('/')[0]}?
                 </p>
                 <p>
                     This trade will be made at the best available market price.
@@ -142,11 +142,11 @@ const Row_: React.FC<RProps> = ({ tracer, selected, setTracerId }) => {
             rowData={[
                 marketId,
                 `${toApproxCurrency(price)}`,
-                `${toApproxCurrency(totalMargin(balance.quote, balance.base, price))}`,
-                balance.quote === 0 ? 'NO POSITION' : balance.quote < 0 ? 'SHORT' : 'LONG',
-                `${toApproxCurrency(Math.abs(balance.quote) * price)}`,
+                `${toApproxCurrency(totalMargin(balance.base, balance.quote, price))}`,
+                balance.base === 0 ? 'NO POSITION' : balance.base < 0 ? 'SHORT' : 'LONG',
+                `${toApproxCurrency(Math.abs(balance.base) * price)}`,
                 `${toApproxCurrency(
-                    calcLiquidationPrice(balance.base, balance.quote, price, tracer?.maxLeverage ?? 1),
+                    calcLiquidationPrice(balance.quote, balance.base, price, tracer?.maxLeverage ?? 1),
                 )}`,
                 '',
             ]}

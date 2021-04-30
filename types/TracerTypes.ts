@@ -8,8 +8,8 @@ export interface TracerData {
 }
 
 export type UserBalance = {
-    base: number; // the accounts deposited base
-    quote: number; // the position the user is currently in
+    quote: number; // the accounts deposited funds
+    base: number; // the position the user currently has
     totalLeveragedValue: number;
     lastUpdatedGasPrice: number;
     tokenBalance: number;
@@ -24,7 +24,7 @@ export type FundingRate = {
 
 export type TracerInfo = {
     balance: UserBalance | undefined;
-    baseTokenBalance: number | undefined;
+    quoteTokenBalance: number | undefined;
     fundingRate: number | undefined;
     matchingFee: number;
     tracerBaseToken: string;

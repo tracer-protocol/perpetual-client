@@ -33,8 +33,8 @@ export const OrderSubmit: React.FC<OSProps> = ({ setSummary }: OSProps) => {
     );
 };
 
-// TODO change these requirements to not use balance.base
-// balance.base is not the right value for this need to calculated available margin in the account
+// TODO change these requirements to not use balance.quote
+// balance.quote is not the right value for this need to calculated available margin in the account
 export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balances }) => {
     const { show, text, variant, setError } = useContext(ErrorContext);
     const { order } = useContext(OrderContext);
@@ -43,7 +43,7 @@ export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balan
     useEffect(() => {
         if (!!balances) {
             // Margin is greater than margin in account
-            balances?.base < rMargin && balances?.base >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
+            balances?.quote < rMargin && balances?.quote >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
         }
     }, [rMargin]);
 
@@ -53,7 +53,7 @@ export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balan
                 <AlertInfo show={show} text={text} variant={variant} />
             </div>
             <div className="py-5 flex">
-                {balances?.base === 0 ? (
+                {balances?.quote === 0 ? (
                     <div className="m-auto w-1/2">
                         <MarginDeposit />
                     </div>
@@ -99,7 +99,7 @@ export const AdvancedOrderButton: React.FC<{
     useEffect(() => {
         if (!!balances) {
             // Margin is greater than margin in account
-            // balances?.base < rMargin && balances?.base >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
+            // balances?.quote < rMargin && balances?.quote >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
         }
     }, [rMargin]);
 

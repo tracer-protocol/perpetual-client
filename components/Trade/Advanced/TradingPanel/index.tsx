@@ -114,7 +114,7 @@ export const WalletConnect: React.FC<{
             <Item>
                 <h3>Total Margin</h3>
                 <span>
-                    <a>{toApproxCurrency(totalMargin(balances?.quote ?? 0, balances?.base ?? 0, fairPrice))}</a>
+                    <a>{toApproxCurrency(totalMargin(balances?.base ?? 0, balances?.quote ?? 0, fairPrice))}</a>
                     {/* <a>
                         {'>>>'} $2,498.72 USDC
                     </a> */}
@@ -125,7 +125,7 @@ export const WalletConnect: React.FC<{
                 <span>
                     <a>
                         {toApproxCurrency(
-                            calcMinimumMargin(balances?.quote ?? 0, balances?.base ?? 0, fairPrice, maxLeverage),
+                            calcMinimumMargin(balances?.base ?? 0, balances?.quote ?? 0, fairPrice, maxLeverage),
                         )}
                     </a>
                     {/* <a>
@@ -178,8 +178,8 @@ export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({
                     fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
                     balances={
                         selectedTracer?.balances ?? {
-                            quote: 0,
                             base: 0,
+                            quote: 0,
                             totalLeveragedValue: 0,
                             lastUpdatedGasPrice: 0,
                             tokenBalance: 0,

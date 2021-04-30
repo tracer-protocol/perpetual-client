@@ -48,13 +48,13 @@ const checkErrors: (balances: UserBalance | undefined, orders: OpenOrder[], acco
     } else if (orders?.length === 0) {
         // there are no orders
         return 3;
-    } else if (!!balances?.quote) {
+    } else if (!!balances?.base) {
         // user has a position already
         return 0;
     } else if (balances?.tokenBalance === 0) {
         // user has no web3 wallet balance
         return 1;
-    } else if (balances?.base === 0) {
+    } else if (balances?.quote === 0) {
         // user has no tcr margin balance
         return 2;
     } else {
