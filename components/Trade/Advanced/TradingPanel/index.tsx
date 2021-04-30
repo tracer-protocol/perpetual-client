@@ -203,10 +203,14 @@ type SProps = {
     selected: number;
 };
 
+const SSlideSelect = styled(SlideSelect)`
+    height: 40px;
+`;
+
 const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
     const { orderDispatch } = useContext(OrderContext);
     return (
-        <SlideSelect
+        <SSlideSelect
             onClick={(index, _e) =>
                 orderDispatch
                     ? orderDispatch({ type: 'setPosition', value: index })
@@ -216,14 +220,14 @@ const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
         >
             <Option>SHORT</Option>
             <Option>LONG</Option>
-        </SlideSelect>
+        </SSlideSelect>
     );
 };
 
 const OrderTypeSelect: React.FC<SProps> = ({ selected }: SProps) => {
     const { orderDispatch } = useContext(OrderContext);
     return (
-        <SlideSelect
+        <SSlideSelect
             onClick={(index, _e) =>
                 orderDispatch
                     ? orderDispatch({ type: 'setOrderType', value: index })
@@ -233,7 +237,7 @@ const OrderTypeSelect: React.FC<SProps> = ({ selected }: SProps) => {
         >
             <Option>MARKET</Option>
             <Option>LIMIT</Option>
-        </SlideSelect>
+        </SSlideSelect>
     );
 };
 

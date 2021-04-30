@@ -3,6 +3,8 @@
  *
  */
 
+import { OpenOrder, TakenOrder } from '@components/types';
+
 // const FEED_UNIT_DIVIDER = 10e7; //used to normalise gas feed prices for margin calcs
 // const MARGIN_MUL_FACTOR = 10000; //Factor to keep precision in margin calcs
 const RYAN_6 = 6; // a number accredited to our good friend Ryan Garner
@@ -173,4 +175,66 @@ export const totalMargin: (quote: number, base: number, fairPrice: number) => nu
 // toCents(price * 100 * 1000)
 export const fromCents: (val: number) => number = (val) => {
     return val / (100 * 10000);
+};
+
+/**
+ * Calculates a theoretical market exposure if it took all the 'best' orders it could
+ *  Returns this exposure and the orders that allow it to gain this exposure
+ * @param rMargin margin entered to use by the user
+ * @param leverage leverage of the trade
+ */
+export const calcExposure: (
+    rMargin: number,
+    leverage: number,
+    orders: OpenOrder[],
+) => { exposure: number; takenOrders: TakenOrder[]; tradePrice: number } = (rMargin, leverage, orders) => {
+    if (orders.length) {
+        // const oppositeOrders = position ? openOrders[0] : openOrders[1];
+        let exposure = 0,
+            totalUnitPrice = 0,
+            units = 0;
+        const takenOrders: TakenOrder[] = [];
+        let deposit = rMargin * leverage; // units of underlying
+        for (const order of orders) {
+            const orderR = order.amount - order.filled; // units of asset
+            const orderPrice = order.price;
+            const r = deposit - orderR * orderPrice;
+            if (r >= 0) {
+                // if it can eat the whole order
+                totalUnitPrice += orderPrice * orderR;
+                units += orderR;
+                exposure += orderR; // units of the assets
+                deposit -= orderR * orderPrice; // subtract the remainder in units of underLying
+                takenOrders.push({
+                    id: order.id,
+                    amount: orderR,
+                    price: order.price,
+                });
+            } else {
+                // eat a bit of the order nom nom
+                if (deposit) {
+                    totalUnitPrice += deposit;
+                    units += deposit / orderPrice;
+                    exposure += deposit / orderPrice;
+                    takenOrders.push({
+                        id: order.id,
+                        amount: deposit / orderPrice, // take what is yours
+                        price: order.price,
+                    });
+                }
+                break;
+            }
+        }
+
+        return {
+            exposure: parseFloat(exposure.toFixed(10)),
+            takenOrders: takenOrders,
+            tradePrice: units ? totalUnitPrice / units : orders[0].price,
+        };
+    }
+    return {
+        exposure: 0,
+        takenOrders: [],
+        tradePrice: 0,
+    };
 };

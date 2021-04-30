@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { OrderContext, TracerContext, Web3Context } from 'context';
+import { OrderContext, TracerContext } from 'context';
 import LeverageSlider from '@components/Trade/LeverageSlider';
 import TracerSelect from '@components/Trade/TracerSelect';
 import { SlideSelect, PlaceOrderButton } from '@components/Buttons';
+import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Card, Button } from '@components/General';
-import { OrderAction, OrderState } from '@context/OrderContext';
+import { OrderAction, OrderState, Errors } from '@context/OrderContext';
 import styled from 'styled-components';
 import { calcLiquidationPrice, calcNotionalValue, toApproxCurrency } from '@libs/utils';
 import { Section } from '@components/SummaryInfo';
 import { UserBalance } from 'types';
-import Tooltip from 'antd/lib/tooltip';
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;
@@ -28,22 +28,14 @@ const Position: React.FC<PProps> = styled(({ className, dispatch, position }: PP
                 }
                 value={position}
             >
-                <a className="m-auto">SHORT</a>
-                <a className="m-auto">LONG</a>
+                <Option className="my-2">SHORT</Option>
+                <Option className="my-2">LONG</Option>
             </SlideSelect>
         </div>
     );
 })`
     width: 300px;
     margin-left: auto;
-`;
-
-const Title = styled.h1`
-    font-size: 20px;
-    letter-spacing: -0.4px;
-    color: #ffffff;
-    font-weight: normal;
-    padding: 0;
 `;
 
 const SSection = styled(Section)`
@@ -110,7 +102,9 @@ const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLever
             </SSection>
             <SSection label={'Wallet Balance'}>
                 <PrevBalance>
-                    {`${toApproxCurrency(balances?.tokenBalance)} ${order?.collateral ?? ''} >>> `}
+                    {`${toApproxCurrency(order?.wallet ? balances?.tokenBalance : balances?.base)} ${
+                        order?.collateral ?? ''
+                    } >>> `}
                 </PrevBalance>
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
@@ -123,10 +117,11 @@ const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLever
     height: 0;
     margin: 0;
     overflow: hidden;
-    transition: height 0.5s ease-in-out, opacity 0.5s ease-in 0.2s;
+    transition: height 0.5s ease-in-out, opacity 0.5s ease-in 0.2s, margin 0.5s ease-in;
     opacity: 0;
     background: #002886;
     border-radius: 10px;
+    margin-top: 10px;
     h3 {
         font-size: 16px;
         letter-spacing: -0.32px;
@@ -139,20 +134,33 @@ const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLever
     }
 `;
 
+const Title = styled.h1`
+    font-size: 20px;
+    letter-spacing: -0.4px;
+    color: #ffffff;
+    font-weight: normal;
+    padding: 0;
+`;
+
 const SCard = styled(Card)`
+    position: relative;
     width: 596px;
-    height: 60vh;
+    height: 550px;
     display: flex;
     flex-direction: column;
     transition: 0.5s ease-in-out;
     padding: 20px;
+    margin-bottom: 60px;
     margin: 0 auto;
     &.show {
-        height: 85vh;
+        height: 780px;
     }
 `;
 
 const SButton = styled(Button)`
+    border: 1px solid #ffffff;
+    color: #fff;
+
     .button-disabled &:hover {
         cursor: not-allowed;
     }
@@ -164,29 +172,47 @@ const SButton = styled(Button)`
     }
 `;
 
-const STooltip = styled<any>(Tooltip)`
-    // * > * .ant-tooltip-content {
-    //     display: ${(props) => (props.connect ? 'none' : 'block')};
-    // }
+const Error = styled(({ className, error }) => {
+    return (
+        <div className={`${className} ${error !== -1 ? 'show' : ''}`}>{error !== -1 ? Errors[error].message : ''}</div>
+    );
+})`
+    background: #f15025;
+    border-radius: 0px 0px 5px 5px;
+    font-size: 16px;
+    letter-spacing: -0.32px;
+    color: #ffffff;
+    text-align: center;
+    position: absolute;
+    padding: 10px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    transform: translateY(100%);
+    transition: all 0.4s ease-in-out;
+    opacity: 0;
+    &.show {
+        opacity: 1;
+    }
 `;
 
 const Basic: React.FC = () => {
-    const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     const { order, exposure, orderDispatch } = useContext(OrderContext);
     const [showSummary, setShowSummary] = useState(false);
     const balances = selectedTracer?.balances;
-    console.log(account);
 
     useEffect(() => {
-        if (order?.position) {
+        // could have equally been checking on the margin variable
+        if (order?.exposure) {
             setShowSummary(true);
         } else {
             setShowSummary(false);
         }
-    }, [order?.position]);
+    }, [order?.exposure]);
+
     return (
-        <div className="container mx-auto mt-3 h-full flex">
+        <div className="container mx-auto mt-3 h-full flex flex-col">
             <SCard className={`${showSummary ? 'show' : ''}`}>
                 <div className="flex">
                     <Title>Basic Trade</Title>
@@ -210,11 +236,10 @@ const Basic: React.FC = () => {
                     fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
                     exposure={exposure ?? 0}
                 />
-                <PlaceOrderButton className="mt-auto" balance={balances?.base ?? 0}>
-                    <STooltip overlayClassName={`${!!account ? 'hidden' : ''}`} title="Please connect your wallet">
-                        <SButton className="mx-auto">Place Trade</SButton>
-                    </STooltip>
+                <PlaceOrderButton className="mt-auto">
+                    <SButton className="mx-auto">Place Trade</SButton>
                 </PlaceOrderButton>
+                <Error error={order?.error ?? -1} />
             </SCard>
         </div>
     );

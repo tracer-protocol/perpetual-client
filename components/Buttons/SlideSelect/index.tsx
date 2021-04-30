@@ -39,7 +39,6 @@ export const SlideOption = styled.div`
     font-size: 16px;
     text-align: center;
     width: 100%;
-    padding: 10px 0;
     color: #3da8f5;
 
     transition: background 0.3;
