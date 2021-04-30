@@ -56,8 +56,8 @@ export default class Tracer {
         this.marketId = marketId;
         this.feeRate = 0;
         this.balances = {
-            base: 0,
             quote: 0,
+            base: 0,
             totalLeveragedValue: 0,
             lastUpdatedGasPrice: 0,
             tokenBalance: 0,
@@ -72,7 +72,7 @@ export default class Tracer {
      */
     init: (web3: Web3) => Promise<boolean> = (web3) => {
         const oracleAddress = this._instance.methods.oracle().call();
-        const tokenAddr = this._instance.methods.tracerBaseToken().call();
+        const tokenAddr = this._instance.methods.tracerquoteToken().call();
         const priceMultiplier = this._instance.methods.priceMultiplier().call();
         const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
         const maxLeverage = this._instance.methods.maxLeverage().call();
@@ -211,8 +211,8 @@ export default class Tracer {
      * returns in order
      *  margin, position, totalLeveragedValue,
      *  deposited, lastUpdatedGasPrice, lastUpdatedIndex
-     *   int256 base,
      *   int256 quote,
+     *   int256 base,
      *   int256 totalLeveragedValue,
      *   int256 lastUpdatedGasPrice,
      *   uint256 lastUpdatedIndex
@@ -226,8 +226,8 @@ export default class Tracer {
             const balance = await this.account.methods.getBalance(account ?? '', this.address.toString()).call();
             const walletBalance = await this.token?.methods.balanceOf(account ?? '').call();
             const parsedBalances = {
-                base: parseFloat(Web3.utils.fromWei(balance[0])),
-                quote: parseFloat(Web3.utils.fromWei(balance[1])),
+                quote: parseFloat(Web3.utils.fromWei(balance[0])),
+                base: parseFloat(Web3.utils.fromWei(balance[1])),
                 totalLeveragedValue: parseFloat(Web3.utils.fromWei(balance[2])),
                 lastUpdatedGasPrice: parseFloat(Web3.utils.fromWei(balance[3])),
                 tokenBalance: walletBalance ? parseInt(Web3.utils.fromWei(walletBalance)) : 0,
@@ -238,8 +238,8 @@ export default class Tracer {
         } catch (error) {
             console.error(`Failed to fetch user balance: ${error}`);
             this.balances = {
-                base: 0,
                 quote: 0,
+                base: 0,
                 totalLeveragedValue: 0,
                 lastUpdatedGasPrice: 0,
                 tokenBalance: 0,
@@ -286,5 +286,5 @@ export default class Tracer {
     // filter by side (opposite of position)
     // as well as what market they have chosen
 
-    // Graph of prices will be based on getting 24 hour prices
+    // Graph of prices will be quoted on getting 24 hour prices
 }

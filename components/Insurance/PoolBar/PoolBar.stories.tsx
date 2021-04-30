@@ -24,7 +24,7 @@ export default {
             table: {
                 type: {
                     summary: 'Requires',
-                    detail: 'QUOTE/BASE'
+                    detail: 'base/quote'
                 },
             },
             control: 'text',

@@ -19,27 +19,27 @@ interface IProps {
 }
 
 export const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, maxLeverage }: IProps) => {
-    const { quote, base, totalLeveragedValue } = balance ?? {
-        quote: 0,
+    const { base, quote, totalLeveragedValue } = balance ?? {
         base: 0,
+        quote: 0,
         totalLeveragedValue: 0,
     };
-    const l = calcLeverage(base, quote, fairPrice);
+    const l = calcLeverage(quote, base, fairPrice);
     return (
         <div className="flex">
             <div className="w-1/2 p-3">
                 <Section label={'Eligible liquidation price (exc. gas)'}>
-                    {toApproxCurrency(calcLiquidationPrice(base, quote, fairPrice, maxLeverage))}
+                    {toApproxCurrency(calcLiquidationPrice(quote, base, fairPrice, maxLeverage))}
                 </Section>
                 <Section label={'Likely Liquidation Price (incl. gas)'}>
-                    {toApproxCurrency(calcProfitableLiquidationPrice(base, quote, fairPrice, maxLeverage))}
+                    {toApproxCurrency(calcProfitableLiquidationPrice(quote, base, fairPrice, maxLeverage))}
                 </Section>
                 <Section label={'Positions'} classes={'text-sm'}>
-                    {quote}
+                    {base}
                 </Section>
             </div>
             <div className="w-1/2 p-3">
-                <Section label={'Notional Value'}>{toApproxCurrency(calcNotionalValue(quote, fairPrice))}</Section>
+                <Section label={'Notional Value'}>{toApproxCurrency(calcNotionalValue(base, fairPrice))}</Section>
                 <Section label={'Leverage Multiplier'}>{l > 1 ? `${l}` : '0'}</Section>
                 <Section label={'Borrowed Amount'}>{toApproxCurrency(totalLeveragedValue)}</Section>
             </div>
@@ -57,36 +57,36 @@ interface PTDProps {
 }
 export const PostTradeDetails: React.FC<PTDProps> = styled(
     ({ balances, position, exposure, fairPrice, maxLeverage, className }: PTDProps) => {
-        const newQuote =
-            position === 0
-                ? balances.quote - (exposure ?? 0) // short
-                : balances.quote + (exposure ?? 0); // long
         const newBase =
             position === 0
-                ? balances.base + calcNotionalValue(exposure ?? 0, fairPrice) // short
-                : balances.base - calcNotionalValue(exposure ?? 0, fairPrice); // long
+                ? balances.base - (exposure ?? 0) // short
+                : balances.base + (exposure ?? 0); // long
+        const newQuote =
+            position === 0
+                ? balances.quote + calcNotionalValue(exposure ?? 0, fairPrice) // short
+                : balances.quote - calcNotionalValue(exposure ?? 0, fairPrice); // long
         return (
             <div className={className}>
                 <h3>Order Summary</h3>
                 <Section label={'Liquidation Price'}>
-                    {toApproxCurrency(calcLiquidationPrice(balances.base, balances.quote, fairPrice, maxLeverage ?? 1))}
+                    {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage ?? 1))}
                     {`  -->  `}
-                    {toApproxCurrency(calcLiquidationPrice(newBase, newQuote, fairPrice, maxLeverage ?? 1))}
+                    {toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage ?? 1))}
                 </Section>
                 <Section label={'Borrowed'}>
-                    {toApproxCurrency(calcBorrowed(balances.quote, balances.base, fairPrice))}
+                    {toApproxCurrency(calcBorrowed(balances.base, balances.quote, fairPrice))}
                     {`  -->  `}
-                    {toApproxCurrency(calcBorrowed(newQuote, newBase, fairPrice))}
+                    {toApproxCurrency(calcBorrowed(newBase, newQuote, fairPrice))}
                 </Section>
                 <Section label={'Withdrawable'}>
-                    {toApproxCurrency(calcWithdrawable(balances.quote, balances.base, fairPrice, maxLeverage ?? 1))}
+                    {toApproxCurrency(calcWithdrawable(balances.base, balances.quote, fairPrice, maxLeverage ?? 1))}
                     {`  -->  `}
-                    {toApproxCurrency(calcWithdrawable(newQuote, newBase, fairPrice, maxLeverage ?? 1))}
+                    {toApproxCurrency(calcWithdrawable(newBase, newQuote, fairPrice, maxLeverage ?? 1))}
                 </Section>
                 <Section label={'Leverage'}>
-                    {calcLeverage(balances.quote, balances.base, fairPrice)}
+                    {calcLeverage(balances.base, balances.quote, fairPrice)}
                     {`  -->  `}
-                    {calcLeverage(newQuote, newBase, fairPrice)}
+                    {calcLeverage(newBase, newQuote, fairPrice)}
                 </Section>
             </div>
         );

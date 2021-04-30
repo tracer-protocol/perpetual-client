@@ -15,8 +15,8 @@ interface ContextProps {
     tracerId: string | undefined;
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
-    quoteAsset: string | undefined;
     baseAsset: string | undefined;
+    quoteAsset: string | undefined;
     balance: UserBalance;
     placeOrder: (order: OrderState, takenOrders: TakenOrder[]) => Promise<Result | undefined>;
 }
@@ -41,8 +41,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         tracerId: tracer || 'TEST0/USD',
         selectedTracer: undefined,
         balance: {
-            base: 0,
             quote: 0,
+            base: 0,
             totalLeveragedValue: 0,
             lastUpdatedGasPrice: 0,
             tokenBalance: 0,
@@ -158,7 +158,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     }, [selectedTracer]);
 
-    const [quoteAsset, baseAsset] = tracerId.split('/');
+    const [baseAsset, quoteAsset] = tracerId.split('/');
 
     return (
         <TracerContext.Provider
@@ -166,8 +166,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 tracerId,
                 setTracerId: (tracerId: string) => tracerDispatch({ type: 'setTracerId', value: tracerId }),
                 selectedTracer,
-                quoteAsset,
                 baseAsset,
+                quoteAsset,
                 balance,
                 placeOrder,
             }}

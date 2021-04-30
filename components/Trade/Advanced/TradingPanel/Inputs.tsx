@@ -16,8 +16,8 @@ export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISP
     const balances = selectedTracer?.balances;
     const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0);
     const maxMargin = calcWithdrawable(
-        balances?.quote ?? 0,
         balances?.base ?? 0,
+        balances?.quote ?? 0,
         fairPrice,
         selectedTracer?.maxLeverage ?? 1,
     );

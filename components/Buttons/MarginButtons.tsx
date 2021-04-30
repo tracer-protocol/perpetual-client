@@ -27,14 +27,14 @@ type BProps = {
 export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
     const [showModal, setShowModal] = useState(false);
     const { tracerId, selectedTracer } = useContext(TracerContext);
-    const { quote, base, tokenBalance } = selectedTracer?.balances ?? {
-        quote: 0,
+    const { base, quote, tokenBalance } = selectedTracer?.balances ?? {
         base: 0,
+        quote: 0,
         tokenBalance: 0,
     };
     const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0);
     const maxLeverage = selectedTracer?.maxLeverage ?? 1;
-    const balance = type === 'Deposit' ? tokenBalance : calcWithdrawable(quote, base, fairPrice, maxLeverage);
+    const balance = type === 'Deposit' ? tokenBalance : calcWithdrawable(base, quote, fairPrice, maxLeverage);
 
     const { deposit, withdraw } = useContext(AccountContext);
     const { handleTransaction } = useContext(TransactionContext);
@@ -42,8 +42,8 @@ export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
     const [valid, setValid] = useState(true);
     const [amount, setAmount] = useState(0);
 
-    // add or subtract amount from the base
-    const newBase = base + (type === 'Deposit' ? 1 : -1) * (Number.isNaN(amount) ? 0 : amount);
+    // add or subtract amount from the quote
+    const newQuote = quote + (type === 'Deposit' ? 1 : -1) * (Number.isNaN(amount) ? 0 : amount);
     useEffect(() => {
         setValid(amount > 0 && amount <= (balance ?? 0));
     }, [balance, amount]);
@@ -84,30 +84,30 @@ export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
                                 <Section
                                     label={`Account Margin`}
                                     classes={
-                                        calcMinimumMargin(base, quote, fairPrice, maxLeverage) >
-                                        totalMargin(newBase, quote, fairPrice)
+                                        calcMinimumMargin(quote, base, fairPrice, maxLeverage) >
+                                        totalMargin(newQuote, base, fairPrice)
                                             ? 'text-red-500'
                                             : ''
                                     }
                                 >
-                                    {toApproxCurrency(totalMargin(quote, base, fairPrice))}
+                                    {toApproxCurrency(totalMargin(base, quote, fairPrice))}
                                     {'  ->  '}
-                                    {toApproxCurrency(totalMargin(quote, newBase, fairPrice))}
+                                    {toApproxCurrency(totalMargin(base, newQuote, fairPrice))}
                                 </Section>
                                 <Section label={`Liquidation Price`}>
-                                    {toApproxCurrency(calcLiquidationPrice(base, quote, fairPrice, maxLeverage))}
+                                    {toApproxCurrency(calcLiquidationPrice(quote, base, fairPrice, maxLeverage))}
                                     {'  ->  '}
-                                    {toApproxCurrency(calcLiquidationPrice(newBase, quote, fairPrice, maxLeverage))}
+                                    {toApproxCurrency(calcLiquidationPrice(newQuote, base, fairPrice, maxLeverage))}
                                 </Section>
                                 <Section label={`Leverage`}>
-                                    {`${calcLeverage(base, quote, fairPrice)}`}
+                                    {`${calcLeverage(quote, base, fairPrice)}`}
                                     {'  ->  '}
-                                    {`${calcLeverage(base, quote, fairPrice)}`}
+                                    {`${calcLeverage(quote, base, fairPrice)}`}
                                 </Section>
                                 <Section label={`Borrowed`}>
-                                    {toApproxCurrency(calcBorrowed(base, quote, fairPrice))}
+                                    {toApproxCurrency(calcBorrowed(quote, base, fairPrice))}
                                     {'  ->  '}
-                                    {toApproxCurrency(calcBorrowed(newBase, quote, fairPrice))}
+                                    {toApproxCurrency(calcBorrowed(newQuote, base, fairPrice))}
                                 </Section>
                             </div>
                         </div>

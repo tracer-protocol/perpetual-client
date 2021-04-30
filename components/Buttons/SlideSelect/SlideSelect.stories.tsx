@@ -67,7 +67,7 @@ export default {
         },
         sClasses: {
             description:
-                'Classname of the currently selected item. Selection criteria is based on value and the index of the child component.',
+                'Classname of the currently selected item. Selection criteria is quoted on value and the index of the child component.',
             table: {
                 type: {
                     summary: 'Defaults to',

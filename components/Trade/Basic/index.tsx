@@ -77,14 +77,14 @@ interface SProps {
 }
 const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLeverage, exposure, className }: SProps) => {
     const position = order?.position ?? 0;
-    const newQuote =
-        position === 0
-            ? balances.quote - (exposure ?? 0) // short
-            : balances.quote + (exposure ?? 0); // long
     const newBase =
         position === 0
-            ? balances.base + calcNotionalValue(exposure ?? 0, fairPrice) // short
-            : balances.base - calcNotionalValue(exposure ?? 0, fairPrice); // long
+            ? balances.base - (exposure ?? 0) // short
+            : balances.base + (exposure ?? 0); // long
+    const newQuote =
+        position === 0
+            ? balances.quote + calcNotionalValue(exposure ?? 0, fairPrice) // short
+            : balances.quote - calcNotionalValue(exposure ?? 0, fairPrice); // long
     return (
         <div className={className}>
             <h3>Order Summary</h3>
@@ -93,7 +93,7 @@ const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLever
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <LiquidationPrice label={'Liquidation Price'}>
-                {`${toApproxCurrency(calcLiquidationPrice(newBase, newQuote, fairPrice, maxLeverage ?? 1))} ${
+                {`${toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage ?? 1))} ${
                     order?.collateral ?? ''
                 }`}
             </LiquidationPrice>
@@ -102,7 +102,7 @@ const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLever
             </SSection>
             <SSection label={'Wallet Balance'}>
                 <PrevBalance>
-                    {`${toApproxCurrency(order?.wallet ? balances?.tokenBalance : balances?.base)} ${
+                    {`${toApproxCurrency(order?.wallet ? balances?.tokenBalance : balances?.quote)} ${
                         order?.collateral ?? ''
                     } >>> `}
                 </PrevBalance>
@@ -223,8 +223,8 @@ const Basic: React.FC = styled(({ className }) => {
                     balances={
                         balances ??
                         ({
-                            base: 0,
                             quote: 0,
+                            base: 0,
                             tokenBalance: 0,
                             totalLeveragedValue: 0,
                             lastUpdatedGasPrice: 0,
@@ -252,7 +252,7 @@ const Basic: React.FC = styled(({ className }) => {
 export default Basic;
 
 // Collateral -> Required deposit
-// For basic required collateral is fixed based on amount and leverage
+// For basic required collateral is fixed quoted on amount and leverage
 
 // Leveral slider should not move automatically
 // changing leverage slider will change the required deposit
