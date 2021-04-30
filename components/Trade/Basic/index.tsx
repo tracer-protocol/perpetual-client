@@ -150,7 +150,6 @@ const SCard = styled(Card)`
     flex-direction: column;
     transition: 0.5s ease-in-out;
     padding: 20px;
-    margin-bottom: 60px;
     margin: 0 auto;
     &.show {
         height: 780px;
@@ -196,7 +195,7 @@ const Error = styled(({ className, error }) => {
     }
 `;
 
-const Basic: React.FC = () => {
+const Basic: React.FC = styled(({ className }) => {
     const { selectedTracer } = useContext(TracerContext);
     const { order, exposure, orderDispatch } = useContext(OrderContext);
     const [showSummary, setShowSummary] = useState(false);
@@ -212,7 +211,7 @@ const Basic: React.FC = () => {
     }, [order?.exposure]);
 
     return (
-        <div className="container mx-auto mt-3 h-full flex flex-col">
+        <div className={`container mx-auto mt-3 ${className}`}>
             <SCard className={`${showSummary ? 'show' : ''}`}>
                 <div className="flex">
                     <Title>Basic Trade</Title>
@@ -243,7 +242,12 @@ const Basic: React.FC = () => {
             </SCard>
         </div>
     );
-};
+})`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-bottom: 60px;
+`;
 
 export default Basic;
 
