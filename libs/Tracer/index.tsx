@@ -72,7 +72,7 @@ export default class Tracer {
      */
     init: (web3: Web3) => Promise<boolean> = (web3) => {
         const oracleAddress = this._instance.methods.oracle().call();
-        const tokenAddr = this._instance.methods.tracerquoteToken().call();
+        const tokenAddr = this._instance.methods.tracerBaseToken().call();
         const priceMultiplier = this._instance.methods.priceMultiplier().call();
         const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
         const maxLeverage = this._instance.methods.maxLeverage().call();

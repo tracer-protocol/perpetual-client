@@ -27,7 +27,7 @@ export type TracerInfo = {
     quoteTokenBalance: number | undefined;
     fundingRate: number | undefined;
     matchingFee: number;
-    tracerquoteToken: string;
+    tracerBaseToken: string;
     oraclePrice: number;
     priceMultiplier: number;
 };

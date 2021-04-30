@@ -127,9 +127,7 @@ export const calcWithdrawable: (base: number, quote: number, fairPrice: number, 
         // TODO this is an error when the users position is so small its negligable
         return margin - 0.0001; // ignore the liquidation cost
     }
-    return (
-        margin - (base !== 0 ? LIQUIDATION_GAS_COST * RYAN_6 + calcNotionalValue(base, fairPrice) / maxLeverage : 0)
-    );
+    return margin - (base !== 0 ? LIQUIDATION_GAS_COST * RYAN_6 + calcNotionalValue(base, fairPrice) / maxLeverage : 0);
 };
 
 /**
