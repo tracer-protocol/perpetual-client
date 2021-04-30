@@ -1,8 +1,66 @@
 import React, { useEffect, useContext, useReducer } from 'react';
 import { TracerContext, Web3Context } from './';
 import { useCalcExposure, useTracerOrders } from '@hooks/TracerHooks';
-import { Children, OpenOrder, OpenOrders, TakenOrder } from 'types';
+import { Children, OpenOrder, OpenOrders, TakenOrder, UserBalance } from 'types';
 import Tracer from '@libs/Tracer';
+
+/**
+ * -1 is no error
+ * 0 is reserved for unknown
+ */
+export const Errors: Record<number, Error> = {
+    0: {
+        name: 'User has position',
+        message: 'You have an open trade. Switch to',
+    },
+    1: {
+        name: 'No Wallet Balance',
+        message: 'No balance found in web3 wallet',
+    },
+    2: {
+        name: 'No Margin Balance',
+        message: 'No deposited balance in TCR market',
+    },
+    3: {
+        name: 'No Orders',
+        message: 'No open orders for this market',
+    },
+    4: {
+        name: 'Account Disconnected',
+        message: 'Please connect your wallet',
+    },
+};
+
+/**
+ * Returns the Error ID relating to the mapping above
+ * These do not need to be in numeric order. It doesnt really matter.
+ * @param balances
+ * @param orders
+ * @returns
+ */
+const checkErrors: (balances: UserBalance | undefined, orders: OpenOrder[], account: string | undefined) => number = (
+    balances,
+    orders,
+    account,
+) => {
+    if (!account) {
+        return 4;
+    } else if (orders?.length === 0) {
+        // there are no orders
+        return 3;
+    } else if (!!balances?.quote) {
+        // user has a position already
+        return 0;
+    } else if (balances?.tokenBalance === 0) {
+        // user has no web3 wallet balance
+        return 1;
+    } else if (balances?.base === 0) {
+        // user has no tcr margin balance
+        return 2;
+    } else {
+        return -1;
+    }
+};
 
 export const OrderTypeMapping: Record<number, string> = {
     0: 'market',
@@ -20,6 +78,13 @@ export type OrderState = {
     matchingEngine: number; // for basic this will always be 0 (OME)
     orderType: number; // for basic this will always be 0 (market order), 1 is limit and 2 is spot
     openOrders: OpenOrders;
+    exposure: number;
+    error: number; // number ID relating to the error map above
+    wallet: number; // ID of corresponding wallet in use 0 -> web3, 1 -> TCR margin
+    // boolean to tell if the amount to buy or amount to pay inputs are locked. eg
+    //  by changing the amount to pay field it should update the amount to buy and vice versa.
+    //  The lock helps avoiding infinite loops when setting these values
+    lock: boolean;
 };
 
 interface ContextProps {
@@ -47,12 +112,16 @@ export type OrderAction =
     | { type: 'setPrice'; value: number }
     | { type: 'setOrderType'; value: number }
     | { type: 'setMatchingEngine'; value: number }
+    | { type: 'setExposure'; value: number }
+    | { type: 'setError'; value: number }
+    | { type: 'setWallet'; value: number }
+    | { type: 'setLock'; value: boolean }
     | { type: 'openOrders'; value: OpenOrders };
 
 // rMargin => require margin
 export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const { setTracerId, tracerId, selectedTracer } = useContext(TracerContext);
-    const { updateTrigger, web3 } = useContext(Web3Context);
+    const { updateTrigger, web3, account } = useContext(Web3Context);
 
     useEffect(() => {
         if (tracerId) {
@@ -75,6 +144,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             shortOrders: [],
             longOrders: [],
         },
+        exposure: 0,
+        error: -1,
+        wallet: 0,
+        lock: false, // default lock amount to pay
     };
 
     const reducer = (state: any, action: OrderAction) => {
@@ -97,6 +170,14 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, matchingEngine: action.value };
             case 'openOrders':
                 return { ...state, openOrders: action.value };
+            case 'setExposure':
+                return { ...state, exposure: action.value };
+            case 'setError':
+                return { ...state, error: action.value };
+            case 'setWallet':
+                return { ...state, wallet: action.value };
+            case 'setLock':
+                return { ...state, lock: action.value };
             default:
                 throw new Error('Unexpected action');
         }
@@ -106,6 +187,30 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     const openOrders = useTracerOrders(web3, selectedTracer as Tracer);
     const oppositeOrders = order.position ? openOrders.shortOrders : openOrders.longOrders;
+
+    const price_ = 0.5; // TODO replace these with actual price
+    useEffect(() => {
+        // lock check to avoid loop
+        if (order.lock) {
+            orderDispatch({ type: 'setExposure', value: order?.rMargin * order.leverage * price_ });
+        }
+    }, [order.rMargin]);
+
+    useEffect(() => {
+        if (!order.lock) {
+            orderDispatch({ type: 'setRMargin', value: order?.exposure / price_ / order.leverage });
+        }
+    }, [order.exposure]);
+
+    useEffect(() => {
+        if (order.lock) {
+            // locked margin, increase exposure
+            orderDispatch({ type: 'setExposure', value: order?.rMargin * order.leverage * price_ });
+        } else {
+            // locked exposure decrease margin
+            orderDispatch({ type: 'setRMargin', value: order?.exposure / price_ / order.leverage });
+        }
+    }, [order.leverage]);
 
     useEffect(() => {
         if (oppositeOrders.length) {
@@ -121,6 +226,11 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         order.position,
         oppositeOrders,
     );
+
+    // useEffect(() => {
+    //     const { exposure } = calcExposure(order.rMargin, order.leverage, oppositeOrders);
+    //     orderDispatch({ type: 'setExposure', value: exposure });
+    // }, [order.rMargin, order.leverage, order.position, oppositeOrders]);
 
     // Handles automatically changing the trade price when taking a market order
     useEffect(() => {
@@ -162,6 +272,13 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     useEffect(() => {
         setTracerId ? setTracerId(`${order.market}/${order.collateral}`) : console.error('Error setting tracerId');
     }, [order.market, order.collateral]);
+
+    useEffect(() => {
+        const error = checkErrors(selectedTracer?.balances, oppositeOrders, account);
+        if (error !== order.error) {
+            orderDispatch({ type: 'setError', value: error });
+        }
+    }, [selectedTracer, oppositeOrders, account]);
 
     return (
         <OrderContext.Provider

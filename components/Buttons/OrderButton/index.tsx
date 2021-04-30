@@ -1,16 +1,13 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import TracerModal from '@components/Modals';
-import { OrderState, OrderTypeMapping } from '@context/OrderContext';
+import { OrderState, OrderTypeMapping, Errors } from '@context/OrderContext';
 import { TracerContext, Web3Context, OrderContext, ErrorContext } from 'context';
 import AlertInfo from '@components/Notifications/AlertInfo';
 import { ConnectButton, MarginDeposit } from '@components/Buttons';
 import { Children, UserBalance } from 'types';
 import styled from 'styled-components';
-
-type POBProps = {
-    balance: number; // users wallets margin balance
-} & Children;
+import Tooltip from 'antd/lib/tooltip';
 
 type OSProps = {
     setSummary: (bool: boolean) => void;
@@ -64,7 +61,7 @@ export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balan
                     ''
                 )}
                 <div className="m-auto w-1/2 flex justify-center">
-                    <PlaceOrderButton balance={balances?.base ?? 0} />
+                    <PlaceOrderButton />
                 </div>
             </div>
         </div>
@@ -108,24 +105,27 @@ export const AdvancedOrderButton: React.FC<{
 
     return (
         <div className="w-full flex">
-            <PlaceOrderButton balance={balances?.base ?? 0}>
+            <PlaceOrderButton>
                 <TradeButton>Place Trade</TradeButton>
             </PlaceOrderButton>
         </div>
     );
 };
 
-export const PlaceOrderButton: React.FC<POBProps> = ({ balance, children }: POBProps) => {
+type POBProps = {
+    className?: string;
+} & Children;
+
+export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
     const { takenOrders, order } = useContext(OrderContext);
     const { rMargin, price, orderType } = order as OrderState;
     const { addToast } = useToasts();
-    const [validOrder, setValidOrder] = useState(false);
     const [showOrder, setShowOrder] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const handleOrder = async (_e: any) => {
-        if (validOrder) {
+        if (order?.error !== -1) {
             setLoading(true);
             placeOrder
                 ? await placeOrder(order as OrderState, takenOrders ?? [])
@@ -133,23 +133,12 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ balance, children }: POBP
             setLoading(false);
             setShowOrder(false);
         } else {
-            addToast('Invalid order', {
+            addToast(`Invalid order: ${Errors[order?.error]?.message}`, {
                 appearance: 'error',
                 autoDismiss: true,
             });
         }
     };
-
-    useEffect(() => {
-        // TODO calc what a valid order is
-        if (balance > 0 && balance >= rMargin) {
-            if (!(takenOrders?.length && order?.orderType === 0)) {
-                setValidOrder(true);
-            }
-        } else if (validOrder) {
-            setValidOrder(false);
-        }
-    }, [rMargin, balance, takenOrders]);
 
     const message = () => {
         if (orderType === 0) {
@@ -159,7 +148,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ balance, children }: POBP
         }
     };
 
-    if (validOrder) {
+    if (order?.error === -1) {
         return (
             <>
                 <TracerModal
@@ -181,12 +170,16 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ balance, children }: POBP
                         </div>
                     </div>
                 </TracerModal>
-                <div className="w-full" onClick={() => setShowOrder(true)}>
+                <div className={`w-full ${className}`} onClick={() => setShowOrder(true)}>
                     {children}
                 </div>
             </>
         );
     } else {
-        return <div className="button-disabled">{children}</div>;
+        return (
+            <Tooltip title={Errors[order?.error ?? -1]?.message}>
+                <div className={`button-disabled ${className}`}>{children}</div>
+            </Tooltip>
+        );
     }
 };

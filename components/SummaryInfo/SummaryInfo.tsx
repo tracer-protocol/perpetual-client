@@ -13,21 +13,27 @@ type SProps = {
 export const Section: React.FC<SProps> = styled(({ label, classes, children, className }: SProps) => {
     return (
         <div className={`${classes} ${className}`}>
-            <span className="label">{label}</span>
-            {children ? <span className={`text-right w-full pl-4`}>{children}</span> : ''}
+            <span className={`label`}>{label}</span>
+            <span className={`content`}>{children}</span>
         </div>
     );
 })`
     width: 100%;
     display: flex;
     margin: 10px 0;
+    font-size: 16px;
+    letter-spacing: -0.32px;
     > .label {
         text-align: left;
         white-space: nowrap;
-        font-size: 16px;
-        letter-spacing: -0.32px;
         color: #3da8f5;
         text-transform: capitalize;
+    }
+
+    > .content {
+        text-align: right;
+        width: 100%;
+        padding-left: 0.25rem;
     }
 `;
 

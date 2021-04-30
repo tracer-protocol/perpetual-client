@@ -1,113 +1,253 @@
-import React, { useState, useContext } from 'react';
-import LightWeightChart from '@components/Charts/LightWeightChart';
+import React, { useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext } from 'context';
 import LeverageSlider from '@components/Trade/LeverageSlider';
 import TracerSelect from '@components/Trade/TracerSelect';
-import { OrderSummaryButtons, OrderSubmit, SlideSelect } from '@components/Buttons';
-import { UserBalance } from '@components/types';
-import Tracer from '@libs/Tracer';
-import { PostTradeDetails } from '@components/components/SummaryInfo/PositionDetails';
+import { SlideSelect, PlaceOrderButton } from '@components/Buttons';
+import { Option } from '@components/Buttons/SlideSelect/Options';
+import { Card, Button } from '@components/General';
+import { OrderAction, OrderState, Errors } from '@context/OrderContext';
+import styled from 'styled-components';
+import { calcLiquidationPrice, calcNotionalValue, toApproxCurrency } from '@libs/utils';
+import { Section } from '@components/SummaryInfo';
+import { UserBalance } from 'types';
 
-const Positions: React.FC<{ className: string }> = ({ className }: { className: string }) => {
-    const { order, orderDispatch } = useContext(OrderContext);
+type PProps = {
+    dispatch: React.Dispatch<OrderAction> | undefined;
+    position: number;
+    className?: string;
+};
 
+const Position: React.FC<PProps> = styled(({ className, dispatch, position }: PProps) => {
     return (
-        <div className={'flex w-full px-5 ' + className}>
+        <div className={className}>
             <SlideSelect
                 onClick={(index, _e) =>
-                    orderDispatch
-                        ? orderDispatch({ type: 'setPosition', value: index })
+                    dispatch
+                        ? dispatch({ type: 'setPosition', value: index })
                         : console.error('Order dispatch function not set')
                 }
-                value={order?.position ?? 0}
+                value={position}
             >
-                <a className="m-auto">SHORT</a>
-                <a className="m-auto">LONG</a>
+                <Option className="my-2">SHORT</Option>
+                <Option className="my-2">LONG</Option>
             </SlideSelect>
         </div>
     );
-};
+})`
+    width: 300px;
+    margin-left: auto;
+`;
 
-const OrderSummary: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
-    const { order, exposure } = useContext(OrderContext);
+const SSection = styled(Section)`
+    border-bottom: 1px solid #011772;
+    letter-spacing: -0.32px;
+    font-size: 16px;
+    padding: 5px 10px;
+    margin: 0;
+`;
+
+const LiquidationPrice = styled(Section)`
+    background: #f15025;
+    background-size: 100%;
+    border-bottom: 1px solid #011772;
+    letter-spacing: -0.32px;
+    font-size: 16px;
+    padding: 5px 0;
+    margin: 0;
+    .label {
+        color: #fff;
+        padding: 0 10px;
+    }
+    .content {
+        padding-right: 10px;
+    }
+`;
+
+const PrevBalance = styled.span`
+    color: #005ea4;
+    margin-right: 5px;
+`;
+interface SProps {
+    balances: UserBalance;
+    fairPrice: number;
+    order: OrderState | undefined;
+    exposure: number;
+    maxLeverage: number;
+    className?: string;
+}
+const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLeverage, exposure, className }: SProps) => {
+    const position = order?.position ?? 0;
+    const newQuote =
+        position === 0
+            ? balances.quote - (exposure ?? 0) // short
+            : balances.quote + (exposure ?? 0); // long
+    const newBase =
+        position === 0
+            ? balances.base + calcNotionalValue(exposure ?? 0, fairPrice) // short
+            : balances.base - calcNotionalValue(exposure ?? 0, fairPrice); // long
+    return (
+        <div className={className}>
+            <h3>Order Summary</h3>
+            <SSection label={'Order Type'}>Market</SSection>
+            <SSection label={'Market Price'}>
+                {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
+            </SSection>
+            <LiquidationPrice label={'Liquidation Price'}>
+                {`${toApproxCurrency(calcLiquidationPrice(newBase, newQuote, fairPrice, maxLeverage ?? 1))} ${
+                    order?.collateral ?? ''
+                }`}
+            </LiquidationPrice>
+            <SSection label={'Slippage % Fees'}>
+                {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
+            </SSection>
+            <SSection label={'Wallet Balance'}>
+                <PrevBalance>
+                    {`${toApproxCurrency(order?.wallet ? balances?.tokenBalance : balances?.base)} ${
+                        order?.collateral ?? ''
+                    } >>> `}
+                </PrevBalance>
+                {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
+            </SSection>
+            <SSection label={'Predicted Const Total'}>
+                {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
+            </SSection>
+        </div>
+    );
+})`
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+    transition: height 0.5s ease-in-out, opacity 0.5s ease-in 0.2s, margin 0.5s ease-in;
+    opacity: 0;
+    background: #002886;
+    border-radius: 10px;
+    margin-top: 10px;
+    h3 {
+        font-size: 16px;
+        letter-spacing: -0.32px;
+        color: #ffffff;
+        padding: 10px;
+    }
+    .show & {
+        height: 260px;
+        opacity: 1;
+    }
+`;
+
+const Title = styled.h1`
+    font-size: 20px;
+    letter-spacing: -0.4px;
+    color: #ffffff;
+    font-weight: normal;
+    padding: 0;
+`;
+
+const SCard = styled(Card)`
+    position: relative;
+    width: 596px;
+    height: 550px;
+    display: flex;
+    flex-direction: column;
+    transition: 0.5s ease-in-out;
+    padding: 20px;
+    margin: 0 auto;
+    &.show {
+        height: 780px;
+    }
+`;
+
+const SButton = styled(Button)`
+    border: 1px solid #ffffff;
+    color: #fff;
+
+    .button-disabled &:hover {
+        cursor: not-allowed;
+    }
+    #tooltip {
+        display: none;
+    }
+    .button-disabled #tooltip {
+        display: block;
+    }
+`;
+
+const Error = styled(({ className, error }) => {
+    return (
+        <div className={`${className} ${error !== -1 ? 'show' : ''}`}>{error !== -1 ? Errors[error].message : ''}</div>
+    );
+})`
+    background: #f15025;
+    border-radius: 0px 0px 5px 5px;
+    font-size: 16px;
+    letter-spacing: -0.32px;
+    color: #ffffff;
+    text-align: center;
+    position: absolute;
+    padding: 10px;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    transform: translateY(100%);
+    transition: all 0.4s ease-in-out;
+    opacity: 0;
+    &.show {
+        opacity: 1;
+    }
+`;
+
+const Basic: React.FC = styled(({ className }) => {
+    const { selectedTracer } = useContext(TracerContext);
+    const { order, exposure, orderDispatch } = useContext(OrderContext);
+    const [showSummary, setShowSummary] = useState(false);
+    const balances = selectedTracer?.balances;
+
+    useEffect(() => {
+        // could have equally been checking on the margin variable
+        if (order?.exposure) {
+            setShowSummary(true);
+        } else {
+            setShowSummary(false);
+        }
+    }, [order?.exposure]);
 
     return (
-        <div>
-            <Positions className="pt-5 pb-5" />
-            <TracerSelect className="px-5 pb-5" inputSize={'text-lg'} />
-            <LeverageSlider leverage={order?.leverage ?? 1} />
-            <div className="px-5 mt-2 p-5 border-t-2 border-gray-100 text-sm">
-                <div className="text-blue-100 font-bold">Order Summary</div>
-                <PostTradeDetails
-                    fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
+        <div className={`container mx-auto mt-3 ${className}`}>
+            <SCard className={`${showSummary ? 'show' : ''}`}>
+                <div className="flex">
+                    <Title>Basic Trade</Title>
+                    <Position dispatch={orderDispatch} position={order?.position ?? 0} />
+                </div>
+                <TracerSelect />
+                <LeverageSlider leverage={order?.leverage ?? 1} />
+                <Summary
                     balances={
-                        selectedTracer?.balances ?? {
-                            quote: 0,
+                        balances ??
+                        ({
                             base: 0,
+                            quote: 0,
+                            tokenBalance: 0,
                             totalLeveragedValue: 0,
                             lastUpdatedGasPrice: 0,
-                            tokenBalance: 0,
-                        }
+                        } as UserBalance)
                     }
-                    exposure={exposure ?? 0}
-                    position={order?.position ?? 0}
+                    order={order}
                     maxLeverage={selectedTracer?.maxLeverage ?? 1}
+                    fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
+                    exposure={exposure ?? 0}
                 />
-            </div>
+                <PlaceOrderButton className="mt-auto">
+                    <SButton className="mx-auto">Place Trade</SButton>
+                </PlaceOrderButton>
+                <Error error={order?.error ?? -1} />
+            </SCard>
         </div>
     );
-};
-
-const BasicPlaceOrder: React.FC<{ setSummary: (bool: boolean) => void }> = ({
-    setSummary,
-}: {
-    setSummary: (bool: boolean) => void;
-}) => {
-    const { order } = useContext(OrderContext);
-    return (
-        <div className="px-24">
-            <Positions className="pt-12 pb-16" />
-            <TracerSelect className="px-5 pb-16" inputSize={'text-5xl'} />
-            <LeverageSlider className="pb-12" leverage={order?.leverage ?? 1} />
-            <OrderSubmit setSummary={setSummary} />
-        </div>
-    );
-};
-
-const BasicOrderSummary: React.FC = () => {
-    const { selectedTracer } = useContext(TracerContext);
-    return (
-        <React.Fragment>
-            <div className="flex w-full  border-b-2 border-gray-100">
-                <div className="mx-auto text-blue-100 font-bold">
-                    <h2>PLACE ORDER</h2>
-                </div>
-            </div>
-            <div className="flex w-full">
-                <div className="w-1/2 border-r-2 border-gray-100">
-                    <OrderSummary selectedTracer={selectedTracer} />
-                </div>
-                <div className="w-1/2 flex flex-col">
-                    <div className="h-full border-b-2 border-gray-100">
-                        <LightWeightChart />
-                    </div>
-                    <OrderSummaryButtons balances={selectedTracer?.balances as UserBalance} />
-                </div>
-            </div>
-        </React.Fragment>
-    );
-};
-
-const Basic: React.FC = () => {
-    const [summary, setSummary] = useState(false);
-    return (
-        <div className="container m-auto h-full flex ">
-            <div className="m-auto w-3/4 rounded-lg shadow-2xl bg-white shadow-gray-100">
-                {summary ? <BasicOrderSummary /> : <BasicPlaceOrder setSummary={setSummary} />}
-            </div>
-        </div>
-    );
-};
+})`
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    margin-bottom: 60px;
+`;
 
 export default Basic;
 

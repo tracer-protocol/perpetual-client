@@ -64,20 +64,20 @@ const DropdownLogo = styled(({ className }) => {
     };
     return (
         <div id="menu" className={`${className} ${show ? 'show' : ''}`} onClick={handleClick}>
-            <img alt="Tracer Logo" className="logo" src="/img/logos/tracer_perps.svg" />
+            <img alt="Tracer Logo" className="logo" src="/img/logos/tracer/tracer_perps.svg" />
             <img alt="down-arrow" className="down-arrow" src="/img/general/triangle_down.svg" />
             <div className="divide" />
             <div className={`dropdown-menu`}>
                 <ul className="dropdown-menu-list">
                     <li className="nav-item">{/* <img alt="Tracer Logo" src="/img/logos/tracer_perps.svg"/> */}</li>
                     <li className="nav-item">
-                        <img alt="Tracer Logo" src="/img/logos/tracer_main.svg" />
+                        <img alt="Tracer Logo" src="/img/logos/tracer/tracer_main.svg" />
                     </li>
                     <li className="nav-item">
-                        <img alt="Tracer Logo" src="/img/logos/tracer_govern.svg" />
+                        <img alt="Tracer Logo" src="/img/logos/tracer/tracer_govern.svg" />
                     </li>
                     <li className="nav-item">
-                        <img alt="Tracer Logo" src="/img/logos/tracer_blog.svg" />
+                        <img alt="Tracer Logo" src="/img/logos/tracer/tracer_blog.svg" />
                     </li>
                 </ul>
             </div>

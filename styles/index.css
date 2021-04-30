@@ -120,6 +120,18 @@ input {
 }
 
 
+/** Ant tooltip styles */
+.ant-tooltip-inner {
+  background: #002886;
+  color: #005EA4;
+}
+.ant-tooltip-inner strong {
+  color: #3DA8F5;
+}
+.ant-tooltip-arrow-content {
+  background-color: #002886;
+}
+
 @tailwind base;
 
 @tailwind components;
@@ -159,7 +171,7 @@ input {
 }
 
 .button-disabled {
-    @apply cursor-not-allowed opacity-50 w-full
+    @apply cursor-not-allowed opacity-50 w-full;
 }
 
 .card {
