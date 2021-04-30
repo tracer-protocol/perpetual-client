@@ -252,7 +252,7 @@ const Basic: React.FC = styled(({ className }) => {
 export default Basic;
 
 // Collateral -> Required deposit
-// For basic required collateral is fixed quoted on amount and leverage
+// For basic required collateral is fixed based on amount and leverage
 
 // Leveral slider should not move automatically
 // changing leverage slider will change the required deposit

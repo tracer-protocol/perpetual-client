@@ -286,5 +286,5 @@ export default class Tracer {
     // filter by side (opposite of position)
     // as well as what market they have chosen
 
-    // Graph of prices will be quoted on getting 24 hour prices
+    // Graph of prices will be based on getting 24 hour prices
 }
