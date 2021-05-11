@@ -30,4 +30,5 @@ export type InsurancePoolInfo = {
     rewards: number;
     health: number;
     apy: number;
+    buffer: number;
 };

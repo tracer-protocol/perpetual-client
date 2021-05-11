@@ -23,6 +23,11 @@ module.exports = withAntdLess({
         source: '/account',
         destination: '/account/positions.html',
         permanent: true,
+      }, 
+      {
+        source: '/insurance',
+        destination: '/insurance/pools.html',
+        permanent: true,
       }
     ]
   },
@@ -33,7 +38,9 @@ module.exports = withAntdLess({
       "/account/history": { page: "/account/[page]" },
       "/account/positions": { page: "/account/[page]" },
       "/trade/basic": { page: "/trade/[interface]" },
-      "/trade/advanced": { page: "/trade/[interface]" }
+      "/trade/advanced": { page: "/trade/[interface]" },
+      "/insurance/pools": { page: "/insurance/[interface]" },
+      "/insurance/portfolio": { page: "/insurance/[interface]" }
     }
   },
   less: {

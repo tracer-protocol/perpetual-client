@@ -1,5 +1,6 @@
 import React from 'react';
-import { Section, FundingRate, PoolHealth } from './';
+import { Section, FundingRate } from './';
+import PoolHealth from '@components/Insurance/PoolHealth';
 
 export const OrderInfo: React.FC<{
     feeRate: number | undefined;

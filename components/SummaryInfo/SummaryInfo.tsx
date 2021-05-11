@@ -1,5 +1,4 @@
 import React from 'react';
-import ProgressBar from '@components/ProgressBar';
 import { Children } from 'types';
 import { FundingRateGraphic } from './';
 import styled from 'styled-components';
@@ -39,17 +38,4 @@ export const Section: React.FC<SProps> = styled(({ label, classes, children, cla
 
 export const FundingRate: React.FC<{ rate: number }> = ({ rate }: { rate: number }) => {
     return <FundingRateGraphic rate={rate} />;
-};
-
-/**
- *
- * @param health as an integer representation of a percentage
- * @returns
- */
-export const PoolHealth: React.FC<{ health: number }> = ({ health }) => {
-    return (
-        <span className="w-3/4">
-            <ProgressBar percent={health} />
-        </span>
-    );
 };

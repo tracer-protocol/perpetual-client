@@ -2,12 +2,11 @@ import React, { useContext, useEffect, useReducer } from 'react';
 import { FactoryContext } from './FactoryContext';
 import { Children, Result, TakenOrder, UserBalance } from 'types';
 import { isEmpty } from 'lodash';
-import { createBook } from '@libs/Ome';
+import { createBook, createOrder } from '@libs/Ome';
 import { Web3Context } from './Web3Context';
 import { OrderState } from './OrderContext';
 import Web3 from 'web3';
 import { signOrders, orderToOMEOrder, OrderData } from '@tracer-protocol/tracer-utils';
-import { createOrder } from '@libs/Ome';
 import Tracer from '@libs/Tracer';
 import { TransactionContext } from './TransactionContext';
 
@@ -107,8 +106,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 },
             ];
             const signedMakes = await signOrders(web3, makes, config?.contracts.trader.address as string);
-            const order = orderToOMEOrder(web3, await signedMakes[0]);
-            await createOrder(selectedTracer?.address as string, order);
+            const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
+            await createOrder(selectedTracer?.address as string, omeOrder);
             return { status: 'success' } as Result; // TODO add error check
         } else if (matchingEngine === 0) {
             // On-chain

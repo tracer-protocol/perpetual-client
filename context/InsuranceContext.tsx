@@ -35,14 +35,25 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     const initialState = {
         pools: {
-            [selectedTracer?.marketId ?? 'undefined']: {
-                market: selectedTracer?.marketId,
-                userBalance: 0,
-                target: 0,
-                liquidity: 0,
+            'LINK/USDC': {
+                market: 'LINK/USDC',
+                userBalance: 100,
+                target: 6000,
+                liquidity: 5000,
                 rewards: 0,
                 health: 0,
                 apy: 0,
+                buffer: 200,
+            } as InsurancePoolInfo,
+            'ETH/USDC': {
+                market: 'ETH/USDC',
+                userBalance: 200,
+                target: 5000,
+                liquidity: 6000,
+                rewards: 0,
+                health: 0,
+                apy: 0,
+                buffer: 200,
             } as InsurancePoolInfo,
         },
     };

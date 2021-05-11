@@ -293,7 +293,7 @@ const NavBar: React.FC = styled(({ className }) => {
                     </Link>
                 </li>
                 <li className={linkStyles + (route === 'insurance' ? ' selected' : '')}>
-                    <Link href="/insurance">
+                    <Link href="/insurance/pools">
                         <a className="m-auto ">Insurance</a>
                     </Link>
                 </li>

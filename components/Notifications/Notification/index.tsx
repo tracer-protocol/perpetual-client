@@ -88,11 +88,12 @@ const Icon: React.FC<any> = ({ appearance: appearance_, autoDismiss, autoDismiss
                 backgroundColor: appearance.fg,
                 color: appearance.bg,
                 width: 30,
+
             }}
         >
             <Countdown opacity={autoDismiss ? 1 : 0} autoDismissTimeout={autoDismissTimeout} isRunning={isRunning} />
             <div className={`${appearance_ === 'loading' ? 'animate-spin' : ''}`}>
-                <FontAwesomeIcon color="#fff" icon={appearance.icon} />
+                <FontAwesomeIcon color="#fff" icon={appearance.icon} style={{ width: '30px' }} />
             </div>
         </div>
     );
