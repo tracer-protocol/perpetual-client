@@ -21,19 +21,18 @@ const parseData: (data: InsurancePoolInfoType[]) => string[][] = (data) => {
     ]) as string[][];
 };
 
-
 const TableHead = styled.th`
-    color: #3DA8F5;
+    color: #3da8f5;
     padding: 1rem;
     font-size: 1rem;
     letter-spacing: -0.32px;
-`
+`;
 
 const TableCell = styled.td`
     transition: 1s;
     padding: 1rem;
     border: 1px solid #002886;
-`
+`;
 
 const TableRow = styled.tr`
     &.selected {
@@ -43,46 +42,50 @@ const TableRow = styled.tr`
         background: #002886;
         cursor: pointer;
     }
-`
+`;
 
 const Teaser = styled.div`
     font-size: 1.3rem;
     color: #fff;
     display: flex;
     margin-bottom: 1rem;
-`
+`;
 const Hidden = styled.div`
     font-size: 1rem;
-    color: #3DA8F5;
+    color: #3da8f5;
     opacity: 0;
     transition: 0.3s;
     transition-delay: 0s;
-    .selected &, .show &, &.show {
+    .selected &,
+    .show &,
+    &.show {
         opacity: 1;
         transition-delay: 0.15s;
     }
-`
+`;
 
 const Collapsible = styled.div`
     transition: 0.3s;
     height: 2rem;
     overflow: hidden;
-    .selected &, &.show { // to options
+    .selected &,
+    &.show {
+        // to options
         height: 250px;
     }
-`
+`;
 
 type CProps = {
-    pool: InsurancePoolInfo | undefined,
-    className?: string
-}
+    pool: InsurancePoolInfo | undefined;
+    className?: string;
+};
 
 const SProgressBar = styled(ProgressBar)`
-    border: 1px solid #3DA8F5;
+    border: 1px solid #3da8f5;
     min-width: 250px;
     width: 100%;
-`
-const HealthCell:React.FC<CProps> = ({ pool }: CProps) => {
+`;
+const HealthCell: React.FC<CProps> = ({ pool }: CProps) => {
     return (
         <Collapsible>
             <Teaser>
@@ -90,19 +93,19 @@ const HealthCell:React.FC<CProps> = ({ pool }: CProps) => {
             </Teaser>
             <Hidden>
                 <Breakdown 
-                    target={1000}
-                    userBalance={100}
-                    liquidity={500}
-                    buffer={50}
+                    target={pool?.target ?? 0} 
+                    userBalance={pool?.userBalance ?? 0} 
+                    liquidity={pool?.liquidity ?? 0} 
+                    buffer={pool?.buffer ?? 0} 
                 />
             </Hidden>
         </Collapsible>
-    )
-}
+    );
+};
 
 const ButtonContainer = styled.div`
     display: flex;
-`
+`;
 
 const SDownCaret = styled(CaretDownFilled)`
     opacity: 0;
@@ -113,17 +116,15 @@ const SDownCaret = styled(CaretDownFilled)`
         opacity: 1;
         transform: rotate(0);
     }
-`
+`;
 
-const OwnershipCell:React.FC<CProps> = styled(({ pool, className }: CProps) => {
+const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
     return (
         <Collapsible className={className}>
             <Teaser>
-                <span>
-                    {pool?.userBalance ?? 0} iTokens 
-                </span>
+                <span>{pool?.userBalance ?? 0} iTokens</span>
                 <span className="percent">
-                    {parseFloat(((pool?.userBalance ?? 0)/(pool?.liquidity ?? 0)).toFixed(5))}%
+                    {parseFloat(((pool?.userBalance ?? 0) / (pool?.liquidity ?? 0)).toFixed(5))}%
                 </span>
             </Teaser>
             <Hidden>
@@ -133,26 +134,24 @@ const OwnershipCell:React.FC<CProps> = styled(({ pool, className }: CProps) => {
                 </ButtonContainer>
             </Hidden>
         </Collapsible>
-    )
+    );
 })`
     > * .percent {
-        color: #3DA8F5;
+        color: #3da8f5;
         margin-left: 20px;
     }
-`
+`;
 
 interface IPTProps {
-    handleClick: (tracerId: string) => void
-    pools: Record<string, InsurancePoolInfoType>
-    className?: string
+    handleClick: (tracerId: string) => void;
+    pools: Record<string, InsurancePoolInfoType>;
+    className?: string;
 }
-const InsurancePoolsTable: React.FC<IPTProps> = styled(({
-    pools,
-    className
-}: IPTProps) => {
+const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IPTProps) => {
     const headings = ['Market', 'APY', 'Health', 'Pool Ownership'];
-    const [expanded, setExpanded]  = useState(-1);
+    const [expanded, setExpanded] = useState(-1);
     const [_rows, setRows] = useState<string[][]>([]);
+
     useEffect(() => {
         if (pools) {
             setRows(parseData(Object.values(pools)));
@@ -171,59 +170,65 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({
                 target = target?.parentNode;
             } while (target);
             setExpanded(-1);
-        })
-    }, [])
+        });
+    }, []);
 
     const onClick = (e: any, index: number) => {
         e.preventDefault();
         setExpanded(index);
-    }
+    };
     return (
         <table id="pools-table" className={className}>
             <thead>
                 <tr>
-                    {headings.map((heading) => <TableHead>{heading}</TableHead>)}
+                    {headings.map((heading, i) => (
+                        <TableHead key={`insurance-head-${i}`}>{heading}</TableHead>
+                    ))}
                 </tr>
             </thead>
             <tbody>
-                {Object.values(pools).map((pool, index) => {
+                {Object.values(pools).map((pool, i) => {
                     // replace with check against selectedTracer
-                    const show = expanded === index;
+                    const show = expanded === i;
                     return (
-                        <TableRow data-key={`insurance-row`} className={show ? 'selected' : ''} onClick={(e) => onClick(e, index)}>
-                                <TableCell className="w-1/6">
-                                    <Collapsible>
-                                        <Teaser>
-                                            <SDownCaret />
-                                            <Logo className="ml-2" ticker="ETH"/>
-                                            <span className="ml-2 my-auto">{pool.market}</span>
-                                        </Teaser>
-                                        <Hidden>
-                                            Protects borrowers in the {pool.market} market.
-                                        </Hidden>
-                                    </Collapsible>
-                                </TableCell>
-                                <TableCell className="w-1/6">
-                                    <Collapsible>
-                                        <Teaser>{pool.apy}</Teaser>
-                                        <Hidden className={`${show ? 'show' : ''}`}>
-                                            30 day average realised/net APY.
-                                        </Hidden>
-                                    </Collapsible>
-                                </TableCell>
-                                <TableCell><HealthCell pool={pool} /></TableCell>
-                                <TableCell><OwnershipCell pool={pool} /></TableCell>
+                        <TableRow
+                            key={`insurance-row-${i}`}
+                            className={show ? 'selected' : ''}
+                            onClick={(e) => onClick(e, i)}
+                        >
+                            <TableCell className="w-1/6">
+                                <Collapsible>
+                                    <Teaser>
+                                        <SDownCaret />
+                                        <Logo className="ml-2" ticker="ETH" />
+                                        <span className="ml-2 my-auto">{pool.market}</span>
+                                    </Teaser>
+                                    <Hidden>Protects borrowers in the {pool.market} market.</Hidden>
+                                </Collapsible>
+                            </TableCell>
+                            <TableCell className="w-1/6">
+                                <Collapsible>
+                                    <Teaser>{pool.apy}</Teaser>
+                                    <Hidden className={`${show ? 'show' : ''}`}>
+                                        30 day average realised/net APY.
+                                    </Hidden>
+                                </Collapsible>
+                            </TableCell>
+                            <TableCell>
+                                <HealthCell pool={pool} />
+                            </TableCell>
+                            <TableCell>
+                                <OwnershipCell pool={pool} />
+                            </TableCell>
                         </TableRow>
-                    )}
-                )}
-
+                    );
+                })}
             </tbody>
         </table>
     );
 })`
     color: #fff;
-`
-
+`;
 
 /**
  * Even though this data could come from props, the user needs to ensure all data

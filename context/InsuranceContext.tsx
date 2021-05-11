@@ -37,21 +37,23 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         pools: {
             'LINK/USDC': {
                 market: 'LINK/USDC',
-                userBalance: 10,
+                userBalance: 100,
                 target: 6000,
                 liquidity: 5000,
                 rewards: 0,
                 health: 0,
                 apy: 0,
+                buffer: 200
             } as InsurancePoolInfo,
             'ETH/USDC': {
                 market: 'ETH/USDC',
-                userBalance: 20,
+                userBalance: 200,
                 target: 5000,
                 liquidity: 6000,
                 rewards: 0,
                 health: 0,
                 apy: 0,
+                buffer: 200
             } as InsurancePoolInfo,
         },
     };

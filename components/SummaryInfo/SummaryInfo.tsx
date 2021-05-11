@@ -39,4 +39,3 @@ export const Section: React.FC<SProps> = styled(({ label, classes, children, cla
 export const FundingRate: React.FC<{ rate: number }> = ({ rate }: { rate: number }) => {
     return <FundingRateGraphic rate={rate} />;
 };
-

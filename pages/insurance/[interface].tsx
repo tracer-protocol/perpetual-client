@@ -10,10 +10,10 @@ import styled from 'styled-components';
 import { SubNav } from '@components/Nav/SubNavBar';
 
 const Content = styled.div`
-    background: #03065E;
+    background: #03065e;
     width: 80%;
     margin: 0 auto;
-`
+`;
 
 const Insurance: React.FC = styled(({ className }) => {
     const tabs = ['Insurance Pools', 'Insurance Portfolio'];
@@ -27,9 +27,13 @@ const Insurance: React.FC = styled(({ className }) => {
             <SelectedTracerStore>
                 <InsuranceStore>
                     <Content>
-                        <SubNav tabs={tabs} selected={pools ? 0 : 1} setTab={(tab: number) => {
-                            router.push(tab === 0 ? '/insurance/pools' : '/insurance/portfolio')
-                        }}/>
+                        <SubNav
+                            tabs={tabs}
+                            selected={pools ? 0 : 1}
+                            setTab={(tab: number) => {
+                                router.push(tab === 0 ? '/insurance/pools' : '/insurance/portfolio');
+                            }}
+                        />
                         {pools ? <Pools /> : <Portfolio />}
                     </Content>
                 </InsuranceStore>
@@ -38,7 +42,7 @@ const Insurance: React.FC = styled(({ className }) => {
     );
 })`
     position: relative;
-    background: #03065E;
-`
+    background: #03065e;
+`;
 
 export default Insurance;

@@ -108,7 +108,7 @@ const clearLogos: Record<string, string> = {
 
 const logos: Record<string, string> = {
     ETH: '/img/logos/currencies/eth.svg',
-}
+};
 
 type Ticker = 'ETH' | 'LINK';
 interface LProps {
@@ -116,7 +116,7 @@ interface LProps {
     ticker: Ticker;
     clear?: boolean; // true then display outlined image
 }
-export const Logo: React.FC<LProps> = styled(({ className, ticker, clear}: LProps) => {
+export const Logo: React.FC<LProps> = styled(({ className, ticker, clear }: LProps) => {
     return <img className={className} src={clear ? clearLogos[ticker] : logos[ticker]} />;
 })`
     width: 30px;
