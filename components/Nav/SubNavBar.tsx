@@ -15,7 +15,7 @@ export const SNavItem = styled.div`
     border-right: 2px solid #0c3586;
     text-align: center;
     padding: 15px;
-    width: 125px;
+    min-width: 125px;
     &.selected {
         background: #002886;
         color: #fff;

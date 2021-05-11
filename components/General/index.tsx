@@ -102,16 +102,22 @@ export const Card = styled.div`
     }
 `;
 
-const logos: Record<string, string> = {
+const clearLogos: Record<string, string> = {
     ETH: '/img/logos/currencies/eth_clear.svg',
 };
+
+const logos: Record<string, string> = {
+    ETH: '/img/logos/currencies/eth.svg',
+}
+
 type Ticker = 'ETH' | 'LINK';
 interface LProps {
     className?: string;
     ticker: Ticker;
+    clear?: boolean; // true then display outlined image
 }
-export const Logo: React.FC<LProps> = styled(({ className, ticker }: LProps) => {
-    return <img className={className} src={logos[ticker]} />;
+export const Logo: React.FC<LProps> = styled(({ className, ticker, clear}: LProps) => {
+    return <img className={className} src={clear ? clearLogos[ticker] : logos[ticker]} />;
 })`
     width: 30px;
     margin: 5px 0;

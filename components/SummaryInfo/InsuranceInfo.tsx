@@ -2,7 +2,8 @@ import { InsuranceContext } from '@components/context';
 import { toApproxCurrency } from '@components/libs/utils';
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Section, PoolHealth } from './';
+import { Section } from './';
+import PoolHealth from '@components/Insurance/PoolHealth';
 
 export const InsuranceInfo: React.FC = styled(({ className }) => {
     const { poolInfo } = useContext(InsuranceContext);

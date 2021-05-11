@@ -1,6 +1,7 @@
 import React from 'react';
-import { Section, FundingRate, PoolHealth } from './';
+import { Section, FundingRate } from './';
 import TracerLoading from '@components/TracerLoading';
+import PoolHealth from '@components/Insurance/PoolHealth';
 
 type MIProps = {
     fundingRate: number;
