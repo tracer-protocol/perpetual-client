@@ -78,18 +78,18 @@ type SProps = {
     percentage: number;
     value: number;
     color: string;
-    target: 'userBalanceTarget' | 'bufferTarget' | 'liquidityTarget'
+    target: 'userBalanceTarget' | 'bufferTarget' | 'liquidityTarget';
     className?: string;
 };
 const Section: React.FC<SProps> = styled(({ title, percentage, value, target, className }: SProps) => {
     return (
-        <div 
-            className={className} 
+        <div
+            className={className}
             onMouseEnter={() => {
-                document.getElementById(target)?.classList.add('visible')
+                document.getElementById(target)?.classList.add('visible');
             }}
             onMouseLeave={() => {
-                document.getElementById(target)?.classList.remove('visible')
+                document.getElementById(target)?.classList.remove('visible');
             }}
         >
             <div className="bar" />
@@ -150,31 +150,31 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
                 <Label title="Current Deposits" value={liquidity} />
                 <Label title="Target" value={target} />
             </div>
-            <BreakdownBar 
-                target={target} 
-                liquidity={liquidity} 
-                userBalance={userBalance} 
+            <BreakdownBar
+                target={target}
+                liquidity={liquidity}
+                userBalance={userBalance}
                 buffer={buffer}
                 className="bar"
             />
             <div className="sections hoverHide">
-                <Section 
-                    title="Buffer" 
-                    percentage={parseFloat(((buffer / denom(target, liquidity)) * 100).toFixed(3))} 
-                    value={buffer} 
-                    color="#011772" 
+                <Section
+                    title="Buffer"
+                    percentage={parseFloat(((buffer / denom(target, liquidity)) * 100).toFixed(3))}
+                    value={buffer}
+                    color="#011772"
                     target="bufferTarget"
                 />
-                <Section 
+                <Section
                     title="Public"
-                    percentage={parseFloat(((liquidity / target) * 100).toFixed(3))} 
-                    value={liquidity} 
-                    color="#3DA8F5" 
+                    percentage={parseFloat(((liquidity / target) * 100).toFixed(3))}
+                    value={liquidity}
+                    color="#3DA8F5"
                     target="liquidityTarget"
                 />
-                <Section 
-                    title="My Shares" 
-                    percentage={parseFloat(((userBalance/ liquidity) * 100).toFixed(3))} 
+                <Section
+                    title="My Shares"
+                    percentage={parseFloat(((userBalance / liquidity) * 100).toFixed(3))}
                     value={userBalance}
                     color="#005EA4"
                     target="userBalanceTarget"
@@ -188,7 +188,8 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
         justify-content: space-between;
     }
 
-    &:hover > .hoverHide > *, &:hover .bar > * {
+    &:hover > .hoverHide > *,
+    &:hover .bar > * {
         opacity: 0.5;
     }
 
@@ -196,7 +197,7 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
         opacity: 1;
     }
     .visible {
-        opacity: 1!important;
+        opacity: 1 !important;
     }
 `;
 

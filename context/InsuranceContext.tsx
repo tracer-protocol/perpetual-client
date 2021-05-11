@@ -43,7 +43,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 rewards: 0,
                 health: 0,
                 apy: 0,
-                buffer: 200
+                buffer: 200,
             } as InsurancePoolInfo,
             'ETH/USDC': {
                 market: 'ETH/USDC',
@@ -53,7 +53,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 rewards: 0,
                 health: 0,
                 apy: 0,
-                buffer: 200
+                buffer: 200,
             } as InsurancePoolInfo,
         },
     };

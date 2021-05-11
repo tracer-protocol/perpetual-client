@@ -3,23 +3,11 @@ import { TracerContext, InsuranceContext } from 'context';
 // import { useAllPools } from 'hooks/GraphHooks/Insurance';
 import { useRouter } from 'next/router';
 import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 'types';
-import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
 import ProgressBar from '@components/ProgressBar';
 import { Button, Logo } from '@components/General';
 import { CaretDownFilled } from '@ant-design/icons';
 import Breakdown from '../PoolHealth/Breakdown';
-
-const parseData: (data: InsurancePoolInfoType[]) => string[][] = (data) => {
-    return data.map((pool) => [
-        pool.market, // marketId
-        `${pool.health}%`, // health
-        `${toApproxCurrency(pool.target ?? 0)}`, // target
-        `${toApproxCurrency(pool.liquidity ?? 0)}`, // liquidity
-        `${toApproxCurrency(pool.userBalance ?? 0)}`, // userShare
-        `${toApproxCurrency(pool.apy ?? 0)}`, // apy of pool
-    ]) as string[][];
-};
 
 const TableHead = styled.th`
     color: #3da8f5;
@@ -92,11 +80,11 @@ const HealthCell: React.FC<CProps> = ({ pool }: CProps) => {
                 <SProgressBar percent={pool?.health ?? 0} />
             </Teaser>
             <Hidden>
-                <Breakdown 
-                    target={pool?.target ?? 0} 
-                    userBalance={pool?.userBalance ?? 0} 
-                    liquidity={pool?.liquidity ?? 0} 
-                    buffer={pool?.buffer ?? 0} 
+                <Breakdown
+                    target={pool?.target ?? 0}
+                    userBalance={pool?.userBalance ?? 0}
+                    liquidity={pool?.liquidity ?? 0}
+                    buffer={pool?.buffer ?? 0}
                 />
             </Hidden>
         </Collapsible>
@@ -150,13 +138,6 @@ interface IPTProps {
 const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IPTProps) => {
     const headings = ['Market', 'APY', 'Health', 'Pool Ownership'];
     const [expanded, setExpanded] = useState(-1);
-    const [_rows, setRows] = useState<string[][]>([]);
-
-    useEffect(() => {
-        if (pools) {
-            setRows(parseData(Object.values(pools)));
-        }
-    }, [pools]);
 
     useEffect(() => {
         document.addEventListener('click', (e) => {
