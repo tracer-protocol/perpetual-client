@@ -31,9 +31,9 @@ interface BProps {
 const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
     return (
         <div className={className}>
-            <div className="buffer" />
-            <div className="liquidity" />
-            <div className="userBalance" />
+            <div className="buffer" id="bufferTarget" />
+            <div className="liquidity" id="liquidityTarget" />
+            <div className="userBalance" id="userBalanceTarget" />
             <div className="remainder" />
         </div>
     );
@@ -43,6 +43,9 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
     border-radius: 20px;
     display: flex;
     margin: 20px 0;
+    > * {
+        transition: 0.3s;
+    }
     > .buffer {
         background: #011772;
         width: ${(props) => (props.buffer / denom(props.target, props.liquidity)) * 100}%;
@@ -75,11 +78,20 @@ type SProps = {
     percentage: number;
     value: number;
     color: string;
+    target: 'userBalanceTarget' | 'bufferTarget' | 'liquidityTarget'
     className?: string;
 };
-const Section: React.FC<SProps> = styled(({ title, percentage, value, className }: SProps) => {
+const Section: React.FC<SProps> = styled(({ title, percentage, value, target, className }: SProps) => {
     return (
-        <div className={className}>
+        <div 
+            className={className} 
+            onMouseEnter={() => {
+                document.getElementById(target)?.classList.add('visible')
+            }}
+            onMouseLeave={() => {
+                document.getElementById(target)?.classList.remove('visible')
+            }}
+        >
             <div className="bar" />
             <p>{title}</p>
             <span>
@@ -92,6 +104,7 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, className 
     font-size: 1rem;
     letter-spacing: -0.32px;
     color: #fff;
+    transition: 0.3s;
     min-width: 100px;
     justify-content: space-between;
     > .bar {
@@ -137,24 +150,34 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
                 <Label title="Current Deposits" value={liquidity} />
                 <Label title="Target" value={target} />
             </div>
-            <BreakdownBar target={target} liquidity={liquidity} userBalance={userBalance} buffer={buffer} />
-            <div className="sections">
+            <BreakdownBar 
+                target={target} 
+                liquidity={liquidity} 
+                userBalance={userBalance} 
+                buffer={buffer}
+                className="bar"
+            />
+            <div className="sections hoverHide">
                 <Section 
                     title="Buffer" 
                     percentage={parseFloat(((buffer / denom(target, liquidity)) * 100).toFixed(3))} 
-                    value={buffer} color="#011772" 
+                    value={buffer} 
+                    color="#011772" 
+                    target="bufferTarget"
                 />
                 <Section 
                     title="Public"
                     percentage={parseFloat(((liquidity / target) * 100).toFixed(3))} 
                     value={liquidity} 
                     color="#3DA8F5" 
+                    target="liquidityTarget"
                 />
                 <Section 
                     title="My Shares" 
                     percentage={parseFloat(((userBalance/ liquidity) * 100).toFixed(3))} 
-                    value={userBalance} 
-                    color="#005EA4" 
+                    value={userBalance}
+                    color="#005EA4"
+                    target="userBalanceTarget"
                 />
             </div>
         </div>
@@ -163,6 +186,17 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
     > .sections {
         display: flex;
         justify-content: space-between;
+    }
+
+    &:hover > .hoverHide > *, &:hover .bar > * {
+        opacity: 0.5;
+    }
+
+    &:hover > .hoverHide > *:hover {
+        opacity: 1;
+    }
+    .visible {
+        opacity: 1!important;
     }
 `;
 
