@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TracerContext, InsuranceContext } from 'context';
-import { useAllPools } from 'hooks/GraphHooks/Insurance';
+// import { useAllPools } from 'hooks/GraphHooks/Insurance';
 import { useRouter } from 'next/router';
 import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 'types';
-import { toApproxCurrency, toPercent } from '@libs/utils';
+import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
 import ProgressBar from '@components/ProgressBar';
 import { Button, Logo } from '@components/General';
@@ -66,6 +66,7 @@ const Hidden = styled.div`
 const Collapsible = styled.div`
     transition: 0.3s;
     height: 2rem;
+    overflow: hidden;
     .selected &, &.show { // to options
         height: 250px;
     }
@@ -81,7 +82,7 @@ const SProgressBar = styled(ProgressBar)`
     min-width: 250px;
     width: 100%;
 `
-const HealthCell:React.FC<CProps> = ({ pool, className }: CProps) => {
+const HealthCell:React.FC<CProps> = ({ pool }: CProps) => {
     return (
         <Collapsible>
             <Teaser>
@@ -115,7 +116,6 @@ const SDownCaret = styled(CaretDownFilled)`
 `
 
 const OwnershipCell:React.FC<CProps> = styled(({ pool, className }: CProps) => {
-    console.log(pool)
     return (
         <Collapsible className={className}>
             <Teaser>
@@ -147,31 +147,36 @@ interface IPTProps {
     className?: string
 }
 const InsurancePoolsTable: React.FC<IPTProps> = styled(({
-    handleClick,
     pools,
     className
 }: IPTProps) => {
     const headings = ['Market', 'APY', 'Health', 'Pool Ownership'];
     const [expanded, setExpanded]  = useState(-1);
-    const [filter, setFilter] = useState('');
-    const [rows, setRows] = useState<string[][]>([]);
+    const [_rows, setRows] = useState<string[][]>([]);
     useEffect(() => {
         if (pools) {
             setRows(parseData(Object.values(pools)));
         }
     }, [pools]);
 
+    useEffect(() => {
+        document.addEventListener('click', (e) => {
+            const table = document.getElementById('pools-table');
+            let target = e.target;
+            do {
+                if (target === table) {
+                    return;
+                }
+                // @ts-ignore
+                target = target?.parentNode;
+            } while (target);
+            setExpanded(-1);
+        })
+    }, [])
+
     const onClick = (e: any, index: number) => {
+        e.preventDefault();
         setExpanded(index);
-        const setter = (clicked:any) => {
-            console.log(clicked)
-            const table = document.getElementById('pools-table')?.getBoundingClientRect()
-            console.log(table)
-            // if (clicked.x < ta)
-            setExpanded(-1)
-            document.removeEventListener('click', setter)
-        }
-        document.addEventListener('click', setter)
     }
     return (
         <table id="pools-table" className={className}>
@@ -185,7 +190,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({
                     // replace with check against selectedTracer
                     const show = expanded === index;
                     return (
-                        <TableRow className={show ? 'selected' : ''} onClick={(e) => onClick(e, index)}>
+                        <TableRow data-key={`insurance-row`} className={show ? 'selected' : ''} onClick={(e) => onClick(e, index)}>
                                 <TableCell className="w-1/6">
                                     <Collapsible>
                                         <Teaser>
@@ -213,15 +218,10 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({
                 )}
 
             </tbody>
-            {/* handleRowClick={handleClick}
-            rows={rows as string[][]}
-            filter={filter}
-            headings={headings} */}
         </table>
     );
 })`
     color: #fff;
-    // border: 1px solid #002886;
 `
 
 
@@ -231,11 +231,11 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({
  *
  */
 const Insurance: React.FC = () => {
-    const { tracerId, setTracerId } = useContext(TracerContext);
-    const { pools, poolInfo } = useContext(InsuranceContext);
-    const { insurancePools } = useAllPools();
+    const { setTracerId } = useContext(TracerContext);
+    const { pools } = useContext(InsuranceContext);
+    // const { insurancePools } = useAllPools();
 
-    console.debug(insurancePools, 'Insurance Graph data');
+    // console.debug(insurancePools, 'Insurance Graph data');
 
     const router = useRouter();
     const query = router.query;
@@ -257,16 +257,6 @@ const Insurance: React.FC = () => {
         }
     }, [query]);
 
-    // return tracerId ? (
-    //     <div className="h-full px-12 pb-6 flex flex-col">
-    //         <div className="my-4 w-full card flex flex-col">
-    //             <InsurancePoolInfo tracer={tracerId} />
-    //         </div>
-    //         <div className="card h-full flex flex-col">
-    //             <PoolContributors holdings={insurancePools[tracerId]?.holders} liquidity={poolInfo?.liquidity ?? 0} />
-    //         </div>
-    //     </div>
-    // ) : 
     return (
         <div className="h-full w-full flex flex-col">
             <InsurancePoolsTable pools={pools ?? {}} handleClick={handleClick} />
