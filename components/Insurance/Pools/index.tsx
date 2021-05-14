@@ -8,7 +8,7 @@ import ProgressBar from '@components/ProgressBar';
 import { Button, Logo } from '@components/General';
 import { CaretDownFilled } from '@ant-design/icons';
 import Breakdown from '../PoolHealth/Breakdown';
-import { InsuranceButton } from '@components/Buttons/InsuranceButtons';
+import { InsuranceModal } from '@components/components/Modals/InsuranceModal';
 
 const TableHead = styled.th`
     color: #3da8f5;
@@ -108,6 +108,12 @@ const SDownCaret = styled(CaretDownFilled)`
 `;
 
 const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
+    const [show, setShow] = useState(false);
+    const [type, setType] = useState("Deposit");
+    const openModal: (type: "Deposit" | "Withdraw") => void = (type: "Deposit" | "Withdraw") => {
+        setType(type)
+        setShow(true)
+    }
     return (
         <Collapsible className={className}>
             <Teaser>
@@ -118,12 +124,13 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
             </Teaser>
             <Hidden>
                 <ButtonContainer>
-                    <InsuranceButton type="Deposit">
-                        <Button className="primary mr-3">Deposit</Button>
-                    </InsuranceButton>
-                    <InsuranceButton type="Withdraw">
-                        <Button>Withdraw</Button>
-                    </InsuranceButton>
+                    <Button className="primary mr-3" onClick={(_e: any) => openModal("Deposit")}>Deposit</Button>
+                    <Button onClick={(_e: any) => openModal("Withdraw")} >Withdraw</Button>
+                    <InsuranceModal 
+                        show={show}
+                        setShow={setShow}
+                        type={type as 'Deposit' | 'Withdraw'}
+                    />
                 </ButtonContainer>
             </Hidden>
         </Collapsible>

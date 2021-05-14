@@ -8,8 +8,9 @@ import styled from 'styled-components';
 import { useMarketPairs } from '../../hooks';
 import { MarginDeposit, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
-import { Button, Logo } from '@components/General';
+import { Button, Logo, BasicInputContainer, Input } from '@components/General';
 import Tooltip from 'antd/lib/tooltip';
+
 
 export const WalletBalance: React.FC<{ marginBalance: number }> = ({ marginBalance }: { marginBalance: number }) => {
     const { orderDispatch } = useContext(OrderContext);
@@ -58,11 +59,6 @@ const SSection = styled.div`
     margin: 10px 0;
 `;
 
-const InputContainer = styled.div`
-    width: full;
-    display: flex;
-    border-bottom: 1px solid #002886;
-`;
 
 const MaxButton: any = styled(Button)`
     width: 60px;
@@ -79,19 +75,6 @@ const Balance = styled.p`
     text-transform: capitalize;
     margin: auto 10px;
     margin-top: 0;
-`;
-
-const SInput = styled.input`
-    font-size: 42px;
-    letter-spacing: 0px;
-    color: #ffffff;
-    width: 100%;
-
-    &:focus {
-        border: none;
-        outline: none;
-        box-shadow: none;
-    }
 `;
 
 const SDropdown = styled(Dropdown)`
@@ -291,8 +274,8 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                         Max
                     </MaxButton>
                 </div>
-                <InputContainer>
-                    <SInput
+                <BasicInputContainer>
+                    <Input
                         id="exposure"
                         type="number"
                         placeholder="0.0"
@@ -316,7 +299,7 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                             <SDownCaret />
                         </DropDownContent>
                     </SDropdown>
-                </InputContainer>
+                </BasicInputContainer>
             </SSection>
 
             {/* MARKET EXPOSURE */}
@@ -328,8 +311,8 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                     </SLabel>
                     <WalletSelect orderDispatch={orderDispatch} wallet={order?.wallet ?? 0} />
                 </div>
-                <InputContainer>
-                    <SInput
+                <BasicInputContainer>
+                    <Input
                         id="margin"
                         type="number"
                         placeholder="0.0"
@@ -368,7 +351,7 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                             </DropDownContent>
                         </SDropdown>
                     </RightContainer>
-                </InputContainer>
+                </BasicInputContainer>
             </SSection>
         </div>
     );

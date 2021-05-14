@@ -1,5 +1,36 @@
 import React from 'react';
 import { Children } from 'types';
+import styled from 'styled-components';
+import { BasicInputContainer, Input } from '@components/General';
+
+const Unit = styled.span`
+    font-size: 18px;
+    letter-spacing: 0px;
+    color: #3DA8F5;
+    margin-top: auto;
+    margin-bottom: 0.2rem;
+`
+
+const Header = styled.h3`
+    font-size: 1rem;
+    letter-spacing: -0.32px;
+    color: #3DA8F5;
+    display: flex;
+    justify-content: space-between
+`
+
+const Balance = styled.span`
+    color: #fff;
+    .max {
+        color: #3DA8F5; 
+        text-decoration: underline;
+        transition: 0.3s;
+        margin-left: 5px;
+    }
+    .max:hover {
+        opacity: 0.8;
+    }
+`
 
 type NSProps = {
     amount: number;
@@ -7,47 +38,35 @@ type NSProps = {
     unit: string;
     title: string;
     balance?: number;
+    className?: string;
 } & Children;
 
-export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title, balance }: NSProps) => {
+export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title, balance, className}: NSProps) => {
     return (
-        <div className="border-b-2 border-gray-100">
-            <h3 className="text-left font-bold text-blue-100 flex">
+        <div className={className}>
+            <Header>
                 {title}
                 {balance ? ( // if there is a balance then display it
-                    <span className="text-blue-100 ml-auto font-normal">
-                        {balance < 0 ? `---` : `Available Balance: ${balance}`}
-                    </span>
+                    <Balance>
+                        {`Available Balance: ${balance}`}
+                        <span className="max" onClick={(_e) => setAmount(balance)}>Max</span>
+                    </Balance>
                 ) : (
                     ''
                 )}
-            </h3>
-            <div className={'max-w-32 py-2 flex w-full'}>
-                <div className="w-1/2">
-                    <input
-                        className="appearance-none text-left text-black max-w-full focus:border-none focus:outline-none focus:shadow-none text-5xl"
-                        id="username"
-                        type="number"
-                        placeholder="0.0"
-                        onChange={(e) => setAmount(parseFloat(e.target.value))}
-                        value={amount ? amount : ''}
-                    />
-                </div>
-                <div className="ml-auto text-right flex flex-col">
-                    <div className="mt-auto flex">
-                        <div className="ml-auto flex">
-                            {balance ? (
-                                <button onClick={() => setAmount(balance)} className="secondary-button">
-                                    Max
-                                </button>
-                            ) : (
-                                ''
-                            )}
-                            <span className="text-lg mt-auto text-gray-200 px-3">{unit}</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            </Header>
+            <BasicInputContainer>
+                <Input
+                    id="username"
+                    type="number"
+                    placeholder="0.0"
+                    onChange={(e) => setAmount(parseFloat(e.target.value))}
+                    value={amount ? amount : ''}
+                />
+                <Unit>
+                    {unit}
+                </Unit>
+            </BasicInputContainer>
         </div>
     );
 };
