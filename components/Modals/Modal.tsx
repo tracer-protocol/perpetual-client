@@ -11,7 +11,7 @@ interface TProps {
     onClose: (event: MouseEvent) => void;
     children: React.ReactNode;
     loading: boolean;
-    className?: string
+    className?: string;
     id?: string;
 }
 
@@ -20,16 +20,16 @@ export const Title = styled.h3`
     font-size: 20px;
     line-height: 40px;
     letter-spacing: -0.4px;
-    color: #FFFFFF;
-`
+    color: #ffffff;
+`;
 
 export const SubTitle = styled.p`
     text-align: left;
     font-size: 16px;
     letter-spacing: -0.32px;
-    color: #3DA8F5;
+    color: #3da8f5;
     margin: 1rem 0;
-`
+`;
 
 const Close = styled(CloseOutlined)`
     background: #002886;
@@ -53,13 +53,13 @@ const Close = styled(CloseOutlined)`
     }
     &:hover svg {
     }
-`
+`;
 
 const Header = styled.div`
     display: flex;
     justify-content: space-between;
     padding: 1rem;
-`
+`;
 
 const Overlay = styled.div`
     background: rgba(0, 0, 0, 0.5);
@@ -69,21 +69,21 @@ const Overlay = styled.div`
     right: 0;
     bottom: 0;
     z-index: 1;
-`
+`;
 const TracerModal: React.FC<TProps> = styled((props: TProps) => {
     const ref = useRef(null);
     useEffect(() => {
-        const content: HTMLDivElement =  ref.current as unknown as HTMLDivElement;
+        const content: HTMLDivElement = (ref.current as unknown) as HTMLDivElement;
         if (props.show) {
             if (content !== null) {
-                content.classList.add('show')
+                content.classList.add('show');
             }
         } else {
             if (content !== null) {
-                content.classList.remove('show')
+                content.classList.remove('show');
             }
         }
-    }, [props.show])
+    }, [props.show]);
     return (
         <div className={`${props.className} ${props.show ? 'show' : ''} model`} id={props.id}>
             {/*content*/}
@@ -91,7 +91,7 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
                 {/*header*/}
                 <Header>
                     <Title>{props.title}</Title>
-                    <Close onClick={props.onClose}/>
+                    <Close onClick={props.onClose} />
                 </Header>
                 <div className="flex flex-col">
                     {!props.loading ? (
@@ -136,7 +136,6 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
     > .content.show {
         opacity: 1;
     }
-
-`
+`;
 
 export default TracerModal;

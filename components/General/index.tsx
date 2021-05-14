@@ -7,7 +7,7 @@ export const Box: React.FC<{ className?: string }> = styled.div`
     padding: 20px;
 `;
 
-export const Button: React.FC<{ className?: string, onClick?: any }> = styled.div`
+export const Button: React.FC<{ className?: string; onClick?: any }> = styled.div`
     transition: 0.3s;
     color: #3da8f5;
     font-size: 16px;
@@ -135,16 +135,19 @@ export const Input = styled.input`
     letter-spacing: 0px;
     color: #ffffff;
     width: 100%;
-    &::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    &::placeholder {
+        /* Chrome, Firefox, Opera, Safari 10.1+ */
         color: #fff;
         opacity: 1; /* Firefox */
     }
 
-    &:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    &:-ms-input-placeholder {
+        /* Internet Explorer 10-11 */
         color: #fff;
     }
 
-    &::-ms-input-placeholder { /* Microsoft Edge */
+    &::-ms-input-placeholder {
+        /* Microsoft Edge */
         color: #fff;
     }
 
@@ -171,25 +174,23 @@ export const Dropdown = styled(({ className, children, defaultHeight }) => {
     const header = useRef(null);
     const body = useRef(null);
     useEffect(() => {
-        const h = header.current as unknown as HTMLDivElement;
-        const b = body.current as unknown as HTMLDivElement;
+        const h = (header.current as unknown) as HTMLDivElement;
+        const b = (body.current as unknown) as HTMLDivElement;
         if (open) {
             // all heights plus 10px for padding
-            (main.current as unknown as HTMLDivElement).style.height = `${h.clientHeight + b.clientHeight + 10}px`
+            ((main.current as unknown) as HTMLDivElement).style.height = `${h.clientHeight + b.clientHeight + 10}px`;
         } else {
-            (main.current as unknown as HTMLDivElement).style.height = `${h.clientHeight ?? defaultHeight}px`
+            ((main.current as unknown) as HTMLDivElement).style.height = `${h.clientHeight ?? defaultHeight}px`;
         }
-    }, [open])
+    }, [open]);
     return (
         <div className={`${className} ${open ? 'open' : ''}`} onClick={(_e) => setOpen(!open)} ref={main}>
-            <div ref={header}>
-                {children[0]}
-            </div>
+            <div ref={header}>{children[0]}</div>
             <div className="body" ref={body}>
                 {children[1]}
             </div>
         </div>
-    )
+    );
 })`
     overflow: hidden;
     transition: 0.3s ease-in-out;
@@ -202,16 +203,15 @@ export const Dropdown = styled(({ className, children, defaultHeight }) => {
     letter-spacing: -0.32px;
 
     &:hover {
-        background: #03065E;
+        background: #03065e;
     }
 
     &.open > .body {
         transition: 0.3s ease-in;
-        opacity: 0
+        opacity: 0;
     }
 
     &.open .body {
         opacity: 1;
     }
-`
-
+`;

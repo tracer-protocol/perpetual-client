@@ -15,7 +15,6 @@ import styled from 'styled-components';
 import { SubTitle } from './Modal';
 import { CaretDownFilled } from '@ant-design/icons';
 
-
 const SSlideSelect = styled(SlideSelect)`
     font-size: 16px;
     letter-spacing: -0.32px;
@@ -33,7 +32,7 @@ const SDown = styled(CaretDownFilled)`
     .open .preview & svg {
         transform: rotate(-180deg);
     }
-`
+`;
 
 const DepositTermsHeader = styled.p`
     justify-content: space-between;
@@ -41,7 +40,7 @@ const DepositTermsHeader = styled.p`
     padding: 10px;
     height: 50px;
     line-height: 30px;
-`
+`;
 
 const DepositTerms = styled.p`
     max-height: 180px;
@@ -50,12 +49,12 @@ const DepositTerms = styled.p`
     width: 100%;
     padding: 0 10px;
     color: #fff;
-`
+`;
 
 type BProps = {
     type: 'Deposit' | 'Withdraw';
-    show: boolean, 
-    setShow: React.Dispatch<React.SetStateAction<boolean>>
+    show: boolean;
+    setShow: React.Dispatch<React.SetStateAction<boolean>>;
 } & Children;
 export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps) => {
     const { tracerId, selectedTracer } = useContext(TracerContext);
@@ -70,8 +69,8 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
     const [valid, setValid] = useState(false);
     const [amount, setAmount] = useState(0); // The amount within the input
     useEffect(() => {
-        setIsDeposit(type === 'Deposit')
-    }, [type])
+        setIsDeposit(type === 'Deposit');
+    }, [type]);
     const amount_ = !Number.isNaN(amount) ? amount : 0;
     const newBalance = isDeposit ? poolBalance + amount_ : poolBalance - amount_;
     useEffect(() => {
@@ -84,7 +83,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
             const callback = () => {
                 setLoading(false);
             };
-            const t = isDeposit ? 'deposit' : 'withdraw'
+            const t = isDeposit ? 'deposit' : 'withdraw';
             withdraw && deposit && handleTransaction
                 ? handleTransaction(isDeposit ? deposit : withdraw, [amount], callback)
                 : console.error(`Failed to ${t} from insurance pool: No deposit function found`);
@@ -98,7 +97,10 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
             loading={loading}
             show={show}
             id="insurance-modal"
-            onClose={() => { setIsDeposit(type === 'Deposit'); setShow(false) }}
+            onClose={() => {
+                setIsDeposit(type === 'Deposit');
+                setShow(false);
+            }}
             title={isDeposit ? 'Deposit Insurance' : 'Withdraw Insurance'}
             subTitle={
                 isDeposit
@@ -107,35 +109,30 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
             }
         >
             <div className="p-6 flex-auto">
-                <SSlideSelect
-                    onClick={(index: number, _e: any) => setIsDeposit(index === 0)}
-                    value={isDeposit ? 0 : 1}
-                >
-                    <Option>
-                        Deposit
-                    </Option>
-                    <Option>
-                        Withdraw
-                    </Option>
+                <SSlideSelect onClick={(index: number, _e: any) => setIsDeposit(index === 0)} value={isDeposit ? 0 : 1}>
+                    <Option>Deposit</Option>
+                    <Option>Withdraw</Option>
                 </SSlideSelect>
-                <SubTitle>{
-                    isDeposit
+                <SubTitle>
+                    {isDeposit
                         ? `Deposit funds to the ${tracerId} insurance pool`
-                        : `Withdraw funds from the ${tracerId} insurance pool`
-                }</SubTitle>
-                { isDeposit 
-                    ?
+                        : `Withdraw funds from the ${tracerId} insurance pool`}
+                </SubTitle>
+                {isDeposit ? (
                     <Dropdown defaultHeight={50}>
                         <DepositTermsHeader>
                             <span>Terms of deposit</span>
                             <SDown />
                         </DepositTermsHeader>
                         <DepositTerms>
-                            When you deposit insurance, you will receive insurance tokens representing your deposit, which will earn fees. You can withdraw your funds buy burning your tokens at any time. At the time of withdrawal, if the current value of the insurance fund does not reach the target, you will be required to pay a withdrawal fee. To understand more about the withdrawal fee, view Tracer Documentation.
+                            When you deposit insurance, you will receive insurance tokens representing your deposit,
+                            which will earn fees. You can withdraw your funds buy burning your tokens at any time. At
+                            the time of withdrawal, if the current value of the insurance fund does not reach the
+                            target, you will be required to pay a withdrawal fee. To understand more about the
+                            withdrawal fee, view Tracer Documentation.
                         </DepositTerms>
                     </Dropdown>
-                    : null
-                }
+                ) : null}
                 <NumberSelect
                     unit={tracerId?.split('/')[1] ?? 'NO_ID'}
                     title={'Amount'}
@@ -158,15 +155,13 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     </div>
                 </div>
                 <div className="flex items-center justify-center p-6 rounded-b">
-                    {
-                        !valid 
-                            ? <Button onClick={() => submit(amount)}>
-                                {isDeposit ? 'Add Insurance' : 'Withdraw Insurance'}
-                            </Button>
-                            : <Button className="disabled">
-                                {isDeposit ? 'Add Insurance' : 'Withdraw Insurance'}
-                            </Button>
-                    }
+                    {!valid ? (
+                        <Button onClick={() => submit(amount)}>
+                            {isDeposit ? 'Add Insurance' : 'Withdraw Insurance'}
+                        </Button>
+                    ) : (
+                        <Button className="disabled">{isDeposit ? 'Add Insurance' : 'Withdraw Insurance'}</Button>
+                    )}
                 </div>
             </div>
         </TracerModal>

@@ -6,23 +6,23 @@ import { BasicInputContainer, Input } from '@components/General';
 const Unit = styled.span`
     font-size: 18px;
     letter-spacing: 0px;
-    color: #3DA8F5;
+    color: #3da8f5;
     margin-top: auto;
     margin-bottom: 0.2rem;
-`
+`;
 
 const Header = styled.h3`
     font-size: 1rem;
     letter-spacing: -0.32px;
-    color: #3DA8F5;
+    color: #3da8f5;
     display: flex;
-    justify-content: space-between
-`
+    justify-content: space-between;
+`;
 
 const Balance = styled.span`
     color: #fff;
     .max {
-        color: #3DA8F5; 
+        color: #3da8f5;
         text-decoration: underline;
         transition: 0.3s;
         margin-left: 5px;
@@ -30,7 +30,7 @@ const Balance = styled.span`
     .max:hover {
         opacity: 0.8;
     }
-`
+`;
 
 type NSProps = {
     amount: number;
@@ -41,7 +41,7 @@ type NSProps = {
     className?: string;
 } & Children;
 
-export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title, balance, className}: NSProps) => {
+export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title, balance, className }: NSProps) => {
     return (
         <div className={className}>
             <Header>
@@ -49,7 +49,9 @@ export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title
                 {balance ? ( // if there is a balance then display it
                     <Balance>
                         {`Available Balance: ${balance}`}
-                        <span className="max" onClick={(_e) => setAmount(balance)}>Max</span>
+                        <span className="max" onClick={(_e) => setAmount(balance)}>
+                            Max
+                        </span>
                     </Balance>
                 ) : (
                     ''
@@ -63,9 +65,7 @@ export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title
                     onChange={(e) => setAmount(parseFloat(e.target.value))}
                     value={amount ? amount : ''}
                 />
-                <Unit>
-                    {unit}
-                </Unit>
+                <Unit>{unit}</Unit>
             </BasicInputContainer>
         </div>
     );

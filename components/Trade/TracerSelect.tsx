@@ -11,7 +11,6 @@ import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Button, Logo, BasicInputContainer, Input } from '@components/General';
 import Tooltip from 'antd/lib/tooltip';
 
-
 export const WalletBalance: React.FC<{ marginBalance: number }> = ({ marginBalance }: { marginBalance: number }) => {
     const { orderDispatch } = useContext(OrderContext);
     return (
@@ -58,7 +57,6 @@ const SSection = styled.div`
     flex-direction: column;
     margin: 10px 0;
 `;
-
 
 const MaxButton: any = styled(Button)`
     width: 60px;

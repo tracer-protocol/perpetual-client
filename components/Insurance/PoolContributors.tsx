@@ -67,8 +67,7 @@ const PoolContributors: React.FC<PCProps> = ({ holdings, liquidity }: PCProps) =
                         </a>
                     </span>
                 </div>
-                <div className="ml-auto p-5 sm:w-full xl:w-1/2 flex">
-                </div>
+                <div className="ml-auto p-5 sm:w-full xl:w-1/2 flex"></div>
             </div>
         </div>
     );
