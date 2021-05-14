@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Table, { TableRow } from '@components/Tables';
 import { SubNavBar } from '@components/Nav';
-import { InsuranceButtons } from '@components/Buttons';
+import { InsuranceButtons } from '@components/Buttons/InsuranceButtons';
 import { Holding } from '@components/types';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 

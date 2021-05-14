@@ -7,7 +7,7 @@ export const Box: React.FC<{ className?: string }> = styled.div`
     padding: 20px;
 `;
 
-export const Button: React.FC<{ className?: string }> = styled.div`
+export const Button: React.FC<{ className?: string, onClick?: any }> = styled.div`
     transition: 0.3s;
     color: #3da8f5;
     font-size: 16px;
@@ -32,6 +32,13 @@ export const Button: React.FC<{ className?: string }> = styled.div`
     &.primary:hover {
         background: #03065e;
         color: #3da8f5;
+    }
+
+    &.disabled {
+        opacity: 0.8;
+    }
+    &.disabled: hover {
+        cursor: not-allowed;
     }
 `;
 
