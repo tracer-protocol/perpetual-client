@@ -169,13 +169,11 @@ export const BasicInputContainer = styled.div`
  * Similiar component to dropdown only there is no content to begin with
  */
 type HEProps = {
-    defaultHeight: number, // defaults to 0
-    open: boolean,
-    className?:string,
-} & Children
-export const HiddenExpand:React.FC<HEProps> = styled(({ 
-    className, children, defaultHeight, open 
-}: HEProps) => {
+    defaultHeight: number; // defaults to 0
+    open: boolean;
+    className?: string;
+} & Children;
+export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, defaultHeight, open }: HEProps) => {
     const main = useRef(null);
     const body = useRef(null);
     useEffect(() => {
@@ -217,20 +215,17 @@ export const HiddenExpand:React.FC<HEProps> = styled(({
     }
 `;
 
-
 /**
  * Takes two children items, will place the first as the header component and the second as the body
  * @param defaultHeight prevents jumpiness when initialising the dropdown
  */
 type DProps = {
-    defaultHeight: number, // defaults to 0
-    className?:string,
-    header: React.ReactNode
-    body: React.ReactNode
-}
-export const Dropdown:React.FC<DProps> = styled(({ 
-    className, header, body, defaultHeight 
-}: DProps) => {
+    defaultHeight: number; // defaults to 0
+    className?: string;
+    header: React.ReactNode;
+    body: React.ReactNode;
+};
+export const Dropdown: React.FC<DProps> = styled(({ className, header, body, defaultHeight }: DProps) => {
     const [open, setOpen] = useState(false);
     const main = useRef(null);
     const _header = useRef(null);
@@ -242,7 +237,9 @@ export const Dropdown:React.FC<DProps> = styled(({
             // all heights plus 10px for padding
             ((main.current as unknown) as HTMLDivElement).style.height = `${h.clientHeight + b.clientHeight + 10}px`;
         } else {
-            ((main.current as unknown) as HTMLDivElement).style.height = `${!!h.clientHeight ?  h.clientHeight : defaultHeight}px`;
+            ((main.current as unknown) as HTMLDivElement).style.height = `${
+                !!h.clientHeight ? h.clientHeight : defaultHeight
+            }px`;
         }
     }, [open]);
     return (
@@ -283,28 +280,24 @@ export const Previous = styled.span`
     margin-right: 5px;
     &:after {
         padding-left: 2px;
-        content: ">>>";
+        content: '>>>';
     }
 `;
 
 type CProps = {
-    className?:string
-    checked?: boolean
-    onClick: any
-}
-export const Checkbox:React.FC<CProps> = styled(({ className, checked, onClick }: CProps) => {
+    className?: string;
+    checked?: boolean;
+    onClick: any;
+};
+export const Checkbox: React.FC<CProps> = styled(({ className, checked, onClick }: CProps) => {
     return (
         <span className={className} onClick={onClick}>
-            <input 
-                type='checkbox'
-                checked={checked}
-            />
+            <input type="checkbox" checked={checked} />
             <span className="checkmark"></span>
-
         </span>
-    )
+    );
 })`
-    border: 1px solid #3DA8F5;
+    border: 1px solid #3da8f5;
     width: 1.7rem;
     height: 1.1rem;
     display: block;
@@ -348,7 +341,7 @@ export const Checkbox:React.FC<CProps> = styled(({ className, checked, onClick }
 
     /* Create the checkmark/indicator (hidden when not checked) */
     & > .checkmark:after {
-        content: "";
+        content: '';
         position: absolute;
         display: none;
     }
@@ -370,4 +363,4 @@ export const Checkbox:React.FC<CProps> = styled(({ className, checked, onClick }
         -ms-transform: rotate(45deg);
         transform: rotate(45deg);
     }
-`
+`;

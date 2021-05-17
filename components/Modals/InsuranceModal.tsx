@@ -56,7 +56,7 @@ const SHiddenExpand = styled(HiddenExpand)`
     & > .body {
         padding: 10px 0;
     }
-`
+`;
 
 const WithdrawalFee = styled(Section)`
     background: #f15025;
@@ -82,7 +82,7 @@ const SSection = styled(Section)`
 const AcceptTerms = styled.span`
     line-height: 1.3rem;
     margin-left: 1rem;
-`
+`;
 
 type BProps = {
     type: 'Deposit' | 'Withdraw';
@@ -153,7 +153,8 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                         : `Withdraw funds from the ${tracerId} insurance pool`}
                 </SubTitle>
                 {isDeposit ? (
-                    <Dropdown defaultHeight={50}
+                    <Dropdown
+                        defaultHeight={50}
                         header={
                             <DepositTermsHeader>
                                 <span>Terms of deposit</span>
@@ -163,8 +164,8 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                         body={
                             <DepositTerms>
                                 When you deposit insurance, you will receive insurance tokens representing your deposit,
-                                which will earn fees. You can withdraw your funds buy burning your tokens at any time. At
-                                the time of withdrawal, if the current value of the insurance fund does not reach the
+                                which will earn fees. You can withdraw your funds buy burning your tokens at any time.
+                                At the time of withdrawal, if the current value of the insurance fund does not reach the
                                 target, you will be required to pay a withdrawal fee. To understand more about the
                                 withdrawal fee, view Tracer Documentation.
                             </DepositTerms>
@@ -180,32 +181,28 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 />
                 <SHiddenExpand defaultHeight={0} open={!!amount}>
                     <SSection label={`Pool Ownership`}>
-                        <Previous>
-                            {`${toApproxCurrency(poolBalance)}`}
-                        </Previous>
+                        <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>
                     <SSection label={`Pool Balance`}>
-                        <Previous>
-                            {`${toApproxCurrency(poolBalance)}`}
-                        </Previous>
+                        <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>
-                    <WithdrawalFee label="Withdrawal Fee (Without Gas)">
-                        {`${toApproxCurrency(0)}`}
-                    </WithdrawalFee>
-                    <SSection label="Total Return">
-                        {`${toApproxCurrency(0)}`}
-                    </SSection>
+                    <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(0)}`}</WithdrawalFee>
+                    <SSection label="Total Return">{`${toApproxCurrency(0)}`}</SSection>
                 </SHiddenExpand>
                 {isDeposit ? (
                     <div className="flex">
-                        <Checkbox checked={acceptedTerms} onClick={(e: any) => { e.preventDefault(); acceptTerms(!acceptedTerms)}}/>
-                        <AcceptTerms>
-                            I have read and accept Terms of Withdrawal
-                        </AcceptTerms>
+                        <Checkbox
+                            checked={acceptedTerms}
+                            onClick={(e: any) => {
+                                e.preventDefault();
+                                acceptTerms(!acceptedTerms);
+                            }}
+                        />
+                        <AcceptTerms>I have read and accept Terms of Withdrawal</AcceptTerms>
                     </div>
-                ): null }
+                ) : null}
                 <div className="flex items-center justify-center p-6 rounded-b">
                     {!valid ? (
                         <Button onClick={() => submit(amount)}>

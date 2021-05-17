@@ -96,9 +96,7 @@ const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLever
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <SSection label={'Wallet Balance'}>
-                <Previous>
-                    {`${toApproxCurrency(order?.wallet ? balances?.tokenBalance : balances?.quote)}`} 
-                </Previous>
+                <Previous>{`${toApproxCurrency(order?.wallet ? balances?.tokenBalance : balances?.quote)}`}</Previous>
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <SSection label={'Predicted Const Total'}>
