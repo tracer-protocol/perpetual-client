@@ -61,6 +61,7 @@ export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title
                 <Input
                     id="username"
                     type="number"
+                    autoComplete="off"
                     placeholder="0.0"
                     onChange={(e) => setAmount(parseFloat(e.target.value))}
                     value={amount ? amount : ''}

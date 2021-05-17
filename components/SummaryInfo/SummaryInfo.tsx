@@ -22,6 +22,7 @@ export const Section: React.FC<SProps> = styled(({ label, classes, children, cla
     margin: 10px 0;
     font-size: 16px;
     letter-spacing: -0.32px;
+    border-bottom: 1px solid #011772;
     > .label {
         text-align: left;
         white-space: nowrap;

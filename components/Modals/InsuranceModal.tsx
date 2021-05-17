@@ -7,10 +7,9 @@ import { Children } from 'types';
 import { TransactionContext } from '@components/context/TransactionContext';
 import NumberSelect from '../Input/NumberSelect';
 import { toApproxCurrency } from '@libs/utils';
-import { calcInsurancePoolHealth } from '@libs/utils/InsuranceCalcs';
 import SlideSelect from '../Buttons/SlideSelect';
 import { Option } from '@components/Buttons/SlideSelect/Options';
-import { Button, Dropdown } from '@components/General';
+import { Button, Checkbox, Dropdown, HiddenExpand, Previous } from '@components/General';
 import styled from 'styled-components';
 import { SubTitle } from './Modal';
 import { CaretDownFilled } from '@ant-design/icons';
@@ -51,6 +50,40 @@ const DepositTerms = styled.p`
     color: #fff;
 `;
 
+const SHiddenExpand = styled(HiddenExpand)`
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    & > .body {
+        padding: 10px 0;
+    }
+`
+
+const WithdrawalFee = styled(Section)`
+    background: #f15025;
+    background-size: 100%;
+    border-bottom: 1px solid #011772;
+    padding: 5px 0;
+    margin: 0;
+    .label {
+        color: #fff;
+        padding: 0 10px;
+    }
+    .content {
+        padding-right: 10px;
+        color: #fff;
+    }
+`;
+
+const SSection = styled(Section)`
+    padding: 5px 10px;
+    margin: 0;
+`;
+
+const AcceptTerms = styled.span`
+    line-height: 1.3rem;
+    margin-left: 1rem;
+`
+
 type BProps = {
     type: 'Deposit' | 'Withdraw';
     show: boolean;
@@ -68,6 +101,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
     const balance = isDeposit ? tracerBalance?.tokenBalance : poolBalance;
     const [valid, setValid] = useState(false);
     const [amount, setAmount] = useState(0); // The amount within the input
+    const [acceptedTerms, acceptTerms] = useState(false);
     useEffect(() => {
         setIsDeposit(type === 'Deposit');
     }, [type]);
@@ -119,19 +153,23 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                         : `Withdraw funds from the ${tracerId} insurance pool`}
                 </SubTitle>
                 {isDeposit ? (
-                    <Dropdown defaultHeight={50}>
-                        <DepositTermsHeader>
-                            <span>Terms of deposit</span>
-                            <SDown />
-                        </DepositTermsHeader>
-                        <DepositTerms>
-                            When you deposit insurance, you will receive insurance tokens representing your deposit,
-                            which will earn fees. You can withdraw your funds buy burning your tokens at any time. At
-                            the time of withdrawal, if the current value of the insurance fund does not reach the
-                            target, you will be required to pay a withdrawal fee. To understand more about the
-                            withdrawal fee, view Tracer Documentation.
-                        </DepositTerms>
-                    </Dropdown>
+                    <Dropdown defaultHeight={50}
+                        header={
+                            <DepositTermsHeader>
+                                <span>Terms of deposit</span>
+                                <SDown />
+                            </DepositTermsHeader>
+                        }
+                        body={
+                            <DepositTerms>
+                                When you deposit insurance, you will receive insurance tokens representing your deposit,
+                                which will earn fees. You can withdraw your funds buy burning your tokens at any time. At
+                                the time of withdrawal, if the current value of the insurance fund does not reach the
+                                target, you will be required to pay a withdrawal fee. To understand more about the
+                                withdrawal fee, view Tracer Documentation.
+                            </DepositTerms>
+                        }
+                    />
                 ) : null}
                 <NumberSelect
                     unit={tracerId?.split('/')[1] ?? 'NO_ID'}
@@ -140,20 +178,34 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     balance={balance}
                     setAmount={setAmount}
                 />
-                <div className="">
-                    <div>
-                        <Section label={`Your Share`}>
+                <SHiddenExpand defaultHeight={0} open={!!amount}>
+                    <SSection label={`Pool Ownership`}>
+                        <Previous>
                             {`${toApproxCurrency(poolBalance)}`}
-                            {'  ->  '}
-                            {`${toApproxCurrency(newBalance)}`}
-                        </Section>
-                        <Section label={`Insurance Pool Health`}>
-                            {`${calcInsurancePoolHealth(poolInfo?.target, poolInfo?.liquidity) * 100}%`}
-                            {'  ->  '}
-                            {`${(poolInfo?.target, poolInfo?.liquidity ?? 0 - amount_) * 100}%`}
-                        </Section>
+                        </Previous>
+                        {`${toApproxCurrency(newBalance)}`}
+                    </SSection>
+                    <SSection label={`Pool Balance`}>
+                        <Previous>
+                            {`${toApproxCurrency(poolBalance)}`}
+                        </Previous>
+                        {`${toApproxCurrency(newBalance)}`}
+                    </SSection>
+                    <WithdrawalFee label="Withdrawal Fee (Without Gas)">
+                        {`${toApproxCurrency(0)}`}
+                    </WithdrawalFee>
+                    <SSection label="Total Return">
+                        {`${toApproxCurrency(0)}`}
+                    </SSection>
+                </SHiddenExpand>
+                {isDeposit ? (
+                    <div className="flex">
+                        <Checkbox checked={acceptedTerms} onClick={(e: any) => { e.preventDefault(); acceptTerms(!acceptedTerms)}}/>
+                        <AcceptTerms>
+                            I have read and accept Terms of Withdrawal
+                        </AcceptTerms>
                     </div>
-                </div>
+                ): null }
                 <div className="flex items-center justify-center p-6 rounded-b">
                     {!valid ? (
                         <Button onClick={() => submit(amount)}>
