@@ -40,13 +40,12 @@ button:focus {
 /* width */
 ::-webkit-scrollbar {
     width: 5px;
-    height: 5px;              /* height of horizontal scrollbar ← You're missing this */
+    height: 8px;
   }
   
   /* Track */
   ::-webkit-scrollbar-track {
-    display: none;
-
+    background: transparent;
   }
 
   /* Corner piece */
@@ -56,7 +55,7 @@ button:focus {
   
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #E5E5F8;
+    background: #3da8f5;
     cursor: pointer;
   }
   

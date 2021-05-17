@@ -19,7 +19,7 @@ const Insurance: React.FC = styled(({ className }) => {
     const tabs = ['Insurance Pools', 'Insurance Portfolio'];
     const router = useRouter();
     const { query } = router;
-    const pools = query.interface === 'pools';
+    const portfolio = query.interface === 'portfolio';
     return (
         <div className={`${className} page`}>
             <NavBar />
@@ -29,12 +29,12 @@ const Insurance: React.FC = styled(({ className }) => {
                     <Content>
                         <SubNav
                             tabs={tabs}
-                            selected={pools ? 0 : 1}
+                            selected={portfolio ? 1 : 0}
                             setTab={(tab: number) => {
                                 router.push(tab === 0 ? '/insurance/pools' : '/insurance/portfolio');
                             }}
                         />
-                        {pools ? <Pools /> : <Portfolio />}
+                        {portfolio ? <Portfolio /> : <Pools />}
                     </Content>
                 </InsuranceStore>
             </SelectedTracerStore>

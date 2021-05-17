@@ -128,6 +128,7 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
         position: fixed;
         margin: auto;
         top: 10%;
+        overflow: scroll;
         left: 0;
         right: 0;
         max-width: 40%;
