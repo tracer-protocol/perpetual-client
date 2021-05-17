@@ -4,7 +4,7 @@ import LeverageSlider from '@components/Trade/LeverageSlider';
 import TracerSelect from '@components/Trade/TracerSelect';
 import { SlideSelect, PlaceOrderButton } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
-import { Card, Button } from '@components/General';
+import { Card, Button, Previous } from '@components/General';
 import { OrderAction, OrderState, Errors } from '@context/OrderContext';
 import styled from 'styled-components';
 import { calcLiquidationPrice, calcNotionalValue, toApproxCurrency } from '@libs/utils';
@@ -62,11 +62,6 @@ const LiquidationPrice = styled(Section)`
         padding-right: 10px;
     }
 `;
-
-const PrevBalance = styled.span`
-    color: #005ea4;
-    margin-right: 5px;
-`;
 interface SProps {
     balances: UserBalance;
     fairPrice: number;
@@ -101,11 +96,7 @@ const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLever
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <SSection label={'Wallet Balance'}>
-                <PrevBalance>
-                    {`${toApproxCurrency(order?.wallet ? balances?.tokenBalance : balances?.quote)} ${
-                        order?.collateral ?? ''
-                    } >>> `}
-                </PrevBalance>
+                <Previous>{`${toApproxCurrency(order?.wallet ? balances?.tokenBalance : balances?.quote)}`}</Previous>
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <SSection label={'Predicted Const Total'}>

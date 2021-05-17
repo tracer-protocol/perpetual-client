@@ -23,32 +23,26 @@ export const AccountMarginInfo: React.FC<IProps> = ({ balance, fairPrice, maxLev
         totalLeveragedValue: 0,
     };
 
-    const minMargin = calcMinimumMargin(quote, base, fairPrice, maxLeverage);
-    const totalMargin_ = totalMargin(quote, base, fairPrice);
-    const invalid = minMargin > totalMargin_ ? 'text-red-500' : '';
+    // const minMargin = calcMinimumMargin(quote, base, fairPrice, maxLeverage);
+    // const totalMargin_ = totalMargin(quote, base, fairPrice);
+    // const invalid = minMargin > totalMargin_ ? 'text-red-500' : '';
     if (!balance) {
         return <div>Loading</div>;
     } else {
         return (
             <div className="border-t-2 border-gray-100">
-                <Section label={'Account Margin'} classes={`text-sm ${invalid}`}>
-                    {toApproxCurrency(totalMargin(base, quote, fairPrice))}
-                </Section>
-                <Section label={'Minimum Margin'} classes={`text-sm ${invalid}`}>
+                <Section label={'Account Margin'}>{toApproxCurrency(totalMargin(base, quote, fairPrice))}</Section>
+                <Section label={'Minimum Margin'}>
                     {toApproxCurrency(calcMinimumMargin(quote, base, fairPrice, maxLeverage))}
                 </Section>
-                <Section label={'Withdrawable'} classes={'text-sm'}>
+                <Section label={'Withdrawable'}>
                     {toApproxCurrency(calcWithdrawable(base, quote, fairPrice, maxLeverage))}
                 </Section>
-                <Section label={'LiquidationPrice'} classes={'text-sm'}>
+                <Section label={'LiquidationPrice'}>
                     {toApproxCurrency(calcLiquidationPrice(quote, base, fairPrice, maxLeverage))}
                 </Section>
-                <Section label={'Leverage'} classes={'text-sm'}>
-                    {`${calcLeverage(quote, base, fairPrice)}`}
-                </Section>
-                <Section label={'Borrowed'} classes={'text-sm'}>
-                    {toApproxCurrency(totalLeveragedValue)}
-                </Section>
+                <Section label={'Leverage'}>{`${calcLeverage(quote, base, fairPrice)}`}</Section>
+                <Section label={'Borrowed'}>{toApproxCurrency(totalLeveragedValue)}</Section>
             </div>
         );
     }

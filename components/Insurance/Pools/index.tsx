@@ -8,6 +8,7 @@ import ProgressBar from '@components/ProgressBar';
 import { Button, Logo } from '@components/General';
 import { CaretDownFilled } from '@ant-design/icons';
 import Breakdown from '../PoolHealth/Breakdown';
+import { InsuranceModal } from '@components/components/Modals/InsuranceModal';
 
 const TableHead = styled.th`
     color: #3da8f5;
@@ -107,6 +108,12 @@ const SDownCaret = styled(CaretDownFilled)`
 `;
 
 const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
+    const [show, setShow] = useState(false);
+    const [type, setType] = useState('Deposit');
+    const openModal: (type: 'Deposit' | 'Withdraw') => void = (type: 'Deposit' | 'Withdraw') => {
+        setType(type);
+        setShow(true);
+    };
     return (
         <Collapsible className={className}>
             <Teaser>
@@ -117,8 +124,11 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
             </Teaser>
             <Hidden>
                 <ButtonContainer>
-                    <Button className="primary mr-3">Deposit</Button>
-                    <Button>Withdraw</Button>
+                    <Button className="primary mr-3" onClick={(_e: any) => openModal('Deposit')}>
+                        Deposit
+                    </Button>
+                    <Button onClick={(_e: any) => openModal('Withdraw')}>Withdraw</Button>
+                    <InsuranceModal show={show} setShow={setShow} type={type as 'Deposit' | 'Withdraw'} />
                 </ButtonContainer>
             </Hidden>
         </Collapsible>
@@ -142,9 +152,11 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
     useEffect(() => {
         document.addEventListener('click', (e) => {
             const table = document.getElementById('pools-table');
+            const modal = document.getElementById('insurance-modal');
             let target = e.target;
             do {
-                if (target === table) {
+                if (target === table || target === modal) {
+                    // dont exit if its a modal click
                     return;
                 }
                 // @ts-ignore
