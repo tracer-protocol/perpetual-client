@@ -2,16 +2,24 @@ import React from 'react';
 import { Children } from 'types';
 import { FundingRateGraphic } from './';
 import styled from 'styled-components';
+import Tooltip from 'antd/lib/tooltip';
 
 type SProps = {
     label: string;
-    classes?: string;
     className?: string;
+    tooltip?: React.ReactChild;
 } & Children;
 
-export const Section: React.FC<SProps> = styled(({ label, classes, children, className }: SProps) => {
-    return (
-        <div className={`${classes} ${className}`}>
+export const Section: React.FC<SProps> = styled(({ label, children, className, tooltip }: SProps) => {
+    return tooltip ? (
+        <Tooltip title={tooltip} placement="right">
+            <div className={`${className}`}>
+                <span className={`label`}>{label}</span>
+                <span className={`content`}>{children}</span>
+            </div>
+        </Tooltip>
+    ) : (
+        <div className={`${className}`}>
             <span className={`label`}>{label}</span>
             <span className={`content`}>{children}</span>
         </div>

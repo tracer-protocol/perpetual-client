@@ -10,7 +10,6 @@ import {
     calcBorrowed,
     calcLeverage,
     calcLiquidationPrice,
-    calcMinimumMargin,
     calcWithdrawable,
     toApproxCurrency,
     totalMargin,
@@ -81,15 +80,7 @@ export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
                         <div>
                             <h3 className="mt-10 text-left text-blue-100 text-lg">Margin {type} Summary</h3>
                             <div>
-                                <Section
-                                    label={`Account Margin`}
-                                    classes={
-                                        calcMinimumMargin(quote, base, fairPrice, maxLeverage) >
-                                        totalMargin(newQuote, base, fairPrice)
-                                            ? 'text-red-500'
-                                            : ''
-                                    }
-                                >
+                                <Section label={`Account Margin`}>
                                     {toApproxCurrency(totalMargin(base, quote, fairPrice))}
                                     {'  ->  '}
                                     {toApproxCurrency(totalMargin(base, newQuote, fairPrice))}

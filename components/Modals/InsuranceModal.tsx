@@ -84,6 +84,35 @@ const AcceptTerms = styled.span`
     margin-left: 1rem;
 `;
 
+const profitibleWithdrawTip = (
+    <p>
+        <strong>Predicted Date for Profitable Withdrawal:</strong> Estimated date for profitable withdrawal despite
+        withdrawal fee. Assuming current gross APY continues with no expenses to the insurance fund.This trade will use
+        funds from your connected Web3 wallet.
+    </p>
+);
+
+const rewardsTip = (
+    <p>
+        <strong>Rewards:</strong> You will receive insurance tokens representing your deposit, which will earn fees.
+    </p>
+);
+
+const ownershipTip = (
+    <p>
+        <strong>Pool Ownership</strong>
+        <br />
+        <Previous>0 USDC</Previous>
+        <span className="text-white">4.5 USDC</span>
+        <br />
+        <Previous>0 iBTC-USDC</Previous>
+        <span className="text-white">4.5 iBTC-USDC</span>
+        <br />
+        <Previous>0%</Previous>
+        <span className="text-white">4%</span>
+    </p>
+);
+
 type BProps = {
     type: 'Deposit' | 'Withdraw';
     show: boolean;
@@ -180,7 +209,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     setAmount={setAmount}
                 />
                 <SHiddenExpand defaultHeight={0} open={!!amount}>
-                    <SSection label={`Pool Ownership`}>
+                    <SSection label={`Pool Ownership`} tooltip={ownershipTip}>
                         <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>
@@ -189,7 +218,14 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>
                     <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(0)}`}</WithdrawalFee>
-                    <SSection label="Total Return">{`${toApproxCurrency(0)}`}</SSection>
+                    <SSection label="Total Return" tooltip={rewardsTip}>{`${toApproxCurrency(0)}`}</SSection>
+                    <SSection label="Predicted Date for Profitable Withdrawal" tooltip={profitibleWithdrawTip}>
+                        {new Date().toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                        })}
+                    </SSection>
                 </SHiddenExpand>
                 {isDeposit ? (
                     <div className="flex">
