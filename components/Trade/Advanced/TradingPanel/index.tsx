@@ -6,7 +6,7 @@ import { PostTradeDetails } from '@components/SummaryInfo/PositionDetails';
 import { FactoryContext, OrderContext, TracerContext } from 'context';
 import InputSelects from './Inputs';
 import { Tracer } from 'libs';
-import { Box } from '@components/General';
+import { Box, Logo } from '@components/General';
 import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
 import { DownOutlined } from '@ant-design/icons';
@@ -16,6 +16,7 @@ const Market = styled.div`
     letter-spacing: -0.4px;
     font-size: 20px;
     color: #fff;
+    display: flex;
 `;
 
 const Selector = styled.div`
@@ -30,6 +31,12 @@ const Selector = styled.div`
     a {
         padding-left: 10px;
     }
+`;
+
+const SLogo = styled(Logo)`
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-right: 0.7rem;
 `;
 
 export const MarketSelect: React.FC = () => {
@@ -49,7 +56,7 @@ export const MarketSelect: React.FC = () => {
     return (
         <Box>
             <Market>
-                <img />
+                <SLogo ticker="ETH" />
                 {tracerId}
             </Market>
             <div className="ml-auto">
