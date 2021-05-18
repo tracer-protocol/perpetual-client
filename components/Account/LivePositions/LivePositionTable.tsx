@@ -8,7 +8,8 @@ import { useClosePosition, useTracerOrders } from '@hooks/TracerHooks';
 
 import Link from 'next/link';
 import Web3 from 'web3';
-import { calcLiquidationPrice, toApproxCurrency, calcTotalMargin } from '@libs/utils';
+import { toApproxCurrency } from '@libs/utils';
+import { calcTotalMargin, calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
 import { Tracer } from '@components/libs';
 import { TransactionContext } from '@components/context/TransactionContext';
 

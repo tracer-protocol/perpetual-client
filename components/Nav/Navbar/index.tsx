@@ -233,7 +233,6 @@ const NavBar: React.FC = styled(({ className }) => {
     const { handleConnect, account } = useContext(Web3Context);
     const ensName = useEnsName(account ?? '');
 
-
     const buttonContent = () => {
         if (!account) {
             return 'Connect Wallet';
@@ -286,7 +285,9 @@ const NavBar: React.FC = styled(({ className }) => {
                     </Link>
                 </li>
             </ul>
-            <ConnectButton onClick={() => handleConnect ? handleConnect() : console.error("Connect button is undefined")}>
+            <ConnectButton
+                onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
+            >
                 <div className="m-auto flex text-sm font-bold">
                     <Identicon account={account ?? ''} />
                     <div className="px-2">{buttonContent()}</div>

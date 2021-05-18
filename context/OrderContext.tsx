@@ -31,8 +31,8 @@ export const Errors: Record<number, Error> = {
     },
     5: {
         name: 'Invalid Funds',
-        message: 'You do not have enough funds in your wallet'
-    }
+        message: 'You do not have enough funds in your wallet',
+    },
 };
 
 /**

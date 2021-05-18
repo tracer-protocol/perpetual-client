@@ -2,36 +2,12 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import TracerModal from '@components/Modals';
 import { OrderState, OrderTypeMapping, Errors } from '@context/OrderContext';
-import { TracerContext, Web3Context, OrderContext, ErrorContext } from 'context';
+import { TracerContext, OrderContext, ErrorContext } from 'context';
 import AlertInfo from '@components/Notifications/AlertInfo';
-import { ConnectButton, MarginDeposit } from '@components/Buttons';
+import { MarginDeposit } from '@components/Buttons';
 import { Children, UserBalance } from 'types';
 import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
-
-type OSProps = {
-    setSummary: (bool: boolean) => void;
-};
-
-export const OrderSubmit: React.FC<OSProps> = ({ setSummary }: OSProps) => {
-    const { account } = useContext(Web3Context);
-    const { show, text, variant } = useContext(ErrorContext);
-
-    return (
-        <div className="w-full flex flex-col items-center">
-            <div className="w-1/2 h-24">
-                <AlertInfo show={show} text={text} variant={variant} />
-            </div>
-            {account ? (
-                <button className="mb-5 button" onClick={() => setSummary(true)}>
-                    Order Summary
-                </button>
-            ) : (
-                <ConnectButton />
-            )}
-        </div>
-    );
-};
 
 // TODO change these requirements to not use balance.quote
 // balance.quote is not the right value for this need to calculated available margin in the account

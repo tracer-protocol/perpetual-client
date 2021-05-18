@@ -177,14 +177,13 @@ const LeftPanel = styled.div`
     display: flex;
     flex-direction: column;
     min-height: 90vh;
-`
+`;
 const RightPanel = styled.div`
     width: 75%;
     display: flex;
     flex-direction: column;
     min-height: 90vh;
-`
-
+`;
 
 const Overlay = styled.div`
     position: absolute;
@@ -200,7 +199,7 @@ const Overlay = styled.div`
         z-index: 2;
         opacity: 0.5;
     }
-`
+`;
 const Advanced: React.FC = () => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
@@ -214,7 +213,7 @@ const Advanced: React.FC = () => {
             <RightPanel>
                 <TradingView selectedTracer={selectedTracer} />
             </RightPanel>
-            <Overlay id="trading-overlay"/>
+            <Overlay id="trading-overlay" />
         </div>
     );
 };

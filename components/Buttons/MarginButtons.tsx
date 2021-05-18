@@ -14,9 +14,7 @@ import {
     calcTotalMargin,
 } from '@tracer-protocol/tracer-utils';
 
-import {
-    toApproxCurrency,
-} from '@components/libs/utils';
+import { toApproxCurrency } from '@components/libs/utils';
 
 type ButtonType = 'Deposit' | 'Withdraw';
 

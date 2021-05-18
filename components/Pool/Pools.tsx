@@ -1,10 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { Web3Context, SelectedTracerStore, TracerContext } from 'context';
+import { SelectedTracerStore, TracerContext } from 'context';
 import { SearchBar } from '@components/Nav/SearchBar';
 import { SearchableTable } from '@components/Tables/SearchableTable';
 import { NumberSelect } from '@components/Input/NumberSelect';
 import { Section } from '@components/SummaryInfo';
-import { ConnectButton } from '@components/Buttons';
 
 const PoolSummary: React.FC = () => {
     return (
@@ -18,7 +17,6 @@ const PoolSummary: React.FC = () => {
 
 const PoolFunds: React.FC = () => {
     const { tracerId, selectedTracer } = useContext(TracerContext);
-    const { account } = useContext(Web3Context);
     const [amount, setAmount] = useState(0);
     const balance = selectedTracer?.balances?.tokenBalance ?? 0;
 
@@ -41,9 +39,7 @@ const PoolFunds: React.FC = () => {
             <div className="m-auto w-full">
                 <PoolSummary />
             </div>
-            <div className="mt-auto">
-                {account ? <button className="button mb-5">Deposit</button> : <ConnectButton />}
-            </div>
+            <div className="mt-auto">{<button className="button mb-5">Deposit</button>}</div>
         </div>
     );
 };

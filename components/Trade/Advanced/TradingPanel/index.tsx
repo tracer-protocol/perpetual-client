@@ -64,13 +64,11 @@ export const MarketSelect: React.FC = () => {
 };
 
 type TIProps = {
-    selectedTracer: Tracer | undefined, 
-    account: string,
-    className?: string
-}
-export const TradingInput: React.FC<TIProps> = styled(({ 
-    selectedTracer, className
-}: TIProps) => {
+    selectedTracer: Tracer | undefined;
+    account: string;
+    className?: string;
+};
+export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, className }: TIProps) => {
     const { order, exposure } = useContext(OrderContext);
     return (
         <Box className={`${className}`}>
@@ -124,8 +122,8 @@ export const TradingInput: React.FC<TIProps> = styled(({
 })`
     transition: 0.8s;
     overflow: scroll;
-    opacity: ${props => props.account === '' ? 0 : 1};
-`
+    opacity: ${(props) => (props.account === '' ? 0 : 1)};
+`;
 
 type SProps = {
     selected: number;
@@ -195,4 +193,4 @@ const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
     }
 `;
 
-export { AccountPanel } from './Account'; 
+export { AccountPanel } from './Account';

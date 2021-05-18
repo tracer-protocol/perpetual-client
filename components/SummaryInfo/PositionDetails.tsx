@@ -1,14 +1,12 @@
 import React from 'react';
-import {
-    toApproxCurrency,
-} from '@libs/utils';
+import { toApproxCurrency } from '@libs/utils';
 import {
     calcBorrowed,
     calcLeverage,
     calcLiquidationPrice,
     calcWithdrawable,
     calcProfitableLiquidationPrice,
-    calcNotionalValue
+    calcNotionalValue,
 } from '@tracer-protocol/tracer-utils';
 import { Section } from './';
 import { UserBalance } from '@components/types';

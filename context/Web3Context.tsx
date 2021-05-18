@@ -169,4 +169,3 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
         </Web3Context.Provider>
     );
 };
-
