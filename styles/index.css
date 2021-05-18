@@ -13,6 +13,18 @@ body, html {
   color: black;
 }
 
+html,
+body,
+body > div:first-child,
+div#__next,
+div#__next > div {
+  height: 100%;
+}
+body > div:first-child {
+  display: block;
+  overflow: auto;
+}
+
 a {
   color: inherit;
 }
