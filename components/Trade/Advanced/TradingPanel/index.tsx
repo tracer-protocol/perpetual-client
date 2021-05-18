@@ -6,14 +6,11 @@ import { PostTradeDetails } from '@components/SummaryInfo/PositionDetails';
 import { FactoryContext, OrderContext, TracerContext } from 'context';
 import InputSelects from './Inputs';
 import { Tracer } from 'libs';
-import { Box, Button } from '@components/General';
+import { Box } from '@components/General';
 import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
 import { DownOutlined } from '@ant-design/icons';
-
 import styled from 'styled-components';
-import { calcMinimumMargin, toApproxCurrency, totalMargin } from '@components/libs/utils';
-import { MarginButton } from '@components/components/Buttons/MarginButtons';
 
 const Market = styled.div`
     letter-spacing: -0.4px;
@@ -66,90 +63,17 @@ export const MarketSelect: React.FC = () => {
     );
 };
 
-const Item = styled.div`
-    width: 100%;
-    font-size: 16px;
-    margin-bottom: 10px;
-
-    span {
-        width: 100%;
-        display: flex;
-        font-size: 16px;
-        letter-spacing: -0.32px;
-    }
-    > span a:nth-child(2) {
-        margin-left: auto;
-        color: #21dd53;
-    }
-    h3 {
-        letter-spacing: -0.32px;
-        color: #3da8f5;
-        text-transform: capitalize;
-        margin-bottom: 5px;
-    }
-`;
-
-const DepositButtons = styled.div`
-    display: flex;
-    justify-content: space-between;
-`;
-
-export const WalletConnect: React.FC<{
-    selectedTracer: Tracer | undefined;
-    account: string;
-}> = ({ selectedTracer, account }) => {
-    const balances = selectedTracer?.balances;
-    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0);
-    const maxLeverage = selectedTracer?.maxLeverage ?? 1;
-
-    return account === '' ? (
-        <Box>
-            <h4 className="title">Connect your Ethereum Wallet</h4>
-            <div className="flex">
-                <div className={`sButton`}>Connect</div>
-            </div>
-        </Box>
-    ) : (
-        <Box className="flex-col">
-            <Item>
-                <h3>Total Margin</h3>
-                <span>
-                    <a>{toApproxCurrency(totalMargin(balances?.base ?? 0, balances?.quote ?? 0, fairPrice))}</a>
-                    {/* <a>
-                        {'>>>'} $2,498.72 USDC
-                    </a> */}
-                </span>
-            </Item>
-            <Item>
-                <h3>Minimum Margin</h3>
-                <span>
-                    <a>
-                        {toApproxCurrency(
-                            calcMinimumMargin(balances?.base ?? 0, balances?.quote ?? 0, fairPrice, maxLeverage),
-                        )}
-                    </a>
-                    {/* <a>
-                        {'>>>'} $2,498.72 USDC
-                    </a> */}
-                </span>
-            </Item>
-            <DepositButtons>
-                <MarginButton type="Deposit">
-                    <Button className="primary">Deposit</Button>
-                </MarginButton>
-                <MarginButton type="Withdraw">
-                    <Button>Withdraw</Button>
-                </MarginButton>
-            </DepositButtons>
-        </Box>
-    );
-};
-
-export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
+type TIProps = {
+    selectedTracer: Tracer | undefined, 
+    account: string,
+    className?: string
+}
+export const TradingInput: React.FC<TIProps> = styled(({ 
+    selectedTracer, className, account
+}: TIProps) => {
     const { order, exposure } = useContext(OrderContext);
-
     return (
-        <Box className="overflow-scroll">
+        <Box className={`${className} overflow-scroll ${account !== '' ? '' : 'no-delay'}`}>
             <div className="body text-xs">
                 {/* Position select */}
                 <div className="py-2">
@@ -197,7 +121,10 @@ export const TradingInput: React.FC<{ selectedTracer: Tracer | undefined }> = ({
             </div>
         </Box>
     );
-};
+})`
+    transition: 0.8s;
+    opacity: ${props => props.account === '' ? 0 : 1};
+`
 
 type SProps = {
     selected: number;
@@ -266,3 +193,5 @@ const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
         margin-right: auto;
     }
 `;
+
+export { AccountPanel } from './Account'; 

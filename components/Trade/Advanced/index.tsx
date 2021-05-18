@@ -3,7 +3,7 @@ import { TracerContext, Web3Context } from 'context';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 import Timer from '@components/Timer';
 import OrderBook from '@components/OrderBook/OrderBook';
-import { MarketSelect, TradingInput, WalletConnect } from './TradingPanel';
+import { MarketSelect, TradingInput, AccountPanel } from './TradingPanel';
 import { getOrders } from '@components/libs/Ome';
 import Web3 from 'web3';
 import Tracer from '@libs/Tracer';
@@ -172,19 +172,33 @@ const TradingSummary: React.FC<TSProps> = styled(({ selectedTracer, className }:
     border-top: 1px solid #0c3586;
 `;
 
+const LeftPanel = styled.div`
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    min-height: 90vh;
+`
+const RightPanel = styled.div`
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    min-height: 90vh;
+`
+
+
 const Advanced: React.FC = () => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     return (
         <div className="flex h-full">
-            <div className="w-1/4 flex flex-col min-h-screen/90">
+            <LeftPanel>
                 <MarketSelect />
-                <WalletConnect selectedTracer={selectedTracer} account={account ?? ''} />
-                <TradingInput selectedTracer={selectedTracer} />
-            </div>
-            <div className="w-3/4 flex flex-col min-h-screen/90">
+                <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} />
+                <TradingInput selectedTracer={selectedTracer} account={account ?? ''} />
+            </LeftPanel>
+            <RightPanel>
                 <TradingView selectedTracer={selectedTracer} />
-            </div>
+            </RightPanel>
         </div>
     );
 };
