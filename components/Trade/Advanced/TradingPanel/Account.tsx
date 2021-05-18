@@ -223,7 +223,6 @@ export const AccountPanel: React.FC<{
         lastUpdatedGasPrice: 0,
         tokenBalance: 0,
     };
-    // console.log(selectedTracer?.oraclePrice, selectedTracer?.priceMultiplier)
     const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1);
     const maxLeverage = selectedTracer?.maxLeverage ?? 1;
 
