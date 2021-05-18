@@ -3,6 +3,7 @@ import TracerLoading from '@components/TracerLoading';
 
 import styled from 'styled-components';
 import { CloseOutlined } from '@ant-design/icons';
+import { Close } from '../General';
 
 interface TProps {
     show: boolean;
@@ -29,30 +30,6 @@ export const SubTitle = styled.p`
     letter-spacing: -0.32px;
     color: #3da8f5;
     margin: 1rem 0;
-`;
-
-const Close = styled(CloseOutlined)`
-    background: #002886;
-    border-radius: 20px;
-    width: 58px;
-    height: 40px;
-    transition: 0.3s;
-    display: flex;
-    top: 0;
-    right: 20px;
-    > svg {
-        transition: 0.3s;
-        margin: auto;
-        height: 20px;
-        width: 20px;
-        color: #fff;
-    }
-    &:hover {
-        cursor: pointer;
-        background: #3da8f5;
-    }
-    &:hover svg {
-    }
 `;
 
 const Header = styled.div`

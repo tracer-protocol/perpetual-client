@@ -29,6 +29,7 @@ const Balance = styled.span`
     }
     .max:hover {
         opacity: 0.8;
+        cursor: pointer;
     }
 `;
 
@@ -47,7 +48,7 @@ export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title
             <Header>
                 {title}
                 {balance ? ( // if there is a balance then display it
-                    <Balance>
+                    <Balance className="balance">
                         {`Available Balance: ${balance}`}
                         <span className="max" onClick={(_e) => setAmount(balance)}>
                             Max

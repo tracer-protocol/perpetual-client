@@ -186,6 +186,21 @@ const RightPanel = styled.div`
 `
 
 
+const Overlay = styled.div`
+    position: absolute;
+    background: black;
+    transition: opacity 0.3s ease-in-out 0.1s;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -9999;
+    &.display {
+        z-index: 2;
+        opacity: 0.5;
+    }
+`
 const Advanced: React.FC = () => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
@@ -199,6 +214,7 @@ const Advanced: React.FC = () => {
             <RightPanel>
                 <TradingView selectedTracer={selectedTracer} />
             </RightPanel>
+            <Overlay id="trading-overlay"/>
         </div>
     );
 };

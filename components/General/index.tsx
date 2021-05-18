@@ -1,3 +1,4 @@
+import { CloseOutlined } from '@ant-design/icons';
 import { Children } from '@components/types';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -11,7 +12,8 @@ export const Box: React.FC<{ className?: string }> = styled.div`
 export const Button: React.FC<{ className?: string; onClick?: any }> = styled.div`
     transition: 0.3s;
     color: #3da8f5;
-    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1rem;
     letter-spacing: -0.32px;
     border: 1px solid #3da8f5;
     border-radius: 20px;
@@ -283,6 +285,13 @@ export const Previous = styled.span`
         content: '>>>';
     }
 `;
+export const After = styled.span`
+    color: #005ea4;
+    &:before {
+        padding-right: 0.5rem;
+        content: '>>>';
+    }
+`;
 
 type CProps = {
     className?: string;
@@ -362,5 +371,29 @@ export const Checkbox: React.FC<CProps> = styled(({ className, checked, onClick 
         -webkit-transform: rotate(45deg);
         -ms-transform: rotate(45deg);
         transform: rotate(45deg);
+    }
+`;
+
+export const Close = styled(CloseOutlined)`
+    background: #002886;
+    border-radius: 20px;
+    width: 58px;
+    height: 40px;
+    transition: 0.3s;
+    display: flex;
+    top: 0;
+    right: 20px;
+    > svg {
+        transition: 0.3s;
+        margin: auto;
+        height: 20px;
+        width: 20px;
+        color: #fff;
+    }
+    &:hover {
+        cursor: pointer;
+        background: #3da8f5;
+    }
+    &:hover svg {
     }
 `;

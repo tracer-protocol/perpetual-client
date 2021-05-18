@@ -1,9 +1,12 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Tracer } from "libs";
 import { toApproxCurrency, totalMargin, calcMinimumMargin } from "@libs/utils";
 import styled from "styled-components";
-import { Box, Button } from '@components/General';
+import { After, Box, Button, Close, HiddenExpand, Previous } from '@components/General';
 import { Web3Context } from "@components/context";
+import NumberSelect from "@components/Input/NumberSelect";
+import { Section } from "@components/SummaryInfo";
+import { UserBalance } from "@components/types";
 
 const MinHeight = 280;
 
@@ -22,7 +25,7 @@ const SBox = styled(Box)`
 
 const SButton = styled(Button)`
     width: 100%;
-    padding: 0.3rem;
+    padding: 0.5rem;
     margin-top: 0.5rem;
 `
 
@@ -67,18 +70,162 @@ const DepositButtons = styled.div`
 `;
 
 const AccountInfo = styled(Box)`
+    position: relative;
     min-height: ${MinHeight}px;
     flex-direction: column;
+`
+
+const SNumberSelect = styled(NumberSelect)`
+    margin-top: 1rem;
+    > * .balance {
+        color: #3DA8F5;
+        margin-left: 2rem;
+    }
+    > * .balance > .max {
+        margin-left: 2rem;
+    }
+`
+
+
+const SHiddenExpand = styled(HiddenExpand)`
+    margin-left: 0;
+    background: #002886;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+`
+
+const SSection = styled(Section)`
+    flex-direction: column;
+    > .content {
+        display: flex;
+        justify-content: space-between;
+        padding: 0;
+    }
+`
+
+const SPrevious = styled(Previous)`
+    width: 100%;
+    display: flex;
+    &: after {
+        margin: auto;
+    }
+`
+const MButton = styled(Button)`
+    width: 100%;
+    height: 40px;
+    border: 1px solid #FFFFFF;
+    color: #fff;
+`
+
+const Balance = styled.div<{
+    display: boolean
+}>`
+    color: #3DA8F5;
+    font-size: 1rem;
+    letter-spacing: -0.32px;
+    transition: 0.3s;
+    opacity: ${props => props.display ? 1 : 0};
+`
+
+type PProps = {
+    className?: string;
+    close: (e: any) => any;
+    deposit: boolean;
+    display: boolean;
+    unit: string;
+    balances: UserBalance;
+    price: number;
+    maxLeverage: number;
+}
+const Popup:React.FC<PProps> = styled(({ 
+    className, 
+    close,
+    deposit,
+    unit,
+    balances,
+    price,
+    maxLeverage
+}: PProps) => {
+    const [amount, setAmount] = useState(0);
+    const newQuote = balances.quote + amount;
+    const balance = deposit ? balances.quote : balances.tokenBalance;
+    return (
+        <div className={className}>
+            <div className="header">
+                <p>{deposit ? 'Deposit' : 'Withdraw'} Margin</p>
+                <Close onClick={close} />
+            </div>
+            <SNumberSelect
+                unit={unit}
+                title={'Amount'}
+                amount={amount}
+                balance={balance}
+                setAmount={setAmount}
+            />
+            <Balance display={!!amount}>
+                <span className="mr-3">Balance</span><After>{toApproxCurrency(newQuote)}</After>
+            </Balance>
+            <SHiddenExpand defaultHeight={0} open={!!amount}>
+                <p className="mb-3">Deposit Summary</p>
+                <SSection label={`Total Margin`}>
+                    <SPrevious>{`${toApproxCurrency(totalMargin(balances.base, balances.quote, price))}`}</SPrevious>
+                    {`${toApproxCurrency(totalMargin(balances.base, newQuote, price))}`}
+                </SSection>
+                <SSection label={`Available Margin`}>
+                    <SPrevious>{`${toApproxCurrency(calcMinimumMargin(balances.base, balances.quote, price, maxLeverage))}`}</SPrevious>
+                    {`${toApproxCurrency(calcMinimumMargin(balances.base, newQuote, price, maxLeverage))}`}
+                </SSection>
+            </SHiddenExpand>
+            <MButton>{deposit ? 'Deposit' : 'Withdraw'}</MButton>
+        </div>
+    )
+})`
+    transition: 0.3s;
+    position: absolute;
+    padding: 10px;
+    top: 0;
+    left: 0;
+    min-height: 100%;
+    width: 100%;
+    background: #011772;
+    z-index: ${props => props.display ? '10' : '-1'};
+    opacity: ${props => props.display ? '1' : '0'};
+
+    > .header {
+        color: #fff;
+        line-height: 20px;
+        font-size: 20px;
+        letter-spacing: -0.4px;
+        display: flex;
+        justify-content: space-between;
+    }
 `
 
 export const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
 }> = ({ selectedTracer, account }) => {
-    const balances = selectedTracer?.balances;
-    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0);
+    const [popup, setPopup] = useState(false);
+    const [deposit, setDeposit] = useState(false);
+    const balances = selectedTracer?.balances ?? {
+        quote: 0, base: 0, totalLeveragedValue: 0, lastUpdatedGasPrice: 0, tokenBalance: 0
+    };
+    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0) ?? 0;
     const maxLeverage = selectedTracer?.maxLeverage ?? 1;
+    
+    useEffect(() => {
+        const overlay = document.getElementById('trading-overlay')
+        if (overlay) {
+            popup 
+            ? overlay.classList.add('display')
+            : overlay.classList.remove('display')
+        }
+    }, [popup])
 
+    const handleClick = (popup: boolean, deposit: boolean) => {
+        setPopup(popup);
+        setDeposit(deposit);
+    }
     return account === '' ? (
         <WalletConnect />
     ) : (
@@ -100,9 +247,18 @@ export const AccountPanel: React.FC<{
                 </span>
             </Item>
             <DepositButtons>
-                <Button className="primary">Deposit</Button>
-                <Button>Withdraw</Button>
+                <Button className="primary" onClick={(_e: any) => handleClick(true, true)}>Deposit</Button>
+                <Button onClick={(_e: any) => handleClick(true, false)}>Withdraw</Button>
             </DepositButtons>
+            <Popup 
+                display={popup} 
+                close={(_e: any) => setPopup(false)} 
+                deposit={deposit}
+                unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
+                balances={balances}
+                maxLeverage={maxLeverage}
+                price={Number.isNaN(fairPrice) ? 0 : fairPrice}
+            />
         </AccountInfo>
     );
 };
