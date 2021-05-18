@@ -69,11 +69,11 @@ type TIProps = {
     className?: string
 }
 export const TradingInput: React.FC<TIProps> = styled(({ 
-    selectedTracer, className, account
+    selectedTracer, className
 }: TIProps) => {
     const { order, exposure } = useContext(OrderContext);
     return (
-        <Box className={`${className} overflow-scroll ${account !== '' ? '' : 'no-delay'}`}>
+        <Box className={`${className}`}>
             <div className="body text-xs">
                 {/* Position select */}
                 <div className="py-2">
@@ -123,6 +123,7 @@ export const TradingInput: React.FC<TIProps> = styled(({
     );
 })`
     transition: 0.8s;
+    overflow: scroll;
     opacity: ${props => props.account === '' ? 0 : 1};
 `
 

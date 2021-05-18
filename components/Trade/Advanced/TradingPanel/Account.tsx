@@ -1,20 +1,23 @@
+import React, { useContext } from "react";
 import { Tracer } from "libs";
 import { toApproxCurrency, totalMargin, calcMinimumMargin } from "@libs/utils";
-import React from "react";
 import styled from "styled-components";
 import { Box, Button } from '@components/General';
+import { Web3Context } from "@components/context";
+
+const MinHeight = 280;
 
 const SBox = styled(Box)`
     background: #011772;
     text-align: center;
     flex-direction: column;
     justify-content: center;
+    min-height: ${MinHeight}px;
     > p {
         font-size: 20px;
         letter-spacing: 0;
         color: #fff;
     }
-    min-height: 280px;
 `
 
 const SButton = styled(Button)`
@@ -23,11 +26,14 @@ const SButton = styled(Button)`
     margin-top: 0.5rem;
 `
 
-const WalletConnect = () => {
+const WalletConnect: React.FC = () => {
+    const { handleConnect } = useContext(Web3Context);
     return (
         <SBox>
             <p>Connect your wallet to get started with Tracer</p>
-            <SButton className="primary">Connect Wallet</SButton>
+            <SButton className="primary"  onClick={() => handleConnect ? handleConnect() : console.error("Connect button is undefined")}>
+                Connect Wallet
+            </SButton>
         </SBox>
     ) 
 }
@@ -60,6 +66,11 @@ const DepositButtons = styled.div`
     justify-content: space-between;
 `;
 
+const AccountInfo = styled(Box)`
+    min-height: ${MinHeight}px;
+    flex-direction: column;
+`
+
 export const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
@@ -71,7 +82,7 @@ export const AccountPanel: React.FC<{
     return account === '' ? (
         <WalletConnect />
     ) : (
-        <Box className="flex-col">
+        <AccountInfo>
             <Item>
                 <h3>Total Margin</h3>
                 <span>
@@ -89,13 +100,9 @@ export const AccountPanel: React.FC<{
                 </span>
             </Item>
             <DepositButtons>
-                {/* <MarginButton type="Deposit"> */}
                 <Button className="primary">Deposit</Button>
-                {/* </MarginButton> */}
-                {/* <MarginButton type="Withdraw"> */}
                 <Button>Withdraw</Button>
-                {/* </MarginButton> */}
             </DepositButtons>
-        </Box>
+        </AccountInfo>
     );
 };

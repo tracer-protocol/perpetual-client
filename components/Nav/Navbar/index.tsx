@@ -2,8 +2,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import { useToasts } from 'react-toast-notifications';
-
 import styled from 'styled-components';
 
 // @ts-ignore
@@ -232,24 +230,9 @@ const NavBar: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
     const route = routes[1];
     const secondaryRoute = routes[2];
-    const { connect, account } = useContext(Web3Context);
+    const { handleConnect, account } = useContext(Web3Context);
     const ensName = useEnsName(account ?? '');
-    const { addToast } = useToasts();
 
-    const handleConnect = async () => {
-        if (connect) {
-            try {
-                connect();
-            } catch (err) {
-                addToast(`Wallet connection failed. ${err}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
-            }
-        } else {
-            console.error('No connect function found');
-        }
-    };
 
     const buttonContent = () => {
         if (!account) {
@@ -303,7 +286,7 @@ const NavBar: React.FC = styled(({ className }) => {
                     </Link>
                 </li>
             </ul>
-            <ConnectButton onClick={() => handleConnect()}>
+            <ConnectButton onClick={() => handleConnect ? handleConnect() : console.error("Connect button is undefined")}>
                 <div className="m-auto flex text-sm font-bold">
                     <Identicon account={account ?? ''} />
                     <div className="px-2">{buttonContent()}</div>
