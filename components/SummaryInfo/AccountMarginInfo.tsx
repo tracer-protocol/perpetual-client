@@ -1,12 +1,14 @@
 import React from 'react';
 import {
-    calcMinimumMargin,
-    calcWithdrawable,
     toApproxCurrency,
-    calcLiquidationPrice,
-    calcLeverage,
-    totalMargin,
 } from '@libs/utils';
+import {
+    calcLeverage,
+    calcLiquidationPrice,
+    calcWithdrawable,
+    calcTotalMargin,
+    calcMinimumMargin
+} from '@tracer-protocol/tracer-utils';
 import { Section } from './';
 import { UserBalance } from '@components/types';
 
@@ -24,14 +26,14 @@ export const AccountMarginInfo: React.FC<IProps> = ({ balance, fairPrice, maxLev
     };
 
     // const minMargin = calcMinimumMargin(quote, base, fairPrice, maxLeverage);
-    // const totalMargin_ = totalMargin(quote, base, fairPrice);
-    // const invalid = minMargin > totalMargin_ ? 'text-red-500' : '';
+    // const calcTotalMargin_ = calcTotalMargin(quote, base, fairPrice);
+    // const invalid = minMargin > calcTotalMargin_ ? 'text-red-500' : '';
     if (!balance) {
         return <div>Loading</div>;
     } else {
         return (
             <div className="border-t-2 border-gray-100">
-                <Section label={'Account Margin'}>{toApproxCurrency(totalMargin(base, quote, fairPrice))}</Section>
+                <Section label={'Account Margin'}>{toApproxCurrency(calcTotalMargin(base, quote, fairPrice))}</Section>
                 <Section label={'Minimum Margin'}>
                     {toApproxCurrency(calcMinimumMargin(quote, base, fairPrice, maxLeverage))}
                 </Section>

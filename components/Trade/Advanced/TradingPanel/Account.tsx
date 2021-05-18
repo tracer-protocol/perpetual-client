@@ -1,14 +1,17 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Tracer } from "libs";
-import { toApproxCurrency, totalMargin, calcMinimumMargin } from "@libs/utils";
+import { toApproxCurrency } from "@libs/utils";
 import styled from "styled-components";
+import { calcTotalMargin, calcMinimumMargin } from '@tracer-protocol/tracer-utils';
 import { After, Box, Button, Close, HiddenExpand, Previous } from '@components/General';
 import { Web3Context } from "@components/context";
 import NumberSelect from "@components/Input/NumberSelect";
 import { Section } from "@components/SummaryInfo";
 import { UserBalance } from "@components/types";
+import Error from '@components/Trade/Error';
 
-const MinHeight = 280;
+
+const MinHeight = 250;
 
 const SBox = styled(Box)`
     background: #011772;
@@ -23,7 +26,7 @@ const SBox = styled(Box)`
     }
 `
 
-const SButton = styled(Button)`
+const Connect = styled(Button)`
     width: 100%;
     padding: 0.5rem;
     margin-top: 0.5rem;
@@ -34,9 +37,9 @@ const WalletConnect: React.FC = () => {
     return (
         <SBox>
             <p>Connect your wallet to get started with Tracer</p>
-            <SButton className="primary"  onClick={() => handleConnect ? handleConnect() : console.error("Connect button is undefined")}>
+            <Connect className="primary"  onClick={() => handleConnect ? handleConnect() : console.error("Connect button is undefined")}>
                 Connect Wallet
-            </SButton>
+            </Connect>
         </SBox>
     ) 
 }
@@ -65,6 +68,7 @@ const Item = styled.div`
 `;
 
 const DepositButtons = styled.div`
+    margin-top: auto;
     display: flex;
     justify-content: space-between;
 `;
@@ -96,6 +100,8 @@ const SHiddenExpand = styled(HiddenExpand)`
 
 const SSection = styled(Section)`
     flex-direction: column;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
     > .content {
         display: flex;
         justify-content: space-between;
@@ -127,6 +133,12 @@ const Balance = styled.div<{
     opacity: ${props => props.display ? 1 : 0};
 `
 
+const SAfter = styled(After)`
+    &.invalid {
+        color: #F15025
+    } 
+`
+
 type PProps = {
     className?: string;
     close: (e: any) => any;
@@ -137,6 +149,7 @@ type PProps = {
     price: number;
     maxLeverage: number;
 }
+
 const Popup:React.FC<PProps> = styled(({ 
     className, 
     close,
@@ -147,8 +160,11 @@ const Popup:React.FC<PProps> = styled(({
     maxLeverage
 }: PProps) => {
     const [amount, setAmount] = useState(0);
-    const newQuote = balances.quote + amount;
-    const balance = deposit ? balances.quote : balances.tokenBalance;
+    const available = deposit 
+        ? balances.tokenBalance
+        : balances.quote - calcMinimumMargin(balances.base, balances.quote, price, maxLeverage);
+    const newBalance = deposit ? balances.quote + amount : balances.quote - amount;
+    const invalid = amount > available;
     return (
         <div className={className}>
             <div className="header">
@@ -159,24 +175,25 @@ const Popup:React.FC<PProps> = styled(({
                 unit={unit}
                 title={'Amount'}
                 amount={amount}
-                balance={balance}
+                balance={available}
                 setAmount={setAmount}
             />
             <Balance display={!!amount}>
-                <span className="mr-3">Balance</span><After>{toApproxCurrency(newQuote)}</After>
+                <span className="mr-3">Balance</span><SAfter className={invalid ? 'invalid' : ''}>{toApproxCurrency(newBalance)}</SAfter>
             </Balance>
             <SHiddenExpand defaultHeight={0} open={!!amount}>
-                <p className="mb-3">Deposit Summary</p>
+                <p className="mb-3">{deposit ? 'Deposit' : 'Withdraw'} Summary</p>
                 <SSection label={`Total Margin`}>
-                    <SPrevious>{`${toApproxCurrency(totalMargin(balances.base, balances.quote, price))}`}</SPrevious>
-                    {`${toApproxCurrency(totalMargin(balances.base, newQuote, price))}`}
+                    <SPrevious>{`${toApproxCurrency(calcTotalMargin(balances.base, balances.quote, price))}`}</SPrevious>
+                    {`${toApproxCurrency(calcTotalMargin(balances.base, newBalance, price))}`}
                 </SSection>
-                <SSection label={`Available Margin`}>
+                <SSection label={`Maintenance Margin`}>
                     <SPrevious>{`${toApproxCurrency(calcMinimumMargin(balances.base, balances.quote, price, maxLeverage))}`}</SPrevious>
-                    {`${toApproxCurrency(calcMinimumMargin(balances.base, newQuote, price, maxLeverage))}`}
+                    {`${toApproxCurrency(calcMinimumMargin(balances.base, newBalance, price, maxLeverage))}`}
                 </SSection>
             </SHiddenExpand>
             <MButton>{deposit ? 'Deposit' : 'Withdraw'}</MButton>
+            <Error error={invalid ? 5 : -1} />
         </div>
     )
 })`
@@ -210,7 +227,8 @@ export const AccountPanel: React.FC<{
     const balances = selectedTracer?.balances ?? {
         quote: 0, base: 0, totalLeveragedValue: 0, lastUpdatedGasPrice: 0, tokenBalance: 0
     };
-    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0) ?? 0;
+    // console.log(selectedTracer?.oraclePrice, selectedTracer?.priceMultiplier)
+    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1);
     const maxLeverage = selectedTracer?.maxLeverage ?? 1;
     
     useEffect(() => {
@@ -233,7 +251,7 @@ export const AccountPanel: React.FC<{
             <Item>
                 <h3>Total Margin</h3>
                 <span>
-                    <a>{toApproxCurrency(totalMargin(balances?.base ?? 0, balances?.quote ?? 0, fairPrice))}</a>
+                    <a>{toApproxCurrency(calcTotalMargin(balances?.base ?? 0, balances?.quote ?? 0, fairPrice))}</a>
                 </span>
             </Item>
             <Item>
@@ -247,8 +265,8 @@ export const AccountPanel: React.FC<{
                 </span>
             </Item>
             <DepositButtons>
-                <Button className="primary" onClick={(_e: any) => handleClick(true, true)}>Deposit</Button>
-                <Button onClick={(_e: any) => handleClick(true, false)}>Withdraw</Button>
+                <Button className='w-full mr-2' onClick={(_e: any) => handleClick(true, true)}>Deposit</Button>
+                <Button className='w-full ml-2' onClick={(_e: any) => handleClick(true, false)}>Withdraw</Button>
             </DepositButtons>
             <Popup 
                 display={popup} 

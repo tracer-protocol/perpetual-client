@@ -2,7 +2,6 @@ import React, { MouseEvent, useEffect, useRef } from 'react';
 import TracerLoading from '@components/TracerLoading';
 
 import styled from 'styled-components';
-import { CloseOutlined } from '@ant-design/icons';
 import { Close } from '../General';
 
 interface TProps {

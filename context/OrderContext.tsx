@@ -29,6 +29,10 @@ export const Errors: Record<number, Error> = {
         name: 'Account Disconnected',
         message: 'Please connect your wallet',
     },
+    5: {
+        name: 'Invalid Funds',
+        message: 'You do not have enough funds in your wallet'
+    }
 };
 
 /**

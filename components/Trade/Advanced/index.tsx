@@ -59,7 +59,7 @@ const parseRes = (res: any, multiplier: number) => {
 
 const useOrders = (trigger: boolean, selectedTracer: Tracer | undefined) => {
     const market = selectedTracer?.address;
-    const priceMultiplier = selectedTracer?.priceMultiplier ?? 0;
+    const priceMultiplier = selectedTracer?.priceMultiplier ?? 1;
     const [response, setResponse] = useState<any>({
         askOrders: [],
         bidOrders: [],
@@ -154,7 +154,7 @@ const TradingSummary: React.FC<TSProps> = styled(({ selectedTracer, className }:
                 return (
                     <PositionDetails
                         balance={selectedTracer?.balances}
-                        fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
+                        fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1)}
                         maxLeverage={selectedTracer?.maxLeverage ?? 1}
                     />
                 );

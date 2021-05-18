@@ -99,7 +99,7 @@ export const TradingInput: React.FC<TIProps> = styled(({
                 )}
 
                 <PostTradeDetails
-                    fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
+                    fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1)}
                     balances={
                         selectedTracer?.balances ?? {
                             base: 0,
