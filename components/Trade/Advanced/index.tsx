@@ -3,7 +3,7 @@ import { TracerContext, Web3Context } from 'context';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 import Timer from '@components/Timer';
 import OrderBook from '@components/OrderBook/OrderBook';
-import { MarketSelect, TradingInput, WalletConnect } from './TradingPanel';
+import { MarketSelect, TradingInput, AccountPanel } from './TradingPanel';
 import { getOrders } from '@components/libs/Ome';
 import Web3 from 'web3';
 import Tracer from '@libs/Tracer';
@@ -59,7 +59,7 @@ const parseRes = (res: any, multiplier: number) => {
 
 const useOrders = (trigger: boolean, selectedTracer: Tracer | undefined) => {
     const market = selectedTracer?.address;
-    const priceMultiplier = selectedTracer?.priceMultiplier ?? 0;
+    const priceMultiplier = selectedTracer?.priceMultiplier ?? 1;
     const [response, setResponse] = useState<any>({
         askOrders: [],
         bidOrders: [],
@@ -154,7 +154,7 @@ const TradingSummary: React.FC<TSProps> = styled(({ selectedTracer, className }:
                 return (
                     <PositionDetails
                         balance={selectedTracer?.balances}
-                        fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
+                        fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1)}
                         maxLeverage={selectedTracer?.maxLeverage ?? 1}
                     />
                 );
@@ -172,19 +172,48 @@ const TradingSummary: React.FC<TSProps> = styled(({ selectedTracer, className }:
     border-top: 1px solid #0c3586;
 `;
 
+const LeftPanel = styled.div`
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    min-height: 90vh;
+`;
+const RightPanel = styled.div`
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    min-height: 90vh;
+`;
+
+const Overlay = styled.div`
+    position: absolute;
+    background: black;
+    transition: opacity 0.3s ease-in-out 0.1s;
+    opacity: 0;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -9999;
+    &.display {
+        z-index: 2;
+        opacity: 0.5;
+    }
+`;
 const Advanced: React.FC = () => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     return (
         <div className="flex h-full">
-            <div className="w-1/4 flex flex-col min-h-screen/90">
+            <LeftPanel>
                 <MarketSelect />
-                <WalletConnect selectedTracer={selectedTracer} account={account ?? ''} />
-                <TradingInput selectedTracer={selectedTracer} />
-            </div>
-            <div className="w-3/4 flex flex-col min-h-screen/90">
+                <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} />
+                <TradingInput selectedTracer={selectedTracer} account={account ?? ''} />
+            </LeftPanel>
+            <RightPanel>
                 <TradingView selectedTracer={selectedTracer} />
-            </div>
+            </RightPanel>
+            <Overlay id="trading-overlay" />
         </div>
     );
 };

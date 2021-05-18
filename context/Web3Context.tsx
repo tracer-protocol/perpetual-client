@@ -10,6 +10,7 @@ import { useMachine } from '@xstate/react';
 import { web3Machine } from '@machines/Web3Machine';
 
 import { networkConfig, Network as NetworkType } from './Web3Context.Config';
+import { useToasts } from 'react-toast-notifications';
 
 export const initModal: () => Promise<Web3Modal> = async () => {
     return new Web3Modal({
@@ -44,7 +45,7 @@ export const initModal: () => Promise<Web3Modal> = async () => {
  *
  */
 interface ContextProps {
-    connect: () => void | undefined;
+    handleConnect: () => Promise<void> | undefined;
     updateTrigger: boolean;
     state: any;
     account: string;
@@ -56,7 +57,7 @@ interface ContextProps {
 }
 
 export const Web3Context = React.createContext<Partial<ContextProps>>({
-    connect: undefined,
+    handleConnect: undefined,
     updateTrigger: undefined,
 });
 
@@ -67,7 +68,6 @@ export const Web3Context = React.createContext<Partial<ContextProps>>({
 export const Web3Store: React.FC<Children> = ({ children }: Children) => {
     // @ts-ignore
     const [trigger, setTrigger] = useState(false);
-
     // @ts-ignore
     const [state, send] = useMachine(web3Machine, {
         value: {},
@@ -81,10 +81,26 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
             provider: undefined,
         },
     });
+    const { addToast } = useToasts();
 
     useEffect(() => {
         send('INIT_CONTRACTS');
     }, []);
+
+    const handleConnect = async () => {
+        if (connect) {
+            try {
+                connect();
+            } catch (err) {
+                addToast(`Wallet connection failed. ${err}`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            }
+        } else {
+            console.error('No connect function found');
+        }
+    };
 
     /* Connects the web3 provider using Web3Modal */
     const connect: () => void = async () => {
@@ -141,7 +157,7 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
     return (
         <Web3Context.Provider
             value={{
-                connect,
+                handleConnect,
                 updateTrigger: trigger,
                 updateGlobal,
                 ...state.context,

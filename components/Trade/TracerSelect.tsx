@@ -6,39 +6,10 @@ import { OrderContext, TracerContext } from 'context';
 import { OrderAction, OrderState } from '@context/OrderContext';
 import styled from 'styled-components';
 import { useMarketPairs } from '../../hooks';
-import { MarginDeposit, SlideSelect } from '@components/Buttons';
+import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Button, Logo, BasicInputContainer, Input } from '@components/General';
 import Tooltip from 'antd/lib/tooltip';
-
-export const WalletBalance: React.FC<{ marginBalance: number }> = ({ marginBalance }: { marginBalance: number }) => {
-    const { orderDispatch } = useContext(OrderContext);
-    return (
-        <div className="px-3 text-blue-100 font-normal flex">
-            <p className="mt-auto mb-auto">
-                {marginBalance < 0 ? `Fetching balance...` : `Acc. Margin Balance: ${marginBalance}`}
-            </p>
-            <span className="mt-auto mb-auto ml-auto w-full flex justify-end">
-                {marginBalance <= 0 ? (
-                    <MarginDeposit />
-                ) : (
-                    // max rMargin will be walletBalance - 10%
-                    <button
-                        onClick={(e) => {
-                            e.preventDefault();
-                            orderDispatch
-                                ? orderDispatch({ type: 'setRMargin', value: marginBalance })
-                                : console.error('Order dispatch not set');
-                        }}
-                        className="secondary-button"
-                    >
-                        Max
-                    </button>
-                )}
-            </span>
-        </div>
-    );
-};
 
 const SLabel = styled.h3`
     display: flex;
@@ -62,6 +33,7 @@ const MaxButton: any = styled(Button)`
     width: 60px;
     padding: 0;
     height: 30px;
+    line-height: 28px;
     margin-left: 5px;
     margin-right: 5px;
 `;
@@ -292,7 +264,7 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                     />
                     <SDropdown className="mt-1 pr-4" overlay={markets} trigger={['click']}>
                         <DropDownContent>
-                            <Logo ticker="ETH" />
+                            <Logo ticker="ETH" clear={true} />
                             <DropDownText>{market}</DropDownText>
                             <SDownCaret />
                         </DropDownContent>

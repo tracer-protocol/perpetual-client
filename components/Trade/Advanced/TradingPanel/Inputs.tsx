@@ -2,7 +2,7 @@ import React from 'react';
 import { OrderContext } from 'context';
 import { useContext } from 'react';
 import SmallInput from '@components/Input/SmallInput';
-import { calcWithdrawable } from '@components/libs/utils';
+import { calcWithdrawable } from '@tracer-protocol/tracer-utils';
 import { Tracer } from '@components/libs';
 interface ISProps {
     selectedTracer: Tracer | undefined;
@@ -14,7 +14,7 @@ export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISP
     const { orderDispatch } = useContext(OrderContext);
     const tracerId = selectedTracer?.marketId ?? '';
     const balances = selectedTracer?.balances;
-    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0);
+    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1);
     const maxMargin = calcWithdrawable(
         balances?.base ?? 0,
         balances?.quote ?? 0,

@@ -13,7 +13,7 @@ import { Oracle } from '@tracer-protocol/contracts/types/web3-v1-contracts/Oracl
 import { Erc20 as Erc20Type } from '@tracer-protocol/contracts/types/web3-v1-contracts/ERC20';
 
 import { AbiItem } from 'web3-utils';
-import { fromCents } from '@libs/utils/TracerCalcs';
+import { fromCents } from '@libs/utils';
 import { checkAllowance } from '@libs/web3/utils';
 import { TakenOrder, OpenOrder, Result, UserBalance } from 'types';
 
@@ -55,6 +55,7 @@ export default class Tracer {
         this.address = address;
         this.marketId = marketId;
         this.feeRate = 0;
+        this.priceMultiplier = 0;
         this.balances = {
             quote: 0,
             base: 0,

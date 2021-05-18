@@ -43,7 +43,7 @@ const LivePositions: React.FC = () => {
                 <Card title={`My ${tracerId} Margin Account`} classes={`mx-12 flex flex-col card`}>
                     <AccountMarginInfo
                         balance={selectedTracer?.balances}
-                        fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
+                        fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1)}
                         maxLeverage={selectedTracer?.maxLeverage ?? 1}
                     />
                     <div className="mt-auto">

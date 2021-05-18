@@ -26,3 +26,10 @@ export const toApproxCurrency: (str: string | number) => string = (str) => {
     });
     // .replace('-', '~');
 };
+
+// order prices are in cents * 1000
+// so converstion is fromCents(price / (100 * 1000))
+// toCents(price * 100 * 1000)
+export const fromCents: (val: number) => number = (val) => {
+    return val / (100 * 10000);
+};

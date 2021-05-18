@@ -5,11 +5,13 @@ import TracerSelect from '@components/Trade/TracerSelect';
 import { SlideSelect, PlaceOrderButton } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Card, Button, Previous } from '@components/General';
-import { OrderAction, OrderState, Errors } from '@context/OrderContext';
+import { OrderAction, OrderState } from '@context/OrderContext';
 import styled from 'styled-components';
-import { calcLiquidationPrice, calcNotionalValue, toApproxCurrency } from '@libs/utils';
+import { calcLiquidationPrice, calcNotionalValue } from '@tracer-protocol/tracer-utils';
+import { toApproxCurrency } from '@libs/utils';
 import { Section } from '@components/SummaryInfo';
 import { UserBalance } from 'types';
+import Error from '../Error';
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;
@@ -162,30 +164,6 @@ const SButton = styled(Button)`
     }
 `;
 
-const Error = styled(({ className, error }) => {
-    return (
-        <div className={`${className} ${error !== -1 ? 'show' : ''}`}>{error !== -1 ? Errors[error].message : ''}</div>
-    );
-})`
-    background: #f15025;
-    border-radius: 0px 0px 5px 5px;
-    font-size: 16px;
-    letter-spacing: -0.32px;
-    color: #ffffff;
-    text-align: center;
-    position: absolute;
-    padding: 10px;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    transform: translateY(100%);
-    transition: all 0.4s ease-in-out;
-    opacity: 0;
-    &.show {
-        opacity: 1;
-    }
-`;
-
 const Basic: React.FC = styled(({ className }) => {
     const { selectedTracer } = useContext(TracerContext);
     const { order, exposure, orderDispatch } = useContext(OrderContext);
@@ -223,7 +201,7 @@ const Basic: React.FC = styled(({ className }) => {
                     }
                     order={order}
                     maxLeverage={selectedTracer?.maxLeverage ?? 1}
-                    fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0)}
+                    fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1)}
                     exposure={exposure ?? 0}
                 />
                 <PlaceOrderButton className="mt-auto">

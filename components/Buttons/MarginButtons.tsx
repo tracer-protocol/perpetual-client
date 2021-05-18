@@ -11,9 +11,10 @@ import {
     calcLeverage,
     calcLiquidationPrice,
     calcWithdrawable,
-    toApproxCurrency,
-    totalMargin,
-} from '@components/libs/utils';
+    calcTotalMargin,
+} from '@tracer-protocol/tracer-utils';
+
+import { toApproxCurrency } from '@components/libs/utils';
 
 type ButtonType = 'Deposit' | 'Withdraw';
 
@@ -31,7 +32,7 @@ export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
         quote: 0,
         tokenBalance: 0,
     };
-    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 0);
+    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1);
     const maxLeverage = selectedTracer?.maxLeverage ?? 1;
     const balance = type === 'Deposit' ? tokenBalance : calcWithdrawable(base, quote, fairPrice, maxLeverage);
 
@@ -81,9 +82,9 @@ export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
                             <h3 className="mt-10 text-left text-blue-100 text-lg">Margin {type} Summary</h3>
                             <div>
                                 <Section label={`Account Margin`}>
-                                    {toApproxCurrency(totalMargin(base, quote, fairPrice))}
+                                    {toApproxCurrency(calcTotalMargin(base, quote, fairPrice))}
                                     {'  ->  '}
-                                    {toApproxCurrency(totalMargin(base, newQuote, fairPrice))}
+                                    {toApproxCurrency(calcTotalMargin(base, newQuote, fairPrice))}
                                 </Section>
                                 <Section label={`Liquidation Price`}>
                                     {toApproxCurrency(calcLiquidationPrice(quote, base, fairPrice, maxLeverage))}

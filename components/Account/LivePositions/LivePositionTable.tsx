@@ -8,7 +8,8 @@ import { useClosePosition, useTracerOrders } from '@hooks/TracerHooks';
 
 import Link from 'next/link';
 import Web3 from 'web3';
-import { calcLiquidationPrice, toApproxCurrency, totalMargin } from '@libs/utils';
+import { toApproxCurrency } from '@libs/utils';
+import { calcTotalMargin, calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
 import { Tracer } from '@components/libs';
 import { TransactionContext } from '@components/context/TransactionContext';
 
@@ -142,7 +143,7 @@ const Row_: React.FC<RProps> = ({ tracer, selected, setTracerId }) => {
             rowData={[
                 marketId,
                 `${toApproxCurrency(price)}`,
-                `${toApproxCurrency(totalMargin(balance.base, balance.quote, price))}`,
+                `${toApproxCurrency(calcTotalMargin(balance.base, balance.quote, price))}`,
                 balance.base === 0 ? 'NO POSITION' : balance.base < 0 ? 'SHORT' : 'LONG',
                 `${toApproxCurrency(Math.abs(balance.base) * price)}`,
                 `${toApproxCurrency(
