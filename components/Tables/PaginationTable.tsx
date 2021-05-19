@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import TracerLoading from '@components/TracerLoading';
 import Table, { TableRow } from './Table';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 interface PProps {
     page: number;
@@ -58,46 +57,26 @@ const Pagination: React.FC<PProps> = ({ page, totalPages, setPage }: PProps) => 
             <ul className="flex m-auto">
                 <li>
                     {page === 0 ? (
-                        <FontAwesomeIcon
-                            className="m-auto mx-3 inline-block"
-                            size="sm"
-                            color="#d5d5d5"
-                            icon={faArrowLeft}
-                        />
+                        <LeftOutlined color={'#d5d5d5'} className={'m-auto mx-3 inline-block'} />
                     ) : (
                         <span
                             className="hover:bg-gray-100 rounded-lg font-bold cursor-pointer flex"
                             onClick={() => setPage(page - 1)}
                         >
-                            <FontAwesomeIcon
-                                className="m-auto mx-3 inline-block"
-                                size="sm"
-                                color="#0000bd"
-                                icon={faArrowLeft}
-                            />
+                            <LeftOutlined color={'#0000bd'} className={'m-auto mx-3 inline-block'} />
                         </span>
                     )}
                 </li>
                 {menu}
                 <li>
                     {page === totalPages - 1 ? (
-                        <FontAwesomeIcon
-                            className=" m-auto mx-3 inline-block"
-                            size="sm"
-                            color="#d5d5d5"
-                            icon={faArrowRight}
-                        />
+                        <RightOutlined color={'#d5d5d5'} className={'m-auto mx-3 inline-block'} />
                     ) : (
                         <span
                             className="hover:bg-gray-100 rounded-lg font-bold cursor-pointer flex"
                             onClick={() => setPage(page + 1)}
                         >
-                            <FontAwesomeIcon
-                                className="m-auto mx-3 inline-block"
-                                size="sm"
-                                color="#0000bd"
-                                icon={faArrowRight}
-                            />
+                            <RightOutlined color={'#0000bd'} className={'m-auto mx-3 inline-block'} />
                         </span>
                     )}
                 </li>

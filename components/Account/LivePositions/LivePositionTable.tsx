@@ -1,8 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { TracerContext } from 'context';
 import { Tracer } from 'libs';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import Table, { TableRow } from '@components/Tables';
 import TracerModal from '@components/Modals';
 
@@ -56,15 +54,7 @@ const TradeButtons: React.FC<{ tracer: string }> = ({ tracer }) => {
             <div className="flex flex-row">
                 <Link href={`/trade/basic?tracer=${tracer}`}>
                     <div className="aCell font-bold">
-                        <div className="mt-auto mb-auto w-full">
-                            Trade
-                            <FontAwesomeIcon
-                                className="h-4 ml-3 inline-block"
-                                size="sm"
-                                color="#0000bd"
-                                icon={faArrowRight}
-                            />
-                        </div>
+                        <div className="mt-auto mb-auto w-full">Trade</div>
                     </div>
                 </Link>
                 <div
@@ -74,15 +64,7 @@ const TradeButtons: React.FC<{ tracer: string }> = ({ tracer }) => {
                         setShow(true);
                     }}
                 >
-                    <div className="mt-auto mb-auto w-full">
-                        Close
-                        <FontAwesomeIcon
-                            className="h-4 ml-3 inline-block"
-                            size="sm"
-                            color="#0000bd"
-                            icon={faArrowRight}
-                        />
-                    </div>
+                    <div className="mt-auto mb-auto w-full">Close</div>
                 </div>
             </div>
             <TracerModal

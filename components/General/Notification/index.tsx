@@ -1,12 +1,11 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-    faCheckCircle,
-    faTimes,
-    faCircleNotch,
-    faExclamationCircle,
-    faInfo,
-    faFire,
-} from '@fortawesome/free-solid-svg-icons';
+    CheckCircleFilled,
+    CloseOutlined,
+    InfoCircleFilled,
+    WarningOutlined,
+    FireFilled,
+    LoadingOutlined,
+} from '@ant-design/icons';
 import styled from 'styled-components';
 
 type PlacementType = 'bottom-left' | 'bottom-center' | 'bottom-right' | 'top-left' | 'top-center' | 'top-right';
@@ -43,37 +42,43 @@ const appearances: Record<string, {
     bg: string
 }>= {
     success: {
-        icon: faCheckCircle,
+        icon: <CheckCircleFilled />,
         text: '#006644',
         fg: '#36B37E',
         bg: '#E3FCEF',
     },
     error: {
-        icon: faFire,
+        icon: <FireFilled />,
         text: '#BF2600',
         fg: '#FF5630',
         bg: '#FFEBE6',
     },
     warning: {
-        icon: faExclamationCircle,
+        icon: <WarningOutlined />,
         text: '#FF8B00',
         fg: '#FFAB00',
         bg: '#FFFAE6',
     },
     info: {
-        icon: faInfo,
+        icon: <InfoCircleFilled />,
         text: '#505F79',
         fg: '#2684FF',
         bg: 'white',
     },
     loading: {
-        icon: faCircleNotch,
+        icon: <LoadingOutlined />,
         text: '#505F79',
         fg: '#2684FF',
         bg: 'white',
     },
 };
 
+const IconWrap = styled.div`
+    width: 30px;
+    height: 30px;
+    font-size: 20px;
+    line-height: 20px;
+`
 const Icon: React.FC<any> = ({ appearance: appearance_, autoDismiss, autoDismissTimeout, isRunning }) => {
     const appearance = appearances[appearance_] ?? appearances['info'] //default info
     return (
@@ -88,13 +93,12 @@ const Icon: React.FC<any> = ({ appearance: appearance_, autoDismiss, autoDismiss
                 backgroundColor: appearance.fg,
                 color: appearance.bg,
                 width: 30,
-
             }}
         >
             <Countdown opacity={autoDismiss ? 1 : 0} autoDismissTimeout={autoDismissTimeout} isRunning={isRunning} />
-            <div className={`${appearance_ === 'loading' ? 'animate-spin' : ''}`}>
-                <FontAwesomeIcon color="#fff" icon={appearance.icon} style={{ width: '30px' }} />
-            </div>
+            <IconWrap>
+                {appearance.icon}
+            </IconWrap>
         </div>
     );
 };
@@ -146,6 +150,18 @@ type HProps = {
 
 const toastWidth = 360;
 
+const Close = styled(CloseOutlined)`
+    padding: 0;
+    margin-right: 0.3rem;
+    margin-top: 0.2rem;
+    margin-bottom: auto;
+    line-height: 14px;
+    transition: 0.3s;
+    &: hover {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+`
 const Hashie: React.FC<HProps | any> = ({
     transitionDuration,
     transitionState,
@@ -177,9 +193,7 @@ const Hashie: React.FC<HProps | any> = ({
                 isRunning={isRunning}
             />
             <Content>{children}</Content>
-            <div className="p-0 mr-2 mt-1 mb-auto cursor-pointer" onClick={onDismiss}>
-                <FontAwesomeIcon color={appearance.fg} icon={faTimes} />
-            </div>
+            <Close onClick={onDismiss}/>
         </div>
     );
 };
