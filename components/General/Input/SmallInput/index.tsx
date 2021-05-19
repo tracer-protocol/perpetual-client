@@ -1,7 +1,7 @@
 import React, { ChangeEvent } from 'react';
-import { Children } from '@components/types';
+import { Children } from 'types';
 import styled from 'styled-components';
-import { NumberInput } from '@components/components/General';
+import { NumberInput } from '@components/General';
 
 const InputContainer = styled.div`
     background: #002886;

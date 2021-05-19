@@ -4,7 +4,7 @@ import { SearchBar } from '@components/Nav/SearchBar';
 import { useAccountData } from '@hooks/GraphHooks/Account';
 import { Web3Context } from '@context/Web3Context';
 import Web3 from 'web3';
-import { toApproxCurrency } from '@components/libs/utils';
+import { toApproxCurrency } from 'libs/utils';
 
 type Trade = {
     id: string;

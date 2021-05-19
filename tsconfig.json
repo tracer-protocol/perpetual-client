@@ -21,12 +21,12 @@
         "jsx": "preserve",
         "baseUrl": ".",
         "paths": {
-            "@components/*": ["*", "components/*"],
-            "@types/*": ["*", "types/*"],
-            "@context/*": ["*", "context/*"],
-            "@hooks/*": ["*", "hooks/*"],
-            "@libs/*": ["*","libs/*"],
-            "@machines/*": ["*","machines/*"]
+            "@components/*": ["components/*"],
+            "@types/*": ["types/*"],
+            "@context/*": ["context/*"],
+            "@hooks/*": ["hooks/*"],
+            "@libs/*": ["libs/*"],
+            "@machines/*": ["machines/*"]
         },
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js", "hooks/GraphHooks"],

@@ -7,7 +7,7 @@ import { TakenOrder, OpenOrder } from 'types';
 import Web3 from 'web3';
 import { fromCents } from '@libs/utils';
 import tracerJSON from '@tracer-protocol/contracts/build/contracts/Tracer.json';
-import { Tracer } from '@components/libs';
+import { Tracer } from 'libs';
 import { Tracer as TracerType } from '@tracer-protocol/contracts/types/web3-v1-contracts/Tracer';
 
 /**

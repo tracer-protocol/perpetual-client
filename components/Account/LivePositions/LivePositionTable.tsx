@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { TracerContext, Web3Context } from 'context';
+import { TracerContext, Web3Context, TransactionContext } from 'context';
+import { Tracer } from 'libs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import Table, { TableRow } from '@components/Tables';
@@ -10,8 +11,6 @@ import Link from 'next/link';
 import Web3 from 'web3';
 import { toApproxCurrency } from '@libs/utils';
 import { calcTotalMargin, calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
-import { Tracer } from '@components/libs';
-import { TransactionContext } from '@components/context/TransactionContext';
 
 type PCProps = {
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;

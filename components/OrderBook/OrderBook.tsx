@@ -1,9 +1,9 @@
-import { OMEOrder } from '@components/types/OrderTypes';
+import { OMEOrder } from 'types/OrderTypes';
 import React from 'react';
 
 import { Order } from './Orders';
 import styled from 'styled-components';
-import { TradingTable } from '../Tables/TradingTable';
+import { TradingTable } from '@components/Tables/TradingTable';
 interface OProps {
     askOrders: OMEOrder[]; //TODO change these
     bidOrders: OMEOrder[];

@@ -2,8 +2,8 @@ import React, { useState, useContext } from 'react';
 import { SelectedTracerStore, TracerContext } from 'context';
 import { SearchBar } from '@components/Nav/SearchBar';
 import { SearchableTable } from '@components/Tables/SearchableTable';
-import { NumberSelect } from '@components/Input/NumberSelect';
-import { Section } from '@components/SummaryInfo';
+import { NumberSelect } from '@components/General/Input/NumberSelect';
+import { Section } from '@components/General';
 
 const PoolSummary: React.FC = () => {
     return (

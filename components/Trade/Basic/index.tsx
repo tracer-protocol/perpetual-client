@@ -9,7 +9,7 @@ import { OrderAction, OrderState } from '@context/OrderContext';
 import styled from 'styled-components';
 import { calcLiquidationPrice, calcNotionalValue } from '@tracer-protocol/tracer-utils';
 import { toApproxCurrency } from '@libs/utils';
-import { Section } from '@components/SummaryInfo';
+import { Section } from '@components/General';
 import { UserBalance } from 'types';
 import Error from '../Error';
 

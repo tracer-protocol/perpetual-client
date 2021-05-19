@@ -1,4 +1,4 @@
-export { PlaceOrderButton, OrderSummaryButtons, AdvancedOrderButton } from './OrderButton';
+export { PlaceOrderButton, AdvancedOrderButton } from './OrderButton';
 
 export { default as Button } from './Button';
 

@@ -6,7 +6,7 @@ import { AbiItem } from 'web3-utils';
 import { TracerContext } from './TracerContext';
 import { Account } from '@tracer-protocol/contracts/types/web3-v1-contracts/Account';
 import accountJSON from '@tracer-protocol/contracts/build/contracts/Account.json';
-import { checkAllowance } from '@components/libs/web3/utils';
+import { checkAllowance } from 'libs/web3/utils';
 interface ContextProps {
     deposit: (amount: number) => any;
     withdraw: (amount: number) => any;

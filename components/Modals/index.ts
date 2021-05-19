@@ -1,2 +1,4 @@
-export { default } from './Modal';
-export { ModalContent } from './AccountModals';
+export * from './AccountModals';
+export * from './InsuranceModal';
+import TracerModal from './Modal';
+export default TracerModal;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Children } from 'types';
 import styled from 'styled-components';
-import { BasicInputContainer, Input } from '@components/General';
+import { BasicInputContainer, Input } from '../';
 
 const Unit = styled.span`
     font-size: 18px;
@@ -63,8 +63,9 @@ export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title
                     id="username"
                     type="number"
                     autoComplete="off"
+                    min={0}
                     placeholder="0.0"
-                    onChange={(e) => setAmount(parseFloat(e.target.value))}
+                    onChange={(e) => setAmount(Math.abs(parseFloat(e.target.value)))}
                     value={amount ? amount : ''}
                 />
                 <Unit>{unit}</Unit>

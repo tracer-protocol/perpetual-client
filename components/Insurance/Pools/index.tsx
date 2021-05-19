@@ -4,11 +4,11 @@ import { TracerContext, InsuranceContext } from 'context';
 import { useRouter } from 'next/router';
 import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 'types';
 import styled from 'styled-components';
-import ProgressBar from '@components/ProgressBar';
+import { ProgressBar } from '@components/General';
 import { Button, Logo } from '@components/General';
 import { CaretDownFilled } from '@ant-design/icons';
 import Breakdown from '../PoolHealth/Breakdown';
-import { InsuranceModal } from '@components/components/Modals/InsuranceModal';
+import { InsuranceModal } from '@components/Modals/InsuranceModal';
 
 const TableHead = styled.th`
     color: #3da8f5;

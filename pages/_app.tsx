@@ -9,8 +9,8 @@ import '../styles/index.css';
 import { ToastProvider } from 'react-toast-notifications';
 import { Web3Store } from '@context/Web3Context';
 import GraphProvider from '@libs/Graph';
-import { Notification } from '@components/Notifications/Notification';
-import { TransactionStore } from '@components/context/TransactionContext';
+import { Notification } from '@components/General/Notification';
+import { TransactionStore } from '@context/TransactionContext';
 
 const App = ({ Component, pageProps }: AppProps) => {  // eslint-disable-line
     return (

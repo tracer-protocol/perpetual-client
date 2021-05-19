@@ -1,9 +1,9 @@
 import React from 'react';
 import { OrderContext } from 'context';
 import { useContext } from 'react';
-import SmallInput from '@components/Input/SmallInput';
+import SmallInput from '@components/General/Input/SmallInput';
 import { calcWithdrawable } from '@tracer-protocol/tracer-utils';
-import { Tracer } from '@components/libs';
+import { Tracer } from 'libs';
 interface ISProps {
     selectedTracer: Tracer | undefined;
     amount: number;

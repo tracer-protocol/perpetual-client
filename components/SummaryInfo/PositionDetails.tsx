@@ -8,8 +8,8 @@ import {
     calcProfitableLiquidationPrice,
     calcNotionalValue,
 } from '@tracer-protocol/tracer-utils';
-import { Section } from './';
-import { UserBalance } from '@components/types';
+import { Section } from '@components/General';
+import { UserBalance } from 'types';
 import styled from 'styled-components';
 
 interface IProps {

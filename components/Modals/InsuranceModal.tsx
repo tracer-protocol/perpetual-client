@@ -1,17 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TracerContext } from '@context/TracerContext';
 import { InsuranceContext } from '@context/InsuranceContext';
-import TracerModal from '@components/Modals';
-import { Section } from '@components/SummaryInfo';
+import { TransactionContext } from '@context/TransactionContext';
 import { Children } from 'types';
-import { TransactionContext } from '@components/context/TransactionContext';
-import NumberSelect from '../Input/NumberSelect';
 import { toApproxCurrency } from '@libs/utils';
 import SlideSelect from '../Buttons/SlideSelect';
 import { Option } from '@components/Buttons/SlideSelect/Options';
-import { Button, Checkbox, Dropdown, HiddenExpand, Previous } from '@components/General';
+import { Button, Checkbox, Dropdown, HiddenExpand, Previous, NumberSelect, Section } from '@components/General';
 import styled from 'styled-components';
-import { SubTitle } from './Modal';
+import TracerModal, { SubTitle } from './Modal';
 import { CaretDownFilled } from '@ant-design/icons';
 
 const SSlideSelect = styled(SlideSelect)`
