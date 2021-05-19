@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import TracerModal from '@components/Modals';
 import { OrderState, OrderTypeMapping, Errors } from '@context/OrderContext';
-import { TracerContext, OrderContext } from 'context';
+import { OrderContext, TracerContext } from 'context';
 import { Children, UserBalance } from 'types';
 import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
@@ -57,7 +57,7 @@ type POBProps = {
 
 export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
-    const { takenOrders, order } = useContext(OrderContext);
+    const { order } = useContext(OrderContext);
     const { rMargin, price, orderType } = order as OrderState;
     const { addToast } = useToasts();
     const [showOrder, setShowOrder] = useState(false);
@@ -67,7 +67,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
         if (order?.error !== -1) {
             setLoading(true);
             placeOrder
-                ? await placeOrder(order as OrderState, takenOrders ?? [])
+                ? await placeOrder(order as OrderState)
                 : console.error('Error placing order: Place order function is not defined');
             setLoading(false);
             setShowOrder(false);
@@ -81,7 +81,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
 
     const message = () => {
         if (orderType === 0) {
-            return `Using $${rMargin} to place ${takenOrders?.length} orders at an average price of ${price}`;
+            return `Using $${rMargin} to place 0 orders at an average price of ${price}`;
         } else if (orderType === 1) {
             return `Using $${rMargin} to place a ${OrderTypeMapping[orderType]} order at $${price}`;
         }

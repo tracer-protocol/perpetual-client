@@ -1,128 +1,13 @@
 import { useEffect, useState, useContext } from 'react';
 import { FactoryContext } from '@context/FactoryContext';
-import { ErrorContext } from '@context/ErrorInfoContext';
 import { AbiItem } from 'web3-utils';
 
-import { TakenOrder, OpenOrder } from 'types';
+import { OpenOrder } from 'types';
 import Web3 from 'web3';
 import { fromCents } from '@libs/utils';
 import tracerJSON from '@tracer-protocol/contracts/build/contracts/Tracer.json';
 import { Tracer } from 'libs';
 import { Tracer as TracerType } from '@tracer-protocol/contracts/types/web3-v1-contracts/Tracer';
-
-/**
- * Calculates a theoretical market exposure if it took all the 'best' orders it could
- *  Returns this exposure and the orders that allow it to gain this exposure
- * @param rMargin margin entered to use by the user
- * @param leverage leverage of the trade
- * @param position long or short boolean pepresentation of the position
- */
-export const useCalcExposure: (
-    // this is my shitty order book implementation
-    rMargin: number,
-    leverage: number,
-    position: boolean,
-    orders: OpenOrder[],
-) => { exposure: number; takenOrders: TakenOrder[]; tradePrice: number } = (rMargin, leverage, position, orders) => {
-    const { setError } = useContext(ErrorContext);
-    const [exposure, setExposure] = useState(0);
-    const [tradePrice, setTradePrice] = useState(0);
-    const [takenOrders, setTakenOrders] = useState<TakenOrder[]>([]);
-
-    useEffect(() => {
-        if (orders.length) {
-            // const oppositeOrders = position ? openOrders[0] : openOrders[1];
-            let exposure = 0,
-                totalUnitPrice = 0,
-                units = 0;
-            const takenOrders: TakenOrder[] = [];
-            let partialOrder = false;
-            let deposit = rMargin * leverage; // units of underlying
-            for (const order of orders) {
-                const orderR = order.amount - order.filled; // units of asset
-                const orderPrice = order.price;
-                const r = deposit - orderR * orderPrice;
-                if (r >= 0) {
-                    // if it can eat the whole order
-                    totalUnitPrice += orderPrice * orderR;
-                    units += orderR;
-                    exposure += orderR; // units of the assets
-                    deposit -= orderR * orderPrice; // subtract the remainder in units of underLying
-                    takenOrders.push({
-                        id: order.id,
-                        amount: orderR,
-                        price: order.price,
-                    });
-                } else {
-                    // eat a bit of the order nom nom
-                    if (deposit) {
-                        totalUnitPrice += deposit;
-                        units += deposit / orderPrice;
-                        exposure += deposit / orderPrice;
-                        takenOrders.push({
-                            id: order.id,
-                            amount: deposit / orderPrice, // take what is yours
-                            price: order.price,
-                        });
-                        partialOrder = true;
-                    }
-                    break;
-                }
-            }
-            // condition is taken all orders
-            const condition = takenOrders.length === orders.length && !partialOrder && orders.length;
-            condition ? setError(2, 2) : setError(0, 2);
-            setExposure(parseFloat(exposure.toFixed(10)));
-            setTradePrice(units ? totalUnitPrice / units : orders[0].price); // market price if no trade price
-            setTakenOrders(takenOrders);
-        }
-    }, [orders, rMargin, leverage, position]);
-
-    return { exposure, takenOrders, tradePrice };
-};
-
-/**
- * Function which closes the users positions by taking the appropriate trades
- *
- */
-export const useClosePosition: (position: number, openOrders: Record<string, OpenOrder[]>) => TakenOrder[] = (
-    position,
-    openOrders,
-) => {
-    const [takenOrders, setTakenOrders] = useState<TakenOrder[]>([]);
-    useEffect(() => {
-        if (openOrders && position) {
-            const oppositeOrders = position < 0 ? openOrders.shortOrders : openOrders.longOrders;
-            // position > 0 is a long position, thus interested in short orders
-            const takenOrders: TakenOrder[] = [];
-            let closingPosition = Math.abs(position);
-            for (const order of oppositeOrders) {
-                const orderR = order.amount - order.filled;
-                const r = closingPosition - orderR;
-                if (r >= 0) {
-                    // take whole order
-                    closingPosition -= orderR;
-                    takenOrders.push({
-                        id: order.id,
-                        amount: orderR, // take what is yours
-                        price: order.price,
-                    });
-                } else {
-                    // take partial order
-                    takenOrders.push({
-                        id: order.id,
-                        amount: closingPosition, // take what is yours
-                        price: order.price,
-                    });
-                    break;
-                }
-            }
-            setTakenOrders(takenOrders);
-        }
-    }, [openOrders, position]);
-
-    return takenOrders;
-};
 
 /**
  * Function which gets all available market pairs from the tracer factory.
@@ -149,24 +34,6 @@ export const useMarketPairs: () => Record<string, string[]> = () => {
     }, [tracers]);
 
     return marketPairs;
-};
-
-export const useAdvancedTradingMarkets: () => string[][] = () => {
-    const { tracers } = useContext(FactoryContext);
-
-    const [rows, setRows] = useState<string[][]>([]);
-    useEffect(() => {
-        if (tracers) {
-            const ids = Object.keys(tracers);
-            setRows(
-                ids.map((id) => {
-                    return [id, '11, 345 USDC', '+0.13%', '-0.13%'];
-                }),
-            );
-        }
-    }, [tracers]);
-
-    return rows;
 };
 
 /**

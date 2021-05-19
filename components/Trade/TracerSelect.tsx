@@ -5,7 +5,7 @@ import { CaretDownFilled, LockOutlined, UnlockOutlined } from '@ant-design/icons
 import { OrderContext, TracerContext } from 'context';
 import { OrderAction, OrderState } from '@context/OrderContext';
 import styled from 'styled-components';
-import { useMarketPairs } from '../../hooks';
+import { useMarketPairs } from 'hooks/TracerHooks';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Button, Logo, BasicInputContainer, Input } from '@components/General';
