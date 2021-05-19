@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Button } from '@components/Buttons';
-import { NumberSelect } from '@components/Input/NumberSelect';
+import { NumberSelect } from '@components/General';
 import { TracerContext } from 'context';
 import { Children } from 'types';
 

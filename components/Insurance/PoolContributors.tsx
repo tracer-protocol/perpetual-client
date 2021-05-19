@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Table, { TableRow } from '@components/Tables';
 import { SubNavBar } from '@components/Nav';
-import { Holding } from '@components/types';
+import { Holding } from 'types';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 
 const parseInsuranceData = (holdings: Holding[], liquidity: number) => {

@@ -5,3 +5,4 @@ export { SelectedTracerStore, TracerContext } from './TracerContext';
 export { InsuranceContext, InsuranceStore } from './InsuranceContext';
 export { FactoryContext, FactoryStore } from './FactoryContext';
 export { AccountContext, AccountStore } from './AccountContext';
+export { TransactionContext, TransactionStore } from './TransactionContext';

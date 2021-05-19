@@ -6,9 +6,9 @@ import { AbiItem } from 'web3-utils';
 import { Insurance } from '@tracer-protocol/contracts/types/web3-v1-contracts/Insurance';
 import insuranceJSON from '@tracer-protocol/contracts/build/contracts/Insurance.json';
 import { TracerContext } from './TracerContext';
-import { checkAllowance } from '@components/libs/web3/utils';
+import { checkAllowance } from 'libs/web3/utils';
 import { FactoryContext } from '.';
-import { Tracer } from '@components/libs';
+import { Tracer } from 'libs';
 interface ContextProps {
     poolInfo: InsurancePoolInfo;
     deposit: (amount: number) => Promise<Result>;

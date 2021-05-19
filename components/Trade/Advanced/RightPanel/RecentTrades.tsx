@@ -1,5 +1,5 @@
-import { TradingTable } from '@components/components/Tables/TradingTable';
-import { toApproxCurrency } from '@components/libs/utils';
+import { TradingTable } from '@components/Tables/TradingTable';
+import { toApproxCurrency } from '@libs/utils';
 import React from 'react';
 import styled from 'styled-components';
 

@@ -2,47 +2,10 @@ import React, { useContext, useState, useEffect } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import TracerModal from '@components/Modals';
 import { OrderState, OrderTypeMapping, Errors } from '@context/OrderContext';
-import { TracerContext, OrderContext, ErrorContext } from 'context';
-import AlertInfo from '@components/Notifications/AlertInfo';
-import { MarginDeposit } from '@components/Buttons';
+import { OrderContext, TracerContext } from 'context';
 import { Children, UserBalance } from 'types';
 import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
-
-// TODO change these requirements to not use balance.quote
-// balance.quote is not the right value for this need to calculated available margin in the account
-export const OrderSummaryButtons: React.FC<{ balances: UserBalance }> = ({ balances }) => {
-    const { show, text, variant, setError } = useContext(ErrorContext);
-    const { order } = useContext(OrderContext);
-    const rMargin = order?.rMargin ?? 0;
-
-    useEffect(() => {
-        if (!!balances) {
-            // Margin is greater than margin in account
-            balances?.quote < rMargin && balances?.quote >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
-        }
-    }, [rMargin]);
-
-    return (
-        <div>
-            <div className="w-3/4 pt-5 m-auto h-24">
-                <AlertInfo show={show} text={text} variant={variant} />
-            </div>
-            <div className="py-5 flex">
-                {balances?.quote === 0 ? (
-                    <div className="m-auto w-1/2">
-                        <MarginDeposit />
-                    </div>
-                ) : (
-                    ''
-                )}
-                <div className="m-auto w-1/2 flex justify-center">
-                    <PlaceOrderButton />
-                </div>
-            </div>
-        </div>
-    );
-};
 
 const TradeButton = styled.div`
     letter-spacing: -0.32px;
@@ -94,7 +57,7 @@ type POBProps = {
 
 export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
-    const { takenOrders, order } = useContext(OrderContext);
+    const { order } = useContext(OrderContext);
     const { rMargin, price, orderType } = order as OrderState;
     const { addToast } = useToasts();
     const [showOrder, setShowOrder] = useState(false);
@@ -104,7 +67,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
         if (order?.error !== -1) {
             setLoading(true);
             placeOrder
-                ? await placeOrder(order as OrderState, takenOrders ?? [])
+                ? await placeOrder(order as OrderState)
                 : console.error('Error placing order: Place order function is not defined');
             setLoading(false);
             setShowOrder(false);
@@ -118,7 +81,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
 
     const message = () => {
         if (orderType === 0) {
-            return `Using $${rMargin} to place ${takenOrders?.length} orders at an average price of ${price}`;
+            return `Using $${rMargin} to place 0 orders at an average price of ${price}`;
         } else if (orderType === 1) {
             return `Using $${rMargin} to place a ${OrderTypeMapping[orderType]} order at $${price}`;
         }

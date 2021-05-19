@@ -1,7 +1,6 @@
 import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
+import { SearchOutlined } from '@ant-design/icons';
 interface SBProps {
     filter: string;
     setFilter: (filter: string) => void;
@@ -11,12 +10,7 @@ interface SBProps {
 export const SearchBar: React.FC<SBProps> = ({ filter, setFilter, cClasses }: SBProps) => {
     return (
         <div className={`relative text-black border-2 border-gray-100 rounded-full flex ${cClasses}`}>
-            <FontAwesomeIcon
-                className="h-4 mt-auto mb-auto ml-3 inline-block"
-                size="sm"
-                color="#0000bd"
-                icon={faSearch}
-            />
+            <SearchOutlined className="h-4 mt-auto mb-auto ml-3 inline-block" color="#0000bd" />
             <input
                 type="search"
                 value={filter}

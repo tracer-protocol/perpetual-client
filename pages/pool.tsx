@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBar from '@components/components/Nav/Navbar';
+import NavBar from '@components/Nav/Navbar';
 import Pools from '@components/Pool';
 
 const Pool: React.FC = () => {

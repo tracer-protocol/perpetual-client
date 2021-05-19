@@ -1,5 +1,5 @@
 import React from 'react';
-import NavBar from '@components/components/Nav/Navbar';
+import NavBar from '@components/Nav/Navbar';
 import Loading from '@components/Loading/Loading';
 import { InsuranceStore } from '@context/InsuranceContext';
 import { SelectedTracerStore } from '@context/TracerContext';

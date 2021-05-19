@@ -1,4 +1,4 @@
-import { toApproxCurrency } from '@components/libs/utils';
+import { toApproxCurrency } from 'libs/utils';
 import React from 'react';
 import styled from 'styled-components';
 

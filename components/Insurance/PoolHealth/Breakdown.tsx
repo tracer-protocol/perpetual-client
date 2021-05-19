@@ -12,7 +12,6 @@ const calcRemainder = (target: number, liquidity: number, userBalance: number, b
 };
 
 const denom = (target: number, liquidity: number) => (target > liquidity ? target : liquidity);
-
 interface BProps {
     target: number;
     liquidity: number;

@@ -4,15 +4,15 @@ import LightWeightChart from '@components/Charts/LightWeightChart';
 import Timer from '@components/Timer';
 import OrderBook from '@components/OrderBook/OrderBook';
 import { MarketSelect, TradingInput, AccountPanel } from './TradingPanel';
-import { getOrders } from '@components/libs/Ome';
+import { getOrders } from 'libs/Ome';
 import Web3 from 'web3';
 import Tracer from '@libs/Tracer';
 import { PositionDetails } from '@components/SummaryInfo/PositionDetails';
-import { InsuranceInfo } from '@components/SummaryInfo/InsuranceInfo';
+import { InsuranceInfo } from './RightPanel/InsuranceInfo';
 import { SubNav } from '@components/Nav/SubNavBar';
 import { Box } from '@components/General';
 import styled from 'styled-components';
-import RecentTrades from './RecentTrades';
+import RecentTrades from './RightPanel/RecentTrades';
 
 const GraphWrap = styled.div`
     height: 500px;

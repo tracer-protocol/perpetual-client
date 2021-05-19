@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useReducer } from 'react';
 import { FactoryContext } from './FactoryContext';
-import { Children, Result, TakenOrder, UserBalance } from 'types';
+import { Children, Result, UserBalance } from 'types';
 import { isEmpty } from 'lodash';
 import { createBook, createOrder } from '@libs/Ome';
 import { Web3Context } from './Web3Context';
@@ -8,7 +8,6 @@ import { OrderState } from './OrderContext';
 import Web3 from 'web3';
 import { signOrders, orderToOMEOrder, OrderData } from '@tracer-protocol/tracer-utils';
 import Tracer from '@libs/Tracer';
-import { TransactionContext } from './TransactionContext';
 
 interface ContextProps {
     tracerId: string | undefined;
@@ -17,7 +16,7 @@ interface ContextProps {
     baseAsset: string | undefined;
     quoteAsset: string | undefined;
     balance: UserBalance;
-    placeOrder: (order: OrderState, takenOrders: TakenOrder[]) => Promise<Result | undefined>;
+    placeOrder: (order: OrderState) => Promise<Result | undefined>;
 }
 
 export const TracerContext = React.createContext<Partial<ContextProps>>({});
@@ -35,7 +34,6 @@ type StoreProps = {
 export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
     const { account, web3, config } = useContext(Web3Context);
     const { tracers } = useContext(FactoryContext);
-    const { handleTransaction } = useContext(TransactionContext);
     const initialState: TracerState = {
         tracerId: tracer || 'TEST0/USD',
         selectedTracer: undefined,
@@ -87,59 +85,27 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     };
 
-    const placeOrder = async (order: OrderState, takenOrders: TakenOrder[]) => {
-        const { rMargin, price, orderType, position, matchingEngine } = order;
-        if (matchingEngine === 1) {
-            // OME order
-            const parsedPrice = price * selectedTracer?.priceMultiplier;
-            const amount = Web3.utils.toWei(rMargin.toString()) ?? 0;
-            const expiration = new Date().getTime() + 604800;
-            const makes: OrderData[] = [
-                {
-                    amount: amount,
-                    price: parsedPrice.toString(),
-                    side: position === 0,
-                    user: account ?? '',
-                    expiration: expiration,
-                    targetTracer: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer.address) : '',
-                    nonce: 5101,
-                },
-            ];
-            const signedMakes = await signOrders(web3, makes, config?.contracts.trader.address as string);
-            const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
-            await createOrder(selectedTracer?.address as string, omeOrder);
-            return { status: 'success' } as Result; // TODO add error check
-        } else if (matchingEngine === 0) {
-            // On-chain
-            if (orderType === 0) {
-                if (!selectedTracer?.takeOrders) {
-                    return {
-                        status: 'error',
-                        message: 'Failed to take order: Take order function is undefined',
-                    } as Result;
-                } else {
-                    handleTransaction
-                        ? await handleTransaction(selectedTracer.takeOrders, [takenOrders ?? [], account])
-                        : console.error('Failed to make order: Handle transaction function undefined');
-                }
-            } else if (orderType === 1) {
-                if (!selectedTracer?.makeOrder) {
-                    return {
-                        status: 'error',
-                        message: 'Failed to make order: Make order function is undefined',
-                    } as Result;
-                } else {
-                    handleTransaction
-                        ? await handleTransaction(selectedTracer.makeOrder, [
-                              rMargin,
-                              Math.round(price * 1000000),
-                              position === 1, // if === 1 then long else false short
-                              account,
-                          ])
-                        : console.error('Failed to create order: Handle transaction function undefined');
-                }
-            }
-        }
+    const placeOrder = async (order: OrderState) => {
+        const { rMargin, price, position } = order;
+        // all orders are OME orders
+        const parsedPrice = price * selectedTracer?.priceMultiplier;
+        const amount = Web3.utils.toWei(rMargin.toString()) ?? 0;
+        const expiration = new Date().getTime() + 604800;
+        const makes: OrderData[] = [
+            {
+                amount: amount,
+                price: parsedPrice.toString(),
+                side: position === 0,
+                user: account ?? '',
+                expiration: expiration,
+                targetTracer: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer.address) : '',
+                nonce: 5101,
+            },
+        ];
+        const signedMakes = await signOrders(web3, makes, config?.contracts.trader.address as string);
+        const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
+        await createOrder(selectedTracer?.address as string, omeOrder);
+        return { status: 'success' } as Result; // TODO add error check
     };
 
     useEffect(() => {

@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TracerContext, AccountContext } from 'context';
 import TracerModal from '@components/Modals';
-import { Section } from '@components/SummaryInfo';
+import { Section } from '@components/General';
 import { Children } from 'types';
-import { TransactionContext } from '@components/context/TransactionContext';
-import NumberSelect from '../Input/NumberSelect';
+import { TransactionContext } from '@context/TransactionContext';
+import NumberSelect from '../General/Input/NumberSelect';
 import { Button } from '.';
 import {
     calcBorrowed,
@@ -14,7 +14,7 @@ import {
     calcTotalMargin,
 } from '@tracer-protocol/tracer-utils';
 
-import { toApproxCurrency } from '@components/libs/utils';
+import { toApproxCurrency } from 'libs/utils';
 
 type ButtonType = 'Deposit' | 'Withdraw';
 

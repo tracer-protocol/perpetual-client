@@ -1,46 +1,19 @@
 import React, { useContext, useState } from 'react';
-import { TracerContext, Web3Context } from 'context';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { TracerContext } from 'context';
+import { Tracer } from 'libs';
 import Table, { TableRow } from '@components/Tables';
 import TracerModal from '@components/Modals';
-import { useClosePosition, useTracerOrders } from '@hooks/TracerHooks';
 
 import Link from 'next/link';
-import Web3 from 'web3';
 import { toApproxCurrency } from '@libs/utils';
 import { calcTotalMargin, calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
-import { Tracer } from '@components/libs';
-import { TransactionContext } from '@components/context/TransactionContext';
 
-type PCProps = {
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-    setShow: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-const PositionClose: ({ setLoading, setShow }: PCProps) => any = ({ setLoading, setShow }: PCProps) => {
-    const { web3, account } = useContext(Web3Context);
+/** ALll subject to change */
+const PositionClose: () => any = () => {
     const { selectedTracer, tracerId } = useContext(TracerContext);
-    const { handleTransaction } = useContext(TransactionContext);
     const balances = selectedTracer?.balances ?? { base: 0 };
-    const openOrders = useTracerOrders(web3 as Web3, selectedTracer as Tracer);
-    const closingOrders = useClosePosition(balances.base ?? 0, openOrders);
 
-    const close = async () => {
-        setLoading(true);
-        if (selectedTracer) {
-            const callBack = async () => {
-                await selectedTracer?.updateUserBalance(account);
-                setLoading(false);
-                setShow(false);
-            };
-            handleTransaction
-                ? await handleTransaction(selectedTracer?.takeOrders, [closingOrders ?? [], account], callBack)
-                : console.error('Failed to make order: Handle transaction function undefined');
-        } else {
-            console.error('Failed to make order: No selected Tracer');
-        }
-    };
+    const close = async () => null;
 
     return (
         <div className="p-6 h-full flex-auto">
@@ -76,22 +49,12 @@ const PositionClose: ({ setLoading, setShow }: PCProps) => any = ({ setLoading, 
 
 const TradeButtons: React.FC<{ tracer: string }> = ({ tracer }) => {
     const [show, setShow] = useState(false);
-    const [loading, setLoading] = useState(false);
-
     return (
         <td className="cCell">
             <div className="flex flex-row">
                 <Link href={`/trade/basic?tracer=${tracer}`}>
                     <div className="aCell font-bold">
-                        <div className="mt-auto mb-auto w-full">
-                            Trade
-                            <FontAwesomeIcon
-                                className="h-4 ml-3 inline-block"
-                                size="sm"
-                                color="#0000bd"
-                                icon={faArrowRight}
-                            />
-                        </div>
+                        <div className="mt-auto mb-auto w-full">Trade</div>
                     </div>
                 </Link>
                 <div
@@ -101,25 +64,17 @@ const TradeButtons: React.FC<{ tracer: string }> = ({ tracer }) => {
                         setShow(true);
                     }}
                 >
-                    <div className="mt-auto mb-auto w-full">
-                        Close
-                        <FontAwesomeIcon
-                            className="h-4 ml-3 inline-block"
-                            size="sm"
-                            color="#0000bd"
-                            icon={faArrowRight}
-                        />
-                    </div>
+                    <div className="mt-auto mb-auto w-full">Close</div>
                 </div>
             </div>
             <TracerModal
-                loading={loading}
+                loading={false}
                 show={show}
                 onClose={() => setShow(false)}
                 title={'Close Position'}
                 subTitle={`Making this trade will setlle your current position within the ${tracer} market`}
             >
-                <PositionClose setShow={setShow} setLoading={setLoading} />
+                <PositionClose />
             </TracerModal>
         </td>
     );

@@ -4,10 +4,9 @@ import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
 import { calcTotalMargin, calcMinimumMargin } from '@tracer-protocol/tracer-utils';
 import { After, Box, Button, Close, HiddenExpand, Previous } from '@components/General';
-import { Web3Context } from '@components/context';
-import NumberSelect from '@components/Input/NumberSelect';
-import { Section } from '@components/SummaryInfo';
-import { UserBalance } from '@components/types';
+import { Web3Context } from 'context';
+import { NumberSelect, Section } from '@components/General';
+import { UserBalance } from 'types';
 import Error from '@components/Trade/Error';
 
 const MinHeight = 250;
