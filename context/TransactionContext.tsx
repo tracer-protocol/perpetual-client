@@ -30,14 +30,14 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         const res = callMethod(...params);
         Promise.resolve(res).then((res) => {
             if (res.status === 'error') {
-                updateToast((toastId as unknown) as string, {
+                updateToast(toastId as unknown as string, {
                     // confirmed this is a string
                     content: `Transaction cancelled. ${res.message}`,
                     appearance: 'error',
                     autoDismiss: true,
                 });
             } else {
-                updateToast((toastId as unknown) as string, {
+                updateToast(toastId as unknown as string, {
                     content: `${res.message}`,
                     appearance: 'success',
                     autoDismiss: true,

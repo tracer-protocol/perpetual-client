@@ -14,12 +14,12 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
     const main = useRef(null);
     const body = useRef(null);
     useEffect(() => {
-        const b = (body.current as unknown) as HTMLDivElement;
+        const b = body.current as unknown as HTMLDivElement;
         if (open) {
             // all heights plus 10px for padding
-            ((main.current as unknown) as HTMLDivElement).style.height = `${b.clientHeight + 10}px`;
+            (main.current as unknown as HTMLDivElement).style.height = `${b.clientHeight + 10}px`;
         } else {
-            ((main.current as unknown) as HTMLDivElement).style.height = `${defaultHeight}px`;
+            (main.current as unknown as HTMLDivElement).style.height = `${defaultHeight}px`;
         }
     }, [open]);
     return (
@@ -68,13 +68,13 @@ export const Dropdown: React.FC<DProps> = styled(({ className, header, body, def
     const _header = useRef(null);
     const _body = useRef(null);
     useEffect(() => {
-        const h = (_header.current as unknown) as HTMLDivElement;
-        const b = (_body.current as unknown) as HTMLDivElement;
+        const h = _header.current as unknown as HTMLDivElement;
+        const b = _body.current as unknown as HTMLDivElement;
         if (open) {
             // all heights plus 10px for padding
-            ((main.current as unknown) as HTMLDivElement).style.height = `${h.clientHeight + b.clientHeight + 10}px`;
+            (main.current as unknown as HTMLDivElement).style.height = `${h.clientHeight + b.clientHeight + 10}px`;
         } else {
-            ((main.current as unknown) as HTMLDivElement).style.height = `${
+            (main.current as unknown as HTMLDivElement).style.height = `${
                 !!h.clientHeight ? h.clientHeight : defaultHeight
             }px`;
         }

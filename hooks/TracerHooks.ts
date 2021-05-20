@@ -5,9 +5,9 @@ import { AbiItem } from 'web3-utils';
 import { OpenOrder } from 'types';
 import Web3 from 'web3';
 import { fromCents } from '@libs/utils';
-import tracerJSON from '@tracer-protocol/contracts/build/contracts/Tracer.json';
+import tracerJSON from '@tracer-protocol/contracts/abi/contracts/TracerPerpetualSwaps.sol/TracerPerpetualSwaps.json';
 import { Tracer } from 'libs';
-import { Tracer as TracerType } from '@tracer-protocol/contracts/types/web3-v1-contracts/Tracer';
+import { TracerPerpetualSwaps as TracerType } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 
 /**
  * Function which gets all available market pairs from the tracer factory.
@@ -50,7 +50,7 @@ export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record
 
     useEffect(() => {
         if (web3 && tracer) {
-            setContract((new web3.eth.Contract(tracerJSON.abi as AbiItem[], tracer.address) as unknown) as TracerType);
+            setContract(new web3.eth.Contract(tracerJSON as AbiItem[], tracer.address) as unknown as TracerType);
         }
     }, [web3, tracer]);
     const [openOrders, setOpenOrders] = useState<Record<string, OpenOrder[]>>({ longOrders: [], shortOrders: [] });

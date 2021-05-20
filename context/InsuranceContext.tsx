@@ -3,8 +3,8 @@ import { Children, InsurancePoolInfo, Result } from 'types';
 import { Web3Context } from './Web3Context';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
-import { Insurance } from '@tracer-protocol/contracts/types/web3-v1-contracts/Insurance';
-import insuranceJSON from '@tracer-protocol/contracts/build/contracts/Insurance.json';
+import { Insurance } from '@tracer-protocol/contracts/types/Insurance';
+import insuranceJSON from '@tracer-protocol/contracts/abi/contracts/Insurance.sol/Insurance.json';
 import { TracerContext } from './TracerContext';
 import { checkAllowance } from 'libs/web3/utils';
 import { FactoryContext } from '.';
@@ -88,9 +88,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     useEffect(() => {
         if (web3 && insuranceAddress) {
-            setContract(
-                (new web3.eth.Contract(insuranceJSON.abi as AbiItem[], insuranceAddress) as unknown) as Insurance,
-            );
+            setContract(new web3.eth.Contract(insuranceJSON as AbiItem[], insuranceAddress) as unknown as Insurance);
         }
     }, [web3, insuranceAddress]);
 

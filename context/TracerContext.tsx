@@ -13,8 +13,6 @@ interface ContextProps {
     tracerId: string | undefined;
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
-    baseAsset: string | undefined;
-    quoteAsset: string | undefined;
     balance: UserBalance;
     placeOrder: (order: OrderState) => Promise<Result | undefined>;
 }
@@ -22,7 +20,6 @@ interface ContextProps {
 export const TracerContext = React.createContext<Partial<ContextProps>>({});
 
 type TracerState = {
-    tracerId: string;
     selectedTracer: Tracer | undefined;
     balance: UserBalance;
 };
@@ -35,7 +32,6 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     const { account, web3, config } = useContext(Web3Context);
     const { tracers } = useContext(FactoryContext);
     const initialState: TracerState = {
-        tracerId: tracer || 'TEST0/USD',
         selectedTracer: undefined,
         balance: {
             quote: 0,
@@ -48,8 +44,6 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
     const reducer = (state: TracerState, action: Record<string, any>) => {
         switch (action.type) {
-            case 'setTracerId':
-                return { ...state, tracerId: action.value };
             case 'setSelectedTracer':
                 return { ...state, selectedTracer: action.value };
             case 'setUserBalance':
@@ -62,19 +56,23 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     const [tracerState, tracerDispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
-        if (!isEmpty(tracers)) {
-            tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] });
-            createBook(tracers?.[tracerId] as Tracer);
-        }
-    }, [tracers, tracerState.tracerId]);
-
-    useEffect(() => {
+        // for initialising the tracer store through props
         if (tracer) {
-            tracerDispatch({ type: 'setTracerId', value: tracer });
+            tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracer] });
         }
     }, [tracer]);
 
-    const { tracerId, selectedTracer, balance } = tracerState;
+    useEffect(() => {
+        // detecting when tracers changes so we can set a default tracer
+        console.log(tracers, 'from tracers');
+        if (tracers && !isEmpty(tracers)) {
+            const defaultTracer = Object.values(tracers)[0];
+            tracerDispatch({ type: 'setSelectedTracer', value: defaultTracer });
+            createBook(defaultTracer);
+        }
+    }, [tracers]);
+
+    const { selectedTracer, balance } = tracerState;
 
     const fetchUserData = async () => {
         if (tracers) {
@@ -123,16 +121,15 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     }, [selectedTracer]);
 
-    const [baseAsset, quoteAsset] = tracerId.split('/');
+    const tracerId = selectedTracer?.marketId;
 
     return (
         <TracerContext.Provider
             value={{
                 tracerId,
-                setTracerId: (tracerId: string) => tracerDispatch({ type: 'setTracerId', value: tracerId }),
+                setTracerId: (tracerId: string) =>
+                    tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] }),
                 selectedTracer,
-                baseAsset,
-                quoteAsset,
                 balance,
                 placeOrder,
             }}

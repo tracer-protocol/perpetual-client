@@ -49,7 +49,7 @@ const Overlay = styled.div`
 const TracerModal: React.FC<TProps> = styled((props: TProps) => {
     const ref = useRef(null);
     useEffect(() => {
-        const content: HTMLDivElement = (ref.current as unknown) as HTMLDivElement;
+        const content: HTMLDivElement = ref.current as unknown as HTMLDivElement;
         if (props.show) {
             if (content !== null) {
                 content.classList.add('show');

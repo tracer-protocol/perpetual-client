@@ -2,15 +2,13 @@
  * Functions to read and write from tracers (including direct trading)
  */
 import Web3 from 'web3';
-import tracerJSON from '@tracer-protocol/contracts/build/contracts/Tracer.json';
-import ERC20 from '@tracer-protocol/contracts/build/contracts/ERC20.json';
-import accountJSON from '@tracer-protocol/contracts/build/contracts/Account.json';
-import oracleJSON from '@tracer-protocol/contracts/build/contracts/Oracle.json';
+import tracerAbi from '@tracer-protocol/contracts/abi/contracts/TracerPerpetualSwaps.sol/TracerPerpetualSwaps.json';
+import ERC20Abi from '@tracer-protocol/contracts/abi/@openzeppelin/contracts/token/ERC20/ERC20.sol/ERC20.json';
+import oracleAbi from '@tracer-protocol/contracts/abi/contracts/oracle/Oracle.sol/Oracle.json';
 
-import { Account as AccountType } from '@tracer-protocol/contracts/types/web3-v1-contracts/Account';
-import { Tracer as TracerType } from '@tracer-protocol/contracts/types/web3-v1-contracts/Tracer';
-import { Oracle } from '@tracer-protocol/contracts/types/web3-v1-contracts/Oracle';
-import { Erc20 as Erc20Type } from '@tracer-protocol/contracts/types/web3-v1-contracts/ERC20';
+import { Oracle } from '@tracer-protocol/contracts/types/Oracle';
+import { ERC20 as Erc20Type } from '@tracer-protocol/contracts/types/ERC20';
+import { TracerPerpetualSwaps as TracerType } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 
 import { AbiItem } from 'web3-utils';
 import { fromCents } from '@libs/utils';
@@ -31,7 +29,6 @@ import { TakenOrder, OpenOrder, Result, UserBalance } from 'types';
 export default class Tracer {
     _instance: TracerType;
     _web3: Web3;
-    public account: AccountType | undefined;
     public accountAddress: string | undefined;
     public address: string;
     public marketId: string;
@@ -47,10 +44,7 @@ export default class Tracer {
     public oraclePrice: number;
 
     constructor(web3: Web3, address: string, marketId: string) {
-        this._instance = (new web3.eth.Contract(
-            (tracerJSON.abi as unknown) as AbiItem,
-            address,
-        ) as unknown) as TracerType;
+        this._instance = new web3.eth.Contract(tracerAbi as unknown as AbiItem, address) as unknown as TracerType;
         this._web3 = web3;
         this.address = address;
         this.marketId = marketId;
@@ -94,12 +88,11 @@ export default class Tracer {
                 const priceMultiplier_ = parseInt(res[0]);
                 this.priceMultiplier = priceMultiplier_;
                 this.liquidationGasCost = parseInt(res[1]);
-                this.token = (new web3.eth.Contract(ERC20.abi as AbiItem[], res[2]) as unknown) as Erc20Type;
-                this._oracle = (new web3.eth.Contract(oracleJSON.abi as AbiItem[], res[3]) as unknown) as Oracle;
+                this.token = new web3.eth.Contract(ERC20Abi as AbiItem[], res[2]) as unknown as Erc20Type;
+                this._oracle = new web3.eth.Contract(oracleAbi as AbiItem[], res[3]) as unknown as Oracle;
                 this.maxLeverage = parseFloat(res[4]) / 10000;
                 this.fundingRateSensitivity = parseInt(res[5]) / priceMultiplier_;
                 this.feeRate = parseInt(res[6]) / priceMultiplier_;
-                this.account = (new web3.eth.Contract(accountJSON.abi as AbiItem[], res[7]) as unknown) as AccountType;
                 this.accountAddress = res[7];
                 this.updateOraclePrice();
                 return true;
@@ -218,35 +211,36 @@ export default class Tracer {
      *   int256 lastUpdatedGasPrice,
      *   uint256 lastUpdatedIndex
      */
-    updateUserBalance: (account: string | undefined) => Promise<boolean> = async (account) => {
-        try {
-            if (!this.account) {
-                return Promise.resolve(false);
-            }
-            // if accounts is undefined the catch should get it
-            const balance = await this.account.methods.getBalance(account ?? '', this.address.toString()).call();
-            const walletBalance = await this.token?.methods.balanceOf(account ?? '').call();
-            const parsedBalances = {
-                quote: parseFloat(Web3.utils.fromWei(balance[0])),
-                base: parseFloat(Web3.utils.fromWei(balance[1])),
-                totalLeveragedValue: parseFloat(Web3.utils.fromWei(balance[2])),
-                lastUpdatedGasPrice: parseFloat(Web3.utils.fromWei(balance[3])),
-                tokenBalance: walletBalance ? parseInt(Web3.utils.fromWei(walletBalance)) : 0,
-            };
-            console.info(`Fetched user balances: ${parsedBalances}`);
-            this.balances = parsedBalances;
-            return true;
-        } catch (error) {
-            console.error(`Failed to fetch user balance: ${error}`);
-            this.balances = {
-                quote: 0,
-                base: 0,
-                totalLeveragedValue: 0,
-                lastUpdatedGasPrice: 0,
-                tokenBalance: 0,
-            } as UserBalance;
-            return false;
-        }
+    updateUserBalance: (account: string | undefined) => Promise<boolean> = async (_account) => {
+        // try {
+        //     if (!this.account) {
+        //         return Promise.resolve(false);
+        //     }
+        //     // if accounts is undefined the catch should get it
+        //     const balance = await this.account.methods.getBalance(account ?? '', this.address.toString()).call();
+        //     const walletBalance = await this.token?.methods.balanceOf(account ?? '').call();
+        //     const parsedBalances = {
+        //         quote: parseFloat(Web3.utils.fromWei(balance[0])),
+        //         base: parseFloat(Web3.utils.fromWei(balance[1])),
+        //         totalLeveragedValue: parseFloat(Web3.utils.fromWei(balance[2])),
+        //         lastUpdatedGasPrice: parseFloat(Web3.utils.fromWei(balance[3])),
+        //         tokenBalance: walletBalance ? parseInt(Web3.utils.fromWei(walletBalance)) : 0,
+        //     };
+        //     console.info(`Fetched user balances: ${parsedBalances}`);
+        //     this.balances = parsedBalances;
+        //     return true;
+        // } catch (error) {
+        //     console.error(`Failed to fetch user balance: ${error}`);
+        this.balances = {
+            quote: 0,
+            base: 0,
+            totalLeveragedValue: 0,
+            lastUpdatedGasPrice: 0,
+            tokenBalance: 0,
+        } as UserBalance;
+        return false;
+        //     return false;
+        // }
     };
 
     updateOraclePrice: () => Promise<void> = async () => {

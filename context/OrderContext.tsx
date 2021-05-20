@@ -137,7 +137,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     }, [tracerId]);
 
     const initialState: OrderState = {
-        market: 'TEST0', // exposed market asset
+        market: 'Market', // exposed market asset
         collateral: 'USD', // collateral asset
         rMargin: 0, // required margin / amount of margin being used
         leverage: 0,
