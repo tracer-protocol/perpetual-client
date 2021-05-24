@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import NumberSelect from './NumberSelect';
+import NumberSelect from './';
 
 const buttonMock = {
     unit: 'TEST',
