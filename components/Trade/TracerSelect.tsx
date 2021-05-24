@@ -191,7 +191,7 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
     const { selectedTracer } = useContext(TracerContext);
     const { rMargin, market, collateral, exposure } = order as OrderState;
     const marketPairs = useMarketPairs();
-    const balance = order?.wallet === 0 ? selectedTracer?.balances?.tokenBalance : selectedTracer?.balances?.quote;
+    const balance = order?.wallet === 0 ? selectedTracer?.balances?.tokenBalance.toNumber() : selectedTracer?.balances?.quote.toNumber();
     const collaterals = (
         <Menu
             onClick={({ key }) =>

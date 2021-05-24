@@ -27,11 +27,10 @@ interface State {
 export const InsuranceContext = React.createContext<Partial<ContextProps>>({});
 
 export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
-    const { account, web3, config } = useContext(Web3Context);
+    const { account, web3 } = useContext(Web3Context);
     const { tracers } = useContext(FactoryContext);
     const { selectedTracer } = useContext(TracerContext);
     const [contract, setContract] = useState<Insurance>();
-    const insuranceAddress = config?.contracts.insurance.address ?? '';
 
     const initialState = {
         pools: {
@@ -87,10 +86,14 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
-        if (web3 && insuranceAddress) {
-            setContract(new web3.eth.Contract(insuranceJSON as AbiItem[], insuranceAddress) as unknown as Insurance);
+        if (web3 && selectedTracer) {
+            let setter = async () => {
+                await selectedTracer.initialised;
+                setContract(new web3.eth.Contract(insuranceJSON as AbiItem[], selectedTracer.insuranceContract) as unknown as Insurance);
+            }
+            setter();
         }
-    }, [web3, insuranceAddress]);
+    }, [web3, selectedTracer]);
 
     const fetchPoolData = async () => {
         Promise.all(
@@ -109,12 +112,12 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             if (!selectedTracer?.address) {
                 return { status: 'error', message: 'Failed to deposit: Selected tracer address cannot be undefined' };
             }
-            const err = await checkAllowance(selectedTracer.token, account, insuranceAddress, amount);
+            const err = await checkAllowance(selectedTracer.token, account, selectedTracer.insuranceContract, amount);
             if (err.error) {
                 return err;
             }
             await contract?.methods
-                .stake(Web3.utils.toWei(amount.toString()), selectedTracer.address.toString())
+                .stake(Web3.utils.toWei(amount.toString()))
                 .send({ from: account });
             updatePoolBalance();
             return { status: 'success', message: 'Transaction success: Successfully made deposit' };
@@ -130,7 +133,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 return { status: 'error', message: 'Failed to withdraw: Selected tracer address cannot be undefined' };
             }
             const result = await contract?.methods
-                .withdraw(Web3.utils.toWei(amount.toString()), selectedTracer.address)
+                .withdraw(Web3.utils.toWei(amount.toString()))
                 .send({ from: account });
             updatePoolBalance();
             return {
@@ -149,13 +152,14 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
      * @param user account address
      */
     const getPoolData: (tracerAddress: string, marketId: string) => Promise<void> = async (tracerAddress, marketId) => {
-        if (tracerAddress) {
+        if (tracerAddress && contract) {
             const userBalance_ = account
-                ? contract?.methods.getPoolUserBalance(tracerAddress, account as string).call()
+                ? contract?.methods.getPoolUserBalance(account as string).call()
                 : Promise.resolve('0'); // we dont want it all to fail if account isnt connected
-            const rewards_ = contract?.methods.getRewardsPerToken(tracerAddress).call();
-            const target_ = contract?.methods.getPoolTarget(tracerAddress).call();
-            const liquidity_ = contract?.methods.getPoolHoldings(tracerAddress).call();
+            const rewards_ = '0'
+            const target_ = contract?.methods.getPoolTarget().call();
+            const liquidity_ = contract?.methods.collateralAmount().call()
+            // .getPoolHoldings(tracerAddress).call();
             const res = await Promise.all([userBalance_, rewards_, target_, liquidity_]);
             const liquidity = res[3] ? parseFloat(Web3.utils.fromWei(res[3])) : 0;
             const target = res[2] ? parseFloat(Web3.utils.fromWei(res[2])) : 0;
@@ -181,7 +185,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         if (!selectedTracer?.address) {
             return { status: 'error', message: 'Failed to withdraw: Selected tracer address cannot be undefined' };
         }
-        Promise.resolve(contract?.methods.getPoolUserBalance(selectedTracer?.address, account as string).call())
+        Promise.resolve(contract?.methods.getPoolUserBalance(account as string).call())
             .then((res) => {
                 dispatch({
                     type: 'setUserBalance',

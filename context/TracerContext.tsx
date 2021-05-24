@@ -8,16 +8,20 @@ import { OrderState } from './OrderContext';
 import Web3 from 'web3';
 import { signOrders, orderToOMEOrder, OrderData } from '@tracer-protocol/tracer-utils';
 import Tracer from '@libs/Tracer';
+import { TransactionContext } from './TransactionContext';
+import { defaults } from '@libs/Tracer';
 
 interface ContextProps {
     tracerId: string | undefined;
+    deposit: (amount: number) => void
+    withdraw: (amount: number) => void
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
     balance: UserBalance;
     placeOrder: (order: OrderState) => Promise<Result | undefined>;
 }
 
-export const TracerContext = React.createContext<Partial<ContextProps>>({});
+export const TracerContext = React.createContext<Partial<ContextProps>>({} as ContextProps);
 
 type TracerState = {
     selectedTracer: Tracer | undefined;
@@ -31,15 +35,11 @@ type StoreProps = {
 export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
     const { account, web3, config } = useContext(Web3Context);
     const { tracers } = useContext(FactoryContext);
+    const { handleTransaction } = useContext(TransactionContext);
+
     const initialState: TracerState = {
         selectedTracer: undefined,
-        balance: {
-            quote: 0,
-            base: 0,
-            totalLeveragedValue: 0,
-            lastUpdatedGasPrice: 0,
-            tokenBalance: 0,
-        },
+        balance: defaults.balances
     };
 
     const reducer = (state: TracerState, action: Record<string, any>) => {
@@ -106,6 +106,13 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         return { status: 'success' } as Result; // TODO add error check
     };
 
+    const submit = async (deposit: boolean, amount: number, callback?: any) => {
+        let func = deposit ? selectedTracer.deposit : selectedTracer.withdraw
+        handleTransaction ? 
+            handleTransaction(func, [amount, account], callback)
+            : console.error(`Failed to ${deposit ? 'deposit' : 'widthdraw'}: handleTransaction is undefined `)
+    };
+
     useEffect(() => {
         const fetch = async () => {
             const balance = await selectedTracer?.updateUserBalance(account);
@@ -127,8 +134,10 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         <TracerContext.Provider
             value={{
                 tracerId,
+                deposit: (amount: number) => submit(true, amount),
+                withdraw: (amount: number) => submit(true, amount),
                 setTracerId: (tracerId: string) =>
-                    tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] }),
+                tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] }),
                 selectedTracer,
                 balance,
                 placeOrder,
