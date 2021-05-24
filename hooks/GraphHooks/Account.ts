@@ -23,7 +23,8 @@ const ALL_TRACERS = gql`
     }
 `;
 
-export const useAccountData: (user: string | undefined) => any = (user) => { // eslint-disable-line
+export const useAccountData: (user: string | undefined) => any = (user) => {
+    // eslint-disable-line
     const ref = useRef([]);
     const { addToast } = useToasts();
     const { data, error, loading, refetch } = useQuery(ALL_TRACERS, {

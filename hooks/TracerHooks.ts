@@ -50,7 +50,7 @@ export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record
 
     useEffect(() => {
         if (web3 && tracer) {
-            setContract((new web3.eth.Contract(tracerJSON.abi as AbiItem[], tracer.address) as unknown) as TracerType);
+            setContract(new web3.eth.Contract(tracerJSON.abi as AbiItem[], tracer.address) as unknown as TracerType);
         }
     }, [web3, tracer]);
     const [openOrders, setOpenOrders] = useState<Record<string, OpenOrder[]>>({ longOrders: [], shortOrders: [] });

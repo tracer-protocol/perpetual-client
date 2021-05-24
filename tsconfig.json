@@ -27,7 +27,7 @@
             "@hooks/*": ["hooks/*"],
             "@libs/*": ["libs/*"],
             "@machines/*": ["machines/*"]
-        },
+        }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js", "hooks/GraphHooks"],
     "exclude": ["node_modules", "components/**/*.stories.tsx"]

@@ -12,34 +12,34 @@
  *
  */
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
-import {  OrderUpdatePayload } from 'types/OrderTypes';
+import { OrderUpdatePayload } from 'types/OrderTypes';
 import Tracer from '@libs/Tracer';
 
 const BASE_URL = process.env.NEXT_PUBLIC_OME_BASE_URL || 'http://localhost:8989';
 
 /** Book API's */
-export const createBook = async (tracer:Tracer) => {
+export const createBook = async (tracer: Tracer) => {
     const market = tracer?.address;
     if (!market) {
-        console.error("Failed to create book: Tracer not found")
+        console.error('Failed to create book: Tracer not found');
         return;
     }
     const data = {
-        market: market 
-    }
+        market: market,
+    };
     return fetch(`${BASE_URL}/book`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
     })
         .then((res) => res.json())
         .then((res) => {
             return res;
         })
         .catch((err) => {
-            console.error(err, "Failed to create market");
+            console.error(err, 'Failed to create market');
         });
 };
 /**
@@ -59,11 +59,11 @@ export const getBooks = async () => {
     })
         .then((res) => res.json())
         .then((res) => {
-            console.debug("Fetched books", res)
+            console.debug('Fetched books', res);
             return res;
         })
         .catch((err) => {
-            console.error(err, "Failed to fetch books");
+            console.error(err, 'Failed to fetch books');
         });
 };
 
@@ -86,7 +86,7 @@ export const getOrders = async (market: string) => {
         });
 };
 
-const omefy = (str: string) => str.slice(2).toLowerCase()
+const omefy = (str: string) => str.slice(2).toLowerCase();
 
 /**
  * Creates an order within a market.
@@ -95,9 +95,9 @@ const omefy = (str: string) => str.slice(2).toLowerCase()
  * @param market the market the order belongs to
  * @param data order data payload. An example of this request
  */
-export const createOrder = async (market:string, data: OMEOrder) => {
+export const createOrder = async (market: string, data: OMEOrder) => {
     if (!market) {
-        console.error("Failed to create order: Market is invalid")
+        console.error('Failed to create order: Market is invalid');
         return;
     }
     return fetch(`${BASE_URL}/book/${omefy(market)}/order`, {
@@ -105,9 +105,12 @@ export const createOrder = async (market:string, data: OMEOrder) => {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify(data),
     })
-        .then((res) => { console.debug("Created order with ome", res); return res})
+        .then((res) => {
+            console.debug('Created order with ome', res);
+            return res;
+        })
         .then((res) => {
             return res;
         })
@@ -139,7 +142,7 @@ export const getOrder = async (market: string, orderId: string) => {
  * @param market the market the order belongs to
  * @param orderId of the order being updated
  */
-export const deleteOrder = (market:string, orderId: string) => {
+export const deleteOrder = (market: string, orderId: string) => {
     return fetch(`${BASE_URL}/book/${market}/order/${orderId}`, {
         method: 'DELETE',
     })

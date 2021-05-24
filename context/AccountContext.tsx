@@ -24,7 +24,7 @@ export const AccountStore: React.FC<StoreProps> = ({ children }: StoreProps) => 
 
     useEffect(() => {
         if (web3 && accountAddress) {
-            setContract((new web3.eth.Contract(accountJSON.abi as AbiItem[], accountAddress) as unknown) as Account);
+            setContract(new web3.eth.Contract(accountJSON.abi as AbiItem[], accountAddress) as unknown as Account);
         }
     }, [web3, accountAddress]);
 

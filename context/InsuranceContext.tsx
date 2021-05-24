@@ -89,7 +89,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     useEffect(() => {
         if (web3 && insuranceAddress) {
             setContract(
-                (new web3.eth.Contract(insuranceJSON.abi as AbiItem[], insuranceAddress) as unknown) as Insurance,
+                new web3.eth.Contract(insuranceJSON.abi as AbiItem[], insuranceAddress) as unknown as Insurance,
             );
         }
     }, [web3, insuranceAddress]);
@@ -212,7 +212,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         if (contract && account && selectedTracer?.address) {
             getPoolData(selectedTracer?.address, selectedTracer?.marketId);
         }
-    }, [contract, account, selectedTracer]) // eslint-disable-line
+    }, [contract, account, selectedTracer]); // eslint-disable-line
 
     const selectedPool: InsurancePoolInfo = (state.pools as Record<string, InsurancePoolInfo>)[
         selectedTracer?.marketId as string

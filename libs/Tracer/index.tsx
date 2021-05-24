@@ -47,10 +47,7 @@ export default class Tracer {
     public oraclePrice: number;
 
     constructor(web3: Web3, address: string, marketId: string) {
-        this._instance = (new web3.eth.Contract(
-            (tracerJSON.abi as unknown) as AbiItem,
-            address,
-        ) as unknown) as TracerType;
+        this._instance = new web3.eth.Contract(tracerJSON.abi as unknown as AbiItem, address) as unknown as TracerType;
         this._web3 = web3;
         this.address = address;
         this.marketId = marketId;
@@ -94,12 +91,12 @@ export default class Tracer {
                 const priceMultiplier_ = parseInt(res[0]);
                 this.priceMultiplier = priceMultiplier_;
                 this.liquidationGasCost = parseInt(res[1]);
-                this.token = (new web3.eth.Contract(ERC20.abi as AbiItem[], res[2]) as unknown) as Erc20Type;
-                this._oracle = (new web3.eth.Contract(oracleJSON.abi as AbiItem[], res[3]) as unknown) as Oracle;
+                this.token = new web3.eth.Contract(ERC20.abi as AbiItem[], res[2]) as unknown as Erc20Type;
+                this._oracle = new web3.eth.Contract(oracleJSON.abi as AbiItem[], res[3]) as unknown as Oracle;
                 this.maxLeverage = parseFloat(res[4]) / 10000;
                 this.fundingRateSensitivity = parseInt(res[5]) / priceMultiplier_;
                 this.feeRate = parseInt(res[6]) / priceMultiplier_;
-                this.account = (new web3.eth.Contract(accountJSON.abi as AbiItem[], res[7]) as unknown) as AccountType;
+                this.account = new web3.eth.Contract(accountJSON.abi as AbiItem[], res[7]) as unknown as AccountType;
                 this.accountAddress = res[7];
                 this.updateOraclePrice();
                 return true;
