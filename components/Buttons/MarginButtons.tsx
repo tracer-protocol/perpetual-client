@@ -15,6 +15,7 @@ import {
 } from '@tracer-protocol/tracer-utils';
 
 import { toApproxCurrency } from 'libs/utils';
+import { defaults } from '@libs/Tracer';
 
 type ButtonType = 'Deposit' | 'Withdraw';
 
@@ -27,14 +28,10 @@ type BProps = {
 export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
     const [showModal, setShowModal] = useState(false);
     const { tracerId, selectedTracer } = useContext(TracerContext);
-    const { base, quote, tokenBalance } = selectedTracer?.balances ?? {
-        base: 0,
-        quote: 0,
-        tokenBalance: 0,
-    };
-    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1);
-    const maxLeverage = selectedTracer?.maxLeverage ?? 1;
-    const balance = type === 'Deposit' ? tokenBalance : calcWithdrawable(base, quote, fairPrice, maxLeverage);
+    const { base, quote, tokenBalance } = selectedTracer?.balances ?? defaults.balances
+    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice
+    const maxLeverage = selectedTracer?.maxLeverage ?? defaults.maxLeverage;
+    const balance = type === 'Deposit' ? tokenBalance : calcWithdrawable(quote, base, fairPrice, maxLeverage);
 
     const { deposit, withdraw } = useContext(AccountContext);
     const { handleTransaction } = useContext(TransactionContext);

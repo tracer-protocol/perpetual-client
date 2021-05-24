@@ -57,8 +57,7 @@ export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record
 
 
     const getOpenOrders: () => Promise<Record<string, OpenOrder[]>> = async () => {
-        const res = await getOrders(tracer.address)
-        console.log(res);
+        const _res = await getOrders(tracer.address)
         return {
             shortOrders: [],
             longOrders: []

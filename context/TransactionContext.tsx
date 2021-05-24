@@ -6,7 +6,7 @@ type HandleTransactionType =
     | ((
           callMethod: (...args: any) => Result | Promise<Result>,
     params: any[], // eslint-disable-line 
-    callback?: () => any, // eslint-disable-line 
+    callback?: (res: Result) => any, // eslint-disable-line 
 ) => void ) | undefined;
 
 export const TransactionContext = createContext<{ handleTransaction: HandleTransactionType }>({
@@ -43,7 +43,7 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
                     autoDismiss: true,
                 });
             }
-            callback ? callback() : null;
+            callback ? callback(res) : null;
         });
     };
 

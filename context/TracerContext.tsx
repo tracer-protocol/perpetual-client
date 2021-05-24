@@ -64,7 +64,6 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
     useEffect(() => {
         // detecting when tracers changes so we can set a default tracer
-        console.log(tracers, 'from tracers');
         if (tracers && !isEmpty(tracers)) {
             const defaultTracer = Object.values(tracers)[0];
             tracerDispatch({ type: 'setSelectedTracer', value: defaultTracer });
@@ -106,11 +105,18 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         return { status: 'success' } as Result; // TODO add error check
     };
 
-    const submit = async (deposit: boolean, amount: number, callback?: any) => {
+    const submit = async (deposit: boolean, amount: number) => {
         let func = deposit ? selectedTracer.deposit : selectedTracer.withdraw
+        const callback = async (res: Result) => {
+            if (res.status !== 'error') {
+                const balance = await selectedTracer?.updateUserBalance(account);
+                tracerDispatch({ type: 'setUserBalance', value: balance });
+            }
+        }
         handleTransaction ? 
             handleTransaction(func, [amount, account], callback)
             : console.error(`Failed to ${deposit ? 'deposit' : 'widthdraw'}: handleTransaction is undefined `)
+        
     };
 
     useEffect(() => {
@@ -135,7 +141,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             value={{
                 tracerId,
                 deposit: (amount: number) => submit(true, amount),
-                withdraw: (amount: number) => submit(true, amount),
+                withdraw: (amount: number) => submit(false, amount),
                 setTracerId: (tracerId: string) =>
                 tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] }),
                 selectedTracer,

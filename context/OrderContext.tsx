@@ -4,6 +4,7 @@ import { useTracerOrders } from '@hooks/TracerHooks';
 import { Children, OpenOrder, OpenOrders, UserBalance } from 'types';
 import Tracer from '@libs/Tracer';
 import { calcTradeExposure } from '@tracer-protocol/tracer-utils';
+import { BigNumber } from 'bignumber.js';
 
 calcTradeExposure;
 /**
@@ -57,10 +58,10 @@ const checkErrors: (balances: UserBalance | undefined, orders: OpenOrder[], acco
     } else if (!!balances?.base) {
         // user has a position already
         return 0;
-    } else if (balances?.tokenBalance === 0) {
+    } else if (balances?.tokenBalance.eq(0)) {
         // user has no web3 wallet balance
         return 1;
-    } else if (balances?.quote === 0) {
+    } else if (balances?.quote.eq(0)) {
         // user has no tcr margin balance
         return 2;
     } else {
@@ -84,7 +85,7 @@ export type OrderState = {
     matchingEngine: number; // for basic this will always be 0 (OME)
     orderType: number; // for basic this will always be 0 (market order), 1 is limit and 2 is spot
     openOrders: OpenOrders;
-    exposure: number;
+    exposure: BigNumber;
     error: number; // number ID relating to the error map above
     wallet: number; // ID of corresponding wallet in use 0 -> web3, 1 -> TCR margin
     // boolean to tell if the amount to buy or amount to pay inputs are locked. eg
@@ -94,8 +95,8 @@ export type OrderState = {
 };
 
 interface ContextProps {
-    exposure: number;
-    tradePrice: number;
+    exposure: BigNumber;
+    tradePrice: BigNumber;
     oppositeOrders: OpenOrder[];
     order: OrderState;
     orderDispatch: React.Dispatch<OrderAction>;
@@ -149,7 +150,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             shortOrders: [],
             longOrders: [],
         },
-        exposure: 0,
+        exposure: new BigNumber(0),
         error: -1,
         wallet: 0,
         lock: false, // default lock amount to pay
@@ -217,11 +218,11 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [order.leverage]);
 
-    useEffect(() => {
-        if (oppositeOrders.length) {
-            orderDispatch({ type: 'setPrice', value: oppositeOrders[0].price });
-        }
-    }, [oppositeOrders, order.position]);
+    // useEffect(() => {
+    //     if (oppositeOrders.length) {
+    //         orderDispatch({ type: 'setPrice', value: oppositeOrders[0].price.toNumber() });
+    //     }
+    // }, [oppositeOrders, order.position]);
 
     // TODO move these out of this context component because these values will have to change
     //  when interacting with the advanced trading screen
@@ -234,17 +235,19 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     // Handles automatically changing the trade price when taking a market order
     useEffect(() => {
-        if (order.orderType === 0) {
-            orderDispatch({ type: 'setPrice', value: tradePrice });
-            // orderDispatch({ type: 'setOrderType', value: 0 });
+        let tradePrice_ = tradePrice.toNumber()
+        // the second condition avoids the infinite loop
+        if (order.orderType === 0 && order.price !== tradePrice) { 
+            orderDispatch({ type: 'setPrice', value: tradePrice_ });
         }
-    }, [order.orderType, tradePrice]);
+    }, [order.orderType]);
 
     // Handles changing the order type to limit if the user changes the order price
     useEffect(() => {
-        if (order.price !== tradePrice && tradePrice) {
+        let t = tradePrice.toNumber()
+        if (order.price !== t) {
             orderDispatch({ type: 'setOrderType', value: 1 });
-        } else if (order.price === tradePrice && order.orderType === 1) {
+        } else if (order.price === t && order.orderType === 1) {
             orderDispatch({ type: 'setOrderType', value: 0 });
         }
     }, [order.price]);

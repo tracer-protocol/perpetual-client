@@ -1,8 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import NavBar from '@components/Nav/Navbar';
-import LivePositions from '@components/Account/LivePositions';
-import History from '@components/Account/History';
 import { SubNavBar } from '@components/Nav';
 import { SelectedTracerStore } from '@context/TracerContext';
 import { InsuranceStore } from '@context/InsuranceContext';
@@ -26,22 +24,14 @@ const Account: React.FC = () => {
         }
     };
 
-    const renderContent = (tab: number) => {
-        switch (tab) {
-            case 1:
-                return <History />;
-            default:
-                return <LivePositions />;
-        }
-    };
-
     return (
         <div className="min-h-screen flex flex-col">
             <NavBar />
             <SubNavBar setTab={setTab} tabs={subTabs} selected={tab} />
             <SelectedTracerStore>
                 <InsuranceStore>
-                    <AccountStore>{renderContent(tab)}</AccountStore>
+                    <AccountStore>
+                    </AccountStore>
                 </InsuranceStore>
             </SelectedTracerStore>
         </div>

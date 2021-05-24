@@ -49,7 +49,7 @@ const InputContainer = styled.div`
 `;
 
 type SIProps = {
-    amount: number;
+    amount: number | undefined;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     setMax?: (e: any) => void;
     unit: string;

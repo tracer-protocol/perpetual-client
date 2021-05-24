@@ -260,7 +260,7 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                                 console.error('Order dispatch not set');
                             }
                         }}
-                        value={exposure > 0 ? exposure : ''}
+                        value={exposure.gt(0) ? exposure.toNumber() : ''}
                     />
                     <SDropdown className="mt-1 pr-4" overlay={markets} trigger={['click']}>
                         <DropDownContent>

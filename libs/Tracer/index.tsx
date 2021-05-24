@@ -27,9 +27,8 @@ export const defaults: Record<string, any> = {
         lastUpdatedGasPrice: 0,
     },
     maxLeverage: new BigNumber(1),
-    fairPrice: new BigNumber(0),
     oraclePrice: new BigNumber(0),
-    priceMultiplier: new BigNumber(1),
+    quoteTokenDecimals: new BigNumber(1),
     exposure: new BigNumber (0),
     feeRate: new BigNumber (0),
     fundingRateSensitivity: new BigNumber (0)
@@ -55,7 +54,7 @@ export default class Tracer {
     _oracle: Oracle | undefined;
     public token: Erc20Type | undefined;
     public liquidationGasCost: number | undefined;
-    public priceMultiplier: BigNumber;
+    public quoteTokenDecimals: BigNumber;
     public maxLeverage: BigNumber | undefined;
     public fundingRateSensitivity: BigNumber;
     public feeRate: BigNumber;
@@ -70,8 +69,8 @@ export default class Tracer {
         this.address = address;
         this.marketId = marketId;
         this.feeRate = defaults.feeRate;
-        this.priceMultiplier = defaults.priceMultiplier;
-        this.fundingRateSensitivity = defaults.priceMultiplier;
+        this.quoteTokenDecimals = defaults.priceMultiplier;
+        this.fundingRateSensitivity = defaults.fundingRateSensitivity;
         this.insuranceContract = "";
         this.balances = defaults.balances;
         this.oraclePrice = defaults.oraclePrice;
@@ -85,14 +84,14 @@ export default class Tracer {
     init: (web3: Web3) => Promise<boolean> = (web3) => {
         const oracleAddress = this._instance.methods.gasPriceOracle().call();
         const tokenAddr = this._instance.methods.tracerQuoteToken().call();
-        const priceMultiplier = this._instance.methods.quoteTokenDecimals().call();
+        const quoteTokenDecimals = this._instance.methods.quoteTokenDecimals().call();
         const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
         const maxLeverage = this._instance.methods.maxLeverage().call();
         const fundingRateSensitivity = this._instance.methods.fundingRateSensitivity().call();
         const feeRate = this._instance.methods.feeRate().call();
         const insuranceContract = this._instance.methods.insuranceContract().call();
         return Promise.all([
-            priceMultiplier,
+            quoteTokenDecimals,
             liquidationGasCost,
             tokenAddr,
             oracleAddress,
@@ -103,7 +102,7 @@ export default class Tracer {
         ])
             .then((res) => {
                 const priceMultiplier_ = new BigNumber(res[0]);
-                this.priceMultiplier = priceMultiplier_;
+                this.quoteTokenDecimals = priceMultiplier_;
                 this.liquidationGasCost = parseInt(res[1]);
                 this.token = new web3.eth.Contract(ERC20Abi as AbiItem[], res[2]) as unknown as Erc20Type;
                 this._oracle = new web3.eth.Contract(oracleAbi as AbiItem[], res[3]) as unknown as Oracle;
@@ -142,11 +141,11 @@ export default class Tracer {
             const parsedBalances = {
                 quote: new BigNumber(Web3.utils.fromWei(balance[0][0])),
                 base: new BigNumber(Web3.utils.fromWei(balance[0][1])),
-                totalLeveragedValue: parseFloat(Web3.utils.fromWei(balance[1])),
-                lastUpdatedGasPrice: parseFloat(Web3.utils.fromWei(balance[3])),
-                tokenBalance: walletBalance ? new BigNumber(Web3.utils.fromWei(walletBalance)) : new BigNumber(0),
+                totalLeveragedValue: new BigNumber(Web3.utils.fromWei(balance[1])),
+                lastUpdatedGasPrice: new BigNumber(Web3.utils.fromWei(balance[3])),
+                tokenBalance: walletBalance ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals)) : new BigNumber(0),
             };
-            console.info(`Fetched user balances: ${parsedBalances}`);
+            console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
             this.balances = parsedBalances;
             return true;
         } catch (error) {
@@ -154,8 +153,8 @@ export default class Tracer {
             this.balances = {
                 quote: new BigNumber(0),
                 base: new BigNumber(0),
-                totalLeveragedValue: 0,
-                lastUpdatedGasPrice: 0,
+                totalLeveragedValue: new BigNumber(0),
+                lastUpdatedGasPrice: new BigNumber(0),
                 tokenBalance: new BigNumber(0),
             } as UserBalance;
             return false;
@@ -165,7 +164,7 @@ export default class Tracer {
     updateOraclePrice: () => Promise<void> = async () => {
         try {
             const price = await this._oracle?.methods.latestAnswer().call();
-            this.oraclePrice = new BigNumber(price ?? '0');
+            this.oraclePrice = new BigNumber(price ?? '0').div(new BigNumber(10).pow(8));
         } catch (err) {
             console.error('Failed to fetch oracle price', err);
             this.oraclePrice = new BigNumber(0);
@@ -177,7 +176,7 @@ export default class Tracer {
      */
     updateFeeRate: () => Promise<void> = async () => {
         const feeRate = await this._instance.methods.feeRate().call();
-        const set = new BigNumber(feeRate).div(this.priceMultiplier);
+        const set = new BigNumber(Web3.utils.fromWei(feeRate))
         this.feeRate = set;
     };
 
@@ -193,8 +192,10 @@ export default class Tracer {
             if (err?.error) {
                 return err;
             }
+            // convert amount to appropriate amount in quote token
+            const amount_ = new BigNumber(amount).times(new BigNumber(10).pow(this.quoteTokenDecimals)).toString()
             const result = await this._instance.methods
-                .deposit(Web3.utils.toWei(amount.toString()))
+                .deposit(amount_)
                 .send({ from: account });
             return { 
                 status: 'success', 

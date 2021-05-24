@@ -9,6 +9,7 @@ import { NumberSelect, Section } from '@components/General';
 import { UserBalance } from 'types';
 import Error from '@components/Trade/Error';
 import { BigNumber } from 'bignumber.js';
+import { defaults } from '@libs/Tracer';
 
 const MinHeight = 250;
 
@@ -163,7 +164,7 @@ const Popup: React.FC<PProps> = styled(({
         ? balances.tokenBalance
         : balances.quote.minus(new BigNumber(0))
             // calcMinimumMargin(balances.base, balances.quote, price, maxLeverage));
-    const newBalance = isDeposit ? balances.quote.toNumber() + amount : balances.quote.toNumber() - amount;
+    const newBalance = isDeposit ? balances.quote.plus(amount): balances.quote.minus(amount);
     const invalid = amount > available.toNumber();
 
     return (
@@ -172,24 +173,24 @@ const Popup: React.FC<PProps> = styled(({
                 <p>{isDeposit ? 'Deposit' : 'Withdraw'} Margin</p>
                 <Close onClick={close} />
             </div>
-            <SNumberSelect unit={unit} title={'Amount'} amount={amount} balance={available} setAmount={setAmount} />
+            <SNumberSelect unit={unit} title={'Amount'} amount={amount} balance={available.toNumber()} setAmount={setAmount} />
             <Balance display={!!amount}>
                 <span className="mr-3">Balance</span>
                 <SAfter className={invalid ? 'invalid' : ''}>{toApproxCurrency(newBalance)}</SAfter>
             </Balance>
             <SHiddenExpand defaultHeight={0} open={!!amount}>
                 <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
-                <SSection label={`Total Margin`}>
+                <SSection label={`Total Margin`} tooltip={'This can be thought of as total equity or total account value'}>
                     <SPrevious>{`${toApproxCurrency(
-                        calcTotalMargin(balances.base, balances.quote, price).toNumber(),
+                        calcTotalMargin(balances.base, balances.quote, price),
                     )}`}</SPrevious>
-                    {`${toApproxCurrency(calcTotalMargin(balances.base, newBalance, price).toNumber())}`}
+                    {`${toApproxCurrency(calcTotalMargin(balances.base, newBalance, price))}`}
                 </SSection>
                 <SSection label={`Maintenance Margin`}>
                     <SPrevious>{`${toApproxCurrency(
-                        calcMinimumMargin(balances.base, balances.quote, price, maxLeverage).toNumber(),
+                        calcMinimumMargin(balances.base, balances.quote, price, maxLeverage),
                     )}`}</SPrevious>
-                    {`${toApproxCurrency(calcMinimumMargin(balances.base, newBalance, price, maxLeverage).toNumber())}`}
+                    {`${toApproxCurrency(calcMinimumMargin(balances.base, newBalance, price, maxLeverage))}`}
                 </SSection>
             </SHiddenExpand>
             <MButton onClick={() => isDeposit ? deposit(amount) : withdraw(amount)}>{isDeposit ? 'Deposit' : 'Withdraw'}</MButton>
@@ -224,14 +225,8 @@ export const AccountPanel: React.FC<{
 }> = ({ selectedTracer, account }) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
-    const balances = selectedTracer?.balances ?? {
-        quote: new BigNumber(0),
-        base: BigNumber(0),
-        totalLeveragedValue: 0,
-        lastUpdatedGasPrice: 0,
-        tokenBalance: BigNumber(0),
-    };
-    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1);
+    const balances = selectedTracer?.balances ?? defaults.balances;
+    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const maxLeverage = selectedTracer?.maxLeverage ?? new BigNumber(1);
 
     useEffect(() => {
@@ -253,7 +248,7 @@ export const AccountPanel: React.FC<{
             <Item>
                 <h3>Total Margin</h3>
                 <span>
-                    <a>{toApproxCurrency(calcTotalMargin(balances?.base, balances?.quote, fairPrice).toNumber())}</a>
+                    <a>{toApproxCurrency(calcTotalMargin(balances?.quote, balances?.base, fairPrice))}</a>
                 </span>
             </Item>
             <Item>
@@ -261,7 +256,7 @@ export const AccountPanel: React.FC<{
                 <span>
                     <a>
                         {toApproxCurrency(
-                            calcMinimumMargin(balances?.base, balances?.quote, fairPrice, maxLeverage).toNumber(),
+                            calcMinimumMargin(balances?.quote, balances?.base, fairPrice, maxLeverage),
                         )}
                     </a>
                 </span>

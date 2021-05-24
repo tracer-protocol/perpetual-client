@@ -11,6 +11,7 @@ import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
 import { DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
+import { defaults } from '@libs/Tracer';
 
 const Market = styled.div`
     letter-spacing: -0.4px;
@@ -91,7 +92,7 @@ export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, classNa
                 </div>
 
                 {/* Quanity and Price Inputs */}
-                <InputSelects amount={order?.rMargin ?? 0} price={order?.price || 0} selectedTracer={selectedTracer} />
+                <InputSelects amount={order?.rMargin} price={order?.price} selectedTracer={selectedTracer} />
 
                 {/* Dont display these if it is a limit order*/}
                 {order?.orderType !== 1 ? (
@@ -104,19 +105,11 @@ export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, classNa
                 )}
 
                 <PostTradeDetails
-                    fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1)}
-                    balances={
-                        selectedTracer?.balances ?? {
-                            base: 0,
-                            quote: 0,
-                            totalLeveragedValue: 0,
-                            lastUpdatedGasPrice: 0,
-                            tokenBalance: 0,
-                        }
-                    }
-                    exposure={exposure ?? 0}
+                    fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
+                    balances={selectedTracer?.balances ?? defaults.balances}
+                    exposure={exposure ?? defaults.exposure}
                     position={order?.position ?? 0}
-                    maxLeverage={selectedTracer?.maxLeverage ?? 1}
+                    maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                 />
 
                 {/* Place Order */}

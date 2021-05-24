@@ -9,19 +9,17 @@ import {
 } from '@tracer-protocol/tracer-utils';
 import { Section } from '@components/General';
 import { UserBalance } from 'types';
+import { defaults } from '@libs/Tracer';
+import { BigNumber } from 'bignumber.js';
 
 interface IProps {
     balance: UserBalance | undefined;
-    fairPrice: number;
-    maxLeverage: number;
+    fairPrice: BigNumber;
+    maxLeverage: BigNumber;
 }
 
 export const AccountMarginInfo: React.FC<IProps> = ({ balance, fairPrice, maxLeverage }: IProps) => {
-    const { base, quote, totalLeveragedValue } = balance ?? {
-        base: 0,
-        quote: 0,
-        totalLeveragedValue: 0,
-    };
+    const { base, quote, totalLeveragedValue } = balance ?? defaults.balances;
 
     // const minMargin = calcMinimumMargin(quote, base, fairPrice, maxLeverage);
     // const calcTotalMargin_ = calcTotalMargin(quote, base, fairPrice);
@@ -31,12 +29,12 @@ export const AccountMarginInfo: React.FC<IProps> = ({ balance, fairPrice, maxLev
     } else {
         return (
             <div className="border-t-2 border-gray-100">
-                <Section label={'Account Margin'}>{toApproxCurrency(calcTotalMargin(base, quote, fairPrice))}</Section>
+                <Section label={'Account Margin'}>{toApproxCurrency(calcTotalMargin(quote, quote, fairPrice))}</Section>
                 <Section label={'Minimum Margin'}>
                     {toApproxCurrency(calcMinimumMargin(quote, base, fairPrice, maxLeverage))}
                 </Section>
                 <Section label={'Withdrawable'}>
-                    {toApproxCurrency(calcWithdrawable(base, quote, fairPrice, maxLeverage))}
+                    {toApproxCurrency(calcWithdrawable(quote, base, fairPrice, maxLeverage))}
                 </Section>
                 <Section label={'LiquidationPrice'}>
                     {toApproxCurrency(calcLiquidationPrice(quote, base, fairPrice, maxLeverage))}

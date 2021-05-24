@@ -11,8 +11,8 @@ export interface TracerData {
 export type UserBalance = {
     quote: BigNumber; // the accounts deposited funds
     base: BigNumber; // the position the user currently has
-    totalLeveragedValue: number;
-    lastUpdatedGasPrice: number;
+    totalLeveragedValue: BigNumber;
+    lastUpdatedGasPrice: BigNumber;
     tokenBalance: BigNumber;
 };
 

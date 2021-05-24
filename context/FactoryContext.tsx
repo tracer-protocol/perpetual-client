@@ -15,7 +15,6 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
     const { tracers } = useAllTracers();
     const { web3 } = useContext(Web3Context);
     const [labelledTracers, setLabelledTracers] = useState<LabelledTracers>({});
-    // const factoryRef = useRef<LabelledTracers>({});
 
     useEffect(() => {
         let mounted = true;
@@ -28,7 +27,6 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
                     }),
                     {},
                 );
-                console.log(labelledTracers, 'from the inside');
                 setLabelledTracers(_labelledTracers);
                 // factoryRef.current = labelledTracers;
             }

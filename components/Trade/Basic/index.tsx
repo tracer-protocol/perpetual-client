@@ -93,7 +93,7 @@ const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLever
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <LiquidationPrice label={'Liquidation Price'}>
-                {`${toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage).toNumber())} ${
+                {`${toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage))} ${
                     order?.collateral ?? ''
                 }`}
             </LiquidationPrice>
@@ -101,7 +101,7 @@ const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLever
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <SSection label={'Wallet Balance'}>
-                <Previous>{`${toApproxCurrency(order?.wallet ? balances.tokenBalance.toNumber() : balances.quote.toNumber())}`}</Previous>
+                <Previous>{`${toApproxCurrency(order?.wallet ? balances.tokenBalance : balances.quote)}`}</Previous>
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <SSection label={'Predicted Const Total'}>
@@ -172,9 +172,7 @@ const Basic: React.FC = styled(({ className }) => {
     const { order, exposure, orderDispatch } = useContext(OrderContext);
     const [showSummary, setShowSummary] = useState(false);
     const balances = selectedTracer?.balances ?? defaults.balances;
-    const fairPrice = selectedTracer 
-        ? (selectedTracer?.oraclePrice).div(selectedTracer?.priceMultiplier) 
-        : defaults.fairPrice
+    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
 
     useEffect(() => {
         // could have equally been checking on the margin variable
