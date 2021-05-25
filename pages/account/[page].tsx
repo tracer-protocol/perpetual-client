@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import NavBar from '@components/Nav/Navbar';
 import LivePositions from '@components/Account/LivePositions';
 import History from '@components/Account/History';
-import { SubNavBar } from '@components/Nav';
+import SubNavBar from '@components/Nav/SubNavBar';
 import { SelectedTracerStore } from '@context/TracerContext';
 import { InsuranceStore } from '@context/InsuranceContext';
 import { AccountStore } from '@context/AccountContext';

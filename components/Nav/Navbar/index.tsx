@@ -285,7 +285,7 @@ const NavBar: React.FC = styled(({ className }) => {
                     </Link>
                 </li>
                 <li className={linkStyles + (route === 'portfolio' ? ' selected' : '')}>
-                    <Link href="/portfolio/trading-portfolio">
+                    <Link href="/portfolio">
                         <a className="m-auto">Portfolio</a>
                     </Link>
                 </li>

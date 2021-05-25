@@ -9,7 +9,7 @@ import Web3 from 'web3';
 import Tracer from '@libs/Tracer';
 import { PositionDetails } from '@components/SummaryInfo/PositionDetails';
 import { InsuranceInfo } from './RightPanel/InsuranceInfo';
-import { SubNav } from '@components/Nav/SubNavBar';
+import SubNav from '@components/Nav/SubNav';
 import { Box } from '@components/General';
 import styled from 'styled-components';
 import RecentTrades from './RightPanel/RecentTrades';
@@ -81,6 +81,7 @@ const useOrders = (trigger: boolean, selectedTracer: Tracer | undefined) => {
 const OrderBookContainer = styled.div`
     border-top: 1px solid #002886;
     padding: 10px;
+  
     h3 {
         letter-spacing: -0.4px;
         color: #ffffff;
