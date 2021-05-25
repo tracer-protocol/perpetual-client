@@ -235,16 +235,16 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     // Handles automatically changing the trade price when taking a market order
     useEffect(() => {
-        let tradePrice_ = tradePrice.toNumber()
+        const tradePrice_ = tradePrice.toNumber();
         // the second condition avoids the infinite loop
-        if (order.orderType === 0 && order.price !== tradePrice) { 
+        if (order.orderType === 0 && order.price !== tradePrice) {
             orderDispatch({ type: 'setPrice', value: tradePrice_ });
         }
     }, [order.orderType]);
 
     // Handles changing the order type to limit if the user changes the order price
     useEffect(() => {
-        let t = tradePrice.toNumber()
+        const t = tradePrice.toNumber();
         if (order.price !== t) {
             orderDispatch({ type: 'setOrderType', value: 1 });
         } else if (order.price === t && order.orderType === 1) {

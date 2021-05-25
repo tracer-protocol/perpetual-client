@@ -13,8 +13,8 @@ import { defaults } from '@libs/Tracer';
 
 interface ContextProps {
     tracerId: string | undefined;
-    deposit: (amount: number) => void
-    withdraw: (amount: number) => void
+    deposit: (amount: number) => void;
+    withdraw: (amount: number) => void;
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
     balance: UserBalance;
@@ -39,7 +39,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
     const initialState: TracerState = {
         selectedTracer: undefined,
-        balance: defaults.balances
+        balance: defaults.balances,
     };
 
     const reducer = (state: TracerState, action: Record<string, any>) => {
@@ -106,17 +106,16 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     };
 
     const submit = async (deposit: boolean, amount: number) => {
-        let func = deposit ? selectedTracer.deposit : selectedTracer.withdraw
+        const func = deposit ? selectedTracer.deposit : selectedTracer.withdraw;
         const callback = async (res: Result) => {
             if (res.status !== 'error') {
                 const balance = await selectedTracer?.updateUserBalance(account);
                 tracerDispatch({ type: 'setUserBalance', value: balance });
             }
-        }
-        handleTransaction ? 
-            handleTransaction(func, [amount, account], callback)
-            : console.error(`Failed to ${deposit ? 'deposit' : 'widthdraw'}: handleTransaction is undefined `)
-        
+        };
+        handleTransaction
+            ? handleTransaction(func, [amount, account], callback)
+            : console.error(`Failed to ${deposit ? 'deposit' : 'widthdraw'}: handleTransaction is undefined `);
     };
 
     useEffect(() => {
@@ -143,7 +142,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 deposit: (amount: number) => submit(true, amount),
                 withdraw: (amount: number) => submit(false, amount),
                 setTracerId: (tracerId: string) =>
-                tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] }),
+                    tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] }),
                 selectedTracer,
                 balance,
                 placeOrder,

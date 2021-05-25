@@ -55,14 +55,13 @@ export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record
     }, [web3, tracer]);
     const [openOrders, setOpenOrders] = useState<Record<string, OpenOrder[]>>({ longOrders: [], shortOrders: [] });
 
-
     const getOpenOrders: () => Promise<Record<string, OpenOrder[]>> = async () => {
-        const _res = await getOrders(tracer.address)
+        await getOrders(tracer.address);
         return {
             shortOrders: [],
-            longOrders: []
-        }
-    }
+            longOrders: [],
+        };
+    };
     /**
      * Gets all open orders placed on chain. First gets the total count of orders and
      * then iterates through the count getting all open orders

@@ -118,9 +118,7 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
         <Collapsible className={className}>
             <Teaser>
                 <span>{pool?.userBalance.toNumber() ?? defaults.userBalance.toNumber()} iTokens</span>
-                <span className="percent">
-                    {(pool.userBalance).div(pool.liquidity).precision(5).toNumber() * 100}%
-                </span>
+                <span className="percent">{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</span>
             </Teaser>
             <Hidden>
                 <ButtonContainer>

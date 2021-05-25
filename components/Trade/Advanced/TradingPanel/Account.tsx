@@ -152,52 +152,61 @@ type PProps = {
     maxLeverage: BigNumber;
 };
 
-const Popup: React.FC<PProps> = styled(({ 
-    className, close, isDeposit, unit, balances, price, maxLeverage 
-}: PProps) => {
-    const { 
-        deposit = () => console.error("Deposit is not defined"), 
-        withdraw = () => console.error("Withdraw is not defined")
-    } = useContext(TracerContext);
-    const [amount, setAmount] = useState(0);
-    const available = isDeposit
-        ? balances.tokenBalance
-        : balances.quote.minus(new BigNumber(0))
-            // calcMinimumMargin(balances.base, balances.quote, price, maxLeverage));
-    const newBalance = isDeposit ? balances.quote.plus(amount): balances.quote.minus(amount);
-    const invalid = amount > available.toNumber();
+const Popup: React.FC<PProps> = styled(
+    ({ className, close, isDeposit, unit, balances, price, maxLeverage }: PProps) => {
+        const {
+            deposit = () => console.error('Deposit is not defined'),
+            withdraw = () => console.error('Withdraw is not defined'),
+        } = useContext(TracerContext);
+        const [amount, setAmount] = useState(0);
+        const available = isDeposit ? balances.tokenBalance : balances.quote.minus(new BigNumber(0));
+        // calcMinimumMargin(balances.base, balances.quote, price, maxLeverage));
+        const newBalance = isDeposit ? balances.quote.plus(amount) : balances.quote.minus(amount);
+        const invalid = amount > available.toNumber();
 
-    return (
-        <div className={className}>
-            <div className="header">
-                <p>{isDeposit ? 'Deposit' : 'Withdraw'} Margin</p>
-                <Close onClick={close} />
+        return (
+            <div className={className}>
+                <div className="header">
+                    <p>{isDeposit ? 'Deposit' : 'Withdraw'} Margin</p>
+                    <Close onClick={close} />
+                </div>
+                <SNumberSelect
+                    unit={unit}
+                    title={'Amount'}
+                    amount={amount}
+                    balance={available.toNumber()}
+                    setAmount={setAmount}
+                />
+                <Balance display={!!amount}>
+                    <span className="mr-3">Balance</span>
+                    <SAfter className={invalid ? 'invalid' : ''}>{toApproxCurrency(newBalance)}</SAfter>
+                </Balance>
+                <SHiddenExpand defaultHeight={0} open={!!amount}>
+                    <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
+                    <SSection
+                        label={`Total Margin`}
+                        tooltip={'This can be thought of as total equity or total account value'}
+                    >
+                        <SPrevious>{`${toApproxCurrency(
+                            calcTotalMargin(balances.base, balances.quote, price),
+                        )}`}</SPrevious>
+                        {`${toApproxCurrency(calcTotalMargin(balances.base, newBalance, price))}`}
+                    </SSection>
+                    <SSection label={`Maintenance Margin`}>
+                        <SPrevious>{`${toApproxCurrency(
+                            calcMinimumMargin(balances.base, balances.quote, price, maxLeverage),
+                        )}`}</SPrevious>
+                        {`${toApproxCurrency(calcMinimumMargin(balances.base, newBalance, price, maxLeverage))}`}
+                    </SSection>
+                </SHiddenExpand>
+                <MButton onClick={() => (isDeposit ? deposit(amount) : withdraw(amount))}>
+                    {isDeposit ? 'Deposit' : 'Withdraw'}
+                </MButton>
+                <Error error={invalid ? 5 : -1} />
             </div>
-            <SNumberSelect unit={unit} title={'Amount'} amount={amount} balance={available.toNumber()} setAmount={setAmount} />
-            <Balance display={!!amount}>
-                <span className="mr-3">Balance</span>
-                <SAfter className={invalid ? 'invalid' : ''}>{toApproxCurrency(newBalance)}</SAfter>
-            </Balance>
-            <SHiddenExpand defaultHeight={0} open={!!amount}>
-                <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
-                <SSection label={`Total Margin`} tooltip={'This can be thought of as total equity or total account value'}>
-                    <SPrevious>{`${toApproxCurrency(
-                        calcTotalMargin(balances.base, balances.quote, price),
-                    )}`}</SPrevious>
-                    {`${toApproxCurrency(calcTotalMargin(balances.base, newBalance, price))}`}
-                </SSection>
-                <SSection label={`Maintenance Margin`}>
-                    <SPrevious>{`${toApproxCurrency(
-                        calcMinimumMargin(balances.base, balances.quote, price, maxLeverage),
-                    )}`}</SPrevious>
-                    {`${toApproxCurrency(calcMinimumMargin(balances.base, newBalance, price, maxLeverage))}`}
-                </SSection>
-            </SHiddenExpand>
-            <MButton onClick={() => isDeposit ? deposit(amount) : withdraw(amount)}>{isDeposit ? 'Deposit' : 'Withdraw'}</MButton>
-            <Error error={invalid ? 5 : -1} />
-        </div>
-    );
-})`
+        );
+    },
+)`
     transition: 0.3s;
     position: absolute;
     padding: 10px;
@@ -255,9 +264,7 @@ export const AccountPanel: React.FC<{
                 <h3>Minimum Margin</h3>
                 <span>
                     <a>
-                        {toApproxCurrency(
-                            calcMinimumMargin(balances?.quote, balances?.base, fairPrice, maxLeverage),
-                        )}
+                        {toApproxCurrency(calcMinimumMargin(balances?.quote, balances?.base, fairPrice, maxLeverage))}
                     </a>
                 </span>
             </Item>

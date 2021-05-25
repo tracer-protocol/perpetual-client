@@ -23,9 +23,9 @@ export const round: (value: number) => number = (value) => {
 
 export const toApproxCurrency: (num_: BigNumber | number) => string = (num_) => {
     let num = num_;
-    if (typeof(num) !== 'number') {
-        num = (num_ as BigNumber).toNumber()
-    } 
+    if (typeof num !== 'number') {
+        num = (num_ as BigNumber).toNumber();
+    }
     return num.toLocaleString('en-us', {
         style: 'currency',
         currency: 'USD',

@@ -13,7 +13,7 @@ import { Section } from '@components/General';
 import { UserBalance } from 'types';
 import Error from '../Error';
 import { BigNumber } from 'bignumber.js';
-import { defaults } from '@libs/Tracer'
+import { defaults } from '@libs/Tracer';
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;

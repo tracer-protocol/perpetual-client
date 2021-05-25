@@ -19,7 +19,7 @@ export const defaults: Record<string, any> = {
     health: new BigNumber(0),
     apy: new BigNumber(0),
     buffer: new BigNumber(0),
-}
+};
 
 export type InsuranceAction =
     | { type: 'setAll'; state: InsurancePoolInfo; marketId: string }
@@ -27,7 +27,14 @@ export type InsuranceAction =
     | { type: 'setLiquidity'; liquidity: BigNumber; marketId: string }
     | { type: 'setHealth'; health: BigNumber; marketId: string }
     | { type: 'setTarget'; target: BigNumber; marketId: string }
-    | { type: 'setBalances'; liquidity: BigNumber, balance: BigNumber, target: BigNumber; marketId: string, health: BigNumber}
+    | {
+          type: 'setBalances';
+          liquidity: BigNumber;
+          balance: BigNumber;
+          target: BigNumber;
+          marketId: string;
+          health: BigNumber;
+      };
 
 interface ContextProps {
     poolInfo: InsurancePoolInfo;
@@ -94,7 +101,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     ...state,
                     pools: {
                         [action.marketId]: {
-                            ...action.state
+                            ...action.state,
                         },
                     },
                 };
@@ -112,7 +119,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     },
                 };
             default:
-                throw new Error("Dispatch function not recognised");
+                throw new Error('Dispatch function not recognised');
         }
     };
 
@@ -120,10 +127,15 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     useEffect(() => {
         if (web3 && selectedTracer) {
-            let setter = async () => {
+            const setter = async () => {
                 await selectedTracer.initialised;
-                setContract(new web3.eth.Contract(insuranceJSON as AbiItem[], selectedTracer.insuranceContract) as unknown as Insurance);
-            }
+                setContract(
+                    new web3.eth.Contract(
+                        insuranceJSON as AbiItem[],
+                        selectedTracer.insuranceContract,
+                    ) as unknown as Insurance,
+                );
+            };
             setter();
         }
     }, [web3, selectedTracer]);
@@ -190,9 +202,9 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 ? contract?.methods.getPoolUserBalance(account as string).call()
                 : Promise.resolve('0'); // we dont want it all to fail if account isnt connected
             const rewards_ = '0';
-            const buffer_= '0';
+            const buffer_ = '0';
             const target_ = contract?.methods.getPoolTarget().call();
-            const liquidity_ = contract?.methods.collateralAmount().call()
+            const liquidity_ = contract?.methods.collateralAmount().call();
             const res = await Promise.all([userBalance_, rewards_, target_, liquidity_, buffer_]);
             const liquidity = res[3] ? new BigNumber(Web3.utils.fromWei(res[3])) : defaults.liquidity;
             const target = res[2] ? new BigNumber(Web3.utils.fromWei(res[2])) : defaults.target;
@@ -208,7 +220,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     rewards: res[1] ? new BigNumber(Web3.utils.fromWei(res[1])) : defaults.rewards,
                     health: health.lt(1) ? health.times(100) : defaults.health,
                     apy: defaults.apy,
-                    buffer: res[4] ? new BigNumber(Web3.utils.fromWei(res[4])) : defaults.buffer
+                    buffer: res[4] ? new BigNumber(Web3.utils.fromWei(res[4])) : defaults.buffer,
                 },
             });
         } // else
@@ -219,9 +231,9 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         if (!selectedTracer?.address) {
             return { status: 'error', message: 'Failed to withdraw: Selected tracer address cannot be undefined' };
         }
-        const userBalance_ = contract?.methods.getPoolUserBalance(account as string).call()
+        const userBalance_ = contract?.methods.getPoolUserBalance(account as string).call();
         const target_ = contract?.methods.getPoolTarget().call();
-        const liquidity_ = contract?.methods.collateralAmount().call()
+        const liquidity_ = contract?.methods.collateralAmount().call();
         Promise.all([userBalance_, target_, liquidity_])
             .then((res) => {
                 const target = res[1] ? new BigNumber(Web3.utils.fromWei(res[1])) : defaults.target;
@@ -233,12 +245,12 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     balance: res[0] ? new BigNumber(Web3.utils.fromWei(res[0])) : defaults.userBalance,
                     target: target,
                     liquidity: liquidity,
-                    health: health
+                    health: health,
                 });
             })
             .catch((err) => {
-                console.error(err)
-            })
+                console.error(err);
+            });
     };
 
     useEffect(() => {

@@ -12,15 +12,12 @@ import { TracerPerpetualSwaps as TracerType } from '@tracer-protocol/contracts/t
 import BigNumber from 'bignumber.js';
 
 import { AbiItem } from 'web3-utils';
-import { 
-    Result,
-    UserBalance
-} from 'types';
+import { Result, UserBalance } from 'types';
 import { checkAllowance } from '../web3/utils';
 
 export const defaults: Record<string, any> = {
     balances: {
-        quote: new BigNumber (0),
+        quote: new BigNumber(0),
         base: new BigNumber(0),
         tokenBalance: new BigNumber(0),
         totalLeveragedValue: 0,
@@ -29,10 +26,10 @@ export const defaults: Record<string, any> = {
     maxLeverage: new BigNumber(1),
     oraclePrice: new BigNumber(0),
     quoteTokenDecimals: new BigNumber(1),
-    exposure: new BigNumber (0),
-    feeRate: new BigNumber (0),
-    fundingRateSensitivity: new BigNumber (0)
-}
+    exposure: new BigNumber(0),
+    feeRate: new BigNumber(0),
+    fundingRateSensitivity: new BigNumber(0),
+};
 
 /**
  * Tracer class to interact with the tracer contract
@@ -71,7 +68,7 @@ export default class Tracer {
         this.feeRate = defaults.feeRate;
         this.quoteTokenDecimals = defaults.priceMultiplier;
         this.fundingRateSensitivity = defaults.fundingRateSensitivity;
-        this.insuranceContract = "";
+        this.insuranceContract = '';
         this.balances = defaults.balances;
         this.oraclePrice = defaults.oraclePrice;
         this.initialised = this.init(web3);
@@ -98,7 +95,7 @@ export default class Tracer {
             maxLeverage,
             fundingRateSensitivity,
             feeRate,
-            insuranceContract
+            insuranceContract,
         ])
             .then((res) => {
                 const priceMultiplier_ = new BigNumber(res[0]);
@@ -143,7 +140,9 @@ export default class Tracer {
                 base: new BigNumber(Web3.utils.fromWei(balance[0][1])),
                 totalLeveragedValue: new BigNumber(Web3.utils.fromWei(balance[1])),
                 lastUpdatedGasPrice: new BigNumber(Web3.utils.fromWei(balance[3])),
-                tokenBalance: walletBalance ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals)) : new BigNumber(0),
+                tokenBalance: walletBalance
+                    ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
+                    : new BigNumber(0),
             };
             console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
             this.balances = parsedBalances;
@@ -176,15 +175,15 @@ export default class Tracer {
      */
     updateFeeRate: () => Promise<void> = async () => {
         const feeRate = await this._instance.methods.feeRate().call();
-        const set = new BigNumber(Web3.utils.fromWei(feeRate))
+        const set = new BigNumber(Web3.utils.fromWei(feeRate));
         this.feeRate = set;
     };
 
     /**
      * Withdraws from the margin account of the tracer
-     * @param amount 
-     * @param account 
-     * @returns 
+     * @param amount
+     * @param account
+     * @returns
      */
     deposit: (amount: number, account: string) => Promise<Result> = async (amount, account) => {
         try {
@@ -193,13 +192,11 @@ export default class Tracer {
                 return err;
             }
             // convert amount to appropriate amount in quote token
-            const amount_ = new BigNumber(amount).times(new BigNumber(10).pow(this.quoteTokenDecimals)).toString()
-            const result = await this._instance.methods
-                .deposit(amount_)
-                .send({ from: account });
-            return { 
-                status: 'success', 
-                message: `Successfully made deposit into margin account, ${result?.transactionHash}` 
+            const amount_ = new BigNumber(amount).times(new BigNumber(10).pow(this.quoteTokenDecimals)).toString();
+            const result = await this._instance.methods.deposit(amount_).send({ from: account });
+            return {
+                status: 'success',
+                message: `Successfully made deposit into margin account, ${result?.transactionHash}`,
             };
         } catch (err) {
             return { status: 'error', message: `Failed to deposit into margin account: ${err.message}` };
@@ -208,16 +205,16 @@ export default class Tracer {
 
     /**
      * Deposits into the margin account of the tracer
-     * @param amount 
-     * @param account 
-     * @returns 
+     * @param amount
+     * @param account
+     * @returns
      */
     withdraw: (amount: number, account: string) => Promise<Result> = async (amount, account) => {
         try {
             const result = await this._instance.methods
                 .withdraw(Web3.utils.toWei(amount.toString()))
-                .send({ from: account })
-            
+                .send({ from: account });
+
             return {
                 status: 'success',
                 message: `Successfully withdrew from margin account, ${result?.transactionHash}`,

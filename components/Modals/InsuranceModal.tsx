@@ -133,11 +133,11 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
     const newBalance = isDeposit ? poolBalance.plus(amount_) : poolBalance.minus(amount_);
 
     useEffect(() => {
-        let amountValid = amount > 0 && amount <= (balance?.toNumber() ?? 0);
+        const amountValid = amount > 0 && amount <= (balance?.toNumber() ?? 0);
         if (isDeposit) {
-            setValid(amountValid && acceptedTerms)
+            setValid(amountValid && acceptedTerms);
         } else {
-            setValid(amountValid)
+            setValid(amountValid);
         }
     }, [balance, amount, acceptedTerms]);
 
@@ -241,7 +241,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 ) : null}
                 <div className="flex items-center justify-center p-6 rounded-b" id="insurance-submit">
                     {valid ? (
-                        <Button onClick={() => submit(amount) }>
+                        <Button onClick={() => submit(amount)}>
                             {isDeposit ? 'Add Insurance' : 'Withdraw Insurance'}
                         </Button>
                     ) : (

@@ -30,8 +30,7 @@ const Account: React.FC = () => {
             <SubNavBar setTab={setTab} tabs={subTabs} selected={tab} />
             <SelectedTracerStore>
                 <InsuranceStore>
-                    <AccountStore>
-                    </AccountStore>
+                    <AccountStore></AccountStore>
                 </InsuranceStore>
             </SelectedTracerStore>
         </div>

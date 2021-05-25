@@ -28,8 +28,8 @@ type BProps = {
 export const MarginButton: React.FC<BProps> = ({ type, children }: BProps) => {
     const [showModal, setShowModal] = useState(false);
     const { tracerId, selectedTracer } = useContext(TracerContext);
-    const { base, quote, tokenBalance } = selectedTracer?.balances ?? defaults.balances
-    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice
+    const { base, quote, tokenBalance } = selectedTracer?.balances ?? defaults.balances;
+    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const maxLeverage = selectedTracer?.maxLeverage ?? defaults.maxLeverage;
     const balance = type === 'Deposit' ? tokenBalance : calcWithdrawable(quote, base, fairPrice, maxLeverage);
 

@@ -55,7 +55,7 @@ export const PostTradeDetails: React.FC<PTDProps> = styled(
         const newBase =
             position === 0
                 ? balances.base.minus(exposure) // short
-                : balances.base .plus(exposure); // long
+                : balances.base.plus(exposure); // long
         const newQuote =
             position === 0
                 ? balances.quote.plus(calcNotionalValue(exposure, fairPrice)) // short
