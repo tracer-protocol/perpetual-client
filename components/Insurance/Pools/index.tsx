@@ -8,7 +8,6 @@ import { Button, Logo } from '@components/General';
 import { CaretDownFilled } from '@ant-design/icons';
 import Breakdown from '../PoolHealth/Breakdown';
 import { InsuranceModal } from '@components/Modals/InsuranceModal';
-import { defaults } from '@context/InsuranceContext';
 
 const TableHead = styled.th`
     color: #3da8f5;
@@ -117,7 +116,7 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
     return (
         <Collapsible className={className}>
             <Teaser>
-                <span>{pool?.userBalance.toNumber() ?? defaults.userBalance.toNumber()} iTokens</span>
+                <span>{pool.userBalance.toNumber()} iTokens</span>
                 <span className="percent">{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</span>
             </Teaser>
             <Hidden>

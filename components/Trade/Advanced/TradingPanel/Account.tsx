@@ -257,14 +257,14 @@ export const AccountPanel: React.FC<{
             <Item>
                 <h3>Total Margin</h3>
                 <span>
-                    <a>{toApproxCurrency(calcTotalMargin(balances?.quote, balances?.base, fairPrice))}</a>
+                    <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
                 </span>
             </Item>
             <Item>
                 <h3>Minimum Margin</h3>
                 <span>
                     <a>
-                        {toApproxCurrency(calcMinimumMargin(balances?.quote, balances?.base, fairPrice, maxLeverage))}
+                        {toApproxCurrency(calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage))}
                     </a>
                 </span>
             </Item>

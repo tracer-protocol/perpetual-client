@@ -4,7 +4,6 @@ import NavBar from '@components/Nav/Navbar';
 import { SubNavBar } from '@components/Nav';
 import { SelectedTracerStore } from '@context/TracerContext';
 import { InsuranceStore } from '@context/InsuranceContext';
-import { AccountStore } from '@context/AccountContext';
 
 const Account: React.FC = () => {
     // const [tab, setTab] = useState(0);
@@ -30,7 +29,6 @@ const Account: React.FC = () => {
             <SubNavBar setTab={setTab} tabs={subTabs} selected={tab} />
             <SelectedTracerStore>
                 <InsuranceStore>
-                    <AccountStore></AccountStore>
                 </InsuranceStore>
             </SelectedTracerStore>
         </div>

@@ -224,14 +224,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     //     }
     // }, [oppositeOrders, order.position]);
 
-    // TODO move these out of this context component because these values will have to change
-    //  when interacting with the advanced trading screen
     const { exposure, tradePrice } = calcTradeExposure(order.rMargin, order.leverage, oppositeOrders);
-
-    // useEffect(() => {
-    //     const { exposure } = calcExposure(order.rMargin, order.leverage, oppositeOrders);
-    //     orderDispatch({ type: 'setExposure', value: exposure });
-    // }, [order.rMargin, order.leverage, order.position, oppositeOrders]);
 
     // Handles automatically changing the trade price when taking a market order
     useEffect(() => {
