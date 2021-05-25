@@ -13,7 +13,7 @@ const calcRemainder = (target: number, liquidity: number, userBalance: number, b
 
 const hasFullOwnership = (liquidity: number, userBalance: number) => liquidity === userBalance;
 
-const denom = (target: number, liquidity: number) => (target > liquidity ? target : liquidity);
+const denom = (target: number, liquidity: number) => (target < liquidity ? target : liquidity);
 
 interface BProps {
     target: number;
@@ -164,14 +164,14 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
             <div className="sections hoverHide">
                 <Section
                     title="Buffer"
-                    percentage={parseFloat(((buffer / denom(target, liquidity)) * 100).toFixed(3))}
+                    percentage={parseFloat(((buffer / liquidity) * 100).toFixed(3))}
                     value={buffer}
                     color="#011772"
                     target="bufferTarget"
                 />
                 <Section
                     title="Public"
-                    percentage={parseFloat((((liquidity - userBalance) / target) * 100).toFixed(3))}
+                    percentage={parseFloat((((liquidity - userBalance - buffer) / liquidity) * 100).toFixed(3))}
                     value={liquidity}
                     color="#3DA8F5"
                     target="liquidityTarget"

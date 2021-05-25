@@ -263,9 +263,7 @@ export const AccountPanel: React.FC<{
             <Item>
                 <h3>Minimum Margin</h3>
                 <span>
-                    <a>
-                        {toApproxCurrency(calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage))}
-                    </a>
+                    <a>{toApproxCurrency(calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage))}</a>
                 </span>
             </Item>
             <DepositButtons>
