@@ -42,7 +42,7 @@ export const useMarketPairs: () => Record<string, string[]> = () => {
  * @param tracer current selected tracer
  * @returns 2 arrays, short orders and long orders respectively
  */
-export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record<string, OpenOrder[]> = (
+export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer | undefined) => Record<string, OpenOrder[]> = (
     web3,
     tracer,
 ) => {
@@ -56,7 +56,10 @@ export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record
     const [openOrders, setOpenOrders] = useState<Record<string, OpenOrder[]>>({ longOrders: [], shortOrders: [] });
 
     const getOpenOrders: () => Promise<Record<string, OpenOrder[]>> = async () => {
-        await getOrders(tracer.address);
+        if (tracer) {
+            // does nothing for now
+            await getOrders(tracer.address);
+        }
         return {
             shortOrders: [],
             longOrders: [],

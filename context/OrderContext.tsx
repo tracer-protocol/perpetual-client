@@ -191,7 +191,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     const [order, orderDispatch] = useReducer(reducer, initialState);
 
-    const openOrders = useTracerOrders(web3, selectedTracer as Tracer);
+    const openOrders = useTracerOrders(web3, selectedTracer);
     const oppositeOrders = order.position ? openOrders.shortOrders : openOrders.longOrders;
 
     const price_ = 0.5; // TODO replace these with actual price

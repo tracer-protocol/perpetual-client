@@ -12,8 +12,8 @@ interface ContextProps {
 export const FactoryContext = React.createContext<Partial<ContextProps>>({});
 
 export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
-    const { tracers } = useAllTracers();
     const { web3 } = useContext(Web3Context);
+    const { tracers } = useAllTracers();
     const [labelledTracers, setLabelledTracers] = useState<LabelledTracers>({});
 
     useEffect(() => {

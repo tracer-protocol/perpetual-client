@@ -11,6 +11,7 @@ import { Web3Store } from '@context/Web3Context';
 import GraphProvider from '@libs/Graph';
 import { Notification } from '@components/General/Notification';
 import { TransactionStore } from '@context/TransactionContext';
+import { FactoryStore } from '@context/FactoryContext';
 
 const App = ({ Component, pageProps }: AppProps) => {  // eslint-disable-line
     return (
@@ -33,13 +34,15 @@ const App = ({ Component, pageProps }: AppProps) => {  // eslint-disable-line
                 <meta name="theme-color" content="#03065E" />
             </Head>
             <ToastProvider components={{ Toast: Notification }}>
-                <GraphProvider graphUri={process.env.NEXT_PUBLIC_GRAPH_URI ?? ''}>
-                    <Web3Store>
-                        <TransactionStore>
-                            <Component {...pageProps} />
-                        </TransactionStore>
-                    </Web3Store>
-                </GraphProvider>
+                <Web3Store>
+                    <GraphProvider>
+                        <FactoryStore>
+                            <TransactionStore>
+                                <Component {...pageProps} />
+                            </TransactionStore>
+                        </FactoryStore>
+                    </GraphProvider>
+                </Web3Store>
             </ToastProvider>
         </div>
     );

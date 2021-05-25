@@ -1,6 +1,6 @@
 import { useToasts } from 'react-toast-notifications';
 import { gql, useQuery } from '@apollo/client';
-import { useRef } from 'react';
+import { useRef } from 'react'
 
 const ALL_TRACERS = gql`
     query TracerData($user: String!) {
@@ -29,11 +29,19 @@ export const useAccountData: (user: string | undefined) => any = (user) => { // 
     const { data, error, loading, refetch } = useQuery(ALL_TRACERS, {
         variables: { user: user?.toLowerCase() },
         errorPolicy: 'all',
-        onError: (error) => {
-            addToast(`Failed to fetch account data. ${error}`, {
-                appearance: 'error',
-                autoDismiss: true,
-            });
+        onError: ({ graphQLErrors, networkError }) => {
+            if (graphQLErrors) {
+                addToast(`Failed to fetch account data. ${error}`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            } 
+            if (networkError) {
+                addToast(`Failed to connect to the graph. ${networkError}`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            }
         },
     });
 
