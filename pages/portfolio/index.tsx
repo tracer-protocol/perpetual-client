@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import NavBar from '@components/Nav/Navbar';
 import styled from 'styled-components';
 import SubNav from "@components/Nav/SubNav";
+import SideNav from "@components/Nav/SideNav";
 
 const LeftPanel = styled.div`
     width: 25%;
@@ -24,7 +25,7 @@ const RightPanel = styled.div`
     border-right: 1px solid #0c3586;
 `;
 
-const RightPanelContent = () => {
+const TradingPortfolio = () => {
     const [tab, setTab] = useState(0);
     const tabs = ['Positions', 'Margin Accounts', 'Trade History', 'Transfers'];
     const content = () => {
@@ -66,13 +67,35 @@ const RightPanelContent = () => {
 };
 
 const Portfolio: React.FC = styled(({ className }) => {
+    const [tab, setTab] = useState(0);
+    const tabs = ['Trading Portfolio', 'Insurance Portfolio'];
+    const content = () => {
+        switch (tab) {
+            case 0:
+                return (
+                    <>
+                        <TradingPortfolio />
+                    </>
+                );
+            case 1:
+                return (
+                    <>
+                        Insurance Portfolio
+                    </>
+                );
+            default:
+                return;
+        }
+    };
     return (
         <div className={className}>
             <NavBar />
             <div className="flex h-full">
-                <LeftPanel>Left Panel</LeftPanel>
+                <LeftPanel>
+                    <SideNav tabs={tabs} setTab={setTab} selected={tab} />
+                </LeftPanel>
                 <RightPanel>
-                    <RightPanelContent />
+                    {content()}
                 </RightPanel>
             </div>
         </div>

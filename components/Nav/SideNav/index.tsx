@@ -9,18 +9,15 @@ interface SNBProps {
     position?: 'end' | 'start';
 }
 
-const SubNavContainer = styled.div`
+const SideNavContainer = styled.div`
     letter-spacing: -0.36px;
     font-size: 18px;
     border-bottom: 1px solid #0c3586;
-    display: flex;
 `;
 
-const SubNavItem = styled.div`
+const SideNavItem = styled.div`
     color: #005ea4;
     transition: 0.3s;
-    border-right: 1px solid #0c3586;
-    text-align: center;
     padding: 15px;
     min-width: 125px;
 
@@ -34,12 +31,12 @@ const SubNavItem = styled.div`
     }
 `;
 
-const SubNav: React.FC<SNBProps> = (props: SNBProps) => {
+const SideNav: React.FC<SNBProps> = (props: SNBProps) => {
     const { tabs, selected, setTab } = props;
     return (
-        <SubNavContainer>
+        <SideNavContainer>
             {tabs.map((tab_, index) => (
-                <SubNavItem
+                <SideNavItem
                     className={index === selected ? 'selected' : ''}
                     key={`sub-nav-${index}`}
                     onClick={(e) => {
@@ -48,10 +45,10 @@ const SubNav: React.FC<SNBProps> = (props: SNBProps) => {
                     }}
                 >
                     {tab_}
-                </SubNavItem>
+                </SideNavItem>
             ))}
-        </SubNavContainer>
+        </SideNavContainer>
     );
 };
 
-export default SubNav;
+export default SideNav;
