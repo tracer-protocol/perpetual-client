@@ -81,7 +81,7 @@ const useOrders = (trigger: boolean, selectedTracer: Tracer | undefined) => {
 const OrderBookContainer = styled.div`
     border-top: 1px solid #002886;
     padding: 10px;
-  
+
     h3 {
         letter-spacing: -0.4px;
         color: #ffffff;

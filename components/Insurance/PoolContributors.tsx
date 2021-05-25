@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Table, { TableRow } from '@components/Tables';
-import { SubNavBar } from '@components/Nav/SubNavBar';
+import SubNavBar from '@components/Nav/SubNavBar';
 import { Holding } from 'types';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 

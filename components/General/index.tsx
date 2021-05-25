@@ -106,10 +106,11 @@ const clearLogos: Record<string, string> = {
 };
 
 const logos: Record<string, string> = {
+    TSLA: '/img/logos/currencies/tesla.svg',
     ETH: '/img/logos/currencies/eth.svg',
 };
 
-type Ticker = 'ETH' | 'LINK';
+type Ticker = 'TSLA' | 'ETH' | 'LINK';
 
 interface LProps {
     className?: string;
