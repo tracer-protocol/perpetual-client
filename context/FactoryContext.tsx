@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useRef } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { useAllTracers } from '@hooks/GraphHooks/Tracer';
 import { Children } from 'types';
 import Tracer from '@libs/Tracer';
@@ -12,22 +12,23 @@ interface ContextProps {
 export const FactoryContext = React.createContext<Partial<ContextProps>>({});
 
 export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
-    const { tracers } = useAllTracers();
     const { web3 } = useContext(Web3Context);
-    const factoryRef = useRef<LabelledTracers>({});
+    const { tracers } = useAllTracers();
+    const [labelledTracers, setLabelledTracers] = useState<LabelledTracers>({});
 
     useEffect(() => {
         let mounted = true;
         if (web3 && tracers.length) {
             if (mounted) {
-                const labelledTracers: LabelledTracers = tracers.reduce(
+                const _labelledTracers: LabelledTracers = tracers.reduce(
                     (o: any, t: { marketId: string; id: string }) => ({
                         ...o,
                         [t.marketId]: new Tracer(web3, t.id, t.marketId),
                     }),
                     {},
                 );
-                factoryRef.current = labelledTracers;
+                setLabelledTracers(_labelledTracers);
+                // factoryRef.current = labelledTracers;
             }
             return () => {
                 // cleanup
@@ -39,7 +40,7 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
     return (
         <FactoryContext.Provider
             value={{
-                tracers: factoryRef.current,
+                tracers: labelledTracers,
             }}
         >
             {children}

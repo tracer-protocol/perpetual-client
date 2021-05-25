@@ -4,6 +4,7 @@ import { SearchBar } from '@components/Nav/SearchBar';
 import { SearchableTable } from '@components/Tables/SearchableTable';
 import { NumberSelect } from '@components/General/Input/NumberSelect';
 import { Section } from '@components/General';
+import { defaults } from '@libs/Tracer';
 
 const PoolSummary: React.FC = () => {
     return (
@@ -18,7 +19,7 @@ const PoolSummary: React.FC = () => {
 const PoolFunds: React.FC = () => {
     const { tracerId, selectedTracer } = useContext(TracerContext);
     const [amount, setAmount] = useState(0);
-    const balance = selectedTracer?.balances?.tokenBalance ?? 0;
+    const balance = selectedTracer?.balances?.tokenBalance ?? defaults.tokenBalance;
 
     return (
         <div className="text-center h-full w-full flex flex-col">

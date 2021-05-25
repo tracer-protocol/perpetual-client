@@ -1,3 +1,4 @@
+import { BigNumber } from 'bignumber.js';
 export interface TracerData {
     tracerId?: string;
     matchingFee: number;
@@ -8,11 +9,11 @@ export interface TracerData {
 }
 
 export type UserBalance = {
-    quote: number; // the accounts deposited funds
-    base: number; // the position the user currently has
-    totalLeveragedValue: number;
-    lastUpdatedGasPrice: number;
-    tokenBalance: number;
+    quote: BigNumber; // the accounts deposited funds
+    base: BigNumber; // the position the user currently has
+    totalLeveragedValue: BigNumber;
+    lastUpdatedGasPrice: BigNumber;
+    tokenBalance: BigNumber;
 };
 
 export type FundingRate = {
@@ -24,7 +25,7 @@ export type FundingRate = {
 
 export type TracerInfo = {
     balance: UserBalance | undefined;
-    quoteTokenBalance: number | undefined;
+    quoteTokenBalance: BigNumber | undefined;
     fundingRate: number | undefined;
     matchingFee: number;
     tracerBaseToken: string;

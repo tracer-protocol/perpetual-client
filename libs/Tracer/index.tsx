@@ -2,20 +2,34 @@
  * Functions to read and write from tracers (including direct trading)
  */
 import Web3 from 'web3';
-import tracerJSON from '@tracer-protocol/contracts/build/contracts/Tracer.json';
-import ERC20 from '@tracer-protocol/contracts/build/contracts/ERC20.json';
-import accountJSON from '@tracer-protocol/contracts/build/contracts/Account.json';
-import oracleJSON from '@tracer-protocol/contracts/build/contracts/Oracle.json';
+import tracerAbi from '@tracer-protocol/contracts/abi/contracts/TracerPerpetualSwaps.sol/TracerPerpetualSwaps.json';
+import ERC20Abi from '@tracer-protocol/contracts/abi/@openzeppelin/contracts/token/ERC20/ERC20.sol/ERC20.json';
+import oracleAbi from '@tracer-protocol/contracts/abi/contracts/oracle/Oracle.sol/Oracle.json';
 
-import { Account as AccountType } from '@tracer-protocol/contracts/types/web3-v1-contracts/Account';
-import { Tracer as TracerType } from '@tracer-protocol/contracts/types/web3-v1-contracts/Tracer';
-import { Oracle } from '@tracer-protocol/contracts/types/web3-v1-contracts/Oracle';
-import { Erc20 as Erc20Type } from '@tracer-protocol/contracts/types/web3-v1-contracts/ERC20';
+import { Oracle } from '@tracer-protocol/contracts/types/Oracle';
+import { ERC20 as Erc20Type } from '@tracer-protocol/contracts/types/ERC20';
+import { TracerPerpetualSwaps as TracerType } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
+import BigNumber from 'bignumber.js';
 
 import { AbiItem } from 'web3-utils';
-import { fromCents } from '@libs/utils';
-import { checkAllowance } from '@libs/web3/utils';
-import { TakenOrder, OpenOrder, Result, UserBalance } from 'types';
+import { Result, UserBalance } from 'types';
+import { checkAllowance } from '../web3/utils';
+
+export const defaults: Record<string, any> = {
+    balances: {
+        quote: new BigNumber(0),
+        base: new BigNumber(0),
+        tokenBalance: new BigNumber(0),
+        totalLeveragedValue: 0,
+        lastUpdatedGasPrice: 0,
+    },
+    maxLeverage: new BigNumber(1),
+    oraclePrice: new BigNumber(0),
+    quoteTokenDecimals: new BigNumber(1),
+    exposure: new BigNumber(0),
+    feeRate: new BigNumber(0),
+    fundingRateSensitivity: new BigNumber(0),
+};
 
 /**
  * Tracer class to interact with the tracer contract
@@ -31,39 +45,33 @@ import { TakenOrder, OpenOrder, Result, UserBalance } from 'types';
 export default class Tracer {
     _instance: TracerType;
     _web3: Web3;
-    public account: AccountType | undefined;
     public accountAddress: string | undefined;
     public address: string;
     public marketId: string;
     _oracle: Oracle | undefined;
     public token: Erc20Type | undefined;
     public liquidationGasCost: number | undefined;
-    public priceMultiplier: number | undefined;
-    public maxLeverage: number | undefined;
-    public fundingRateSensitivity: number | undefined;
-    public feeRate: number;
+    public quoteTokenDecimals: BigNumber;
+    public maxLeverage: BigNumber | undefined;
+    public fundingRateSensitivity: BigNumber;
+    public feeRate: BigNumber;
     public initialised: Promise<boolean>;
     public balances: UserBalance;
-    public oraclePrice: number;
+    public oraclePrice: BigNumber;
+    public insuranceContract: string;
 
     constructor(web3: Web3, address: string, marketId: string) {
-        this._instance = (new web3.eth.Contract(
-            (tracerJSON.abi as unknown) as AbiItem,
-            address,
-        ) as unknown) as TracerType;
+        console.log(address.slice(), 'Address');
+        this._instance = new web3.eth.Contract(tracerAbi as unknown as AbiItem, address) as unknown as TracerType;
         this._web3 = web3;
         this.address = address;
         this.marketId = marketId;
-        this.feeRate = 0;
-        this.priceMultiplier = 0;
-        this.balances = {
-            quote: 0,
-            base: 0,
-            totalLeveragedValue: 0,
-            lastUpdatedGasPrice: 0,
-            tokenBalance: 0,
-        };
-        this.oraclePrice = 0;
+        this.feeRate = defaults.feeRate;
+        this.quoteTokenDecimals = defaults.priceMultiplier;
+        this.fundingRateSensitivity = defaults.fundingRateSensitivity;
+        this.insuranceContract = '';
+        this.balances = defaults.balances;
+        this.oraclePrice = defaults.oraclePrice;
         this.initialised = this.init(web3);
     }
 
@@ -72,35 +80,38 @@ export default class Tracer {
      * @param web3 provider to create the contracts
      */
     init: (web3: Web3) => Promise<boolean> = (web3) => {
-        const oracleAddress = this._instance.methods.oracle().call();
-        const tokenAddr = this._instance.methods.tracerBaseToken().call();
-        const priceMultiplier = this._instance.methods.priceMultiplier().call();
+        const oracleAddress = this._instance.methods.gasPriceOracle().call();
+        const tokenAddr = this._instance.methods.tracerQuoteToken().call();
+        const quoteTokenDecimals = this._instance.methods.quoteTokenDecimals().call();
         const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
         const maxLeverage = this._instance.methods.maxLeverage().call();
-        const fundingRateSensitivity = this._instance.methods.FUNDING_RATE_SENSITIVITY().call();
+        const fundingRateSensitivity = this._instance.methods.fundingRateSensitivity().call();
         const feeRate = this._instance.methods.feeRate().call();
-        const accountAddress = this._instance.methods.accountContract().call();
+        const insuranceContract = this._instance.methods.insuranceContract().call();
         return Promise.all([
-            priceMultiplier,
+            quoteTokenDecimals,
             liquidationGasCost,
             tokenAddr,
             oracleAddress,
             maxLeverage,
             fundingRateSensitivity,
             feeRate,
-            accountAddress,
+            insuranceContract,
         ])
             .then((res) => {
-                const priceMultiplier_ = parseInt(res[0]);
-                this.priceMultiplier = priceMultiplier_;
+                const priceMultiplier_ = new BigNumber(res[0]);
+                this.quoteTokenDecimals = priceMultiplier_;
                 this.liquidationGasCost = parseInt(res[1]);
-                this.token = (new web3.eth.Contract(ERC20.abi as AbiItem[], res[2]) as unknown) as Erc20Type;
-                this._oracle = (new web3.eth.Contract(oracleJSON.abi as AbiItem[], res[3]) as unknown) as Oracle;
-                this.maxLeverage = parseFloat(res[4]) / 10000;
-                this.fundingRateSensitivity = parseInt(res[5]) / priceMultiplier_;
-                this.feeRate = parseInt(res[6]) / priceMultiplier_;
-                this.account = (new web3.eth.Contract(accountJSON.abi as AbiItem[], res[7]) as unknown) as AccountType;
-                this.accountAddress = res[7];
+                this.token = res[2]
+                    ? (new web3.eth.Contract(ERC20Abi as AbiItem[], res[2]) as unknown as Erc20Type)
+                    : undefined;
+                this._oracle = res[3]
+                    ? (new web3.eth.Contract(oracleAbi as AbiItem[], res[3]) as unknown as Oracle)
+                    : undefined;
+                this.maxLeverage = new BigNumber(parseFloat(res[4]) / 10000);
+                this.fundingRateSensitivity = new BigNumber(res[5]).div(priceMultiplier_);
+                this.feeRate = new BigNumber(res[6]).div(priceMultiplier_);
+                this.insuranceContract = res[7];
                 this.updateOraclePrice();
                 return true;
             })
@@ -108,103 +119,6 @@ export default class Tracer {
                 console.error(err);
                 return false;
             });
-    };
-
-    /**
-     * Places an on chain order, fillable by any part on chain.
-     * @param amount the amount of Tracers to buy
-     * @param price the price in dollars to buy the tracer at
-     * @param side the side of the order. True for long, false for short.
-     * @param expiration the expiry time for this order
-     */
-    makeOrder: (amount: number, price: number, side: boolean, from: string) => Promise<Result> = async (
-        amount,
-        price,
-        side,
-        from,
-    ) => {
-        const expiration = new Date();
-        expiration.setHours(expiration.getHours() + 24);
-        try {
-            await this._instance.methods
-                .makeOrder(
-                    Web3.utils.toWei(amount.toString()),
-                    price.toString(),
-                    side ? true : false,
-                    Math.round(expiration.getTime() / 1000).toString(),
-                )
-                .send({ from: from });
-            return { status: 'success', message: 'Successfully created orders' };
-        } catch (err) {
-            console.error(err);
-            return { status: 'error', error: err };
-        }
-    };
-
-    /**
-     * Takes an on chain order, in whole or in part. Order is executed at the makers
-     *  defined price.
-     * @param orderId the ID of the order to be filled. Emitted in the makeOrder function
-     * @param amount the amount of the order to fill.
-     */
-    takeOrders: (orders: TakenOrder[], from: string) => Promise<Result> = async (orders, from) => {
-        try {
-            const ARBITRARY_AMOUNT = 420;
-            await checkAllowance(this.token, from, this.accountAddress, ARBITRARY_AMOUNT);
-            for (const order of orders) {
-                await this._instance.methods
-                    .takeOrder(order.id, Web3.utils.toWei(order.amount.toString()))
-                    .send({ from: from });
-            }
-            // batching still requires you to confirm multiple times
-            // var batch = new this._web3.BatchRequest();
-            // for (var order of orders) {
-            //     batch.add(
-            //         this._instance.methods
-            //             .takeOrder(order.id, Web3.utils.toWei(order.amount.toString())).send.request({from: from})
-            //     )
-            // }
-            // await batch.execute();
-            return { status: 'success', message: 'Successfully took orders' };
-        } catch (err) {
-            console.error(err);
-            return { status: 'error', error: err };
-        }
-    };
-
-    /**
-     * Gets all open orders placed on chain. First gets the total count of orders and
-     * then iterates through the count getting all open orders
-     * @return an array of order objects {order amount, amount filled, price and the side of an order, address, id}
-     */
-    getOpenOrders: () => Promise<Record<string, OpenOrder[]>> = async () => {
-        const count = await this._instance.methods.orderCounter().call();
-        const shortOrders = [];
-        const longOrders = [];
-        for (let i = 0; i < parseInt(count); i++) {
-            const rawOrder = await this._instance.methods.getOrder(i).call();
-
-            // Amount = filled, not open
-            // TODO if the amount not filled is very small this will fail
-            const amount = parseFloat(Web3.utils.fromWei(rawOrder[0]));
-            const filled = parseFloat(Web3.utils.fromWei(rawOrder[1]));
-            if (amount !== filled) {
-                const order = {
-                    amount: amount,
-                    filled: filled,
-                    price: fromCents(parseFloat(rawOrder[2])),
-                    side: rawOrder[3],
-                    maker: rawOrder[4],
-                    id: i,
-                };
-                rawOrder[3] ? longOrders.push(order) : shortOrders.push(order);
-            }
-        }
-        // short orders we want in ascending order since the long wants the lowest priced short
-        // opposite for long, the shorts want the highest priced long so put longs in descending
-        shortOrders.sort((a, b) => a.price - b.price);
-        longOrders.sort((a, b) => b.price - a.price);
-        return { shortOrders: shortOrders, longOrders: longOrders };
     };
 
     /**
@@ -220,30 +134,32 @@ export default class Tracer {
      */
     updateUserBalance: (account: string | undefined) => Promise<boolean> = async (account) => {
         try {
-            if (!this.account) {
+            if (!account) {
                 return Promise.resolve(false);
             }
             // if accounts is undefined the catch should get it
-            const balance = await this.account.methods.getBalance(account ?? '', this.address.toString()).call();
-            const walletBalance = await this.token?.methods.balanceOf(account ?? '').call();
+            const balance = await this._instance.methods.getBalance(account).call();
+            const walletBalance = await this.token?.methods.balanceOf(account).call();
             const parsedBalances = {
-                quote: parseFloat(Web3.utils.fromWei(balance[0])),
-                base: parseFloat(Web3.utils.fromWei(balance[1])),
-                totalLeveragedValue: parseFloat(Web3.utils.fromWei(balance[2])),
-                lastUpdatedGasPrice: parseFloat(Web3.utils.fromWei(balance[3])),
-                tokenBalance: walletBalance ? parseInt(Web3.utils.fromWei(walletBalance)) : 0,
+                quote: new BigNumber(Web3.utils.fromWei(balance[0][0])),
+                base: new BigNumber(Web3.utils.fromWei(balance[0][1])),
+                totalLeveragedValue: new BigNumber(Web3.utils.fromWei(balance[1])),
+                lastUpdatedGasPrice: new BigNumber(Web3.utils.fromWei(balance[3])),
+                tokenBalance: walletBalance
+                    ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
+                    : new BigNumber(0),
             };
-            console.info(`Fetched user balances: ${parsedBalances}`);
+            console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
             this.balances = parsedBalances;
             return true;
         } catch (error) {
             console.error(`Failed to fetch user balance: ${error}`);
             this.balances = {
-                quote: 0,
-                base: 0,
-                totalLeveragedValue: 0,
-                lastUpdatedGasPrice: 0,
-                tokenBalance: 0,
+                quote: new BigNumber(0),
+                base: new BigNumber(0),
+                totalLeveragedValue: new BigNumber(0),
+                lastUpdatedGasPrice: new BigNumber(0),
+                tokenBalance: new BigNumber(0),
             } as UserBalance;
             return false;
         }
@@ -252,26 +168,11 @@ export default class Tracer {
     updateOraclePrice: () => Promise<void> = async () => {
         try {
             const price = await this._oracle?.methods.latestAnswer().call();
-            this.oraclePrice = parseFloat(price ?? '0');
+            this.oraclePrice = new BigNumber(price ?? '0').div(new BigNumber(10).pow(8));
         } catch (err) {
             console.error('Failed to fetch oracle price', err);
-            this.oraclePrice = 0;
+            this.oraclePrice = new BigNumber(0);
         }
-    };
-
-    /**
-     * Gets the tracers ID ie BTC/USD
-     */
-    getTracerId: () => Promise<string> = async () => {
-        const tracerId = await this._instance.methods.marketId().call();
-        return Web3.utils.toUtf8(tracerId);
-    };
-
-    /**
-     * Get the tracers address ie 0x27d2..
-     */
-    getAddress: () => string = () => {
-        return this.address;
     };
 
     /**
@@ -279,13 +180,52 @@ export default class Tracer {
      */
     updateFeeRate: () => Promise<void> = async () => {
         const feeRate = await this._instance.methods.feeRate().call();
-        const set = parseInt(feeRate) / (this.priceMultiplier ?? 1);
+        const set = new BigNumber(Web3.utils.fromWei(feeRate));
         this.feeRate = set;
     };
 
-    // get market price will just be the best current offer in open orders
-    // filter by side (opposite of position)
-    // as well as what market they have chosen
+    /**
+     * Withdraws from the margin account of the tracer
+     * @param amount
+     * @param account
+     * @returns
+     */
+    deposit: (amount: number, account: string) => Promise<Result> = async (amount, account) => {
+        try {
+            const err = await checkAllowance(this.token, account, this.address, amount);
+            if (err?.error) {
+                return err;
+            }
+            // convert amount to appropriate amount in quote token
+            const amount_ = new BigNumber(amount).times(new BigNumber(10).pow(this.quoteTokenDecimals)).toString();
+            const result = await this._instance.methods.deposit(amount_).send({ from: account });
+            return {
+                status: 'success',
+                message: `Successfully made deposit into margin account, ${result?.transactionHash}`,
+            };
+        } catch (err) {
+            return { status: 'error', message: `Failed to deposit into margin account: ${err.message}` };
+        }
+    };
 
-    // Graph of prices will be based on getting 24 hour prices
+    /**
+     * Deposits into the margin account of the tracer
+     * @param amount
+     * @param account
+     * @returns
+     */
+    withdraw: (amount: number, account: string) => Promise<Result> = async (amount, account) => {
+        try {
+            const result = await this._instance.methods
+                .withdraw(Web3.utils.toWei(amount.toString()))
+                .send({ from: account });
+
+            return {
+                status: 'success',
+                message: `Successfully withdrew from margin account, ${result?.transactionHash}`,
+            };
+        } catch (err) {
+            return { status: 'error', message: `Failed to withdraw from margin account: ${err.message}` };
+        }
+    };
 }

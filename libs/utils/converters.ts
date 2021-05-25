@@ -1,3 +1,5 @@
+import { BigNumber } from 'bignumber.js';
+
 /**
  * Simple func to convert a number to a percentage by multiplying
  *  it by 10 and returning the string
@@ -19,12 +21,15 @@ export const round: (value: number) => number = (value) => {
  * Custom to locale which replaces - with ~
  */
 
-export const toApproxCurrency: (str: string | number) => string = (str) => {
-    return str.toLocaleString('en-us', {
+export const toApproxCurrency: (num_: BigNumber | number) => string = (num_) => {
+    let num = num_;
+    if (typeof num !== 'number') {
+        num = (num_ as BigNumber).toNumber();
+    }
+    return num.toLocaleString('en-us', {
         style: 'currency',
         currency: 'USD',
     });
-    // .replace('-', '~');
 };
 
 // order prices are in cents * 1000

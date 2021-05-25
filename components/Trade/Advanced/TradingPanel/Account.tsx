@@ -4,10 +4,12 @@ import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
 import { calcTotalMargin, calcMinimumMargin } from '@tracer-protocol/tracer-utils';
 import { After, Box, Button, Close, HiddenExpand, Previous } from '@components/General';
-import { Web3Context } from 'context';
+import { TracerContext, Web3Context } from 'context';
 import { NumberSelect, Section } from '@components/General';
 import { UserBalance } from 'types';
 import Error from '@components/Trade/Error';
+import { BigNumber } from 'bignumber.js';
+import { defaults } from '@libs/Tracer';
 
 const MinHeight = 250;
 
@@ -142,52 +144,69 @@ const SAfter = styled(After)`
 type PProps = {
     className?: string;
     close: (e: any) => any;
-    deposit: boolean;
+    isDeposit: boolean;
     display: boolean;
     unit: string;
     balances: UserBalance;
-    price: number;
-    maxLeverage: number;
+    price: BigNumber;
+    maxLeverage: BigNumber;
 };
 
-const Popup: React.FC<PProps> = styled(({ className, close, deposit, unit, balances, price, maxLeverage }: PProps) => {
-    const [amount, setAmount] = useState(0);
-    const available = deposit
-        ? balances.tokenBalance
-        : balances.quote - calcMinimumMargin(balances.base, balances.quote, price, maxLeverage);
-    const newBalance = deposit ? balances.quote + amount : balances.quote - amount;
-    const invalid = amount > available;
-    return (
-        <div className={className}>
-            <div className="header">
-                <p>{deposit ? 'Deposit' : 'Withdraw'} Margin</p>
-                <Close onClick={close} />
+const Popup: React.FC<PProps> = styled(
+    ({ className, close, isDeposit, unit, balances, price, maxLeverage }: PProps) => {
+        const {
+            deposit = () => console.error('Deposit is not defined'),
+            withdraw = () => console.error('Withdraw is not defined'),
+        } = useContext(TracerContext);
+        const [amount, setAmount] = useState(0);
+        const available = isDeposit ? balances.tokenBalance : balances.quote.minus(new BigNumber(0));
+        // calcMinimumMargin(balances.base, balances.quote, price, maxLeverage));
+        const newBalance = isDeposit ? balances.quote.plus(amount) : balances.quote.minus(amount);
+        const invalid = amount > available.toNumber();
+
+        return (
+            <div className={className}>
+                <div className="header">
+                    <p>{isDeposit ? 'Deposit' : 'Withdraw'} Margin</p>
+                    <Close onClick={close} />
+                </div>
+                <SNumberSelect
+                    unit={unit}
+                    title={'Amount'}
+                    amount={amount}
+                    balance={available.toNumber()}
+                    setAmount={setAmount}
+                />
+                <Balance display={!!amount}>
+                    <span className="mr-3">Balance</span>
+                    <SAfter className={invalid ? 'invalid' : ''}>{toApproxCurrency(newBalance)}</SAfter>
+                </Balance>
+                <SHiddenExpand defaultHeight={0} open={!!amount}>
+                    <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
+                    <SSection
+                        label={`Total Margin`}
+                        tooltip={'This can be thought of as total equity or total account value'}
+                    >
+                        <SPrevious>{`${toApproxCurrency(
+                            calcTotalMargin(balances.base, balances.quote, price),
+                        )}`}</SPrevious>
+                        {`${toApproxCurrency(calcTotalMargin(balances.base, newBalance, price))}`}
+                    </SSection>
+                    <SSection label={`Maintenance Margin`}>
+                        <SPrevious>{`${toApproxCurrency(
+                            calcMinimumMargin(balances.base, balances.quote, price, maxLeverage),
+                        )}`}</SPrevious>
+                        {`${toApproxCurrency(calcMinimumMargin(balances.base, newBalance, price, maxLeverage))}`}
+                    </SSection>
+                </SHiddenExpand>
+                <MButton onClick={() => (isDeposit ? deposit(amount) : withdraw(amount))}>
+                    {isDeposit ? 'Deposit' : 'Withdraw'}
+                </MButton>
+                <Error error={invalid ? 5 : -1} />
             </div>
-            <SNumberSelect unit={unit} title={'Amount'} amount={amount} balance={available} setAmount={setAmount} />
-            <Balance display={!!amount}>
-                <span className="mr-3">Balance</span>
-                <SAfter className={invalid ? 'invalid' : ''}>{toApproxCurrency(newBalance)}</SAfter>
-            </Balance>
-            <SHiddenExpand defaultHeight={0} open={!!amount}>
-                <p className="mb-3">{deposit ? 'Deposit' : 'Withdraw'} Summary</p>
-                <SSection label={`Total Margin`}>
-                    <SPrevious>{`${toApproxCurrency(
-                        calcTotalMargin(balances.base, balances.quote, price),
-                    )}`}</SPrevious>
-                    {`${toApproxCurrency(calcTotalMargin(balances.base, newBalance, price))}`}
-                </SSection>
-                <SSection label={`Maintenance Margin`}>
-                    <SPrevious>{`${toApproxCurrency(
-                        calcMinimumMargin(balances.base, balances.quote, price, maxLeverage),
-                    )}`}</SPrevious>
-                    {`${toApproxCurrency(calcMinimumMargin(balances.base, newBalance, price, maxLeverage))}`}
-                </SSection>
-            </SHiddenExpand>
-            <MButton>{deposit ? 'Deposit' : 'Withdraw'}</MButton>
-            <Error error={invalid ? 5 : -1} />
-        </div>
-    );
-})`
+        );
+    },
+)`
     transition: 0.3s;
     position: absolute;
     padding: 10px;
@@ -215,15 +234,9 @@ export const AccountPanel: React.FC<{
 }> = ({ selectedTracer, account }) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
-    const balances = selectedTracer?.balances ?? {
-        quote: 0,
-        base: 0,
-        totalLeveragedValue: 0,
-        lastUpdatedGasPrice: 0,
-        tokenBalance: 0,
-    };
-    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1);
-    const maxLeverage = selectedTracer?.maxLeverage ?? 1;
+    const balances = selectedTracer?.balances ?? defaults.balances;
+    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
+    const maxLeverage = selectedTracer?.maxLeverage ?? new BigNumber(1);
 
     useEffect(() => {
         const overlay = document.getElementById('trading-overlay');
@@ -236,6 +249,7 @@ export const AccountPanel: React.FC<{
         setPopup(popup);
         setDeposit(deposit);
     };
+
     return account === '' ? (
         <WalletConnect />
     ) : (
@@ -243,17 +257,13 @@ export const AccountPanel: React.FC<{
             <Item>
                 <h3>Total Margin</h3>
                 <span>
-                    <a>{toApproxCurrency(calcTotalMargin(balances?.base ?? 0, balances?.quote ?? 0, fairPrice))}</a>
+                    <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
                 </span>
             </Item>
             <Item>
                 <h3>Minimum Margin</h3>
                 <span>
-                    <a>
-                        {toApproxCurrency(
-                            calcMinimumMargin(balances?.base ?? 0, balances?.quote ?? 0, fairPrice, maxLeverage),
-                        )}
-                    </a>
+                    <a>{toApproxCurrency(calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage))}</a>
                 </span>
             </Item>
             <DepositButtons>
@@ -267,7 +277,7 @@ export const AccountPanel: React.FC<{
             <Popup
                 display={popup}
                 close={(_e: any) => setPopup(false)}
-                deposit={deposit}
+                isDeposit={deposit}
                 unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}
                 maxLeverage={maxLeverage}

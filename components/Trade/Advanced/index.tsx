@@ -6,7 +6,7 @@ import OrderBook from '@components/OrderBook/OrderBook';
 import { MarketSelect, TradingInput, AccountPanel } from './TradingPanel';
 import { getOrders } from 'libs/Ome';
 import Web3 from 'web3';
-import Tracer from '@libs/Tracer';
+import Tracer, { defaults } from '@libs/Tracer';
 import { PositionDetails } from '@components/SummaryInfo/PositionDetails';
 import { InsuranceInfo } from './RightPanel/InsuranceInfo';
 import { SubNav } from '@components/Nav/SubNavBar';
@@ -59,7 +59,7 @@ const parseRes = (res: any, multiplier: number) => {
 
 const useOrders = (trigger: boolean, selectedTracer: Tracer | undefined) => {
     const market = selectedTracer?.address;
-    const priceMultiplier = selectedTracer?.priceMultiplier ?? 1;
+    const priceMultiplier = selectedTracer?.quoteTokenDecimals ?? defaults.quoteTokenDecimals;
     const [response, setResponse] = useState<any>({
         askOrders: [],
         bidOrders: [],
@@ -148,14 +148,16 @@ type TSProps = {
 const TradingSummary: React.FC<TSProps> = styled(({ selectedTracer, className }: TSProps) => {
     const [tab, setTab] = useState(0);
     const tabs = [`Position`, `Orders`, `Fills`];
+    const balances = selectedTracer?.balances ?? defaults.balances;
+    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const content = () => {
         switch (tab) {
             case 0:
                 return (
                     <PositionDetails
-                        balance={selectedTracer?.balances}
-                        fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1)}
-                        maxLeverage={selectedTracer?.maxLeverage ?? 1}
+                        balance={balances}
+                        fairPrice={fairPrice}
+                        maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                     />
                 );
             default:

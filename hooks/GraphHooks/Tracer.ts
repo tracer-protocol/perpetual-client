@@ -25,17 +25,21 @@ export const useAllTracers: () => Tracers = () => {
     const ref = useRef([]);
     const { addToast } = useToasts();
     const { data, error, loading, refetch } = useQuery(ALL_TRACERS, {
-        errorPolicy: 'all',
-        onError: (error) => {
-            addToast(`Failed to fetch tracers. ${error}`, {
-                appearance: 'error',
-                autoDismiss: true,
-            });
+        onError: ({ graphQLErrors, networkError }) => {
+            if (graphQLErrors?.length) {
+                graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
+            }
+            if (networkError) {
+                addToast(`Failed to fetch tracer data: ${networkError}`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            }
         },
     });
 
     return {
-        tracers: data?.tracers || ref.current,
+        tracers: data?.tracers ?? ref.current,
         error,
         loading,
         refetch,

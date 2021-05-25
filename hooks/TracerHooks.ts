@@ -4,10 +4,10 @@ import { AbiItem } from 'web3-utils';
 
 import { OpenOrder } from 'types';
 import Web3 from 'web3';
-import { fromCents } from '@libs/utils';
-import tracerJSON from '@tracer-protocol/contracts/build/contracts/Tracer.json';
+import tracerJSON from '@tracer-protocol/contracts/abi/contracts/TracerPerpetualSwaps.sol/TracerPerpetualSwaps.json';
 import { Tracer } from 'libs';
-import { Tracer as TracerType } from '@tracer-protocol/contracts/types/web3-v1-contracts/Tracer';
+import { TracerPerpetualSwaps as TracerType } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
+import { getOrders } from '@libs/Ome';
 
 /**
  * Function which gets all available market pairs from the tracer factory.
@@ -42,7 +42,7 @@ export const useMarketPairs: () => Record<string, string[]> = () => {
  * @param tracer current selected tracer
  * @returns 2 arrays, short orders and long orders respectively
  */
-export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record<string, OpenOrder[]> = (
+export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer | undefined) => Record<string, OpenOrder[]> = (
     web3,
     tracer,
 ) => {
@@ -50,49 +50,59 @@ export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer) => Record
 
     useEffect(() => {
         if (web3 && tracer) {
-            setContract((new web3.eth.Contract(tracerJSON.abi as AbiItem[], tracer.address) as unknown) as TracerType);
+            setContract(new web3.eth.Contract(tracerJSON as AbiItem[], tracer.address) as unknown as TracerType);
         }
     }, [web3, tracer]);
     const [openOrders, setOpenOrders] = useState<Record<string, OpenOrder[]>>({ longOrders: [], shortOrders: [] });
 
+    const getOpenOrders: () => Promise<Record<string, OpenOrder[]>> = async () => {
+        if (tracer) {
+            // does nothing for now
+            await getOrders(tracer.address);
+        }
+        return {
+            shortOrders: [],
+            longOrders: [],
+        };
+    };
     /**
      * Gets all open orders placed on chain. First gets the total count of orders and
      * then iterates through the count getting all open orders
      * @return an array of order objects {order amount, amount filled, price and the side of an order, address, id}
      */
-    const getOpenOrders: () => Promise<Record<string, OpenOrder[]>> = async () => {
-        if (!contract) {
-            return Promise.resolve({});
-        }
-        const shortOrders = [];
-        const longOrders = [];
-        // This is really annoying to do with the web3-redux store so just initiated a contract instance
-        const count = await contract.methods.orderCounter().call();
-        for (let i = 0; i < parseInt(count); i++) {
-            const rawOrder = await contract.methods.getOrder(i).call();
+    // const getOpenOrders: () => Promise<Record<string, OpenOrder[]>> = async () => {
+    //     if (!contract) {
+    //         return Promise.resolve({});
+    //     }
+    //     const shortOrders = [];
+    //     const longOrders = [];
+    //     // This is really annoying to do with the web3-redux store so just initiated a contract instance
+    //     const count = await contract.methods.orderCounter().call();
+    //     for (let i = 0; i < parseInt(count); i++) {
+    //         const rawOrder = await contract.methods.getOrder(i).call();
 
-            // Amount = filled, not open
-            // TODO if the amount not filled is very small this will fail
-            const amount = parseFloat(Web3.utils.fromWei(rawOrder[0]));
-            const filled = parseFloat(Web3.utils.fromWei(rawOrder[1]));
-            if (amount !== filled) {
-                const order = {
-                    amount: amount,
-                    filled: filled,
-                    price: fromCents(parseFloat(rawOrder[2])),
-                    side: rawOrder[3],
-                    maker: rawOrder[4],
-                    id: i,
-                };
-                rawOrder[3] ? longOrders.push(order) : shortOrders.push(order);
-            }
-        }
-        // short orders we want in ascending order since the long wants the lowest priced short
-        // opposite for long, the shorts want the highest priced long so put longs in descending
-        shortOrders.sort((a, b) => a.price - b.price);
-        longOrders.sort((a, b) => b.price - a.price);
-        return { shortOrders: shortOrders, longOrders: longOrders };
-    };
+    //         // Amount = filled, not open
+    //         // TODO if the amount not filled is very small this will fail
+    //         const amount = parseFloat(Web3.utils.fromWei(rawOrder[0]));
+    //         const filled = parseFloat(Web3.utils.fromWei(rawOrder[1]));
+    //         if (amount !== filled) {
+    //             const order = {
+    //                 amount: amount,
+    //                 filled: filled,
+    //                 price: fromCents(parseFloat(rawOrder[2])),
+    //                 side: rawOrder[3],
+    //                 maker: rawOrder[4],
+    //                 id: i,
+    //             };
+    //             rawOrder[3] ? longOrders.push(order) : shortOrders.push(order);
+    //         }
+    //     }
+    //     // short orders we want in ascending order since the long wants the lowest priced short
+    //     // opposite for long, the shorts want the highest priced long so put longs in descending
+    //     shortOrders.sort((a, b) => a.price - b.price);
+    //     longOrders.sort((a, b) => b.price - a.price);
+    //     return { shortOrders: shortOrders, longOrders: longOrders };
+    // };
 
     useEffect(() => {
         let mounted = true;

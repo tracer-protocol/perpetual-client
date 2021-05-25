@@ -39,11 +39,16 @@ export const useAllPools: () => Pools = () => {
 
     const { data, error, loading, refetch } = useQuery(ALL_POOLS, {
         errorPolicy: 'all',
-        onError: (error) => {
-            addToast(`Failed to fetch insurance data. ${error}`, {
-                appearance: 'error',
-                autoDismiss: true,
-            });
+        onError: ({ graphQLErrors, networkError }) => {
+            if (graphQLErrors.length) {
+                graphQLErrors.map((err) => console.error(`Failed to fetch insurance data: ${err}`));
+            }
+            if (networkError) {
+                addToast(`Failed to fetch insurance data: ${networkError}`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            }
         },
     });
 

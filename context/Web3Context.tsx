@@ -4,7 +4,6 @@ import Web3Modal from 'web3modal';
 import Fortmatic from 'fortmatic';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { Children } from 'types';
-import { FactoryStore } from './FactoryContext';
 import { useMachine } from '@xstate/react';
 
 import { web3Machine } from '@machines/Web3Machine';
@@ -154,6 +153,7 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
     //     Network.selectSingle(state, state.context?.networkId ?? ''),
     // );
     const config = networkConfig[state.context.networkId ?? '1337'];
+
     return (
         <Web3Context.Provider
             value={{
@@ -165,7 +165,7 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
                 config,
             }}
         >
-            <FactoryStore>{children}</FactoryStore>
+            {children}
         </Web3Context.Provider>
     );
 };

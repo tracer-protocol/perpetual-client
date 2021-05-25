@@ -10,6 +10,7 @@ import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Button, Logo, BasicInputContainer, Input } from '@components/General';
 import Tooltip from 'antd/lib/tooltip';
+import { BigNumber } from 'bignumber.js';
 
 const SLabel = styled.h3`
     display: flex;
@@ -189,9 +190,12 @@ type TSProps = {
 const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
     const { order, orderDispatch } = useContext(OrderContext);
     const { selectedTracer } = useContext(TracerContext);
-    const { rMargin, market, collateral, exposure } = order as OrderState;
+    const { orderBase, market, collateral, exposure } = order as OrderState;
     const marketPairs = useMarketPairs();
-    const balance = order?.wallet === 0 ? selectedTracer?.balances?.tokenBalance : selectedTracer?.balances?.quote;
+    const balance =
+        order?.wallet === 0
+            ? selectedTracer?.balances?.tokenBalance.toNumber()
+            : selectedTracer?.balances?.quote.toNumber();
     const collaterals = (
         <Menu
             onClick={({ key }) =>
@@ -235,7 +239,7 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                             e.preventDefault();
                             if (orderDispatch) {
                                 orderDispatch({ type: 'setLock', value: false });
-                                orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) });
+                                orderDispatch({ type: 'setExposure', value: new BigNumber(e.target.value) });
                             } else {
                                 console.error('Order dispatch not set');
                             }
@@ -255,12 +259,12 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                             e.preventDefault();
                             if (orderDispatch) {
                                 orderDispatch({ type: 'setLock', value: false });
-                                orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) });
+                                orderDispatch({ type: 'setExposure', value: new BigNumber(e.target.value) });
                             } else {
                                 console.error('Order dispatch not set');
                             }
                         }}
-                        value={exposure > 0 ? exposure : ''}
+                        value={exposure.gt(0) ? exposure.toString(10) : ''}
                     />
                     <SDropdown className="mt-1 pr-4" overlay={markets} trigger={['click']}>
                         <DropDownContent>
@@ -292,12 +296,12 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                             e.preventDefault();
                             if (orderDispatch) {
                                 orderDispatch({ type: 'setLock', value: true });
-                                orderDispatch({ type: 'setRMargin', value: parseFloat(e.target.value) });
+                                orderDispatch({ type: 'setOrderBase', value: parseFloat(e.target.value) ?? 0 });
                             } else {
                                 console.error('Order dispatch not set');
                             }
                         }}
-                        value={rMargin > 0 ? rMargin : ''}
+                        value={orderBase > 0 ? orderBase : ''}
                     />
                     <RightContainer>
                         <Balance>Balance: {balance ?? '-'}</Balance>
@@ -306,7 +310,7 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                                 e.preventDefault();
                                 if (orderDispatch) {
                                     orderDispatch({ type: 'setLock', value: true });
-                                    orderDispatch({ type: 'setRMargin', value: balance ?? 0 });
+                                    orderDispatch({ type: 'setOrderBase', value: balance ?? 0 });
                                 } else {
                                     console.error('Order dispatch not set');
                                 }
