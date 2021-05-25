@@ -75,6 +75,7 @@ type TIProps = {
     account: string;
     className?: string;
 };
+
 export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, className }: TIProps) => {
     const { order, exposure } = useContext(OrderContext);
     return (

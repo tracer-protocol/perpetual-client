@@ -27,7 +27,8 @@ const TableRow = styled.tr`
     &.selected {
         background: #002886;
     }
-    &: hover {
+
+    &:hover {
         background: #002886;
         cursor: pointer;
     }
@@ -39,6 +40,7 @@ const Teaser = styled.div`
     display: flex;
     margin-bottom: 1rem;
 `;
+
 const Hidden = styled.div`
     font-size: 1rem;
     color: #3da8f5;
@@ -74,6 +76,7 @@ const SProgressBar = styled(ProgressBar)`
     min-width: 250px;
     width: 100%;
 `;
+
 const HealthCell: React.FC<CProps> = ({ pool }: CProps) => {
     return (
         <Collapsible>
@@ -145,6 +148,7 @@ interface IPTProps {
     pools: Record<string, InsurancePoolInfoType>;
     className?: string;
 }
+
 const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IPTProps) => {
     const headings = ['Market', 'APY', 'Health', 'Pool Ownership'];
     const [expanded, setExpanded] = useState(-1);

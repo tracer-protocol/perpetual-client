@@ -1,9 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { TracerContext, Web3Context } from 'context';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 import Timer from '@components/Timer';
 import OrderBook from '@components/OrderBook/OrderBook';
-import { MarketSelect, TradingInput, AccountPanel } from './TradingPanel';
+import { AccountPanel, MarketSelect, TradingInput } from './TradingPanel';
 import { getOrders } from 'libs/Ome';
 import Web3 from 'web3';
 import Tracer from '@libs/Tracer';
@@ -37,7 +37,7 @@ const Graphs = () => {
 const parseRes = (res: any, multiplier: number) => {
     const parseOrders = (orders: any) => {
         const sections = Object.values(orders);
-        const flattenedOrders = sections.map((orders: any) =>
+        return sections.map((orders: any) =>
             orders.reduce(
                 (prev: any, order: { amount: number; price: number }) => ({
                     price: order.price / multiplier, // price remains the same,
@@ -48,7 +48,6 @@ const parseRes = (res: any, multiplier: number) => {
                 },
             ),
         );
-        return flattenedOrders;
     };
 
     return {
@@ -178,6 +177,7 @@ const LeftPanel = styled.div`
     flex-direction: column;
     min-height: 90vh;
 `;
+
 const RightPanel = styled.div`
     width: 75%;
     display: flex;
@@ -195,11 +195,13 @@ const Overlay = styled.div`
     height: 100%;
     width: 100%;
     z-index: -9999;
+
     &.display {
         z-index: 2;
         opacity: 0.5;
     }
 `;
+
 const Advanced: React.FC = () => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
