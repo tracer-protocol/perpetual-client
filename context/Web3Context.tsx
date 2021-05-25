@@ -4,7 +4,6 @@ import Web3Modal from 'web3modal';
 import Fortmatic from 'fortmatic';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { Children } from 'types';
-import { FactoryStore } from './FactoryContext';
 import { useMachine } from '@xstate/react';
 
 import { web3Machine } from '@machines/Web3Machine';

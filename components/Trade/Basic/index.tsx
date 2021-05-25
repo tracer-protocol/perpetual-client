@@ -176,12 +176,13 @@ const Basic: React.FC = styled(({ className }) => {
 
     useEffect(() => {
         // could have equally been checking on the margin variable
-        if (order?.exposure) {
+        console.log("here", order)
+        if (order?.exposure.toNumber() || order?.orderBase) {
             setShowSummary(true);
         } else {
             setShowSummary(false);
         }
-    }, [order?.exposure]);
+    }, [order]);
 
     return (
         <div className={`container mx-auto mt-3 ${className}`}>

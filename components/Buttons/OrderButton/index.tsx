@@ -33,14 +33,14 @@ export const AdvancedOrderButton: React.FC<{
 }> = ({ balances }: { balances: UserBalance | undefined }) => {
     // const { setError } = useContext(ErrorContext);
     const { order } = useContext(OrderContext);
-    const rMargin = order?.rMargin ?? 0;
+    const orderBase = order?.orderBase ?? 0;
 
     useEffect(() => {
         if (!!balances) {
             // Margin is greater than margin in account
-            // balances?.quote < rMargin && balances?.quote >= 0 && rMargin > 0 ? setError(1, 1) : setError(0, 1);
+            // balances?.quote < orderBase && balances?.quote >= 0 && orderBase > 0 ? setError(1, 1) : setError(0, 1);
         }
-    }, [rMargin]);
+    }, [orderBase]);
 
     return (
         <div className="w-full flex">
@@ -58,7 +58,7 @@ type POBProps = {
 export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
     const { order } = useContext(OrderContext);
-    const { rMargin, price, orderType } = order as OrderState;
+    const { orderBase, price, orderType } = order as OrderState;
     const { addToast } = useToasts();
     const [showOrder, setShowOrder] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -81,9 +81,9 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
 
     const message = () => {
         if (orderType === 0) {
-            return `Using $${rMargin} to place 0 orders at an average price of ${price}`;
+            return `Using $${orderBase} to place 0 orders at an average price of ${price}`;
         } else if (orderType === 1) {
-            return `Using $${rMargin} to place a ${OrderTypeMapping[orderType]} order at $${price}`;
+            return `Using $${orderBase} to place a ${OrderTypeMapping[orderType]} order at $${price}`;
         }
     };
 
