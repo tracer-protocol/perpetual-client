@@ -229,9 +229,6 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
 const Insurance: React.FC = () => {
     const { setTracerId } = useContext(TracerContext);
     const { pools } = useContext(InsuranceContext);
-    // const { insurancePools } = useAllPools();
-
-    // console.debug(insurancePools, 'Insurance Graph data');
 
     const router = useRouter();
     const query = router.query;
