@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TracerContext } from '@context/TracerContext';
-import { InsuranceContext } from '@context/InsuranceContext';
+import { InsuranceContext, defaults } from '@context/InsuranceContext';
 import { TransactionContext } from '@context/TransactionContext';
 import { Children } from 'types';
 import { toApproxCurrency } from '@libs/utils';
@@ -119,11 +119,9 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
     const { tracerId, selectedTracer } = useContext(TracerContext);
     const { poolInfo, deposit, withdraw } = useContext(InsuranceContext);
     const { handleTransaction } = useContext(TransactionContext);
-    const [loading, setLoading] = useState(false);
     const [isDeposit, setIsDeposit] = useState(true);
     const tracerBalance = selectedTracer?.balances;
-
-    const poolBalance = poolInfo?.userBalance ?? 0;
+    const poolBalance = poolInfo?.userBalance ?? defaults.userBalance;
     const balance = isDeposit ? tracerBalance?.tokenBalance : poolBalance;
     const [valid, setValid] = useState(false);
     const [amount, setAmount] = useState(0); // The amount within the input
@@ -132,16 +130,21 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
         setIsDeposit(type === 'Deposit');
     }, [type]);
     const amount_ = !Number.isNaN(amount) ? amount : 0;
-    const newBalance = isDeposit ? poolBalance + amount_ : poolBalance - amount_;
+    const newBalance = isDeposit ? poolBalance.plus(amount_) : poolBalance.minus(amount_);
+
     useEffect(() => {
-        setValid(amount > 0 && amount <= (balance ?? 0));
-    }, [balance, amount]);
+        let amountValid = amount > 0 && amount <= (balance?.toNumber() ?? 0);
+        if (isDeposit) {
+            setValid(amountValid && acceptedTerms)
+        } else {
+            setValid(amountValid)
+        }
+    }, [balance, amount, acceptedTerms]);
 
     const submit = async (amount: number) => {
         try {
-            setLoading(true);
             const callback = () => {
-                setLoading(false);
+                setShow(false);
             };
             const t = isDeposit ? 'deposit' : 'withdraw';
             withdraw && deposit && handleTransaction
@@ -154,7 +157,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
 
     return (
         <TracerModal
-            loading={loading}
+            loading={false}
             show={show}
             id="insurance-modal"
             onClose={() => {
@@ -202,7 +205,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     unit={tracerId?.split('/')[1] ?? 'NO_ID'}
                     title={'Amount'}
                     amount={amount}
-                    balance={balance}
+                    balance={balance?.toNumber() ?? 0}
                     setAmount={setAmount}
                 />
                 <SHiddenExpand defaultHeight={0} open={!!amount}>
@@ -236,9 +239,9 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                         <AcceptTerms>I have read and accept Terms of Withdrawal</AcceptTerms>
                     </div>
                 ) : null}
-                <div className="flex items-center justify-center p-6 rounded-b">
-                    {!valid ? (
-                        <Button onClick={() => submit(amount)}>
+                <div className="flex items-center justify-center p-6 rounded-b" id="insurance-submit">
+                    {valid ? (
+                        <Button onClick={() => submit(amount) }>
                             {isDeposit ? 'Add Insurance' : 'Withdraw Insurance'}
                         </Button>
                     ) : (

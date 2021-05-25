@@ -1,3 +1,5 @@
+import { BigNumber } from "bignumber.js";
+
 export type Holding = {
     rewards: Record<string, unknown>[];
     trader: {
@@ -24,11 +26,11 @@ export type InsurancePool = {
 
 export type InsurancePoolInfo = {
     market: string;
-    liquidity: number;
-    target: number;
-    userBalance: number;
-    rewards: number;
-    health: number;
-    apy: number;
-    buffer: number;
+    liquidity: BigNumber;
+    target: BigNumber;
+    userBalance: BigNumber;
+    rewards: BigNumber;
+    health: BigNumber;
+    apy: BigNumber;
+    buffer: BigNumber;
 };
