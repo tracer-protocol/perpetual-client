@@ -2,7 +2,6 @@ import React, { useEffect, useContext, useReducer } from 'react';
 import { TracerContext, Web3Context } from './';
 import { useTracerOrders } from '@hooks/TracerHooks';
 import { Children, OpenOrder, OpenOrders, UserBalance } from 'types';
-import Tracer from '@libs/Tracer';
 import { calcTradeExposure } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
 

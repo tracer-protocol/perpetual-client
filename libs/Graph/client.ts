@@ -15,13 +15,12 @@ const ApolloWrapper: (uri: string) => ApolloClient<any> | Error = (uri: string) 
             return new ApolloClient({
                 link: link.concat(createHttpLink({ uri: uri })),
                 cache: new InMemoryCache(),
-            })
+            });
         } catch (err) {
             console.error('Failed to connect to client');
             return Error(err);
         }
-    }
-    , [uri])
+    }, [uri]);
     return client;
 };
 

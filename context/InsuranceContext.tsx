@@ -127,7 +127,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     useEffect(() => {
         if (web3 && selectedTracer && selectedTracer.insuranceContract) {
-            console.log(selectedTracer.insuranceContract, "Insurance contract")
+            console.log(selectedTracer.insuranceContract, 'Insurance contract');
             const setter = async () => {
                 await selectedTracer.initialised;
                 setContract(
@@ -230,8 +230,11 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     const updatePoolBalances: () => void = () => {
         if (!selectedTracer?.address) {
-            return { status: 'error', message: 'Failed to fetch balances: Selected tracer address cannot be undefined' };
-        } else if(!contract) {
+            return {
+                status: 'error',
+                message: 'Failed to fetch balances: Selected tracer address cannot be undefined',
+            };
+        } else if (!contract) {
             return { status: 'error', message: 'Failed to fetch balances: Contract cannot be undefined' };
         }
         const userBalance_ = contract?.methods.getPoolUserBalance(account as string).call();
@@ -282,7 +285,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         <InsuranceContext.Provider
             value={{
                 poolInfo: {
-                    ...selectedPool as InsurancePoolInfo,
+                    ...(selectedPool as InsurancePoolInfo),
                 },
                 deposit,
                 withdraw,

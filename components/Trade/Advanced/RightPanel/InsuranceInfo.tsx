@@ -11,7 +11,9 @@ export const InsuranceInfo: React.FC = styled(({ className }) => {
         <div className={className}>
             <h3>Insurance Health</h3>
             <PoolHealth health={poolInfo?.health?.toNumber() ?? defaults.health.toNumber()} />
-            <Section label={'Current Funding Level'}>{`${toApproxCurrency(poolInfo?.liquidity ?? defaults.liquidity)}`}</Section>
+            <Section label={'Current Funding Level'}>{`${toApproxCurrency(
+                poolInfo?.liquidity ?? defaults.liquidity,
+            )}`}</Section>
             <Section label={'Target'}>{`${toApproxCurrency(poolInfo?.target ?? defaults.target)}`}</Section>
         </div>
     );

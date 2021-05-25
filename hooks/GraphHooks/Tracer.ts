@@ -27,8 +27,8 @@ export const useAllTracers: () => Tracers = () => {
     const { data, error, loading, refetch } = useQuery(ALL_TRACERS, {
         onError: ({ graphQLErrors, networkError }) => {
             if (graphQLErrors?.length) {
-                graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`))
-            } 
+                graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
+            }
             if (networkError) {
                 addToast(`Failed to fetch tracer data: ${networkError}`, {
                     appearance: 'error',

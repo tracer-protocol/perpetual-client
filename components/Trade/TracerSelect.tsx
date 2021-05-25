@@ -296,7 +296,7 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                             e.preventDefault();
                             if (orderDispatch) {
                                 orderDispatch({ type: 'setLock', value: true });
-                                orderDispatch({ type: 'setOrderBase', value: parseFloat(e.target.value) ?? 0});
+                                orderDispatch({ type: 'setOrderBase', value: parseFloat(e.target.value) ?? 0 });
                             } else {
                                 console.error('Order dispatch not set');
                             }
