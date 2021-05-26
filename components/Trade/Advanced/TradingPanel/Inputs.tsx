@@ -4,22 +4,23 @@ import { useContext } from 'react';
 import SmallInput from '@components/General/Input/SmallInput';
 import { calcWithdrawable } from '@tracer-protocol/tracer-utils';
 import { Tracer } from 'libs';
+import { defaults } from '@libs/Tracer';
 interface ISProps {
     selectedTracer: Tracer | undefined;
-    amount: number;
-    price: number;
+    amount: number | undefined;
+    price: number | undefined;
 }
 
 export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISProps) => {
     const { orderDispatch } = useContext(OrderContext);
     const tracerId = selectedTracer?.marketId ?? '';
-    const balances = selectedTracer?.balances;
-    const fairPrice = (selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1);
+    const balances = selectedTracer?.balances ?? defaults.balances;
+    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const maxMargin = calcWithdrawable(
-        balances?.base ?? 0,
-        balances?.quote ?? 0,
+        balances.base,
+        balances.quote,
         fairPrice,
-        selectedTracer?.maxLeverage ?? 1,
+        selectedTracer?.maxLeverage ?? defaults.maxLeverage,
     );
     return (
         <div className="flex flex-wrap text-white">
@@ -28,13 +29,13 @@ export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISP
                     title={'Amount'}
                     onChange={(e) =>
                         orderDispatch
-                            ? orderDispatch({ type: 'setRMargin', value: parseFloat(e.target.value) })
+                            ? orderDispatch({ type: 'setOrderBase', value: parseFloat(e.target.value) })
                             : console.error('No dispatch function set')
                     }
                     setMax={(e) => {
                         e.preventDefault();
                         orderDispatch
-                            ? orderDispatch({ type: 'setRMargin', value: maxMargin })
+                            ? orderDispatch({ type: 'setOrderBase', value: maxMargin.toNumber() })
                             : console.error('No dispatch function set');
                     }}
                     unit={tracerId.split('/')[0]}

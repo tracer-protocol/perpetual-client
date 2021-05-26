@@ -2,8 +2,8 @@ import React, { useEffect, useContext, useReducer } from 'react';
 import { TracerContext, Web3Context } from './';
 import { useTracerOrders } from '@hooks/TracerHooks';
 import { Children, OpenOrder, OpenOrders, UserBalance } from 'types';
-import Tracer from '@libs/Tracer';
 import { calcTradeExposure } from '@tracer-protocol/tracer-utils';
+import { BigNumber } from 'bignumber.js';
 
 calcTradeExposure;
 /**
@@ -57,10 +57,10 @@ const checkErrors: (balances: UserBalance | undefined, orders: OpenOrder[], acco
     } else if (!!balances?.base) {
         // user has a position already
         return 0;
-    } else if (balances?.tokenBalance === 0) {
+    } else if (balances?.tokenBalance.eq(0)) {
         // user has no web3 wallet balance
         return 1;
-    } else if (balances?.quote === 0) {
+    } else if (balances?.quote.eq(0)) {
         // user has no tcr margin balance
         return 2;
     } else {
@@ -77,14 +77,14 @@ export const OrderTypeMapping: Record<number, string> = {
 export type OrderState = {
     market: string; // exposed market asset
     collateral: string; // collateral asset
-    rMargin: number; // required margin / amount of margin being used
+    orderBase: number; // required margin / amount of margin being used
     leverage: number;
     position: number; // long or short, 0 is short, 1 is long
     price: number; // price of the market asset in relation to the collateral asset
     matchingEngine: number; // for basic this will always be 0 (OME)
     orderType: number; // for basic this will always be 0 (market order), 1 is limit and 2 is spot
     openOrders: OpenOrders;
-    exposure: number;
+    exposure: BigNumber;
     error: number; // number ID relating to the error map above
     wallet: number; // ID of corresponding wallet in use 0 -> web3, 1 -> TCR margin
     // boolean to tell if the amount to buy or amount to pay inputs are locked. eg
@@ -94,8 +94,8 @@ export type OrderState = {
 };
 
 interface ContextProps {
-    exposure: number;
-    tradePrice: number;
+    exposure: BigNumber;
+    tradePrice: BigNumber;
     oppositeOrders: OpenOrder[];
     order: OrderState;
     orderDispatch: React.Dispatch<OrderAction>;
@@ -111,19 +111,19 @@ export const OrderContext = React.createContext<Partial<ContextProps>>({});
 export type OrderAction =
     | { type: 'setMarket'; value: string }
     | { type: 'setCollateral'; value: string }
-    | { type: 'setRMargin'; value: number }
+    | { type: 'setOrderBase'; value: number }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
     | { type: 'setPrice'; value: number }
     | { type: 'setOrderType'; value: number }
     | { type: 'setMatchingEngine'; value: number }
-    | { type: 'setExposure'; value: number }
+    | { type: 'setExposure'; value: BigNumber }
     | { type: 'setError'; value: number }
     | { type: 'setWallet'; value: number }
     | { type: 'setLock'; value: boolean }
     | { type: 'openOrders'; value: OpenOrders };
 
-// rMargin => require margin
+// orderBase => require margin
 export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const { setTracerId, tracerId, selectedTracer } = useContext(TracerContext);
     const { updateTrigger, web3, account } = useContext(Web3Context);
@@ -137,9 +137,9 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     }, [tracerId]);
 
     const initialState: OrderState = {
-        market: 'TEST0', // exposed market asset
+        market: 'Market', // exposed market asset
         collateral: 'USD', // collateral asset
-        rMargin: 0, // required margin / amount of margin being used
+        orderBase: 0, // required margin / amount of margin being used
         leverage: 0,
         position: 0, // long or short, 0 is short, 1 is long
         price: 0, // price of the market asset in relation to the collateral asset
@@ -149,7 +149,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             shortOrders: [],
             longOrders: [],
         },
-        exposure: 0,
+        exposure: new BigNumber(0),
         error: -1,
         wallet: 0,
         lock: false, // default lock amount to pay
@@ -161,8 +161,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, market: action.value };
             case 'setCollateral':
                 return { ...state, collateral: action.value };
-            case 'setRMargin':
-                return { ...state, rMargin: action.value };
+            case 'setOrderBase':
+                return { ...state, orderBase: action.value };
             case 'setLeverage':
                 return { ...state, leverage: action.value };
             case 'setPosition':
@@ -190,61 +190,56 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     const [order, orderDispatch] = useReducer(reducer, initialState);
 
-    const openOrders = useTracerOrders(web3, selectedTracer as Tracer);
+    const openOrders = useTracerOrders(web3, selectedTracer);
     const oppositeOrders = order.position ? openOrders.shortOrders : openOrders.longOrders;
 
     const price_ = 0.5; // TODO replace these with actual price
     useEffect(() => {
         // lock check to avoid loop
         if (order.lock) {
-            orderDispatch({ type: 'setExposure', value: order?.rMargin * order.leverage * price_ });
+            orderDispatch({ type: 'setExposure', value: new BigNumber(order?.orderBase * order.leverage * price_) });
         }
-    }, [order.rMargin]);
+    }, [order.orderBase]);
 
     useEffect(() => {
         if (!order.lock) {
-            orderDispatch({ type: 'setRMargin', value: order?.exposure / price_ / order.leverage });
+            orderDispatch({ type: 'setOrderBase', value: order?.exposure / price_ / order.leverage });
         }
     }, [order.exposure]);
 
     useEffect(() => {
         if (order.lock) {
-            // locked margin, increase exposure
-            orderDispatch({ type: 'setExposure', value: order?.rMargin * order.leverage * price_ });
+            // locked base, increase exposure
+            orderDispatch({ type: 'setExposure', value: new BigNumber(order?.orderBase * order.leverage * price_) });
         } else {
             // locked exposure decrease margin
-            orderDispatch({ type: 'setRMargin', value: order?.exposure / price_ / order.leverage });
+            orderDispatch({ type: 'setOrderBase', value: order?.exposure / price_ / order.leverage });
         }
     }, [order.leverage]);
 
-    useEffect(() => {
-        if (oppositeOrders.length) {
-            orderDispatch({ type: 'setPrice', value: oppositeOrders[0].price });
-        }
-    }, [oppositeOrders, order.position]);
-
-    // TODO move these out of this context component because these values will have to change
-    //  when interacting with the advanced trading screen
-    const { exposure, tradePrice } = calcTradeExposure(order.rMargin, order.leverage, oppositeOrders);
-
     // useEffect(() => {
-    //     const { exposure } = calcExposure(order.rMargin, order.leverage, oppositeOrders);
-    //     orderDispatch({ type: 'setExposure', value: exposure });
-    // }, [order.rMargin, order.leverage, order.position, oppositeOrders]);
+    //     if (oppositeOrders.length) {
+    //         orderDispatch({ type: 'setPrice', value: oppositeOrders[0].price.toNumber() });
+    //     }
+    // }, [oppositeOrders, order.position]);
+
+    const { exposure, tradePrice } = calcTradeExposure(order.orderBase, order.leverage, oppositeOrders);
 
     // Handles automatically changing the trade price when taking a market order
     useEffect(() => {
-        if (order.orderType === 0) {
-            orderDispatch({ type: 'setPrice', value: tradePrice });
-            // orderDispatch({ type: 'setOrderType', value: 0 });
+        const tradePrice_ = tradePrice.toNumber();
+        // the second condition avoids the infinite loop
+        if (order.orderType === 0 && order.price !== tradePrice) {
+            orderDispatch({ type: 'setPrice', value: tradePrice_ });
         }
-    }, [order.orderType, tradePrice]);
+    }, [order.orderType]);
 
     // Handles changing the order type to limit if the user changes the order price
     useEffect(() => {
-        if (order.price !== tradePrice && tradePrice) {
+        const t = tradePrice.toNumber();
+        if (order.price !== t) {
             orderDispatch({ type: 'setOrderType', value: 1 });
-        } else if (order.price === tradePrice && order.orderType === 1) {
+        } else if (order.price === t && order.orderType === 1) {
             orderDispatch({ type: 'setOrderType', value: 0 });
         }
     }, [order.price]);
@@ -253,7 +248,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const reset = () => {
         // setMarket('TEST0');
         // setCollateral('USD');
-        // setRMargin(0);
+        // setOrderBase(0);
         // setLeverage(1);
         // setPosition(0);
         // setPrice(0);
@@ -264,7 +259,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     // Resets the required margin and leverage on an update trigger
     // TODO this is outdated and should probably be removed, not sure of the reprecussions
     useEffect(() => {
-        orderDispatch({ type: 'setRMargin', value: 0 });
+        orderDispatch({ type: 'setOrderBase', value: 0 });
         orderDispatch({ type: 'setLeverage', value: 1 });
     }, [updateTrigger]);
 

@@ -1,4 +1,5 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
+import { useMemo } from 'react';
 import { createNetworkStatusNotifier } from 'react-apollo-network-status';
 
 const { link, useApolloNetworkStatus } = createNetworkStatusNotifier();
@@ -9,15 +10,18 @@ const useGlobalLoadingState: () => boolean = () => {
 };
 
 const ApolloWrapper: (uri: string) => ApolloClient<any> | Error = (uri: string) => {
-    try {
-        return new ApolloClient({
-            link: link.concat(createHttpLink({ uri: uri })),
-            cache: new InMemoryCache(),
-        });
-    } catch (err) {
-        console.error('Failed to connect to client');
-        return Error(err);
-    }
+    const client = useMemo(() => {
+        try {
+            return new ApolloClient({
+                link: link.concat(createHttpLink({ uri: uri })),
+                cache: new InMemoryCache(),
+            });
+        } catch (err) {
+            console.error('Failed to connect to client');
+            return Error(err);
+        }
+    }, [uri]);
+    return client;
 };
 
 export default {

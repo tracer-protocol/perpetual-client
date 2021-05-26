@@ -11,7 +11,10 @@ const calcRemainder = (target: number, liquidity: number, userBalance: number, b
     }
 };
 
-const denom = (target: number, liquidity: number) => (target > liquidity ? target : liquidity);
+const hasFullOwnership = (liquidity: number, userBalance: number) => liquidity === userBalance;
+
+const denom = (target: number, liquidity: number) => (target < liquidity ? target : liquidity);
+
 interface BProps {
     target: number;
     liquidity: number;
@@ -50,7 +53,7 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         width: ${(props) => (props.buffer / denom(props.target, props.liquidity)) * 100}%;
         border-top-left-radius: 20px;
         border-bottom-left-radius: 20px;
-        margin-left: 4px;
+        margin-left: ${(props) => (!!props.buffer ? '4px' : '0') /** is the buffer 0 */};
     }
     > .liquidity {
         background: #3da8f5;
@@ -65,6 +68,8 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
             calcRemainder(props.target, props.liquidity, props.userBalance, props.buffer) === 0 ? '20px' : ''};
         border-bottom-right-radius: ${(props) =>
             calcRemainder(props.target, props.liquidity, props.userBalance, props.buffer) === 0 ? '20px' : ''};
+        border-top-left-radius: ${(props) => (hasFullOwnership(props.liquidity, props.userBalance) ? '20px' : '')};
+        border-bottom-left-radius: ${(props) => (hasFullOwnership(props.liquidity, props.userBalance) ? '20px' : '')};
     }
     > .remainder {
         background: transparent;
@@ -94,7 +99,7 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
             <div className="bar" />
             <p>{title}</p>
             <span>
-                <span>{percentage}%</span>
+                <span>{Number.isNaN(percentage) ? 0 : percentage}%</span>
                 <span className="value"> | {toApproxCurrency(value)}</span>
             </span>
         </div>
@@ -159,14 +164,14 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
             <div className="sections hoverHide">
                 <Section
                     title="Buffer"
-                    percentage={parseFloat(((buffer / denom(target, liquidity)) * 100).toFixed(3))}
+                    percentage={parseFloat(((buffer / liquidity) * 100).toFixed(3))}
                     value={buffer}
                     color="#011772"
                     target="bufferTarget"
                 />
                 <Section
                     title="Public"
-                    percentage={parseFloat(((liquidity / target) * 100).toFixed(3))}
+                    percentage={parseFloat((((liquidity - userBalance - buffer) / liquidity) * 100).toFixed(3))}
                     value={liquidity}
                     color="#3DA8F5"
                     target="liquidityTarget"

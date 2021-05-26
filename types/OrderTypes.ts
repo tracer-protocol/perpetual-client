@@ -1,3 +1,5 @@
+import { BigNumber } from 'bignumber.js';
+
 export type TakenOrder = {
     id: number;
     amount: number;
@@ -37,9 +39,9 @@ export type OrderUpdatePayload = {
 };
 
 export type OpenOrder = {
-    amount: number;
+    amount: BigNumber;
+    price: BigNumber;
     filled: number;
-    price: number;
     side: boolean; // true for long, false for short
     maker: string; //address of the order maker
     id: number; // order id

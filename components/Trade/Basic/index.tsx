@@ -12,6 +12,8 @@ import { toApproxCurrency } from '@libs/utils';
 import { Section } from '@components/General';
 import { UserBalance } from 'types';
 import Error from '../Error';
+import { BigNumber } from 'bignumber.js';
+import { defaults } from '@libs/Tracer';
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;
@@ -68,23 +70,24 @@ const LiquidationPrice = styled(Section)`
 
 interface SProps {
     balances: UserBalance;
-    fairPrice: number;
+    fairPrice: BigNumber;
     order: OrderState | undefined;
-    exposure: number;
-    maxLeverage: number;
+    exposure: BigNumber;
+    maxLeverage: BigNumber;
     className?: string;
 }
 
 const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLeverage, exposure, className }: SProps) => {
     const position = order?.position ?? 0;
+    const notional: BigNumber = calcNotionalValue(exposure, fairPrice);
     const newBase =
         position === 0
-            ? balances.base - (exposure ?? 0) // short
-            : balances.base + (exposure ?? 0); // long
-    const newQuote =
+            ? balances.base.minus(exposure) // short
+            : balances.base.plus(exposure); // long
+    const newQuote: BigNumber =
         position === 0
-            ? balances.quote + calcNotionalValue(exposure ?? 0, fairPrice) // short
-            : balances.quote - calcNotionalValue(exposure ?? 0, fairPrice); // long
+            ? balances.quote.plus(notional) // short
+            : balances.quote.minus(notional); // long
     return (
         <div className={className}>
             <h3>Order Summary</h3>
@@ -93,7 +96,7 @@ const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLever
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <LiquidationPrice label={'Liquidation Price'}>
-                {`${toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage ?? 1))} ${
+                {`${toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage))} ${
                     order?.collateral ?? ''
                 }`}
             </LiquidationPrice>
@@ -101,7 +104,7 @@ const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLever
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <SSection label={'Wallet Balance'}>
-                <Previous>{`${toApproxCurrency(order?.wallet ? balances?.tokenBalance : balances?.quote)}`}</Previous>
+                <Previous>{`${toApproxCurrency(order?.wallet ? balances.tokenBalance : balances.quote)}`}</Previous>
                 {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
             </SSection>
             <SSection label={'Predicted Const Total'}>
@@ -171,16 +174,18 @@ const Basic: React.FC = styled(({ className }) => {
     const { selectedTracer } = useContext(TracerContext);
     const { order, exposure, orderDispatch } = useContext(OrderContext);
     const [showSummary, setShowSummary] = useState(false);
-    const balances = selectedTracer?.balances;
+    const balances = selectedTracer?.balances ?? defaults.balances;
+    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
 
     useEffect(() => {
         // could have equally been checking on the margin variable
-        if (order?.exposure) {
+        console.log('here', order);
+        if (order?.exposure.toNumber() || order?.orderBase) {
             setShowSummary(true);
         } else {
             setShowSummary(false);
         }
-    }, [order?.exposure]);
+    }, [order]);
 
     return (
         <div className={`container mx-auto mt-3 ${className}`}>
@@ -192,20 +197,11 @@ const Basic: React.FC = styled(({ className }) => {
                 <TracerSelect />
                 <LeverageSlider leverage={order?.leverage ?? 1} />
                 <Summary
-                    balances={
-                        balances ??
-                        ({
-                            quote: 0,
-                            base: 0,
-                            tokenBalance: 0,
-                            totalLeveragedValue: 0,
-                            lastUpdatedGasPrice: 0,
-                        } as UserBalance)
-                    }
+                    balances={balances}
                     order={order}
-                    maxLeverage={selectedTracer?.maxLeverage ?? 1}
-                    fairPrice={(selectedTracer?.oraclePrice ?? 0) / (selectedTracer?.priceMultiplier ?? 1)}
-                    exposure={exposure ?? 0}
+                    maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                    fairPrice={fairPrice}
+                    exposure={exposure ?? defaults.exposure}
                 />
                 <PlaceOrderButton className="mt-auto">
                     <SButton className="mx-auto">Place Trade</SButton>

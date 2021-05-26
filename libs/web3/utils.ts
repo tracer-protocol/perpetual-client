@@ -1,5 +1,5 @@
 import Web3 from 'web3';
-import { Erc20 as ERC20Token } from '@tracer-protocol/contracts/types/web3-v1-contracts/ERC20';
+import { ERC20 as ERC20Token } from '@tracer-protocol/contracts/types/ERC20';
 import { Result } from 'types';
 
 /**

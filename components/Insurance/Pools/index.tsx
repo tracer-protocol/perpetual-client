@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TracerContext, InsuranceContext } from 'context';
-// import { useAllPools } from 'hooks/GraphHooks/Insurance';
 import { useRouter } from 'next/router';
 import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 'types';
 import styled from 'styled-components';
@@ -67,7 +66,7 @@ const Collapsible = styled.div`
 `;
 
 type CProps = {
-    pool: InsurancePoolInfo | undefined;
+    pool: InsurancePoolInfo;
     className?: string;
 };
 
@@ -81,14 +80,14 @@ const HealthCell: React.FC<CProps> = ({ pool }: CProps) => {
     return (
         <Collapsible>
             <Teaser>
-                <SProgressBar percent={pool?.health ?? 0} />
+                <SProgressBar percent={pool?.health.toNumber()} />
             </Teaser>
             <Hidden>
                 <Breakdown
-                    target={pool?.target ?? 0}
-                    userBalance={pool?.userBalance ?? 0}
-                    liquidity={pool?.liquidity ?? 0}
-                    buffer={pool?.buffer ?? 0}
+                    target={pool.target.toNumber()}
+                    userBalance={pool.userBalance.toNumber()}
+                    liquidity={pool.liquidity.toNumber()}
+                    buffer={pool.buffer.toNumber()}
                 />
             </Hidden>
         </Collapsible>
@@ -120,10 +119,8 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
     return (
         <Collapsible className={className}>
             <Teaser>
-                <span>{pool?.userBalance ?? 0} iTokens</span>
-                <span className="percent">
-                    {parseFloat(((pool?.userBalance ?? 0) / (pool?.liquidity ?? 0)).toFixed(5))}%
-                </span>
+                <span>{pool.userBalance.toNumber()} iTokens</span>
+                <span className="percent">{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</span>
             </Teaser>
             <Hidden>
                 <ButtonContainer>
@@ -159,7 +156,8 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
             const modal = document.getElementById('insurance-modal');
             let target = e.target;
             do {
-                if (target === table || target === modal) {
+                // @ts-ignore
+                if (target === table || target === modal || target?.id === 'insurance-submit') {
                     // dont exit if its a modal click
                     return;
                 }
@@ -205,7 +203,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                             </TableCell>
                             <TableCell className="w-1/6">
                                 <Collapsible>
-                                    <Teaser>{pool.apy}</Teaser>
+                                    <Teaser>{pool.apy.toNumber()}</Teaser>
                                     <Hidden className={`${show ? 'show' : ''}`}>
                                         30 day average realised/net APY.
                                     </Hidden>
@@ -235,9 +233,6 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
 const Insurance: React.FC = () => {
     const { setTracerId } = useContext(TracerContext);
     const { pools } = useContext(InsuranceContext);
-    // const { insurancePools } = useAllPools();
-
-    // console.debug(insurancePools, 'Insurance Graph data');
 
     const router = useRouter();
     const query = router.query;

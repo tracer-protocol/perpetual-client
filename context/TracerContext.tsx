@@ -8,21 +8,22 @@ import { OrderState } from './OrderContext';
 import Web3 from 'web3';
 import { signOrders, orderToOMEOrder, OrderData } from '@tracer-protocol/tracer-utils';
 import Tracer from '@libs/Tracer';
+import { TransactionContext } from './TransactionContext';
+import { defaults } from '@libs/Tracer';
 
 interface ContextProps {
     tracerId: string | undefined;
+    deposit: (amount: number) => void;
+    withdraw: (amount: number) => void;
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
-    baseAsset: string | undefined;
-    quoteAsset: string | undefined;
     balance: UserBalance;
     placeOrder: (order: OrderState) => Promise<Result | undefined>;
 }
 
-export const TracerContext = React.createContext<Partial<ContextProps>>({});
+export const TracerContext = React.createContext<Partial<ContextProps>>({} as ContextProps);
 
 type TracerState = {
-    tracerId: string;
     selectedTracer: Tracer | undefined;
     balance: UserBalance;
 };
@@ -34,22 +35,15 @@ type StoreProps = {
 export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
     const { account, web3, config } = useContext(Web3Context);
     const { tracers } = useContext(FactoryContext);
+    const { handleTransaction } = useContext(TransactionContext);
+
     const initialState: TracerState = {
-        tracerId: tracer || 'TEST0/USD',
         selectedTracer: undefined,
-        balance: {
-            quote: 0,
-            base: 0,
-            totalLeveragedValue: 0,
-            lastUpdatedGasPrice: 0,
-            tokenBalance: 0,
-        },
+        balance: defaults.balances,
     };
 
     const reducer = (state: TracerState, action: Record<string, any>) => {
         switch (action.type) {
-            case 'setTracerId':
-                return { ...state, tracerId: action.value };
             case 'setSelectedTracer':
                 return { ...state, selectedTracer: action.value };
             case 'setUserBalance':
@@ -62,19 +56,22 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     const [tracerState, tracerDispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
-        if (!isEmpty(tracers)) {
-            tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] });
-            createBook(tracers?.[tracerId] as Tracer);
-        }
-    }, [tracers, tracerState.tracerId]);
-
-    useEffect(() => {
+        // for initialising the tracer store through props
         if (tracer) {
-            tracerDispatch({ type: 'setTracerId', value: tracer });
+            tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracer] });
         }
     }, [tracer]);
 
-    const { tracerId, selectedTracer, balance } = tracerState;
+    useEffect(() => {
+        // detecting when tracers changes so we can set a default tracer
+        if (tracers && !isEmpty(tracers)) {
+            const defaultTracer = Object.values(tracers)[0];
+            tracerDispatch({ type: 'setSelectedTracer', value: defaultTracer });
+            createBook(defaultTracer);
+        }
+    }, [tracers]);
+
+    const { selectedTracer, balance } = tracerState;
 
     const fetchUserData = async () => {
         if (tracers) {
@@ -86,10 +83,10 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     };
 
     const placeOrder = async (order: OrderState) => {
-        const { rMargin, price, position } = order;
+        const { orderBase, price, position } = order;
         // all orders are OME orders
         const parsedPrice = price * selectedTracer?.priceMultiplier;
-        const amount = Web3.utils.toWei(rMargin.toString()) ?? 0;
+        const amount = Web3.utils.toWei(orderBase.toString()) ?? 0;
         const expiration = new Date().getTime() + 604800;
         const makes: OrderData[] = [
             {
@@ -108,6 +105,19 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         return { status: 'success' } as Result; // TODO add error check
     };
 
+    const submit = async (deposit: boolean, amount: number) => {
+        const func = deposit ? selectedTracer.deposit : selectedTracer.withdraw;
+        const callback = async (res: Result) => {
+            if (res.status !== 'error') {
+                const balance = await selectedTracer?.updateUserBalance(account);
+                tracerDispatch({ type: 'setUserBalance', value: balance });
+            }
+        };
+        handleTransaction
+            ? handleTransaction(func, [amount, account], callback)
+            : console.error(`Failed to ${deposit ? 'deposit' : 'widthdraw'}: handleTransaction is undefined `);
+    };
+
     useEffect(() => {
         const fetch = async () => {
             const balance = await selectedTracer?.updateUserBalance(account);
@@ -123,16 +133,17 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     }, [selectedTracer]);
 
-    const [baseAsset, quoteAsset] = tracerId.split('/');
+    const tracerId = selectedTracer?.marketId;
 
     return (
         <TracerContext.Provider
             value={{
                 tracerId,
-                setTracerId: (tracerId: string) => tracerDispatch({ type: 'setTracerId', value: tracerId }),
+                deposit: (amount: number) => submit(true, amount),
+                withdraw: (amount: number) => submit(false, amount),
+                setTracerId: (tracerId: string) =>
+                    tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] }),
                 selectedTracer,
-                baseAsset,
-                quoteAsset,
                 balance,
                 placeOrder,
             }}

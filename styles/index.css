@@ -1,20 +1,16 @@
-@font-face {
-    font-family: 'Akkurat';
-    src: url('https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.eot'); /* IE9*/
-    src: url('https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.eot?#iefix') format('embedded-opentype'),
-        /* IE6-IE8 */ url('https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.woff2') format('woff2'),
-        /* chrome firefox */ url('https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.woff') format('woff'),
-        /* chrome firefox */ url('https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.ttf')
-            format('truetype'),
-        /* chrome firefox opera Safari, Android, iOS 4.2+*/
-            url('https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.svg#Akkurat') format('svg'); /* iOS 4.1- */
+@font-face {font-family: "Akkurat";
+    src: url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.eot"), /* IE9*/
+    url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.woff2") format("woff2"), /* chrome firefox */
+    url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.woff") format("woff"), /* chrome firefox */
+    url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.ttf") format("truetype"), /* chrome firefox opera Safari, Android, iOS 4.2+*/
+    url("https://db.onlinewebfonts.com/t/cf3327022417d4ff7f54f0963c4f41ea.svg#Akkurat") format("svg"); /* iOS 4.1- */
 }
 
-body,
-html {
-    font-family: 'Akkurat', serif;
-    background-color: #03065e;
-    color: black;
+body, html {
+  font-family: "Akkurat", ui-sans-serif, system-ui, -apple-system!important;
+  background-color: #F2F2F2;
+  color: black;
 }
 
 html,
@@ -22,16 +18,15 @@ body,
 body > div:first-child,
 div#__next,
 div#__next > div {
-    height: 100%;
+  height: 100%;
 }
-
 body > div:first-child {
-    display: block;
-    overflow: auto;
+  display: block;
+  overflow: auto;
 }
 
 a {
-    color: inherit;
+  color: inherit;
 }
 
 a:hover {
@@ -40,17 +35,17 @@ a:hover {
 }
 
 a:active {
-    color: inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 
 a:focus {
-    color: inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 
 button:focus {
-    border: none;
+  border: none;
 }
 
 /* Scroll bar stuff */
@@ -58,34 +53,34 @@ button:focus {
 ::-webkit-scrollbar {
     width: 5px;
     height: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
     background: transparent;
-}
+  }
 
-/* Corner piece */
-::-webkit-scrollbar-corner {
-    display: none;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
+  /* Corner piece */
+  ::-webkit-scrollbar-corner {
+      display: none;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
     background: #3da8f5;
     cursor: pointer;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
     background: #0000bd;
-}
+  }
 
 a {
     color: #0000bd;
 }
 
-.increased-hit-box {
+.increased-hit-box{
     height: 5vh;
     width: 5vh;
     position: absolute;
@@ -93,20 +88,21 @@ a {
 }
 
 .box-shadow {
-    box-shadow: 0 5px 30px #0000bd29;
-    border-radius: 16px !important;
+  box-shadow: 0px 5px 30px #0000BD29;
+  border-radius: 16px !important;
 }
 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  -webkit-appearance: none;
+  margin: 0;
 }
 
+
 /* Firefox */
-input[type='number'] {
-    -moz-appearance: textfield;
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 input {
@@ -115,7 +111,7 @@ input {
 
 /* input[type="search"]::-webkit-search-cancel-button {
   /* Remove default */
-/* -webkit-appearance: none;
+  /* -webkit-appearance: none;
   
   color: #0000bd;
   background: #0000bd;
@@ -123,32 +119,28 @@ input {
 
 /** GLOBAL TABLE STYLES */
 .bid {
-    color: #00ff08;
+  color: #00FF08;
 }
 
 .ask {
-    color: #f15025;
+  color: #F15025
 }
 
 @keyframes countdown {
-    from {
-        height: 100%;
-    }
-    to {
-        height: 0;
-    }
+    from { height: 100%; } to { height: 0% }
 }
+
 
 /** Ant tooltip styles */
 .ant-tooltip-inner {
-    background: #002886;
-    color: #005ea4;
+  background: #002886;
+  color: #005EA4;
 }
 .ant-tooltip-inner strong {
-    color: #3da8f5;
+  color: #3DA8F5;
 }
 .ant-tooltip-arrow-content {
-    background-color: #002886;
+  background-color: #002886;
 }
 
 @tailwind base;
@@ -177,7 +169,7 @@ input {
 }
 
 .button-grow:focus {
-    outline: none;
+    outline:none;
 }
 
 .button:hover {
@@ -186,7 +178,7 @@ input {
 }
 
 .button-inactive {
-    @apply border-2 cursor-pointer rounded-xxl p-4 opacity-50 bg-blue-300 text-blue-100 border-blue-100;
+  @apply border-2 cursor-pointer rounded-xxl p-4 opacity-50 bg-blue-300 text-blue-100 border-blue-100;
 }
 
 .button-disabled {
@@ -215,7 +207,7 @@ input {
 /** Table css */
 .cCell {
     @apply p-3;
-}
+} 
 
 .cRow {
     @apply border-b-2 border-blue-300 cursor-pointer;
@@ -232,6 +224,7 @@ input {
 .aCell:hover {
     @apply bg-blue-200;
 }
+
 
 .page {
     @apply h-screen flex flex-col;
@@ -258,3 +251,4 @@ h4 {
 .advanced-card .body {
     @apply px-3 py-2;
 }
+

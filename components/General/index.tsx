@@ -10,7 +10,7 @@ export const Box: React.FC<{ className?: string }> = styled.div`
     padding: 20px;
 `;
 
-export const Button: React.FC<{ className?: string; onClick?: any }> = styled.div`
+export const Button = styled.div`
     transition: 0.3s;
     color: #3da8f5;
     font-size: 1rem;
