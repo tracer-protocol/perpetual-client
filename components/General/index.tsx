@@ -111,11 +111,9 @@ const logos: Record<string, string> = {
     LINK: '/img/logos/currencies/link.svg',
 };
 
-type Ticker = 'TSLA' | 'ETH' | 'LINK';
-
 interface LProps {
     className?: string;
-    ticker: Ticker;
+    ticker: string;
     clear?: boolean; // true then display outlined image
 }
 
