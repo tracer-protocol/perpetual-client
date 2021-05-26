@@ -27,6 +27,14 @@ const RightPanel = styled.div`
     border-right: 1px solid #0c3586;
 `;
 
+const NoLeverageBanner = styled.div`
+    width: 200px;
+    padding: 10px;
+    border-radius: 7px;
+    color: #3da8f5;
+    background-color: #002886;
+`;
+
 const Button = styled.div`
     transition: 0.5s;
     color: #3da8f5;
@@ -73,6 +81,35 @@ Button.defaultProps = {
     },
 };
 
+const TableHead = styled.th`
+    max-width: ${(props: any) => props.theme.maxWidth as string};
+    text-align: left;
+    color: #3da8f5;
+    padding: 1rem;
+    font-weight: normal;
+    border-right: 1px solid #002886;
+`;
+
+TableHead.defaultProps = {
+    theme: {
+        maxWidth: '150px',
+    },
+};
+
+const TableHeadEnd = styled.th`
+    width: ${(props: any) => props.theme.width as string};
+    text-align: left;
+    color: #3da8f5;
+    padding: 1rem;
+    font-weight: normal;
+`;
+
+TableHeadEnd.defaultProps = {
+    theme: {
+        width: '200px',
+    },
+};
+
 const TableRow = styled.tr`
     display: ${(props: any) => props.theme.display as string};
     color: ${(props: any) => props.theme.color as string};
@@ -94,23 +131,6 @@ TableRow.defaultProps = {
         hoverCursor: 'pointer',
     },
 };
-
-const TableHead = styled.th`
-    max-width: 150px;
-    text-align: left;
-    color: #3da8f5;
-    padding: 1rem;
-    font-weight: normal;
-    border-right: 1px solid #002886;
-`;
-
-const TableHeadEnd = styled.th`
-    width: 16rem;
-    text-align: left;
-    color: #3da8f5;
-    padding: 1rem;
-    font-weight: normal;
-`;
 
 const TableCell = styled.td`
     color: ${(props: any) => props.color as string};
@@ -331,6 +351,94 @@ const Position = () => {
     );
 };
 
+const MarginAccounts = () => {
+    const headings = ['Market', 'Total Margin', 'Maintenance Margin', 'Available Margin', 'Status of Position'];
+
+    const tracers = [
+        {
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            tMargin: 4242,
+            mMargin: 2121,
+            aMargin: 2121,
+            status: 'Open',
+        },
+        {
+            name: 'LINK',
+            market: 'LINK-USDC',
+            tMargin: 4242,
+            mMargin: 2121,
+            aMargin: 2121,
+            status: 'Eligible for Liquidation',
+        },
+        {
+            name: 'ETH',
+            market: 'ETH-USDC',
+            tMargin: 4242,
+            mMargin: 2121,
+            aMargin: 2121,
+            status: 'Approaching Liquidation',
+        },
+    ];
+
+    const tableHeadEnd = {
+        width: '500px',
+    };
+
+    return (
+        <>
+            <table>
+                <thead>
+                    <tr>
+                        {headings.map((heading, i) =>
+                            i == 4 ? (
+                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                            ) : (
+                                <TableHead>{heading}</TableHead>
+                            ),
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {tracers.map((tracer) => (
+                        <TableRow>
+                            <TableCell>
+                                <div className="flex flex-row">
+                                    <div className="my-auto">
+                                        <Logo ticker={tracer.name} />
+                                    </div>
+                                    <div className="my-auto ml-2">{tracer.market}</div>
+                                </div>
+                            </TableCell>
+                            <TableCell>{toApproxCurrency(tracer.tMargin)}</TableCell>
+                            <TableCell>{toApproxCurrency(tracer.mMargin)}</TableCell>
+                            <TableCell>{toApproxCurrency(tracer.aMargin)}</TableCell>
+                            <TableCell>
+                                <div className="flex flex-row">
+                                    <StatusIndicator
+                                        color={getStatusColour(tracer.status)}
+                                        className="font-black my-auto"
+                                    >
+                                        &bull;
+                                    </StatusIndicator>
+                                    <div className="mx-2 my-auto">{tracer.status}</div>
+                                    <div className="flex flex-row my-auto ml-auto mr-4">
+                                        <Button className="mr-2">Deposit</Button>
+                                        <Button>Withdraw</Button>
+                                    </div>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </tbody>
+            </table>
+            <NoLeverageBanner className="ml-72 mt-2">
+                You have no leveraged trades open in this market.
+            </NoLeverageBanner>
+        </>
+    );
+};
+
 const TradingPortfolio = () => {
     const [tab, setTab] = useState(0);
     const tabs = ['Positions', 'Margin Accounts', 'Trade History', 'Transfers'];
@@ -339,7 +447,7 @@ const TradingPortfolio = () => {
             case 0:
                 return <Position />;
             case 1:
-                return <>Margin Accounts Tab</>;
+                return <MarginAccounts />;
             case 2:
                 return <>Trade History Tab</>;
             case 3:
