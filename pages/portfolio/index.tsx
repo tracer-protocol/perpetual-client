@@ -6,6 +6,27 @@ import SideNav from '@components/Nav/SideNav';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 
+const LeftPanel = styled.div`
+    width: 25%;
+    margin-left: 5vw;
+    display: flex;
+    flex-direction: column;
+    min-height: 90vh;
+    border-top: 1px solid #0c3586;
+    border-right: 1px solid #0c3586;
+    border-left: 1px solid #0c3586;
+`;
+
+const RightPanel = styled.div`
+    width: 75%;
+    margin-right: 5vw;
+    display: flex;
+    flex-direction: column;
+    min-height: 90vh;
+    border-top: 1px solid #0c3586;
+    border-right: 1px solid #0c3586;
+`;
+
 const Button = styled.div`
     transition: 0.5s;
     color: #3da8f5;
@@ -19,9 +40,9 @@ const Button = styled.div`
     width: ${(props: any) => props.theme.width as string};
 
     &:hover {
-        cursor: pointer;
-        background: #3da8f5;
-        color: #fff;
+        color: ${(props: any) => props.theme.hoverFG as string};
+        background: ${(props: any) => props.theme.hoverBG as string};
+        cursor: ${(props: any) => props.theme.hoverCursor as string};
     }
 
     &.primary {
@@ -46,29 +67,33 @@ const Button = styled.div`
 Button.defaultProps = {
     theme: {
         width: '100px',
+        hoverFG: '#fff',
+        hoverBG: '#3da8f5',
+        hoverCursor: 'pointer',
     },
 };
 
-const LeftPanel = styled.div`
-    width: 25%;
-    margin-left: 5vw;
-    display: flex;
-    flex-direction: column;
-    min-height: 90vh;
-    border-top: 1px solid #0c3586;
-    border-right: 1px solid #0c3586;
-    border-left: 1px solid #0c3586;
+const TableRow = styled.tr`
+    display: ${(props: any) => props.theme.display as string};
+    color: ${(props: any) => props.theme.color as string};
+    opacity: ${(props: any) => props.theme.opacity as string};
+    transition: 0.5s;
+
+    &:hover {
+        background: ${(props: any) => props.theme.hoverBG as string};
+        cursor: ${(props: any) => props.theme.hoverCursor as string};
+    }
 `;
 
-const RightPanel = styled.div`
-    width: 75%;
-    margin-right: 5vw;
-    display: flex;
-    flex-direction: column;
-    min-height: 90vh;
-    border-top: 1px solid #0c3586;
-    border-right: 1px solid #0c3586;
-`;
+TableRow.defaultProps = {
+    theme: {
+        display: 'normal',
+        color: '#fff',
+        opacity: 1,
+        hoverBG: '#002886',
+        hoverCursor: 'pointer',
+    },
+};
 
 const TableHead = styled.th`
     max-width: 150px;
@@ -94,13 +119,8 @@ const TableCell = styled.td`
     border: 1px solid #002886;
 `;
 
-const TableRow = styled.tr`
-    transition: 0.5s;
-
-    &:hover {
-        background: #002886;
-        cursor: pointer;
-    }
+const SecondaryCell = styled.div`
+    color: #005ea4;
 `;
 
 const StatusIndicator = styled.div`
@@ -118,10 +138,6 @@ const getStatusColour = (status: string) => {
 
 const Position = () => {
     const [show, setShow] = useState(false);
-
-    const largeWidth = {
-        width: '250px',
-    };
 
     const headings = [
         'Market',
@@ -144,6 +160,7 @@ const Position = () => {
             marginUsed: 45.3,
             exposure: 4.5,
             liquidationP: 4500.3,
+            markP: 4255.2,
             status: 'Open',
         },
         {
@@ -155,6 +172,7 @@ const Position = () => {
             marginUsed: 45.3,
             exposure: 4.5,
             liquidationP: 4500.3,
+            markP: 4255.2,
             status: 'Eligible for Liquidation',
         },
         {
@@ -166,9 +184,87 @@ const Position = () => {
             marginUsed: 45.3,
             exposure: 4.5,
             liquidationP: 4500.3,
+            markP: 4255.2,
             status: 'Approaching Liquidation',
         },
+        {
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            position: 'long',
+            unrealisedPL: 453.23,
+            realisedPL: -4.5,
+            marginUsed: 45.3,
+            exposure: 4.5,
+            liquidationP: 4500.3,
+            markP: 4255.2,
+            status: 'Closed',
+        },
+        {
+            name: 'LINK',
+            market: 'LINK-USDC',
+            position: 'long',
+            unrealisedPL: 453.23,
+            realisedPL: 3.1,
+            marginUsed: 45.3,
+            exposure: 4.5,
+            liquidationP: 4500.3,
+            markP: 4255.2,
+            status: 'Closed',
+        },
     ];
+
+    const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+        e.preventDefault();
+        setShow(!show);
+    };
+
+    const activeButton = {
+        width: '100px',
+        hoverFG: '#fff',
+        hoverBG: '#3da8f5',
+        hoverCursor: 'pointer',
+    };
+
+    const inactiveButton = {
+        width: '100px',
+    };
+
+    const largeButton = {
+        width: '250px',
+        hoverFG: '#fff',
+        hoverBG: '#3da8f5',
+        hoverCursor: 'pointer',
+    };
+
+    const openRow = {
+        display: 'normal',
+        color: '#fff',
+        opacity: 1,
+        hoverBG: '#002886',
+        hoverCursor: 'pointer',
+    };
+
+    const showClosedRow = {
+        display: 'normal',
+        color: '##00000029',
+        opacity: 0.5,
+    };
+
+    const hideClosedRow = {
+        display: 'none',
+    };
+
+    const getRowStatus = (status: string, show: boolean) => {
+        if (status != 'Closed') {
+            return openRow;
+        } else {
+            if (show) {
+                return showClosedRow;
+            } else {
+                return hideClosedRow;
+            }
+        }
+    };
 
     return (
         <>
@@ -182,7 +278,7 @@ const Position = () => {
                 </thead>
                 <tbody>
                     {tracers.map((tracer) => (
-                        <TableRow>
+                        <TableRow theme={getRowStatus(tracer.status, show)}>
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
@@ -202,7 +298,10 @@ const Position = () => {
                             <TableCell>
                                 {tracer.exposure} {tracer.name}
                             </TableCell>
-                            <TableCell>{tracer.liquidationP}</TableCell>
+                            <TableCell>
+                                {toApproxCurrency(tracer.liquidationP)}
+                                <SecondaryCell>{toApproxCurrency(tracer.markP)}</SecondaryCell>
+                            </TableCell>
                             <TableCell>
                                 <div className="flex flex-row">
                                     <StatusIndicator
@@ -213,7 +312,9 @@ const Position = () => {
                                     </StatusIndicator>
                                     <div className="mx-2 my-auto">{tracer.status}</div>
                                     <div className="my-auto ml-auto">
-                                        <Button>Close</Button>
+                                        <Button theme={tracer.status != 'Closed' ? activeButton : inactiveButton}>
+                                            Close
+                                        </Button>
                                     </div>
                                 </div>
                             </TableCell>
@@ -222,7 +323,9 @@ const Position = () => {
                 </tbody>
             </table>
             <div className="flex mt-8 justify-center">
-                <Button theme={largeWidth}>{show ? 'Hide Closed Position' : 'Show Closed Position'}</Button>
+                <Button theme={largeButton} onClick={(e) => onClick(e)}>
+                    {show ? 'Hide Closed Positions' : 'Show Closed Positions'}
+                </Button>
             </div>
         </>
     );
@@ -234,11 +337,7 @@ const TradingPortfolio = () => {
     const content = () => {
         switch (tab) {
             case 0:
-                return (
-                    <>
-                        <Position />
-                    </>
-                );
+                return <Position />;
             case 1:
                 return <>Margin Accounts Tab</>;
             case 2:
