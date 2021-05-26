@@ -4,6 +4,50 @@ import styled from 'styled-components';
 import SubNav from '@components/Nav/SubNav';
 import SideNav from '@components/Nav/SideNav';
 import { Logo } from '@components/General';
+import { toApproxCurrency } from '@libs/utils';
+
+const Button = styled.div`
+    transition: 0.5s;
+    color: #3da8f5;
+    font-size: 1rem;
+    line-height: 1rem;
+    letter-spacing: -0.32px;
+    border: 1px solid #3da8f5;
+    border-radius: 20px;
+    text-align: center;
+    padding: 10px 0;
+    width: ${(props: any) => props.theme.width as string};
+
+    &:hover {
+        cursor: pointer;
+        background: #3da8f5;
+        color: #fff;
+    }
+
+    &.primary {
+        background: #3da8f5;
+        color: #fff;
+    }
+
+    &.primary:hover {
+        background: #03065e;
+        color: #3da8f5;
+    }
+
+    &.disabled {
+        opacity: 0.8;
+    }
+
+    &.disabled:hover {
+        cursor: not-allowed;
+    }
+`;
+
+Button.defaultProps = {
+    theme: {
+        width: '100px',
+    },
+};
 
 const LeftPanel = styled.div`
     width: 25%;
@@ -26,50 +70,59 @@ const RightPanel = styled.div`
     border-right: 1px solid #0c3586;
 `;
 
-const TableHeadStart = styled.th`
-    width: 6rem;
-    font-size: 0.8rem;
+const TableHead = styled.th`
+    max-width: 150px;
     text-align: left;
     color: #3da8f5;
-    padding: 0.5rem 1rem;
-    font-weight: normal;
-    border-right: 1px solid #002886;
-`;
-
-const TableHeadMiddle = styled.th`
-    width: 5rem;
-    font-size: 0.8rem;
-    text-align: left;
-    color: #3da8f5;
-    padding: 0.5rem 1rem;
+    padding: 1rem;
     font-weight: normal;
     border-right: 1px solid #002886;
 `;
 
 const TableHeadEnd = styled.th`
-    width: 10vw;
-    font-size: 0.8rem;
+    width: 16rem;
     text-align: left;
     color: #3da8f5;
-    padding: 0.5rem 1rem;
+    padding: 1rem;
     font-weight: normal;
-    border-right: 1px solid #002886;
 `;
 
 const TableCell = styled.td`
+    color: ${(props: any) => props.color as string};
+    font-size: 1rem;
     padding: 0.5rem 1rem;
     border: 1px solid #002886;
 `;
 
 const TableRow = styled.tr`
     transition: 0.5s;
+
     &:hover {
         background: #002886;
         cursor: pointer;
     }
 `;
 
+const StatusIndicator = styled.div`
+    color: ${(props: any) => props.color as string};
+`;
+
+const getStatusColour = (status: string) => {
+    if (status == 'Eligible for Liquidation') {
+        return '#F15025';
+    } else if (status == 'Approaching Liquidation') {
+        return '#F4AB57';
+    }
+    return '#fff';
+};
+
 const Position = () => {
+    const [show, setShow] = useState(false);
+
+    const largeWidth = {
+        width: '250px',
+    };
+
     const headings = [
         'Market',
         'Position',
@@ -77,12 +130,13 @@ const Position = () => {
         'Realised P&L',
         'Margin Used',
         'Exposure',
-        'Liquidation Price / Mark Price',
+        'Liquidation Price/ Mark Price',
         'Status',
     ];
 
     const tracers = [
         {
+            name: 'TSLA',
             market: 'TSLA-USDC',
             position: 'long',
             unrealisedPL: 453.23,
@@ -92,6 +146,28 @@ const Position = () => {
             liquidationP: 4500.3,
             status: 'Open',
         },
+        {
+            name: 'LINK',
+            market: 'LINK-USDC',
+            position: 'long',
+            unrealisedPL: 453.23,
+            realisedPL: 3.1,
+            marginUsed: 45.3,
+            exposure: 4.5,
+            liquidationP: 4500.3,
+            status: 'Eligible for Liquidation',
+        },
+        {
+            name: 'ETH',
+            market: 'ETH-USDC',
+            position: 'short',
+            unrealisedPL: -453.23,
+            realisedPL: 4.5,
+            marginUsed: 45.3,
+            exposure: 4.5,
+            liquidationP: 4500.3,
+            status: 'Approaching Liquidation',
+        },
     ];
 
     return (
@@ -100,13 +176,7 @@ const Position = () => {
                 <thead>
                     <tr>
                         {headings.map((heading, i) =>
-                            i == 0 ? (
-                                <TableHeadStart>{heading}</TableHeadStart>
-                            ) : i == 7 ? (
-                                <TableHeadEnd>{heading}</TableHeadEnd>
-                            ) : (
-                                <TableHeadMiddle>{heading}</TableHeadMiddle>
-                            ),
+                            i == 7 ? <TableHeadEnd>{heading}</TableHeadEnd> : <TableHead>{heading}</TableHead>,
                         )}
                     </tr>
                 </thead>
@@ -116,22 +186,44 @@ const Position = () => {
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
-                                        <Logo ticker="TSLA" />
+                                        <Logo ticker={tracer.name} />
                                     </div>
                                     <div className="my-auto ml-2">{tracer.market}</div>
                                 </div>
                             </TableCell>
                             <TableCell>{tracer.position.toUpperCase()}</TableCell>
-                            <TableCell>{tracer.unrealisedPL}</TableCell>
-                            <TableCell>{tracer.realisedPL}</TableCell>
-                            <TableCell>{tracer.marginUsed}</TableCell>
-                            <TableCell>{tracer.exposure}</TableCell>
+                            <TableCell color={tracer.unrealisedPL < 0 ? '#F15025' : '#21DD53'}>
+                                {toApproxCurrency(tracer.unrealisedPL)}
+                            </TableCell>
+                            <TableCell color={tracer.realisedPL < 0 ? '#F15025' : '#21DD53'}>
+                                {toApproxCurrency(tracer.realisedPL)}
+                            </TableCell>
+                            <TableCell>{toApproxCurrency(tracer.marginUsed)}</TableCell>
+                            <TableCell>
+                                {tracer.exposure} {tracer.name}
+                            </TableCell>
                             <TableCell>{tracer.liquidationP}</TableCell>
-                            <TableCell>{tracer.status}</TableCell>
+                            <TableCell>
+                                <div className="flex flex-row">
+                                    <StatusIndicator
+                                        color={getStatusColour(tracer.status)}
+                                        className="font-black my-auto"
+                                    >
+                                        &bull;
+                                    </StatusIndicator>
+                                    <div className="mx-2 my-auto">{tracer.status}</div>
+                                    <div className="my-auto ml-auto">
+                                        <Button>Close</Button>
+                                    </div>
+                                </div>
+                            </TableCell>
                         </TableRow>
                     ))}
                 </tbody>
             </table>
+            <div className="flex mt-8 justify-center">
+                <Button theme={largeWidth}>{show ? 'Hide Closed Position' : 'Show Closed Position'}</Button>
+            </div>
         </>
     );
 };
