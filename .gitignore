@@ -39,10 +39,4 @@ yarn-error.log*
 # vercel
 .vercel
 
-# temp
-
-/.idea/.gitignore
-/.idea/modules.xml
-/.idea/inspectionProfiles/Project_Default.xml
-/.idea/swaps-client.iml
-/.idea/vcs.xml
+/package-lock.json
