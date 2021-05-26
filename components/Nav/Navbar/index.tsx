@@ -220,7 +220,7 @@ const ConnectButton: React.FC<any> = styled.button`
     display: flex;
     border: 2px solid #fff;
     border-radius: 20px;
-    width: 150px;
+    width: 160px;
     height: 50px;
     transition: 0.2s;
     padding: 0 10px;

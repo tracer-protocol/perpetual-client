@@ -17,7 +17,7 @@ const SubNavContainer = styled.div`
 `;
 
 const SubNavItem = styled.div`
-    color: #005ea4;
+    color: #fff;
     transition: 0.3s;
     border-right: 1px solid #0c3586;
     text-align: center;

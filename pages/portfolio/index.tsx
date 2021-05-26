@@ -148,9 +148,9 @@ const StatusIndicator = styled.div`
 `;
 
 const getStatusColour = (status: string) => {
-    if (status == 'Eligible for Liquidation') {
+    if (status === 'Eligible for Liquidation') {
         return '#F15025';
-    } else if (status == 'Approaching Liquidation') {
+    } else if (status === 'Approaching Liquidation') {
         return '#F4AB57';
     }
     return '#fff';
@@ -275,7 +275,7 @@ const Position = () => {
     };
 
     const getRowStatus = (status: string, show: boolean) => {
-        if (status != 'Closed') {
+        if (status !== 'Closed') {
             return openRow;
         } else {
             if (show) {
@@ -292,13 +292,13 @@ const Position = () => {
                 <thead>
                     <tr>
                         {headings.map((heading, i) =>
-                            i == 7 ? <TableHeadEnd>{heading}</TableHeadEnd> : <TableHead>{heading}</TableHead>,
+                            i === 7 ? <TableHeadEnd>{heading}</TableHeadEnd> : <TableHead>{heading}</TableHead>,
                         )}
                     </tr>
                 </thead>
                 <tbody>
-                    {tracers.map((tracer) => (
-                        <TableRow theme={getRowStatus(tracer.status, show)}>
+                    {tracers.map((tracer, i) => (
+                        <TableRow key={`table-row-${i}`} theme={getRowStatus(tracer.status, show)}>
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
@@ -326,13 +326,13 @@ const Position = () => {
                                 <div className="flex flex-row">
                                     <StatusIndicator
                                         color={getStatusColour(tracer.status)}
-                                        className="font-black my-auto"
+                                        className="text-2xl my-auto"
                                     >
                                         &bull;
                                     </StatusIndicator>
                                     <div className="mx-2 my-auto">{tracer.status}</div>
                                     <div className="my-auto ml-auto">
-                                        <Button theme={tracer.status != 'Closed' ? activeButton : inactiveButton}>
+                                        <Button theme={tracer.status !== 'Closed' ? activeButton : inactiveButton}>
                                             Close
                                         </Button>
                                     </div>
@@ -391,7 +391,7 @@ const MarginAccounts = () => {
                 <thead>
                     <tr>
                         {headings.map((heading, i) =>
-                            i == 4 ? (
+                            i === 4 ? (
                                 <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
                             ) : (
                                 <TableHead>{heading}</TableHead>
@@ -400,8 +400,8 @@ const MarginAccounts = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {tracers.map((tracer) => (
-                        <TableRow>
+                    {tracers.map((tracer, i) => (
+                        <TableRow key={`table-row-${i}`}>
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
@@ -417,7 +417,7 @@ const MarginAccounts = () => {
                                 <div className="flex flex-row">
                                     <StatusIndicator
                                         color={getStatusColour(tracer.status)}
-                                        className="font-black my-auto"
+                                        className="text-2xl my-auto"
                                     >
                                         &bull;
                                     </StatusIndicator>
@@ -439,6 +439,95 @@ const MarginAccounts = () => {
     );
 };
 
+const TradeHistory = () => {
+    const headings = ['Date', 'Market', 'Position', 'Exposure / Price', 'Slippage', 'Fees', 'Total Cost', 'Order Type'];
+
+    const tracers = [
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            position: 'long',
+            exposure: 4.5,
+            slippage: 3.23,
+            fees: 2.23,
+            cost: 453.23,
+            type: 'Market',
+        },
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            position: 'long',
+            exposure: 4.5,
+            slippage: 3.23,
+            fees: 2.23,
+            cost: 453.23,
+            type: 'Market',
+        },
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            position: 'long',
+            exposure: 4.5,
+            slippage: 3.23,
+            fees: 2.23,
+            cost: 453.23,
+            type: 'Market',
+        },
+    ];
+
+    const tableHeadEnd = {
+        width: '200px',
+    };
+
+    return (
+        <>
+            <table>
+                <thead>
+                    <tr>
+                        {headings.map((heading, i) =>
+                            i === 7 ? (
+                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                            ) : (
+                                <TableHead>{heading}</TableHead>
+                            ),
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {tracers.map((tracer, i) => (
+                        <TableRow key={`table-row-${i}`}>
+                            <TableCell>
+                                {tracer.date}
+                                <SecondaryCell>{tracer.time}</SecondaryCell>
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex flex-row">
+                                    <div className="my-auto">
+                                        <Logo ticker={tracer.name} />
+                                    </div>
+                                    <div className="my-auto ml-2">{tracer.market}</div>
+                                </div>
+                            </TableCell>
+                            <TableCell>{tracer.position.toUpperCase()}</TableCell>
+                            <TableCell>{toApproxCurrency(tracer.exposure)}</TableCell>
+                            <TableCell>{toApproxCurrency(tracer.slippage)}</TableCell>
+                            <TableCell>{toApproxCurrency(tracer.fees)}</TableCell>
+                            <TableCell>{toApproxCurrency(tracer.cost)}</TableCell>
+                            <TableCell>{tracer.type}</TableCell>
+                        </TableRow>
+                    ))}
+                </tbody>
+            </table>
+        </>
+    );
+};
+
 const TradingPortfolio = () => {
     const [tab, setTab] = useState(0);
     const tabs = ['Positions', 'Margin Accounts', 'Trade History', 'Transfers'];
@@ -449,7 +538,7 @@ const TradingPortfolio = () => {
             case 1:
                 return <MarginAccounts />;
             case 2:
-                return <>Trade History Tab</>;
+                return <TradeHistory />;
             case 3:
                 return <>Transfers Tab</>;
             default:

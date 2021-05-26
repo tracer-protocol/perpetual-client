@@ -16,13 +16,13 @@ const SideNavContainer = styled.div`
 `;
 
 const SideNavItem = styled.div`
-    color: #005ea4;
+    color: #3da8f5;
     transition: 0.3s;
     padding: 15px;
     min-width: 125px;
 
     &.selected {
-        background: #002886;
+        background: #005ea4;
         color: #fff;
     }
 
