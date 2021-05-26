@@ -4,8 +4,8 @@ This client is still in development. We have recently begun implementing a forke
 
 ## Stable Branches
 
--   [ ] master
--   [ ] develop
+-  master
+-  develop
 
 ## Todos
 
@@ -55,14 +55,12 @@ Checkout [tracer-graphs](https://github.com/lions-mane/tracer-graphs) to deploy 
 
 ## Running
 
-Install packages with
+### Install packages with
 
-```
-  npm install || yarn
-```
+`npm install` or `yarn install`
 
-Run the development server:
+`npm ci` will be significantly faster when there is a package-lock.json.
 
-```bash
-  npm run dev || yarn dev
-```
+### Run the development server:
+
+`npm run dev` or `yarn dev`

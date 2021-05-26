@@ -5,9 +5,6 @@
 /.pnp
 .pnp.js
 
-# idea
-/idea
-
 # testing
 /coverage
 
@@ -39,4 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
-/package-lock.json
+# idea
+/.idea/.gitignore
+/.idea/modules.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/swaps-client.iml
+/.idea/vcs.xml
