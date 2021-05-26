@@ -5,6 +5,9 @@
 /.pnp
 .pnp.js
 
+# idea
+/idea
+
 # testing
 /coverage
 
@@ -35,6 +38,9 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# temp
+
 /.idea/.gitignore
 /.idea/modules.xml
 /.idea/inspectionProfiles/Project_Default.xml
