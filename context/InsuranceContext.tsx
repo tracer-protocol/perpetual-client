@@ -275,7 +275,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         if (contract && account && selectedTracer?.address) {
             getPoolData(selectedTracer?.address, selectedTracer?.marketId);
         }
-    }, [contract, account, selectedTracer]) // eslint-disable-line
+    }, [contract, account, selectedTracer]); // eslint-disable-line
 
     const selectedPool: InsurancePoolInfo = (state.pools as Record<string, InsurancePoolInfo>)[
         selectedTracer?.marketId as string

@@ -528,6 +528,78 @@ const TradeHistory = () => {
     );
 };
 
+const Transfers = () => {
+    const headings = ['Date', 'Type', 'Amount / Currency', 'Transaction Details'];
+
+    const tracers = [
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            type: 'Deposit',
+            amount: 4562,
+            currency: 'DAI',
+            details: '0x75...423',
+        },
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            type: 'Deposit',
+            amount: 4562,
+            currency: 'DAI',
+            details: '0x75...423',
+        },
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            type: 'Deposit',
+            amount: 4562,
+            currency: 'DAI',
+            details: '0x75...423',
+        },
+    ];
+
+    const tableHeadEnd = {
+        width: '700px',
+    };
+
+    return (
+        <>
+            <table>
+                <thead>
+                    <tr>
+                        {headings.map((heading, i) =>
+                            i === 3 ? (
+                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                            ) : (
+                                <TableHead>{heading}</TableHead>
+                            ),
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {tracers.map((tracer, i) => (
+                        <TableRow key={`table-row-${i}`}>
+                            <TableCell>
+                                {tracer.date}
+                                <SecondaryCell>{tracer.time}</SecondaryCell>
+                            </TableCell>
+                            <TableCell>{tracer.type}</TableCell>
+                            <TableCell>
+                                {toApproxCurrency(tracer.amount)}
+                                <SecondaryCell>{tracer.currency}</SecondaryCell>
+                            </TableCell>
+                            <TableCell>{tracer.details}</TableCell>
+                        </TableRow>
+                    ))}
+                </tbody>
+            </table>
+        </>
+    );
+};
+
 const TradingPortfolio = () => {
     const [tab, setTab] = useState(0);
     const tabs = ['Positions', 'Margin Accounts', 'Trade History', 'Transfers'];
@@ -540,7 +612,7 @@ const TradingPortfolio = () => {
             case 2:
                 return <TradeHistory />;
             case 3:
-                return <>Transfers Tab</>;
+                return <Transfers />;
             default:
                 return;
         }

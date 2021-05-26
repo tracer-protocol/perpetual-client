@@ -5,9 +5,10 @@ import { Children, Result } from 'types';
 type HandleTransactionType =
     | ((
           callMethod: (...args: any) => Result | Promise<Result>,
-    params: any[], // eslint-disable-line 
-    callback?: (res: Result) => any, // eslint-disable-line 
-) => void ) | undefined;
+          params: any[], // eslint-disable-line
+          callback?: (res: Result) => any, // eslint-disable-line
+      ) => void)
+    | undefined;
 
 export const TransactionContext = createContext<{ handleTransaction: HandleTransactionType }>({
     handleTransaction: undefined,
