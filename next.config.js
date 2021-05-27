@@ -34,8 +34,6 @@ module.exports = withAntdLess({
     exportPathMap: () => {
         return {
             '/': { page: '/' },
-            '/account/history': { page: '/account/[page]' },
-            '/account/positions': { page: '/account/[page]' },
             '/trade/basic': { page: '/trade/[interface]' },
             '/trade/advanced': { page: '/trade/[interface]' },
             '/insurance/pools': { page: '/insurance/[interface]' },
