@@ -15,7 +15,7 @@ type TransitionState = 'entering' | 'entered' | 'exiting' | 'exited';
 /* eslint-disable */
 
 const getTranslate: (placement: PlacementType) => string = (placement: PlacementType) => {
-    const pos:string[] = placement.split('-');
+    const pos: string[] = placement.split('-');
     const relevantPlacement = pos[1] === 'center' ? pos[0] : pos[1];
     const translateMap: Record<string, string> = {
         right: 'translate3d(120%, 0, 0)',
@@ -35,12 +35,15 @@ const hashieStates = (placement: PlacementType) => ({
 });
 
 // TODO load these colours in tailwind config
-const appearances: Record<string, {
-    icon: any,
-    text: string,
-    fg: string, 
-    bg: string
-}>= {
+const appearances: Record<
+    string,
+    {
+        icon: any;
+        text: string;
+        fg: string;
+        bg: string;
+    }
+> = {
     success: {
         icon: <CheckCircleFilled />,
         text: '#006644',
@@ -78,9 +81,9 @@ const IconWrap = styled.div`
     height: 30px;
     font-size: 20px;
     line-height: 20px;
-`
+`;
 const Icon: React.FC<any> = ({ appearance: appearance_, autoDismiss, autoDismissTimeout, isRunning }) => {
-    const appearance = appearances[appearance_] ?? appearances['info'] //default info
+    const appearance = appearances[appearance_] ?? appearances['info']; //default info
     return (
         <div
             className="
@@ -96,9 +99,7 @@ const Icon: React.FC<any> = ({ appearance: appearance_, autoDismiss, autoDismiss
             }}
         >
             <Countdown opacity={autoDismiss ? 1 : 0} autoDismissTimeout={autoDismissTimeout} isRunning={isRunning} />
-            <IconWrap>
-                {appearance.icon}
-            </IconWrap>
+            <IconWrap>{appearance.icon}</IconWrap>
         </div>
     );
 };
@@ -119,14 +120,11 @@ const Countdown: React.FC<any> = ({ autoDismissTimeout, opacity, isRunning, ...p
     />
 );
 
-const Content = styled((props: any) =>
-    <div
-        className={`react-toast-notifications__toast__content w-full p-2 ${props.className}`}
-        {...props} 
-    >
+const Content = styled((props: any) => (
+    <div className={`react-toast-notifications__toast__content w-full p-2 ${props.className}`} {...props}>
         {props.children}
     </div>
-)`
+))`
     flex-grow: 1;
     font-size: 14;
     line-height: 1.4;
@@ -134,7 +132,7 @@ const Content = styled((props: any) =>
     width: 100%;
     padding: 5px;
     word-break: break-word;
-`
+`;
 
 type HProps = {
     appearance: AppearanceTypes;
@@ -161,7 +159,7 @@ const Close = styled(CloseOutlined)`
         cursor: pointer;
         opacity: 0.8;
     }
-`
+`;
 const Hashie: React.FC<HProps | any> = ({
     transitionDuration,
     transitionState,
@@ -173,7 +171,7 @@ const Hashie: React.FC<HProps | any> = ({
     isRunning,
     children,
 }: HProps) => {
-    const appearance = appearances[appearance_] ?? appearances['info'] //default info
+    const appearance = appearances[appearance_] ?? appearances['info']; //default info
     return (
         <div
             className="rounded-md mb-2 flex"
@@ -193,7 +191,7 @@ const Hashie: React.FC<HProps | any> = ({
                 isRunning={isRunning}
             />
             <Content>{children}</Content>
-            <Close onClick={onDismiss}/>
+            <Close onClick={onDismiss} />
         </div>
     );
 };
@@ -206,11 +204,10 @@ Hashie.defaultProps = {
     autoDismissTimeout: 5000,
 };
 
-export const NotificationsContainer = styled.div
-`
+export const NotificationsContainer = styled.div`
     position: absolute;
     top: 4rem;
     right: 0;
     margin: 0.25rem;
-`
-export const Notification = ({ children, ...props }: any ) => <Hashie {...props}>{children}</Hashie>;
+`;
+export const Notification = ({ children, ...props }: any) => <Hashie {...props}>{children}</Hashie>;

@@ -7,18 +7,18 @@ import { Notification } from '@components/Notifications/Notification';
 
 export const withGlobalContext = (Story) => (
     <ToastProvider components={{ Toast: Notification }}>
-      <GraphProvider graphUri={process.env.NEXT_PUBLIC_GRAPH_URI}>
-        <Web3Store>
-          <Story />
-        </Web3Store>
-      </GraphProvider>
+        <GraphProvider graphUri={process.env.NEXT_PUBLIC_GRAPH_URI}>
+            <Web3Store>
+                <Story />
+            </Web3Store>
+        </GraphProvider>
     </ToastProvider>
-)
+);
 
 export const withOrderContext = (Story) => (
-  <SelectedTracerStore>
-    <OrderStore>
-      <Story />
-    </OrderStore>
-  </SelectedTracerStore>
-)
+    <SelectedTracerStore>
+        <OrderStore>
+            <Story />
+        </OrderStore>
+    </SelectedTracerStore>
+);

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { SearchOutlined } from '@ant-design/icons';
+
 interface SBProps {
     filter: string;
     setFilter: (filter: string) => void;

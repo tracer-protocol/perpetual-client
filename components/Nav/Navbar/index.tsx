@@ -135,6 +135,7 @@ const DropdownLogo = styled(({ className }) => {
         transition: all 0.3s ease-in-out;
         z-index: -1;
     }
+
     > .dropdown-menu ul {
         margin-top: 3vh;
         transition: all 0.3s ease-in-out;
@@ -142,9 +143,11 @@ const DropdownLogo = styled(({ className }) => {
         border-radius: 10px;
         opacity: 0;
     }
+
     .delayed-transition {
         transition-delay: 0.3s !important;
     }
+
     > .dropdown-menu ul .nav-item {
         background: transparent;
         border-top: transparent;
@@ -157,15 +160,18 @@ const DropdownLogo = styled(({ className }) => {
     > .dropdown-menu ul img {
         height: 30px;
     }
+
     .dropdown-menu ul .nav-item:nth-child(1) {
         border-top: transparent;
         height: 70px; // 30px for logo and 40px for padding;
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
     }
+
     > .dropdown-menu ul .nav-item:nth-child(2) {
         transition: all 0.3s ease-in-out, background 0.5s ease;
     }
+
     > .dropdown-menu ul .nav-item:nth-child(3) {
         transition: all 0.3s ease-in-out, background 0.5s ease;
     }
@@ -176,12 +182,15 @@ const DropdownLogo = styled(({ className }) => {
     &.show > .dropdown-menu ul .nav-item:nth-child(2) {
         transition: all 0.3s ease-in-out 0.2s, background 0.5s ease;
     }
+
     &.show > .dropdown-menu ul .nav-item:nth-child(3) {
         transition: all 0.3s ease-in-out 0.3s, background 0.5s ease;
     }
+
     &.show > .dropdown-menu ul .nav-item:nth-child(4) {
         transition: all 0.3s ease-in-out 0.4s, background 0.5s ease;
     }
+
     &.show > .dropdown-menu ul .nav-item {
         border-top: 1px solid #3da8f5;
         transform: translateX(0);
@@ -211,9 +220,8 @@ const ConnectButton: React.FC<any> = styled.button`
     display: flex;
     border: 2px solid #fff;
     border-radius: 20px;
-    width: 150px;
+    width: 160px;
     height: 50px;
-    border: 2px solid #ffffff;
     transition: 0.2s;
     padding: 0 10px;
     margin: auto 20px;
@@ -221,10 +229,13 @@ const ConnectButton: React.FC<any> = styled.button`
     &:focus {
         outline: none;
     }
+
     &:hover {
         background: #3da8f5;
     }
 `;
+
+const linkStyles = 'mx-2 py-2';
 
 const NavBar: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
@@ -251,7 +262,6 @@ const NavBar: React.FC = styled(({ className }) => {
         }
     };
 
-    const linkStyles = 'mx-2 py-2';
     return (
         <nav className={className}>
             <DropdownLogo />
@@ -269,19 +279,14 @@ const NavBar: React.FC = styled(({ className }) => {
                         <a className="m-auto">Trade</a>
                     </Link>
                 </li>
-                <li className={linkStyles + (route === 'pool' ? ' selected' : '')}>
-                    <Link href="/pool">
-                        <a className="m-auto">Pool</a>
-                    </Link>
-                </li>
                 <li className={linkStyles + (route === 'insurance' ? ' selected' : '')}>
                     <Link href="/insurance/pools">
                         <a className="m-auto ">Insurance</a>
                     </Link>
                 </li>
-                <li className={linkStyles + (route === 'account' ? ' selected' : '')}>
-                    <Link href="/account/positions">
-                        <a className="m-auto">Account</a>
+                <li className={linkStyles + (route === 'portfolio' ? ' selected' : '')}>
+                    <Link href="/portfolio">
+                        <a className="m-auto">Portfolio</a>
                     </Link>
                 </li>
             </ul>
@@ -315,6 +320,7 @@ const NavBar: React.FC = styled(({ className }) => {
         transition: 0.2s;
         padding: 0 20px;
     }
+
     > ul li.selected {
         color: #37b1f6;
     }
@@ -326,12 +332,14 @@ const NavBar: React.FC = styled(({ className }) => {
     > ul li .trade-toggle {
         display: none;
     }
+
     > ul li.selected .trade-toggle {
         display: flex;
         margin: auto 20px;
         border: 1px solid #3da8f5;
         border-radius: 20px;
     }
+
     > ul li.selected .trade-toggle div {
         width: 100px;
         text-align: center;
@@ -340,6 +348,7 @@ const NavBar: React.FC = styled(({ className }) => {
             cursor: pointer;
         }
     }
+
     > ul li.selected .trade-toggle div.selected {
         color: #03065e;
         background-color: #3da8f5;

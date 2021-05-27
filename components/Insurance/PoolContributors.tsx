@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Table, { TableRow } from '@components/Tables';
-import { SubNavBar } from '@components/Nav';
+import SubNavBar from '@components/Nav/SubNavBar';
 import { Holding } from 'types';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 
@@ -48,7 +48,7 @@ const PoolContributors: React.FC<PCProps> = ({ holdings, liquidity }: PCProps) =
                     </Table>
                 );
             case 2:
-                return <LightWeightChart candleData={[]}/>;
+                return <LightWeightChart candleData={[]} />;
             default:
                 return <></>;
         }

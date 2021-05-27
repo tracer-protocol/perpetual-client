@@ -58,6 +58,7 @@ const LiquidationPrice = styled(Section)`
     font-size: 16px;
     padding: 5px 0;
     margin: 0;
+
     .label {
         color: #fff;
         padding: 0 10px;
@@ -66,6 +67,7 @@ const LiquidationPrice = styled(Section)`
         padding-right: 10px;
     }
 `;
+
 interface SProps {
     balances: UserBalance;
     fairPrice: BigNumber;
@@ -74,6 +76,7 @@ interface SProps {
     maxLeverage: BigNumber;
     className?: string;
 }
+
 const Summary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLeverage, exposure, className }: SProps) => {
     const position = order?.position ?? 0;
     const notional: BigNumber = calcNotionalValue(exposure, fairPrice);

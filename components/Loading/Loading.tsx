@@ -21,7 +21,7 @@ const Loading: React.FC = () => {
             setState('WAITING');
             setTimeout(() => setState('LOADING'), 100);
         }
-	}, [loading]) // eslint-disable-line
+    }, [loading]); // eslint-disable-line
 
     return (
         <>

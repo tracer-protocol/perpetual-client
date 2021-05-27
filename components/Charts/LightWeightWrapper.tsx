@@ -147,7 +147,7 @@ class ChartWrapper extends React.Component<Props> {
         this.series = [];
     };
 
-    addSeries = (serie:any, type:any) => {
+    addSeries = (serie: any, type: any) => {
         const func = addSeriesFunctions[type];
         const color = (serie.option && serie.options.color) || colors[this.series.length % colors.length];
         const series = this.chart[func]({
@@ -160,7 +160,7 @@ class ChartWrapper extends React.Component<Props> {
             series.setMarkers(serie.markers);
         }
         if (serie.priceLines) {
-            serie.priceLines.forEach((line:any) => series.createPriceLine(line));
+            serie.priceLines.forEach((line: any) => series.createPriceLine(line));
         }
         if (serie.legend) {
             this.addLegend(series, color, serie.legend);
@@ -197,7 +197,7 @@ class ChartWrapper extends React.Component<Props> {
             });
     };
 
-    unsubscribeEvents = (prevProps:any) => {
+    unsubscribeEvents = (prevProps: any) => {
         const chart = this.chart;
         chart.unsubscribeClick(prevProps.onClick);
         chart.unsubscribeCrosshairMove(prevProps.onCrosshairMove);
@@ -220,7 +220,7 @@ class ChartWrapper extends React.Component<Props> {
         from && to && this.chart.timeScale().setVisibleRange({ from, to });
     };
 
-    handleLinearInterpolation = (data:any, candleTime:any) => {
+    handleLinearInterpolation = (data: any, candleTime: any) => {
         if (!candleTime || data.length < 2 || !data[0].value) {
             return data;
         }
@@ -273,16 +273,15 @@ class ChartWrapper extends React.Component<Props> {
         }
     };
 
-    addLegend = (series:any, color:any, title:any) => {
+    addLegend = (series: any, color: any, title: any) => {
         this.legends.push({ series, color, title });
     };
 
-    handleLegends = (param:any) => {
+    handleLegends = (param: any) => {
         const div = this.legendDiv.current;
         if (param.time && div && this.legends.length) {
             div.innerHTML = '';
-            this.legends.forEach(({ series, color, title }: {series: any, color: any, title: any}) => {
-
+            this.legends.forEach(({ series, color, title }: { series: any; color: any; title: any }) => {
                 let price = param.seriesPrices.get(series);
                 if (price !== undefined) {
                     if (typeof price === 'object') {
@@ -333,7 +332,7 @@ export default ChartWrapper;
 
 const isObject = (item: any) => item && typeof item === 'object' && !Array.isArray(item);
 
-const mergeDeep = (target:any, source:any) => {
+const mergeDeep = (target: any, source: any) => {
     const output = Object.assign({}, target);
     if (isObject(target) && isObject(source)) {
         Object.keys(source).forEach((key) => {

@@ -41,14 +41,15 @@ export const Button = styled.div`
     &.disabled {
         opacity: 0.8;
     }
-    &.disabled: hover {
+
+    &.disabled:hover {
         cursor: not-allowed;
     }
 `;
 
 export const Card = styled.div`
     background: #011772;
-    box-shadow: 0px 5px 10px #00000029;
+    box-shadow: 0 5px 10px #00000029;
     border-radius: 5px;
     transition: 0.3s;
 
@@ -64,6 +65,7 @@ type SProps = {
     className?: string;
     tooltip?: React.ReactChild;
 } & Children;
+
 export const Section: React.FC<SProps> = styled(({ label, children, className, tooltip }: SProps) => {
     return tooltip ? (
         <Tooltip title={tooltip} placement="right">
@@ -104,17 +106,19 @@ const clearLogos: Record<string, string> = {
 };
 
 const logos: Record<string, string> = {
+    TSLA: '/img/logos/currencies/tesla.svg',
     ETH: '/img/logos/currencies/eth.svg',
+    LINK: '/img/logos/currencies/link.svg',
 };
 
-type Ticker = 'ETH' | 'LINK';
 interface LProps {
     className?: string;
-    ticker: Ticker;
+    ticker: string;
     clear?: boolean; // true then display outlined image
 }
+
 export const Logo: React.FC<LProps> = styled(({ className, ticker, clear }: LProps) => {
-    return <img className={className} src={clear ? clearLogos[ticker] : logos[ticker]} />;
+    return <img className={className} src={clear ? clearLogos[ticker] : logos[ticker]} alt="logo" />;
 })`
     width: 30px;
     margin: 5px 0;
@@ -128,6 +132,7 @@ export const Previous = styled.span`
         content: '>>>';
     }
 `;
+
 export const After = styled.span`
     color: #005ea4;
     &:before {
@@ -164,6 +169,7 @@ type IProps = {
     percent: number;
     className?: string;
 };
+
 export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IProps) => {
     return (
         <div className={className}>

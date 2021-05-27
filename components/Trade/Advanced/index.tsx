@@ -7,7 +7,7 @@ import { MarketSelect, TradingInput, AccountPanel } from './TradingPanel';
 import Tracer from '@libs/Tracer';
 import { AccountSummary } from './AccountDetails';
 import { InsuranceInfo } from './RightPanel/InsuranceInfo';
-import { SubNav } from '@components/Nav/SubNavBar';
+import SubNav from '@components/Nav/SubNav';
 import { Box } from '@components/General';
 import styled from 'styled-components';
 import RecentTrades from './RightPanel/RecentTrades';
@@ -39,6 +39,7 @@ const Graphs = () => {
 const OrderBookContainer = styled.div`
     border-top: 1px solid #002886;
     padding: 10px;
+
     h3 {
         letter-spacing: -0.4px;
         color: #ffffff;
@@ -85,6 +86,7 @@ const LeftPanel = styled.div`
     flex-direction: column;
     min-height: 90vh;
 `;
+
 const RightPanel = styled.div`
     width: 75%;
     display: flex;
@@ -102,11 +104,13 @@ const Overlay = styled.div`
     height: 100%;
     width: 100%;
     z-index: -9999;
+
     &.display {
         z-index: 2;
         opacity: 0.5;
     }
 `;
+
 const Advanced: React.FC = () => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);

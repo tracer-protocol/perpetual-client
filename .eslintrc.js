@@ -7,7 +7,7 @@ module.exports = {
             jsx: true, // Allows for the parsing of JSX
         },
     },
-    ignorePatterns: ["**/*.stories.tsx"],
+    ignorePatterns: ['**/*.stories.tsx'],
     settings: {
         react: {
             version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
@@ -23,7 +23,7 @@ module.exports = {
         'default-case': 2, // require default in switch
         'default-case-last': 2,
         eqeqeq: 2,
-        "react/prop-types": 0,
+        'react/prop-types': 0,
         '@typescript-eslint/no-unused-vars': [1, { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }],
         '@typescript-eslint/no-explicit-any': [0],
         '@typescript-eslint/ban-ts-comment': [0],

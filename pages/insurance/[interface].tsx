@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 import Pools from '@components/Insurance/Pools';
 import Portfolio from '@components/Insurance/Portfolio';
 import styled from 'styled-components';
-import { SubNav } from '@components/Nav/SubNavBar';
+import SubNav from '@components/Nav/SubNav';
 
 const Content = styled.div`
     background: #03065e;
