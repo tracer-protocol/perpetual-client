@@ -52,7 +52,7 @@ export default class Tracer {
     public token: Erc20Type | undefined;
     public liquidationGasCost: number | undefined;
     public quoteTokenDecimals: BigNumber;
-    public maxLeverage: BigNumber | undefined;
+    public maxLeverage: BigNumber;
     public fundingRateSensitivity: BigNumber;
     public feeRate: BigNumber;
     public initialised: Promise<boolean>;
@@ -71,6 +71,7 @@ export default class Tracer {
         this.insuranceContract = '';
         this.balances = defaults.balances;
         this.oraclePrice = defaults.oraclePrice;
+        this.maxLeverage = defaults.maxLeverage;
         this.initialised = this.init(web3);
     }
 

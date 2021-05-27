@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext, useState, useMemo } from 'react';
 import { useAllTracers } from '@libs/Graph/hooks/Tracer';
 import { Children } from 'types';
 import Tracer from '@libs/Tracer';
@@ -12,7 +12,7 @@ interface ContextProps {
 export const FactoryContext = React.createContext<Partial<ContextProps>>({});
 
 export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
-    const { web3 } = useContext(Web3Context);
+    const { web3, account } = useContext(Web3Context);
     const { tracers } = useAllTracers();
     const [labelledTracers, setLabelledTracers] = useState<LabelledTracers>({});
 
@@ -36,6 +36,12 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
             };
         }
     }, [web3, tracers]);
+
+    useMemo(() => { // update users balance across all tracers
+        if (tracers && account) {
+            Object.values(labelledTracers).map((tracer) => tracer.updateUserBalance(account))
+        }
+    }, [account, labelledTracers])
 
     return (
         <FactoryContext.Provider

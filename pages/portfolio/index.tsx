@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import NavBar from '@components/Nav/Navbar';
 import styled from 'styled-components';
 import SubNav from '@components/Nav/SubNav';
 import SideNav from '@components/Nav/SideNav';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
+import { FactoryContext } from '@context/FactoryContext';
+import Tracer from '@libs/Tracer';
+import { calcLiquidationPrice, calcTotalMargin } from '@tracer-protocol/tracer-utils';
 
 const LeftPanel = styled.div`
     width: 25%;
@@ -156,7 +159,7 @@ const getStatusColour = (status: string) => {
     return '#fff';
 };
 
-const Position = () => {
+const Position:React.FC<{ labelledTracers: Record<string, Tracer> }> = ({ labelledTracers }) => {
     const [show, setShow] = useState(false);
 
     const headings = [
@@ -170,68 +173,71 @@ const Position = () => {
         'Status',
     ];
 
-    const tracers = [
-        {
-            name: 'TSLA',
-            market: 'TSLA-USDC',
-            position: 'long',
-            unrealisedPL: 453.23,
-            realisedPL: -4.5,
-            marginUsed: 45.3,
-            exposure: 4.5,
-            liquidationP: 4500.3,
-            markP: 4255.2,
-            status: 'Open',
-        },
-        {
-            name: 'LINK',
-            market: 'LINK-USDC',
-            position: 'long',
-            unrealisedPL: 453.23,
-            realisedPL: 3.1,
-            marginUsed: 45.3,
-            exposure: 4.5,
-            liquidationP: 4500.3,
-            markP: 4255.2,
-            status: 'Eligible for Liquidation',
-        },
-        {
-            name: 'ETH',
-            market: 'ETH-USDC',
-            position: 'short',
-            unrealisedPL: -453.23,
-            realisedPL: 4.5,
-            marginUsed: 45.3,
-            exposure: 4.5,
-            liquidationP: 4500.3,
-            markP: 4255.2,
-            status: 'Approaching Liquidation',
-        },
-        {
-            name: 'TSLA',
-            market: 'TSLA-USDC',
-            position: 'long',
-            unrealisedPL: 453.23,
-            realisedPL: -4.5,
-            marginUsed: 45.3,
-            exposure: 4.5,
-            liquidationP: 4500.3,
-            markP: 4255.2,
-            status: 'Closed',
-        },
-        {
-            name: 'LINK',
-            market: 'LINK-USDC',
-            position: 'long',
-            unrealisedPL: 453.23,
-            realisedPL: 3.1,
-            marginUsed: 45.3,
-            exposure: 4.5,
-            liquidationP: 4500.3,
-            markP: 4255.2,
-            status: 'Closed',
-        },
-    ];
+    const _status = [
+        "Open", "Eligible for Liquidation", "Approaching Liquidation", "Closed"
+    ]
+    // const tracers = [
+    //     {
+    //         name: 'TSLA',
+    //         market: 'TSLA-USDC',
+    //         position: 'long',
+    //         unrealisedPL: 453.23,
+    //         realisedPL: -4.5,
+    //         marginUsed: 45.3,
+    //         exposure: 4.5,
+    //         liquidationP: 4500.3,
+    //         markP: 4255.2,
+    //         status: 'Open',
+    //     },
+    //     {
+    //         name: 'LINK',
+    //         market: 'LINK-USDC',
+    //         position: 'long',
+    //         unrealisedPL: 453.23,
+    //         realisedPL: 3.1,
+    //         marginUsed: 45.3,
+    //         exposure: 4.5,
+    //         liquidationP: 4500.3,
+    //         markP: 4255.2,
+    //         status: 'Eligible for Liquidation',
+    //     },
+    //     {
+    //         name: 'ETH',
+    //         market: 'ETH-USDC',
+    //         position: 'short',
+    //         unrealisedPL: -453.23,
+    //         realisedPL: 4.5,
+    //         marginUsed: 45.3,
+    //         exposure: 4.5,
+    //         liquidationP: 4500.3,
+    //         markP: 4255.2,
+    //         status: 'Approaching Liquidation',
+    //     },
+    //     {
+    //         name: 'TSLA',
+    //         market: 'TSLA-USDC',
+    //         position: 'long',
+    //         unrealisedPL: 453.23,
+    //         realisedPL: -4.5,
+    //         marginUsed: 45.3,
+    //         exposure: 4.5,
+    //         liquidationP: 4500.3,
+    //         markP: 4255.2,
+    //         status: 'Closed',
+    //     },
+    //     {
+    //         name: 'LINK',
+    //         market: 'LINK-USDC',
+    //         position: 'long',
+    //         unrealisedPL: 453.23,
+    //         realisedPL: 3.1,
+    //         marginUsed: 45.3,
+    //         exposure: 4.5,
+    //         liquidationP: 4500.3,
+    //         markP: 4255.2,
+    //         status: 'Closed',
+    //     },
+    // ];
 
     const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
@@ -297,49 +303,58 @@ const Position = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {tracers.map((tracer, i) => (
-                        <TableRow key={`table-row-${i}`} theme={getRowStatus(tracer.status, show)}>
-                            <TableCell>
-                                <div className="flex flex-row">
-                                    <div className="my-auto">
-                                        <Logo ticker={tracer.name} />
+                    {Object.values(labelledTracers).map((tracer, i) => { 
+                        let name = tracer.marketId.split("/")[0];
+                        let status = _status[i];
+                        let { quote, base } = tracer.balances;
+
+                        // TODO calculate these
+                        let unrealisedPL= 453.23, realisedPL = -4.5;
+
+                        return (
+                            <TableRow key={`table-row-${i}`} theme={getRowStatus(status[i], show)}>
+                                <TableCell>
+                                    <div className="flex flex-row">
+                                        <div className="my-auto">
+                                            <Logo ticker={name} />
+                                        </div>
+                                        <div className="my-auto ml-2">{tracer.marketId}</div>
                                     </div>
-                                    <div className="my-auto ml-2">{tracer.market}</div>
-                                </div>
-                            </TableCell>
-                            <TableCell>{tracer.position.toUpperCase()}</TableCell>
-                            <TableCell color={tracer.unrealisedPL < 0 ? '#F15025' : '#21DD53'}>
-                                {toApproxCurrency(tracer.unrealisedPL)}
-                            </TableCell>
-                            <TableCell color={tracer.realisedPL < 0 ? '#F15025' : '#21DD53'}>
-                                {toApproxCurrency(tracer.realisedPL)}
-                            </TableCell>
-                            <TableCell>{toApproxCurrency(tracer.marginUsed)}</TableCell>
-                            <TableCell>
-                                {tracer.exposure} {tracer.name}
-                            </TableCell>
-                            <TableCell>
-                                {toApproxCurrency(tracer.liquidationP)}
-                                <SecondaryCell>{toApproxCurrency(tracer.markP)}</SecondaryCell>
-                            </TableCell>
-                            <TableCell>
-                                <div className="flex flex-row">
-                                    <StatusIndicator
-                                        color={getStatusColour(tracer.status)}
-                                        className="text-2xl my-auto"
-                                    >
-                                        &bull;
-                                    </StatusIndicator>
-                                    <div className="mx-2 my-auto">{tracer.status}</div>
-                                    <div className="my-auto ml-auto">
-                                        <Button theme={tracer.status !== 'Closed' ? activeButton : inactiveButton}>
-                                            Close
-                                        </Button>
+                                </TableCell>
+                                <TableCell>{base.lt(0) ? 'SHORT' : 'LONG'}</TableCell>
+                                <TableCell color={unrealisedPL < 0 ? '#F15025' : '#21DD53'}>
+                                    {toApproxCurrency(unrealisedPL)}
+                                </TableCell>
+                                <TableCell color={realisedPL < 0 ? '#F15025' : '#21DD53'}>
+                                    {toApproxCurrency(realisedPL)}
+                                </TableCell>
+                                <TableCell>{toApproxCurrency(calcTotalMargin(quote, base, tracer.oraclePrice))}</TableCell>
+                                <TableCell>
+                                    {base.abs().toNumber()} {name}
+                                </TableCell>
+                                <TableCell>
+                                    {toApproxCurrency(calcLiquidationPrice(quote, base, tracer.oraclePrice, tracer.maxLeverage))}
+                                    <SecondaryCell>{toApproxCurrency(tracer.oraclePrice)}</SecondaryCell>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex flex-row">
+                                        <StatusIndicator
+                                            color={getStatusColour(status)}
+                                            className="text-2xl my-auto"
+                                        >
+                                            &bull;
+                                        </StatusIndicator>
+                                        <div className="mx-2 my-auto">{status}</div>
+                                        <div className="my-auto ml-auto">
+                                            <Button theme={status !== 'Closed' ? activeButton : inactiveButton}>
+                                                Close
+                                            </Button>
+                                        </div>
                                     </div>
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    )}
                 </tbody>
             </table>
             <div className="flex mt-8 justify-center">
@@ -601,12 +616,13 @@ const Transfers = () => {
 };
 
 const TradingPortfolio = () => {
+    const { tracers } = useContext(FactoryContext);
     const [tab, setTab] = useState(0);
     const tabs = ['Positions', 'Margin Accounts', 'Trade History', 'Transfers'];
     const content = () => {
         switch (tab) {
             case 0:
-                return <Position />;
+                return <Position labelledTracers={tracers ?? {}} />;
             case 1:
                 return <MarginAccounts />;
             case 2:

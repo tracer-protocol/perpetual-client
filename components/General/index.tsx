@@ -109,6 +109,7 @@ const logos: Record<string, string> = {
     TSLA: '/img/logos/currencies/tesla.svg',
     ETH: '/img/logos/currencies/eth.svg',
     LINK: '/img/logos/currencies/link.svg',
+    DEFAULT: '/img/logos/currencies/tesla.svg',
 };
 
 interface LProps {
@@ -118,7 +119,7 @@ interface LProps {
 }
 
 export const Logo: React.FC<LProps> = styled(({ className, ticker, clear }: LProps) => {
-    return <img className={className} src={clear ? clearLogos[ticker] : logos[ticker]} alt="logo" />;
+    return <img className={className} src={clear ? clearLogos[ticker] : logos[ticker] ?? logos["TSLA"]} alt="logo" />;
 })`
     width: 30px;
     margin: 5px 0;
