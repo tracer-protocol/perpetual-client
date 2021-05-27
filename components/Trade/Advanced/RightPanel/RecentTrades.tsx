@@ -1,17 +1,12 @@
 import { TradingTable } from '@components/Tables/TradingTable';
 import { toApproxCurrency } from '@libs/utils';
+import { FilledOrder } from 'types/OrderTypes';
 import React from 'react';
 import styled from 'styled-components';
-
-type Trade = {
-    price: number;
-    amount: number;
-    time: string;
-    bid: boolean;
-};
+import Web3 from 'web3';
 
 interface RTProps {
-    trades: Trade[];
+    trades: FilledOrder[];
     className?: string;
 }
 
@@ -29,13 +24,20 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                         </tr>
                     </thead>
                     <tbody>
-                        {trades.map((trade: Trade, index) => (
-                            <tr key={`row-${index}`}>
-                                <td className={trade.bid ? 'bid' : 'ask'}>{toApproxCurrency(trade.price)}</td>
-                                <td>{trade.amount}</td>
-                                <td>{trade.time}</td>
-                            </tr>
-                        ))}
+                        {trades.map((trade, index) => {
+                            const d = new Date(parseInt(trade.timestamp) * 1000);
+                            return (
+                                <tr key={`row-${index}`}>
+                                    <td className={!!trade.position ? 'bid' : 'ask'}>
+                                        {toApproxCurrency(parseFloat(Web3.utils.fromWei(trade.price)))}
+                                    </td>
+                                    <td>{Web3.utils.fromWei(trade.amount)}</td>
+                                    <td>
+                                        {d.getHours()}:{d.getMinutes()}
+                                    </td>
+                                </tr>
+                            );
+                        })}
                     </tbody>
                 </TradingTable>
             ) : (

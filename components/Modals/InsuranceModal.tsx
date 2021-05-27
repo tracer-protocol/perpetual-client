@@ -148,7 +148,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
             };
             const t = isDeposit ? 'deposit' : 'withdraw';
             withdraw && deposit && handleTransaction
-                ? handleTransaction(isDeposit ? deposit : withdraw, [amount], callback)
+                ? handleTransaction(isDeposit ? deposit : withdraw, [amount], { callback })
                 : console.error(`Failed to ${t} from insurance pool: No deposit function found`);
         } catch (err) {
             console.error(`Failed to deposit into insurance pool: ${err}`);

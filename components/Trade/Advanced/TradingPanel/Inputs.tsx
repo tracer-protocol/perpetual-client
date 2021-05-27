@@ -27,11 +27,11 @@ export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISP
             <div className="w-full p-3">
                 <SmallInput
                     title={'Amount'}
-                    onChange={(e) =>
+                    onChange={(e) => {
                         orderDispatch
                             ? orderDispatch({ type: 'setOrderBase', value: parseFloat(e.target.value) })
-                            : console.error('No dispatch function set')
-                    }
+                            : console.error('No dispatch function set');
+                    }}
                     setMax={(e) => {
                         e.preventDefault();
                         orderDispatch
@@ -45,11 +45,14 @@ export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISP
             <div className="w-full p-3">
                 <SmallInput
                     title={'Price'}
-                    onChange={(e) =>
-                        orderDispatch
-                            ? orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) })
-                            : console.error('No dispatch function set')
-                    }
+                    onChange={(e) => {
+                        if (orderDispatch) {
+                            orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
+                            orderDispatch({ type: 'setOrderType', value: 1 });
+                        } else {
+                            console.error('No dispatch function set');
+                        }
+                    }}
                     unit={tracerId.split('/')[1]}
                     amount={price}
                 />

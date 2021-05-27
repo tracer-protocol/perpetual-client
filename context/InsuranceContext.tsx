@@ -127,7 +127,6 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     useEffect(() => {
         if (web3 && selectedTracer && selectedTracer.insuranceContract) {
-            console.log(selectedTracer.insuranceContract, 'Insurance contract');
             const setter = async () => {
                 await selectedTracer.initialised;
                 setContract(

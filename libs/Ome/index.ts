@@ -73,6 +73,20 @@ export const getBooks = async () => {
 export const getOrders = async (market: string) => {
     return fetch(`${BASE_URL}/book/${omefy(market)}`, {
         method: 'GET',
+    })
+        .then((res) => res.json() )
+        .then((res) => {
+            return res;
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+};
+
+
+export const getUsersOrders: (market: string, account: string) => Promise<OMEOrder[]> = async (market: string, account: string) => {
+    return fetch(`${BASE_URL}/book/${omefy(market)}/${omefy(account)}`, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -83,8 +97,10 @@ export const getOrders = async (market: string) => {
         })
         .catch((err) => {
             console.error(err);
+            return []
         });
-};
+
+}
 
 const omefy = (str: string) => str.slice(2).toLowerCase()
 
@@ -95,7 +111,7 @@ const omefy = (str: string) => str.slice(2).toLowerCase()
  * @param market the market the order belongs to
  * @param data order data payload. An example of this request
  */
-export const createOrder = async (market:string, data: OMEOrder) => {
+export const createOrder: (market: string, data: OMEOrder) => Promise<Response> = async (market, data) => {
     if (!market) {
         console.error("Failed to create order: Market is invalid")
         return;
@@ -113,6 +129,7 @@ export const createOrder = async (market:string, data: OMEOrder) => {
         })
         .catch((err) => {
             console.error(err);
+            return err;
         });
 };
 
@@ -174,3 +191,5 @@ export const updateOrder = (market: string, orderId: string, update: OrderUpdate
             console.error(err);
         });
 };
+
+export * from './hooks';

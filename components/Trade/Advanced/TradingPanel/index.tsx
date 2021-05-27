@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import { DefaultSlider } from '@components/Trade/LeverageSlider';
-import { PostTradeDetails } from '@components/SummaryInfo/PositionDetails';
 import { FactoryContext, OrderContext, TracerContext } from 'context';
 import InputSelects from './Inputs';
 import { Tracer } from 'libs';
@@ -12,6 +11,7 @@ import Dropdown from 'antd/lib/dropdown';
 import { DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { defaults } from '@libs/Tracer';
+import PostTradeDetails from './PostTradeDetails';
 
 const Market = styled.div`
     letter-spacing: -0.4px;
@@ -77,7 +77,7 @@ type TIProps = {
     className?: string;
 };
 export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, className }: TIProps) => {
-    const { order, exposure } = useContext(OrderContext);
+    const { order } = useContext(OrderContext);
     return (
         <Box className={`${className}`}>
             <div className="body text-xs">
@@ -107,7 +107,7 @@ export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, classNa
                 <PostTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                     balances={selectedTracer?.balances ?? defaults.balances}
-                    exposure={exposure ?? defaults.exposure}
+                    exposure={order?.exposure ?? defaults.exposure}
                     position={order?.position ?? 0}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                 />
@@ -137,11 +137,14 @@ const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
     const { orderDispatch } = useContext(OrderContext);
     return (
         <SSlideSelect
-            onClick={(index, _e) =>
-                orderDispatch
-                    ? orderDispatch({ type: 'setPosition', value: index })
-                    : console.error('Order dispatch function not set')
-            }
+            onClick={(index, _e) => {
+                // when we go back to market order we need to ensure the price is locked
+                if (orderDispatch) {
+                    orderDispatch({ type: 'setPosition', value: index });
+                } else {
+                    console.error('Order dispatch function not set');
+                }
+            }}
             value={selected}
         >
             <Option>SHORT</Option>
@@ -154,11 +157,16 @@ const OrderTypeSelect: React.FC<SProps> = ({ selected }: SProps) => {
     const { orderDispatch } = useContext(OrderContext);
     return (
         <SSlideSelect
-            onClick={(index, _e) =>
-                orderDispatch
-                    ? orderDispatch({ type: 'setOrderType', value: index })
-                    : console.error('Order dispatch function not set')
-            }
+            onClick={(index, _e) => {
+                if (orderDispatch) {
+                    orderDispatch({ type: 'setOrderType', value: index });
+                    if (index === 0) {
+                        orderDispatch({ type: 'setLock', value: true });
+                    }
+                } else {
+                    console.error('Order dispatch function not set');
+                }
+            }}
             value={selected}
         >
             <Option>MARKET</Option>

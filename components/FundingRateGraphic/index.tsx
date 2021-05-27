@@ -4,7 +4,7 @@ interface IProps {
     rate: number;
 }
 
-export const FundingRateGraphic: React.FC<IProps> = ({ rate }: IProps) => {
+const FundingRateGraphic: React.FC<IProps> = ({ rate }: IProps) => {
     const fundingRate = rate;
     const green = Math.abs((-1 - fundingRate) * 10);
     const red = (1 - fundingRate) * 10;
@@ -28,3 +28,5 @@ export const FundingRateGraphic: React.FC<IProps> = ({ rate }: IProps) => {
         </React.Fragment>
     );
 };
+
+export default FundingRateGraphic;
