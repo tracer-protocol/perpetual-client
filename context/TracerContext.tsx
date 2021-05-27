@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useReducer } from 'react';
 import { FactoryContext } from './FactoryContext';
 import { Children, Result, UserBalance } from 'types';
 import { isEmpty } from 'lodash';
-import { createBook, createOrder } from '@libs/Ome';
+import { createOrder } from '@libs/Ome';
 import { Web3Context } from './Web3Context';
 import { OrderState } from './OrderContext';
 import Web3 from 'web3';
@@ -68,7 +68,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const defaultTracer = Object.values(tracers)[0];
             tracerDispatch({ type: 'setSelectedTracer', value: defaultTracer });
             // for testing purposes this will not be done each time someone opens the app
-            // createBook(defaultTracer); 
+            // createBook(defaultTracer);
         }
     }, [tracers]);
 

@@ -59,10 +59,9 @@ export type OMEOrder = {
     maxCumulative?: number;
 };
 
-
 export type FilledOrder = {
-    position: boolean
-    amount: string
-    price: string
-    timestamp: string
-}
+    position: boolean;
+    amount: string;
+    price: string;
+    timestamp: string;
+};

@@ -25,14 +25,18 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                     </thead>
                     <tbody>
                         {trades.map((trade, index) => {
-                            let d = new Date(parseInt(trade.timestamp) * 1000)
+                            const d = new Date(parseInt(trade.timestamp) * 1000);
                             return (
                                 <tr key={`row-${index}`}>
-                                    <td className={!!trade.position ? 'bid' : 'ask'}>{toApproxCurrency(parseFloat(Web3.utils.fromWei(trade.price)))}</td>
+                                    <td className={!!trade.position ? 'bid' : 'ask'}>
+                                        {toApproxCurrency(parseFloat(Web3.utils.fromWei(trade.price)))}
+                                    </td>
                                     <td>{Web3.utils.fromWei(trade.amount)}</td>
-                                    <td>{d.getHours()}:{d.getMinutes()}</td>
+                                    <td>
+                                        {d.getHours()}:{d.getMinutes()}
+                                    </td>
                                 </tr>
-                            )
+                            );
                         })}
                     </tbody>
                 </TradingTable>

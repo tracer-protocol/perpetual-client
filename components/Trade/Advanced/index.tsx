@@ -48,7 +48,7 @@ const OrderBookContainer = styled.div`
 
 const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
     const orders = useOrders(selectedTracer?.address ?? '');
-    const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '')
+    const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
 
     return (
         <div>
@@ -70,7 +70,7 @@ const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selecte
                             <p>No open orders</p>
                         )}
                     </OrderBookContainer>
-                    <RecentTrades trades={mostRecentTrades.trades} />
+                    <RecentTrades trades={mostRecentTrades} />
                 </Box>
             </div>
         </div>

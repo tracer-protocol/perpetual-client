@@ -1,7 +1,6 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import TracerModal from '@components/Modals';
-import { OrderState, OrderTypeMapping, Errors } from '@context/OrderContext';
+import { OrderState, Errors } from '@context/OrderContext';
 import { OrderContext, TracerContext } from 'context';
 import { Children, UserBalance } from 'types';
 import styled from 'styled-components';

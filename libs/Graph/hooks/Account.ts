@@ -54,7 +54,6 @@ export const useAccountData: (user: string | undefined) => any = (user) => { // 
     };
 };
 
-
 const USER_TRACER_TRADES = gql`
     query Tracer_Trades($account: String!, $tracer: String!) {
         trades(trader: $account, tracer: $tracer) {
@@ -64,9 +63,17 @@ const USER_TRACER_TRADES = gql`
             timestamp
         }
     }
-`
+`;
 
-export const useUsersMatched = (tracer: string, account: string) => {
+export const useUsersMatched: (
+    tracer: string,
+    account: string,
+) => {
+    filledOrders: FilledOrder[];
+    error: any;
+    loading: any;
+    refetch: any;
+} = (tracer, account) => {
     const ref = useRef<FilledOrder[]>([]);
     const { addToast } = useToasts();
     const { data, error, loading, refetch } = useQuery(USER_TRACER_TRADES, {
@@ -89,9 +96,9 @@ export const useUsersMatched = (tracer: string, account: string) => {
     });
 
     return {
-        filledOrders: data || ref.current,
+        filledOrders: data.trades || ref.current,
         error,
         loading,
         refetch,
     };
-}
+};

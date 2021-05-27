@@ -47,7 +47,6 @@ export const useAllTracers: () => Tracers = () => {
     };
 };
 
-
 const TRACER_TRADES = gql`
     query Tracer_Trades($tracer: String!) {
         trades(first: 15, tracer: $tracer, orderBy: timestamp, orderDirection: desc) {
@@ -57,14 +56,19 @@ const TRACER_TRADES = gql`
             timestamp
         }
     }
-`
+`;
 
 /**
  * Fetch the most recent X trades for the tracer market
  * @param tracer market
- * @returns 
+ * @returns
  */
-export const useMostRecentMatched = (tracer: string) => {
+export const useMostRecentMatched: (tracer: string) => {
+    mostRecentTrades: FilledOrder[];
+    error: any;
+    loading: any;
+    refetch: any;
+} = (tracer) => {
     const ref = useRef<FilledOrder[]>([]);
     const { addToast } = useToasts();
     const { data, error, loading, refetch } = useQuery(TRACER_TRADES, {
@@ -87,9 +91,9 @@ export const useMostRecentMatched = (tracer: string) => {
     });
 
     return {
-        mostRecentTrades: data || ref.current,
+        mostRecentTrades: data.trades || ref.current,
         error,
         loading,
         refetch,
     };
-}
+};

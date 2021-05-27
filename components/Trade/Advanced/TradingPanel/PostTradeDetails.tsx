@@ -5,42 +5,12 @@ import {
     calcLeverage,
     calcLiquidationPrice,
     calcWithdrawable,
-    calcProfitableLiquidationPrice,
     calcNotionalValue,
 } from '@tracer-protocol/tracer-utils';
-import { Section } from '@components/General';
+import { Previous, Section } from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
 import styled from 'styled-components';
-
-interface IProps {
-    balance: UserBalance;
-    fairPrice: BigNumber;
-    maxLeverage: BigNumber;
-}
-
-export const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, maxLeverage }: IProps) => {
-    const { base, quote, totalLeveragedValue } = balance;
-    const l = calcLeverage(quote, base, fairPrice);
-    return (
-        <div className="flex">
-            <div className="w-1/2 p-3">
-                <Section label={'Eligible liquidation price (exc. gas)'}>
-                    {toApproxCurrency(calcLiquidationPrice(quote, base, fairPrice, maxLeverage))}
-                </Section>
-                <Section label={'Likely Liquidation Price (incl. gas)'}>
-                    {toApproxCurrency(calcProfitableLiquidationPrice(quote, base, fairPrice, maxLeverage))}
-                </Section>
-                <Section label={'Positions'}>{base.toNumber()}</Section>
-            </div>
-            <div className="w-1/2 p-3">
-                <Section label={'Notional Value'}>{toApproxCurrency(calcNotionalValue(base, fairPrice))}</Section>
-                <Section label={'Leverage Multiplier'}>{l.gt(1) ? `${l.toNumber()}` : '0'}</Section>
-                <Section label={'Borrowed Amount'}>{toApproxCurrency(totalLeveragedValue)}</Section>
-            </div>
-        </div>
-    );
-};
 
 interface PTDProps {
     balances: UserBalance;
@@ -50,7 +20,7 @@ interface PTDProps {
     maxLeverage: BigNumber;
     className?: string;
 }
-export const PostTradeDetails: React.FC<PTDProps> = styled(
+const PostTradeDetails: React.FC<PTDProps> = styled(
     ({ balances, position, exposure, fairPrice, maxLeverage, className }: PTDProps) => {
         const newBase =
             position === 0
@@ -64,23 +34,23 @@ export const PostTradeDetails: React.FC<PTDProps> = styled(
             <div className={className}>
                 <h3>Order Summary</h3>
                 <Section label={'Liquidation Price'}>
-                    {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
-                    {`  -->  `}
+                    <Previous>
+                        {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
+                    </Previous>
                     {toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage))}
                 </Section>
                 <Section label={'Borrowed'}>
-                    {toApproxCurrency(calcBorrowed(balances.quote, balances.base, fairPrice))}
-                    {`  -->  `}
+                    <Previous>{toApproxCurrency(calcBorrowed(balances.quote, balances.base, fairPrice))}</Previous>
                     {toApproxCurrency(calcBorrowed(newQuote, newBase, fairPrice))}
                 </Section>
                 <Section label={'Withdrawable'}>
-                    {toApproxCurrency(calcWithdrawable(balances.quote, balances.base, fairPrice, maxLeverage))}
-                    {`  -->  `}
+                    <Previous>
+                        {toApproxCurrency(calcWithdrawable(balances.quote, balances.base, fairPrice, maxLeverage))}
+                    </Previous>
                     {toApproxCurrency(calcWithdrawable(newQuote, newBase, fairPrice, maxLeverage))}
                 </Section>
                 <Section label={'Leverage'}>
-                    {calcLeverage(balances.quote, balances.base, fairPrice).toPrecision(3)}
-                    {`  -->  `}
+                    <Previous>{calcLeverage(balances.quote, balances.base, fairPrice).toPrecision(3)}</Previous>
                     {calcLeverage(newQuote, newBase, fairPrice).toPrecision(3)}
                 </Section>
             </div>
@@ -99,3 +69,5 @@ export const PostTradeDetails: React.FC<PTDProps> = styled(
         margin-bottom: 20px;
     }
 `;
+
+export default PostTradeDetails;
