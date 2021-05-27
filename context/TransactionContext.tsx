@@ -5,8 +5,15 @@ import { Children, Result } from 'types';
 type HandleTransactionType =
     | ((
           callMethod: (...args: any) => Result | Promise<Result>,
-          params: any[], // eslint-disable-line
-          callback?: (res: Result) => any, // eslint-disable-line
+    params: any[], // eslint-disable-line 
+          options?: {
+        callback?: (res: Result) => any, // eslint-disable-line 
+              statusMessages?: {
+                  waiting?: string;
+                  error?: string;
+                  success?: string;
+              };
+          },
       ) => void)
     | undefined;
 
@@ -21,9 +28,10 @@ export const TransactionContext = createContext<{ handleTransaction: HandleTrans
 export const TransactionStore: React.FC = ({ children }: Children) => {
     const { addToast, updateToast } = useToasts();
 
-    const handleTransaction: HandleTransactionType = async (callMethod, params, callback) => {
+    const handleTransaction: HandleTransactionType = async (callMethod, params, options) => {
+        const { statusMessages, callback } = options ?? {};
         // actually returns a string error in the library
-        const toastId = addToast('Approve transaction with provider', {
+        const toastId = addToast(statusMessages?.waiting ?? 'Approve transaction with provider', {
             appearance: 'loading' as AppearanceTypes,
             autoDismiss: false,
         });
@@ -33,13 +41,13 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
             if (res.status === 'error') {
                 updateToast(toastId as unknown as string, {
                     // confirmed this is a string
-                    content: `Transaction cancelled. ${res.message}`,
+                    content: statusMessages?.error ?? `Transaction cancelled. ${res.message}`,
                     appearance: 'error',
                     autoDismiss: true,
                 });
             } else {
                 updateToast(toastId as unknown as string, {
-                    content: `${res.message}`,
+                    content: statusMessages?.success ?? `${res.message}`,
                     appearance: 'success',
                     autoDismiss: true,
                 });

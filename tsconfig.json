@@ -29,6 +29,6 @@
             "@machines/*": ["machines/*"]
         }
     },
-    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js", "hooks/GraphHooks"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js"],
     "exclude": ["node_modules", "components/**/*.stories.tsx"]
 }

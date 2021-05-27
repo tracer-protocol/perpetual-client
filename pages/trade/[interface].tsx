@@ -2,7 +2,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import NavBar from '@components/Nav';
 import { Basic, Advanced } from '@components/Trade';
-import { OrderStore, ErrorInfo, SelectedTracerStore } from 'context';
+import { OrderStore, SelectedTracerStore } from 'context';
 import { InsuranceStore } from '@context/InsuranceContext';
 import styled from 'styled-components';
 
@@ -15,9 +15,7 @@ const Trade: React.FC = styled(({ className }) => {
             <NavBar />
             <SelectedTracerStore tracer={query.tracer as string}>
                 <InsuranceStore>
-                    <ErrorInfo>
-                        <OrderStore>{advanced ? <Advanced /> : <Basic />}</OrderStore>
-                    </ErrorInfo>
+                    <OrderStore>{advanced ? <Advanced /> : <Basic />}</OrderStore>
                 </InsuranceStore>
             </SelectedTracerStore>
         </div>

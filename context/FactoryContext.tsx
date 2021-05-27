@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
-import { useAllTracers } from '@hooks/GraphHooks/Tracer';
+import { useAllTracers } from '@libs/Graph/hooks/Tracer';
 import { Children } from 'types';
 import Tracer from '@libs/Tracer';
 import { Web3Context } from './Web3Context';

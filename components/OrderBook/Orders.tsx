@@ -43,14 +43,14 @@ export const Order: React.FC<BProps> = styled(
     .fill-bid {
         background-repeat: no-repeat;
         background-position: 100% 100%;
-        background-image: linear-gradient(to left, #f1502566 100%, white 0%);
+        background-image: linear-gradient(to left, #00ff0866 100%, white 0%);
         background-size: 0%;
     }
 
     .fill-ask {
         background-repeat: no-repeat;
         background-position: 100% 100%;
-        background-image: linear-gradient(to left, #00ff0866 100%, white 0%);
+        background-image: linear-gradient(to left, #f1502566 100%, white 0%);
         background-size: 0%;
     }
 `;

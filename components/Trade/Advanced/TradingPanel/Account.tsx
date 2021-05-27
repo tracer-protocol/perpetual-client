@@ -159,8 +159,11 @@ const Popup: React.FC<PProps> = styled(
             withdraw = () => console.error('Withdraw is not defined'),
         } = useContext(TracerContext);
         const [amount, setAmount] = useState(0);
-        const available = isDeposit ? balances.tokenBalance : balances.quote.minus(new BigNumber(0));
-        // calcMinimumMargin(balances.base, balances.quote, price, maxLeverage));
+        const available = isDeposit
+            ? balances.tokenBalance
+            : calcTotalMargin(balances.quote, balances.base, price).minus(
+                  calcMinimumMargin(balances.quote, balances.base, price, maxLeverage),
+              );
         const newBalance = isDeposit ? balances.quote.plus(amount) : balances.quote.minus(amount);
         const invalid = amount > available.toNumber();
 
@@ -188,15 +191,15 @@ const Popup: React.FC<PProps> = styled(
                         tooltip={'This can be thought of as total equity or total account value'}
                     >
                         <SPrevious>{`${toApproxCurrency(
-                            calcTotalMargin(balances.base, balances.quote, price),
+                            calcTotalMargin(balances.quote, balances.base, price),
                         )}`}</SPrevious>
-                        {`${toApproxCurrency(calcTotalMargin(balances.base, newBalance, price))}`}
+                        {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, price))}`}
                     </SSection>
                     <SSection label={`Maintenance Margin`}>
                         <SPrevious>{`${toApproxCurrency(
-                            calcMinimumMargin(balances.base, balances.quote, price, maxLeverage),
+                            calcMinimumMargin(balances.quote, balances.base, price, maxLeverage),
                         )}`}</SPrevious>
-                        {`${toApproxCurrency(calcMinimumMargin(balances.base, newBalance, price, maxLeverage))}`}
+                        {`${toApproxCurrency(calcMinimumMargin(newBalance, balances.base, price, maxLeverage))}`}
                     </SSection>
                 </SHiddenExpand>
                 <MButton onClick={() => (isDeposit ? deposit(amount) : withdraw(amount))}>

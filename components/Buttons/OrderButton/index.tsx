@@ -1,8 +1,7 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import TracerModal from '@components/Modals';
-import { OrderState, OrderTypeMapping, Errors } from '@context/OrderContext';
-import { OrderContext, TracerContext } from 'context';
+import { OrderState, Errors } from '@context/OrderContext';
+import { OrderContext, TracerContext, TransactionContext } from 'context';
 import { Children, UserBalance } from 'types';
 import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
@@ -58,39 +57,51 @@ type POBProps = {
 export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
     const { order } = useContext(OrderContext);
-    const { orderBase, price, orderType } = order as OrderState;
+    const { handleTransaction } = useContext(TransactionContext);
     const { addToast } = useToasts();
-    const [showOrder, setShowOrder] = useState(false);
-    const [loading, setLoading] = useState(false);
 
     const handleOrder = async (_e: any) => {
-        if (order?.error !== -1) {
-            setLoading(true);
-            placeOrder
-                ? await placeOrder(order as OrderState)
-                : console.error('Error placing order: Place order function is not defined');
-            setLoading(false);
-            setShowOrder(false);
+        if (order?.error === -1) {
+            if (placeOrder) {
+                if (handleTransaction) {
+                    handleTransaction(placeOrder, [order as OrderState], {
+                        statusMessages: {
+                            waiting: 'Please sign the transaction through your web3 provider',
+                        },
+                    });
+                } else {
+                    console.error('Error placing order: Handle transaction function is not defined');
+                }
+            } else {
+                console.error('Error placing order: Place order function is not defined');
+            }
         } else {
-            addToast(`Invalid order: ${Errors[order?.error]?.message}`, {
-                appearance: 'error',
-                autoDismiss: true,
-            });
+            if (order?.error) {
+                addToast(`Invalid order: ${Errors[order.error]?.message}`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            } else {
+                addToast(`Invalid order: An unhandled error occured`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            }
         }
     };
 
-    const message = () => {
-        if (orderType === 0) {
-            return `Using $${orderBase} to place 0 orders at an average price of ${price}`;
-        } else if (orderType === 1) {
-            return `Using $${orderBase} to place a ${OrderTypeMapping[orderType]} order at $${price}`;
-        }
-    };
+    // const message = () => {
+    //     if (orderType === 0) {
+    //         return `Using $${orderBase} to place 0 orders at an average price of ${price}`;
+    //     } else if (orderType === 1) {
+    //         return `Using $${orderBase} to place a ${OrderTypeMapping[orderType]} order at $${price}`;
+    //     }
+    // };
 
     if (order?.error === -1) {
         return (
             <>
-                <TracerModal
+                {/* <TracerModal
                     loading={loading}
                     show={showOrder}
                     onClose={() => setShowOrder(false)}
@@ -108,8 +119,8 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
                             </button>
                         </div>
                     </div>
-                </TracerModal>
-                <div className={`w-full ${className}`} onClick={() => setShowOrder(true)}>
+                </TracerModal> */}
+                <div className={`w-full ${className}`} onClick={handleOrder}>
                     {children}
                 </div>
             </>
