@@ -44,7 +44,7 @@ export const networkConfig: Record<string, Network> = {
     //     graphUri: 'http://localhost:8000/subgraphs/name/tetther1122/tracer-graph',
     // },
     // other networks go here
-    '42': { // until we redploy contracts to kovan
+    '42': {
         previewUrl: 'https://kovan.etherscan.io',
         contracts: {
             insurance: {
@@ -89,5 +89,4 @@ export const networkConfig: Record<string, Network> = {
         },
         graphUri: 'http://localhost:8000/subgraphs/name/dospore/tracer-graph',
     },
-    // other networks go here
 };
