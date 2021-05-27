@@ -3632,10 +3632,10 @@
     tslib "^2.1.0"
     web3 "^1.3.4"
 
-"@tracer-protocol/tracer-utils@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@tracer-protocol/tracer-utils/-/tracer-utils-0.2.0.tgz#c40a039607cbf2c08617a4aad00556f7e7c212ac"
-  integrity sha512-Yqgd1JzWhSI03IQHn1RVudQLAiN4U39Chj3j6vbcE+iJb4ogWk7ov9EYDYCULueEizphlZ1txmZzyUWtCNPbXg==
+"@tracer-protocol/tracer-utils@^0.2.1":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@tracer-protocol/tracer-utils/-/tracer-utils-0.2.1.tgz#cf5b83d3cbea801592d4a3db511954879bbb195b"
+  integrity sha512-O2/61shVyblxIBPqgopZIZFe80fSVnuXIH4jcK2OuBRu/QX0rJtj8h9IuHV+lZikoaHE1CcvLjxebROXGfF9nA==
   dependencies:
     "@types/node" "^14.14.37"
     bignumber.js "^9.0.1"
@@ -3643,7 +3643,7 @@
     ganache-cli "^6.12.2"
     node-fetch "^2.6.1"
     tslib "^2.1.0"
-    web3 "^1.3.4"
+    web3 "^1.3.6"
 
 "@truffle/blockchain-utils@^0.0.30":
   version "0.0.30"
@@ -22346,7 +22346,7 @@ web3@1.2.11:
     web3-shh "1.2.11"
     web3-utils "1.2.11"
 
-web3@1.3.6, web3@^1.0.0-beta.34, web3@^1.3.0, web3@^1.3.3, web3@^1.3.4:
+web3@1.3.6, web3@^1.0.0-beta.34, web3@^1.3.0, web3@^1.3.3, web3@^1.3.4, web3@^1.3.6:
   version "1.3.6"
   resolved "https://registry.yarnpkg.com/web3/-/web3-1.3.6.tgz#599425461c3f9a8cbbefa70616438995f4a064cc"
   integrity sha512-jEpPhnL6GDteifdVh7ulzlPrtVQeA30V9vnki9liYlUvLV82ZM7BNOQJiuzlDePuE+jZETZSP/0G/JlUVt6pOA==
