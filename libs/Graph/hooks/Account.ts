@@ -96,7 +96,7 @@ export const useUsersMatched: (
     });
 
     return {
-        filledOrders: data.trades || ref.current,
+        filledOrders: data?.trades || ref.current,
         error,
         loading,
         refetch,

@@ -111,7 +111,7 @@ const omefy = (str: string) => str.slice(2).toLowerCase()
  * @param market the market the order belongs to
  * @param data order data payload. An example of this request
  */
-export const createOrder = async (market:string, data: OMEOrder) => {
+export const createOrder: (market: string, data: OMEOrder) => Promise<Response> = async (market, data) => {
     if (!market) {
         console.error("Failed to create order: Market is invalid")
         return;
@@ -129,6 +129,7 @@ export const createOrder = async (market:string, data: OMEOrder) => {
         })
         .catch((err) => {
             console.error(err);
+            return err;
         });
 };
 

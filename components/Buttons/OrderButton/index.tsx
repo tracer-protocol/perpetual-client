@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { OrderState, Errors } from '@context/OrderContext';
-import { OrderContext, TracerContext } from 'context';
+import { OrderContext, TracerContext, TransactionContext } from 'context';
 import { Children, UserBalance } from 'types';
 import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
@@ -57,16 +57,20 @@ type POBProps = {
 export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
     const { order } = useContext(OrderContext);
-    // const { orderBase, price, orderType } = order as OrderState;
+    const { handleTransaction } = useContext(TransactionContext);
     const { addToast } = useToasts();
-    // const [showOrder, setShowOrder] = useState(false);
-    // const [loading, setLoading] = useState(false);
 
     const handleOrder = async (_e: any) => {
         if (order?.error === -1) {
-            placeOrder
-                ? await placeOrder(order as OrderState)
-                : console.error('Error placing order: Place order function is not defined');
+            if (placeOrder) {
+                if (handleTransaction) {
+                    handleTransaction(placeOrder, [order as OrderState])
+                } else {
+                    console.error('Error placing order: Handle transaction function is not defined');
+                }
+            } else {
+                console.error('Error placing order: Place order function is not defined');
+            }
         } else {
             if (order?.error) {
                 addToast(`Invalid order: ${Errors[order.error]?.message}`, {

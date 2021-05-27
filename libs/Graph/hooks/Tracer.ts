@@ -91,7 +91,7 @@ export const useMostRecentMatched: (tracer: string) => {
     });
 
     return {
-        mostRecentTrades: data.trades || ref.current,
+        mostRecentTrades: data?.trades || ref.current,
         error,
         loading,
         refetch,

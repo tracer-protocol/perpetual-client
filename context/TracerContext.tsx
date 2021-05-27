@@ -6,7 +6,7 @@ import { createOrder } from '@libs/Ome';
 import { Web3Context } from './Web3Context';
 import { OrderState } from './OrderContext';
 import Web3 from 'web3';
-import { signOrders, orderToOMEOrder, OrderData } from '@tracer-protocol/tracer-utils';
+import { orderToOMEOrder, OrderData, signOrdersV3 } from '@tracer-protocol/tracer-utils';
 import Tracer from '@libs/Tracer';
 import { TransactionContext } from './TransactionContext';
 import { defaults } from '@libs/Tracer';
@@ -18,7 +18,7 @@ interface ContextProps {
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
     balance: UserBalance;
-    placeOrder: (order: OrderState) => Promise<Result | undefined>;
+    placeOrder: (order: OrderState) => Promise<Result>;
 }
 
 export const TracerContext = React.createContext<Partial<ContextProps>>({} as ContextProps);
@@ -83,27 +83,33 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     };
 
-    const placeOrder = async (order: OrderState) => {
+    const placeOrder: (order: OrderState) => Promise<Result> = async (order) => {
         const { orderBase, price, position } = order;
         // all orders are OME orders
-        const parsedPrice = price * selectedTracer?.priceMultiplier;
         const amount = Web3.utils.toWei(orderBase.toString()) ?? 0;
         const expiration = new Date().getTime() + 604800;
         const makes: OrderData[] = [
             {
                 amount: amount,
-                price: parsedPrice.toString(),
-                side: position === 0,
-                user: account ?? '',
-                expiration: expiration,
-                targetTracer: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer.address) : '',
-                nonce: 5101,
+                price: Web3.utils.toWei(price.toString()),
+                side: position ? 1 : 0,
+                maker: account ?? '',
+                expires: expiration,
+                market: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer.address) : '',
+                created: Date.now()
             },
         ];
-        const signedMakes = await signOrders(web3, makes, config?.contracts.trader.address as string);
-        const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
-        await createOrder(selectedTracer?.address as string, omeOrder);
-        return { status: 'success' } as Result; // TODO add error check
+        try {
+            const signedMakes = await signOrdersV3(web3, makes, config?.contracts.trader.address as string);
+            const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
+            let res = await createOrder(selectedTracer?.address as string, omeOrder);
+            if (res.status !== 200) {
+                return { status: 'error', message: `Failed to place order: ${res}` }
+            }
+            return { status: 'success', message: "Successfully placed order"} as Result; // TODO add error check
+        } catch (err) {
+            return { status: 'error', message: `Faiiled to place order: ${order}` } as Result; // TODO add error check
+        }
     };
 
     const submit = async (deposit: boolean, amount: number) => {
