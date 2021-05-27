@@ -1,5 +1,5 @@
-// in your node script before running whatever is causing the warnings
-process.traceDeprecation = true;
+// // in your node script before running whatever is causing the warnings
+// process.traceDeprecation = true;
 
 import React from 'react';
 import { AppProps } from 'next/app';
@@ -14,7 +14,6 @@ import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
 
 const App = ({ Component, pageProps }: AppProps) => {
-    // eslint-disable-line
     return (
         <div>
             <Head>
