@@ -159,9 +159,11 @@ const Popup: React.FC<PProps> = styled(
             withdraw = () => console.error('Withdraw is not defined'),
         } = useContext(TracerContext);
         const [amount, setAmount] = useState(0);
-        const available = isDeposit 
-            ? balances.tokenBalance 
-            : calcTotalMargin(balances.quote , balances.base, price).minus(calcMinimumMargin(balances.quote, balances.base, price, maxLeverage));
+        const available = isDeposit
+            ? balances.tokenBalance
+            : calcTotalMargin(balances.quote, balances.base, price).minus(
+                  calcMinimumMargin(balances.quote, balances.base, price, maxLeverage),
+              );
         const newBalance = isDeposit ? balances.quote.plus(amount) : balances.quote.minus(amount);
         const invalid = amount > available.toNumber();
 
@@ -189,7 +191,7 @@ const Popup: React.FC<PProps> = styled(
                         tooltip={'This can be thought of as total equity or total account value'}
                     >
                         <SPrevious>{`${toApproxCurrency(
-                            calcTotalMargin(balances.quote , balances.base, price),
+                            calcTotalMargin(balances.quote, balances.base, price),
                         )}`}</SPrevious>
                         {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, price))}`}
                     </SSection>

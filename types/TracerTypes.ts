@@ -34,9 +34,9 @@ export type TracerInfo = {
 };
 
 export type CandleData = {
-    time: string, 
-    open: number, 
-    high: number, 
-    low: number, 
-    close: number
+    time: string;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
 }[];

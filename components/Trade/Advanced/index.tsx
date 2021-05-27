@@ -113,10 +113,8 @@ const Advanced: React.FC = () => {
     const { orderDispatch } = useContext(OrderContext);
 
     useEffect(() => {
-        orderDispatch ?
-            orderDispatch({ type: "setLock", value: true })
-            : console.error('Order dispatch undefined')
-    }, [])
+        orderDispatch ? orderDispatch({ type: 'setLock', value: true }) : console.error('Order dispatch undefined');
+    }, []);
 
     return (
         <div className="flex h-full">

@@ -113,16 +113,22 @@ const ALL_CANDLES = gql`
     }
 `;
 
-const parseCandles: (data: any) => CandleData = (data) => data?.map((candle: any) => ({
-    time: candle.time, 
-    open: parseFloat(Web3.utils.fromWei(candle.open)),
-    close: parseFloat(Web3.utils.fromWei(candle.close)),
-    low: parseFloat(Web3.utils.fromWei(candle.low)),
-    high: parseFloat(Web3.utils.fromWei(candle.high)),
-    totalAmount: parseFloat(Web3.utils.fromWei(candle.totalAmount)),
-}))
+const parseCandles: (data: any) => CandleData = (data) =>
+    data?.map((candle: any) => ({
+        time: candle.time,
+        open: parseFloat(Web3.utils.fromWei(candle.open)),
+        close: parseFloat(Web3.utils.fromWei(candle.close)),
+        low: parseFloat(Web3.utils.fromWei(candle.low)),
+        high: parseFloat(Web3.utils.fromWei(candle.high)),
+        totalAmount: parseFloat(Web3.utils.fromWei(candle.totalAmount)),
+    }));
 
-export const useCandles = () => {
+export const useCandles: () => {
+    candles: CandleData;
+    error: any;
+    loading: any;
+    refetch: any;
+} = () => {
     const ref = useRef<[]>([]);
     const { addToast } = useToasts();
     const { data, error, loading, refetch } = useQuery(ALL_CANDLES, {
@@ -149,4 +155,4 @@ export const useCandles = () => {
         loading,
         refetch,
     };
-}
+};

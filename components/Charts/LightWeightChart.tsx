@@ -69,10 +69,9 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
             ...setGraphOptions(),
             candlestickSeries: [
                 {
-                    data: candleData
-                }
-            ]
-
+                    data: candleData,
+                },
+            ],
         });
     }, []);
 
