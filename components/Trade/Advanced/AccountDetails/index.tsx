@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { SubNav } from '@components/Nav/SubNavBar';
+import SubNav from '@components/Nav/SubNav';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import { useOpenOrders } from '@libs/Ome';

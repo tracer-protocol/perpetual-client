@@ -48,7 +48,7 @@ const PoolContributors: React.FC<PCProps> = ({ holdings, liquidity }: PCProps) =
                     </Table>
                 );
             case 2:
-                return <LightWeightChart candleData={[]}/>;
+                return <LightWeightChart candleData={[]} />;
             default:
                 return <></>;
         }
