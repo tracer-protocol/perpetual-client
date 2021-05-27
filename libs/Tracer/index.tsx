@@ -61,7 +61,6 @@ export default class Tracer {
     public insuranceContract: string;
 
     constructor(web3: Web3, address: string, marketId: string) {
-        console.log(address.slice(), 'Address');
         this._instance = new web3.eth.Contract(tracerAbi as unknown as AbiItem, address) as unknown as TracerType;
         this._web3 = web3;
         this.address = address;
@@ -197,7 +196,7 @@ export default class Tracer {
                 return err;
             }
             // convert amount to appropriate amount in quote token
-            const amount_ = new BigNumber(amount).times(new BigNumber(10).pow(this.quoteTokenDecimals)).toString();
+            const amount_ = Web3.utils.toWei(amount.toString());
             const result = await this._instance.methods.deposit(amount_).send({ from: account });
             return {
                 status: 'success',

@@ -73,6 +73,20 @@ export const getBooks = async () => {
 export const getOrders = async (market: string) => {
     return fetch(`${BASE_URL}/book/${omefy(market)}`, {
         method: 'GET',
+    })
+        .then((res) => res.json() )
+        .then((res) => {
+            return res;
+        })
+        .catch((err) => {
+            console.error(err);
+        });
+};
+
+
+export const getUsersOrders: (market: string, account: string) => Promise<OMEOrder[]> = async (market: string, account: string) => {
+    return fetch(`${BASE_URL}/book/${omefy(market)}/${omefy(account)}`, {
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
@@ -83,8 +97,10 @@ export const getOrders = async (market: string) => {
         })
         .catch((err) => {
             console.error(err);
+            return []
         });
-};
+
+}
 
 const omefy = (str: string) => str.slice(2).toLowerCase()
 

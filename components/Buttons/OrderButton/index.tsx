@@ -58,39 +58,43 @@ type POBProps = {
 export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
     const { order } = useContext(OrderContext);
-    const { orderBase, price, orderType } = order as OrderState;
+    // const { orderBase, price, orderType } = order as OrderState;
     const { addToast } = useToasts();
-    const [showOrder, setShowOrder] = useState(false);
-    const [loading, setLoading] = useState(false);
+    // const [showOrder, setShowOrder] = useState(false);
+    // const [loading, setLoading] = useState(false);
 
     const handleOrder = async (_e: any) => {
-        if (order?.error !== -1) {
-            setLoading(true);
+        if (order?.error === -1) {
             placeOrder
                 ? await placeOrder(order as OrderState)
                 : console.error('Error placing order: Place order function is not defined');
-            setLoading(false);
-            setShowOrder(false);
         } else {
-            addToast(`Invalid order: ${Errors[order?.error]?.message}`, {
-                appearance: 'error',
-                autoDismiss: true,
-            });
+            if (order?.error) {
+                addToast(`Invalid order: ${Errors[order.error]?.message}`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            } else {
+                addToast(`Invalid order: An unhandled error occured`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            }
         }
     };
 
-    const message = () => {
-        if (orderType === 0) {
-            return `Using $${orderBase} to place 0 orders at an average price of ${price}`;
-        } else if (orderType === 1) {
-            return `Using $${orderBase} to place a ${OrderTypeMapping[orderType]} order at $${price}`;
-        }
-    };
+    // const message = () => {
+    //     if (orderType === 0) {
+    //         return `Using $${orderBase} to place 0 orders at an average price of ${price}`;
+    //     } else if (orderType === 1) {
+    //         return `Using $${orderBase} to place a ${OrderTypeMapping[orderType]} order at $${price}`;
+    //     }
+    // };
 
     if (order?.error === -1) {
         return (
             <>
-                <TracerModal
+                {/* <TracerModal
                     loading={loading}
                     show={showOrder}
                     onClose={() => setShowOrder(false)}
@@ -108,8 +112,8 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
                             </button>
                         </div>
                     </div>
-                </TracerModal>
-                <div className={`w-full ${className}`} onClick={() => setShowOrder(true)}>
+                </TracerModal> */}
+                <div className={`w-full ${className}`} onClick={handleOrder}>
                     {children}
                 </div>
             </>

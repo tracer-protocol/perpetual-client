@@ -67,7 +67,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         if (tracers && !isEmpty(tracers)) {
             const defaultTracer = Object.values(tracers)[0];
             tracerDispatch({ type: 'setSelectedTracer', value: defaultTracer });
-            createBook(defaultTracer);
+            // for testing purposes this will not be done each time someone opens the app
+            // createBook(defaultTracer); 
         }
     }, [tracers]);
 

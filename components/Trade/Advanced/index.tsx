@@ -1,11 +1,9 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { TracerContext, Web3Context } from 'context';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 import Timer from '@components/Timer';
 import OrderBook from '@components/OrderBook/OrderBook';
 import { MarketSelect, TradingInput, AccountPanel } from './TradingPanel';
-import { getOrders } from 'libs/Ome';
-import Web3 from 'web3';
 import Tracer, { defaults } from '@libs/Tracer';
 import { PositionDetails } from '@components/SummaryInfo/PositionDetails';
 import { InsuranceInfo } from './RightPanel/InsuranceInfo';
@@ -13,6 +11,7 @@ import { SubNav } from '@components/Nav/SubNavBar';
 import { Box } from '@components/General';
 import styled from 'styled-components';
 import RecentTrades from './RightPanel/RecentTrades';
+import { OMEContext } from '@context/OMEContext';
 
 const GraphWrap = styled.div`
     height: 500px;
@@ -34,51 +33,6 @@ const Graphs = () => {
     );
 };
 
-const parseRes = (res: any, multiplier: number) => {
-    const parseOrders = (orders: any) => {
-        const sections = Object.values(orders);
-        const flattenedOrders = sections.map((orders: any) =>
-            orders.reduce(
-                (prev: any, order: { amount: number; price: number }) => ({
-                    price: order.price / multiplier, // price remains the same,
-                    quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.amount.toString())),
-                }),
-                {
-                    quantity: 0,
-                },
-            ),
-        );
-        return flattenedOrders;
-    };
-
-    return {
-        askOrders: parseOrders(res?.asks ?? {}),
-        bidOrders: parseOrders(res?.bids ?? {}),
-    };
-};
-
-const useOrders = (trigger: boolean, selectedTracer: Tracer | undefined) => {
-    const market = selectedTracer?.address;
-    const priceMultiplier = selectedTracer?.quoteTokenDecimals ?? defaults.quoteTokenDecimals;
-    const [response, setResponse] = useState<any>({
-        askOrders: [],
-        bidOrders: [],
-    });
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = await getOrders(market as string);
-            setResponse(parseRes(res, priceMultiplier));
-        };
-        let id: any;
-        if (!!market) {
-            fetchData();
-            id = setInterval(() => fetchData(), 5000);
-        }
-        return () => clearInterval(id);
-    }, [trigger, market]);
-    return response;
-};
-
 const OrderBookContainer = styled.div`
     border-top: 1px solid #002886;
     padding: 10px;
@@ -92,7 +46,7 @@ const OrderBookContainer = styled.div`
 `;
 
 const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
-    const orders = useOrders(true, selectedTracer);
+    const { orders } = useContext(OMEContext);
     const testTrades = [
         {
             amount: 1,
@@ -124,7 +78,7 @@ const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selecte
                     <InsuranceInfo />
                     <OrderBookContainer>
                         <h3>Order Book</h3>
-                        {orders.askOrders?.length || orders.bidOrders?.length ? (
+                        {orders?.askOrders?.length || orders?.bidOrders?.length ? (
                             <>
                                 <Timer />
                                 <OrderBook askOrders={orders.askOrders} bidOrders={orders.bidOrders} />

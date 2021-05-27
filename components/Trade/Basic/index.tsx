@@ -176,7 +176,6 @@ const Basic: React.FC = styled(({ className }) => {
 
     useEffect(() => {
         // could have equally been checking on the margin variable
-        console.log('here', order);
         if (order?.exposure.toNumber() || order?.orderBase) {
             setShowSummary(true);
         } else {

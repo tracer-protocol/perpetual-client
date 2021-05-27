@@ -44,17 +44,18 @@ export const Errors: Record<number, Error> = {
  * @param orders
  * @returns
  */
-const checkErrors: (balances: UserBalance | undefined, orders: OpenOrder[], account: string | undefined) => number = (
+const checkErrors: (balances: UserBalance | undefined, orders: OpenOrder[], account: string | undefined, order: OrderState) => number = (
     balances,
     orders,
     account,
+    order
 ) => {
     if (!account) {
         return 4;
-    } else if (orders?.length === 0) {
+    } else if (orders?.length === 0 && order.orderType === 0) {
         // there are no orders
         return 3;
-    } else if (!!balances?.base) {
+    } else if (!balances?.base.eq(0) && order.orderType === 0) {
         // user has a position already
         return 0;
     } else if (balances?.tokenBalance.eq(0)) {
@@ -269,11 +270,11 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     }, [order.market, order.collateral]);
 
     useEffect(() => {
-        const error = checkErrors(selectedTracer?.balances, oppositeOrders, account);
+        const error = checkErrors(selectedTracer?.balances, oppositeOrders, account, order);
         if (error !== order.error) {
             orderDispatch({ type: 'setError', value: error });
         }
-    }, [selectedTracer, oppositeOrders, account]);
+    }, [selectedTracer, oppositeOrders, account, order]);
 
     return (
         <OrderContext.Provider
