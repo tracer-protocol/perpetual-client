@@ -1,7 +1,7 @@
 import React from 'react';
 import { useRouter } from 'next/router';
 import NavBar from '@components/Nav/Navbar';
-import { SubNavBar } from '@components/Nav';
+import SubNavBar from '@components/Nav/SubNavBar';
 import { SelectedTracerStore } from '@context/TracerContext';
 import { InsuranceStore } from '@context/InsuranceContext';
 
