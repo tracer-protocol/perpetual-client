@@ -69,19 +69,19 @@ export const PostTradeDetails: React.FC<PTDProps> = styled(
                     {toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage))}
                 </Section>
                 <Section label={'Borrowed'}>
-                    {toApproxCurrency(calcBorrowed(balances.base, balances.quote, fairPrice))}
+                    {toApproxCurrency(calcBorrowed(balances.quote, balances.base, fairPrice))}
                     {`  -->  `}
-                    {toApproxCurrency(calcBorrowed(newBase, newQuote, fairPrice))}
+                    {toApproxCurrency(calcBorrowed(newQuote, newBase, fairPrice))}
                 </Section>
                 <Section label={'Withdrawable'}>
-                    {toApproxCurrency(calcWithdrawable(balances.base, balances.quote, fairPrice, maxLeverage))}
+                    {toApproxCurrency(calcWithdrawable(balances.quote, balances.base, fairPrice, maxLeverage))}
                     {`  -->  `}
-                    {toApproxCurrency(calcWithdrawable(newBase, newQuote, fairPrice, maxLeverage))}
+                    {toApproxCurrency(calcWithdrawable(newQuote, newBase, fairPrice, maxLeverage))}
                 </Section>
                 <Section label={'Leverage'}>
-                    {calcLeverage(balances.base, balances.quote, fairPrice).toNumber()}
+                    {calcLeverage(balances.quote, balances.base, fairPrice).toPrecision(3)}
                     {`  -->  `}
-                    {calcLeverage(newBase, newQuote, fairPrice).toNumber()}
+                    {calcLeverage(newQuote, newBase, fairPrice).toPrecision(3)}
                 </Section>
             </div>
         );

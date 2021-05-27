@@ -4,14 +4,15 @@ import LightWeightChart from '@components/Charts/LightWeightChart';
 import Timer from '@components/Timer';
 import OrderBook from '@components/OrderBook/OrderBook';
 import { MarketSelect, TradingInput, AccountPanel } from './TradingPanel';
-import Tracer, { defaults } from '@libs/Tracer';
-import { PositionDetails } from '@components/SummaryInfo/PositionDetails';
+import Tracer from '@libs/Tracer';
+import { AccountSummary } from './AccountDetails';
 import { InsuranceInfo } from './RightPanel/InsuranceInfo';
 import { SubNav } from '@components/Nav/SubNavBar';
 import { Box } from '@components/General';
 import styled from 'styled-components';
 import RecentTrades from './RightPanel/RecentTrades';
-import { OMEContext } from '@context/OMEContext';
+import { useOrders } from '@libs/Ome';
+import { useMostRecentMatched } from '@libs/Graph/hooks/Tracer';
 
 const GraphWrap = styled.div`
     height: 500px;
@@ -46,33 +47,15 @@ const OrderBookContainer = styled.div`
 `;
 
 const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
-    const { orders } = useContext(OMEContext);
-    const testTrades = [
-        {
-            amount: 1,
-            bid: false,
-            price: 59852,
-            time: '14:03',
-        },
-        {
-            amount: 5,
-            bid: true,
-            price: 59852,
-            time: '14:02',
-        },
-        {
-            amount: 4,
-            bid: false,
-            price: 59852,
-            time: '14:01',
-        },
-    ];
+    const orders = useOrders(selectedTracer?.address ?? '');
+    const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '')
+
     return (
         <div>
             <div className="flex">
                 <Box className="w-3/4 flex flex-col p-0">
                     <Graphs />
-                    <TradingSummary selectedTracer={selectedTracer} />
+                    <AccountSummary selectedTracer={selectedTracer} />
                 </Box>
                 <Box className="w-1/4 flex flex-col p-0">
                     <InsuranceInfo />
@@ -87,46 +70,12 @@ const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selecte
                             <p>No open orders</p>
                         )}
                     </OrderBookContainer>
-                    <RecentTrades trades={testTrades} />
+                    <RecentTrades trades={mostRecentTrades.trades} />
                 </Box>
             </div>
         </div>
     );
 };
-
-type TSProps = {
-    selectedTracer: Tracer | undefined;
-    className?: string;
-};
-
-const TradingSummary: React.FC<TSProps> = styled(({ selectedTracer, className }: TSProps) => {
-    const [tab, setTab] = useState(0);
-    const tabs = [`Position`, `Orders`, `Fills`];
-    const balances = selectedTracer?.balances ?? defaults.balances;
-    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
-    const content = () => {
-        switch (tab) {
-            case 0:
-                return (
-                    <PositionDetails
-                        balance={balances}
-                        fairPrice={fairPrice}
-                        maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                    />
-                );
-            default:
-                return;
-        }
-    };
-    return (
-        <div className={className}>
-            <SubNav tabs={tabs} setTab={setTab} selected={tab} />
-            {content()}
-        </div>
-    );
-})`
-    border-top: 1px solid #0c3586;
-`;
 
 const LeftPanel = styled.div`
     width: 25%;

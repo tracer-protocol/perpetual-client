@@ -64,7 +64,7 @@ const SmallInput: React.FC<SIProps> = styled(({ title, amount, onChange, unit, s
             <a className={`max ${!setMax ? 'hide' : ''}`} onClick={setMax}>
                 Max
             </a>
-            <NumberInput id="margin" type="number" placeholder="0.0" min="0" onChange={onChange} value={amount} />
+            <NumberInput id="margin" type="number" placeholder="0.0" min="0" onChange={onChange} value={!!amount ? amount : ''} />
             <a className="unit">{unit}</a>
         </InputContainer>
     </div>
