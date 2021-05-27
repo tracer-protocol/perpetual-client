@@ -1,4 +1,3 @@
-import factoryJSON from '@tracer-protocol/contracts/abi/contracts/TracerPerpetualsFactory.sol/TracerPerpetualsFactory.json';
 import oracleJSON from '@tracer-protocol/contracts/abi/contracts/oracle/Oracle.sol/Oracle.json';
 import insuranceJSON from '@tracer-protocol/contracts/abi/contracts/Insurance.sol/Insurance.json';
 import pricingJSON from '@tracer-protocol/contracts/abi/contracts/Pricing.sol/Pricing.json';
@@ -45,40 +44,32 @@ export const networkConfig: Record<string, Network> = {
     //     graphUri: 'http://localhost:8000/subgraphs/name/tetther1122/tracer-graph',
     // },
     // other networks go here
-    // '42': { // until we redploy contracts to kovan
-    //     previewUrl: 'https://kovan.etherscan.io',
-    //     contracts: {
-    //         factory: {
-    //             address: '0xB0577B9A46c555eA0B35d35903823ECC70aE0998',
-    //             abi: factoryJSON as AbiItem[],
-    //         },
-    //         insurance: {
-    //             address: '0x8a2c78De0c31C8C0C0B1Eb0f55245D9Fbee82734',
-    //             abi: insuranceJSON as AbiItem[],
-    //         },
-    //         pricing: {
-    //             address: '0x238987aE4EC0a4C7B38816E8e2d5aA7D2dE47A61',
-    //             abi: pricingJSON as AbiItem[],
-    //         },
-    //         oracle: {
-    //             address: '0x783D398923277aFC2dF89F92afA6af58EFd1BB45',
-    //             abi: oracleJSON as AbiItem[],
-    //         },
-    //         trader: {
-    //             address: '0x636EfC1dB64F64664ca7AD83946E6Cb2C9F16313',
-    //             abi: traderJSON as AbiItem[],
-    //         },
-    //     },
-    //     graphUri: 'https://api.thegraph.com/subgraphs/name/tracer-protocol/tracer-kovan',
-    // },
+    '42': { // until we redploy contracts to kovan
+        previewUrl: 'https://kovan.etherscan.io',
+        contracts: {
+            insurance: {
+                address: '0x8a2c78De0c31C8C0C0B1Eb0f55245D9Fbee82734',
+                abi: insuranceJSON as AbiItem[],
+            },
+            pricing: {
+                address: '0x238987aE4EC0a4C7B38816E8e2d5aA7D2dE47A61',
+                abi: pricingJSON as AbiItem[],
+            },
+            oracle: {
+                address: '0x783D398923277aFC2dF89F92afA6af58EFd1BB45',
+                abi: oracleJSON as AbiItem[],
+            },
+            trader: {
+                address: '0x636EfC1dB64F64664ca7AD83946E6Cb2C9F16313',
+                abi: traderJSON as AbiItem[],
+            },
+        },
+        graphUri: 'https://api.thegraph.com/subgraphs/name/tracer-protocol/tracer-kovan',
+    },
     '1337': {
         // local
         previewUrl: '',
         contracts: {
-            factory: {
-                address: process.env.NEXT_PUBLIC_FACTORY_ADDRESS,
-                abi: factoryJSON as AbiItem[],
-            },
             insurance: {
                 address: process.env.NEXT_PUBLIC_INSURANCE_ADDRESS,
                 abi: insuranceJSON as AbiItem[],
