@@ -141,9 +141,6 @@ const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
                 // when we go back to market order we need to ensure the price is locked
                 if (orderDispatch) {
                     orderDispatch({ type: 'setPosition', value: index });
-                    if (index === 0) {
-                        orderDispatch({ type: 'setLock', value: true });
-                    }
                 } else {
                     console.error('Order dispatch function not set');
                 }

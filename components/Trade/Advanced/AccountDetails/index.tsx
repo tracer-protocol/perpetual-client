@@ -38,7 +38,7 @@ const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, maxLeverage }: 
                 <Section label={'Likely Liquidation Price (incl. gas)'}>
                     {toApproxCurrency(calcProfitableLiquidationPrice(quote, base, fairPrice, maxLeverage))}
                 </Section>
-                <Section label={'Positions'}>{base.toNumber()}</Section>
+                <Section label={`${base.lt(0) ? 'Short' : 'Long'} Positions`}>{base.abs().toNumber()}</Section>
             </div>
             <div className="w-1/2 p-3">
                 <Section label={'Notional Value'}>{toApproxCurrency(calcNotionalValue(base, fairPrice))}</Section>

@@ -96,19 +96,19 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 maker: account ?? '',
                 expires: expiration,
                 market: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer.address) : '',
-                created: Date.now()
+                created: Date.now(),
             },
         ];
         try {
             const signedMakes = await signOrdersV3(web3, makes, config?.contracts.trader.address as string);
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
-            let res = await createOrder(selectedTracer?.address as string, omeOrder);
+            const res = await createOrder(selectedTracer?.address as string, omeOrder);
             if (res.status !== 200) {
-                return { status: 'error', message: `Failed to place order: ${res}` }
+                return { status: 'error', message: `Failed to place order: Status: ${res.status}-${res.statusText}` };
             }
-            return { status: 'success', message: "Successfully placed order"} as Result; // TODO add error check
+            return { status: 'success', message: 'Successfully placed order' } as Result;
         } catch (err) {
-            return { status: 'error', message: `Faiiled to place order: ${order}` } as Result; // TODO add error check
+            return { status: 'error', message: `Faiiled to place order: ${order}` } as Result;
         }
     };
 
@@ -121,7 +121,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             }
         };
         handleTransaction
-            ? handleTransaction(func, [amount, account], callback)
+            ? handleTransaction(func, [amount, account], { callback })
             : console.error(`Failed to ${deposit ? 'deposit' : 'widthdraw'}: handleTransaction is undefined `);
     };
 

@@ -2,6 +2,8 @@ import { gql, useQuery } from '@apollo/client';
 import { FilledOrder } from 'types/OrderTypes';
 import { useRef } from 'react';
 import { useToasts } from 'react-toast-notifications';
+import Web3 from 'web3';
+import { CandleData } from 'types/TracerTypes';
 
 const ALL_TRACERS = gql`
     query {
@@ -97,3 +99,54 @@ export const useMostRecentMatched: (tracer: string) => {
         refetch,
     };
 };
+const ALL_CANDLES = gql`
+    query {
+        candles(where: { period: 3600 }) {
+            id
+            time
+            open
+            close
+            low
+            high
+            totalAmount
+        }
+    }
+`;
+
+const parseCandles: (data: any) => CandleData = (data) => data?.map((candle: any) => ({
+    time: candle.time, 
+    open: parseFloat(Web3.utils.fromWei(candle.open)),
+    close: parseFloat(Web3.utils.fromWei(candle.close)),
+    low: parseFloat(Web3.utils.fromWei(candle.low)),
+    high: parseFloat(Web3.utils.fromWei(candle.high)),
+    totalAmount: parseFloat(Web3.utils.fromWei(candle.totalAmount)),
+}))
+
+export const useCandles = () => {
+    const ref = useRef<[]>([]);
+    const { addToast } = useToasts();
+    const { data, error, loading, refetch } = useQuery(ALL_CANDLES, {
+        errorPolicy: 'all',
+        onError: ({ graphQLErrors, networkError }) => {
+            if (graphQLErrors) {
+                addToast(`Failed to fetch candles trades. ${error}`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            }
+            if (networkError) {
+                addToast(`Failed to connect to the graph. ${networkError}`, {
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            }
+        },
+    });
+
+    return {
+        candles: parseCandles(data?.candles) || ref.current,
+        error,
+        loading,
+        refetch,
+    };
+}

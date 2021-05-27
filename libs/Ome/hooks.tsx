@@ -3,6 +3,7 @@ import { OMEOrder as FlattenedOMEOrder } from 'types/OrderTypes';
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { getOrders, getUsersOrders } from '.';
 import Web3 from 'web3';
+import BigNumber from 'bignumber.js';
 
 type Orders = {
     askOrders: FlattenedOMEOrder[];
@@ -36,7 +37,7 @@ const parseRes: (res: any) => Orders = (res) => {
         const flattenedOrders = sections.map((orders: any) =>
             orders.reduce(
                 (prev: any, order: { amount: number; price: number }) => ({
-                    price: order.price, // price remains the same,
+                    price: new BigNumber(Web3.utils.fromWei(order.price.toString())), // price remains the same,
                     quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.amount.toString())),
                 }),
                 {

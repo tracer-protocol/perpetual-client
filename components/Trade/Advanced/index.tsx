@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { TracerContext, Web3Context } from 'context';
+import React, { useState, useContext, useEffect } from 'react';
+import { OrderContext, TracerContext, Web3Context } from 'context';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 import Timer from '@components/Timer';
 import OrderBook from '@components/OrderBook/OrderBook';
@@ -12,7 +12,8 @@ import { Box } from '@components/General';
 import styled from 'styled-components';
 import RecentTrades from './RightPanel/RecentTrades';
 import { useOrders } from '@libs/Ome';
-import { useMostRecentMatched } from '@libs/Graph/hooks/Tracer';
+import { useCandles, useMostRecentMatched } from '@libs/Graph/hooks/Tracer';
+import { CandleData } from 'types/TracerTypes';
 
 const GraphWrap = styled.div`
     height: 500px;
@@ -24,11 +25,12 @@ const GraphWrap = styled.div`
 const Graphs = () => {
     const [tab, setTab] = useState(0);
     const tabs = ['Price', 'Depth', 'Funding', 'Insurance'];
+    const { candles } = useCandles();
     return (
         <div className="3/4">
             <SubNav tabs={tabs} setTab={setTab} selected={tab} />
             <GraphWrap>
-                <LightWeightChart />
+                <LightWeightChart candleData={candles as CandleData} />
             </GraphWrap>
         </div>
     );
@@ -108,6 +110,14 @@ const Overlay = styled.div`
 const Advanced: React.FC = () => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
+    const { orderDispatch } = useContext(OrderContext);
+
+    useEffect(() => {
+        orderDispatch ?
+            orderDispatch({ type: "setLock", value: true })
+            : console.error('Order dispatch undefined')
+    }, [])
+
     return (
         <div className="flex h-full">
             <LeftPanel>

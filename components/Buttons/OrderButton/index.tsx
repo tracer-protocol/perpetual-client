@@ -64,7 +64,11 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
         if (order?.error === -1) {
             if (placeOrder) {
                 if (handleTransaction) {
-                    handleTransaction(placeOrder, [order as OrderState])
+                    handleTransaction(placeOrder, [order as OrderState], {
+                        statusMessages: {
+                            waiting: 'Please sign the transaction through your web3 provider',
+                        },
+                    });
                 } else {
                     console.error('Error placing order: Handle transaction function is not defined');
                 }
