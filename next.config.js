@@ -40,7 +40,7 @@ module.exports = withAntdLess({
             '/trade/advanced': { page: '/trade/[interface]' },
             '/insurance/pools': { page: '/insurance/[interface]' },
             '/insurance/portfolio': { page: '/insurance/[interface]' },
-            '/portfolio': { page: '/portfolio/index' },
+            '/portfolio': { page: '/portfolio' },
         };
     },
     less: {
