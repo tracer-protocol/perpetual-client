@@ -117,7 +117,12 @@ const Advanced: React.FC = () => {
     const { orderDispatch } = useContext(OrderContext);
 
     useEffect(() => {
-        orderDispatch ? orderDispatch({ type: 'setLock', value: true }) : console.error('Order dispatch undefined');
+        if (orderDispatch) {
+            orderDispatch({ type: 'setLock', value: true }) 
+            orderDispatch({ type: 'setAdvanced', value: true}) 
+        } else {
+            console.error('Order dispatch undefined');
+        }
     }, []);
 
     return (
