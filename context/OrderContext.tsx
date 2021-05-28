@@ -53,11 +53,9 @@ const checkErrors: (
     if (!account) {
         return 4;
     } else if (orders?.length === 0 && order.orderType === 0) {
-        // ignore if on advanced
         // there are no orders
         return 3;
     } else if (!balances?.base.eq(0) && order.orderType === 0) {
-        // ignore if on advanced
         // user has a position already
         return 0;
     } else if (balances?.tokenBalance.eq(0) && !order.advanced) {
@@ -159,7 +157,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         error: -1,
         wallet: 0,
         lock: false, // default lock amount to pay
-        advanced: false
+        advanced: false,
     };
 
     const reducer = (state: any, action: OrderAction) => {

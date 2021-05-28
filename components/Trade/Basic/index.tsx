@@ -186,10 +186,9 @@ const Basic: React.FC = styled(({ className }) => {
         }
     }, [order]);
 
-
     useEffect(() => {
         if (orderDispatch) {
-            orderDispatch({ type: 'setAdvanced', value: true}) 
+            orderDispatch({ type: 'setAdvanced', value: true });
         } else {
             console.error('Order dispatch undefined');
         }
