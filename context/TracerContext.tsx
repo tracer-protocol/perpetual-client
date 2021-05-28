@@ -33,7 +33,7 @@ type StoreProps = {
 } & Children;
 
 export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
-    const { account, web3, config } = useContext(Web3Context);
+    const { account, web3, config, networkId } = useContext(Web3Context);
     const { tracers } = useContext(FactoryContext);
     const { handleTransaction } = useContext(TransactionContext);
 
@@ -100,7 +100,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             },
         ];
         try {
-            const signedMakes = await signOrdersV3(web3, makes, config?.contracts.trader.address as string);
+            const signedMakes = await signOrdersV3(web3, makes, config?.contracts.trader.address as string, networkId);
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
             if (res.status !== 200) {
