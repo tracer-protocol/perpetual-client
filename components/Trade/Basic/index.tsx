@@ -186,6 +186,14 @@ const Basic: React.FC = styled(({ className }) => {
         }
     }, [order]);
 
+    useEffect(() => {
+        if (orderDispatch) {
+            orderDispatch({ type: 'setAdvanced', value: true });
+        } else {
+            console.error('Order dispatch undefined');
+        }
+    }, []);
+
     return (
         <div className={`container mx-auto mt-3 ${className}`}>
             <SCard className={`${showSummary ? 'show' : ''}`}>

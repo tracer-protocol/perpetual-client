@@ -58,7 +58,8 @@ const checkErrors: (
     } else if (!balances?.base.eq(0) && order.orderType === 0) {
         // user has a position already
         return 0;
-    } else if (balances?.tokenBalance.eq(0)) {
+    } else if (balances?.tokenBalance.eq(0) && !order.advanced) {
+        // ignore if on advanced
         // user has no web3 wallet balance
         return 1;
     } else if (balances?.quote.eq(0)) {
@@ -92,6 +93,7 @@ export type OrderState = {
     //  by changing the amount to pay field it should update the amount to buy and vice versa.
     //  The lock helps avoiding infinite loops when setting these values
     lock: boolean;
+    advanced: boolean; // boolean to check if on basic or advanced page
 };
 
 interface ContextProps {
@@ -122,6 +124,7 @@ export type OrderAction =
     | { type: 'setError'; value: number }
     | { type: 'setWallet'; value: number }
     | { type: 'setLock'; value: boolean }
+    | { type: 'setAdvanced'; value: boolean }
     | { type: 'openOrders'; value: OpenOrders };
 
 // orderBase => require margin
@@ -154,6 +157,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         error: -1,
         wallet: 0,
         lock: false, // default lock amount to pay
+        advanced: false,
     };
 
     const reducer = (state: any, action: OrderAction) => {
@@ -184,6 +188,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, wallet: action.value };
             case 'setLock':
                 return { ...state, lock: action.value };
+            case 'setAdvanced':
+                return { ...state, advanced: action.value };
             default:
                 throw new Error('Unexpected action');
         }
