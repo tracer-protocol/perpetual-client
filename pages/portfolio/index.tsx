@@ -625,17 +625,249 @@ const TradingPortfolio = () => {
     );
 };
 
+const OpenDeposits = () => {
+    const headings = [
+        'Market',
+        'APY',
+        'Realised APY',
+        'Pool Ownership',
+        'Unrealised Value',
+        'Withdrawal Fee',
+        'Unrealised Value',
+    ];
+
+    const tracers = [
+        {
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            apy: '0.86%',
+            apyR: '86.3%',
+            pool: 683,
+            urv: 4657.31,
+            wf: 0,
+        },
+        {
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            apy: '0.86%',
+            apyR: '44.2%',
+            pool: 683,
+            urv: 4657.31,
+            wf: 0,
+        },
+    ];
+
+    const tableHeadEnd = {
+        width: '300px',
+    };
+
+    return (
+        <>
+            <table>
+                <thead>
+                    <tr>
+                        {headings.map((heading, i) =>
+                            i === 6 ? (
+                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                            ) : (
+                                <TableHead>{heading}</TableHead>
+                            ),
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {tracers.map((tracer, i) => (
+                        <TableRow key={`table-row-${i}`}>
+                            <TableCell>
+                                <div className="flex flex-row">
+                                    <div className="my-auto">
+                                        <Logo ticker={tracer.name} />
+                                    </div>
+                                    <div className="my-auto ml-2">{tracer.market}</div>
+                                </div>
+                            </TableCell>
+                            <TableCell>{tracer.apy}</TableCell>
+                            <TableCell>{tracer.apyR}</TableCell>
+                            <TableCell>{tracer.pool} iTokens</TableCell>
+                            <TableCell>{toApproxCurrency(tracer.urv)}</TableCell>
+                            <TableCell>{toApproxCurrency(tracer.wf)}</TableCell>
+                            <TableCell color={tracer.urv < 0 ? '#F15025' : '#21DD53'}>
+                                <div className="flex flex-row">
+                                    <div className="mr-20 my-auto">{toApproxCurrency(tracer.urv)}</div>
+                                    <Button>Withdraw</Button>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </tbody>
+            </table>
+        </>
+    );
+};
+
+const DepositHistory = () => {
+    const headings = ['Date', 'Market', 'Amount', 'iTokens Minted', 'Transaction Details'];
+
+    const tracers = [
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            amount: 453,
+            tokens: 453,
+            details: '0x45...3235',
+        },
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            amount: 453,
+            tokens: 453,
+            details: '0x45...3235',
+        },
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            amount: 453,
+            tokens: 453,
+            details: '0x45...3235',
+        },
+    ];
+
+    const tableHeadEnd = {
+        width: '300px',
+    };
+
+    return (
+        <>
+            <table>
+                <thead>
+                    <tr>
+                        {headings.map((heading, i) =>
+                            i === 4 ? (
+                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                            ) : (
+                                <TableHead>{heading}</TableHead>
+                            ),
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {tracers.map((tracer, i) => (
+                        <TableRow key={`table-row-${i}`}>
+                            <TableCell>
+                                {tracer.date}
+                                <SecondaryCell>{tracer.time}</SecondaryCell>
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex flex-row">
+                                    <div className="my-auto">
+                                        <Logo ticker={tracer.name} />
+                                    </div>
+                                    <div className="my-auto ml-2">{tracer.market}</div>
+                                    <div className="my-auto ml-1">Insurance Pool</div>
+                                </div>
+                            </TableCell>
+                            <TableCell>{toApproxCurrency(tracer.amount)} USDC</TableCell>
+                            <TableCell>{tracer.tokens} iTLA-USDC</TableCell>
+                            <TableCell>{tracer.details}</TableCell>
+                        </TableRow>
+                    ))}
+                </tbody>
+            </table>
+        </>
+    );
+};
+
+const WithdrawalHistory = () => {
+    const headings = ['Date', 'Market', 'Amount', 'Transaction Details'];
+
+    const tracers = [
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            amount: 453,
+            details: '0x45...3235',
+        },
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            amount: 453,
+            details: '0x45...3235',
+        },
+        {
+            date: '24/04/2021',
+            time: '04:31pm',
+            name: 'TSLA',
+            market: 'TSLA-USDC',
+            amount: 453,
+            details: '0x45...3235',
+        },
+    ];
+
+    const tableHeadEnd = {
+        width: '500px',
+    };
+
+    return (
+        <>
+            <table>
+                <thead>
+                    <tr>
+                        {headings.map((heading, i) =>
+                            i === 3 ? (
+                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                            ) : (
+                                <TableHead>{heading}</TableHead>
+                            ),
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {tracers.map((tracer, i) => (
+                        <TableRow key={`table-row-${i}`}>
+                            <TableCell>
+                                {tracer.date}
+                                <SecondaryCell>{tracer.time}</SecondaryCell>
+                            </TableCell>
+                            <TableCell>
+                                <div className="flex flex-row">
+                                    <div className="my-auto">
+                                        <Logo ticker={tracer.name} />
+                                    </div>
+                                    <div className="my-auto ml-2">{tracer.market}</div>
+                                    <div className="my-auto ml-1">Insurance Pool</div>
+                                </div>
+                            </TableCell>
+                            <TableCell>{tracer.amount} iTLA-USDC</TableCell>
+                            <TableCell>{tracer.details}</TableCell>
+                        </TableRow>
+                    ))}
+                </tbody>
+            </table>
+        </>
+    );
+};
+
 const InsurancePortfolio = () => {
     const [tab, setTab] = useState(0);
     const tabs = ['Open Deposits', 'Deposit History', 'Withdrawal History'];
     const content = () => {
         switch (tab) {
             case 0:
-                return <>Open Deposits</>;
+                return <OpenDeposits />;
             case 1:
-                return <>Deposit History</>;
+                return <DepositHistory />;
             case 2:
-                return <>Withdrawal History</>;
+                return <WithdrawalHistory />;
             default:
                 return;
         }
