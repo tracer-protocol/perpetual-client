@@ -625,19 +625,38 @@ const TradingPortfolio = () => {
     );
 };
 
+const InsurancePortfolio = () => {
+    const [tab, setTab] = useState(0);
+    const tabs = ['Open Deposits', 'Deposit History', 'Withdrawal History'];
+    const content = () => {
+        switch (tab) {
+            case 0:
+                return <>Open Deposits</>;
+            case 1:
+                return <>Deposit History</>;
+            case 2:
+                return <>Withdrawal History</>;
+            default:
+                return;
+        }
+    };
+    return (
+        <>
+            <SubNav tabs={tabs} setTab={setTab} selected={tab} />
+            {content()}
+        </>
+    );
+};
+
 const Portfolio: React.FC = styled(({ className }) => {
     const [tab, setTab] = useState(0);
     const tabs = ['Trading Portfolio', 'Insurance Portfolio'];
     const content = () => {
         switch (tab) {
             case 0:
-                return (
-                    <>
-                        <TradingPortfolio />
-                    </>
-                );
+                return <TradingPortfolio />;
             case 1:
-                return <>Insurance Portfolio</>;
+                return <InsurancePortfolio />;
             default:
                 return;
         }
