@@ -1,5 +1,5 @@
 import React from 'react';
-import { toApproxCurrency } from '@libs/utils';
+import { isVerySmall, toApproxCurrency } from '@libs/utils';
 import {
     calcBorrowed,
     calcLeverage,
@@ -51,7 +51,7 @@ const PostTradeDetails: React.FC<PTDProps> = styled(
                 </Section>
                 <Section label={'Leverage'}>
                     <Previous>{calcLeverage(balances.quote, balances.base, fairPrice).toPrecision(3)}</Previous>
-                    {calcLeverage(newQuote, newBase, fairPrice).toPrecision(3)}
+                    {isVerySmall(calcLeverage(newQuote, newBase, fairPrice), false)}
                 </Section>
             </div>
         );
