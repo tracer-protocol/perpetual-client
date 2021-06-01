@@ -1,19 +1,8 @@
-/* eslint-disable */ //TODO remove this
-
-// example requests
-// curl --verbose -H "Content-Type: application/json" --request POST --data '{"market": "Ac06d243a13fB257F391D41F18997E7345fb440d"}' localhost:8989/book
-// curl --verbose --request GET localhost:8989/book
-// curl --header "Content-Type: application/json" --verbose --request POST --data '{"address":"0x529da3408a37a91c8154c64f3628db4eaa7b8da2", "market":"0x529da3408a37a91c8154c64f3628db4eaa7b8da2", "side":"Bid", "price":"12", "amount":"33", "expiration":1596600983, "flags": [1], "signed_data": [12, 33, 88, 43, 42, 22], "nonce": "0x44"}' http://localhost:8989/book/Ac06d243a13fB257F391D41F18997E7345fb440d
-// curl --verbose --header "Content-Type: application/json" --request POST --data '{"address":"0x529da3408a37a91c8154c64f3628db4eaa7b8da2", "market":"0x529da3408a37a91c8154c64f3628db4eaa7b8da2", "side":"Ask", "price":"12", "amount":"33", "expiration":1596600983, "flags": [1], "signed_data": [12, 33, 88, 43, 42, 22], "nonce": "0x44"}' http://localhost:8989/book/Ac06d243a13fB257F391D41F18997E7345fb440d
-// curl --verbose -H "Content-Type: application/json" --request GET localhost:8989/book/Ac06d243a13fB257F391D41F18997E7345fb440d
-
-/**
- * Request functions which interact with the OME.
- *
- */
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { OrderUpdatePayload } from 'types/OrderTypes';
 import Tracer from '@libs/Tracer';
+import { Result } from 'types/General';
+
 
 const BASE_URL = process.env.NEXT_PUBLIC_OME_BASE_URL || 'http://localhost:8989';
 
@@ -93,10 +82,11 @@ export const getUsersOrders: (market: string, account: string) => Promise<OMEOrd
     })
         .then((res) => res.json())
         .then((res) => {
+            console.log(res)
             return res;
         })
         .catch((err) => {
-            console.error(err);
+            console.error("Failed to fetch user orders", err);
             return []
         });
 
@@ -159,16 +149,29 @@ export const getOrder = async (market: string, orderId: string) => {
  * @param market the market the order belongs to
  * @param orderId of the order being updated
  */
-export const deleteOrder = (market: string, orderId: string) => {
-    return fetch(`${BASE_URL}/book/${market}/order/${orderId}`, {
+export const cancelOrder:(market: string, orderId: string) => Promise<Result> = async (
+    market, orderId
+) => {
+    return fetch(`${BASE_URL}/book/${omefy(market)}/order/${orderId}`, {
         method: 'DELETE',
     })
-        .then((res) => res.json())
         .then((res) => {
-            return res;
+            console.log("Res beee", res)
+            return res.body
+        })
+        .then((res) => {
+            console.log(res)
+            return {
+                status: 'success',
+                message: `Successfully cancelled order: ${orderId}`
+            } as Result;
         })
         .catch((err) => {
             console.error(err);
+            return {
+                status: 'error',
+                message: `Failed to cancel order: ${err}`
+            } as Result;
         });
 };
 

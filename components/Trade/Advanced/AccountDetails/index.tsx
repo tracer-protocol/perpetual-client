@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useOpenOrders } from '@libs/Ome';
 import { Web3Context } from '@context/Web3Context';
 import { Table, TRow, TData } from '@components/General/Table';
-import { timeAgo, toApproxCurrency } from '@libs/utils';
+import { calcStatus, timeAgo, toApproxCurrency } from '@libs/utils';
 import Web3 from 'web3';
 import { useUsersMatched } from '@libs/Graph/hooks/Account';
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
@@ -16,17 +16,20 @@ import {
     calcProfitableLiquidationPrice,
     calcNotionalValue,
 } from '@tracer-protocol/tracer-utils';
-import { Section } from '@components/General';
+import { Button, Section } from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
+import { TransactionContext } from '@context/TransactionContext';
+import { cancelOrder } from '@libs/Ome';
 
 interface IProps {
     balance: UserBalance;
     fairPrice: BigNumber;
     maxLeverage: BigNumber;
+    baseTicker: string;
 }
 
-const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, maxLeverage }: IProps) => {
+const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, maxLeverage, baseTicker }: IProps) => {
     const { base, quote, totalLeveragedValue } = balance;
     const l = calcLeverage(quote, base, fairPrice);
     return (
@@ -38,7 +41,9 @@ const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, maxLeverage }: 
                 <Section label={'Likely Liquidation Price (incl. gas)'}>
                     {toApproxCurrency(calcProfitableLiquidationPrice(quote, base, fairPrice, maxLeverage))}
                 </Section>
-                <Section label={`${base.lt(0) ? 'Short' : 'Long'} Positions`}>{base.abs().toNumber()}</Section>
+                <Section label={`${base.lt(0) ? 'Short' : 'Long'} Positions`}>
+                    {`${base.abs().toNumber()} ${baseTicker}`}
+                </Section>
             </div>
             <div className="w-1/2 p-3">
                 <Section label={'Notional Value'}>{toApproxCurrency(calcNotionalValue(base, fairPrice))}</Section>
@@ -66,24 +71,65 @@ const STable = styled(Table)`
     }
 `;
 
+
+const Cancel = styled(Button)`
+    height: 28px;
+    opacity: 0.8;
+    padding: 0;
+    width: auto;
+    max-width: 80px;
+    margin: auto;
+    line-height: 25px;
+
+    &:hover {
+        opacity: 1;
+    }
+`
+
 const OpenOrders: React.FC<{
     userOrders: OMEOrder[];
-}> = ({ userOrders }) => {
+    baseTicker: string;
+    refetch: () => void;
+}> = ({ userOrders, baseTicker, refetch }) => {
+    const { handleTransaction } = useContext(TransactionContext);
+    const _cancelOrder = (market: string, orderId: string) => {
+        console.info(`Attempting to cancel order: ${orderId} on market: ${market}`)
+        handleTransaction ?
+            handleTransaction(cancelOrder, [market, orderId], {
+                statusMessages: {
+                    waiting: `Cancelling order: ${orderId} on market ${market} `
+                },
+                callback: () => refetch()
+            })
+            : console.error("Failed to cancel order: Handle transaction not defined")
+    }
     return (
-        <STable headings={['Status', 'Side', 'Amount/Filled', 'Price']}>
+        <STable headings={['Status', 'Side', 'Amount', 'Filled', 'Remaining', 'Price', '']}>
             <tbody>
-                {userOrders.map((order, index) => (
-                    <TRow key={`open-order-${index}`}>
-                        <TData>Open</TData>
-                        <TData className={order.side.toLowerCase() /** This will be the global .bid or .ask */}>
-                            {order.side}
-                        </TData>
-                        <TData>
-                            {Web3.utils.fromWei(order.amount.toString())}/{Web3.utils.fromWei(order.amount.toString())}
-                        </TData>
-                        <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
-                    </TRow>
-                ))}
+                {userOrders.map((order, index) => {
+                    let amount = parseFloat(Web3.utils.fromWei(order.amount.toString())),
+                        filled = parseFloat(Web3.utils.fromWei(order.amount.toString())),
+                        remaining = amount - filled;
+                    return (
+                        <TRow key={`open-order-${index}`}>
+                            <TData>{calcStatus(order)}</TData>
+                            <TData className={order.side.toLowerCase() /** This will be the global .bid or .ask */}>
+                                {order.side}
+                            </TData>
+                            <TData>
+                                {amount} {baseTicker}
+                            </TData>
+                            <TData>
+                                {filled} {baseTicker}
+                            </TData>
+                            <TData>
+                                {remaining} {baseTicker}
+                            </TData>
+                            <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
+                            <TData><Cancel onClick={(_e) => _cancelOrder(order.target_tracer, order.id)}>Cancel</Cancel></TData>
+                        </TRow>
+                    )}
+                )}
             </tbody>
         </STable>
     );
@@ -127,7 +173,11 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
     const balances = selectedTracer?.balances ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const { filledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');
-    const userOrders = useOpenOrders(selectedTracer?.address ?? '', account ?? '');
+    const {
+        userOrders, 
+        refetch: refetchUserOrders 
+    } = useOpenOrders(selectedTracer?.address ?? '', account ?? '');
+    const baseTicker = 'BTC';
     const content = () => {
         switch (tab) {
             case 0:
@@ -136,10 +186,17 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
                         balance={balances}
                         fairPrice={fairPrice}
                         maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                        baseTicker={baseTicker}
                     />
                 );
             case 1:
-                return <OpenOrders userOrders={userOrders} />;
+                return (
+                    <OpenOrders 
+                        userOrders={userOrders} 
+                        baseTicker={baseTicker}
+                        refetch={refetchUserOrders}
+                    />
+                )
             case 2:
                 return <Fills filledOrders={filledOrders} />;
             default:

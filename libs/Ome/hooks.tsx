@@ -10,8 +10,12 @@ type Orders = {
     bidOrders: FlattenedOMEOrder[];
 };
 
-export const useOpenOrders: (selectedTracer: string, account: string) => OMEOrder[] = (selectedTracer, account) => {
+export const useOpenOrders: (selectedTracer: string, account: string) => {
+    userOrders: OMEOrder[],
+    refetch: () => void
+} = (selectedTracer, account) => {
     const [userOrders, setUserOrders] = useState<OMEOrder[]>([]);
+    const [trigger, setTrigger] = useState(false); // refetch
     useEffect(() => {
         let mounted = true;
         const fetchUserData = async () => {
@@ -26,9 +30,13 @@ export const useOpenOrders: (selectedTracer: string, account: string) => OMEOrde
         return () => {
             mounted = false; // cleanup
         };
-    }, [selectedTracer, account]);
+    }, [selectedTracer, account, trigger]);
+    
 
-    return userOrders;
+    return {
+        userOrders: userOrders,
+        refetch: () => setTrigger(!trigger)
+    };
 };
 
 const parseRes: (res: any) => Orders = (res) => {
