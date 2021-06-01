@@ -71,7 +71,6 @@ const STable = styled(Table)`
     }
 `;
 
-
 const Cancel = styled(Button)`
     height: 28px;
     opacity: 0.8;
@@ -84,7 +83,7 @@ const Cancel = styled(Button)`
     &:hover {
         opacity: 1;
     }
-`
+`;
 
 const OpenOrders: React.FC<{
     userOrders: OMEOrder[];
@@ -93,21 +92,21 @@ const OpenOrders: React.FC<{
 }> = ({ userOrders, baseTicker, refetch }) => {
     const { handleTransaction } = useContext(TransactionContext);
     const _cancelOrder = (market: string, orderId: string) => {
-        console.info(`Attempting to cancel order: ${orderId} on market: ${market}`)
-        handleTransaction ?
-            handleTransaction(cancelOrder, [market, orderId], {
-                statusMessages: {
-                    waiting: `Cancelling order: ${orderId} on market ${market} `
-                },
-                callback: () => refetch()
-            })
-            : console.error("Failed to cancel order: Handle transaction not defined")
-    }
+        console.info(`Attempting to cancel order: ${orderId} on market: ${market}`);
+        handleTransaction
+            ? handleTransaction(cancelOrder, [market, orderId], {
+                  statusMessages: {
+                      waiting: `Cancelling order: ${orderId} on market ${market} `,
+                  },
+                  callback: () => refetch(),
+              })
+            : console.error('Failed to cancel order: Handle transaction not defined');
+    };
     return (
         <STable headings={['Status', 'Side', 'Amount', 'Filled', 'Remaining', 'Price', '']}>
             <tbody>
                 {userOrders.map((order, index) => {
-                    let amount = parseFloat(Web3.utils.fromWei(order.amount.toString())),
+                    const amount = parseFloat(Web3.utils.fromWei(order.amount.toString())),
                         filled = parseFloat(Web3.utils.fromWei(order.amount.toString())),
                         remaining = amount - filled;
                     return (
@@ -126,10 +125,12 @@ const OpenOrders: React.FC<{
                                 {remaining} {baseTicker}
                             </TData>
                             <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
-                            <TData><Cancel onClick={(_e) => _cancelOrder(order.target_tracer, order.id)}>Cancel</Cancel></TData>
+                            <TData>
+                                <Cancel onClick={(_e) => _cancelOrder(order.target_tracer, order.id)}>Cancel</Cancel>
+                            </TData>
                         </TRow>
-                    )}
-                )}
+                    );
+                })}
             </tbody>
         </STable>
     );
@@ -173,10 +174,7 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
     const balances = selectedTracer?.balances ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const { filledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');
-    const {
-        userOrders, 
-        refetch: refetchUserOrders 
-    } = useOpenOrders(selectedTracer?.address ?? '', account ?? '');
+    const { userOrders, refetch: refetchUserOrders } = useOpenOrders(selectedTracer?.address ?? '', account ?? '');
     const baseTicker = 'BTC';
     const content = () => {
         switch (tab) {
@@ -190,13 +188,7 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
                     />
                 );
             case 1:
-                return (
-                    <OpenOrders 
-                        userOrders={userOrders} 
-                        baseTicker={baseTicker}
-                        refetch={refetchUserOrders}
-                    />
-                )
+                return <OpenOrders userOrders={userOrders} baseTicker={baseTicker} refetch={refetchUserOrders} />;
             case 2:
                 return <Fills filledOrders={filledOrders} />;
             default:

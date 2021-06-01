@@ -103,7 +103,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const signedMakes = await signOrdersV3(web3, makes, config?.contracts.trader.address as string, networkId);
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
-            
+
             return res;
         } catch (err) {
             return { status: 'error', message: `Faiiled to place order ${err}` } as Result;

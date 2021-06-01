@@ -23,7 +23,8 @@ export const round: (value: number) => number = (value) => {
 
 export const toApproxCurrency: (num_: BigNumber | number) => string = (num_) => {
     let num = num_;
-    if (!num_) { // reject if num is falsey
+    if (!num_) {
+        // reject if num is falsey
         return '$0.00';
     }
     if (typeof num !== 'number') {

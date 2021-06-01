@@ -20,7 +20,6 @@ interface BProps {
 
 export const Order: React.FC<BProps> = styled(
     ({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
-        console.log(price, "Price")
         return (
             <tr className={className}>
                 <td className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price)}</td>
