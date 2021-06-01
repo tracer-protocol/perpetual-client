@@ -6,7 +6,7 @@ import { createOrder } from '@libs/Ome';
 import { Web3Context } from './Web3Context';
 import { OrderState } from './OrderContext';
 import Web3 from 'web3';
-import { orderToOMEOrder, OrderData, signOrdersV3 } from '@tracer-protocol/tracer-utils';
+import { orderToOMEOrder, OrderData, signOrdersV4 } from '@tracer-protocol/tracer-utils';
 import Tracer from '@libs/Tracer';
 import { TransactionContext } from './TransactionContext';
 import { defaults } from '@libs/Tracer';
@@ -100,7 +100,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             },
         ];
         try {
-            const signedMakes = await signOrdersV3(web3, makes, config?.contracts.trader.address as string, networkId);
+            const signedMakes = await signOrdersV4(web3, makes, config?.contracts.trader.address as string, networkId);
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
 
