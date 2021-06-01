@@ -101,10 +101,11 @@ const omefy = (str: string) => str.slice(2).toLowerCase();
  * @param market the market the order belongs to
  * @param data order data payload. An example of this request
  */
-export const createOrder: (market: string, data: OMEOrder) => Promise<Response> = async (market, data) => {
+export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = async (market, data) => {
     if (!market) {
-        console.error('Failed to create order: Market is invalid');
-        return;
+        return {
+            status: 'error', message: 'Failed to create order: Market is invalid'
+        }
     }
     return fetch(`${BASE_URL}/book/${omefy(market)}/order`, {
         method: 'POST',
@@ -115,14 +116,18 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<Response> 
     })
         .then((res) => {
             console.debug('Created order with ome', res);
-            return res;
-        })
-        .then((res) => {
-            return res;
+            if (res.status === 404) {
+                return {
+                    status: 'error', message: `Failed to create order 404 not found`
+                } as Result
+            } else return {
+                status: 'success', message: 'Successfully placed order'
+            } as Result
         })
         .catch((err) => {
-            console.error(err);
-            return err;
+            return {
+                status: 'error', message: `${err}`
+            } as Result;
         });
 };
 

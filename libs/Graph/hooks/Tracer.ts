@@ -125,10 +125,7 @@ export const useCandles: () => {
         errorPolicy: 'all',
         onError: ({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
-                addToast(`Failed to fetch candles trades. ${error}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
+                graphQLErrors.map((err) => console.error(`Failed to fetch candle trades: ${err}`));
             }
             if (networkError) {
                 addToast(`Failed to connect to the graph. ${networkError}`, {

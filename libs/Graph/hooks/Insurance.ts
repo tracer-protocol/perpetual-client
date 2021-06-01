@@ -1,6 +1,5 @@
 import { gql, useQuery } from '@apollo/client';
 import { useEffect, useRef, useState } from 'react';
-import { useToasts } from 'react-toast-notifications';
 import { InsurancePool } from 'types';
 
 const ALL_POOLS = gql`
@@ -35,19 +34,12 @@ type Pools = {
 
 export const useAllPools: () => Pools = () => {
     const ref = useRef({});
-    const { addToast } = useToasts();
 
     const { data, error, loading, refetch } = useQuery(ALL_POOLS, {
         errorPolicy: 'all',
-        onError: ({ graphQLErrors, networkError }) => {
+        onError: ({ graphQLErrors }) => {
             if (graphQLErrors.length) {
                 graphQLErrors.map((err) => console.error(`Failed to fetch insurance data: ${err}`));
-            }
-            if (networkError) {
-                addToast(`Failed to fetch insurance data: ${networkError}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
             }
         },
     });
