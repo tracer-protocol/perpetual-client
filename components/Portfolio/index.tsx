@@ -146,12 +146,7 @@ export const SecondaryCell = styled.div`
     color: #005ea4;
 `;
 
-type DateTimeProps = {
-    date: string;
-    time: string;
-};
-
-export const DateTimeCell: React.FC<DateTimeProps> = ({ date, time }) => {
+export const DateTimeCell: React.FC<{ date: string; time: string }> = ({ date, time }) => {
     return (
         <>
             <TableCell>
