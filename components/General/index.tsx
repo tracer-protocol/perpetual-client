@@ -13,34 +13,8 @@ export const DateAndTime = styled(({ className, date, time }) => {
     );
 })`
     font-size: 1rem;
-    padding: 0.5rem 1rem;
-
-    ${(props) => {
-        if (props.borderTop === true) {
-            return 'border-top: 1px solid #002886;';
-        }
-    }};
-
-    ${(props) => {
-        if (props.borderRight === true) {
-            return 'border-right: 1px solid #002886;';
-        }
-    }};
-
-    ${(props) => {
-        if (props.borderBottom === true) {
-            return 'border-bottom: 1px solid #002886;';
-        }
-    }};
-
-    ${(props) => {
-        if (props.borderLeft === true) {
-            return 'border-left: 1px solid #002886;';
-        }
-    }};
-
     .secondary {
-        color: ${(props) => props.color as string};
+        color: #005ea4;
     }
 `;
 

@@ -58,13 +58,9 @@ const DepositHistory: React.FC = () => {
                 <tbody>
                     {tracers.map((tracer, i) => (
                         <TableRow key={`table-row-${i}`}>
-                            <DateAndTime
-                                date={tracer.date}
-                                time={tracer.time}
-                                borderRight={true}
-                                borderBottom={true}
-                                color="#005ea4"
-                            />
+                            <TableCell>
+                                <DateAndTime date={tracer.date} time={tracer.time} />
+                            </TableCell>
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
