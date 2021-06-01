@@ -1,6 +1,6 @@
 import React from 'react';
 import { Logo } from '@components/General';
-import { TableHead, TableHeadEnd, TableRow, TableCell, DateTimeCell } from '@components/Portfolio';
+import { TableHead, TableHeadEnd, TableRow, TableCell, DateAndTime } from '@components/Portfolio';
 
 const WithdrawalHistory: React.FC = () => {
     const headings = ['Date', 'Market', 'Amount', 'Transaction Details'];
@@ -53,7 +53,13 @@ const WithdrawalHistory: React.FC = () => {
                 <tbody>
                     {tracers.map((tracer, i) => (
                         <TableRow key={`table-row-${i}`}>
-                            <DateTimeCell date={tracer.date} time={tracer.time} />
+                            <DateAndTime
+                                date={tracer.date}
+                                time={tracer.time}
+                                borderRight={true}
+                                borderBottom={true}
+                                color="#005ea4"
+                            />
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
