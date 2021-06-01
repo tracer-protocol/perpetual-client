@@ -12,6 +12,7 @@ import GraphProvider from '@libs/Graph';
 import { Notification } from '@components/General/Notification';
 import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
+import { OMEStore } from '@context/OMEContext';
 
 const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
     return (
@@ -37,9 +38,11 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                 <Web3Store>
                     <GraphProvider>
                         <FactoryStore>
-                            <TransactionStore>
-                                <Component {...pageProps} />
-                            </TransactionStore>
+                            <OMEStore>
+                                <TransactionStore>
+                                    <Component {...pageProps} />
+                                </TransactionStore>
+                            </OMEStore>
                         </FactoryStore>
                     </GraphProvider>
                 </Web3Store>
