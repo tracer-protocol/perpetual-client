@@ -1,6 +1,6 @@
 import React from 'react';
 import { toApproxCurrency } from '@libs/utils';
-import {TableHead, TableHeadEnd, TableRow, TableCell, SecondaryCell, DateTimeCell} from '@components/Portfolio';
+import { TableHead, TableHeadEnd, TableRow, TableCell, SecondaryCell, DateTimeCell } from '@components/Portfolio';
 
 const Transfers: React.FC = () => {
     const headings = ['Date', 'Type', 'Amount / Currency', 'Transaction Details'];
