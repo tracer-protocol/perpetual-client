@@ -112,7 +112,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     };
 
-    const submit = async (deposit: boolean, amount: number, _callback?: (...args: any) => any) => {
+    const submit = async (deposit: boolean, amount: number, _callback?: () => any) => {
         const func = deposit ? selectedTracer.deposit : selectedTracer.withdraw;
         const callback = async (res: Result) => {
             if (res.status !== 'error') {
