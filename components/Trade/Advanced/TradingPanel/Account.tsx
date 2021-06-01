@@ -143,7 +143,7 @@ const SAfter = styled(After)`
 
 type PProps = {
     className?: string;
-    close: (e: any) => any;
+    close: () => any;
     isDeposit: boolean;
     display: boolean;
     unit: string;
@@ -171,7 +171,7 @@ const Popup: React.FC<PProps> = styled(
             <div className={className}>
                 <div className="header">
                     <p>{isDeposit ? 'Deposit' : 'Withdraw'} Margin</p>
-                    <Close onClick={close} />
+                    <Close onClick={() => close()} />
                 </div>
                 <SNumberSelect
                     unit={unit}
@@ -202,7 +202,7 @@ const Popup: React.FC<PProps> = styled(
                         {`${toApproxCurrency(calcMinimumMargin(newBalance, balances.base, price, maxLeverage))}`}
                     </SSection>
                 </SHiddenExpand>
-                <MButton onClick={() => (isDeposit ? deposit(amount) : withdraw(amount))}>
+                <MButton onClick={() => (isDeposit ? deposit(amount, close) : withdraw(amount, close))}>
                     {isDeposit ? 'Deposit' : 'Withdraw'}
                 </MButton>
                 <Error error={invalid ? 5 : -1} />
@@ -279,7 +279,7 @@ export const AccountPanel: React.FC<{
             </DepositButtons>
             <Popup
                 display={popup}
-                close={(_e: any) => setPopup(false)}
+                close={() => setPopup(false)}
                 isDeposit={deposit}
                 unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}

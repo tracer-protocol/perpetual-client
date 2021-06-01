@@ -1,4 +1,4 @@
-// // in your node script before running whatever is causing the warnings
+// prevent creating full trace
 process.traceDeprecation = true;
 
 import React from 'react';
@@ -13,7 +13,7 @@ import { Notification } from '@components/General/Notification';
 import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
 
-const App = ({ Component, pageProps }: AppProps) => { //eslint-disable-line
+const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
     return (
         <div>
             <Head>

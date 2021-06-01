@@ -4,6 +4,20 @@ import Tooltip from 'antd/lib/tooltip';
 import React from 'react';
 import styled from 'styled-components';
 
+export const DateAndTime = styled(({ className, date, time }) => {
+    return (
+        <div className={className}>
+            {date}
+            <div className="secondary">{time}</div>
+        </div>
+    );
+})`
+    font-size: 1rem;
+    .secondary {
+        color: #005ea4;
+    }
+`;
+
 export const Box: React.FC<{ className?: string }> = styled.div`
     border: 1px solid #0c3586;
     display: flex;
