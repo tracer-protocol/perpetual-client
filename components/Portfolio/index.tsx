@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import React from 'react';
 
 export const LeftPanel = styled.div`
     width: 25%;
@@ -144,6 +145,22 @@ export const TableCell = styled.td`
 export const SecondaryCell = styled.div`
     color: #005ea4;
 `;
+
+type DateTimeProps = {
+    date: string;
+    time: string;
+};
+
+export const DateTimeCell: React.FC<DateTimeProps> = ({ date, time }) => {
+    return (
+        <>
+            <TableCell>
+                {date}
+                <SecondaryCell>{time}</SecondaryCell>
+            </TableCell>
+        </>
+    );
+};
 
 export const StatusIndicator = styled.div`
     color: ${(props: any) => props.color as string};

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHead, TableHeadEnd, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
+import { TableHead, TableHeadEnd, TableRow, TableCell, DateTimeCell } from '@components/Portfolio';
 
 const TradeHistory: React.FC = () => {
     const headings = ['Date', 'Market', 'Position', 'Exposure / Price', 'Slippage', 'Fees', 'Total Cost', 'Order Type'];
@@ -66,10 +66,7 @@ const TradeHistory: React.FC = () => {
                 <tbody>
                     {tracers.map((tracer, i) => (
                         <TableRow key={`table-row-${i}`}>
-                            <TableCell>
-                                {tracer.date}
-                                <SecondaryCell>{tracer.time}</SecondaryCell>
-                            </TableCell>
+                            <DateTimeCell date={tracer.date} time={tracer.time} />
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">

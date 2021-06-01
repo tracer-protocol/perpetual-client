@@ -1,6 +1,6 @@
 import React from 'react';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHead, TableHeadEnd, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
+import {TableHead, TableHeadEnd, TableRow, TableCell, SecondaryCell, DateTimeCell} from '@components/Portfolio';
 
 const Transfers: React.FC = () => {
     const headings = ['Date', 'Type', 'Amount / Currency', 'Transaction Details'];
@@ -56,10 +56,7 @@ const Transfers: React.FC = () => {
                 <tbody>
                     {tracers.map((tracer, i) => (
                         <TableRow key={`table-row-${i}`}>
-                            <TableCell>
-                                {tracer.date}
-                                <SecondaryCell>{tracer.time}</SecondaryCell>
-                            </TableCell>
+                            <DateTimeCell date={tracer.date} time={tracer.time} />
                             <TableCell>{tracer.type}</TableCell>
                             <TableCell>
                                 {toApproxCurrency(tracer.amount)}
