@@ -66,7 +66,7 @@ export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title
                     min={0}
                     placeholder="0.0"
                     onChange={(e) => setAmount(Math.abs(parseFloat(e.target.value)))}
-                    value={amount ? amount : ''}
+                    value={!Number.isNaN(amount) ? amount : ''}
                 />
                 <Unit>{unit}</Unit>
             </BasicInputContainer>
