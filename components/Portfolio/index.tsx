@@ -9,6 +9,10 @@ export const LeftPanel = styled.div`
     border-top: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
     border-left: 1px solid #0c3586;
+
+    @media only screen and (max-width: 1200px) {
+        width: auto;
+    }
 `;
 
 export const RightPanel = styled.div`
@@ -19,6 +23,10 @@ export const RightPanel = styled.div`
     min-height: 90vh;
     border-top: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
+
+    @media only screen and (max-width: 1200px) {
+        width: auto;
+    }
 `;
 
 export const NoLeverageBanner = styled.div`
