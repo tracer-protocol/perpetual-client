@@ -1,6 +1,7 @@
 import React from 'react';
 import { Logo } from '@components/General';
-import { TableHead, TableHeadEnd, TableRow, TableCell, DateAndTime } from '@components/Portfolio';
+import { TableHead, TableHeadEnd, TableRow, TableCell } from '@components/Portfolio';
+import { DateAndTime } from '@components/General';
 
 const WithdrawalHistory: React.FC = () => {
     const headings = ['Date', 'Market', 'Amount', 'Transaction Details'];

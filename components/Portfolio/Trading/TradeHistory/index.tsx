@@ -1,7 +1,8 @@
 import React from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHead, TableHeadEnd, TableRow, TableCell, DateAndTime } from '@components/Portfolio';
+import { TableHead, TableHeadEnd, TableRow, TableCell } from '@components/Portfolio';
+import { DateAndTime } from '@components/General';
 
 const TradeHistory: React.FC = () => {
     const headings = ['Date', 'Market', 'Position', 'Exposure / Price', 'Slippage', 'Fees', 'Total Cost', 'Order Type'];
