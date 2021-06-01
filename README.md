@@ -4,8 +4,8 @@ This client is still in development. We have recently begun implementing a forke
 
 ## Stable Branches
 
--  master
--  develop
+-   master
+-   develop
 
 ## Todos
 
@@ -54,13 +54,5 @@ Create a .env.local in your root directory and set the contract addresses
 Checkout [tracer-graphs](https://github.com/lions-mane/tracer-graphs) to deploy the respective tracer-subgraphs.
 
 ## Running
-
-### Install packages with
-
-`npm install` or `yarn install`
-
-`npm ci` will be significantly faster when there is a package-lock.json.
-
-### Run the development server:
 
 `npm run dev` or `yarn dev`
