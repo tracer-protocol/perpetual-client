@@ -1,4 +1,3 @@
-import { useToasts } from 'react-toast-notifications';
 import { gql, useQuery } from '@apollo/client';
 import { useRef } from 'react';
 import { FilledOrder } from 'types/OrderTypes';
@@ -27,22 +26,12 @@ const ALL_TRACERS = gql`
 export const useAccountData: (user: string | undefined) => any = (user) => {
     // eslint-disable-line
     const ref = useRef([]);
-    const { addToast } = useToasts();
     const { data, error, loading, refetch } = useQuery(ALL_TRACERS, {
         variables: { user: user?.toLowerCase() },
         errorPolicy: 'all',
-        onError: ({ graphQLErrors, networkError }) => {
-            if (graphQLErrors) {
-                addToast(`Failed to fetch account data. ${error}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
-            }
-            if (networkError) {
-                addToast(`Failed to connect to the graph. ${networkError}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
+        onError: ({ graphQLErrors }) => {
+            if (graphQLErrors.length) {
+                graphQLErrors.map((err) => console.error(`Failed to fetch account data: ${err}`));
             }
         },
     });
@@ -76,22 +65,12 @@ export const useUsersMatched: (
     refetch: any;
 } = (tracer, account) => {
     const ref = useRef<FilledOrder[]>([]);
-    const { addToast } = useToasts();
     const { data, error, loading, refetch } = useQuery(USER_TRACER_TRADES, {
         variables: { account: account?.toLowerCase(), tracer: tracer.toLowerCase() },
         errorPolicy: 'all',
-        onError: ({ graphQLErrors, networkError }) => {
-            if (graphQLErrors) {
-                addToast(`Failed to fetch account trades. ${error}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
-            }
-            if (networkError) {
-                addToast(`Failed to connect to the graph. ${networkError}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
+        onError: ({ graphQLErrors }) => {
+            if (graphQLErrors.length) {
+                graphQLErrors.map((err) => console.error(`Failed to fetch account trades: ${err}`));
             }
         },
     });
