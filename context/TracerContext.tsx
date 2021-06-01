@@ -13,8 +13,8 @@ import { defaults } from '@libs/Tracer';
 
 interface ContextProps {
     tracerId: string | undefined;
-    deposit: (amount: number) => void;
-    withdraw: (amount: number) => void;
+    deposit: (amount: number, _callback?: () => void) => void;
+    withdraw: (amount: number, _callback?: () => void) => void;
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
     balance: UserBalance;
@@ -112,12 +112,13 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     };
 
-    const submit = async (deposit: boolean, amount: number) => {
+    const submit = async (deposit: boolean, amount: number, _callback?: () => any) => {
         const func = deposit ? selectedTracer.deposit : selectedTracer.withdraw;
         const callback = async (res: Result) => {
             if (res.status !== 'error') {
                 const balance = await selectedTracer?.updateUserBalance(account);
                 tracerDispatch({ type: 'setUserBalance', value: balance });
+                _callback ? _callback() : null;
             }
         };
         handleTransaction
@@ -146,8 +147,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         <TracerContext.Provider
             value={{
                 tracerId,
-                deposit: (amount: number) => submit(true, amount),
-                withdraw: (amount: number) => submit(false, amount),
+                deposit: (amount, _callback) => submit(true, amount, _callback),
+                withdraw: (amount, _callback) => submit(false, amount, _callback),
                 setTracerId: (tracerId: string) =>
                     tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] }),
                 selectedTracer,
