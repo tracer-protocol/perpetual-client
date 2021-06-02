@@ -8,7 +8,6 @@ import { OMEOrder as FlattenedOMEOrder } from 'types/OrderTypes';
 import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
 
-
 type Orders = {
     askOrders: FlattenedOMEOrder[];
     bidOrders: FlattenedOMEOrder[];
@@ -38,23 +37,23 @@ export const parseOrders: (res: any) => Orders = (res) => {
 };
 
 interface ContextProps {
-    omeState: OMEState
-    omeDispatch: React.Dispatch<OMEAction>
+    omeState: OMEState;
+    omeDispatch: React.Dispatch<OMEAction>;
 }
 
 type OMEState = {
-    userOrders: OMEOrder[],
-    orders: Orders
-}
+    userOrders: OMEOrder[];
+    orders: Orders;
+};
 type OMEAction =
     | { type: 'setUserOrders'; orders: OMEOrder[] }
     | { type: 'setOrders'; orders: Orders }
     | { type: 'refetchUserOrders' }
-    | { type: 'refetchOrders' }
+    | { type: 'refetchOrders' };
 
 export const OMEContext = React.createContext<Partial<ContextProps>>({});
 
-export const OMEStore : React.FC<Children> = ({ children }: Children) => {
+export const OMEStore: React.FC<Children> = ({ children }: Children) => {
     const isMounted = useRef(true);
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
@@ -63,15 +62,15 @@ export const OMEStore : React.FC<Children> = ({ children }: Children) => {
         userOrders: [],
         orders: {
             askOrders: [],
-            bidOrders: []
-        }
+            bidOrders: [],
+        },
     };
 
     const fetchUserData = async () => {
         if (selectedTracer?.address && account) {
             const res = await getUsersOrders(selectedTracer?.address as string, account);
             if (isMounted.current) {
-                omeDispatch({ type: 'setUserOrders', orders: res})
+                omeDispatch({ type: 'setUserOrders', orders: res });
             }
         }
     };
@@ -80,29 +79,31 @@ export const OMEStore : React.FC<Children> = ({ children }: Children) => {
         if (selectedTracer?.address) {
             const res = await getOrders(selectedTracer?.address);
             if (isMounted.current) {
-                omeDispatch({ type: 'setOrders', orders: parseOrders(res)})
+                omeDispatch({ type: 'setOrders', orders: parseOrders(res) });
             }
         }
     };
 
     useEffect(() => {
-        return () => { (isMounted.current = false) }; // cleanup dismount
+        return () => {
+            isMounted.current = false;
+        }; // cleanup dismount
     }, []);
 
-    const reducer = (state: OMEState, action: OMEAction ) => {
+    const reducer = (state: OMEState, action: OMEAction) => {
         switch (action.type) {
             case 'setUserOrders':
-                return { ...state, userOrders: action.orders};
-            case 'setOrders' : {
-                return { ...state, orders: action.orders};
+                return { ...state, userOrders: action.orders };
+            case 'setOrders': {
+                return { ...state, orders: action.orders };
             }
             case 'refetchUserOrders': {
                 fetchUserData();
-                return { ...state }
+                return { ...state };
             }
             case 'refetchOrders': {
                 fetchOrders();
-                return { ...state }
+                return { ...state };
             }
             default:
                 throw new Error('Unexpected action');
@@ -113,13 +114,13 @@ export const OMEStore : React.FC<Children> = ({ children }: Children) => {
 
     useEffect(() => {
         fetchUserData();
-    }, [selectedTracer?.address, account])
+    }, [selectedTracer?.address, account]);
 
     useEffect(() => {
         // fetches orders every 5 seconds
         // TODO update this as it triggers a re-render for all using the OMEStore
         let id: any;
-        if (!!selectedTracer ) {
+        if (!!selectedTracer) {
             fetchOrders();
             id = setInterval(() => fetchOrders(), 5000);
         }
@@ -132,7 +133,7 @@ export const OMEStore : React.FC<Children> = ({ children }: Children) => {
         <OMEContext.Provider
             value={{
                 omeDispatch,
-                omeState
+                omeState,
             }}
         >
             {children}

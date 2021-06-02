@@ -135,6 +135,7 @@ const OpenOrders: React.FC<{
         </STable>
     );
 });
+OpenOrders.displayName = 'OpenOrders';
 
 const Fills: React.FC<{
     filledOrders: FilledOrder[];
@@ -161,6 +162,7 @@ const Fills: React.FC<{
         </STable>
     );
 });
+Fills.displayName = 'Fills';
 
 type TSProps = {
     selectedTracer: Tracer | undefined;
@@ -174,9 +176,11 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
     const balances = selectedTracer?.balances ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const { filledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');
-    const { 
-        omeState, 
-        omeDispatch = () => { console.error("Ome dispatch function not set") }
+    const {
+        omeState,
+        omeDispatch = () => {
+            console.error('Ome dispatch function not set');
+        },
     } = useContext(OMEContext);
 
     const baseTicker = 'BTC';
@@ -190,15 +194,15 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
                         maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                         baseTicker={baseTicker}
                     />
-                )
+                );
             case 1:
                 return (
-                    <OpenOrders 
-                        userOrders={omeState?.userOrders ?? []} 
-                        baseTicker={baseTicker} 
-                        refetch={() => omeDispatch({ type: 'refetchUserOrders' })} 
+                    <OpenOrders
+                        userOrders={omeState?.userOrders ?? []}
+                        baseTicker={baseTicker}
+                        refetch={() => omeDispatch({ type: 'refetchUserOrders' })}
                     />
-                )
+                );
             case 2:
                 return <Fills filledOrders={filledOrders} />;
             default:

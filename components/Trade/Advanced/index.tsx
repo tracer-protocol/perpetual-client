@@ -67,7 +67,10 @@ const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selecte
                         {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
                             <>
                                 <Timer />
-                                <OrderBook askOrders={omeState.orders.askOrders} bidOrders={omeState.orders.bidOrders} />
+                                <OrderBook
+                                    askOrders={omeState.orders.askOrders}
+                                    bidOrders={omeState.orders.bidOrders}
+                                />
                             </>
                         ) : (
                             <p>No open orders</p>
