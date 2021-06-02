@@ -116,7 +116,7 @@ export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, classNa
 
                 {/* Place Order */}
                 <div className="py-1">
-                    <AdvancedOrderButton balances={selectedTracer?.balances} />
+                    <AdvancedOrderButton />
                 </div>
             </div>
         </Box>

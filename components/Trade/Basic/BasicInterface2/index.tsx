@@ -137,7 +137,7 @@ const BasicInterface2: React.FC = styled(({ className }) => {
                                 console.error('Order dispatch not set');
                             }
                         }}
-                        value={amountToPay > 0 ? amountToPay: ''}
+                        value={amountToPay > 0 ? amountToPay : ''}
                     />
 
                     <RightContainer>
