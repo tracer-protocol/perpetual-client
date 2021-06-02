@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Dropdown from 'antd/lib/dropdown';
-import { CaretDownFilled } from '@ant-design/icons';
+import { CaretDownFilled, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { OrderContext, TracerContext } from '@context/index';
 import { OrderAction, OrderState } from '@context/OrderContext';
 import styled from 'styled-components';
@@ -9,7 +9,6 @@ import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Button, Logo, BasicInputContainer, Input } from '@components/General';
 import Tooltip from 'antd/lib/tooltip';
-import { BigNumber } from 'bignumber.js';
 import { markets, collaterals } from '../Menus';
 
 const SLabel = styled.h3`
@@ -79,7 +78,7 @@ const DropDownText = styled.div`
 const RightContainer = styled.div`
     white-space: nowrap;
     display: flex;
-    margin-top: 5px;
+    margin-top: 10px;
 `;
 
 interface WSProps {
@@ -109,6 +108,30 @@ const marginTip = (
     </p>
 );
 
+const Lock: React.FC<{
+    isAmountToPay: boolean;
+    lockAmountToPay: boolean;
+}> = ({ isAmountToPay, lockAmountToPay }) => {
+    // removed the onClick unlock functions for now
+    const lock_ = <LockOutlined className="mx-2" color="#3da8f5" />;
+    const unlock_ = <UnlockOutlined className="mx-2" color="#3da8f5" />;
+    if (isAmountToPay) {
+        // ie lock for margin input / amount to pay
+        if (lockAmountToPay) {
+            return lock_;
+        } else {
+            return unlock_;
+        }
+    } else {
+        // this is just opposite logic
+        if (!lockAmountToPay) {
+            return lock_;
+        } else {
+            return unlock_;
+        }
+    }
+};
+
 const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wallet }: WSProps) => {
     return (
         <div className={className}>
@@ -132,7 +155,7 @@ const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wall
     );
 })`
     display: flex;
-    p {
+    > p {
         color: #3da8f5;
         margin: auto 5px;
     }
@@ -141,7 +164,7 @@ const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wall
 const BasicInterface1: React.FC = styled(({ className }) => {
     const { order, orderDispatch } = useContext(OrderContext);
     const { selectedTracer } = useContext(TracerContext);
-    const { orderBase, market, collateral, exposure } = order as OrderState;
+    const { amountToPay, market, collateral, amountToBuy } = order as OrderState;
     const marketPairs = useMarketPairs();
     const balance =
         order?.wallet === 0
@@ -151,16 +174,19 @@ const BasicInterface1: React.FC = styled(({ className }) => {
     //get market address -> using tracer factory helper function
     //pass in address and initialise Tracer -> get all open orders of the address
     return (
-        <div className={className}>
-            {/* MARGIN DEPOSIT */}
+        <div className={className} id="basiceInterface1">
+            {/* AMOUNT TO PAY */}
             <SSection>
-                <SLabel>
-                    <span>Amount to buy</span>
-                </SLabel>
-
+                <div className="flex">
+                    <SLabel>
+                        <span>Amount to pay</span>
+                        <Lock isAmountToPay={true} lockAmountToPay={order?.lockAmountToPay ?? true} />
+                    </SLabel>
+                    <WalletSelect orderDispatch={orderDispatch} wallet={order?.wallet ?? 0} />
+                </div>
                 <BasicInputContainer>
                     <Input
-                        id="exposure"
+                        id="amountToPay"
                         type="number"
                         placeholder="0.0"
                         autoComplete="off"
@@ -169,22 +195,22 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                             e.preventDefault();
                             if (orderDispatch) {
                                 orderDispatch({ type: 'setLock', value: false });
-                                orderDispatch({ type: 'setExposure', value: new BigNumber(e.target.value) });
+                                orderDispatch({ type: 'setAmountToPay', value: parseFloat(e.target.value) ?? 0 });
                             } else {
                                 console.error('Order dispatch not set');
                             }
                         }}
-                        value={exposure.gt(0) ? exposure.toString(10) : ''}
+                        value={amountToPay > 0 ? amountToPay : ''}
                     />
-
-                    <div className="flex">
+                    <RightContainer>
+                        <Balance>Balance: {balance ?? '-'}</Balance>
                         <MaxButton
-                            className="mr-2 mb-2 mt-auto"
+                            className="mr-2"
                             onClick={(e: any) => {
                                 e.preventDefault();
                                 if (orderDispatch) {
                                     orderDispatch({ type: 'setLock', value: false });
-                                    orderDispatch({ type: 'setExposure', value: new BigNumber(e.target.value) });
+                                    orderDispatch({ type: 'setAmountToPay', value: balance ?? 0 });
                                 } else {
                                     console.error('Order dispatch not set');
                                 }
@@ -194,7 +220,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                         </MaxButton>
 
                         <SDropdown
-                            className="mt-1 pr-4"
+                            className="pr-4"
                             overlay={markets(orderDispatch, marketPairs[collateral] ?? [])}
                             trigger={['click']}
                         >
@@ -204,22 +230,33 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                                 <SDownCaret />
                             </DropDownContent>
                         </SDropdown>
-                    </div>
+                    </RightContainer>
                 </BasicInputContainer>
             </SSection>
 
-            {/* MARKET EXPOSURE */}
+            {/** AMOUNT TO BUY */}
             <SSection>
                 <div className="flex">
                     <SLabel>
-                        <span>Amount to pay</span>
+                        <span>Amount to buy</span>
+                        <Lock isAmountToPay={false} lockAmountToPay={order?.lockAmountToPay ?? false} />
                     </SLabel>
-                    <WalletSelect orderDispatch={orderDispatch} wallet={order?.wallet ?? 0} />
+                    <MaxButton
+                        onClick={(e: any) => {
+                            e.preventDefault();
+                            if (orderDispatch) {
+                                orderDispatch({ type: 'setAmountToPay', value: (order?.price ?? 0) * (balance ?? 0) });
+                            } else {
+                                console.error('Order dispatch not set');
+                            }
+                        }}
+                    >
+                        Max
+                    </MaxButton>
                 </div>
-
                 <BasicInputContainer>
                     <Input
-                        id="margin"
+                        id="amountToBuy"
                         type="number"
                         placeholder="0.0"
                         autoComplete="off"
@@ -227,31 +264,17 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                         onChange={(e) => {
                             e.preventDefault();
                             if (orderDispatch) {
-                                orderDispatch({ type: 'setLock', value: true });
-                                orderDispatch({ type: 'setOrderBase', value: parseFloat(e.target.value) ?? 0 });
+                                if (order?.lockAmountToPay) {
+                                    orderDispatch({ type: 'setAmountToBuy', value: parseFloat(e.target.value) });
+                                }
                             } else {
                                 console.error('Order dispatch not set');
                             }
                         }}
-                        value={orderBase > 0 ? orderBase : ''}
+                        value={!Number.isNaN(amountToBuy) ? amountToBuy : ''}
                     />
 
-                    <RightContainer className="mt-4">
-                        <Balance>Available: {balance ?? ''}</Balance>
-                        <MaxButton
-                            className="mr-2"
-                            onClick={(e: any) => {
-                                e.preventDefault();
-                                if (orderDispatch) {
-                                    orderDispatch({ type: 'setLock', value: true });
-                                    orderDispatch({ type: 'setOrderBase', value: balance ?? 0 });
-                                } else {
-                                    console.error('Order dispatch not set');
-                                }
-                            }}
-                        >
-                            Max
-                        </MaxButton>
+                    <RightContainer>
                         <SDropdown overlay={collaterals(orderDispatch, Object.keys(marketPairs))} trigger={['click']}>
                             <DropDownContent>
                                 <DropDownText>{collateral}</DropDownText>
@@ -266,6 +289,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
 })`
     display: flex;
     flex-direction: column;
+    margin: 1rem 0;
 `;
 
 export default BasicInterface1;

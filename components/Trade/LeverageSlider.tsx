@@ -37,7 +37,7 @@ export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }:
     const marks = {
         1: '1x',
         50: '50x',
-        100: '100x Max',
+        100: '100x',
     };
     return (
         <>

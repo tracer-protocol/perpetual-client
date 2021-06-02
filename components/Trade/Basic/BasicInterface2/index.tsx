@@ -77,14 +77,14 @@ const RightContainer = styled.div`
 
 const BasicInterface2: React.FC = styled(({ className }) => {
     const { order, orderDispatch } = useContext(OrderContext);
-    const { orderBase, market, collateral } = order as OrderState;
+    const { amountToPay, market, collateral } = order as OrderState;
     const marketPairs = useMarketPairs();
     const wallets = ['Wallet', 'Margin'];
 
     //get market address -> using tracer factory helper function
     //pass in address and initialise Tracer -> get all open orders of the address
     return (
-        <div className={className}>
+        <div className={className} id="basicInterface2">
             {/* MARGIN DEPOSIT */}
             <SSection>
                 <SLabel className="mb-2">Select Market</SLabel>
@@ -132,13 +132,12 @@ const BasicInterface2: React.FC = styled(({ className }) => {
                         onChange={(e) => {
                             e.preventDefault();
                             if (orderDispatch) {
-                                orderDispatch({ type: 'setLock', value: true });
-                                orderDispatch({ type: 'setOrderBase', value: parseFloat(e.target.value) ?? 0 });
+                                orderDispatch({ type: 'setAmountToPay', value: parseFloat(e.target.value) ?? 0 });
                             } else {
                                 console.error('Order dispatch not set');
                             }
                         }}
-                        value={orderBase > 0 ? orderBase : ''}
+                        value={amountToPay > 0 ? amountToPay : ''}
                     />
 
                     <RightContainer>

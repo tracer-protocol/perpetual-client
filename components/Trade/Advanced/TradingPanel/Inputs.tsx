@@ -29,13 +29,13 @@ export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISP
                     title={'Amount'}
                     onChange={(e) => {
                         orderDispatch
-                            ? orderDispatch({ type: 'setOrderBase', value: parseFloat(e.target.value) })
+                            ? orderDispatch({ type: 'setAmountToPay', value: parseFloat(e.target.value) })
                             : console.error('No dispatch function set');
                     }}
                     setMax={(e) => {
                         e.preventDefault();
                         orderDispatch
-                            ? orderDispatch({ type: 'setOrderBase', value: maxMargin.toNumber() })
+                            ? orderDispatch({ type: 'setAmountToPay', value: maxMargin.toNumber() })
                             : console.error('No dispatch function set');
                     }}
                     unit={tracerId.split('/')[0]}

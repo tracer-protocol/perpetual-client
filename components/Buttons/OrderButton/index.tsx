@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { OrderState, Errors } from '@context/OrderContext';
 import { OrderContext, TracerContext, TransactionContext } from 'context';
-import { Children, UserBalance } from 'types';
+import { Children } from 'types';
 import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
 import { OMEContext } from '@context/OMEContext';
@@ -30,28 +30,13 @@ const TradeButton = styled.div`
     }
 `;
 
-export const AdvancedOrderButton: React.FC<{
-    balances: UserBalance | undefined;
-}> = ({ balances }: { balances: UserBalance | undefined }) => {
-    // const { setError } = useContext(ErrorContext);
-    const { order } = useContext(OrderContext);
-    const orderBase = order?.orderBase ?? 0;
-
-    useEffect(() => {
-        if (!!balances) {
-            // Margin is greater than margin in account
-            // balances?.quote < orderBase && balances?.quote >= 0 && orderBase > 0 ? setError(1, 1) : setError(0, 1);
-        }
-    }, [orderBase]);
-
-    return (
-        <div className="w-full flex">
-            <PlaceOrderButton>
-                <TradeButton>Place Trade</TradeButton>
-            </PlaceOrderButton>
-        </div>
-    );
-};
+export const AdvancedOrderButton: React.FC = () => (
+    <div className="w-full flex">
+        <PlaceOrderButton>
+            <TradeButton>Place Trade</TradeButton>
+        </PlaceOrderButton>
+    </div>
+);
 
 type POBProps = {
     className?: string;

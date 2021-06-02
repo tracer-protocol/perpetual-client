@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext } from 'context';
 import LeverageSlider from '@components/Trade/LeverageSlider';
 import BasicInterface1 from '@components/Trade/Basic/BasicInterface1';
-import BasicInterface2 from '@components/Trade/Basic/BasicInterface2';
+// import BasicInterface2 from '@components/Trade/Basic/BasicInterface2';
 import { SlideSelect, PlaceOrderButton } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Card, Button, Previous } from '@components/General';
@@ -15,8 +15,6 @@ import { UserBalance } from 'types';
 import Error from '../Error';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
-// @ts-ignore
-import { Experiment, Variant } from '@marvelapp/react-ab-test';
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;
@@ -185,7 +183,7 @@ const Basic: React.FC = styled(({ className }) => {
 
     useEffect(() => {
         // could have equally been checking on the margin variable
-        if (order?.exposure.toNumber() || order?.orderBase) {
+        if (order?.amountToBuy || order?.amountToPay) {
             setShowSummary(true);
         } else {
             setShowSummary(false);
@@ -208,15 +206,9 @@ const Basic: React.FC = styled(({ className }) => {
                     <Position dispatch={orderDispatch} position={order?.position ?? 0} />
                 </div>
 
-                {/** Display the variant basic interfaces */}
-                <Experiment name="BasicInterface">
-                    <Variant name="BasicInterface1">
-                        <BasicInterface1 />
-                    </Variant>
-                    <Variant name="BasicInterface2">
-                        <BasicInterface2 />
-                    </Variant>
-                </Experiment>
+                {/** Display the variant basic interfaces, workout ab testing for this */}
+                <BasicInterface1 />
+                {/* <BasicInterface2 /> */}
 
                 <LeverageSlider leverage={order?.leverage ?? 1} />
                 <OrderSummary
@@ -224,7 +216,7 @@ const Basic: React.FC = styled(({ className }) => {
                     order={order}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                     fairPrice={fairPrice}
-                    exposure={exposure ?? defaults.exposure}
+                    exposure={exposure ?? defaults.amountToBuy}
                 />
                 <PlaceOrderButton className="mt-auto mb-2">
                     <SButton className="mx-auto">Place Trade</SButton>
