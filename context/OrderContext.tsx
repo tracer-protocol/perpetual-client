@@ -1,9 +1,11 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
 import { TracerContext, Web3Context } from './';
-import { useTracerOrders } from '@hooks/TracerHooks';
-import { Children, OpenOrder, OpenOrders, UserBalance } from 'types';
+import { Children, OpenOrder, UserBalance } from 'types';
 import { calcTradeExposure } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
+import { OMEContext } from './OMEContext';
+import { OMEOrder } from 'types/OrderTypes';
+import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
 
 calcTradeExposure;
 /**
@@ -47,7 +49,7 @@ export const Errors: Record<number, Error> = {
  */
 const checkErrors: (
     balances: UserBalance | undefined,
-    orders: OpenOrder[],
+    orders: OMEOrder[],
     account: string | undefined,
     order: OrderState,
 ) => number = (balances, orders, account, order) => {
@@ -86,7 +88,7 @@ export type OrderState = {
     price: number; // price of the market asset in relation to the collateral asset
     matchingEngine: number; // for basic this will always be 0 (OME)
     orderType: number; // for basic this will always be 0 (market order), 1 is limit and 2 is spot
-    openOrders: OpenOrders;
+    oppositeOrders: FlatOrder[];
     exposure: BigNumber;
     error: number; // number ID relating to the error map above
     wallet: number; // ID of corresponding wallet in use 0 -> web3, 1 -> TCR margin
@@ -126,12 +128,14 @@ export type OrderAction =
     | { type: 'setWallet'; value: number }
     | { type: 'setLock'; value: boolean }
     | { type: 'setAdvanced'; value: boolean }
-    | { type: 'openOrders'; value: OpenOrders };
+    | { type: 'setMarketPrice'; value: number }
+    | { type: 'setOppositeOrders'; orders: FlatOrder[] };
 
 // orderBase => require margin
 export const OrderStore: React.FC<Children> = ({ children }: Children) => {
+    const { account } = useContext(Web3Context);
     const { setTracerId, tracerId, selectedTracer } = useContext(TracerContext);
-    const { web3, account } = useContext(Web3Context);
+    const { omeState } = useContext(OMEContext);
 
     useEffect(() => {
         if (tracerId) {
@@ -150,10 +154,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         price: NaN, // price of the market asset in relation to the collateral asset
         matchingEngine: 0, // for basic this will always be 0 (OME)
         orderType: 0, // for basic this will always be 0 (market order), 1 is limit and 2 is spot
-        openOrders: {
-            shortOrders: [],
-            longOrders: [],
-        },
+        oppositeOrders: [],
         exposure: new BigNumber(0),
         error: -1,
         wallet: 0,
@@ -179,8 +180,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, orderType: action.value };
             case 'setMatchingEngine':
                 return { ...state, matchingEngine: action.value };
-            case 'openOrders':
-                return { ...state, openOrders: action.value };
+            case 'setOppositeOrders':
+                return { ...state, oppositeOrders: action.orders };
+            case 'setMarketPrice': 
+                return { ...state, marketPrice: action.value };
             case 'setExposure':
                 return { ...state, exposure: action.value };
             case 'setError':
@@ -198,31 +201,40 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     const [order, orderDispatch] = useReducer(reducer, initialState);
 
-    const openOrders = useTracerOrders(web3, selectedTracer);
-    const oppositeOrders = order.position ? openOrders.shortOrders : openOrders.longOrders;
-
-    const price_ = 0.5; // TODO replace these with actual price
-
     // only lock when on market order
-    useEffect(() => {
+    useMemo(() => {
         // lock check to avoid loop
         if (order.orderType === 0) {
+            console.log("setting order base 2")
+            console.log(order.lock)
             if (order.lock) {
                 orderDispatch({
                     type: 'setExposure',
-                    value: new BigNumber(order?.orderBase * order.leverage * price_),
+                    value: new BigNumber(order?.orderBase * order.leverage * order.marketPrice),
                 });
             }
         }
     }, [order.orderBase]);
 
-    useEffect(() => {
+    useMemo(() => {
         if (order.orderType === 0) {
+            console.log("setting order base")
             if (!order.lock) {
-                orderDispatch({ type: 'setOrderBase', value: order?.exposure / price_ / order.leverage });
+                orderDispatch({ type: 'setOrderBase', value: order?.exposure / order.marketPrice / order.leverage });
             }
         }
     }, [order.exposure]);
+
+    useMemo(() => {
+        if (omeState?.orders) {
+            let oppositeOrders = (order.position ? omeState.orders.askOrders : omeState.orders.bidOrders).map((order) => ({
+                price: new BigNumber(order.price),
+                amount: new BigNumber(order.quantity)
+            }));
+            orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders })
+            orderDispatch({ type: 'setMarketPrice', value: oppositeOrders[0]?.price?.toNumber() ?? 0})
+        }
+    }, [order.position, omeState?.orders])
 
     useEffect(() => {
         if (order.orderType === 0) {
@@ -230,25 +242,29 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 // locked base, increase exposure
                 orderDispatch({
                     type: 'setExposure',
-                    value: new BigNumber(order?.orderBase * order.leverage * price_),
+                    value: new BigNumber(order?.orderBase * order.leverage * order.marketPrice),
                 });
             } else {
                 // locked exposure decrease margin
-                orderDispatch({ type: 'setOrderBase', value: order?.exposure / price_ / order.leverage });
+                orderDispatch({ type: 'setOrderBase', value: order?.exposure / order.marketPrice / order.leverage });
             }
         }
     }, [order.leverage]);
 
     useMemo(() => {
         // calculate the exposure based on the opposite orders
-        if (order.orderType === 0) {
-            const { exposure, tradePrice } = calcTradeExposure(order.orderBase, order.leverage, oppositeOrders);
+        if (order.orderType === 0 && omeState?.orders) {
+            // convert orders
+            let tradeQuote = Number.isNaN(order.orderBase) ? new BigNumber(order.orderBase) : new BigNumber(0);
+            const { exposure, tradePrice } = calcTradeExposure(
+                tradeQuote, order.leverage, order.oppositeOrders
+            );
             orderDispatch({ type: 'setExposure', value: exposure });
             if (!!tradePrice.toNumber()) {
                 orderDispatch({ type: 'setPrice', value: tradePrice.toNumber() });
             }
         }
-    }, [order.orderBase, order.leverage, oppositeOrders]);
+    }, [order.orderBase, order.leverage, order.oppositeOrders]);
 
     useEffect(() => {
         // calculate and set the exposure based on the orderPrice for limit
@@ -281,17 +297,21 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         setTracerId ? setTracerId(`${order.market}/${order.collateral}`) : console.error('Error setting tracerId');
     }, [order.market, order.collateral]);
 
-    useEffect(() => {
-        const error = checkErrors(selectedTracer?.balances, oppositeOrders, account, order);
-        if (error !== order.error) {
-            orderDispatch({ type: 'setError', value: error });
+    useMemo(() => {
+        if (omeState?.orders) {
+            let oppositeOrders = order.position ? omeState.orders.askOrders : omeState.orders.bidOrders
+            const error = checkErrors(selectedTracer?.balances, oppositeOrders, account, order);
+            if (error !== order.error) {
+                orderDispatch({ type: 'setError', value: error });
+            }
         }
-    }, [selectedTracer, oppositeOrders, account, order]);
+    }, [selectedTracer, account, order]);
+
+    console.log(order.oppositeOrders, "opposite orders")
 
     return (
         <OrderContext.Provider
             value={{
-                oppositeOrders,
                 order,
                 orderDispatch,
                 reset,

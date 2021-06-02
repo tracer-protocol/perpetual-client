@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Dropdown from 'antd/lib/dropdown';
-import { CaretDownFilled } from '@ant-design/icons';
+import { CaretDownFilled, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { OrderContext, TracerContext } from '@context/index';
 import { OrderAction, OrderState } from '@context/OrderContext';
 import styled from 'styled-components';
@@ -109,6 +109,51 @@ const marginTip = (
     </p>
 );
 
+const Lock: React.FC<{
+    amountToPay: boolean;
+    lock: boolean;
+    orderDispatch: React.Dispatch<OrderAction> | undefined;
+}> = ({ amountToPay, lock, orderDispatch }) => {
+    const lock_ = (
+        <LockOutlined
+            className="mx-2"
+            color="#3da8f5"
+            // onClick={(e) => {
+            //     e.preventDefault();
+            //     orderDispatch
+            //         ? orderDispatch({ type: 'setLock', value: !margin })
+            //         : console.error('Order dispatch function not set');
+            // }}
+        />
+    );
+    const unlock_ = (
+        <UnlockOutlined
+            className="mx-2"
+            color="#3da8f5"
+            // onClick={(e) => {
+            //     e.preventDefault();
+            //     orderDispatch
+            //         ? orderDispatch({ type: 'setLock', value: margin })
+            //         : console.error('Order dispatch function not set');
+            // }}
+        />
+    );
+    if (amountToPay) {
+        // ie lock for margin input / amount to pay
+        if (lock) {
+            return lock_;
+        } else {
+            return unlock_;
+        }
+    } else {
+        // this is just opposite logic
+        if (!lock) {
+            return lock_;
+        } else {
+            return unlock_;
+        }
+    }
+};
 const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wallet }: WSProps) => {
     return (
         <div className={className}>
@@ -154,10 +199,25 @@ const BasicInterface1: React.FC = styled(({ className }) => {
         <div className={className}>
             {/* MARGIN DEPOSIT */}
             <SSection>
-                <SLabel>
-                    <span>Amount to buy</span>
-                </SLabel>
-
+                <div className="flex">
+                    <SLabel>
+                        <span>Amount to buy</span>
+                        <Lock orderDispatch={orderDispatch} amountToPay={false} lock={order?.lock ?? false} />
+                    </SLabel>
+                    <MaxButton
+                        onClick={(e: any) => {
+                            e.preventDefault();
+                            if (orderDispatch) {
+                                orderDispatch({ type: 'setLock', value: false });
+                                orderDispatch({ type: 'setExposure', value: new BigNumber(e.target.value) });
+                            } else {
+                                console.error('Order dispatch not set');
+                            }
+                        }}
+                    >
+                        Max
+                    </MaxButton>
+                </div>
                 <BasicInputContainer>
                     <Input
                         id="exposure"
@@ -213,6 +273,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                 <div className="flex">
                     <SLabel>
                         <span>Amount to pay</span>
+                        <Lock orderDispatch={orderDispatch} amountToPay={true} lock={order?.lock ?? true} />
                     </SLabel>
                     <WalletSelect orderDispatch={orderDispatch} wallet={order?.wallet ?? 0} />
                 </div>
