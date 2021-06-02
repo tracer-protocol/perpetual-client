@@ -77,7 +77,7 @@ const RightContainer = styled.div`
 
 const BasicInterface2: React.FC = styled(({ className }) => {
     const { order, orderDispatch } = useContext(OrderContext);
-    const { orderBase, market, collateral } = order as OrderState;
+    const { amountToPay, market, collateral } = order as OrderState;
     const marketPairs = useMarketPairs();
     const wallets = ['Wallet', 'Margin'];
 
@@ -132,13 +132,12 @@ const BasicInterface2: React.FC = styled(({ className }) => {
                         onChange={(e) => {
                             e.preventDefault();
                             if (orderDispatch) {
-                                orderDispatch({ type: 'setLock', value: true });
-                                orderDispatch({ type: 'setOrderBase', value: parseFloat(e.target.value) ?? 0 });
+                                orderDispatch({ type: 'setAmountToPay', value: parseFloat(e.target.value) ?? 0 });
                             } else {
                                 console.error('Order dispatch not set');
                             }
                         }}
-                        value={orderBase > 0 ? orderBase : ''}
+                        value={amountToPay > 0 ? amountToPay: ''}
                     />
 
                     <RightContainer>

@@ -78,7 +78,7 @@ const DropDownText = styled.div`
 const RightContainer = styled.div`
     white-space: nowrap;
     display: flex;
-    margin-top: 5px;
+    margin-top: 10px;
 `;
 
 interface WSProps {
@@ -204,6 +204,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                     <RightContainer>
                         <Balance>Balance: {balance ?? '-'}</Balance>
                         <MaxButton
+                            className="mr-2"
                             onClick={(e: any) => {
                                 e.preventDefault();
                                 if (orderDispatch) {
@@ -218,7 +219,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                         </MaxButton>
 
                         <SDropdown
-                            className="mt-1 pr-4"
+                            className="pr-4"
                             overlay={markets(orderDispatch, marketPairs[collateral] ?? [])}
                             trigger={['click']}
                         >
@@ -252,7 +253,6 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                         Max
                     </MaxButton>
                 </div>
-
                 <BasicInputContainer>
                     <Input
                         id="amountToBuy"
@@ -273,22 +273,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                         value={!Number.isNaN(amountToBuy) ? amountToBuy : ''}
                     />
 
-                    <RightContainer className="mt-4">
-                        <Balance>Available: {balance ?? ''}</Balance>
-                        <MaxButton
-                            className="mr-2"
-                            onClick={(e: any) => {
-                                e.preventDefault();
-                                if (orderDispatch) {
-                                    orderDispatch({ type: 'setLock', value: true });
-                                    orderDispatch({ type: 'setAmountToBuy', value: balance ?? 0 });
-                                } else {
-                                    console.error('Order dispatch not set');
-                                }
-                            }}
-                        >
-                            Max
-                        </MaxButton>
+                    <RightContainer>
                         <SDropdown overlay={collaterals(orderDispatch, Object.keys(marketPairs))} trigger={['click']}>
                             <DropDownContent>
                                 <DropDownText>{collateral}</DropDownText>
@@ -303,6 +288,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
 })`
     display: flex;
     flex-direction: column;
+    margin: 1rem 0;
 `;
 
 export default BasicInterface1;
