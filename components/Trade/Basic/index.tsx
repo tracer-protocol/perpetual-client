@@ -15,8 +15,8 @@ import { UserBalance } from 'types';
 import Error from '../Error';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
+// @ts-ignore
 import { Experiment, Variant } from '@marvelapp/react-ab-test';
-
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;

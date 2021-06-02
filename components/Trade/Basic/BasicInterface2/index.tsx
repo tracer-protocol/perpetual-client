@@ -30,7 +30,7 @@ const SSection = styled.div`
 const SDropdown = styled(Dropdown)`
     border: 1px solid #3da8f5;
     border-radius: 20px;
-    min-height: 30px;
+    max-height: 50px;
     min-width: 90px;
     margin-bottom: auto;
 

@@ -50,8 +50,10 @@ const SDropdown = styled(Dropdown)`
     border: 1px solid #3da8f5;
     border-radius: 20px;
     min-height: 30px;
+    max-height: 50px;
     min-width: 90px;
     margin-bottom: auto;
+
     &:hover {
         cursor: pointer;
     }
@@ -203,7 +205,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
 
                     <div className="flex">
                         <MaxButton
-                            className="mr-2 my-auto"
+                            className="mr-2 mb-2 mt-auto"
                             onClick={(e: any) => {
                                 e.preventDefault();
                                 if (orderDispatch) {
