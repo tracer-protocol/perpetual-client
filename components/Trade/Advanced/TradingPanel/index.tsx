@@ -12,6 +12,7 @@ import { DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { defaults } from '@libs/Tracer';
 import PostTradeDetails from './PostTradeDetails';
+import BigNumber from 'bignumber.js';
 
 const Market = styled.div`
     letter-spacing: -0.4px;
@@ -92,8 +93,8 @@ export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, classNa
                     <PositionSelect selected={order?.position ?? 0} />
                 </div>
 
-                {/* Quantity and Price Inputs */}
-                <InputSelects amount={order?.orderBase} price={order?.price} selectedTracer={selectedTracer} />
+                {/* Quanity and Price Inputs */}
+                <InputSelects amount={order?.amountToPay} price={order?.price} selectedTracer={selectedTracer} />
 
                 {/* Dont display these if it is a limit order*/}
                 {order?.orderType !== 1 ? (
@@ -108,7 +109,7 @@ export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, classNa
                 <PostTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                     balances={selectedTracer?.balances ?? defaults.balances}
-                    exposure={order?.exposure ?? defaults.exposure}
+                    exposure={order?.amountToBuy ? new BigNumber(order.amountToBuy) : defaults.amountToBuy}
                     position={order?.position ?? 0}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                 />

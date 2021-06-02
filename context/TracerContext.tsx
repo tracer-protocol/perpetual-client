@@ -84,9 +84,9 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     };
 
     const placeOrder: (order: OrderState) => Promise<Result> = async (order) => {
-        const { orderBase, price, position } = order;
+        const { amountToPay, price, position } = order;
         // all orders are OME orders
-        const amount = Web3.utils.toWei(orderBase.toString()) ?? 0;
+        const amount = Web3.utils.toWei(amountToPay.toString()) ?? 0;
         const expiration = new Date().getTime() + 604800;
         const makes: OrderData[] = [
             {

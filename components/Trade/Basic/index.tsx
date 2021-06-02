@@ -185,7 +185,7 @@ const Basic: React.FC = styled(({ className }) => {
 
     useEffect(() => {
         // could have equally been checking on the margin variable
-        if (order?.exposure.toNumber() || order?.orderBase) {
+        if (order?.amountToBuy || order?.amountToPay) {
             setShowSummary(true);
         } else {
             setShowSummary(false);
@@ -224,7 +224,7 @@ const Basic: React.FC = styled(({ className }) => {
                     order={order}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                     fairPrice={fairPrice}
-                    exposure={exposure ?? defaults.exposure}
+                    exposure={exposure ?? defaults.amountToBuy}
                 />
                 <PlaceOrderButton className="mt-auto mb-2">
                     <SButton className="mx-auto">Place Trade</SButton>

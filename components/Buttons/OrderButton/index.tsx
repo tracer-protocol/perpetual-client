@@ -35,14 +35,14 @@ export const AdvancedOrderButton: React.FC<{
 }> = ({ balances }: { balances: UserBalance | undefined }) => {
     // const { setError } = useContext(ErrorContext);
     const { order } = useContext(OrderContext);
-    const orderBase = order?.orderBase ?? 0;
+    const amountToPay = order?.amountToPay ?? 0;
 
     useEffect(() => {
         if (!!balances) {
             // Margin is greater than margin in account
-            // balances?.quote < orderBase && balances?.quote >= 0 && orderBase > 0 ? setError(1, 1) : setError(0, 1);
+            // balances?.quote < amountToPay && balances?.quote >= 0 && amountToPay > 0 ? setError(1, 1) : setError(0, 1);
         }
-    }, [orderBase]);
+    }, [amountToPay]);
 
     return (
         <div className="w-full flex">
