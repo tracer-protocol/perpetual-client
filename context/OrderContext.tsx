@@ -254,7 +254,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 order.oppositeOrders,
             );
             if (!exposure.eq(0)) {
-                console.log('Settting amount to buy');
                 orderDispatch({ type: 'setAmountToBuy', value: exposure.toNumber() });
             }
             if (!tradePrice.eq(0)) {
@@ -266,7 +265,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     useEffect(() => {
         // calculate and set the exposure based on the orderPrice for limit
         if (order.orderType === 1) {
-            console.log('Setting amount to buy');
             orderDispatch({ type: 'setAmountToBuy', value: order.price * order.amountToPay });
         }
     }, [order.amountToPay, order.price, order.orderType]);
