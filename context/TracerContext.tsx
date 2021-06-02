@@ -85,25 +85,24 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
     const placeOrder: (order: OrderState) => Promise<Result> = async (order) => {
         const { amountToPay, price, position } = order;
-        // all orders are OME orders
         const amount = Web3.utils.toWei(amountToPay.toString()) ?? 0;
-        const expiration = new Date().getTime() + 604800;
+        const now = Math.floor(Date.now() / 1000); // timestamp in seconds
+        const fourDays = 345600; // four days in seconds
         const makes: OrderData[] = [
             {
                 amount: amount,
                 price: Web3.utils.toWei(price.toString()),
                 side: position ? 1 : 0,
                 maker: account ?? '',
-                expires: expiration,
+                expires: now + fourDays,
                 market: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer.address) : '',
-                created: Date.now(),
+                created: now,
             },
         ];
         try {
             const signedMakes = await signOrdersV4(web3, makes, config?.contracts.trader.address as string, networkId);
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
-
             return res;
         } catch (err) {
             return { status: 'error', message: `Faiiled to place order ${err}` } as Result;
