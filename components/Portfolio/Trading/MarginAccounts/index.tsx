@@ -9,8 +9,10 @@ import {
     Button,
     StatusIndicator,
     getStatusColour,
-    NoLeverageBanner,
 } from '@components/Portfolio';
+import Tooltip from 'antd/lib/tooltip';
+
+const NoLeverageTip = <p>You have no leveraged trades open in this market.</p>;
 
 const MarginAccounts: React.FC = () => {
     const headings = ['Market', 'Total Margin', 'Maintenance Margin', 'Available Margin', 'Status of Position'];
@@ -64,12 +66,14 @@ const MarginAccounts: React.FC = () => {
                     {tracers.map((tracer, i) => (
                         <TableRow key={`table-row-${i}`}>
                             <TableCell>
-                                <div className="flex flex-row">
-                                    <div className="my-auto">
-                                        <Logo ticker={tracer.name} />
+                                <Tooltip title={NoLeverageTip}>
+                                    <div className="flex flex-row">
+                                        <div className="my-auto">
+                                            <Logo ticker={tracer.name} />
+                                        </div>
+                                        <div className="my-auto ml-2">{tracer.market}</div>
                                     </div>
-                                    <div className="my-auto ml-2">{tracer.market}</div>
-                                </div>
+                                </Tooltip>
                             </TableCell>
                             <TableCell>{toApproxCurrency(tracer.tMargin)}</TableCell>
                             <TableCell>{toApproxCurrency(tracer.mMargin)}</TableCell>
@@ -93,9 +97,6 @@ const MarginAccounts: React.FC = () => {
                     ))}
                 </tbody>
             </table>
-            <NoLeverageBanner className="ml-72 mt-2">
-                You have no leveraged trades open in this market.
-            </NoLeverageBanner>
         </>
     );
 };
