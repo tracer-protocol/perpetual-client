@@ -131,6 +131,7 @@ const Lock: React.FC<{
         }
     }
 };
+
 const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wallet }: WSProps) => {
     return (
         <div className={className}>
@@ -154,7 +155,7 @@ const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wall
     );
 })`
     display: flex;
-    p {
+    > p {
         color: #3da8f5;
         margin: auto 5px;
     }
@@ -173,7 +174,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
     //get market address -> using tracer factory helper function
     //pass in address and initialise Tracer -> get all open orders of the address
     return (
-        <div className={className}>
+        <div className={className} id="basiceInterface1">
             {/* AMOUNT TO PAY */}
             <SSection>
                 <div className="flex">

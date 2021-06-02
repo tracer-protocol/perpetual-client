@@ -84,7 +84,7 @@ const BasicInterface2: React.FC = styled(({ className }) => {
     //get market address -> using tracer factory helper function
     //pass in address and initialise Tracer -> get all open orders of the address
     return (
-        <div className={className}>
+        <div className={className} id="basicInterface2">
             {/* MARGIN DEPOSIT */}
             <SSection>
                 <SLabel className="mb-2">Select Market</SLabel>
