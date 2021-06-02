@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
 import { CaretDownFilled } from '@ant-design/icons';
 import { OrderContext, TracerContext } from '@context/index';
@@ -11,6 +10,7 @@ import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Button, Logo, BasicInputContainer, Input } from '@components/General';
 import Tooltip from 'antd/lib/tooltip';
 import { BigNumber } from 'bignumber.js';
+import { markets, collaterals } from '../Menus';
 
 const SLabel = styled.h3`
     display: flex;
@@ -147,32 +147,6 @@ const BasicInterface1: React.FC = styled(({ className }) => {
         order?.wallet === 0
             ? selectedTracer?.balances?.tokenBalance.toNumber()
             : selectedTracer?.balances?.quote.toNumber();
-    const collaterals = (
-        <Menu
-            onClick={({ key }) =>
-                orderDispatch
-                    ? orderDispatch({ type: 'setCollateral', value: key.toString() })
-                    : console.error('Order dispatch undefined')
-            }
-        >
-            {Object.keys(marketPairs)?.map((option) => {
-                return <Menu.Item key={option}>{option}</Menu.Item>;
-            })}
-        </Menu>
-    );
-    const markets = (
-        <Menu
-            onClick={({ key }) =>
-                orderDispatch
-                    ? orderDispatch({ type: 'setMarket', value: key.toString() })
-                    : console.error('Order dispatch undefined')
-            }
-        >
-            {marketPairs[collateral]?.map((option) => {
-                return <Menu.Item key={option}>{option}</Menu.Item>;
-            })}
-        </Menu>
-    );
 
     //get market address -> using tracer factory helper function
     //pass in address and initialise Tracer -> get all open orders of the address
@@ -219,7 +193,11 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                             Max
                         </MaxButton>
 
-                        <SDropdown className="mt-1 pr-4" overlay={markets} trigger={['click']}>
+                        <SDropdown
+                            className="mt-1 pr-4"
+                            overlay={markets(orderDispatch, marketPairs[collateral] ?? [])}
+                            trigger={['click']}
+                        >
                             <DropDownContent>
                                 <Logo ticker="ETH" clear={true} />
                                 <DropDownText>{market}</DropDownText>
@@ -274,7 +252,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                         >
                             Max
                         </MaxButton>
-                        <SDropdown overlay={collaterals} trigger={['click']}>
+                        <SDropdown overlay={collaterals(orderDispatch, Object.keys(marketPairs))} trigger={['click']}>
                             <DropDownContent>
                                 <DropDownText>{collateral}</DropDownText>
                                 <SDownCaret />

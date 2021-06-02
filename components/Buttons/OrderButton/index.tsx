@@ -98,40 +98,11 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
         }
     };
 
-    // const message = () => {
-    //     if (orderType === 0) {
-    //         return `Using $${orderBase} to place 0 orders at an average price of ${price}`;
-    //     } else if (orderType === 1) {
-    //         return `Using $${orderBase} to place a ${OrderTypeMapping[orderType]} order at $${price}`;
-    //     }
-    // };
-
     if (order?.error === -1) {
         return (
-            <>
-                {/* <TracerModal
-                    loading={loading}
-                    show={showOrder}
-                    onClose={() => setShowOrder(false)}
-                    title={'Order'}
-                    subTitle={'Confirm your order'}
-                >
-                    <div className="p-6 flex-auto">
-                        <div className="border-b-2 border-gray-100">
-                            <h3 className="mt-5 text-left text-blue-100 text-lg">Orders</h3>
-                            <h3>{message()}</h3>
-                        </div>
-                        <div className="flex mt-5">
-                            <button className="button m-auto" onClick={handleOrder}>
-                                Confirm
-                            </button>
-                        </div>
-                    </div>
-                </TracerModal> */}
-                <div className={`w-full ${className}`} onClick={handleOrder}>
-                    {children}
-                </div>
-            </>
+            <div className={`w-full ${className}`} onClick={handleOrder}>
+                {children}
+            </div>
         );
     } else {
         return (

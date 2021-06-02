@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
 import { CaretDownFilled } from '@ant-design/icons';
 import { OrderContext } from '@context/index';
@@ -7,6 +6,7 @@ import { OrderState } from '@context/OrderContext';
 import styled from 'styled-components';
 import { useMarketPairs } from '@hooks/TracerHooks';
 import { Logo, BasicInputContainer, Input } from '@components/General';
+import { collaterals, markets, walletMenu } from '../Menus';
 
 const SLabel = styled.h3`
     display: flex;
@@ -79,32 +79,7 @@ const BasicInterface2: React.FC = styled(({ className }) => {
     const { order, orderDispatch } = useContext(OrderContext);
     const { orderBase, market, collateral } = order as OrderState;
     const marketPairs = useMarketPairs();
-    const collaterals = (
-        <Menu
-            onClick={({ key }) =>
-                orderDispatch
-                    ? orderDispatch({ type: 'setCollateral', value: key.toString() })
-                    : console.error('Order dispatch undefined')
-            }
-        >
-            {Object.keys(marketPairs)?.map((option) => {
-                return <Menu.Item key={option}>{option}</Menu.Item>;
-            })}
-        </Menu>
-    );
-    const markets = (
-        <Menu
-            onClick={({ key }) =>
-                orderDispatch
-                    ? orderDispatch({ type: 'setMarket', value: key.toString() })
-                    : console.error('Order dispatch undefined')
-            }
-        >
-            {marketPairs[collateral]?.map((option) => {
-                return <Menu.Item key={option}>{option}</Menu.Item>;
-            })}
-        </Menu>
-    );
+    const wallets = ['Wallet', 'Margin'];
 
     //get market address -> using tracer factory helper function
     //pass in address and initialise Tracer -> get all open orders of the address
@@ -114,7 +89,7 @@ const BasicInterface2: React.FC = styled(({ className }) => {
             <SSection>
                 <SLabel className="mb-2">Select Market</SLabel>
                 <BasicInputContainer className="pb-2">
-                    <SDropdown overlay={markets} trigger={['click']}>
+                    <SDropdown overlay={markets(orderDispatch, marketPairs[collateral] ?? [])} trigger={['click']}>
                         <DropDownContent>
                             <Logo ticker="ETH" clear={true} />
                             <DropDownText>{market}</DropDownText>
@@ -137,7 +112,11 @@ const BasicInterface2: React.FC = styled(({ className }) => {
                 </div>
 
                 <BasicInputContainer className="pb-2">
-                    <LDropdown overlay={collaterals} trigger={['click']} className="mr-3">
+                    <LDropdown
+                        overlay={collaterals(orderDispatch, Object.keys(marketPairs))}
+                        trigger={['click']}
+                        className="mr-3"
+                    >
                         <DropDownContent>
                             <DropDownText>{collateral}</DropDownText>
                             <SDownCaret />
@@ -163,9 +142,9 @@ const BasicInterface2: React.FC = styled(({ className }) => {
                     />
 
                     <RightContainer>
-                        <LDropdown overlay={markets} trigger={['click']}>
+                        <LDropdown overlay={walletMenu(orderDispatch, wallets)} trigger={['click']}>
                             <DropDownContent>
-                                <DropDownText>Wallet</DropDownText>
+                                <DropDownText>{wallets[order?.wallet ?? 0]}</DropDownText>
                                 <SDownCaret />
                             </DropDownContent>
                         </LDropdown>

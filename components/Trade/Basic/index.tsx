@@ -209,7 +209,7 @@ const Basic: React.FC = styled(({ className }) => {
                 </div>
 
                 {/** Display the variant basic interfaces */}
-                <Experiment name="Basic Interface">
+                <Experiment name="BasicInterface">
                     <Variant name="BasicInterface1">
                         <BasicInterface1 />
                     </Variant>
@@ -226,7 +226,7 @@ const Basic: React.FC = styled(({ className }) => {
                     fairPrice={fairPrice}
                     exposure={exposure ?? defaults.exposure}
                 />
-                <PlaceOrderButton className="mt-5">
+                <PlaceOrderButton className="mt-auto mb-2">
                     <SButton className="mx-auto">Place Trade</SButton>
                 </PlaceOrderButton>
                 <Error error={order?.error ?? -1} />
