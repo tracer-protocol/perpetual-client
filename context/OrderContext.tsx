@@ -158,7 +158,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         oppositeOrders: [],
         error: -1,
         wallet: 0,
-        lockAmountToPay: false, // default lock amount to buy 
+        lockAmountToPay: false, // default lock amount to buy
         advanced: false,
     };
 
@@ -182,7 +182,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, matchingEngine: action.value };
             case 'setOppositeOrders':
                 return { ...state, oppositeOrders: action.orders };
-            case 'setMarketPrice': 
+            case 'setMarketPrice':
                 return { ...state, marketPrice: action.value };
             case 'setAmountToBuy':
                 return { ...state, amountToBuy: action.value };
@@ -201,20 +201,24 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     const [order, orderDispatch] = useReducer(reducer, initialState);
 
-
     useMemo(() => {
         if (omeState?.orders) {
-            let oppositeOrders = (order.position ? omeState.orders.askOrders : omeState.orders.bidOrders).map((order) => ({
-                price: new BigNumber(order.price),
-                amount: new BigNumber(order.quantity)
-            }));
-            orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders })
-            if (order.orderType === 0) { // market order
-                if (order.advanced && !order.amountToBuy) return // dont set if advanced and no amount
-                orderDispatch({ type: 'setPrice', value: oppositeOrders[0]?.price?.toNumber() ?? NaN })
+            const oppositeOrders = (order.position ? omeState.orders.askOrders : omeState.orders.bidOrders).map(
+                (order) => ({
+                    price: new BigNumber(order.price),
+                    amount: new BigNumber(order.quantity),
+                }),
+            );
+            orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
+            if (order.orderType === 0) {
+                // market order
+                if (order.advanced && !order.amountToBuy) {
+                    return;
+                } // dont set if advanced and no amount
+                orderDispatch({ type: 'setPrice', value: oppositeOrders[0]?.price?.toNumber() ?? NaN });
             }
         }
-    }, [order.position, omeState?.orders])
+    }, [order.position, omeState?.orders]);
 
     useEffect(() => {
         if (order.orderType === 0) {
@@ -222,30 +226,35 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 // locked amount to buy input so increase amount to buy
                 orderDispatch({
                     type: 'setAmountToBuy',
-                    value: (order?.amountToPay * order.leverage * order.price),
+                    value: order?.amountToPay * order.leverage * order.price,
                 });
             } else {
                 // locked exposure decrease margin
-                orderDispatch({ type: 'setAmountToPay', value: order?.amountToBuy.toNumber() / order.price / order.leverage });
+                orderDispatch({
+                    type: 'setAmountToPay',
+                    value: order?.amountToBuy.toNumber() / order.price / order.leverage,
+                });
             }
         }
     }, [order.leverage]);
 
     useEffect(() => {
         if (order.orderType === 0) {
-            orderDispatch({ type: 'setPrice', value: order.oppositeOrders[0]?.price?.toNumber() ?? NaN })
-        } 
-    }, [order.orderType])
+            orderDispatch({ type: 'setPrice', value: order.oppositeOrders[0]?.price?.toNumber() ?? NaN });
+        }
+    }, [order.orderType]);
 
     useEffect(() => {
         // calculate the exposure based on the opposite orders
         if (order.orderType === 0 && order.oppositeOrders.length) {
             // convert orders
             const { exposure, tradePrice } = calcTradeExposure(
-                new BigNumber(order.amountToPay ?? 0), order.leverage, order.oppositeOrders
+                new BigNumber(order.amountToPay ?? 0),
+                order.leverage,
+                order.oppositeOrders,
             );
             if (!exposure.eq(0)) {
-                console.log("Settting amount to buy")
+                console.log('Settting amount to buy');
                 orderDispatch({ type: 'setAmountToBuy', value: exposure.toNumber() });
             }
             if (!tradePrice.eq(0)) {
@@ -257,7 +266,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     useEffect(() => {
         // calculate and set the exposure based on the orderPrice for limit
         if (order.orderType === 1) {
-            console.log("Setting amount to buy")
+            console.log('Setting amount to buy');
             orderDispatch({ type: 'setAmountToBuy', value: order.price * order.amountToPay });
         }
     }, [order.amountToPay, order.price, order.orderType]);
@@ -288,7 +297,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     useMemo(() => {
         if (omeState?.orders) {
-            let oppositeOrders = order.position ? omeState.orders.askOrders : omeState.orders.bidOrders
+            const oppositeOrders = order.position ? omeState.orders.askOrders : omeState.orders.bidOrders;
             const error = checkErrors(selectedTracer?.balances, oppositeOrders, account, order);
             if (error !== order.error) {
                 orderDispatch({ type: 'setError', value: error });

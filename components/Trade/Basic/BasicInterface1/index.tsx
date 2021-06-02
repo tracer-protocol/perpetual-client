@@ -111,32 +111,10 @@ const marginTip = (
 const Lock: React.FC<{
     isAmountToPay: boolean;
     lockAmountToPay: boolean;
-    orderDispatch: React.Dispatch<OrderAction> | undefined;
-}> = ({ isAmountToPay, lockAmountToPay, orderDispatch }) => {
-    const lock_ = (
-        <LockOutlined
-            className="mx-2"
-            color="#3da8f5"
-            // onClick={(e) => {
-            //     e.preventDefault();
-            //     orderDispatch
-            //         ? orderDispatch({ type: 'setLock', value: !margin })
-            //         : console.error('Order dispatch function not set');
-            // }}
-        />
-    );
-    const unlock_ = (
-        <UnlockOutlined
-            className="mx-2"
-            color="#3da8f5"
-            // onClick={(e) => {
-            //     e.preventDefault();
-            //     orderDispatch
-            //         ? orderDispatch({ type: 'setLock', value: margin })
-            //         : console.error('Order dispatch function not set');
-            // }}
-        />
-    );
+}> = ({ isAmountToPay, lockAmountToPay }) => {
+    // removed the onClick unlock functions for now
+    const lock_ = <LockOutlined className="mx-2" color="#3da8f5" />;
+    const unlock_ = <UnlockOutlined className="mx-2" color="#3da8f5" />;
     if (isAmountToPay) {
         // ie lock for margin input / amount to pay
         if (lockAmountToPay) {
@@ -201,11 +179,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                 <div className="flex">
                     <SLabel>
                         <span>Amount to pay</span>
-                        <Lock 
-                            orderDispatch={orderDispatch} 
-                            isAmountToPay={true} 
-                            lockAmountToPay={order?.lockAmountToPay ?? true} 
-                        />
+                        <Lock isAmountToPay={true} lockAmountToPay={order?.lockAmountToPay ?? true} />
                     </SLabel>
                     <WalletSelect orderDispatch={orderDispatch} wallet={order?.wallet ?? 0} />
                 </div>
@@ -263,17 +237,13 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                 <div className="flex">
                     <SLabel>
                         <span>Amount to buy</span>
-                        <Lock 
-                            orderDispatch={orderDispatch} 
-                            isAmountToPay={false} 
-                            lockAmountToPay={order?.lockAmountToPay ?? false} 
-                        />
+                        <Lock isAmountToPay={false} lockAmountToPay={order?.lockAmountToPay ?? false} />
                     </SLabel>
                     <MaxButton
                         onClick={(e: any) => {
                             e.preventDefault();
                             if (orderDispatch) {
-                                orderDispatch({ type: 'setAmountToPay', value: (order?.price ?? 0) * (balance ?? 0) })
+                                orderDispatch({ type: 'setAmountToPay', value: (order?.price ?? 0) * (balance ?? 0) });
                             } else {
                                 console.error('Order dispatch not set');
                             }
@@ -328,7 +298,6 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                     </RightContainer>
                 </BasicInputContainer>
             </SSection>
-
         </div>
     );
 })`
