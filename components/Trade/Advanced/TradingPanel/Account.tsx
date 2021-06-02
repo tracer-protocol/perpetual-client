@@ -158,7 +158,7 @@ const Popup: React.FC<PProps> = styled(
             deposit = () => console.error('Deposit is not defined'),
             withdraw = () => console.error('Withdraw is not defined'),
         } = useContext(TracerContext);
-        const [amount, setAmount] = useState(0);
+        const [amount, setAmount] = useState(NaN);
         const available = isDeposit
             ? balances.tokenBalance
             : calcTotalMargin(balances.quote, balances.base, price).minus(
