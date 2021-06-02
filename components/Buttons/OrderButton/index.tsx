@@ -5,6 +5,7 @@ import { OrderContext, TracerContext, TransactionContext } from 'context';
 import { Children, UserBalance } from 'types';
 import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
+import { OMEContext } from '@context/OMEContext';
 
 const TradeButton = styled.div`
     letter-spacing: -0.32px;
@@ -56,10 +57,11 @@ type POBProps = {
 
 export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
+    const { omeDispatch = () => console.error("OME dispatch is undefined") } = useContext(OMEContext);
     const { order } = useContext(OrderContext);
     const { handleTransaction } = useContext(TransactionContext);
     const { addToast } = useToasts();
-
+    
     const handleOrder = async (_e: any) => {
         if (order?.error === -1) {
             if (placeOrder) {
@@ -68,6 +70,10 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
                         statusMessages: {
                             waiting: 'Please sign the transaction through your web3 provider',
                         },
+                        callback: () => {
+                            omeDispatch({ type: 'refetchOrders' })
+                            omeDispatch({ type: 'refetchUserOrders' })
+                        }
                     });
                 } else {
                     console.error('Error placing order: Handle transaction function is not defined');

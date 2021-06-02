@@ -131,5 +131,3 @@ export const cancelOrder: (market: string, orderId: string) => Promise<Result> =
             } as Result;
         });
 };
-
-export * from './hooks';
