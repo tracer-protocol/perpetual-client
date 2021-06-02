@@ -209,6 +209,7 @@ const DropdownLogo = styled(({ className }) => {
     .dropdown-menu ul .nav-item img {
         margin-left: 30px;
     }
+
     &.show > .dropdown-menu {
         opacity: 1;
         height: 400px;
@@ -344,6 +345,7 @@ const NavBar: React.FC = styled(({ className }) => {
         width: 100px;
         text-align: center;
         transition: 0.2s;
+
         &:hover {
             cursor: pointer;
         }

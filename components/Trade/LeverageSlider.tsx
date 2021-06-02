@@ -2,6 +2,15 @@ import React, { useContext, useEffect } from 'react';
 import Slider from 'antd/lib/slider';
 import { OrderContext } from 'context';
 import styled from 'styled-components';
+import Tooltip from 'antd/lib/tooltip';
+
+const LeverageTip = (
+    <p>
+        <strong>Increase Exposure</strong> allows you to finance your investment through a combination of borrowed funds
+        and margin. Increasing leverage will increase your exposure to ETH, at a risk.{' '}
+        <a className="underline">Learn more</a>.
+    </p>
+);
 
 interface DSProps {
     leverage: number;
@@ -115,7 +124,9 @@ interface LSProps {
 const LeverageSlider: React.FC<LSProps> = styled(({ className, leverage }: LSProps) => {
     return (
         <div className={className}>
-            <h3>Increase Exposure</h3>
+            <h3>
+                <Tooltip title={LeverageTip}>Increase Exposure</Tooltip>
+            </h3>
             <div className="w-full m-auto py-5 px-5">
                 <DefaultSlider leverage={leverage ?? 1} />
             </div>

@@ -21,7 +21,8 @@ export const Errors: Record<number, Error> = {
     },
     2: {
         name: 'No Margin Balance',
-        message: 'No deposited balance in TCR market',
+        message:
+            'You have nothing in your margin account. Use your wallet account or deposit to your margin account by switching to',
     },
     3: {
         name: 'No Orders',

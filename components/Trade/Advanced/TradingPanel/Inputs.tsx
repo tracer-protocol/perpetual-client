@@ -14,7 +14,6 @@ interface ISProps {
 export const Inputs: React.FC<ISProps> = ({ selectedTracer, amount, price }: ISProps) => {
     const { orderDispatch } = useContext(OrderContext);
     const tracerId = selectedTracer?.marketId ?? '';
-    console.log(amount, price);
     const balances = selectedTracer?.balances ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const maxMargin = calcWithdrawable(
