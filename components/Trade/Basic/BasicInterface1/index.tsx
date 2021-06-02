@@ -136,7 +136,7 @@ const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wall
     }
 `;
 
-const BasicShort: React.FC = styled(({ className }) => {
+const BasicInterface1: React.FC = styled(({ className }) => {
     const { order, orderDispatch } = useContext(OrderContext);
     const { selectedTracer } = useContext(TracerContext);
     const { orderBase, market, collateral, exposure } = order as OrderState;
@@ -288,4 +288,4 @@ const BasicShort: React.FC = styled(({ className }) => {
     flex-direction: column;
 `;
 
-export default BasicShort;
+export default BasicInterface1;

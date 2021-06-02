@@ -75,7 +75,7 @@ const RightContainer = styled.div`
     margin-top: 5px;
 `;
 
-const BasicLong: React.FC = styled(({ className }) => {
+const BasicInterface2: React.FC = styled(({ className }) => {
     const { order, orderDispatch } = useContext(OrderContext);
     const { orderBase, market, collateral } = order as OrderState;
     const marketPairs = useMarketPairs();
@@ -179,4 +179,4 @@ const BasicLong: React.FC = styled(({ className }) => {
     flex-direction: column;
 `;
 
-export default BasicLong;
+export default BasicInterface2;

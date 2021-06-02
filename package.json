@@ -8,6 +8,7 @@
         "@apollo/client": "^3.3.7",
         "@ensdomains/ensjs": "^2.0.0",
         "@ensdomains/react-ens-address": "^0.0.27",
+        "@marvelapp/react-ab-test": "^3.0.1",
         "@portis/web3": "^4.0.0",
         "@tracer-protocol/contracts": "^0.2.4",
         "@tracer-protocol/tracer-utils": "^0.2.4",
