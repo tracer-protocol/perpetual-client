@@ -179,7 +179,7 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
     const {
         omeState,
         omeDispatch = () => {
-            console.error('Ome dispatch function not set');
+            console.error('OME dispatch is underfined');
         },
     } = useContext(OMEContext);
 
