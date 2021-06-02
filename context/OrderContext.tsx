@@ -146,7 +146,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         orderBase: 0, // required margin / amount of margin being used
         leverage: 0,
         position: 0, // long or short, 0 is short, 1 is long
-        price: 0, // price of the market asset in relation to the collateral asset
+        price: NaN, // price of the market asset in relation to the collateral asset
         matchingEngine: 0, // for basic this will always be 0 (OME)
         orderType: 0, // for basic this will always be 0 (market order), 1 is limit and 2 is spot
         openOrders: {
@@ -243,7 +243,9 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         if (order.orderType === 0) {
             const { exposure, tradePrice } = calcTradeExposure(order.orderBase, order.leverage, oppositeOrders);
             orderDispatch({ type: 'setExposure', value: exposure });
-            orderDispatch({ type: 'setPrice', value: tradePrice.toNumber() });
+            if (!!tradePrice.toNumber()) {
+                orderDispatch({ type: 'setPrice', value: tradePrice.toNumber() });
+            }
         }
     }, [order.orderBase, order.leverage, oppositeOrders]);
 

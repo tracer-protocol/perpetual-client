@@ -69,13 +69,13 @@ export const timeAgo: (current: number, previous: number) => string = (current, 
 export const isVerySmall: (num: BigNumber, currency: boolean) => string = (num, currency) => {
     const isSmall = num.lt(0.000001); // some arbitrarily small number
     if (currency) {
-        if (isSmall) {
+        if (isSmall && num.eq(0)) {
             return `≈ ${toApproxCurrency(0)}`;
         } else {
             return toApproxCurrency(num);
         }
     } else {
-        if (isSmall) {
+        if (isSmall && !num.eq(0)) {
             return `≈ ${num.toFixed(4)}`;
         } else {
             return `${num.toFixed(4)}`;
