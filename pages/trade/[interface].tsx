@@ -5,6 +5,7 @@ import { Basic, Advanced } from '@components/Trade';
 import { OrderStore, SelectedTracerStore } from 'context';
 import { InsuranceStore } from '@context/InsuranceContext';
 import styled from 'styled-components';
+import { OMEStore } from '@context/OMEContext';
 
 const Trade: React.FC = styled(({ className }) => {
     const router = useRouter();
@@ -14,9 +15,11 @@ const Trade: React.FC = styled(({ className }) => {
         <div className={className}>
             <NavBar />
             <SelectedTracerStore tracer={query.tracer as string}>
-                <InsuranceStore>
-                    <OrderStore>{advanced ? <Advanced /> : <Basic />}</OrderStore>
-                </InsuranceStore>
+                <OMEStore>
+                    <InsuranceStore>
+                        <OrderStore>{advanced ? <Advanced /> : <Basic />}</OrderStore>
+                    </InsuranceStore>
+                </OMEStore>
             </SelectedTracerStore>
         </div>
     );

@@ -2,7 +2,6 @@ import React, { useState, useContext } from 'react';
 import SubNav from '@components/Nav/SubNav';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
-import { useOpenOrders } from '@libs/Ome';
 import { Web3Context } from '@context/Web3Context';
 import { Table, TRow, TData } from '@components/General/Table';
 import { calcStatus, timeAgo, toApproxCurrency } from '@libs/utils';
@@ -21,6 +20,7 @@ import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
 import { TransactionContext } from '@context/TransactionContext';
 import { cancelOrder } from '@libs/Ome';
+import { OMEContext } from '@context/OMEContext';
 
 interface IProps {
     balance: UserBalance;
@@ -89,7 +89,7 @@ const OpenOrders: React.FC<{
     userOrders: OMEOrder[];
     baseTicker: string;
     refetch: () => void;
-}> = ({ userOrders, baseTicker, refetch }) => {
+}> = React.memo(({ userOrders, baseTicker, refetch }) => {
     const { handleTransaction } = useContext(TransactionContext);
     const _cancelOrder = (market: string, orderId: string) => {
         console.info(`Attempting to cancel order: ${orderId} on market: ${market}`);
@@ -134,11 +134,12 @@ const OpenOrders: React.FC<{
             </tbody>
         </STable>
     );
-};
+});
+OpenOrders.displayName = 'OpenOrders';
 
 const Fills: React.FC<{
     filledOrders: FilledOrder[];
-}> = ({ filledOrders }) => {
+}> = React.memo(({ filledOrders }) => {
     return (
         <STable headings={['Time', 'Side', 'Amount', 'Price', 'Total/Fee']}>
             <tbody>
@@ -160,7 +161,8 @@ const Fills: React.FC<{
             </tbody>
         </STable>
     );
-};
+});
+Fills.displayName = 'Fills';
 
 type TSProps = {
     selectedTracer: Tracer | undefined;
@@ -174,7 +176,13 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
     const balances = selectedTracer?.balances ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const { filledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');
-    const { userOrders, refetch: refetchUserOrders } = useOpenOrders(selectedTracer?.address ?? '', account ?? '');
+    const {
+        omeState,
+        omeDispatch = () => {
+            console.error('OME dispatch is underfined');
+        },
+    } = useContext(OMEContext);
+
     const baseTicker = 'BTC';
     const content = () => {
         switch (tab) {
@@ -188,7 +196,13 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
                     />
                 );
             case 1:
-                return <OpenOrders userOrders={userOrders} baseTicker={baseTicker} refetch={refetchUserOrders} />;
+                return (
+                    <OpenOrders
+                        userOrders={omeState?.userOrders ?? []}
+                        baseTicker={baseTicker}
+                        refetch={() => omeDispatch({ type: 'refetchUserOrders' })}
+                    />
+                );
             case 2:
                 return <Fills filledOrders={filledOrders} />;
             default:
