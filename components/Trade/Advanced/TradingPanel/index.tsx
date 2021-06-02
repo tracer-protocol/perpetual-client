@@ -92,7 +92,7 @@ export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, classNa
                     <PositionSelect selected={order?.position ?? 0} />
                 </div>
 
-                {/* Quanity and Price Inputs */}
+                {/* Quantity and Price Inputs */}
                 <InputSelects amount={order?.orderBase} price={order?.price} selectedTracer={selectedTracer} />
 
                 {/* Dont display these if it is a limit order*/}

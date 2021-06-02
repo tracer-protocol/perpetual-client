@@ -9,7 +9,6 @@ import { OMEContext } from '@context/OMEContext';
 
 const TradeButton = styled.div`
     letter-spacing: -0.32px;
-    color: #ffffff;
     width: 100%;
     font-size: 16px;
     text-align: center;
@@ -19,15 +18,18 @@ const TradeButton = styled.div`
     background: #03065e;
     color: #3da8f5;
     transition: 0.3s;
+
     &:hover {
         background: #3da8f5;
         color: #fff;
         cursor: pointer;
     }
+
     .button-disabled &:hover {
         cursor: not-allowed;
     }
 `;
+
 export const AdvancedOrderButton: React.FC<{
     balances: UserBalance | undefined;
 }> = ({ balances }: { balances: UserBalance | undefined }) => {

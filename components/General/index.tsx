@@ -53,7 +53,7 @@ export const Button = styled.div`
     }
 
     &.disabled {
-        opacity: 0.8;
+        opacity: 1;
     }
 
     &.disabled:hover {

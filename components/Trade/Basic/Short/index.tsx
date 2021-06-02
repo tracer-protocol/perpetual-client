@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
 import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
-import { CaretDownFilled, LockOutlined, UnlockOutlined } from '@ant-design/icons';
-import { OrderContext, TracerContext } from 'context';
+import { CaretDownFilled } from '@ant-design/icons';
+import { OrderContext, TracerContext } from '@context/index';
 import { OrderAction, OrderState } from '@context/OrderContext';
 import styled from 'styled-components';
-import { useMarketPairs } from 'hooks/TracerHooks';
+import { useMarketPairs } from '@hooks/TracerHooks';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Button, Logo, BasicInputContainer, Input } from '@components/General';
@@ -18,6 +18,7 @@ const SLabel = styled.h3`
     letter-spacing: -0.32px;
     color: #3da8f5;
     margin-right: auto;
+
     span {
         margin: auto;
     }
@@ -35,8 +36,6 @@ const MaxButton: any = styled(Button)`
     padding: 0;
     height: 30px;
     line-height: 28px;
-    margin-left: 5px;
-    margin-right: 5px;
 `;
 
 const Balance = styled.p`
@@ -44,8 +43,7 @@ const Balance = styled.p`
     letter-spacing: -0.32px;
     color: #3da8f5;
     text-transform: capitalize;
-    margin: auto 10px;
-    margin-top: 0;
+    margin: 0 10px auto 10px;
 `;
 
 const SDropdown = styled(Dropdown)`
@@ -72,8 +70,7 @@ const SDownCaret = styled(CaretDownFilled)`
 `;
 
 const DropDownText = styled.div`
-    margin: auto;
-    margin-right: 0;
+    margin: auto 0 auto auto;
     font-size: 16px;
 `;
 
@@ -102,6 +99,7 @@ const walletTip = (
         <strong>Wallet</strong> This trade will use funds from your connected Web3 wallet.
     </p>
 );
+
 const marginTip = (
     <p>
         <strong>Margin</strong> This trade will use funds from your margin account. To deposit funds to your margin
@@ -109,51 +107,6 @@ const marginTip = (
     </p>
 );
 
-const Lock: React.FC<{
-    margin: boolean;
-    lock: boolean;
-    orderDispatch: React.Dispatch<OrderAction> | undefined;
-}> = ({ margin, lock, orderDispatch }) => {
-    const lock_ = (
-        <LockOutlined
-            className="mx-2"
-            color="#3da8f5"
-            onClick={(e) => {
-                e.preventDefault();
-                orderDispatch
-                    ? orderDispatch({ type: 'setLock', value: !margin })
-                    : console.error('Order dispatch function not set');
-            }}
-        />
-    );
-    const unlock_ = (
-        <UnlockOutlined
-            className="mx-2"
-            color="#3da8f5"
-            onClick={(e) => {
-                e.preventDefault();
-                orderDispatch
-                    ? orderDispatch({ type: 'setLock', value: margin })
-                    : console.error('Order dispatch function not set');
-            }}
-        />
-    );
-    if (margin) {
-        // ie lock for margin input
-        if (lock) {
-            return lock_;
-        } else {
-            return unlock_;
-        }
-    } else {
-        // this is just opposite logic
-        if (!lock) {
-            return lock_;
-        } else {
-            return unlock_;
-        }
-    }
-};
 const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wallet }: WSProps) => {
     return (
         <div className={className}>
@@ -183,11 +136,7 @@ const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wall
     }
 `;
 
-type TSProps = {
-    className?: string;
-};
-
-const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
+const BasicShort: React.FC = styled(({ className }) => {
     const { order, orderDispatch } = useContext(OrderContext);
     const { selectedTracer } = useContext(TracerContext);
     const { orderBase, market, collateral, exposure } = order as OrderState;
@@ -229,25 +178,10 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
         <div className={className}>
             {/* MARGIN DEPOSIT */}
             <SSection>
-                <div className="flex">
-                    <SLabel>
-                        <span>Amount to buy</span>
-                        <Lock orderDispatch={orderDispatch} margin={false} lock={order?.lock ?? false} />
-                    </SLabel>
-                    <MaxButton
-                        onClick={(e: any) => {
-                            e.preventDefault();
-                            if (orderDispatch) {
-                                orderDispatch({ type: 'setLock', value: false });
-                                orderDispatch({ type: 'setExposure', value: new BigNumber(e.target.value) });
-                            } else {
-                                console.error('Order dispatch not set');
-                            }
-                        }}
-                    >
-                        Max
-                    </MaxButton>
-                </div>
+                <SLabel>
+                    <span>Amount to buy</span>
+                </SLabel>
+
                 <BasicInputContainer>
                     <Input
                         id="exposure"
@@ -266,13 +200,31 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                         }}
                         value={exposure.gt(0) ? exposure.toString(10) : ''}
                     />
-                    <SDropdown className="mt-1 pr-4" overlay={markets} trigger={['click']}>
-                        <DropDownContent>
-                            <Logo ticker="ETH" clear={true} />
-                            <DropDownText>{market}</DropDownText>
-                            <SDownCaret />
-                        </DropDownContent>
-                    </SDropdown>
+
+                    <div className="flex">
+                        <MaxButton
+                            className="mr-2 my-auto"
+                            onClick={(e: any) => {
+                                e.preventDefault();
+                                if (orderDispatch) {
+                                    orderDispatch({ type: 'setLock', value: false });
+                                    orderDispatch({ type: 'setExposure', value: new BigNumber(e.target.value) });
+                                } else {
+                                    console.error('Order dispatch not set');
+                                }
+                            }}
+                        >
+                            Max
+                        </MaxButton>
+
+                        <SDropdown className="mt-1 pr-4" overlay={markets} trigger={['click']}>
+                            <DropDownContent>
+                                <Logo ticker="ETH" clear={true} />
+                                <DropDownText>{market}</DropDownText>
+                                <SDownCaret />
+                            </DropDownContent>
+                        </SDropdown>
+                    </div>
                 </BasicInputContainer>
             </SSection>
 
@@ -281,10 +233,10 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                 <div className="flex">
                     <SLabel>
                         <span>Amount to pay</span>
-                        <Lock orderDispatch={orderDispatch} margin={true} lock={order?.lock ?? false} />
                     </SLabel>
                     <WalletSelect orderDispatch={orderDispatch} wallet={order?.wallet ?? 0} />
                 </div>
+
                 <BasicInputContainer>
                     <Input
                         id="margin"
@@ -303,9 +255,11 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
                         }}
                         value={orderBase > 0 ? orderBase : ''}
                     />
-                    <RightContainer>
-                        <Balance>Balance: {balance ?? '-'}</Balance>
+
+                    <RightContainer className="mt-4">
+                        <Balance>Available: {balance ?? ''}</Balance>
                         <MaxButton
+                            className="mr-2"
                             onClick={(e: any) => {
                                 e.preventDefault();
                                 if (orderDispatch) {
@@ -334,4 +288,4 @@ const TracerSelect: React.FC<TSProps> = styled(({ className }: TSProps) => {
     flex-direction: column;
 `;
 
-export default TracerSelect;
+export default BasicShort;
