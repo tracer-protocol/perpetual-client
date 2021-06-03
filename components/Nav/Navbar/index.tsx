@@ -62,7 +62,7 @@ const DropdownLogo = styled(({ className }) => {
     };
     return (
         <div id="menu" className={`${className} ${show ? 'show' : ''}`} onClick={handleClick}>
-            <img alt="Tracer Logo" className="logo" src="/img/logos/tracer/tracer_perps.svg" />
+            <img alt="Tracer Logo" className="logo hidden lg:block" src="/img/logos/tracer/tracer_perps.svg" />
             <img alt="down-arrow" className="down-arrow" src="/img/general/triangle_down.svg" />
             <div className="divide" />
             <div className={`dropdown-menu`}>
@@ -209,6 +209,7 @@ const DropdownLogo = styled(({ className }) => {
     .dropdown-menu ul .nav-item img {
         margin-left: 30px;
     }
+
     &.show > .dropdown-menu {
         opacity: 1;
         height: 400px;
@@ -344,6 +345,7 @@ const NavBar: React.FC = styled(({ className }) => {
         width: 100px;
         text-align: center;
         transition: 0.2s;
+
         &:hover {
             cursor: pointer;
         }

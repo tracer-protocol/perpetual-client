@@ -26,17 +26,10 @@ type Tracers = {
 
 export const useAllTracers: () => Tracers = () => {
     const ref = useRef([]);
-    const { addToast } = useToasts();
     const { data, error, loading, refetch } = useQuery(ALL_TRACERS, {
-        onError: ({ graphQLErrors, networkError }) => {
+        onError: ({ graphQLErrors }) => {
             if (graphQLErrors?.length) {
                 graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
-            }
-            if (networkError) {
-                addToast(`Failed to fetch tracer data: ${networkError}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
             }
         },
     });
@@ -78,13 +71,10 @@ export const useMostRecentMatched: (tracer: string) => {
         errorPolicy: 'all',
         onError: ({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
-                addToast(`Failed to fetch account trades. ${error}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
+                graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
             }
             if (networkError) {
-                addToast(`Failed to connect to the graph. ${networkError}`, {
+                addToast(`Failed to fetch account trades due to network error: ${networkError}`, {
                     appearance: 'error',
                     autoDismiss: true,
                 });
@@ -135,10 +125,7 @@ export const useCandles: () => {
         errorPolicy: 'all',
         onError: ({ graphQLErrors, networkError }) => {
             if (graphQLErrors) {
-                addToast(`Failed to fetch candles trades. ${error}`, {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
+                graphQLErrors.map((err) => console.error(`Failed to fetch candle trades: ${err}`));
             }
             if (networkError) {
                 addToast(`Failed to connect to the graph. ${networkError}`, {

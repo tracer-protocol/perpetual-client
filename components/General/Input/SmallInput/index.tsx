@@ -70,7 +70,7 @@ const SmallInput: React.FC<SIProps> = styled(({ title, amount, onChange, unit, s
                 placeholder="0.0"
                 min="0"
                 onChange={onChange}
-                value={!!amount ? amount : ''}
+                value={!Number.isNaN(amount) ? amount : ''}
             />
             <a className="unit">{unit}</a>
         </InputContainer>

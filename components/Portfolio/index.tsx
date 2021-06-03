@@ -1,11 +1,6 @@
-import React, { useState } from 'react';
-import NavBar from '@components/Nav/Navbar';
 import styled from 'styled-components';
-import SideNav from '@components/Nav/SideNav';
-import TradingPortfolio from '@components/Portfolio/Trading';
-import InsurancePortfolio from '@components/Portfolio/Insurance';
 
-const LeftPanel = styled.div`
+export const LeftPanel = styled.div`
     width: 25%;
     margin-left: 5vw;
     display: flex;
@@ -14,9 +9,13 @@ const LeftPanel = styled.div`
     border-top: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
     border-left: 1px solid #0c3586;
+
+    @media only screen and (max-width: 1200px) {
+        width: auto;
+    }
 `;
 
-const RightPanel = styled.div`
+export const RightPanel = styled.div`
     width: 75%;
     margin-right: 5vw;
     display: flex;
@@ -24,9 +23,21 @@ const RightPanel = styled.div`
     min-height: 90vh;
     border-top: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
+
+    @media only screen and (max-width: 1200px) {
+        width: auto;
+    }
 `;
 
-const Button = styled.div`
+export const NoLeverageBanner = styled.div`
+    width: 200px;
+    padding: 10px;
+    border-radius: 7px;
+    color: #3da8f5;
+    background-color: #002886;
+`;
+
+export const Button = styled.div`
     transition: 0.5s;
     color: #3da8f5;
     font-size: 1rem;
@@ -72,13 +83,14 @@ Button.defaultProps = {
     },
 };
 
-const TableHead = styled.th`
+export const TableHead = styled.th`
     max-width: ${(props: any) => props.theme.maxWidth as string};
     text-align: left;
     color: #3da8f5;
     padding: 1rem;
     font-weight: normal;
     border-right: 1px solid #002886;
+    border-bottom: 1px solid #002886;
 `;
 
 TableHead.defaultProps = {
@@ -87,12 +99,13 @@ TableHead.defaultProps = {
     },
 };
 
-const TableHeadEnd = styled.th`
+export const TableHeadEnd = styled.th`
     width: ${(props: any) => props.theme.width as string};
     text-align: left;
     color: #3da8f5;
     padding: 1rem;
     font-weight: normal;
+    border-bottom: 1px solid #002886;
 `;
 
 TableHeadEnd.defaultProps = {
@@ -101,7 +114,7 @@ TableHeadEnd.defaultProps = {
     },
 };
 
-const TableRow = styled.tr`
+export const TableRow = styled.tr`
     display: ${(props: any) => props.theme.display as string};
     color: ${(props: any) => props.theme.color as string};
     opacity: ${(props: any) => props.theme.opacity as string};
@@ -123,34 +136,28 @@ TableRow.defaultProps = {
     },
 };
 
-export default styled(({ className }) => {
-    const [tab, setTab] = useState(0);
-    const tabs = ['Trading Portfolio', 'Insurance Portfolio'];
-    const content = () => {
-        switch (tab) {
-            case 0:
-                return <TradingPortfolio />;
-            case 1:
-                return <InsurancePortfolio />;
-            default:
-                return;
-        }
-    };
-    return (
-        <div className={className}>
-            <NavBar />
-            <div className="flex h-full">
-                <LeftPanel>
-                    <SideNav tabs={tabs} setTab={setTab} selected={tab} />
-                </LeftPanel>
-                <RightPanel>{content()}</RightPanel>
-            </div>
-        </div>
-    );
-})`
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    background-color: #03065e;
-    color: #fff;
+export const TableCell = styled.td`
+    color: ${(props: any) => props.color as string};
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-right: 1px solid #002886;
+    border-bottom: 1px solid #002886;
 `;
+
+export const SecondaryCell = styled.div`
+    color: #005ea4;
+`;
+
+export const StatusIndicator = styled.div`
+    color: ${(props: any) => props.color as string};
+`;
+
+export function getStatusColour(status: string): string {
+    let colour = '#fff';
+    if (status === 'Eligible for Liquidation') {
+        colour = '#F15025';
+    } else if (status === 'Approaching Liquidation') {
+        colour = '#F4AB57';
+    }
+    return colour;
+}

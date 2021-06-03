@@ -11,9 +11,9 @@ import SubNav from '@components/Nav/SubNav';
 import { Box } from '@components/General';
 import styled from 'styled-components';
 import RecentTrades from './RightPanel/RecentTrades';
-import { useOrders } from '@libs/Ome';
 import { useCandles, useMostRecentMatched } from '@libs/Graph/hooks/Tracer';
 import { CandleData } from 'types/TracerTypes';
+import { OMEContext } from '@context/OMEContext';
 
 const GraphWrap = styled.div`
     height: 500px;
@@ -50,7 +50,7 @@ const OrderBookContainer = styled.div`
 `;
 
 const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
-    const orders = useOrders(selectedTracer?.address ?? '');
+    const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
 
     return (
@@ -64,10 +64,13 @@ const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selecte
                     <InsuranceInfo />
                     <OrderBookContainer>
                         <h3>Order Book</h3>
-                        {orders?.askOrders?.length || orders?.bidOrders?.length ? (
+                        {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
                             <>
                                 <Timer />
-                                <OrderBook askOrders={orders.askOrders} bidOrders={orders.bidOrders} />
+                                <OrderBook
+                                    askOrders={omeState.orders.askOrders}
+                                    bidOrders={omeState.orders.bidOrders}
+                                />
                             </>
                         ) : (
                             <p>No open orders</p>
@@ -117,7 +120,12 @@ const Advanced: React.FC = () => {
     const { orderDispatch } = useContext(OrderContext);
 
     useEffect(() => {
-        orderDispatch ? orderDispatch({ type: 'setLock', value: true }) : console.error('Order dispatch undefined');
+        if (orderDispatch) {
+            orderDispatch({ type: 'setLock', value: true });
+            orderDispatch({ type: 'setAdvanced', value: true });
+        } else {
+            console.error('Order dispatch undefined');
+        }
     }, []);
 
     return (

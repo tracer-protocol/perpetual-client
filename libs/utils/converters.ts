@@ -23,6 +23,10 @@ export const round: (value: number) => number = (value) => {
 
 export const toApproxCurrency: (num_: BigNumber | number) => string = (num_) => {
     let num = num_;
+    if (!num_) {
+        // reject if num is falsey
+        return '$0.00';
+    }
     if (typeof num !== 'number') {
         num = (num_ as BigNumber).toNumber();
     }
@@ -59,5 +63,22 @@ export const timeAgo: (current: number, previous: number) => string = (current, 
         return Math.round(elapsed / msPerMonth) + 'm';
     } else {
         return Math.round(elapsed / msPerYear) + 'y';
+    }
+};
+
+export const isVerySmall: (num: BigNumber, currency: boolean) => string = (num, currency) => {
+    const isSmall = num.lt(0.000001); // some arbitrarily small number
+    if (currency) {
+        if (isSmall && num.eq(0)) {
+            return `≈ ${toApproxCurrency(0)}`;
+        } else {
+            return toApproxCurrency(num);
+        }
+    } else {
+        if (isSmall && !num.eq(0)) {
+            return `≈ ${num.toFixed(4)}`;
+        } else {
+            return `${num.toFixed(4)}`;
+        }
     }
 };

@@ -5,9 +5,9 @@ import { Children, Result } from 'types';
 type HandleTransactionType =
     | ((
           callMethod: (...args: any) => Result | Promise<Result>,
-    params: any[], // eslint-disable-line 
+          params: any[], // eslint-disable-line
           options?: {
-        callback?: (res: Result) => any, // eslint-disable-line 
+              callback?: (res: Result) => any; // eslint-disable-line
               statusMessages?: {
                   waiting?: string;
                   error?: string;

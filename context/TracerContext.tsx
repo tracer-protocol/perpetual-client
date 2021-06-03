@@ -6,15 +6,15 @@ import { createOrder } from '@libs/Ome';
 import { Web3Context } from './Web3Context';
 import { OrderState } from './OrderContext';
 import Web3 from 'web3';
-import { orderToOMEOrder, OrderData, signOrdersV3 } from '@tracer-protocol/tracer-utils';
+import { orderToOMEOrder, OrderData, signOrdersV4 } from '@tracer-protocol/tracer-utils';
 import Tracer from '@libs/Tracer';
 import { TransactionContext } from './TransactionContext';
 import { defaults } from '@libs/Tracer';
 
 interface ContextProps {
     tracerId: string | undefined;
-    deposit: (amount: number) => void;
-    withdraw: (amount: number) => void;
+    deposit: (amount: number, _callback?: () => void) => void;
+    withdraw: (amount: number, _callback?: () => void) => void;
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
     balance: UserBalance;
@@ -33,7 +33,7 @@ type StoreProps = {
 } & Children;
 
 export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
-    const { account, web3, config } = useContext(Web3Context);
+    const { account, web3, config, networkId } = useContext(Web3Context);
     const { tracers } = useContext(FactoryContext);
     const { handleTransaction } = useContext(TransactionContext);
 
@@ -84,40 +84,38 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     };
 
     const placeOrder: (order: OrderState) => Promise<Result> = async (order) => {
-        const { orderBase, price, position } = order;
-        // all orders are OME orders
-        const amount = Web3.utils.toWei(orderBase.toString()) ?? 0;
-        const expiration = new Date().getTime() + 604800;
+        const { amountToPay, price, position } = order;
+        const amount = Web3.utils.toWei(amountToPay.toString()) ?? 0;
+        const now = Math.floor(Date.now() / 1000); // timestamp in seconds
+        const fourDays = 345600; // four days in seconds
         const makes: OrderData[] = [
             {
                 amount: amount,
                 price: Web3.utils.toWei(price.toString()),
                 side: position ? 1 : 0,
                 maker: account ?? '',
-                expires: expiration,
+                expires: now + fourDays,
                 market: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer.address) : '',
-                created: Date.now(),
+                created: now,
             },
         ];
         try {
-            const signedMakes = await signOrdersV3(web3, makes, config?.contracts.trader.address as string);
+            const signedMakes = await signOrdersV4(web3, makes, config?.contracts.trader.address as string, networkId);
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
-            if (res.status !== 200) {
-                return { status: 'error', message: `Failed to place order: Status: ${res.status}-${res.statusText}` };
-            }
-            return { status: 'success', message: 'Successfully placed order' } as Result;
+            return res;
         } catch (err) {
-            return { status: 'error', message: `Faiiled to place order: ${order}` } as Result;
+            return { status: 'error', message: `Faiiled to place order ${err}` } as Result;
         }
     };
 
-    const submit = async (deposit: boolean, amount: number) => {
+    const submit = async (deposit: boolean, amount: number, _callback?: () => any) => {
         const func = deposit ? selectedTracer.deposit : selectedTracer.withdraw;
         const callback = async (res: Result) => {
             if (res.status !== 'error') {
                 const balance = await selectedTracer?.updateUserBalance(account);
                 tracerDispatch({ type: 'setUserBalance', value: balance });
+                _callback ? _callback() : null;
             }
         };
         handleTransaction
@@ -146,8 +144,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         <TracerContext.Provider
             value={{
                 tracerId,
-                deposit: (amount: number) => submit(true, amount),
-                withdraw: (amount: number) => submit(false, amount),
+                deposit: (amount, _callback) => submit(true, amount, _callback),
+                withdraw: (amount, _callback) => submit(false, amount, _callback),
                 setTracerId: (tracerId: string) =>
                     tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] }),
                 selectedTracer,
