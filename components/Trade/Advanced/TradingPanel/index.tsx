@@ -80,13 +80,6 @@ const Popup: React.FC<PProps> = styled(({ className, close }: PProps) => {
 
     return (
         <div className={className}>
-            <div className="header">
-                <div className="flex">
-                    <SLogo ticker="ETH" />
-                    <div className="my-auto">BTC-USDC</div>
-                </div>
-                <Close onClick={() => close()} />
-            </div>
             <Table headings={['', 'CURRENT PRICE', '24H CHANGE', 'OPEN INTEREST']} className="mt-2">
                 {tracers.map((tracer, i) => (
                     <TRow key={`table-row-${i}`}>
@@ -110,13 +103,13 @@ const Popup: React.FC<PProps> = styled(({ className, close }: PProps) => {
     transition: 0.3s;
     position: absolute;
     padding: 10px;
-    top: 10vh;
+    top: 100%;
     left: 0;
-    width: 25%;
-    height: 35vh;
+    width: 100%;
     background: #011772;
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
+    height: ${(props) => (props.display ? '35vh' : '0')};
 
     .header {
         color: #fff;
@@ -145,14 +138,19 @@ export const MarketSelect: React.FC = () => {
     //     </Menu>
     // );
     return (
-        <Box>
+        <Box className="relative">
             <Market>
                 <SLogo ticker="ETH" />
                 {/*{tracerId}*/}
             </Market>
-            <Button className="ml-auto mr-2 px-3" onClick={(_e: any) => handleClick(true)}>
-                View markets
-            </Button>
+            {
+                popup ?
+
+                    <Close onClick={() => setPopup(false)} />
+                : <Button className="ml-auto mr-2 px-3" onClick={(_e: any) => handleClick(true)}>
+                    View markets
+                </Button>
+            }
             <Popup display={popup} close={() => setPopup(false)} />
         </Box>
     );
