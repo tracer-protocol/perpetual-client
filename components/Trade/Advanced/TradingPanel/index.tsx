@@ -5,7 +5,7 @@ import { DefaultSlider } from '@components/Trade/LeverageSlider';
 import { FactoryContext, OrderContext, TracerContext } from 'context';
 import InputSelects from './Inputs';
 import { Tracer } from 'libs';
-import { Box, Button, Close, Logo } from '@components/General';
+import { Box, Button, Close, DateAndTime, Logo } from '@components/General';
 import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
 import { DownOutlined } from '@ant-design/icons';
@@ -18,7 +18,15 @@ import { toApproxCurrency } from '@libs/utils';
 import Error from '@components/Trade/Error';
 import { UserBalance } from '@types/TracerTypes';
 import { Table, TData, TRow } from '@components/General/Table';
-import { getStatusColour, SecondaryCell, StatusIndicator, TableCell, TableRow } from '@components/Portfolio';
+import {
+    getStatusColour,
+    SecondaryCell,
+    StatusIndicator,
+    TableCell,
+    TableHead,
+    TableHeadEnd,
+    TableRow,
+} from '@components/Portfolio';
 
 const Market = styled.div`
     letter-spacing: -0.4px;
@@ -53,50 +61,71 @@ type PProps = {
     display: boolean;
 };
 
-const Popup: React.FC<PProps> = styled(({ className, close }: PProps) => {
+const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
     const tracers = [
         {
-            name: 'TSLA',
-            market: 'TSLA',
+            name: 'ETH',
+            market: 'ETH',
             price: 3424.23,
             change: '0.03%',
-            interest: '453.33 TSLA',
+            interest: '453.33 ETH',
         },
         {
-            name: 'TSLA',
-            market: 'TSLA',
+            name: 'ETH',
+            market: 'ETH',
             price: 3424.23,
             change: '0.03%',
-            interest: '453.33 TSLA',
+            interest: '453.33 ETH',
         },
         {
-            name: 'TSLA',
-            market: 'TSLA',
+            name: 'ETH',
+            market: 'ETH',
             price: 3424.23,
             change: '0.03%',
-            interest: '453.33 TSLA',
+            interest: '453.33 ETH',
         },
     ];
 
+    const headings = ['', 'CURRENT PRICE', '24H CHANGE', 'OPEN INTEREST'];
+
+    const tableHeadTheme = {
+        borderRight: 'none',
+        borderBottom: 'none',
+    };
+
+    const tableCellTheme = {
+        borderRight: 'none',
+        borderBottom: 'none',
+    };
+
     return (
         <div className={className}>
-            <Table headings={['', 'CURRENT PRICE', '24H CHANGE', 'OPEN INTEREST']} className="mt-2">
-                {tracers.map((tracer, i) => (
-                    <TRow key={`table-row-${i}`}>
-                        <TData>
-                            <div className="flex flex-row">
-                                <div className="my-auto">
-                                    <Logo ticker={tracer.name} />
+            <table>
+                <thead>
+                    {headings.map((heading, i) => (
+                        <TableHead key={`table-head-${i}`} theme={tableHeadTheme}>
+                            {heading}
+                        </TableHead>
+                    ))}
+                </thead>
+                <tbody>
+                    {tracers.map((tracer, i) => (
+                        <TableRow key={`table-row-${i}`}>
+                            <TableCell theme={tableCellTheme}>
+                                <div className="flex flex-row">
+                                    <div className="my-auto">
+                                        <Logo className="w-full" ticker={tracer.name} />
+                                    </div>
+                                    <div className="my-auto ml-2">{tracer.market}</div>
                                 </div>
-                                <div className="my-auto ml-2">{tracer.market}</div>
-                            </div>
-                        </TData>
-                        <TData>{toApproxCurrency(tracer.price)}</TData>
-                        <TData>{tracer.change}</TData>
-                        <TData>{tracer.interest}</TData>
-                    </TRow>
-                ))}
-            </Table>
+                            </TableCell>
+                            <TableCell theme={tableCellTheme}>{toApproxCurrency(tracer.price)}</TableCell>
+                            <TableCell theme={tableCellTheme}>{tracer.change}</TableCell>
+                            <TableCell theme={tableCellTheme}>{tracer.interest}</TableCell>
+                        </TableRow>
+                    ))}
+                </tbody>
+            </table>
         </div>
     );
 })`
@@ -143,14 +172,13 @@ export const MarketSelect: React.FC = () => {
                 <SLogo ticker="ETH" />
                 {/*{tracerId}*/}
             </Market>
-            {
-                popup ?
-
-                    <Close onClick={() => setPopup(false)} />
-                : <Button className="ml-auto mr-2 px-3" onClick={(_e: any) => handleClick(true)}>
+            {popup ? (
+                <Close className="ml-auto mr-2" onClick={() => setPopup(false)} />
+            ) : (
+                <Button className="ml-auto mr-2 px-3" onClick={(_e: any) => handleClick(true)}>
                     View markets
                 </Button>
-            }
+            )}
             <Popup display={popup} close={() => setPopup(false)} />
         </Box>
     );
@@ -177,7 +205,7 @@ export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, classNa
                     <PositionSelect selected={order?.position ?? 0} />
                 </div>
 
-                {/* Quanity and Price Inputs */}
+                {/* Quantity and Price Inputs */}
                 <InputSelects amount={order?.amountToPay} price={order?.price} selectedTracer={selectedTracer} />
 
                 {/* Dont display these if it is a limit order*/}

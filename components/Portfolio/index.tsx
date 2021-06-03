@@ -81,13 +81,15 @@ export const TableHead = styled.th`
     color: #3da8f5;
     padding: 1rem;
     font-weight: normal;
-    border-right: 1px solid #002886;
-    border-bottom: 1px solid #002886;
+    border-right: ${(props: any) => props.theme.borderRight as string};
+    border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
 
 TableHead.defaultProps = {
     theme: {
         maxWidth: '150px',
+        borderRight: '1px solid #002886',
+        borderBottom: '1px solid #002886',
     },
 };
 
@@ -132,9 +134,16 @@ export const TableCell = styled.td`
     color: ${(props: any) => props.color as string};
     font-size: 1rem;
     padding: 0.5rem 1rem;
-    border-right: 1px solid #002886;
-    border-bottom: 1px solid #002886;
+    border-right: ${(props: any) => props.theme.borderRight as string};
+    border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
+
+TableCell.defaultProps = {
+    theme: {
+        borderRight: '1px solid #002886',
+        borderBottom: '1px solid #002886',
+    },
+};
 
 export const SecondaryCell = styled.div`
     color: #005ea4;
