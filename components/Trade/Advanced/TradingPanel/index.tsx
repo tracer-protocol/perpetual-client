@@ -35,28 +35,28 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
     const tracers = [
         {
             name: 'ETH',
-            market: 'ETH',
+            market: 'ETH-USDC',
             price: 3424.23,
             change: '0.03%',
             interest: '453 ETH',
         },
         {
             name: 'ETH',
-            market: 'ETH',
+            market: 'ETH-USDC',
             price: 3424.23,
             change: '0.03%',
             interest: '453 ETH',
         },
         {
             name: 'ETH',
-            market: 'ETH',
+            market: 'ETH-USDC',
             price: 3424.23,
             change: '0.03%',
             interest: '453 ETH',
         },
     ];
 
-    const headings = ['', 'CURRENT PRICE', '24H CHANGE', 'OPEN INTEREST'];
+    const headings = ['', '24H CHANGE', 'CURRENT PRICE'];
 
     const tableHeadTheme = {
         borderRight: 'none',
@@ -75,34 +75,18 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
 
     return (
         <div className={className}>
-            <table>
-                <thead>
-                    {headings.map((heading, i) =>
-                        i === 3 ? (
-                            <TableHeadEnd theme={tableHeadEndTheme}>{heading}</TableHeadEnd>
-                        ) : (
-                            <TableHead theme={tableHeadTheme}>{heading}</TableHead>
-                        ),
-                    )}
-                </thead>
-                <tbody>
-                    {tracers.map((tracer, i) => (
-                        <TableRow key={`table-row-${i}`}>
-                            <TableCell theme={tableCellTheme}>
-                                <div className="flex flex-row">
-                                    <div className="my-auto">
-                                        <Logo ticker={tracer.name} />
-                                    </div>
-                                    <div className="my-auto ml-2">{tracer.market}</div>
-                                </div>
-                            </TableCell>
-                            <TableCell theme={tableCellTheme}>{toApproxCurrency(tracer.price)}</TableCell>
-                            <TableCell theme={tableCellTheme}>{tracer.change}</TableCell>
-                            <TableCell theme={tableCellTheme}>{tracer.interest}</TableCell>
-                        </TableRow>
-                    ))}
-                </tbody>
-            </table>
+            {tracers.map((tracer, i) => (
+                <div key={`table-row-${i}`} className="flex market">
+                    <div className="flex flex-row ml-5">
+                        <div className="my-auto">
+                            <Logo ticker={tracer.name} />
+                        </div>
+                        <div className="my-auto ml-2">{tracer.market}</div>
+                    </div>
+                    <div className="m-auto">{tracer.change}</div>
+                    <div className="my-auto mr-8">{toApproxCurrency(tracer.price)}</div>
+                </div>
+            ))}
         </div>
     );
 })`
@@ -115,11 +99,13 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
 
-    .header {
-        color: #fff;
-        font-size: 1.2rem;
-        display: flex;
-        justify-content: space-between;
+    .market {
+        transition: 0.5s;
+    }
+
+    .market:hover {
+        background: #002886;
+        cursor: pointer;
     }
 `;
 
@@ -165,6 +151,7 @@ export const MarketSelect: React.FC = styled(({ className }) => {
             <Box className="relative">
                 <Market>
                     <SLogo ticker="ETH" />
+                    <div className="my-auto">ETH-USDC</div>
                 </Market>
                 <MarketSelectDropdown
                     onMouseEnter={showDropdown}
