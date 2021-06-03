@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import { DefaultSlider } from '@components/Trade/LeverageSlider';
 import { FactoryContext, OrderContext, TracerContext } from 'context';
 import InputSelects from './Inputs';
 import { Tracer } from 'libs';
-import { Box, Logo } from '@components/General';
+import { Box, Button, Close, Logo } from '@components/General';
 import Menu from 'antd/lib/menu';
 import Dropdown from 'antd/lib/dropdown';
 import { DownOutlined } from '@ant-design/icons';
@@ -13,6 +13,12 @@ import styled from 'styled-components';
 import { defaults } from '@libs/Tracer';
 import PostTradeDetails from './PostTradeDetails';
 import BigNumber from 'bignumber.js';
+import { calcMinimumMargin, calcTotalMargin } from '@tracer-protocol/tracer-utils';
+import { toApproxCurrency } from '@libs/utils';
+import Error from '@components/Trade/Error';
+import { UserBalance } from '@types/TracerTypes';
+import { Table, TData, TRow } from '@components/General/Table';
+import { getStatusColour, SecondaryCell, StatusIndicator, TableCell, TableRow } from '@components/Portfolio';
 
 const Market = styled.div`
     letter-spacing: -0.4px;
@@ -41,33 +47,113 @@ const SLogo = styled(Logo)`
     margin-right: 0.7rem;
 `;
 
-export const MarketSelect: React.FC = () => {
-    const { tracers } = useContext(FactoryContext);
-    const { setTracerId, tracerId } = useContext(TracerContext);
-    const marketsList = (
-        <Menu
-            onClick={({ key }) =>
-                setTracerId ? setTracerId(key as string) : console.error('Set tracer id function not set')
-            }
-        >
-            {Object.keys(tracers ?? {})?.map((marketId) => {
-                return <Menu.Item key={marketId}>{marketId}</Menu.Item>;
-            })}
-        </Menu>
+type PProps = {
+    className?: string;
+    close: () => any;
+    display: boolean;
+};
+
+const Popup: React.FC<PProps> = styled(({ className, close }: PProps) => {
+    const tracers = [
+        {
+            name: 'TSLA',
+            market: 'TSLA',
+            price: 3424.23,
+            change: '0.03%',
+            interest: '453.33 TSLA',
+        },
+        {
+            name: 'TSLA',
+            market: 'TSLA',
+            price: 3424.23,
+            change: '0.03%',
+            interest: '453.33 TSLA',
+        },
+        {
+            name: 'TSLA',
+            market: 'TSLA',
+            price: 3424.23,
+            change: '0.03%',
+            interest: '453.33 TSLA',
+        },
+    ];
+
+    return (
+        <div className={className}>
+            <div className="header">
+                <div className="flex">
+                    <SLogo ticker="ETH" />
+                    <div className="my-auto">BTC-USDC</div>
+                </div>
+                <Close onClick={() => close()} />
+            </div>
+            <Table headings={['', 'CURRENT PRICE', '24H CHANGE', 'OPEN INTEREST']} className="mt-2">
+                {tracers.map((tracer, i) => (
+                    <TRow key={`table-row-${i}`}>
+                        <TData>
+                            <div className="flex flex-row">
+                                <div className="my-auto">
+                                    <Logo ticker={tracer.name} />
+                                </div>
+                                <div className="my-auto ml-2">{tracer.market}</div>
+                            </div>
+                        </TData>
+                        <TData>{toApproxCurrency(tracer.price)}</TData>
+                        <TData>{tracer.change}</TData>
+                        <TData>{tracer.interest}</TData>
+                    </TRow>
+                ))}
+            </Table>
+        </div>
     );
+})`
+    transition: 0.3s;
+    position: absolute;
+    padding: 10px;
+    top: 10vh;
+    left: 0;
+    width: 25%;
+    height: 35vh;
+    background: #011772;
+    z-index: ${(props) => (props.display ? '10' : '-1')};
+    opacity: ${(props) => (props.display ? '1' : '0')};
+
+    .header {
+        color: #fff;
+        font-size: 1.2rem;
+        display: flex;
+        justify-content: space-between;
+    }
+`;
+
+export const MarketSelect: React.FC = () => {
+    const [popup, setPopup] = useState(false);
+    const handleClick = (popup: boolean) => {
+        setPopup(popup);
+    };
+    // const { tracers } = useContext(FactoryContext);
+    // const { setTracerId, tracerId } = useContext(TracerContext);
+    // const marketsList = (
+    //     <Menu
+    //         onClick={({ key }) =>
+    //             setTracerId ? setTracerId(key as string) : console.error('Set tracer id function not set')
+    //         }
+    //     >
+    //         {Object.keys(tracers ?? {})?.map((marketId) => {
+    //             return <Menu.Item key={marketId}>{marketId}</Menu.Item>;
+    //         })}
+    //     </Menu>
+    // );
     return (
         <Box>
             <Market>
                 <SLogo ticker="ETH" />
-                {tracerId}
+                {/*{tracerId}*/}
             </Market>
-            <div className="ml-auto">
-                <Dropdown overlay={marketsList} trigger={['click']}>
-                    <Selector>
-                        <a>View Markets</a> <DownOutlined className="m-auto px-2" />
-                    </Selector>
-                </Dropdown>
-            </div>
+            <Button className="ml-auto mr-2 px-3" onClick={(_e: any) => handleClick(true)}>
+                View markets
+            </Button>
+            <Popup display={popup} close={() => setPopup(false)} />
         </Box>
     );
 };

@@ -29,14 +29,6 @@ export const RightPanel = styled.div`
     }
 `;
 
-export const NoLeverageBanner = styled.div`
-    width: 200px;
-    padding: 10px;
-    border-radius: 7px;
-    color: #3da8f5;
-    background-color: #002886;
-`;
-
 export const Button = styled.div`
     transition: 0.5s;
     color: #3da8f5;
