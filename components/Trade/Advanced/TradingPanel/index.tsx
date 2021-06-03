@@ -10,8 +10,7 @@ import styled from 'styled-components';
 import { defaults } from '@libs/Tracer';
 import PostTradeDetails from './PostTradeDetails';
 import BigNumber from 'bignumber.js';
-import { toApproxCurrency } from '@libs/utils';
-import { TableCell, TableHead, TableHeadEnd, TableRow } from '@components/Portfolio';
+import { toApproxCurrency, toPercent } from '@libs/utils';
 
 const Market = styled.div`
     letter-spacing: -0.4px;
@@ -37,41 +36,21 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
             name: 'ETH',
             market: 'ETH-USDC',
             price: 3424.23,
-            change: '0.03%',
-            interest: '453 ETH',
+            change: 0.0003,
         },
         {
             name: 'ETH',
             market: 'ETH-USDC',
             price: 3424.23,
-            change: '0.03%',
-            interest: '453 ETH',
+            change: 0.0003,
         },
         {
             name: 'ETH',
             market: 'ETH-USDC',
             price: 3424.23,
-            change: '0.03%',
-            interest: '453 ETH',
+            change: 0.0003,
         },
     ];
-
-    const headings = ['', '24H CHANGE', 'CURRENT PRICE'];
-
-    const tableHeadTheme = {
-        borderRight: 'none',
-        borderBottom: 'none',
-    };
-
-    const tableHeadEndTheme = {
-        width: '100px',
-        borderBottom: 'none',
-    };
-
-    const tableCellTheme = {
-        borderRight: 'none',
-        borderBottom: 'none',
-    };
 
     return (
         <div className={className}>
@@ -83,7 +62,7 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
                         </div>
                         <div className="my-auto ml-2">{tracer.market}</div>
                     </div>
-                    <div className="m-auto">{tracer.change}</div>
+                    <div className="m-auto">{toPercent(tracer.change)}</div>
                     <div className="my-auto mr-8">{toApproxCurrency(tracer.price)}</div>
                 </div>
             ))}
