@@ -79,8 +79,7 @@ export const TableHead = styled.th`
     max-width: ${(props: any) => props.theme.maxWidth as string};
     text-align: left;
     color: #3da8f5;
-    padding: 1rem;
-    font-weight: normal;
+    padding: 0 1rem;
     border-right: ${(props: any) => props.theme.borderRight as string};
     border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
@@ -110,10 +109,10 @@ TableHeadEnd.defaultProps = {
 };
 
 export const TableRow = styled.tr`
+    transition: 0.5s;
     display: ${(props: any) => props.theme.display as string};
     color: ${(props: any) => props.theme.color as string};
     opacity: ${(props: any) => props.theme.opacity as string};
-    transition: 0.5s;
 
     &:hover {
         background: ${(props: any) => props.theme.hoverBG as string};
