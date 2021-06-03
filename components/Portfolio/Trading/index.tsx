@@ -29,14 +29,19 @@ const defaultTracers = {
 }
 
 const TradingPortfolio: React.FC = () => {
-    const { tracers } = useContext(FactoryContext);
-    console.log(tracers, "Tracers")
+    const { tracers, allFilledOrders } = useContext(FactoryContext);
+
     const [tab, setTab] = useState(0);
     const tabs = ['Positions', 'Margin Accounts', 'Trade History', 'Transfers'];
     const content = () => {
         switch (tab) {
             case 0:
-                return <Position tracers={defaultTracers} />;
+                return (
+                    <Position 
+                        tracers={tracers ?? defaultTracers} 
+                        allFilledOrders={allFilledOrders ?? {}} 
+                    />
+                )
             case 1:
                 return <MarginAccounts />;
             case 2:

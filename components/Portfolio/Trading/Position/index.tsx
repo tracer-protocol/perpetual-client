@@ -11,10 +11,13 @@ import {
     StatusIndicator,
     getStatusColour,
 } from '@components/Portfolio';
-import Tracer from '@libs/Tracer';
-import { calcLiquidationPrice, calcTotalMargin } from '@tracer-protocol/tracer-utils';
+import { calcLiquidationPrice, calcTotalMargin, calcUnrealised } from '@tracer-protocol/tracer-utils';
+import { LabelledOrders } from 'types/OrderTypes';
+import { LabelledTracers } from 'types/TracerTypes';
 
-const Position:React.FC<{ tracers: Record<string, Tracer> }> = ({ tracers }) => {
+const Position:React.FC<{ 
+    tracers: LabelledTracers, allFilledOrders: LabelledOrders 
+}> = ({ tracers, allFilledOrders }) => {
     const [show, setShow] = useState(false);
     const headings = [
         'Market',
@@ -99,10 +102,8 @@ const Position:React.FC<{ tracers: Record<string, Tracer> }> = ({ tracers }) => 
                         let name = tracer.marketId.split("/")[0];
                         let status = _status[i];
                         let { quote, base } = tracer.balances;
-
-                        // TODO calculate these
-                        let unrealisedPL= 453.23, realisedPL = -4.5;
-
+                        let realisedPNL = 0; // TODO calculte realisedPNL
+                        let unrealisedPNL = calcUnrealised(base, tracer.oraclePrice, allFilledOrders[tracer.address] ?? [])
                         return (
                             <TableRow key={`table-row-${i}`} theme={getRowStatus(status[i], show)}>
                                 <TableCell>
@@ -114,11 +115,11 @@ const Position:React.FC<{ tracers: Record<string, Tracer> }> = ({ tracers }) => 
                                     </div>
                                 </TableCell>
                                 <TableCell>{base.lt(0) ? 'SHORT' : 'LONG'}</TableCell>
-                                <TableCell color={unrealisedPL < 0 ? '#F15025' : '#21DD53'}>
-                                    {toApproxCurrency(unrealisedPL)}
+                                <TableCell color={unrealisedPNL.toNumber() < 0 ? '#F15025' : '#21DD53'}>
+                                    {toApproxCurrency(unrealisedPNL)}
                                 </TableCell>
-                                <TableCell color={realisedPL < 0 ? '#F15025' : '#21DD53'}>
-                                    {toApproxCurrency(realisedPL)}
+                                <TableCell color={realisedPNL < 0 ? '#F15025' : '#21DD53'}>
+                                    {toApproxCurrency(realisedPNL)}
                                 </TableCell>
                                 <TableCell>{toApproxCurrency(calcTotalMargin(quote, base, tracer.oraclePrice))}</TableCell>
                                 <TableCell>

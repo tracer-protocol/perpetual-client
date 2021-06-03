@@ -3,10 +3,12 @@ import { useAllTracers } from '@libs/Graph/hooks/Tracer';
 import { Children } from 'types';
 import Tracer from '@libs/Tracer';
 import { Web3Context } from './Web3Context';
-
-type LabelledTracers = Record<string, Tracer>;
+import { useAllUsersMatched } from '@libs/Graph/hooks/Account';
+import { LabelledOrders } from 'types/OrderTypes';
+import { LabelledTracers } from 'types/TracerTypes';
 interface ContextProps {
     tracers: LabelledTracers;
+    allFilledOrders: LabelledOrders;
 }
 
 export const FactoryContext = React.createContext<Partial<ContextProps>>({});
@@ -15,6 +17,7 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
     const { web3, account } = useContext(Web3Context);
     const { tracers } = useAllTracers();
     const [labelledTracers, setLabelledTracers] = useState<LabelledTracers>({});
+    const { allFilledOrders } = useAllUsersMatched(account ?? '');
 
     useEffect(() => {
         let mounted = true;
@@ -47,6 +50,7 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
         <FactoryContext.Provider
             value={{
                 tracers: labelledTracers,
+                allFilledOrders: allFilledOrders
             }}
         >
             {children}

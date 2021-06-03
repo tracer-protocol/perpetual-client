@@ -61,7 +61,9 @@ export type OMEOrder = {
 
 export type FilledOrder = {
     position: boolean;
-    amount: string;
-    price: string;
+    amount: BigNumber;
+    price: BigNumber;
     timestamp: string;
 };
+
+export type LabelledOrders = Record<string, FilledOrder[]>;
