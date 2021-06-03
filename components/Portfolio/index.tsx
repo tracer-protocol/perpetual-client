@@ -99,12 +99,13 @@ export const TableHeadEnd = styled.th`
     color: #3da8f5;
     padding: 1rem;
     font-weight: normal;
-    border-bottom: 1px solid #002886;
+    border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
 
 TableHeadEnd.defaultProps = {
     theme: {
         width: '200px',
+        borderBottom: '1px solid #002886',
     },
 };
 

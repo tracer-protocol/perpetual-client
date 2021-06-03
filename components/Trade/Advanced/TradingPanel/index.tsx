@@ -2,51 +2,22 @@ import React, { useContext, useState } from 'react';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import { DefaultSlider } from '@components/Trade/LeverageSlider';
-import { FactoryContext, OrderContext, TracerContext } from 'context';
+import { OrderContext } from 'context';
 import InputSelects from './Inputs';
 import { Tracer } from 'libs';
-import { Box, Button, Close, DateAndTime, Logo } from '@components/General';
-import Menu from 'antd/lib/menu';
-import Dropdown from 'antd/lib/dropdown';
-import { DownOutlined } from '@ant-design/icons';
+import { Box, Logo } from '@components/General';
 import styled from 'styled-components';
 import { defaults } from '@libs/Tracer';
 import PostTradeDetails from './PostTradeDetails';
 import BigNumber from 'bignumber.js';
-import { calcMinimumMargin, calcTotalMargin } from '@tracer-protocol/tracer-utils';
 import { toApproxCurrency } from '@libs/utils';
-import Error from '@components/Trade/Error';
-import { UserBalance } from '@types/TracerTypes';
-import { Table, TData, TRow } from '@components/General/Table';
-import {
-    getStatusColour,
-    SecondaryCell,
-    StatusIndicator,
-    TableCell,
-    TableHead,
-    TableHeadEnd,
-    TableRow,
-} from '@components/Portfolio';
+import { TableCell, TableHead, TableHeadEnd, TableRow } from '@components/Portfolio';
 
 const Market = styled.div`
     letter-spacing: -0.4px;
     font-size: 20px;
     color: #fff;
     display: flex;
-`;
-
-const Selector = styled.div`
-    border-radius: 10px;
-    border: 1px solid #3da8f5;
-    color: #3da8f5;
-
-    &:hover {
-        cursor: pointer;
-    }
-
-    a {
-        padding-left: 10px;
-    }
 `;
 
 const SLogo = styled(Logo)`
@@ -57,7 +28,6 @@ const SLogo = styled(Logo)`
 
 type PProps = {
     className?: string;
-    close: () => any;
     display: boolean;
 };
 
@@ -68,21 +38,21 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
             market: 'ETH',
             price: 3424.23,
             change: '0.03%',
-            interest: '453.33 ETH',
+            interest: '453 ETH',
         },
         {
             name: 'ETH',
             market: 'ETH',
             price: 3424.23,
             change: '0.03%',
-            interest: '453.33 ETH',
+            interest: '453 ETH',
         },
         {
             name: 'ETH',
             market: 'ETH',
             price: 3424.23,
             change: '0.03%',
-            interest: '453.33 ETH',
+            interest: '453 ETH',
         },
     ];
 
@@ -90,6 +60,11 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
 
     const tableHeadTheme = {
         borderRight: 'none',
+        borderBottom: 'none',
+    };
+
+    const tableHeadEndTheme = {
+        width: '100px',
         borderBottom: 'none',
     };
 
@@ -102,11 +77,13 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
         <div className={className}>
             <table>
                 <thead>
-                    {headings.map((heading, i) => (
-                        <TableHead key={`table-head-${i}`} theme={tableHeadTheme}>
-                            {heading}
-                        </TableHead>
-                    ))}
+                    {headings.map((heading, i) =>
+                        i === 3 ? (
+                            <TableHeadEnd theme={tableHeadEndTheme}>{heading}</TableHeadEnd>
+                        ) : (
+                            <TableHead theme={tableHeadTheme}>{heading}</TableHead>
+                        ),
+                    )}
                 </thead>
                 <tbody>
                     {tracers.map((tracer, i) => (
@@ -114,7 +91,7 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
                             <TableCell theme={tableCellTheme}>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
-                                        <Logo className="w-full" ticker={tracer.name} />
+                                        <Logo ticker={tracer.name} />
                                     </div>
                                     <div className="my-auto ml-2">{tracer.market}</div>
                                 </div>
@@ -129,16 +106,14 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
         </div>
     );
 })`
-    transition: 0.3s;
+    transition: 1s;
     position: absolute;
-    padding: 10px;
     top: 100%;
     left: 0;
     width: 100%;
     background: #011772;
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
-    height: ${(props) => (props.display ? '35vh' : '0')};
 
     .header {
         color: #fff;
@@ -148,41 +123,71 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
     }
 `;
 
-export const MarketSelect: React.FC = () => {
+const MarketSelectDropdown = styled.div`
+    transition: 0.3s;
+    color: #3da8f5;
+    font-size: 1rem;
+    border: 1px solid #3da8f5;
+    border-radius: 20px;
+    padding: 5px 0;
+    width: 160px;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    .down-arrow {
+        transition: 0.5s;
+    }
+
+    &:hover .down-arrow {
+        transform: rotate(180deg);
+        margin-top: 6px;
+    }
+`;
+
+export const MarketSelect: React.FC = styled(({ className }) => {
     const [popup, setPopup] = useState(false);
     const handleClick = (popup: boolean) => {
         setPopup(popup);
     };
-    // const { tracers } = useContext(FactoryContext);
-    // const { setTracerId, tracerId } = useContext(TracerContext);
-    // const marketsList = (
-    //     <Menu
-    //         onClick={({ key }) =>
-    //             setTracerId ? setTracerId(key as string) : console.error('Set tracer id function not set')
-    //         }
-    //     >
-    //         {Object.keys(tracers ?? {})?.map((marketId) => {
-    //             return <Menu.Item key={marketId}>{marketId}</Menu.Item>;
-    //         })}
-    //     </Menu>
-    // );
+
+    const showDropdown = () => {
+        setPopup(true);
+    };
+
+    const hideDropdown = () => {
+        setPopup(false);
+    };
+
     return (
-        <Box className="relative">
-            <Market>
-                <SLogo ticker="ETH" />
-                {/*{tracerId}*/}
-            </Market>
-            {popup ? (
-                <Close className="ml-auto mr-2" onClick={() => setPopup(false)} />
-            ) : (
-                <Button className="ml-auto mr-2 px-3" onClick={(_e: any) => handleClick(true)}>
-                    View markets
-                </Button>
-            )}
-            <Popup display={popup} close={() => setPopup(false)} />
-        </Box>
+        <div className={className} onMouseLeave={hideDropdown}>
+            <Box className="relative">
+                <Market>
+                    <SLogo ticker="ETH" />
+                </Market>
+                <MarketSelectDropdown
+                    onMouseEnter={showDropdown}
+                    id="dropdown"
+                    className="ml-auto mr-2 px-3"
+                    onClick={(_e: any) => handleClick(true)}
+                >
+                    <div className="flex justify-center">
+                        <div>View Markets</div>
+                        <div>
+                            <img
+                                className="down-arrow w-4 ml-1"
+                                src="/img/general/triangle_down.svg"
+                                alt="Down Arrow"
+                            />
+                        </div>
+                    </div>
+                </MarketSelectDropdown>
+                <Popup display={popup} />
+            </Box>
+        </div>
     );
-};
+})``;
 
 type TIProps = {
     selectedTracer: Tracer | undefined;
@@ -305,13 +310,12 @@ const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
     );
 })`
     display: flex;
+
     > .label {
-        margin: auto 0;
+        margin: auto auto 35px 0;
         font-size: 16px;
         letter-spacing: -0.32px;
         color: #3da8f5;
-        margin-bottom: 35px; // this is because ant has a margin-bottom 28px on the slider
-        margin-right: auto;
     }
 `;
 
