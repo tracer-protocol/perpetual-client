@@ -3,8 +3,6 @@ import { toApproxCurrency } from '@libs/utils';
 import { FilledOrder } from 'types/OrderTypes';
 import React from 'react';
 import styled from 'styled-components';
-import Web3 from 'web3';
-
 interface RTProps {
     trades: FilledOrder[];
     className?: string;
@@ -29,9 +27,9 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                             return (
                                 <tr key={`row-${index}`}>
                                     <td className={!!trade.position ? 'bid' : 'ask'}>
-                                        {toApproxCurrency(parseFloat(Web3.utils.fromWei(trade.price)))}
+                                        {toApproxCurrency(trade.price)}
                                     </td>
-                                    <td>{Web3.utils.fromWei(trade.amount)}</td>
+                                    <td>{trade.amount.toPrecision(3)}</td>
                                     <td>
                                         {d.getHours()}:{d.getMinutes()}
                                     </td>

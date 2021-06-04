@@ -98,7 +98,6 @@ const Position: React.FC<{
                 </thead>
                 <tbody>
                     {Object.values(tracers).map((tracer, i) => {
-                        console.log(tracer.loading);
                         if (tracer.loading) {
                             return 'Loading';
                         }

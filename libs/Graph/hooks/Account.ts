@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js';
 import { useCallback, useRef } from 'react';
 import { FilledOrder, LabelledOrders } from 'types/OrderTypes';
 import Web3 from 'web3';
+import { toBigNumbers } from '..';
 
 const ALL_TRACERS = gql`
     query TracerData($user: String!) {
@@ -45,13 +46,6 @@ export const useAccountData: (user: string | undefined) => any = (user) => {
         refetch,
     };
 };
-
-const toBigNumbers: (orders: any) => FilledOrder[] = (orders) =>
-    orders.map((order: any) => ({
-        ...orders,
-        amount: new BigNumber(Web3.utils.fromWei(order.amount)),
-        price: new BigNumber(Web3.utils.fromWei(order.price)),
-    }));
 
 const USER_TRACER_TRADES = gql`
     query Tracer_Trades($account: String!, $tracer: String!) {

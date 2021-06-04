@@ -134,7 +134,7 @@ export type OrderAction =
 // amountToPay => require margin
 export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const { account } = useContext(Web3Context);
-    const { setTracerId, tracerId, selectedTracer, balances } = useContext(TracerContext);
+    const { setTracerId, tracerId, selectedTracer } = useContext(TracerContext);
     const { omeState } = useContext(OMEContext);
 
     useEffect(() => {
@@ -296,7 +296,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     useMemo(() => {
         if (omeState?.orders) {
             const oppositeOrders = order.position ? omeState.orders.askOrders : omeState.orders.bidOrders;
-            const error = checkErrors(balances, oppositeOrders, account, order);
+            const error = checkErrors(selectedTracer?.getBalance(), oppositeOrders, account, order);
             if (error !== order.error) {
                 orderDispatch({ type: 'setError', value: error });
             }

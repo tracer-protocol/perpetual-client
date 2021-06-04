@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import Web3 from 'web3';
 import { CandleData } from 'types/TracerTypes';
+import { toBigNumbers } from '..';
 
 const ALL_TRACERS = gql`
     query {
@@ -83,7 +84,7 @@ export const useMostRecentMatched: (tracer: string) => {
     });
 
     return {
-        mostRecentTrades: data?.trades || ref.current,
+        mostRecentTrades: data?.trades ? toBigNumbers(data?.trades) : ref.current,
         error,
         loading,
         refetch,
