@@ -92,7 +92,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             {
                 amount: amount,
                 price: Web3.utils.toWei(price.toString()),
-                side: position ? 1 : 0,
+                side: position ? 0 : 1,
                 maker: account ?? '',
                 expires: now + fourDays,
                 market: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer.address) : '',
