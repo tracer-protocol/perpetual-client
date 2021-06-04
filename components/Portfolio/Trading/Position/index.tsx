@@ -16,7 +16,8 @@ import { LabelledOrders } from 'types/OrderTypes';
 import { LabelledTracers } from 'types/TracerTypes';
 
 const Position:React.FC<{ 
-    tracers: LabelledTracers, allFilledOrders: LabelledOrders 
+    tracers: LabelledTracers, 
+    allFilledOrders: LabelledOrders ,
 }> = ({ tracers, allFilledOrders }) => {
     const [show, setShow] = useState(false);
     const headings = [
@@ -98,7 +99,11 @@ const Position:React.FC<{
                     </tr>
                 </thead>
                 <tbody>
-                    {Object.values(tracers).map((tracer, i) => { 
+                    {Object.values(tracers).map((tracer, i) => {
+                        console.log(tracer.loading)
+                        if (tracer.loading) {
+                            return "Loading"
+                        }
                         let name = tracer.marketId.split("/")[0];
                         let status = _status[i];
                         let { quote, base } = tracer.balances;

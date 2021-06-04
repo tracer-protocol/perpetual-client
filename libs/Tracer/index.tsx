@@ -137,6 +137,7 @@ export default class Tracer {
             if (!account) {
                 return Promise.resolve(false);
             }
+            await this.initialised;
             // if accounts is undefined the catch should get it
             const balance = await this._instance.methods.getBalance(account).call();
             const walletBalance = await this.token?.methods.balanceOf(account).call();

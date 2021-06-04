@@ -13,6 +13,7 @@ import styled from 'styled-components';
 import { defaults } from '@libs/Tracer';
 import PostTradeDetails from './PostTradeDetails';
 import BigNumber from 'bignumber.js';
+import { initialFactoryState } from '@context/FactoryContext';
 
 const Market = styled.div`
     letter-spacing: -0.4px;
@@ -42,7 +43,7 @@ const SLogo = styled(Logo)`
 `;
 
 export const MarketSelect: React.FC = () => {
-    const { tracers } = useContext(FactoryContext);
+    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const { setTracerId, tracerId } = useContext(TracerContext);
     const marketsList = (
         <Menu

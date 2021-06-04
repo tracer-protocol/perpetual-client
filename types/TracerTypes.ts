@@ -42,4 +42,4 @@ export type CandleData = {
     close: number;
 }[];
 
-export type LabelledTracers = Record<string, Tracer>;
+export type LabelledTracers = Record<string, Tracer & { loading: boolean }>;

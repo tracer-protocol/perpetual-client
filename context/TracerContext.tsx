@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useReducer } from 'react';
-import { FactoryContext } from './FactoryContext';
+import { FactoryContext, initialFactoryState } from './FactoryContext';
 import { Children, Result, UserBalance } from 'types';
 import { isEmpty } from 'lodash';
 import { createOrder } from '@libs/Ome';
@@ -34,7 +34,7 @@ type StoreProps = {
 
 export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
     const { account, web3, config, networkId } = useContext(Web3Context);
-    const { tracers } = useContext(FactoryContext);
+    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const { handleTransaction } = useContext(TransactionContext);
 
     const initialState: TracerState = {
