@@ -120,7 +120,7 @@ const Position: React.FC<{
                                         <div className="my-auto ml-2">{tracer.marketId}</div>
                                     </div>
                                 </TableCell>
-                                <TableCell>{base.lt(0) ? 'SHORT' : 'LONG'}</TableCell>
+                                <TableCell>{base.eq(0) ? 'NO POSITION' : base.lt(0) ? 'SHORT' : 'LONG'}</TableCell>
                                 <TableCell color={unrealisedPNL.toNumber() < 0 ? '#F15025' : '#21DD53'}>
                                     {toApproxCurrency(unrealisedPNL)}
                                 </TableCell>
