@@ -15,9 +15,9 @@ import { calcLiquidationPrice, calcTotalMargin, calcUnrealised } from '@tracer-p
 import { LabelledOrders } from 'types/OrderTypes';
 import { LabelledTracers } from 'types/TracerTypes';
 
-const Position:React.FC<{ 
-    tracers: LabelledTracers, 
-    allFilledOrders: LabelledOrders ,
+const Position: React.FC<{
+    tracers: LabelledTracers;
+    allFilledOrders: LabelledOrders;
 }> = ({ tracers, allFilledOrders }) => {
     const [show, setShow] = useState(false);
     const headings = [
@@ -31,9 +31,7 @@ const Position:React.FC<{
         'Status',
     ];
 
-    const _status = [
-        "Open", "Eligible for Liquidation", "Approaching Liquidation", "Closed"
-    ]
+    const _status = ['Open', 'Eligible for Liquidation', 'Approaching Liquidation', 'Closed'];
 
     const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
@@ -100,15 +98,19 @@ const Position:React.FC<{
                 </thead>
                 <tbody>
                     {Object.values(tracers).map((tracer, i) => {
-                        console.log(tracer.loading)
+                        console.log(tracer.loading);
                         if (tracer.loading) {
-                            return "Loading"
+                            return 'Loading';
                         }
-                        let name = tracer.marketId.split("/")[0];
-                        let status = _status[i];
-                        let { quote, base } = tracer.balances;
-                        let realisedPNL = 0; // TODO calculte realisedPNL
-                        let unrealisedPNL = calcUnrealised(base, tracer.oraclePrice, allFilledOrders[tracer.address] ?? [])
+                        const name = tracer.marketId.split('/')[0];
+                        const status = _status[i];
+                        const { quote, base } = tracer.balances;
+                        const realisedPNL = 0; // TODO calculte realisedPNL
+                        const unrealisedPNL = calcUnrealised(
+                            base,
+                            tracer.oraclePrice,
+                            allFilledOrders[tracer.address] ?? [],
+                        );
                         return (
                             <TableRow key={`table-row-${i}`} theme={getRowStatus(status[i], show)}>
                                 <TableCell>
@@ -126,20 +128,21 @@ const Position:React.FC<{
                                 <TableCell color={realisedPNL < 0 ? '#F15025' : '#21DD53'}>
                                     {toApproxCurrency(realisedPNL)}
                                 </TableCell>
-                                <TableCell>{toApproxCurrency(calcTotalMargin(quote, base, tracer.oraclePrice))}</TableCell>
+                                <TableCell>
+                                    {toApproxCurrency(calcTotalMargin(quote, base, tracer.oraclePrice))}
+                                </TableCell>
                                 <TableCell>
                                     {base.abs().toNumber()} {name}
                                 </TableCell>
                                 <TableCell>
-                                    {toApproxCurrency(calcLiquidationPrice(quote, base, tracer.oraclePrice, tracer.maxLeverage))}
+                                    {toApproxCurrency(
+                                        calcLiquidationPrice(quote, base, tracer.oraclePrice, tracer.maxLeverage),
+                                    )}
                                     <SecondaryCell>{toApproxCurrency(tracer.oraclePrice)}</SecondaryCell>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex flex-row">
-                                        <StatusIndicator
-                                            color={getStatusColour(status)}
-                                            className="text-2xl my-auto"
-                                        >
+                                        <StatusIndicator color={getStatusColour(status)} className="text-2xl my-auto">
                                             &bull;
                                         </StatusIndicator>
                                         <div className="mx-2 my-auto">{status}</div>
@@ -151,8 +154,8 @@ const Position:React.FC<{
                                     </div>
                                 </TableCell>
                             </TableRow>
-                        )}
-                    )}
+                        );
+                    })}
                 </tbody>
             </table>
             <div className="flex mt-8 justify-center">

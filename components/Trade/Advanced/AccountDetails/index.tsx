@@ -173,7 +173,7 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
     const { account } = useContext(Web3Context);
     const [tab, setTab] = useState(0);
     const tabs = [`Position`, `Orders`, `Fills`];
-    const balances = selectedTracer?.balances ?? defaults.balances;
+    const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const { filledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');
     const {

@@ -109,7 +109,7 @@ export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, classNa
 
                 <PostTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
-                    balances={selectedTracer?.balances ?? defaults.balances}
+                    balances={selectedTracer?.getBalance() ?? defaults.balances}
                     exposure={order?.amountToBuy ? new BigNumber(order.amountToBuy) : defaults.amountToBuy}
                     position={order?.position ?? 0}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}

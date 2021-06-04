@@ -13,12 +13,12 @@ interface ContextProps {
 }
 
 export type FactoryState = {
-    tracers: LabelledTracers,
-    hasSetTracers: boolean
-}
+    tracers: LabelledTracers;
+    hasSetTracers: boolean;
+};
 export const initialFactoryState: FactoryState = {
     tracers: {},
-    hasSetTracers: false
+    hasSetTracers: false,
 };
 export type FactoryAction =
     | { type: 'setLoaded'; marketId: string }
@@ -35,25 +35,25 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
     const reducer = (state: FactoryState, action: FactoryAction) => {
         switch (action.type) {
             case 'setLoaded':
-                return { 
+                return {
                     ...state,
                     tracers: {
                         [action.marketId]: {
                             ...state.tracers[action.marketId],
-                            loading: false 
-                        }
-                    }
+                            loading: false,
+                        },
+                    },
                 };
             case 'setTracers':
                 return {
                     ...state,
-                    tracers: action.tracers
-                }
+                    tracers: action.tracers,
+                };
             case 'HAS_SET_TRACERS': {
                 return {
                     ...state,
-                    hasSetTracers: true
-                }
+                    hasSetTracers: true,
+                };
             }
             default:
                 throw new Error('Unexpected action');
@@ -72,18 +72,18 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
                         ...o,
                         [t.marketId]: {
                             ...new Tracer(web3, t.id, t.marketId),
-                            loading: true
+                            loading: true,
                         },
                     }),
                     {},
                 );
                 factoryDispatch({
                     type: 'setTracers',
-                    tracers: _labelledTracers
-                })
+                    tracers: _labelledTracers,
+                });
                 factoryDispatch({
-                    type: 'HAS_SET_TRACERS'
-                })
+                    type: 'HAS_SET_TRACERS',
+                });
             }
             return () => {
                 // cleanup
@@ -94,27 +94,29 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
 
     const fetchAllBalances = async () => {
         Object.values(factoryState.tracers).map((tracer) => {
-            tracer?.updateUserBalance(account)
+            tracer
+                ?.updateUserBalance(account)
                 .then((_res) => {
-                    factoryDispatch({ type: 'setLoaded', marketId: tracer.marketId }) 
+                    factoryDispatch({ type: 'setLoaded', marketId: tracer.marketId });
                 })
                 .catch((err) => {
-                    console.error(`Failed to fetch balances for ${tracer.marketId}`, err)
-                })
-        })
-    }
+                    console.error(`Failed to fetch balances for ${tracer.marketId}`, err);
+                });
+        });
+    };
 
-    useEffect(() => { // update users balance across all tracers
+    useEffect(() => {
+        // update users balance across all tracers
         if (account && factoryState.hasSetTracers) {
-            fetchAllBalances()
+            fetchAllBalances();
         }
-    }, [account, factoryState.hasSetTracers])
+    }, [account, factoryState.hasSetTracers]);
 
     return (
         <FactoryContext.Provider
             value={{
                 allFilledOrders: allFilledOrders,
-                factoryState
+                factoryState,
             }}
         >
             {children}

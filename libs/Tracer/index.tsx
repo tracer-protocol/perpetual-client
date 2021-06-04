@@ -132,7 +132,7 @@ export default class Tracer {
      *   int256 lastUpdatedGasPrice,
      *   uint256 lastUpdatedIndex
      */
-    updateUserBalance: (account: string | undefined) => Promise<boolean> = async (account) => {
+    updateUserBalance: (account: string | undefined) => Promise<UserBalance> = async (account) => {
         try {
             if (!account) {
                 return Promise.resolve(false);
@@ -141,6 +141,7 @@ export default class Tracer {
             // if accounts is undefined the catch should get it
             const balance = await this._instance.methods.getBalance(account).call();
             const walletBalance = await this.token?.methods.balanceOf(account).call();
+            console.log('Wallet balance', walletBalance);
             const parsedBalances = {
                 quote: new BigNumber(Web3.utils.fromWei(balance[0][0])),
                 base: new BigNumber(Web3.utils.fromWei(balance[0][1])),
@@ -152,19 +153,16 @@ export default class Tracer {
             };
             console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
             this.balances = parsedBalances;
-            return true;
+            return parsedBalances;
         } catch (error) {
             console.error(`Failed to fetch user balance: ${error}`);
-            this.balances = {
-                quote: new BigNumber(0),
-                base: new BigNumber(0),
-                totalLeveragedValue: new BigNumber(0),
-                lastUpdatedGasPrice: new BigNumber(0),
-                tokenBalance: new BigNumber(0),
-            } as UserBalance;
-            return false;
+            console.log('Setting default balances');
+            // this.balances = defaults.balances;
+            return defaults.balances;
         }
     };
+
+    getBalance: () => UserBalance = () => this.balances;
 
     updateOraclePrice: () => Promise<void> = async () => {
         try {

@@ -133,7 +133,7 @@ interface LProps {
 }
 
 export const Logo: React.FC<LProps> = styled(({ className, ticker, clear }: LProps) => {
-    return <img className={className} src={clear ? clearLogos[ticker] : logos[ticker] ?? logos["TSLA"]} alt="logo" />;
+    return <img className={className} src={clear ? clearLogos[ticker] : logos[ticker] ?? logos['TSLA']} alt="logo" />;
 })`
     width: 30px;
     margin: 5px 0;

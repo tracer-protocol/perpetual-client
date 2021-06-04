@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useReducer } from 'react';
-import { FactoryContext, initialFactoryState } from './FactoryContext';
+import { FactoryContext } from './FactoryContext';
 import { Children, Result, UserBalance } from 'types';
-import { isEmpty } from 'lodash';
 import { createOrder } from '@libs/Ome';
 import { Web3Context } from './Web3Context';
 import { OrderState } from './OrderContext';
@@ -17,7 +16,7 @@ interface ContextProps {
     withdraw: (amount: number, _callback?: () => void) => void;
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
-    balance: UserBalance;
+    balances: UserBalance;
     placeOrder: (order: OrderState) => Promise<Result>;
 }
 
@@ -25,7 +24,7 @@ export const TracerContext = React.createContext<Partial<ContextProps>>({} as Co
 
 type TracerState = {
     selectedTracer: Tracer | undefined;
-    balance: UserBalance;
+    balances: UserBalance;
 };
 
 type StoreProps = {
@@ -34,12 +33,12 @@ type StoreProps = {
 
 export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
     const { account, web3, config, networkId } = useContext(Web3Context);
-    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
+    const { factoryState } = useContext(FactoryContext);
     const { handleTransaction } = useContext(TransactionContext);
 
     const initialState: TracerState = {
         selectedTracer: undefined,
-        balance: defaults.balances,
+        balances: defaults.balances,
     };
 
     const reducer = (state: TracerState, action: Record<string, any>) => {
@@ -57,29 +56,28 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
     useEffect(() => {
         // for initialising the tracer store through props
-        if (tracer) {
-            tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracer] });
+        if (tracer && factoryState?.hasSetTracers) {
+            tracerDispatch({ type: 'setSelectedTracer', value: factoryState?.tracers[tracer] });
         }
-    }, [tracer]);
+    }, [tracer, factoryState?.hasSetTracers]);
 
     useEffect(() => {
         // detecting when tracers changes so we can set a default tracer
-        if (tracers && !isEmpty(tracers)) {
-            const defaultTracer = Object.values(tracers)[0];
+        if (factoryState?.hasSetTracers) {
+            const defaultTracer = Object.values(factoryState?.tracers)[0];
             tracerDispatch({ type: 'setSelectedTracer', value: defaultTracer });
+            fetchUserData();
             // for testing purposes this will not be done each time someone opens the app
             // createBook(defaultTracer);
         }
-    }, [tracers]);
+    }, [factoryState?.hasSetTracers]);
 
-    const { selectedTracer, balance } = tracerState;
+    const { selectedTracer, balances } = tracerState;
 
     const fetchUserData = async () => {
-        if (tracers) {
-            const userData = await Promise.all(
-                Object.values(tracers).map((tracer: Tracer) => tracer?.updateUserBalance(account)),
-            );
-            tracerDispatch({ type: 'setUserBalance', value: userData[0] });
+        if (factoryState?.hasSetTracers) {
+            const userData = await selectedTracer?.updateUserBalance(account);
+            tracerDispatch({ type: 'setUserBalance', value: userData });
         }
     };
 
@@ -125,8 +123,9 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
     useEffect(() => {
         const fetch = async () => {
-            const balance = await selectedTracer?.updateUserBalance(account);
-            tracerDispatch({ type: 'setUserBalance', value: balance });
+            if (account) {
+                fetchUserData();
+            }
         };
         fetch();
     }, [account]);
@@ -147,9 +146,9 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 deposit: (amount, _callback) => submit(true, amount, _callback),
                 withdraw: (amount, _callback) => submit(false, amount, _callback),
                 setTracerId: (tracerId: string) =>
-                    tracerDispatch({ type: 'setSelectedTracer', value: tracers?.[tracerId] }),
+                    tracerDispatch({ type: 'setSelectedTracer', value: factoryState?.tracers?.[tracerId] }),
                 selectedTracer,
-                balance,
+                balances,
                 placeOrder,
             }}
         >

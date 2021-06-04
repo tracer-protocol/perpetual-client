@@ -46,13 +46,12 @@ export const useAccountData: (user: string | undefined) => any = (user) => {
     };
 };
 
-const toBigNumbers: (orders: any) => FilledOrder[] = (
-    orders
-) => orders.map((order: any) => ({ 
-    ...orders,
-    amount: new BigNumber(Web3.utils.fromWei(order.amount)),
-    price: new BigNumber(Web3.utils.fromWei(order.price))
-}))
+const toBigNumbers: (orders: any) => FilledOrder[] = (orders) =>
+    orders.map((order: any) => ({
+        ...orders,
+        amount: new BigNumber(Web3.utils.fromWei(order.amount)),
+        price: new BigNumber(Web3.utils.fromWei(order.price)),
+    }));
 
 const USER_TRACER_TRADES = gql`
     query Tracer_Trades($account: String!, $tracer: String!) {
@@ -85,7 +84,6 @@ export const useUsersMatched: (
         },
     });
 
-
     return {
         filledOrders: data?.trades ? toBigNumbers(data?.trades) : ref.current,
         error,
@@ -108,19 +106,18 @@ const USER_TRADES = gql`
     }
 `;
 
-const groupTracers = (filledOrders: any[]) => filledOrders.reduce((r, a) => {
+const groupTracers = (filledOrders: any[]) =>
+    filledOrders.reduce((r, a) => {
         r[a.tracer.id] = r[a.tracer.id] || [];
         r[a.tracer.id].push({
             ...a,
             amount: new BigNumber(Web3.utils.fromWei(a.amount)),
-            price: new BigNumber(Web3.utils.fromWei(a.price))
+            price: new BigNumber(Web3.utils.fromWei(a.price)),
         });
         return r;
-}, Object.create(null))
+    }, Object.create(null));
 
-export const useAllUsersMatched: (
-    account: string,
-) => {
+export const useAllUsersMatched: (account: string) => {
     allFilledOrders: LabelledOrders;
     error: any;
     loading: any;
@@ -137,7 +134,10 @@ export const useAllUsersMatched: (
         },
     });
 
-    const memoedGroupTracers = useCallback(() => data?.trades ? groupTracers(data?.trades) : ref.current ,[data?.trades])
+    const memoedGroupTracers = useCallback(
+        () => (data?.trades ? groupTracers(data?.trades) : ref.current),
+        [data?.trades],
+    );
 
     return {
         allFilledOrders: memoedGroupTracers(),

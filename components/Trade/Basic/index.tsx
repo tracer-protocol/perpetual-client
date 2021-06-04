@@ -175,10 +175,10 @@ const SButton = styled(Button)`
 `;
 
 const Basic: React.FC = styled(({ className }) => {
-    const { selectedTracer } = useContext(TracerContext);
+    const { selectedTracer, balances: _balances } = useContext(TracerContext);
     const { order, exposure, orderDispatch } = useContext(OrderContext);
     const [showSummary, setShowSummary] = useState(false);
-    const balances = selectedTracer?.balances ?? defaults.balances;
+    const balances = _balances ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
 
     useEffect(() => {

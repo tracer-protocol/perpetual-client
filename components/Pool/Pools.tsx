@@ -17,9 +17,9 @@ const PoolSummary: React.FC = () => {
 };
 
 const PoolFunds: React.FC = () => {
-    const { tracerId, selectedTracer } = useContext(TracerContext);
+    const { tracerId, balances } = useContext(TracerContext);
     const [amount, setAmount] = useState(0);
-    const balance = selectedTracer?.balances?.tokenBalance ?? defaults.tokenBalance;
+    const balance = balances?.tokenBalance ?? defaults.tokenBalance;
 
     return (
         <div className="text-center h-full w-full flex flex-col">

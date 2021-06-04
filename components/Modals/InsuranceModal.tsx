@@ -116,13 +116,12 @@ type BProps = {
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
 } & Children;
 export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps) => {
-    const { tracerId, selectedTracer } = useContext(TracerContext);
+    const { tracerId, balances } = useContext(TracerContext);
     const { poolInfo, deposit, withdraw } = useContext(InsuranceContext);
     const { handleTransaction } = useContext(TransactionContext);
     const [isDeposit, setIsDeposit] = useState(true);
-    const tracerBalance = selectedTracer?.balances;
     const poolBalance = poolInfo?.userBalance ?? defaults.userBalance;
-    const balance = isDeposit ? tracerBalance?.tokenBalance : poolBalance;
+    const balance = isDeposit ? balances?.tokenBalance : poolBalance;
     const [valid, setValid] = useState(false);
     const [amount, setAmount] = useState(0); // The amount within the input
     const [acceptedTerms, acceptTerms] = useState(false);

@@ -10,6 +10,7 @@ import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Button, Logo, BasicInputContainer, Input } from '@components/General';
 import Tooltip from 'antd/lib/tooltip';
 import { markets, collaterals } from '../Menus';
+import { defaults } from '@libs/Tracer';
 
 const SLabel = styled.h3`
     display: flex;
@@ -162,14 +163,12 @@ const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wall
 `;
 
 const BasicInterface1: React.FC = styled(({ className }) => {
-    const { order, orderDispatch } = useContext(OrderContext);
     const { selectedTracer } = useContext(TracerContext);
+    const { order, orderDispatch } = useContext(OrderContext);
     const { amountToPay, market, collateral, amountToBuy } = order as OrderState;
     const marketPairs = useMarketPairs();
-    const balance =
-        order?.wallet === 0
-            ? selectedTracer?.balances?.tokenBalance.toNumber()
-            : selectedTracer?.balances?.quote.toNumber();
+    const balances = selectedTracer?.getBalance() ?? defaults.balances;
+    const balance = order?.wallet === 0 ? balances?.tokenBalance?.toNumber() : balances?.quote?.toNumber();
 
     //get market address -> using tracer factory helper function
     //pass in address and initialise Tracer -> get all open orders of the address
