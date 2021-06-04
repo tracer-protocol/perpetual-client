@@ -12,13 +12,6 @@ import PostTradeDetails from './PostTradeDetails';
 import BigNumber from 'bignumber.js';
 import { toApproxCurrency, toPercent } from '@libs/utils';
 
-const Market = styled.div`
-    letter-spacing: -0.4px;
-    font-size: 20px;
-    color: #fff;
-    display: flex;
-`;
-
 const SLogo = styled(Logo)`
     margin-top: 0;
     margin-bottom: 0;
@@ -148,10 +141,10 @@ export const MarketSelect: React.FC = styled(({ className }) => {
             style={{ transition: '0.5s' }}
         >
             <Box className="relative">
-                <Market>
+                <div className="flex text-lg max-h-10">
                     <SLogo ticker="ETH" />
                     <div className="my-auto">ETH-USDC</div>
-                </Market>
+                </div>
                 <div
                     className="ml-auto mr-2 px-3"
                     onMouseEnter={() => {
