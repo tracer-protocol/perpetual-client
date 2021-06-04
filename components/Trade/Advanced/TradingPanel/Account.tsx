@@ -19,6 +19,7 @@ const SBox = styled(Box)`
     flex-direction: column;
     justify-content: center;
     min-height: ${MinHeight}px;
+
     > p {
         font-size: 20px;
         letter-spacing: 0;
@@ -58,10 +59,12 @@ const Item = styled.div`
         font-size: 16px;
         letter-spacing: -0.32px;
     }
+
     > span a:nth-child(2) {
         margin-left: auto;
         color: #21dd53;
     }
+
     h3 {
         letter-spacing: -0.32px;
         color: #3da8f5;
@@ -114,7 +117,7 @@ const SSection = styled(Section)`
 const SPrevious = styled(Previous)`
     width: 100%;
     display: flex;
-    &: after {
+    &:after {
         margin: auto;
     }
 `;

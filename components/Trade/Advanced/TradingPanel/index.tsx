@@ -25,12 +25,16 @@ const SLogo = styled(Logo)`
     margin-right: 0.7rem;
 `;
 
-type PProps = {
+const ColouredDiv = styled.div`
+    color: ${(props: any) => props.color as string};
+`;
+
+type MarketSelectDropdownProps = {
     className?: string;
     display: boolean;
 };
 
-const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
+const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(({ className }: MarketSelectDropdownProps) => {
     const tracers = [
         {
             name: 'ETH',
@@ -56,14 +60,16 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
         <div className={className}>
             {tracers.map((tracer, i) => (
                 <div key={`table-row-${i}`} className="flex market">
-                    <div className="flex flex-row ml-5">
+                    <div className="flex flex-row ml-5 py-2">
                         <div className="my-auto">
                             <Logo ticker={tracer.name} />
                         </div>
                         <div className="my-auto ml-2">{tracer.market}</div>
                     </div>
-                    <div className="m-auto">{toPercent(tracer.change)}</div>
-                    <div className="my-auto mr-8">{toApproxCurrency(tracer.price)}</div>
+                    <ColouredDiv className="m-auto py-2" color={tracer.change < 0 ? '#F15025' : '#21DD53'}>
+                        {toPercent(tracer.change)}
+                    </ColouredDiv>
+                    <div className="my-auto mr-8 py-2">{toApproxCurrency(tracer.price)}</div>
                 </div>
             ))}
         </div>
@@ -88,8 +94,7 @@ const Popup: React.FC<PProps> = styled(({ className }: PProps) => {
     }
 `;
 
-const MarketSelectDropdown = styled.div`
-    transition: 0.3s;
+const MarketSelectDropdownButton = styled.div`
     color: #3da8f5;
     font-size: 1rem;
     border: 1px solid #3da8f5;
@@ -102,7 +107,9 @@ const MarketSelectDropdown = styled.div`
     }
 
     .down-arrow {
-        transition: 0.5s;
+        transition: ${(props: any) => props.theme.transition as string};
+        transform: ${(props: any) => props.theme.transform as string};
+        margin-top: ${(props: any) => props.theme.marginTop as string};
     }
 
     &:hover .down-arrow {
@@ -111,32 +118,41 @@ const MarketSelectDropdown = styled.div`
     }
 `;
 
+const BackgroundColouredDiv = styled.div`
+    background-color: ${(props: any) => props.color as string};
+`;
+
 export const MarketSelect: React.FC = styled(({ className }) => {
     const [popup, setPopup] = useState(false);
-    const handleClick = (popup: boolean) => {
-        setPopup(popup);
+    const ArrowDownTheme = {
+        transition: '0.5s',
     };
-
-    const showDropdown = () => {
-        setPopup(true);
-    };
-
-    const hideDropdown = () => {
-        setPopup(false);
+    const ArrowUpTheme = {
+        transition: '0.5s',
+        transform: 'rotate(180deg)',
+        marginTop: '6px',
     };
 
     return (
-        <div className={className} onMouseLeave={hideDropdown}>
+        <BackgroundColouredDiv
+            className={className}
+            onMouseLeave={() => {
+                setPopup(false);
+            }}
+            color={popup ? '#011772' : '#03065e'}
+            style={{ transition: '0.5s' }}
+        >
             <Box className="relative">
                 <Market>
                     <SLogo ticker="ETH" />
                     <div className="my-auto">ETH-USDC</div>
                 </Market>
-                <MarketSelectDropdown
-                    onMouseEnter={showDropdown}
-                    id="dropdown"
+                <MarketSelectDropdownButton
+                    onMouseEnter={() => {
+                        setPopup(true);
+                    }}
+                    theme={popup ? ArrowUpTheme : ArrowDownTheme}
                     className="ml-auto mr-2 px-3"
-                    onClick={(_e: any) => handleClick(true)}
                 >
                     <div className="flex justify-center">
                         <div>View Markets</div>
@@ -148,10 +164,10 @@ export const MarketSelect: React.FC = styled(({ className }) => {
                             />
                         </div>
                     </div>
-                </MarketSelectDropdown>
-                <Popup display={popup} />
+                </MarketSelectDropdownButton>
+                <MarketSelectDropdown display={popup} />
             </Box>
-        </div>
+        </BackgroundColouredDiv>
     );
 })``;
 
