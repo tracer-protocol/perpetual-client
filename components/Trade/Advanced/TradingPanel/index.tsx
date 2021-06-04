@@ -29,6 +29,10 @@ const ColouredDiv = styled.div`
     color: ${(props: any) => props.color as string};
 `;
 
+const BackgroundColouredDiv = styled.div`
+    background-color: ${(props: any) => props.color as string};
+`;
+
 type MarketSelectDropdownProps = {
     className?: string;
     display: boolean;
@@ -94,7 +98,25 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(({ clas
     }
 `;
 
-const MarketSelectDropdownButton = styled.div`
+type MarketSelectDropdownButtonProps = {
+    className?: string;
+    arrowUp?: boolean;
+};
+
+const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = styled(
+    ({ className }: MarketSelectDropdownButtonProps) => {
+        return (
+            <div className={className}>
+                <div className="flex justify-center">
+                    <div>View Markets</div>
+                    <div>
+                        <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
+                    </div>
+                </div>
+            </div>
+        );
+    },
+)`
     color: #3da8f5;
     font-size: 1rem;
     border: 1px solid #3da8f5;
@@ -107,31 +129,14 @@ const MarketSelectDropdownButton = styled.div`
     }
 
     .down-arrow {
-        transition: ${(props: any) => props.theme.transition as string};
-        transform: ${(props: any) => props.theme.transform as string};
-        margin-top: ${(props: any) => props.theme.marginTop as string};
+        transition: 0.5s;
+        transform: ${(props) => (props.arrowUp ? 'rotate(180deg)' : 'none')};
+        margin-top: ${(props) => (props.arrowUp ? '6px' : '0')};
     }
-
-    &:hover .down-arrow {
-        transform: rotate(180deg);
-        margin-top: 6px;
-    }
-`;
-
-const BackgroundColouredDiv = styled.div`
-    background-color: ${(props: any) => props.color as string};
 `;
 
 export const MarketSelect: React.FC = styled(({ className }) => {
     const [popup, setPopup] = useState(false);
-    const ArrowDownTheme = {
-        transition: '0.5s',
-    };
-    const ArrowUpTheme = {
-        transition: '0.5s',
-        transform: 'rotate(180deg)',
-        marginTop: '6px',
-    };
 
     return (
         <BackgroundColouredDiv
@@ -147,24 +152,17 @@ export const MarketSelect: React.FC = styled(({ className }) => {
                     <SLogo ticker="ETH" />
                     <div className="my-auto">ETH-USDC</div>
                 </Market>
-                <MarketSelectDropdownButton
+                <div
+                    className="ml-auto mr-2 px-3"
                     onMouseEnter={() => {
                         setPopup(true);
                     }}
-                    theme={popup ? ArrowUpTheme : ArrowDownTheme}
-                    className="ml-auto mr-2 px-3"
+                    onClick={() => {
+                        setPopup(!popup);
+                    }}
                 >
-                    <div className="flex justify-center">
-                        <div>View Markets</div>
-                        <div>
-                            <img
-                                className="down-arrow w-4 ml-1"
-                                src="/img/general/triangle_down.svg"
-                                alt="Down Arrow"
-                            />
-                        </div>
-                    </div>
-                </MarketSelectDropdownButton>
+                    <MarketSelectDropdownButton arrowUp={popup} />
+                </div>
                 <MarketSelectDropdown display={popup} />
             </Box>
         </BackgroundColouredDiv>
