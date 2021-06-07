@@ -18,8 +18,10 @@ const InsurancePoolsHeader = styled.div`
     width: 90%;
     margin: 0 auto;
     color: white;
-    padding: 0 1rem 1rem;
+    padding: 1rem;
     font-size: 1rem;
+    border-left: 1px solid #002886;
+    border-right: 1px solid #002886;
 `;
 
 const InsurancePoolsFooter = styled.div`
@@ -47,7 +49,7 @@ const Insurance: React.FC = styled(({ className }) => {
     return (
         <div className={`${className} page`}>
             <NavBar />
-            <Loading />
+            {/*<Loading />*/}
             <SelectedTracerStore>
                 <InsuranceStore>
                     <InsurancePoolsHeader>Insurance Pools</InsurancePoolsHeader>
