@@ -66,7 +66,7 @@ const DropdownLogo = styled(({ className }) => {
             <img alt="down-arrow" className="down-arrow z-10" src="/img/general/triangle_down.svg" />
             <div className={`dropdown-menu`}>
                 <ul className="dropdown-menu-list">
-                    <li className="nav-item">{/* <img alt="Tracer Logo" src="/img/logos/tracer_perps.svg"/> */}</li>
+                    <li className="nav-item" />
                     <li className="nav-item">
                         <img alt="Tracer Logo" src="/img/logos/tracer/tracer_main.svg" />
                     </li>
