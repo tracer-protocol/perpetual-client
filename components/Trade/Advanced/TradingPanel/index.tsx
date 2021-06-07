@@ -93,10 +93,8 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     ({ className, arrowUp }: MarketSelectDropdownButtonProps) => {
         return (
             <div className={className}>
-                <div className="flex justify-center">
-                    <div>{arrowUp ? 'Hide Markets' : 'View Markets'}</div>
-                    <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
-                </div>
+                <span>{arrowUp ? 'Hide Markets' : 'View Markets'}</span>
+                <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
             </div>
         );
     },
@@ -107,14 +105,15 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     border-radius: 20px;
     height: 28px;
     width: 160px;
+    text-align: center;
 
     &:hover {
         cursor: pointer;
     }
-
-    .down-arrow {
+    > .down-arrow {
+        display: inline-block;
         transition: 0.3s;
-        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'none')};
+        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-3px)' : 'translateY(-2px)')};
     }
 `;
 
@@ -122,15 +121,20 @@ const MarketContainer = styled.div`
     font-size: 20px;
     letter-spacing: -0.4px;
     display: flex;
+    max-height: 30px;
 `;
 
 const SBox = styled(Box)`
     background-color: ${(props: any) => props.color as string}!important;
     position: relative;
-    z-index: 4;
+    z-index: ${(props:any) => props.display ? 4 : 1};
 `;
 
-export const MarketSelect: React.FC = styled(({ className }) => {
+type MSProps = {
+    className?: string,
+    account: string
+}
+export const MarketSelect: React.FC<MSProps>= styled(({ className }: MSProps) => {
     const { tracers } = useContext(FactoryContext);
     const { selectedTracer, setTracerId } = useContext(TracerContext);
     const [popup, setPopup] = useState(false);
@@ -144,7 +148,7 @@ export const MarketSelect: React.FC = styled(({ className }) => {
 
     return (
         <div className={className}>
-            <SBox color={popup ? '#011772' : '#03065e'}>
+            <SBox color={popup ? '#011772' : '#03065e'} display={popup}>
                 <MarketContainer>
                     <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
                     <div className="my-auto">{selectedTracer?.marketId}</div>
@@ -173,8 +177,8 @@ export const MarketSelect: React.FC = styled(({ className }) => {
         </div>
     );
 })`
-    transition: 0.5s;
     width: 100%;
+    display: ${(props) => (props.account === '' ? 'none' : 'block')};
 `;
 
 type TIProps = {
