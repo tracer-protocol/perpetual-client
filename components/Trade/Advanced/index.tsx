@@ -88,6 +88,7 @@ const LeftPanel = styled.div`
     display: flex;
     flex-direction: column;
     min-height: 90vh;
+    position: relative;
 `;
 
 const RightPanel = styled.div`

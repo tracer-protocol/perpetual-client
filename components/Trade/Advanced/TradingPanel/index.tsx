@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import { DefaultSlider } from '@components/Trade/LeverageSlider';
-import { OrderContext } from 'context';
+import { FactoryContext, OrderContext, TracerContext } from 'context';
 import InputSelects from './Inputs';
 import { Tracer } from 'libs';
 import { Box, Logo } from '@components/General';
@@ -10,7 +10,8 @@ import styled from 'styled-components';
 import { defaults } from '@libs/Tracer';
 import PostTradeDetails from './PostTradeDetails';
 import BigNumber from 'bignumber.js';
-import { toApproxCurrency, toPercent } from '@libs/utils';
+import { toApproxCurrency } from '@libs/utils';
+import MarketChange from '@components/General/MarketChange';
 
 const SLogo = styled(Logo)`
     margin-top: 0;
@@ -18,76 +19,68 @@ const SLogo = styled(Logo)`
     margin-right: 0.7rem;
 `;
 
-const ColouredDiv = styled.div`
-    color: ${(props: any) => props.color as string};
-`;
-
-const BackgroundColouredDiv = styled.div`
-    background-color: ${(props: any) => props.color as string};
-`;
-
 type MarketSelectDropdownProps = {
-    className?: string;
+    tracers: Record<string, Tracer>;
+    onMarketSelect: (tracerId: string) => any;
     display: boolean;
+    className?: string;
 };
 
-const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(({ className }: MarketSelectDropdownProps) => {
-    const tracers = [
-        {
-            name: 'ETH',
-            market: 'ETH-USDC',
-            price: 3424.23,
-            change: 0.0003,
-        },
-        {
-            name: 'ETH',
-            market: 'ETH-USDC',
-            price: 3424.23,
-            change: 0.0003,
-        },
-        {
-            name: 'ETH',
-            market: 'ETH-USDC',
-            price: 3424.23,
-            change: 0.0003,
-        },
-    ];
-
-    return (
-        <div className={className}>
-            {tracers.map((tracer, i) => (
-                <div key={`table-row-${i}`} className="flex market">
-                    <div className="flex flex-row ml-5 py-2">
-                        <div className="my-auto">
-                            <Logo ticker={tracer.name} />
+const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
+    ({ className, tracers, onMarketSelect }: MarketSelectDropdownProps) => {
+        return (
+            <div className={className}>
+                {Object.values(tracers).map((tracer) => (
+                    <Box
+                        className="market"
+                        key={`tracer-market-${tracer.marketId}`}
+                        onClick={() => onMarketSelect(tracer.marketId)}
+                    >
+                        <MarketContainer className="w-1/4">
+                            <SLogo ticker={tracer.baseTicker} />
+                            <div className="my-auto">{tracer.marketId}</div>
+                        </MarketContainer>
+                        <div className="info w-1/4">
+                            <MarketChange size={'lg'} before={false} amount={tracer.get24HourChange()} />
+                            <div>{toApproxCurrency(tracer.getOraclePrice())}</div>
                         </div>
-                        <div className="my-auto ml-2">{tracer.market}</div>
-                    </div>
-                    <ColouredDiv className="m-auto py-2" color={tracer.change < 0 ? '#F15025' : '#21DD53'}>
-                        {toPercent(tracer.change)}
-                    </ColouredDiv>
-                    <div className="my-auto mr-8 py-2">{toApproxCurrency(tracer.price)}</div>
-                </div>
-            ))}
-        </div>
-    );
-})`
-    transition: 1s;
+                    </Box>
+                ))}
+            </div>
+        );
+    },
+)`
+    transition: 0.5s;
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
+    height: 0;
     background: #011772;
+    font-size: 16px;
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
-
-    .market {
-        transition: 0.5s;
+    height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 80}px` : '0')};
+    > .market {
+        // eventually this will have to change to be dynamic as more markets get added
+        // this can be done with jQuery and a useEffect when tracers is updated and setting nth-child attr
+        transition-delay: 0.5s;
+        transition: 0.3s;
+        opacity: ${(props) => (props.display ? '1' : '0')};
     }
 
-    .market:hover {
+    > .market:hover {
         background: #002886;
         cursor: pointer;
+    }
+
+    > .market .info {
+        margin-left: auto;
+        margin-right: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        line-height: 30px;
     }
 `;
 
@@ -97,14 +90,12 @@ type MarketSelectDropdownButtonProps = {
 };
 
 const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = styled(
-    ({ className }: MarketSelectDropdownButtonProps) => {
+    ({ className, arrowUp }: MarketSelectDropdownButtonProps) => {
         return (
             <div className={className}>
                 <div className="flex justify-center">
-                    <div>View Markets</div>
-                    <div>
-                        <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
-                    </div>
+                    <div>{arrowUp ? 'Hide Markets' : 'View Markets'}</div>
+                    <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
                 </div>
             </div>
         );
@@ -114,7 +105,7 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     font-size: 1rem;
     border: 1px solid #3da8f5;
     border-radius: 20px;
-    padding: 5px 0;
+    height: 28px;
     width: 160px;
 
     &:hover {
@@ -122,45 +113,69 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     }
 
     .down-arrow {
-        transition: 0.5s;
-        transform: ${(props) => (props.arrowUp ? 'rotate(180deg)' : 'none')};
-        margin-top: ${(props) => (props.arrowUp ? '6px' : '0')};
+        transition: 0.3s;
+        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'none')};
     }
 `;
 
+const MarketContainer = styled.div`
+    font-size: 20px;
+    letter-spacing: -0.4px;
+    display: flex;
+`;
+
+const SBox = styled(Box)`
+    background-color: ${(props: any) => props.color as string}!important;
+    position: relative;
+    z-index: 4;
+`;
+
 export const MarketSelect: React.FC = styled(({ className }) => {
+    const { tracers } = useContext(FactoryContext);
+    const { selectedTracer, setTracerId } = useContext(TracerContext);
     const [popup, setPopup] = useState(false);
 
+    useEffect(() => {
+        const overlay = document.getElementById('trading-overlay');
+        if (overlay) {
+            popup ? overlay.classList.add('display') : overlay.classList.remove('display');
+        }
+    }, [popup]);
+
     return (
-        <BackgroundColouredDiv
-            className={className}
-            onMouseLeave={() => {
-                setPopup(false);
-            }}
-            color={popup ? '#011772' : '#03065e'}
-            style={{ transition: '0.5s' }}
-        >
-            <Box className="relative">
-                <div className="flex text-lg max-h-10">
-                    <SLogo ticker="ETH" />
-                    <div className="my-auto">ETH-USDC</div>
-                </div>
+        <div className={className}>
+            <SBox color={popup ? '#011772' : '#03065e'}>
+                <MarketContainer>
+                    <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
+                    <div className="my-auto">{selectedTracer?.marketId}</div>
+                </MarketContainer>
                 <div
-                    className="ml-auto mr-2 px-3"
-                    onMouseEnter={() => {
-                        setPopup(true);
-                    }}
+                    className="ml-auto"
                     onClick={() => {
                         setPopup(!popup);
                     }}
                 >
                     <MarketSelectDropdownButton arrowUp={popup} />
                 </div>
-                <MarketSelectDropdown display={popup} />
-            </Box>
-        </BackgroundColouredDiv>
+                <MarketSelectDropdown
+                    tracers={tracers ?? {}}
+                    display={popup}
+                    onMarketSelect={(tracerId: string) => {
+                        if (setTracerId) {
+                            setTracerId(tracerId);
+                            setPopup(false);
+                        } else {
+                            console.error('Failed to set tracer, setTracerId undefined');
+                        }
+                    }}
+                />
+            </SBox>
+        </div>
     );
-})``;
+})`
+    transition: 0.5s;
+    width: 100%;
+`;
 
 type TIProps = {
     selectedTracer: Tracer | undefined;

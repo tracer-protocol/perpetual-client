@@ -16,9 +16,11 @@ const MinHeight = 250;
 const SBox = styled(Box)`
     background: #011772;
     text-align: center;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     min-height: ${MinHeight}px;
+    z-index: 4;
 
     > p {
         font-size: 20px;
@@ -28,8 +30,8 @@ const SBox = styled(Box)`
 `;
 
 const Connect = styled(Button)`
-    width: 100%;
-    padding: 0.5rem;
+    width: 100% !important;
+    padding: 0.5rem !important;
     margin-top: 0.5rem;
 `;
 
