@@ -16,22 +16,21 @@ const NetworkButton = styled.span`
     &:hover {
         cursor: pointer;
         background: #fff;
-        color: #F15025;
+        color: #f15025;
     }
-
-`
+`;
 type UNProps = {
     display: boolean;
-    className?:string;
-}
+    className?: string;
+};
 const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
     return (
         <div className={className}>
             You are connected to the wrong network. Switch to <NetworkButton>Kovan Testnet.</NetworkButton>
         </div>
-    )
+    );
 })`
-    background: #F15025;
+    background: #f15025;
     color: #fff;
     letter-spacing: -0.36px;
     height: 40px;
@@ -40,10 +39,10 @@ const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
     width: 100%;
     position: absolute;
     text-align: center;
-    bottom: ${props => props.display ? '-40px' : '0px'};
-    opacity: ${props => props.display ? '1' : '0'};
-    transition: ${props => props.display ? 'bottom 0.3s, opacity 0.3s 0.1s' : 'bottom 0.3s 0.1s, opacity 0.3s'};
-`
+    bottom: ${(props) => (props.display ? '-40px' : '0px')};
+    opacity: ${(props) => (props.display ? '1' : '0')};
+    transition: ${(props) => (props.display ? 'bottom 0.3s, opacity 0.3s 0.1s' : 'bottom 0.3s 0.1s, opacity 0.3s')};
+`;
 
 const useEnsName = (account: string) => {
     const [ensName, setEnsName] = useState(account);
@@ -282,7 +281,6 @@ const NavBar: React.FC = styled(({ className }) => {
     const secondaryRoute = routes[2];
     const { handleConnect, account, networkId } = useContext(Web3Context);
     const ensName = useEnsName(account ?? '');
-    console.log(networkId)
 
     const buttonContent = () => {
         if (!account) {
@@ -339,7 +337,7 @@ const NavBar: React.FC = styled(({ className }) => {
                 </div>
             </ConnectButton>
 
-            { /** TODO this will need to change to arbritrum network id */}
+            {/** TODO this will need to change to arbritrum network id */}
             <UnknownNetwork display={networkId !== 42 && !!networkId} />
         </nav>
     );
