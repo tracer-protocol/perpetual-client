@@ -1,11 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext } from 'context';
 import LeverageSlider from '@components/Trade/LeverageSlider';
-import BasicInterface1 from '@components/Trade/Basic/BasicInterface1';
-// import BasicInterface2 from '@components/Trade/Basic/BasicInterface2';
+import BasicInterface2 from '@components/Trade/Basic/BasicInterface2';
 import { SlideSelect, PlaceOrderButton } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
-import { Card, Button, Previous } from '@components/General';
+import { Card, Button, Previous, HiddenExpand } from '@components/General';
 import { OrderAction, OrderState } from '@context/OrderContext';
 import styled from 'styled-components';
 import { calcLiquidationPrice, calcNotionalValue } from '@tracer-protocol/tracer-utils';
@@ -91,7 +90,7 @@ const OrderSummary: React.FC<SProps> = styled(
                 ? balances.quote.plus(notional) // short
                 : balances.quote.minus(notional); // long
         return (
-            <div className={className}>
+            <HiddenExpand className={className} defaultHeight={0} open={!!order?.amountToPay || !!order?.amountToBuy}>
                 <h3>Order Summary</h3>
                 <SSection label={'Order Type'}>Market</SSection>
                 <SSection label={'Market Price'}>
@@ -112,28 +111,21 @@ const OrderSummary: React.FC<SProps> = styled(
                 <SSection label={'Predicted Const Total'}>
                     {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
                 </SSection>
-            </div>
+            </HiddenExpand>
         );
     },
 )`
-    height: 0;
-    margin: 30px 0 0 0;
-    overflow: hidden;
-    transition: height 0.5s ease-in-out, opacity 0.5s ease-in 0.2s, margin 0.5s ease-in;
-    display: none;
+    overflow: scroll;
     background: #002886;
-    border-radius: 10px;
-
+    margin: 10px 0;
+    > .body {
+        padding: 0;
+    }
     h3 {
         font-size: 16px;
         letter-spacing: -0.32px;
         color: #ffffff;
         padding: 10px;
-    }
-
-    .show & {
-        height: 260px;
-        display: block;
     }
 `;
 
@@ -148,7 +140,7 @@ const Title = styled.h1`
 const SCard = styled(Card)`
     position: relative;
     width: 596px;
-    height: 550px;
+    height: 650px;
     display: flex;
     flex-direction: column;
     transition: 0.5s ease-in-out;
@@ -172,6 +164,13 @@ const SButton = styled(Button)`
     .button-disabled #tooltip {
         display: block;
     }
+`;
+
+const Header = styled.div`
+    display: flex;
+    border-bottom: 1px solid #002886;
+    padding-bottom: 0.5rem;
+    letter-spacing: -0.32px;
 `;
 
 const Basic: React.FC = styled(({ className }) => {
@@ -201,16 +200,16 @@ const Basic: React.FC = styled(({ className }) => {
     return (
         <div className={`container mx-auto mt-3 ${className}`}>
             <SCard className={`${showSummary ? 'show' : ''}`}>
-                <div className="flex">
-                    <Title>Basic Trade</Title>
+                <Header>
+                    <Title>Market Trade</Title>
                     <Position dispatch={orderDispatch} position={order?.position ?? 0} />
-                </div>
+                </Header>
 
                 {/** Display the variant basic interfaces, workout ab testing for this */}
-                <BasicInterface1 />
-                {/* <BasicInterface2 /> */}
+                <BasicInterface2 />
 
                 <LeverageSlider leverage={order?.leverage ?? 1} />
+
                 <OrderSummary
                     balances={balances}
                     order={order}

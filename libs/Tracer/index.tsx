@@ -173,7 +173,7 @@ export default class Tracer {
     updateOraclePrice: () => Promise<void> = async () => {
         try {
             const price = await this._oracle?.methods.latestAnswer().call();
-            this.oraclePrice = new BigNumber(price ?? '0').div(new BigNumber(10).pow(this.quoteTokenDecimals));
+            this.oraclePrice = new BigNumber(Web3.utils.fromWei(price ?? '0'));
         } catch (err) {
             console.error('Failed to fetch oracle price', err);
             this.oraclePrice = new BigNumber(0);
