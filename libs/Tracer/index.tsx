@@ -29,6 +29,7 @@ export const defaults: Record<string, any> = {
     amountToBuy: new BigNumber(0),
     feeRate: new BigNumber(0),
     fundingRateSensitivity: new BigNumber(0),
+    twentyFourHourChange: 0,
 };
 
 /**
@@ -48,6 +49,8 @@ export default class Tracer {
     public accountAddress: string | undefined;
     public address: string;
     public marketId: string;
+    public baseTicker: string;
+    public quoteTicker: string;
     _oracle: Oracle | undefined;
     public token: Erc20Type | undefined;
     public liquidationGasCost: number | undefined;
@@ -58,6 +61,7 @@ export default class Tracer {
     public initialised: Promise<boolean>;
     public balances: UserBalance;
     public oraclePrice: BigNumber;
+    public twentyFourHourChange: number;
     public insuranceContract: string;
 
     constructor(web3: Web3, address: string, marketId: string) {
@@ -65,9 +69,13 @@ export default class Tracer {
         this._web3 = web3;
         this.address = address;
         this.marketId = marketId;
+        const tickers = marketId.split('/');
+        this.baseTicker = tickers[0];
+        this.quoteTicker = tickers[1];
         this.feeRate = defaults.feeRate;
         this.quoteTokenDecimals = defaults.priceMultiplier;
         this.fundingRateSensitivity = defaults.fundingRateSensitivity;
+        this.twentyFourHourChange = defaults.twentyFourHourChange;
         this.insuranceContract = '';
         this.balances = defaults.balances;
         this.oraclePrice = defaults.oraclePrice;
@@ -226,5 +234,13 @@ export default class Tracer {
         } catch (err) {
             return { status: 'error', message: `Failed to withdraw from margin account: ${err.message}` };
         }
+    };
+
+    getOraclePrice: () => BigNumber = () => {
+        return this.oraclePrice;
+    };
+
+    get24HourChange: () => number = () => {
+        return this.twentyFourHourChange;
     };
 }

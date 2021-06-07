@@ -18,7 +18,7 @@ export const DateAndTime = styled(({ className, date, time }) => {
     }
 `;
 
-export const Box: React.FC<{ className?: string }> = styled.div`
+export const Box = styled.div`
     border: 1px solid #0c3586;
     display: flex;
     padding: 20px;
@@ -117,11 +117,13 @@ export const Section: React.FC<SProps> = styled(({ label, children, className, t
 
 const clearLogos: Record<string, string> = {
     ETH: '/img/logos/currencies/eth_clear.svg',
+    TEST1: '/img/logos/currencies/eth_clear.svg',
 };
 
 const logos: Record<string, string> = {
     TSLA: '/img/logos/currencies/tesla.svg',
     ETH: '/img/logos/currencies/eth.svg',
+    TEST1: '/img/logos/currencies/eth.svg',
     LINK: '/img/logos/currencies/link.svg',
 };
 

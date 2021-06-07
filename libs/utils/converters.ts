@@ -6,7 +6,7 @@ import { BigNumber } from 'bignumber.js';
  * @param value
  */
 export const toPercent: (value: number) => string = (value) => {
-    return `${round(value) * 100} %`;
+    return `${value * 100} %`;
 };
 
 /**

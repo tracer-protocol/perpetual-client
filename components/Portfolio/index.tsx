@@ -29,14 +29,6 @@ export const RightPanel = styled.div`
     }
 `;
 
-export const NoLeverageBanner = styled.div`
-    width: 200px;
-    padding: 10px;
-    border-radius: 7px;
-    color: #3da8f5;
-    background-color: #002886;
-`;
-
 export const Button = styled.div`
     transition: 0.5s;
     color: #3da8f5;
@@ -87,15 +79,16 @@ export const TableHead = styled.th`
     max-width: ${(props: any) => props.theme.maxWidth as string};
     text-align: left;
     color: #3da8f5;
-    padding: 1rem;
-    font-weight: normal;
-    border-right: 1px solid #002886;
-    border-bottom: 1px solid #002886;
+    padding: 0 1rem;
+    border-right: ${(props: any) => props.theme.borderRight as string};
+    border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
 
 TableHead.defaultProps = {
     theme: {
         maxWidth: '150px',
+        borderRight: '1px solid #002886',
+        borderBottom: '1px solid #002886',
     },
 };
 
@@ -105,20 +98,21 @@ export const TableHeadEnd = styled.th`
     color: #3da8f5;
     padding: 1rem;
     font-weight: normal;
-    border-bottom: 1px solid #002886;
+    border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
 
 TableHeadEnd.defaultProps = {
     theme: {
         width: '200px',
+        borderBottom: '1px solid #002886',
     },
 };
 
 export const TableRow = styled.tr`
+    transition: 0.5s;
     display: ${(props: any) => props.theme.display as string};
     color: ${(props: any) => props.theme.color as string};
     opacity: ${(props: any) => props.theme.opacity as string};
-    transition: 0.5s;
 
     &:hover {
         background: ${(props: any) => props.theme.hoverBG as string};
@@ -140,9 +134,16 @@ export const TableCell = styled.td`
     color: ${(props: any) => props.color as string};
     font-size: 1rem;
     padding: 0.5rem 1rem;
-    border-right: 1px solid #002886;
-    border-bottom: 1px solid #002886;
+    border-right: ${(props: any) => props.theme.borderRight as string};
+    border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
+
+TableCell.defaultProps = {
+    theme: {
+        borderRight: '1px solid #002886',
+        borderBottom: '1px solid #002886',
+    },
+};
 
 export const SecondaryCell = styled.div`
     color: #005ea4;

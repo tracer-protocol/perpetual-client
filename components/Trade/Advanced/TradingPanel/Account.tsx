@@ -16,9 +16,12 @@ const MinHeight = 250;
 const SBox = styled(Box)`
     background: #011772;
     text-align: center;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     min-height: ${MinHeight}px;
+    z-index: 4;
+
     > p {
         font-size: 20px;
         letter-spacing: 0;
@@ -27,8 +30,8 @@ const SBox = styled(Box)`
 `;
 
 const Connect = styled(Button)`
-    width: 100%;
-    padding: 0.5rem;
+    width: 100% !important;
+    padding: 0.5rem !important;
     margin-top: 0.5rem;
 `;
 
@@ -58,10 +61,12 @@ const Item = styled.div`
         font-size: 16px;
         letter-spacing: -0.32px;
     }
+
     > span a:nth-child(2) {
         margin-left: auto;
         color: #21dd53;
     }
+
     h3 {
         letter-spacing: -0.32px;
         color: #3da8f5;
@@ -114,7 +119,7 @@ const SSection = styled(Section)`
 const SPrevious = styled(Previous)`
     width: 100%;
     display: flex;
-    &: after {
+    &:after {
         margin: auto;
     }
 `;
