@@ -31,11 +31,14 @@ const SSection = styled.div`
     margin: 10px 0;
 `;
 
-const MaxButton: any = styled(Button)`
+export const MaxButton: any = styled(Button)`
     width: 60px;
     padding: 0;
     height: 30px;
-    line-height: 28px;
+    display: flex;
+    > span {
+        margin: auto;
+    }
 `;
 
 const Balance = styled.p`
@@ -217,7 +220,6 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                         >
                             Max
                         </MaxButton>
-
                         <SDropdown
                             className="pr-4"
                             overlay={markets(orderDispatch, marketPairs[collateral] ?? [])}
