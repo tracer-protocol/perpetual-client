@@ -1,6 +1,5 @@
 import React from 'react';
 import NavBar from '@components/Nav/Navbar';
-import Loading from '@components/Loading/Loading';
 import { InsuranceStore } from '@context/InsuranceContext';
 import { SelectedTracerStore } from '@context/TracerContext';
 import Pools from '@components/Insurance/Pools';
@@ -49,7 +48,6 @@ const Insurance: React.FC = styled(({ className }) => {
     return (
         <div className={`${className} page`}>
             <NavBar />
-            {/*<Loading />*/}
             <SelectedTracerStore>
                 <InsuranceStore>
                     <InsurancePoolsHeader>Insurance Pools</InsurancePoolsHeader>
