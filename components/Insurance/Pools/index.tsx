@@ -5,7 +5,7 @@ import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 't
 import styled from 'styled-components';
 import { ProgressBar } from '@components/General';
 import { Button, Logo } from '@components/General';
-import { CaretDownFilled } from '@ant-design/icons';
+import { CaretDownFilled, CaretRightFilled } from '@ant-design/icons';
 import Breakdown from '../PoolHealth/Breakdown';
 import { InsuranceModal } from '@components/Modals/InsuranceModal';
 import { TableHead, TableHeadEnd, TableRow, TableCell } from '@components/Portfolio';
@@ -39,6 +39,7 @@ const Teaser = styled.div`
     color: #fff;
     display: flex;
     margin-bottom: 1rem;
+    height: 3vh;
 `;
 
 const Hidden = styled.div`
@@ -59,9 +60,9 @@ const Collapsible = styled.div`
     transition: 0.3s;
     height: 2rem;
     overflow: hidden;
+
     .selected &,
     &.show {
-        // to options
         height: 250px;
     }
 `;
@@ -100,13 +101,20 @@ const ButtonContainer = styled.div`
 `;
 
 const SDownCaret = styled(CaretDownFilled)`
-    opacity: 0;
     transition: 0.3s;
     margin: auto 0;
     transform: rotate(-180deg);
+
     .selected & {
-        opacity: 1;
         transform: rotate(0);
+    }
+`;
+
+const RightCaret = styled(CaretRightFilled)`
+    color: #002886;
+
+    .selected & {
+        display: none;
     }
 `;
 
@@ -141,6 +149,11 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
     }
 `;
 
+const Market = styled.div`
+    display: flex;
+    align-items: center;
+`;
+
 interface IPTProps {
     handleClick: (tracerId: string) => void;
     pools: Record<string, InsurancePoolInfoType>;
@@ -148,7 +161,7 @@ interface IPTProps {
 }
 
 const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IPTProps) => {
-    const headings = ['Market', 'APY', 'Health', 'Pool Ownership'];
+    const headings = ['Market', 'Current APY', 'Health', 'Pool Ownership'];
     const [expanded, setExpanded] = useState(-1);
 
     useEffect(() => {
@@ -185,7 +198,6 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
             <thead>
                 <tr>
                     {headings.map((heading, i) =>
-                        // <TableHead key={`insurance-head-${i}`}>{heading}</TableHead>
                         i === 3 ? (
                             <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
                         ) : (
@@ -207,19 +219,17 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                             <TableCell className="w-1/6">
                                 <Collapsible>
                                     <Teaser>
-                                        <SDownCaret />
-                                        <Logo className="ml-2" ticker="ETH" />
-                                        <span className="ml-2 my-auto">{pool.market}</span>
+                                        <Market className={show ? 'show' : ''}>
+                                            {show ? <SDownCaret /> : <RightCaret />}
+                                            <Logo className="ml-2" ticker="ETH" />
+                                            <span className="ml-2">{pool.market}</span>
+                                        </Market>
                                     </Teaser>
-                                    <Hidden>Protects borrowers in the {pool.market} market.</Hidden>
                                 </Collapsible>
                             </TableCell>
                             <TableCell className="w-1/6">
                                 <Collapsible>
                                     <Teaser>{pool.apy.toNumber()}</Teaser>
-                                    <Hidden className={`${show ? 'show' : ''}`}>
-                                        30 day average realised/net APY.
-                                    </Hidden>
                                 </Collapsible>
                             </TableCell>
                             <TableCell>

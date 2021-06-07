@@ -45,6 +45,10 @@ const DepositTerms = styled.p`
     width: 100%;
     padding: 0 10px;
     color: #fff;
+
+    > .highlight {
+        color: #f15025;
+    }
 `;
 
 const SHiddenExpand = styled(HiddenExpand)`
@@ -163,7 +167,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 setIsDeposit(type === 'Deposit');
                 setShow(false);
             }}
-            title={isDeposit ? 'Deposit Insurance' : 'Withdraw Insurance'}
+            title="[Market-Name] Insurance Pool"
             subTitle={
                 isDeposit
                     ? `Add insurance to the ${tracerId} insurance pool for a specified period of time.`
@@ -191,11 +195,14 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                         }
                         body={
                             <DepositTerms>
-                                When you deposit insurance, you will receive insurance tokens representing your deposit,
-                                which will earn fees. You can withdraw your funds buy burning your tokens at any time.
-                                At the time of withdrawal, if the current value of the insurance fund does not reach the
-                                target, you will be required to pay a withdrawal fee. To understand more about the
-                                withdrawal fee, view Tracer Documentation.
+                                When you deposit insurance, you will receive insurance tokens proportionate to your
+                                deposit, which will earn fees. You can withdraw your funds by burning your tokens at any
+                                time. At the time of withdrawal,{' '}
+                                <span className="highlight">
+                                    you will be required to pay a withdrawal fee if the current value of the insurance
+                                    fund is less than the target
+                                </span>
+                                . To understand more about the withdrawal fee, learn more.
                             </DepositTerms>
                         }
                     />
@@ -240,11 +247,9 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 ) : null}
                 <div className="flex items-center justify-center p-6 rounded-b" id="insurance-submit">
                     {valid ? (
-                        <Button onClick={() => submit(amount)}>
-                            {isDeposit ? 'Add Insurance' : 'Withdraw Insurance'}
-                        </Button>
+                        <Button onClick={() => submit(amount)}>{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
                     ) : (
-                        <Button className="disabled">{isDeposit ? 'Add Insurance' : 'Withdraw Insurance'}</Button>
+                        <Button className="disabled">{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
                     )}
                 </div>
             </div>
