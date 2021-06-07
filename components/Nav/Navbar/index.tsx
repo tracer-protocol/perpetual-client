@@ -43,6 +43,7 @@ const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
     text-align: center;
     bottom: ${(props) => (props.display ? '-40px' : '0px')};
     opacity: ${(props) => (props.display ? '1' : '0')};
+    z-index: ${(props) => (props.display ? '1' : '-1')};
     transition: ${(props) => (props.display ? 'bottom 0.3s, opacity 0.3s 0.1s' : 'bottom 0.3s 0.1s, opacity 0.3s')};
 `;
 
