@@ -143,7 +143,7 @@ export const web3Machine = Machine<MachineContext, Web3StateSchema, Web3Event>({
                         },
                         onDone: {
                             target: '#waiting',
-                            actions: assign({ account: '' }),
+                            actions: [assign({ account: '' }), assign({ networkId: 0 })],
                         },
                         onError: {
                             target: 'disconnectingFailed',

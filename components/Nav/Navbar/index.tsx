@@ -8,6 +8,45 @@ import styled from 'styled-components';
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import { Web3Context } from 'context';
 
+const NetworkButton = styled.span`
+    border: 1px solid #fff;
+    transition: 0.3s;
+    border-radius: 20px;
+    padding: 0 10px;
+    &:hover {
+        cursor: pointer;
+        background: #fff;
+        color: #f15025;
+    }
+`;
+type UNProps = {
+    display: boolean;
+    className?: string;
+};
+const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
+    // TODO add an onclick to swap to arbritrum using
+    // https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
+    return (
+        <div className={className}>
+            You are connected to the wrong network. Switch to <NetworkButton>Kovan Testnet.</NetworkButton>
+        </div>
+    );
+})`
+    background: #f15025;
+    color: #fff;
+    letter-spacing: -0.36px;
+    height: 40px;
+    line-height: 40px;
+    font-size: 18px;
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    bottom: ${(props) => (props.display ? '-40px' : '0px')};
+    opacity: ${(props) => (props.display ? '1' : '0')};
+    z-index: ${(props) => (props.display ? '1' : '-1')};
+    transition: ${(props) => (props.display ? 'bottom 0.3s, opacity 0.3s 0.1s' : 'bottom 0.3s 0.1s, opacity 0.3s')};
+`;
+
 const useEnsName = (account: string) => {
     const [ensName, setEnsName] = useState(account);
     const [ens, setEns] = useState(undefined);
@@ -217,7 +256,7 @@ const ConnectButton: React.FC<any> = styled.button`
     height: 50px;
     transition: 0.2s;
     padding: 0 10px;
-    margin: auto 20px;
+    margin: auto 10px;
 
     &:focus {
         outline: none;
@@ -234,7 +273,7 @@ const NavBar: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
     const route = routes[1];
     const secondaryRoute = routes[2];
-    const { handleConnect, account } = useContext(Web3Context);
+    const { handleConnect, account, networkId } = useContext(Web3Context);
     const ensName = useEnsName(account ?? '');
 
     const buttonContent = () => {
@@ -291,6 +330,9 @@ const NavBar: React.FC = styled(({ className }) => {
                     <div className="px-2">{buttonContent()}</div>
                 </div>
             </ConnectButton>
+
+            {/** TODO this will need to change to arbritrum network id */}
+            <UnknownNetwork display={networkId !== 42 && !!networkId} />
         </nav>
     );
 })`
@@ -302,6 +344,8 @@ const NavBar: React.FC = styled(({ className }) => {
     background-image: url('/img/nav-bg.png');
     background-repeat: no-repeat;
     background-size: cover;
+    position: relative;
+    z-index: 5;
 
     > ul {
         display: flex;
