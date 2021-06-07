@@ -8,30 +8,31 @@ import { Button, Logo } from '@components/General';
 import { CaretDownFilled } from '@ant-design/icons';
 import Breakdown from '../PoolHealth/Breakdown';
 import { InsuranceModal } from '@components/Modals/InsuranceModal';
+import { TableHead, TableHeadEnd, TableRow, TableCell } from '@components/Portfolio';
 
-const TableHead = styled.th`
-    color: #3da8f5;
-    padding: 1rem;
-    font-size: 1rem;
-    letter-spacing: -0.32px;
-`;
-
-const TableCell = styled.td`
-    transition: 1s;
-    padding: 1rem;
-    border: 1px solid #002886;
-`;
-
-const TableRow = styled.tr`
-    &.selected {
-        background: #002886;
-    }
-
-    &:hover {
-        background: #002886;
-        cursor: pointer;
-    }
-`;
+// const TableHead = styled.th`
+//     color: #3da8f5;
+//     padding: 1rem;
+//     font-size: 1rem;
+//     letter-spacing: -0.32px;
+// `;
+//
+// const TableCell = styled.td`
+//     transition: 1s;
+//     padding: 1rem;
+//     border: 1px solid #002886;
+// `;
+//
+// const TableRow = styled.tr`
+//     &.selected {
+//         background: #002886;
+//     }
+//
+//     &:hover {
+//         background: #002886;
+//         cursor: pointer;
+//     }
+// `;
 
 const Teaser = styled.div`
     font-size: 1.3rem;
@@ -172,13 +173,25 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
         e.preventDefault();
         setExpanded(index);
     };
+
+    const tableHeadEnd = {
+        width: '650px',
+        borderRight: '1px solid #002886',
+        borderBottom: '1px solid #002886',
+    };
+
     return (
         <table id="pools-table" className={className}>
             <thead>
                 <tr>
-                    {headings.map((heading, i) => (
-                        <TableHead key={`insurance-head-${i}`}>{heading}</TableHead>
-                    ))}
+                    {headings.map((heading, i) =>
+                        // <TableHead key={`insurance-head-${i}`}>{heading}</TableHead>
+                        i === 3 ? (
+                            <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                        ) : (
+                            <TableHead>{heading}</TableHead>
+                        ),
+                    )}
                 </tr>
             </thead>
             <tbody>
