@@ -24,6 +24,8 @@ type UNProps = {
     className?: string;
 };
 const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
+    // TODO add an onclick to swap to arbritrum using
+    // https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
     return (
         <div className={className}>
             You are connected to the wrong network. Switch to <NetworkButton>Kovan Testnet.</NetworkButton>
