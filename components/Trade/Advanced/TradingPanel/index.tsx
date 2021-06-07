@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import { DefaultSlider } from '@components/Trade/LeverageSlider';
@@ -6,35 +6,13 @@ import { FactoryContext, OrderContext, TracerContext } from 'context';
 import InputSelects from './Inputs';
 import { Tracer } from 'libs';
 import { Box, Logo } from '@components/General';
-import Menu from 'antd/lib/menu';
-import Dropdown from 'antd/lib/dropdown';
-import { DownOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { defaults } from '@libs/Tracer';
 import PostTradeDetails from './PostTradeDetails';
 import BigNumber from 'bignumber.js';
 import { initialFactoryState } from '@context/FactoryContext';
-
-const Market = styled.div`
-    letter-spacing: -0.4px;
-    font-size: 20px;
-    color: #fff;
-    display: flex;
-`;
-
-const Selector = styled.div`
-    border-radius: 10px;
-    border: 1px solid #3da8f5;
-    color: #3da8f5;
-
-    &:hover {
-        cursor: pointer;
-    }
-
-    a {
-        padding-left: 10px;
-    }
-`;
+import { toApproxCurrency } from '@libs/utils';
+import MarketChange from '@components/General/MarketChange';
 
 const SLogo = styled(Logo)`
     margin-top: 0;
@@ -42,36 +20,162 @@ const SLogo = styled(Logo)`
     margin-right: 0.7rem;
 `;
 
-export const MarketSelect: React.FC = () => {
-    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
-    const { setTracerId, tracerId } = useContext(TracerContext);
-    const marketsList = (
-        <Menu
-            onClick={({ key }) =>
-                setTracerId ? setTracerId(key as string) : console.error('Set tracer id function not set')
-            }
-        >
-            {Object.keys(tracers ?? {})?.map((marketId) => {
-                return <Menu.Item key={marketId}>{marketId}</Menu.Item>;
-            })}
-        </Menu>
-    );
-    return (
-        <Box>
-            <Market>
-                <SLogo ticker="ETH" />
-                {tracerId}
-            </Market>
-            <div className="ml-auto">
-                <Dropdown overlay={marketsList} trigger={['click']}>
-                    <Selector>
-                        <a>View Markets</a> <DownOutlined className="m-auto px-2" />
-                    </Selector>
-                </Dropdown>
-            </div>
-        </Box>
-    );
+type MarketSelectDropdownProps = {
+    tracers: Record<string, Tracer>;
+    onMarketSelect: (tracerId: string) => any;
+    display: boolean;
+    className?: string;
 };
+
+const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
+    ({ className, tracers, onMarketSelect }: MarketSelectDropdownProps) => {
+        return (
+            <div className={className}>
+                {Object.values(tracers).map((tracer) => (
+                    <Box
+                        className="market"
+                        key={`tracer-market-${tracer.marketId}`}
+                        onClick={() => onMarketSelect(tracer.marketId)}
+                    >
+                        <MarketContainer className="w-1/4">
+                            <SLogo ticker={tracer.baseTicker} />
+                            <div className="my-auto">{tracer.marketId}</div>
+                        </MarketContainer>
+                        <div className="info w-1/4">
+                            <MarketChange size={'lg'} before={false} amount={tracer.get24HourChange()} />
+                            <div>{toApproxCurrency(tracer.getOraclePrice())}</div>
+                        </div>
+                    </Box>
+                ))}
+            </div>
+        );
+    },
+)`
+    transition: 0.5s;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: #011772;
+    font-size: 16px;
+    z-index: ${(props) => (props.display ? '10' : '-1')};
+    opacity: ${(props) => (props.display ? '1' : '0')};
+    height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 80}px` : '0')};
+    > .market {
+        // eventually this will have to change to be dynamic as more markets get added
+        // this can be done with jQuery and a useEffect when tracers is updated and setting nth-child attr
+        transition-delay: 0.5s;
+        transition: 0.3s;
+        opacity: ${(props) => (props.display ? '1' : '0')};
+    }
+
+    > .market:hover {
+        background: #002886;
+        cursor: pointer;
+    }
+
+    > .market .info {
+        margin-left: auto;
+        margin-right: 0.5rem;
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        line-height: 30px;
+    }
+`;
+
+type MarketSelectDropdownButtonProps = {
+    className?: string;
+    arrowUp?: boolean;
+};
+
+const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = styled(
+    ({ className, arrowUp }: MarketSelectDropdownButtonProps) => {
+        return (
+            <div className={className}>
+                <span>{arrowUp ? 'Hide Markets' : 'View Markets'}</span>
+                <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
+            </div>
+        );
+    },
+)`
+    color: #3da8f5;
+    font-size: 1rem;
+    border: 1px solid #3da8f5;
+    border-radius: 20px;
+    height: 28px;
+    width: 160px;
+    text-align: center;
+
+    &:hover {
+        cursor: pointer;
+    }
+    > .down-arrow {
+        display: inline-block;
+        transition: 0.3s;
+        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-3px)' : 'translateY(-2px)')};
+    }
+`;
+
+const MarketContainer = styled.div`
+    font-size: 20px;
+    letter-spacing: -0.4px;
+    display: flex;
+    max-height: 30px;
+`;
+
+const SBox = styled<any>(Box)`
+    background-color: ${(props) => props.color as string}!important;
+    position: relative;
+    z-index: ${(props) => (props.display ? 4 : 1)};
+`;
+
+type MSProps = {
+    className?: string;
+    account: string;
+};
+export const MarketSelect: React.FC<MSProps> = styled(({ className }: MSProps) => {
+    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
+    const { selectedTracer, setTracerId } = useContext(TracerContext);
+    const [popup, setPopup] = useState(false);
+
+    useEffect(() => {
+        const overlay = document.getElementById('trading-overlay');
+        if (overlay) {
+            popup ? overlay.classList.add('display') : overlay.classList.remove('display');
+        }
+    }, [popup]);
+
+    return (
+        <div className={className}>
+            <SBox color={popup ? '#011772' : '#03065e'} display={popup} onMouseLeave={() => setPopup(false)}>
+                <MarketContainer>
+                    <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
+                    <div className="my-auto">{selectedTracer?.marketId}</div>
+                </MarketContainer>
+                <div className="ml-auto" onMouseEnter={() => setPopup(true)}>
+                    <MarketSelectDropdownButton arrowUp={popup} />
+                </div>
+                <MarketSelectDropdown
+                    tracers={tracers ?? {}}
+                    display={popup}
+                    onMarketSelect={(tracerId: string) => {
+                        if (setTracerId) {
+                            setTracerId(tracerId);
+                            setPopup(false);
+                        } else {
+                            console.error('Failed to set tracer, setTracerId undefined');
+                        }
+                    }}
+                />
+            </SBox>
+        </div>
+    );
+})`
+    width: 100%;
+    display: ${(props) => (props.account === '' ? 'none' : 'block')};
+`;
 
 type TIProps = {
     selectedTracer: Tracer | undefined;
@@ -94,7 +198,7 @@ export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, classNa
                     <PositionSelect selected={order?.position ?? 0} />
                 </div>
 
-                {/* Quanity and Price Inputs */}
+                {/* Quantity and Price Inputs */}
                 <InputSelects amount={order?.amountToPay} price={order?.price} selectedTracer={selectedTracer} />
 
                 {/* Dont display these if it is a limit order*/}
@@ -194,13 +298,12 @@ const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
     );
 })`
     display: flex;
+
     > .label {
-        margin: auto 0;
+        margin: auto auto 35px 0;
         font-size: 16px;
         letter-spacing: -0.32px;
         color: #3da8f5;
-        margin-bottom: 35px; // this is because ant has a margin-bottom 28px on the slider
-        margin-right: auto;
     }
 `;
 

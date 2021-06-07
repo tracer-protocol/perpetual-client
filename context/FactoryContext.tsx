@@ -7,7 +7,6 @@ import { useAllUsersMatched } from '@libs/Graph/hooks/Account';
 import { LabelledOrders } from 'types/OrderTypes';
 import { LabelledTracers } from 'types/TracerTypes';
 interface ContextProps {
-    tracers: LabelledTracers;
     allFilledOrders: LabelledOrders;
     factoryState: FactoryState;
 }

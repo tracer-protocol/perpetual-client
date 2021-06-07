@@ -88,6 +88,7 @@ const LeftPanel = styled.div`
     display: flex;
     flex-direction: column;
     min-height: 90vh;
+    position: relative;
 `;
 
 const RightPanel = styled.div`
@@ -131,7 +132,7 @@ const Advanced: React.FC = () => {
     return (
         <div className="flex h-full">
             <LeftPanel>
-                <MarketSelect />
+                <MarketSelect account={account ?? ''} />
                 <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} />
                 <TradingInput selectedTracer={selectedTracer} account={account ?? ''} />
             </LeftPanel>

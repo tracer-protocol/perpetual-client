@@ -62,8 +62,8 @@ const DropdownLogo = styled(({ className }) => {
     };
     return (
         <div id="menu" className={`${className} ${show ? 'show' : ''}`} onClick={handleClick}>
-            <img alt="Tracer Logo" className="logo hidden lg:block" src="/img/logos/tracer/tracer_perps.svg" />
-            <img alt="down-arrow" className="down-arrow" src="/img/general/triangle_down.svg" />
+            <img alt="Tracer Logo" className="logo hidden lg:block z-10" src="/img/logos/tracer/tracer_perps.svg" />
+            <img alt="down-arrow" className="down-arrow z-10" src="/img/general/triangle_down.svg" />
             <div className="divide" />
             <div className={`dropdown-menu`}>
                 <ul className="dropdown-menu-list">
@@ -195,6 +195,7 @@ const DropdownLogo = styled(({ className }) => {
         border-top: 1px solid #3da8f5;
         transform: translateX(0);
         opacity: 1;
+
         &:hover {
             cursor: pointer;
             background-color: #3da8f5;
@@ -213,7 +214,7 @@ const DropdownLogo = styled(({ className }) => {
     &.show > .dropdown-menu {
         opacity: 1;
         height: 400px;
-        z-index: 1;
+        z-index: 3;
     }
 `;
 
