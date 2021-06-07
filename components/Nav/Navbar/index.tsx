@@ -299,6 +299,9 @@ const NavBar: React.FC = styled(({ className }) => {
     width: 100%;
     color: #fff;
     height: 10vh;
+    background-image: url('/img/nav-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
 
     > ul {
         display: flex;

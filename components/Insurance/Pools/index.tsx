@@ -5,49 +5,27 @@ import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 't
 import styled from 'styled-components';
 import { ProgressBar } from '@components/General';
 import { Button, Logo } from '@components/General';
-import { CaretDownFilled, CaretRightFilled } from '@ant-design/icons';
+import { CaretDownFilled } from '@ant-design/icons';
 import Breakdown from '../PoolHealth/Breakdown';
 import { InsuranceModal } from '@components/Modals/InsuranceModal';
-import { TableHead, TableHeadEnd, TableRow, TableCell } from '@components/Portfolio';
-
-// const TableHead = styled.th`
-//     color: #3da8f5;
-//     padding: 1rem;
-//     font-size: 1rem;
-//     letter-spacing: -0.32px;
-// `;
-//
-// const TableCell = styled.td`
-//     transition: 1s;
-//     padding: 1rem;
-//     border: 1px solid #002886;
-// `;
-//
-// const TableRow = styled.tr`
-//     &.selected {
-//         background: #002886;
-//     }
-//
-//     &:hover {
-//         background: #002886;
-//         cursor: pointer;
-//     }
-// `;
+import { TableHead, TableHeadEnd, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
+import { toPercent } from '@libs/utils';
 
 const Teaser = styled.div`
-    font-size: 1.3rem;
     color: #fff;
-    display: flex;
-    margin-bottom: 1rem;
     height: 3vh;
+
+    &.column {
+        flex-direction: column;
+    }
 `;
 
 const Hidden = styled.div`
-    font-size: 1rem;
     color: #3da8f5;
     opacity: 0;
     transition: 0.3s;
     transition-delay: 0s;
+
     .selected &,
     .show &,
     &.show {
@@ -56,31 +34,19 @@ const Hidden = styled.div`
     }
 `;
 
-const Collapsible = styled.div`
-    transition: 0.3s;
-    height: 2rem;
-    overflow: hidden;
-
-    .selected &,
-    &.show {
-        height: 250px;
-    }
-`;
-
-type CProps = {
-    pool: InsurancePoolInfo;
-    className?: string;
-};
-
 const SProgressBar = styled(ProgressBar)`
     border: 1px solid #3da8f5;
     min-width: 250px;
     width: 100%;
 `;
 
-const HealthCell: React.FC<CProps> = ({ pool }: CProps) => {
+type CProps = {
+    pool: InsurancePoolInfo;
+    className?: string;
+};
+const HealthCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
     return (
-        <Collapsible>
+        <div className={className}>
             <Teaser>
                 <SProgressBar percent={pool?.health.toNumber()} />
             </Teaser>
@@ -92,29 +58,24 @@ const HealthCell: React.FC<CProps> = ({ pool }: CProps) => {
                     buffer={pool.buffer.toNumber()}
                 />
             </Hidden>
-        </Collapsible>
+        </div>
     );
-};
+})``;
 
 const ButtonContainer = styled.div`
     display: flex;
+    margin-top: 5rem;
 `;
 
 const SDownCaret = styled(CaretDownFilled)`
     transition: 0.3s;
     margin: auto 0;
-    transform: rotate(-180deg);
-
-    .selected & {
-        transform: rotate(0);
-    }
-`;
-
-const RightCaret = styled(CaretRightFilled)`
+    transform: rotate(-90deg);
     color: #002886;
 
     .selected & {
-        display: none;
+        transform: rotate(0);
+        color: white;
     }
 `;
 
@@ -126,10 +87,10 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
         setShow(true);
     };
     return (
-        <Collapsible className={className}>
-            <Teaser>
+        <div className={className}>
+            <Teaser className="column">
                 <span>{pool.userBalance.toNumber()} iTokens</span>
-                <span className="percent">{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</span>
+                <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
             </Teaser>
             <Hidden>
                 <ButtonContainer>
@@ -140,12 +101,18 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
                     <InsuranceModal show={show} setShow={setShow} type={type as 'Deposit' | 'Withdraw'} />
                 </ButtonContainer>
             </Hidden>
-        </Collapsible>
+        </div>
     );
-})`
-    > * .percent {
-        color: #3da8f5;
-        margin-left: 20px;
+})``;
+
+const Collapsible = styled.div`
+    transition: 0.3s;
+    height: 3rem;
+    overflow: hidden;
+
+    .selected &,
+    &.show {
+        height: 15rem;
     }
 `;
 
@@ -216,27 +183,27 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                             className={show ? 'selected' : ''}
                             onClick={(e) => onClick(e, i)}
                         >
-                            <TableCell className="w-1/6">
-                                <Collapsible>
-                                    <Teaser>
-                                        <Market className={show ? 'show' : ''}>
-                                            {show ? <SDownCaret /> : <RightCaret />}
-                                            <Logo className="ml-2" ticker="ETH" />
-                                            <span className="ml-2">{pool.market}</span>
-                                        </Market>
-                                    </Teaser>
-                                </Collapsible>
-                            </TableCell>
-                            <TableCell className="w-1/6">
-                                <Collapsible>
-                                    <Teaser>{pool.apy.toNumber()}</Teaser>
+                            <TableCell className="vertical-centre">
+                                <Collapsible className={show ? 'show' : ''}>
+                                    <Market>
+                                        <SDownCaret />
+                                        <Logo className="ml-2" ticker="ETH" />
+                                        <span className="ml-2">{pool.market}</span>
+                                    </Market>
                                 </Collapsible>
                             </TableCell>
                             <TableCell>
-                                <HealthCell pool={pool} />
+                                <Collapsible className="pt-2">{toPercent(pool.apy.toNumber())}</Collapsible>
                             </TableCell>
                             <TableCell>
-                                <OwnershipCell pool={pool} />
+                                <Collapsible className="pt-2">
+                                    <HealthCell pool={pool} />
+                                </Collapsible>
+                            </TableCell>
+                            <TableCell>
+                                <Collapsible>
+                                    <OwnershipCell pool={pool} />
+                                </Collapsible>
                             </TableCell>
                         </TableRow>
                     );
