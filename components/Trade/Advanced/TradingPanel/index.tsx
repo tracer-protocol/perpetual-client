@@ -124,17 +124,17 @@ const MarketContainer = styled.div`
     max-height: 30px;
 `;
 
-const SBox = styled(Box)`
-    background-color: ${(props: any) => props.color as string}!important;
+const SBox = styled<any>(Box)`
+    background-color: ${(props) => props.color as string}!important;
     position: relative;
-    z-index: ${(props:any) => props.display ? 4 : 1};
+    z-index: ${(props) => (props.display ? 4 : 1)};
 `;
 
 type MSProps = {
-    className?: string,
-    account: string
-}
-export const MarketSelect: React.FC<MSProps>= styled(({ className }: MSProps) => {
+    className?: string;
+    account: string;
+};
+export const MarketSelect: React.FC<MSProps> = styled(({ className }: MSProps) => {
     const { tracers } = useContext(FactoryContext);
     const { selectedTracer, setTracerId } = useContext(TracerContext);
     const [popup, setPopup] = useState(false);
@@ -148,17 +148,12 @@ export const MarketSelect: React.FC<MSProps>= styled(({ className }: MSProps) =>
 
     return (
         <div className={className}>
-            <SBox color={popup ? '#011772' : '#03065e'} display={popup}>
+            <SBox color={popup ? '#011772' : '#03065e'} display={popup} onMouseLeave={() => setPopup(false)}>
                 <MarketContainer>
                     <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
                     <div className="my-auto">{selectedTracer?.marketId}</div>
                 </MarketContainer>
-                <div
-                    className="ml-auto"
-                    onClick={() => {
-                        setPopup(!popup);
-                    }}
-                >
+                <div className="ml-auto" onMouseEnter={() => setPopup(true)}>
                     <MarketSelectDropdownButton arrowUp={popup} />
                 </div>
                 <MarketSelectDropdown
