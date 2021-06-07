@@ -11,10 +11,15 @@ import {
     StatusIndicator,
     getStatusColour,
 } from '@components/Portfolio';
+import { calcLiquidationPrice, calcTotalMargin, calcUnrealised } from '@tracer-protocol/tracer-utils';
+import { LabelledOrders } from 'types/OrderTypes';
+import { LabelledTracers } from 'types/TracerTypes';
 
-const Position: React.FC = () => {
+const Position: React.FC<{
+    tracers: LabelledTracers;
+    allFilledOrders: LabelledOrders;
+}> = ({ tracers, allFilledOrders }) => {
     const [show, setShow] = useState(false);
-
     const headings = [
         'Market',
         'Position',
@@ -26,68 +31,7 @@ const Position: React.FC = () => {
         'Status',
     ];
 
-    const tracers = [
-        {
-            name: 'TSLA',
-            market: 'TSLA-USDC',
-            position: 'long',
-            unrealisedPL: 453.23,
-            realisedPL: -4.5,
-            marginUsed: 45.3,
-            exposure: 4.5,
-            liquidationP: 4500.3,
-            markP: 4255.2,
-            status: 'Open',
-        },
-        {
-            name: 'LINK',
-            market: 'LINK-USDC',
-            position: 'long',
-            unrealisedPL: 453.23,
-            realisedPL: 3.1,
-            marginUsed: 45.3,
-            exposure: 4.5,
-            liquidationP: 4500.3,
-            markP: 4255.2,
-            status: 'Eligible for Liquidation',
-        },
-        {
-            name: 'ETH',
-            market: 'ETH-USDC',
-            position: 'short',
-            unrealisedPL: -453.23,
-            realisedPL: 4.5,
-            marginUsed: 45.3,
-            exposure: 4.5,
-            liquidationP: 4500.3,
-            markP: 4255.2,
-            status: 'Approaching Liquidation',
-        },
-        {
-            name: 'TSLA',
-            market: 'TSLA-USDC',
-            position: 'long',
-            unrealisedPL: 453.23,
-            realisedPL: -4.5,
-            marginUsed: 45.3,
-            exposure: 4.5,
-            liquidationP: 4500.3,
-            markP: 4255.2,
-            status: 'Closed',
-        },
-        {
-            name: 'LINK',
-            market: 'LINK-USDC',
-            position: 'long',
-            unrealisedPL: 453.23,
-            realisedPL: 3.1,
-            marginUsed: 45.3,
-            exposure: 4.5,
-            liquidationP: 4500.3,
-            markP: 4255.2,
-            status: 'Closed',
-        },
-    ];
+    const _status = ['Open', 'Eligible for Liquidation', 'Approaching Liquidation', 'Closed'];
 
     const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
@@ -153,49 +97,64 @@ const Position: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {tracers.map((tracer, i) => (
-                        <TableRow key={`table-row-${i}`} theme={getRowStatus(tracer.status, show)}>
-                            <TableCell>
-                                <div className="flex flex-row">
-                                    <div className="my-auto">
-                                        <Logo ticker={tracer.name} />
+                    {Object.values(tracers).map((tracer, i) => {
+                        if (tracer.loading) {
+                            return 'Loading';
+                        }
+                        const name = tracer.marketId.split('/')[0];
+                        const status = _status[i];
+                        const { quote, base } = tracer.balances;
+                        const realisedPNL = 0; // TODO calculte realisedPNL
+                        const unrealisedPNL = calcUnrealised(
+                            base,
+                            tracer.oraclePrice,
+                            allFilledOrders[tracer.address] ?? [],
+                        );
+                        return (
+                            <TableRow key={`table-row-${i}`} theme={getRowStatus(status[i], show)}>
+                                <TableCell>
+                                    <div className="flex flex-row">
+                                        <div className="my-auto">
+                                            <Logo ticker={name} />
+                                        </div>
+                                        <div className="my-auto ml-2">{tracer.marketId}</div>
                                     </div>
-                                    <div className="my-auto ml-2">{tracer.market}</div>
-                                </div>
-                            </TableCell>
-                            <TableCell>{tracer.position.toUpperCase()}</TableCell>
-                            <TableCell color={tracer.unrealisedPL < 0 ? '#F15025' : '#21DD53'}>
-                                {toApproxCurrency(tracer.unrealisedPL)}
-                            </TableCell>
-                            <TableCell color={tracer.realisedPL < 0 ? '#F15025' : '#21DD53'}>
-                                {toApproxCurrency(tracer.realisedPL)}
-                            </TableCell>
-                            <TableCell>{toApproxCurrency(tracer.marginUsed)}</TableCell>
-                            <TableCell>
-                                {tracer.exposure} {tracer.name}
-                            </TableCell>
-                            <TableCell>
-                                {toApproxCurrency(tracer.liquidationP)}
-                                <SecondaryCell>{toApproxCurrency(tracer.markP)}</SecondaryCell>
-                            </TableCell>
-                            <TableCell>
-                                <div className="flex flex-row">
-                                    <StatusIndicator
-                                        color={getStatusColour(tracer.status)}
-                                        className="text-2xl my-auto"
-                                    >
-                                        &bull;
-                                    </StatusIndicator>
-                                    <div className="mx-2 my-auto">{tracer.status}</div>
-                                    <div className="my-auto ml-auto">
-                                        <Button theme={tracer.status !== 'Closed' ? activeButton : inactiveButton}>
-                                            Close
-                                        </Button>
+                                </TableCell>
+                                <TableCell>{base.eq(0) ? 'NO POSITION' : base.lt(0) ? 'SHORT' : 'LONG'}</TableCell>
+                                <TableCell color={unrealisedPNL.toNumber() < 0 ? '#F15025' : '#21DD53'}>
+                                    {toApproxCurrency(unrealisedPNL)}
+                                </TableCell>
+                                <TableCell color={realisedPNL < 0 ? '#F15025' : '#21DD53'}>
+                                    {toApproxCurrency(realisedPNL)}
+                                </TableCell>
+                                <TableCell>
+                                    {toApproxCurrency(calcTotalMargin(quote, base, tracer.oraclePrice))}
+                                </TableCell>
+                                <TableCell>
+                                    {base.abs().toNumber()} {name}
+                                </TableCell>
+                                <TableCell>
+                                    {toApproxCurrency(
+                                        calcLiquidationPrice(quote, base, tracer.oraclePrice, tracer.maxLeverage),
+                                    )}
+                                    <SecondaryCell>{toApproxCurrency(tracer.oraclePrice)}</SecondaryCell>
+                                </TableCell>
+                                <TableCell>
+                                    <div className="flex flex-row">
+                                        <StatusIndicator color={getStatusColour(status)} className="text-2xl my-auto">
+                                            &bull;
+                                        </StatusIndicator>
+                                        <div className="mx-2 my-auto">{status}</div>
+                                        <div className="my-auto ml-auto">
+                                            <Button theme={status !== 'Closed' ? activeButton : inactiveButton}>
+                                                Close
+                                            </Button>
+                                        </div>
                                     </div>
-                                </div>
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                                </TableCell>
+                            </TableRow>
+                        );
+                    })}
                 </tbody>
             </table>
             <div className="flex mt-8 justify-center">
@@ -206,5 +165,4 @@ const Position: React.FC = () => {
         </>
     );
 };
-
 export default Position;

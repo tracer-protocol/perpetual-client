@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { defaults } from '@libs/Tracer';
 import PostTradeDetails from './PostTradeDetails';
 import BigNumber from 'bignumber.js';
+import { initialFactoryState } from '@context/FactoryContext';
 import { toApproxCurrency } from '@libs/utils';
 import MarketChange from '@components/General/MarketChange';
 
@@ -135,7 +136,7 @@ type MSProps = {
     account: string;
 };
 export const MarketSelect: React.FC<MSProps> = styled(({ className }: MSProps) => {
-    const { tracers } = useContext(FactoryContext);
+    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const { selectedTracer, setTracerId } = useContext(TracerContext);
     const [popup, setPopup] = useState(false);
 
@@ -212,7 +213,7 @@ export const TradingInput: React.FC<TIProps> = styled(({ selectedTracer, classNa
 
                 <PostTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
-                    balances={selectedTracer?.balances ?? defaults.balances}
+                    balances={selectedTracer?.getBalance() ?? defaults.balances}
                     exposure={order?.amountToBuy ? new BigNumber(order.amountToBuy) : defaults.amountToBuy}
                     position={order?.position ?? 0}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}

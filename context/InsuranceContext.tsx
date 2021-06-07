@@ -10,6 +10,7 @@ import { checkAllowance } from 'libs/web3/utils';
 import { FactoryContext } from '.';
 import { Tracer } from 'libs';
 import { BigNumber } from 'bignumber.js';
+import { initialFactoryState } from './FactoryContext';
 
 export const defaults: Record<string, any> = {
     userBalance: new BigNumber(0),
@@ -55,7 +56,7 @@ export const InsuranceContext = React.createContext<Partial<ContextProps>>({});
 
 export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     const { account, web3 } = useContext(Web3Context);
-    const { tracers } = useContext(FactoryContext);
+    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const { selectedTracer } = useContext(TracerContext);
     const [contract, setContract] = useState<Insurance>();
 

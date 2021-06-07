@@ -145,16 +145,16 @@ const Fills: React.FC<{
             <tbody>
                 {filledOrders.map((order, index) => {
                     const now = Date.now();
-                    const price = parseFloat(Web3.utils.fromWei(order.price));
+                    const price = order.price;
                     return (
                         <TRow key={`filled-order-${index}`}>
                             <TData>{timeAgo(now, parseInt(order.timestamp))}</TData>
                             <TData className={!!order.position ? 'bid' : 'ask'}>
                                 {!!order.position ? 'Short' : 'Long'}
                             </TData>
-                            <TData>{Web3.utils.fromWei(order.amount)}</TData>
+                            <TData>{order.amount.toNumber()}</TData>
                             <TData>{toApproxCurrency(price)}</TData>
-                            <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.amount)) * price)}/$0</TData>
+                            <TData>{toApproxCurrency(order.amount.times(price))}/$0</TData>
                         </TRow>
                     );
                 })}
@@ -173,7 +173,7 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
     const { account } = useContext(Web3Context);
     const [tab, setTab] = useState(0);
     const tabs = [`Position`, `Orders`, `Fills`];
-    const balances = selectedTracer?.balances ?? defaults.balances;
+    const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const { filledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');
     const {

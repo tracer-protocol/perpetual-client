@@ -1,3 +1,4 @@
+import Tracer from '@libs/Tracer';
 import { BigNumber } from 'bignumber.js';
 export interface TracerData {
     tracerId?: string;
@@ -40,3 +41,5 @@ export type CandleData = {
     low: number;
     close: number;
 }[];
+
+export type LabelledTracers = Record<string, Tracer & { loading: boolean }>;

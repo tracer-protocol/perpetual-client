@@ -1,6 +1,9 @@
 import { gql, useQuery } from '@apollo/client';
-import { useRef } from 'react';
-import { FilledOrder } from 'types/OrderTypes';
+import BigNumber from 'bignumber.js';
+import { useCallback, useRef } from 'react';
+import { FilledOrder, LabelledOrders } from 'types/OrderTypes';
+import Web3 from 'web3';
+import { toBigNumbers } from '..';
 
 const ALL_TRACERS = gql`
     query TracerData($user: String!) {
@@ -76,7 +79,62 @@ export const useUsersMatched: (
     });
 
     return {
-        filledOrders: data?.trades || ref.current,
+        filledOrders: data?.trades ? toBigNumbers(data?.trades) : ref.current,
+        error,
+        loading,
+        refetch,
+    };
+};
+
+const USER_TRADES = gql`
+    query Tracer_Trades($account: String!) {
+        trades(trader: $account, orderBy: timestamp, orderDirection: desc) {
+            position
+            amount
+            price
+            timestamp
+            tracer {
+                id
+            }
+        }
+    }
+`;
+
+const groupTracers = (filledOrders: any[]) =>
+    filledOrders.reduce((r, a) => {
+        r[a.tracer.id] = r[a.tracer.id] || [];
+        r[a.tracer.id].push({
+            ...a,
+            amount: new BigNumber(Web3.utils.fromWei(a.amount)),
+            price: new BigNumber(Web3.utils.fromWei(a.price)),
+        });
+        return r;
+    }, Object.create(null));
+
+export const useAllUsersMatched: (account: string) => {
+    allFilledOrders: LabelledOrders;
+    error: any;
+    loading: any;
+    refetch: any;
+} = (account) => {
+    const ref = useRef<LabelledOrders>({});
+    const { data, error, loading, refetch } = useQuery(USER_TRADES, {
+        variables: { account: account?.toLowerCase() },
+        errorPolicy: 'all',
+        onError: ({ graphQLErrors }) => {
+            if (graphQLErrors.length) {
+                graphQLErrors.map((err) => console.error(`Failed to fetch account trades: ${err}`));
+            }
+        },
+    });
+
+    const memoedGroupTracers = useCallback(
+        () => (data?.trades ? groupTracers(data?.trades) : ref.current),
+        [data?.trades],
+    );
+
+    return {
+        allFilledOrders: memoedGroupTracers(),
         error,
         loading,
         refetch,

@@ -55,7 +55,7 @@ export default class Tracer {
     public token: Erc20Type | undefined;
     public liquidationGasCost: number | undefined;
     public quoteTokenDecimals: BigNumber;
-    public maxLeverage: BigNumber | undefined;
+    public maxLeverage: BigNumber;
     public fundingRateSensitivity: BigNumber;
     public feeRate: BigNumber;
     public initialised: Promise<boolean>;
@@ -79,6 +79,7 @@ export default class Tracer {
         this.insuranceContract = '';
         this.balances = defaults.balances;
         this.oraclePrice = defaults.oraclePrice;
+        this.maxLeverage = defaults.maxLeverage;
         this.initialised = this.init(web3);
     }
 
@@ -139,11 +140,12 @@ export default class Tracer {
      *   int256 lastUpdatedGasPrice,
      *   uint256 lastUpdatedIndex
      */
-    updateUserBalance: (account: string | undefined) => Promise<boolean> = async (account) => {
+    updateUserBalance: (account: string | undefined) => Promise<UserBalance> = async (account) => {
         try {
             if (!account) {
                 return Promise.resolve(false);
             }
+            await this.initialised;
             // if accounts is undefined the catch should get it
             const balance = await this._instance.methods.getBalance(account).call();
             const walletBalance = await this.token?.methods.balanceOf(account).call();
@@ -158,19 +160,15 @@ export default class Tracer {
             };
             console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
             this.balances = parsedBalances;
-            return true;
+            return parsedBalances;
         } catch (error) {
             console.error(`Failed to fetch user balance: ${error}`);
-            this.balances = {
-                quote: new BigNumber(0),
-                base: new BigNumber(0),
-                totalLeveragedValue: new BigNumber(0),
-                lastUpdatedGasPrice: new BigNumber(0),
-                tokenBalance: new BigNumber(0),
-            } as UserBalance;
-            return false;
+            this.balances = defaults.balances;
+            return defaults.balances;
         }
     };
+
+    getBalance: () => UserBalance = () => this.balances;
 
     updateOraclePrice: () => Promise<void> = async () => {
         try {

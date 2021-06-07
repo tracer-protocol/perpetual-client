@@ -296,7 +296,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     useMemo(() => {
         if (omeState?.orders) {
             const oppositeOrders = order.position ? omeState.orders.askOrders : omeState.orders.bidOrders;
-            const error = checkErrors(selectedTracer?.balances, oppositeOrders, account, order);
+            const error = checkErrors(selectedTracer?.getBalance(), oppositeOrders, account, order);
             if (error !== order.error) {
                 orderDispatch({ type: 'setError', value: error });
             }

@@ -3680,14 +3680,16 @@
     tslib "^2.1.0"
     web3 "^1.3.4"
 
-"@tracer-protocol/tracer-utils@^0.2.5":
-  version "0.2.5"
-  resolved "https://registry.yarnpkg.com/@tracer-protocol/tracer-utils/-/tracer-utils-0.2.5.tgz#9b9fd5ebb48f2d14eb82d8064d33ada65c7676da"
-  integrity sha512-b/6uWXdx4btypBqCknEWjSLVICkAYzPoN+gLYPXn6W7ujEMipsaPdhqBrmKzibGSOUSh4gjnVzSIft/1e59Knw==
+"@tracer-protocol/tracer-utils@^0.2.8":
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/@tracer-protocol/tracer-utils/-/tracer-utils-0.2.8.tgz#a4756f713e7d39ba14459f71bd334c8611347079"
+  integrity sha512-NKzzNRDUOMJsCcOqBnD4EC/HZA+b8CUEBG0W9s3eV77st7pKHa47Q0JvSb1R2h47RSQ5/7ryLOFUcJwXNy/E0g==
   dependencies:
     "@types/node" "^14.14.37"
     bignumber.js "^9.0.1"
     chai "^4.3.4"
+    eth-sig-util "^3.0.1"
+    ethers "^5.3.0"
     ganache-cli "^6.12.2"
     node-fetch "^2.6.1"
     tslib "^2.1.0"
@@ -9759,6 +9761,16 @@ eth-sig-util@^2.5.3:
     tweetnacl "^1.0.3"
     tweetnacl-util "^0.15.0"
 
+eth-sig-util@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/eth-sig-util/-/eth-sig-util-3.0.1.tgz#8753297c83a3f58346bd13547b59c4b2cd110c96"
+  integrity sha512-0Us50HiGGvZgjtWTyAI/+qTzYPMLy5Q451D0Xy68bxq1QMWdoOddDwGvsqcFT27uohKgalM9z/yxplyt+mY2iQ==
+  dependencies:
+    ethereumjs-abi "^0.6.8"
+    ethereumjs-util "^5.1.1"
+    tweetnacl "^1.0.3"
+    tweetnacl-util "^0.15.0"
+
 eth-tx-summary@^3.1.2:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/eth-tx-summary/-/eth-tx-summary-3.2.4.tgz#e10eb95eb57cdfe549bf29f97f1e4f1db679035c"
@@ -9862,7 +9874,7 @@ ethereumjs-abi@0.6.5:
     bn.js "^4.10.0"
     ethereumjs-util "^4.3.0"
 
-ethereumjs-abi@0.6.8, "ethereumjs-abi@git+https://github.com/ethereumjs/ethereumjs-abi.git":
+ethereumjs-abi@0.6.8, ethereumjs-abi@^0.6.8, "ethereumjs-abi@git+https://github.com/ethereumjs/ethereumjs-abi.git":
   version "0.6.8"
   resolved "git+https://github.com/ethereumjs/ethereumjs-abi.git#ee3994657fa7a427238e6ba92a84d0b529bbcde0"
   dependencies:
@@ -10104,7 +10116,7 @@ ethers@^4.0.32:
     uuid "2.0.1"
     xmlhttprequest "1.8.0"
 
-ethers@^5.0.0, ethers@^5.0.1, ethers@^5.0.13, ethers@^5.0.2, ethers@^5.0.30, ethers@^5.1.4:
+ethers@^5.0.0, ethers@^5.0.1, ethers@^5.0.13, ethers@^5.0.2, ethers@^5.0.30, ethers@^5.1.4, ethers@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.3.0.tgz#1ec14d09c461e8f2554b00cd080e94a3094e7e9d"
   integrity sha512-myN+338S4sFQZvQ9trii7xit8Hu/LnUtjA0ROFOHpUreQc3fgLZEMNVqF3vM1u2D78DIIeG1TbuozVCVlXQWvQ==

@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from 'react';
-import { FactoryContext } from '@context/FactoryContext';
+import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
 import { AbiItem } from 'web3-utils';
 
 import { OpenOrder } from 'types';
@@ -17,7 +17,7 @@ import { getOrders } from '@libs/Ome';
  */
 export const useMarketPairs: () => Record<string, string[]> = () => {
     const [marketPairs, setMarketPairs] = useState<Record<string, string[]>>({});
-    const { tracers } = useContext(FactoryContext);
+    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     useEffect(() => {
         if (tracers) {
             const pairs: Record<string, string[]> = {};

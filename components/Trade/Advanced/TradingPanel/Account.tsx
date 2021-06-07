@@ -242,7 +242,7 @@ export const AccountPanel: React.FC<{
 }> = ({ selectedTracer, account }) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
-    const balances = selectedTracer?.balances ?? defaults.balances;
+    const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const maxLeverage = selectedTracer?.maxLeverage ?? new BigNumber(1);
 
