@@ -41,8 +41,13 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
                             <SLogo ticker={tracer.baseTicker} />
                             <div className="my-auto">{tracer.marketId}</div>
                         </MarketContainer>
-                        <div className="info w-1/4">
-                            <MarketChange size={'lg'} before={false} amount={tracer.get24HourChange()} />
+                        <div className="info">
+                            <MarketChange 
+                                className="mr-2" 
+                                size={'lg'} 
+                                before={false} 
+                                amount={tracer.get24HourChange()} 
+                            />
                             <div>{toApproxCurrency(tracer.getOraclePrice())}</div>
                         </div>
                     </Box>
@@ -77,7 +82,6 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
 
     > .market .info {
         margin-left: auto;
-        margin-right: 0.5rem;
         display: flex;
         justify-content: space-between;
         font-size: 16px;
