@@ -96,7 +96,7 @@ export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }:
     }
 
     .ant-slider-step {
-        width: 105%;
+        width: 104%;
         height: 10px;
         margin-top: -5px;
         margin-left: -10px;
@@ -127,7 +127,7 @@ const LeverageSlider: React.FC<LSProps> = styled(({ className, leverage }: LSPro
             <h3>
                 <Tooltip title={LeverageTip}>Increase Exposure</Tooltip>
             </h3>
-            <div className="w-full m-auto py-5 px-5">
+            <div className="w-full m-auto py-5 px-1">
                 <DefaultSlider leverage={leverage ?? 1} />
             </div>
         </div>
