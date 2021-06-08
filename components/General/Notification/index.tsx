@@ -36,7 +36,6 @@ const hashieStates = (placement: PlacementType) => ({
     exited: { transform: 'scale(0.66)', opacity: 0 },
 });
 
-// TODO load these colours in tailwind config
 const appearances: Record<
     string,
     {
