@@ -7,14 +7,13 @@ import styled from 'styled-components';
 import { Button } from '@components/Portfolio';
 
 const InsurancePoolsContent = styled.div`
-    width: 90%;
-    margin: 0 auto;
+    width: 100%;
     border-top: 1px solid #002886;
     border-left: 1px solid #002886;
 `;
 
 const InsurancePoolsHeader = styled.div`
-    width: 90%;
+    width: 100%;
     margin: 0 auto;
     color: white;
     padding: 1rem;
@@ -24,7 +23,7 @@ const InsurancePoolsHeader = styled.div`
 `;
 
 const InsurancePoolsFooter = styled.div`
-    width: 90%;
+    width: 100%;
     display: flex;
     align-items: center;
     margin: 0 auto;
@@ -48,20 +47,22 @@ const Insurance: React.FC = styled(({ className }) => {
     return (
         <div className={`${className} page`}>
             <NavBar />
-            <SelectedTracerStore>
-                <InsuranceStore>
-                    <InsurancePoolsHeader>Insurance Pools</InsurancePoolsHeader>
-                    <InsurancePoolsContent>
-                        <Pools />
-                    </InsurancePoolsContent>
-                    <InsurancePoolsFooter>
-                        New to insurance pools?{' '}
-                        <Button className="learn-more" theme={ButtonTheme}>
-                            Learn More
-                        </Button>
-                    </InsurancePoolsFooter>
-                </InsuranceStore>
-            </SelectedTracerStore>
+            <div className="container">
+                <SelectedTracerStore>
+                    <InsuranceStore>
+                        <InsurancePoolsHeader>Insurance Pools</InsurancePoolsHeader>
+                        <InsurancePoolsContent>
+                            <Pools />
+                        </InsurancePoolsContent>
+                        <InsurancePoolsFooter>
+                            New to insurance pools?{' '}
+                            <Button className="learn-more" theme={ButtonTheme}>
+                                Learn More
+                            </Button>
+                        </InsurancePoolsFooter>
+                    </InsuranceStore>
+                </SelectedTracerStore>
+            </div>
         </div>
     );
 })`
