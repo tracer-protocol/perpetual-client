@@ -222,7 +222,7 @@ const DropdownLogo = styled(({ className }) => {
         transition: all 0.3s ease-in-out 0.4s, background 0.5s ease;
     }
 
-    &.show > .dropdown-menu ul .nav-item {
+    &.show > .dropdown-menu ul .nav-item:nth-child(2) {
         border-top: 1px solid #3da8f5;
         transform: translateX(0);
         opacity: 1;
@@ -230,6 +230,31 @@ const DropdownLogo = styled(({ className }) => {
         &:hover {
             cursor: pointer;
             background-color: #3da8f5;
+        }
+    }
+
+    &.show > .dropdown-menu ul .nav-item:nth-child(3) {
+        border-top: 1px solid #3da8f5;
+        transform: translateX(0);
+        opacity: 1;
+
+        &:hover {
+            cursor: pointer;
+            background-color: #3da8f5;
+        }
+    }
+
+    &.show > .dropdown-menu ul .nav-item:nth-child(4) {
+        border-top: 1px solid #3da8f5;
+        transform: translateX(0);
+        opacity: 1;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+
+        &:hover {
+            cursor: pointer;
+            background-color: #3da8f5;
+            border-right: 10px;
         }
     }
 
@@ -244,7 +269,7 @@ const DropdownLogo = styled(({ className }) => {
 
     &.show > .dropdown-menu {
         opacity: 1;
-        height: 400px;
+        height: 280px;
         z-index: 5;
     }
 `;
