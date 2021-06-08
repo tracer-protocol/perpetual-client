@@ -75,7 +75,7 @@ export const useMostRecentMatched: (tracer: string) => {
                 graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
             }
             if (networkError) {
-                addToast(`Failed to fetch account trades due to network error: ${networkError}`, {
+                addToast(['Failed to fetch', `Failed to fetch account trades due to network error: ${networkError}`], {
                     appearance: 'error',
                     autoDismiss: true,
                 });
@@ -129,7 +129,7 @@ export const useCandles: () => {
                 graphQLErrors.map((err) => console.error(`Failed to fetch candle trades: ${err}`));
             }
             if (networkError) {
-                addToast(`Failed to connect to the graph. ${networkError}`, {
+                addToast(['Failed to fetch', `Failed to connect to the graph. ${networkError}`], {
                     appearance: 'error',
                     autoDismiss: true,
                 });

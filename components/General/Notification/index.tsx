@@ -1,12 +1,14 @@
+import React from 'react';
 import {
-    CheckCircleFilled,
     CloseOutlined,
     InfoCircleFilled,
     WarningOutlined,
-    FireFilled,
     LoadingOutlined,
+    CloseCircleTwoTone,
+    CheckCircleTwoTone,
 } from '@ant-design/icons';
 import styled from 'styled-components';
+import Timer from '@components/Timer';
 
 type PlacementType = 'bottom-left' | 'bottom-center' | 'bottom-right' | 'top-left' | 'top-center' | 'top-right';
 type AppearanceTypes = 'success' | 'error' | 'warning' | 'info' | 'loading';
@@ -34,7 +36,6 @@ const hashieStates = (placement: PlacementType) => ({
     exited: { transform: 'scale(0.66)', opacity: 0 },
 });
 
-// TODO load these colours in tailwind config
 const appearances: Record<
     string,
     {
@@ -45,14 +46,14 @@ const appearances: Record<
     }
 > = {
     success: {
-        icon: <CheckCircleFilled />,
-        text: '#006644',
+        icon: <CheckCircleTwoTone twoToneColor={"#05CB3A"} />,
+        text: '#05CB3A',
         fg: '#36B37E',
         bg: '#E3FCEF',
     },
     error: {
-        icon: <FireFilled />,
-        text: '#BF2600',
+        icon: <CloseCircleTwoTone twoToneColor={"#F15025"}/>,
+        text: '#F15025',
         fg: '#FF5630',
         bg: '#FFEBE6',
     },
@@ -66,59 +67,70 @@ const appearances: Record<
         icon: <InfoCircleFilled />,
         text: '#505F79',
         fg: '#2684FF',
-        bg: 'white',
+        bg: '#00156C',
     },
     loading: {
         icon: <LoadingOutlined />,
-        text: '#505F79',
+        text: '#fff',
         fg: '#2684FF',
-        bg: 'white',
+        bg: '#00156C',
     },
 };
 
-const IconWrap = styled.div`
+const IconWrap = styled.span`
     width: 30px;
     height: 30px;
     font-size: 20px;
     line-height: 20px;
 `;
-const Icon: React.FC<any> = ({ appearance: appearance_, autoDismiss, autoDismissTimeout, isRunning }) => {
+const Header: React.FC<any> = ({ 
+    appearance: appearance_, onDismiss,
+    title
+}) => {
     const appearance = appearances[appearance_] ?? appearances['info']; //default info
     return (
         <div
-            className="
-                react-toast-notifications__toast__icon-wrapper
-                relative flex-shrink-0 overflow-hidden text-center
-                rounded-tl-md rounded-bl-md
-                py-2 
-            "
             style={{
-                backgroundColor: appearance.fg,
-                color: appearance.bg,
-                width: 30,
+                color: appearance.text,
+                fontWeight: 'bold',
+                fontSize: '19px',
+                letterSpacing: '-0.38px',
+                width: '100%',
+                display: 'flex'
             }}
         >
-            <Countdown opacity={autoDismiss ? 1 : 0} autoDismissTimeout={autoDismissTimeout} isRunning={isRunning} />
             <IconWrap>{appearance.icon}</IconWrap>
+            <span>{title}</span>
+            <Close onClick={onDismiss} />
         </div>
     );
 };
 
-const Countdown: React.FC<any> = ({ autoDismissTimeout, opacity, isRunning, ...props }) => (
-    <div
-        className="
-        react-toast-notifications__toast__countdown
-        bottom-0 height-0 left-0 absolute w-full
-    "
-        style={{
-            animation: `countdown ${autoDismissTimeout}ms linear`,
-            animationPlayState: isRunning ? 'running' : 'paused',
-            backgroundColor: 'rgba(0,0,0,0.1)',
-            opacity,
-        }}
-        {...props}
-    />
-);
+const STimer = styled<any>(Timer)`
+    #refetchLoader {
+        animation: countdown-width ${props => props.autoDismissTimeout}s linear;
+        background: #002886;
+        position: absolute; 
+        height: 0.25rem;
+        right: 0;
+    }
+`
+STimer.defaultProps = {
+    autoDismissTimer: 5
+}
+
+const Countdown: React.FC<{
+    autoDismissTimeout: number,
+    display: boolean
+}> = ({ autoDismissTimeout, display }) => (
+        display 
+            ? 
+                <div className="w-full">
+                    <STimer autoDismissTimeout={Math.floor(autoDismissTimeout/1000)}/>
+                </div>
+            :
+                null
+)
 
 const Content = styled((props: any) => (
     <div className={`react-toast-notifications__toast__content w-full p-2 ${props.className}`} {...props}>
@@ -126,8 +138,9 @@ const Content = styled((props: any) => (
     </div>
 ))`
     flex-grow: 1;
-    font-size: 14;
+    font-size: 18px;
     line-height: 1.4;
+    color: #005EA4;
     min-height: 40;
     width: 100%;
     padding: 5px;
@@ -150,14 +163,20 @@ const toastWidth = 360;
 
 const Close = styled(CloseOutlined)`
     padding: 0;
-    margin-right: 0.3rem;
     margin-top: 0.2rem;
+    margin-left: auto;
     margin-bottom: auto;
     line-height: 14px;
+    color: #3DA8F5;
     transition: 0.3s;
+    border: 1px solid #3DA8F5;
+    padding: 2px 13px;
+    border-radius: 10px;
     &: hover {
         cursor: pointer;
         opacity: 0.8;
+        border: 1px solid #fff;
+        color: #fff;
     }
 `;
 const Hashie: React.FC<HProps | any> = ({
@@ -172,11 +191,12 @@ const Hashie: React.FC<HProps | any> = ({
     children,
 }: HProps) => {
     const appearance = appearances[appearance_] ?? appearances['info']; //default info
+    let children_ = React.Children.toArray(children);
     return (
         <div
-            className="rounded-md mb-2 flex"
+            className="rounded-md mb-2 flex flex-col p-2"
             style={{
-                backgroundColor: appearance.bg,
+                backgroundColor: '#00156C',
                 boxShadow: '0 3px 8px rgba(0, 0, 0, 0.175)',
                 color: appearance.text,
                 transition: `transform ${transitionDuration}ms cubic-bezier(0.2, 0, 0, 1), opacity ${transitionDuration}ms`,
@@ -184,14 +204,16 @@ const Hashie: React.FC<HProps | any> = ({
                 ...hashieStates(placement)[transitionState],
             }}
         >
-            <Icon
+            <Header
                 appearance={appearance_}
                 autoDismiss={autoDismiss}
                 autoDismissTimeout={autoDismissTimeout}
                 isRunning={isRunning}
+                onDismiss={onDismiss}
+                title={children_[0]}
             />
-            <Content>{children}</Content>
-            <Close onClick={onDismiss} />
+            <Content>{children_[1]}</Content>
+            <Countdown display={autoDismiss} autoDismissTimeout={autoDismissTimeout} />
         </div>
     );
 };
