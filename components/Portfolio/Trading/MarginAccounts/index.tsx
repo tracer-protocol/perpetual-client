@@ -1,15 +1,7 @@
 import React from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import {
-    TableHead,
-    TableHeadEnd,
-    TableRow,
-    TableCell,
-    Button,
-    StatusIndicator,
-    getStatusColour,
-} from '@components/Portfolio';
+import { TableHead, TableRow, TableCell, Button, StatusIndicator, getStatusColour } from '@components/Portfolio';
 import Tooltip from 'antd/lib/tooltip';
 
 const NoLeverageTip = <p>You have no leveraged trades open in this market.</p>;
@@ -44,8 +36,7 @@ const MarginAccounts: React.FC = () => {
         },
     ];
 
-    const tableHeadEnd = {
-        width: '500px',
+    const TableHeadEndTheme = {
         borderBottom: '1px solid #002886',
     };
 
@@ -56,7 +47,7 @@ const MarginAccounts: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 4 ? (
-                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Logo } from '@components/General';
-import { TableHead, TableHeadEnd, TableRow, TableCell } from '@components/Portfolio';
+import { TableHead, TableRow, TableCell } from '@components/Portfolio';
 import { DateAndTime } from '@components/General';
 
 const WithdrawalHistory: React.FC = () => {
@@ -33,8 +33,8 @@ const WithdrawalHistory: React.FC = () => {
         },
     ];
 
-    const tableHeadEnd = {
-        width: '500px',
+    const TableHeadEndTheme = {
+        minWidth: '500px',
         borderBottom: '1px solid #002886',
     };
 
@@ -45,7 +45,7 @@ const WithdrawalHistory: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 3 ? (
-                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),
