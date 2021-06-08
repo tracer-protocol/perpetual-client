@@ -77,11 +77,11 @@ Button.defaultProps = {
 
 export const TableHead = styled.th`
     max-width: ${(props: any) => props.theme.maxWidth as string};
-    width: ${props => props.theme.width};
-    min-height: 57px;
+    width: ${(props) => props.theme.width};
+    height: 57px;
     text-align: left;
     color: #3da8f5;
-    padding: 15px 1rem;
+    padding: 0 1rem;
     font-weight: normal;
     border-right: ${(props: any) => props.theme.borderRight as string};
     border-bottom: ${(props: any) => props.theme.borderBottom as string};
@@ -121,13 +121,15 @@ TableRow.defaultProps = {
 export const TableCell = styled.td`
     color: ${(props: any) => props.color as string};
     font-size: 1rem;
-    padding: 0.5rem 1rem;
-    border-right: ${(props: any) => props.theme.borderRight as string};
+    padding: 0 1rem;
+    height: ${(props: any) => props.theme.height as string};
+    border-right: ${(props) => props.theme.borderRight as string};
     border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
 
 TableCell.defaultProps = {
     theme: {
+        height: '70px',
         borderRight: '1px solid #002886',
         borderBottom: '1px solid #002886',
     },

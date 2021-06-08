@@ -90,9 +90,9 @@ const Position: React.FC<{
             <table>
                 <thead>
                     <tr>
-                        {headings.map((heading) =>
-                            <TableHead>{heading}</TableHead>
-                        )}
+                        {headings.map((heading, i) => (
+                            <TableHead key={`position-heading-${i}`}>{heading}</TableHead>
+                        ))}
                     </tr>
                 </thead>
                 <tbody>
