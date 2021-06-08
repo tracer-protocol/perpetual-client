@@ -42,11 +42,11 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
                             <div className="my-auto">{tracer.marketId}</div>
                         </MarketContainer>
                         <div className="info">
-                            <MarketChange 
-                                className="mr-2" 
-                                size={'lg'} 
-                                before={false} 
-                                amount={tracer.get24HourChange()} 
+                            <MarketChange
+                                className="mr-2"
+                                size={'lg'}
+                                before={false}
+                                amount={tracer.get24HourChange()}
                             />
                             <div>{toApproxCurrency(tracer.getOraclePrice())}</div>
                         </div>

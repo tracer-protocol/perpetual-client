@@ -13,8 +13,7 @@ import { Notification } from '@components/General/Notification';
 import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
 
-const App = ({ Component, pageProps }: AppProps) => {
-    // eslint-disable-line
+const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
     return (
         <div>
             <Head>
