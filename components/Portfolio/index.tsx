@@ -53,7 +53,7 @@ export const Button = styled.div`
     }
 
     &.primary:hover {
-        background: #03065e;
+        background: #000240;
         color: #3da8f5;
     }
 

@@ -53,7 +53,7 @@ const setGraphOptions: () => Record<string, unknown> = () => {
             layout: {
                 textColor: '#696969',
                 fontFamily: 'Akkurat',
-                backgroundColor: '#03065E',
+                backgroundColor: '#000240',
             },
         },
     };

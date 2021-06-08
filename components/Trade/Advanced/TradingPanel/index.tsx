@@ -153,7 +153,7 @@ export const MarketSelect: React.FC<MSProps> = styled(({ className }: MSProps) =
 
     return (
         <div className={className}>
-            <SBox color={popup ? '#011772' : '#03065e'} display={popup} onMouseLeave={() => setPopup(false)}>
+            <SBox color={popup ? '#011772' : '#000240'} display={popup} onMouseLeave={() => setPopup(false)}>
                 <MarketContainer>
                     <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
                     <div className="my-auto">{selectedTracer?.marketId}</div>

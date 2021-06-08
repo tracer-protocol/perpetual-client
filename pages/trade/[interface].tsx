@@ -27,7 +27,7 @@ const Trade: React.FC = styled(({ className }) => {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: #03065e;
+    background-color: #000240;
     color: #fff;
 `;
 
