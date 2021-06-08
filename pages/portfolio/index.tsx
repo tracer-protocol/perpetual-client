@@ -7,7 +7,6 @@ import InsurancePortfolio from '@components/Portfolio/Insurance';
 
 const LeftPanel = styled.div`
     width: 25%;
-    margin-left: 5vw;
     display: flex;
     flex-direction: column;
     min-height: 90vh;
@@ -18,7 +17,6 @@ const LeftPanel = styled.div`
 
 const RightPanel = styled.div`
     width: 75%;
-    margin-right: 5vw;
     display: flex;
     flex-direction: column;
     min-height: 90vh;
@@ -139,7 +137,7 @@ export default styled(({ className }) => {
     return (
         <div className={className}>
             <NavBar />
-            <div className="flex h-full">
+            <div className="container flex">
                 <LeftPanel>
                     <SideNav tabs={tabs} setTab={setTab} selected={tab} />
                 </LeftPanel>
@@ -149,7 +147,6 @@ export default styled(({ className }) => {
     );
 })`
     min-height: 100vh;
-    display: flex;
     flex-direction: column;
     background-color: #03065e;
     color: #fff;

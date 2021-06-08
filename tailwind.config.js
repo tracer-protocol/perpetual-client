@@ -2,6 +2,9 @@ module.exports = {
     important: true,
     purge: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
     theme: {
+        container: {
+            center: true,
+        },
         minWidth: {
             0: '0',
             '1/4': '25%',

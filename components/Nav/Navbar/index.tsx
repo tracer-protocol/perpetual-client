@@ -123,7 +123,6 @@ const DropdownLogo = styled(({ className }) => {
     height: 100%;
     display: flex;
     width: 350px;
-    margin-left: 5vw;
     position: relative;
 
     &:hover {
@@ -244,7 +243,7 @@ const DropdownLogo = styled(({ className }) => {
     &.show > .dropdown-menu {
         opacity: 1;
         height: 400px;
-        z-index: 3;
+        z-index: 5;
     }
 `;
 
@@ -268,6 +267,18 @@ const ConnectButton: React.FC<any> = styled.button`
 `;
 
 const linkStyles = 'mx-2 py-2';
+
+const NavBarContainer: React.FC = styled(({ className }) => {
+    return (
+        <div className={className}>
+            <NavBar />
+        </div>
+    );
+})`
+    background-image: url('/img/nav-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+`;
 
 const NavBar: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
@@ -295,7 +306,7 @@ const NavBar: React.FC = styled(({ className }) => {
     };
 
     return (
-        <nav className={className}>
+        <nav className={`${className} container`}>
             <DropdownLogo />
             <ul>
                 <li className={linkStyles + (route === 'trade' ? ' selected' : '')}>
@@ -336,16 +347,10 @@ const NavBar: React.FC = styled(({ className }) => {
         </nav>
     );
 })`
-    background-color: #03065e;
     display: flex;
-    width: 100%;
     color: #fff;
     height: 10vh;
-    background-image: url('/img/nav-bg.png');
-    background-repeat: no-repeat;
-    background-size: cover;
     position: relative;
-    z-index: 5;
 
     > ul {
         display: flex;
@@ -397,4 +402,4 @@ const NavBar: React.FC = styled(({ className }) => {
     }
 `;
 
-export default NavBar;
+export default NavBarContainer;

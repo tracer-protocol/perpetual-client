@@ -130,7 +130,7 @@ const Advanced: React.FC = () => {
     }, []);
 
     return (
-        <div className="flex h-full">
+        <div className="container flex h-full">
             <LeftPanel>
                 <MarketSelect account={account ?? ''} />
                 <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} />
