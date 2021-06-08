@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TracerContext } from '@context/TracerContext';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
-import { TransactionContext } from '@context/TransactionContext';
 import { Children } from 'types';
 import { toApproxCurrency } from '@libs/utils';
 import SlideSelect from '../Buttons/SlideSelect';
@@ -122,7 +121,6 @@ type BProps = {
 export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps) => {
     const { tracerId, balances } = useContext(TracerContext);
     const { poolInfo, deposit, withdraw } = useContext(InsuranceContext);
-    const { handleTransaction } = useContext(TransactionContext);
     const [isDeposit, setIsDeposit] = useState(true);
     const poolBalance = poolInfo?.userBalance ?? defaults.userBalance;
     const balance = isDeposit ? balances?.tokenBalance : poolBalance;
@@ -149,10 +147,9 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
             const callback = () => {
                 setShow(false);
             };
-            const t = isDeposit ? 'deposit' : 'withdraw';
-            withdraw && deposit && handleTransaction
-                ? handleTransaction(isDeposit ? deposit : withdraw, [amount], { callback })
-                : console.error(`Failed to ${t} from insurance pool: No deposit function found`);
+            if (!!deposit && !!withdraw) {
+                isDeposit ? deposit(amount, callback) : withdraw(amount, callback);
+            }
         } catch (err) {
             console.error(`Failed to deposit into insurance pool: ${err}`);
         }
