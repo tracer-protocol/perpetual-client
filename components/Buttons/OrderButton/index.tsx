@@ -15,7 +15,7 @@ const TradeButton = styled.div`
     border: 1px solid #3da8f5;
     border-radius: 10px;
     padding: 10px 0;
-    background: #03065e;
+    background: #000240;
     color: #3da8f5;
     transition: 0.3s;
 
