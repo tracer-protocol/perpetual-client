@@ -53,7 +53,7 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         width: ${(props) => (props.buffer / denom(props.target, props.liquidity)) * 100}%;
         border-top-left-radius: 20px;
         border-bottom-left-radius: 20px;
-        margin-left: ${(props) => (!!props.buffer ? '4px' : '0') /** is the buffer 0 */};
+        margin-left: ${(props) => (!!props.buffer ? '0' : '0') /** is the buffer 0 */};
     }
     > .liquidity {
         background: #3da8f5;
