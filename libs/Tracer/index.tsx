@@ -12,8 +12,11 @@ import { TracerPerpetualSwaps as TracerType } from '@tracer-protocol/contracts/t
 import BigNumber from 'bignumber.js';
 
 import { AbiItem } from 'web3-utils';
-import { Result, UserBalance } from 'types';
+import { UserBalance } from 'types';
 import { checkAllowance } from '../web3/utils';
+import PromiEvent from 'web3/promiEvent';
+// @ts-ignore
+import { TransactionReceipt } from 'web3/types';
 
 export const defaults: Record<string, any> = {
     balances: {
@@ -124,7 +127,7 @@ export default class Tracer {
                 return true;
             })
             .catch((err) => {
-                console.error(err);
+                console.error(err, 'Failed to init tracer');
                 return false;
             });
     };
@@ -190,52 +193,55 @@ export default class Tracer {
     };
 
     /**
-     * Withdraws from the margin account of the tracer
-     * @param amount
-     * @param account
-     * @returns
+     * Deposits into the margin account of the tracer
+     * @param amount amount to deposit
+     * @param account account depositing
+     * @returns web3 PromiEvent type
      */
-    deposit: (amount: number, account: string) => Promise<Result> = async (amount, account) => {
-        try {
-            const err = await checkAllowance(this.token, account, this.address, amount);
-            if (err?.error) {
-                return err;
-            }
-            // convert amount to appropriate amount in quote token
-            const amount_ = Web3.utils.toWei(amount.toString());
-            const result = await this._instance.methods.deposit(amount_).send({ from: account });
-            return {
-                status: 'success',
-                message: `Successfully made deposit into margin account, ${result?.transactionHash}`,
-            };
-        } catch (err) {
-            return { status: 'error', message: `Failed to deposit into margin account: ${err.message}` };
-        }
+    // @ts-ignore
+    deposit: (amount: number, account: string) => PromiEvent<TransactionReceipt> = (amount, account) => {
+        // convert amount to appropriate amount in quote token
+        const amount_ = Web3.utils.toWei(amount.toString());
+        return this._instance.methods.deposit(amount_).send({ from: account });
     };
 
     /**
-     * Deposits into the margin account of the tracer
-     * @param amount
-     * @param account
-     * @returns
+     * Withdraws from the margin account of the tracer
+     * @param amount amount to deposit
+     * @param account account depositing
+     * @returns web3 PromiEvent type
      */
-    withdraw: (amount: number, account: string) => Promise<Result> = async (amount, account) => {
-        try {
-            const result = await this._instance.methods
-                .withdraw(Web3.utils.toWei(amount.toString()))
-                .send({ from: account });
+    // @ts-ignore
+    withdraw: (amount: number, account: string) => PromiEvent<TransactionReceipt> = (amount, account) => {
+        return this._instance.methods.withdraw(Web3.utils.toWei(amount.toString())).send({ from: account });
+    };
 
-            return {
-                status: 'success',
-                message: `Successfully withdrew from margin account, ${result?.transactionHash}`,
-            };
-        } catch (err) {
-            return { status: 'error', message: `Failed to withdraw from margin account: ${err.message}` };
-        }
+    /**
+     * Checks is an account has approved a contract.
+     *  True case is if the approved amount is above 420
+     * @param account account to check
+     * @returns 0 if not approved 1 if approved and -1 if something went wrong
+     */
+    checkAllowance: (account: string, contract: string) => Promise<0 | 1 | -1> = async (account, contract) => {
+        return checkAllowance(this.token, account, contract);
+    };
+
+    /**
+     * Approve the tracer token for a given contract address
+     * @returns TransactionType event
+     */
+    // @ts-ignore
+    approve: (account: string, contract: string) => PromiEvent<TransactionReceipt> = (account, contract) => {
+        const max = Number.MAX_SAFE_INTEGER;
+        return this.token?.methods.approve(contract, Web3.utils.toWei(max.toString())).send({ from: account });
     };
 
     getOraclePrice: () => BigNumber = () => {
         return this.oraclePrice;
+    };
+
+    getInsuranceContract: () => string = () => {
+        return this.insuranceContract.slice();
     };
 
     get24HourChange: () => number = () => {

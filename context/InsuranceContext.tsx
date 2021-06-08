@@ -1,16 +1,19 @@
 import React, { useEffect, useContext, useState, useReducer } from 'react';
-import { Children, InsurancePoolInfo, Result } from 'types';
+import { Children, InsurancePoolInfo } from 'types';
 import { Web3Context } from './Web3Context';
 import Web3 from 'web3';
 import { AbiItem } from 'web3-utils';
 import { Insurance } from '@tracer-protocol/contracts/types/Insurance';
 import insuranceJSON from '@tracer-protocol/contracts/abi/contracts/Insurance.sol/Insurance.json';
 import { TracerContext } from './TracerContext';
-import { checkAllowance } from 'libs/web3/utils';
 import { FactoryContext } from '.';
 import { Tracer } from 'libs';
 import { BigNumber } from 'bignumber.js';
 import { initialFactoryState } from './FactoryContext';
+import PromiEvent from 'web3/promiEvent';
+import { TransactionContext } from './TransactionContext';
+// @ts-ignore
+import { TransactionReceipt } from 'web3/types';
 
 export const defaults: Record<string, any> = {
     userBalance: new BigNumber(0),
@@ -39,8 +42,8 @@ export type InsuranceAction =
 
 interface ContextProps {
     poolInfo: InsurancePoolInfo;
-    deposit: (amount: number) => Promise<Result>;
-    withdraw: (amount: number) => Promise<Result>;
+    deposit: (amount: number, _callback?: () => void) => void;
+    withdraw: (amount: number, _callback?: () => void) => void;
     contract: Insurance;
     pools: Record<string, InsurancePoolInfo>;
 }
@@ -58,6 +61,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     const { account, web3 } = useContext(Web3Context);
     const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const { selectedTracer } = useContext(TracerContext);
+    const { handleTransaction } = useContext(TransactionContext);
     const [contract, setContract] = useState<Insurance>();
 
     const initialState = {
@@ -127,19 +131,15 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     const [state, dispatch] = useReducer(reducer, initialState);
 
     useEffect(() => {
-        if (web3 && selectedTracer && selectedTracer.insuranceContract) {
-            const setter = async () => {
-                await selectedTracer.initialised;
-                setContract(
-                    new web3.eth.Contract(
-                        insuranceJSON as AbiItem[],
-                        selectedTracer.insuranceContract,
-                    ) as unknown as Insurance,
-                );
-            };
-            setter();
+        if (web3 && selectedTracer?.getInsuranceContract()) {
+            setContract(
+                new web3.eth.Contract(
+                    insuranceJSON as AbiItem[],
+                    selectedTracer.getInsuranceContract(),
+                ) as unknown as Insurance,
+            );
         }
-    }, [web3, selectedTracer]);
+    }, [web3, selectedTracer?.getInsuranceContract()]);
 
     const fetchPoolData = async () => {
         Promise.all(
@@ -153,41 +153,46 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
      *
      * @param amount the amount to deposit
      */
-    const deposit: (amount: number) => Promise<Result> = async (amount) => {
-        try {
-            if (!selectedTracer?.address) {
-                return { status: 'error', message: 'Failed to deposit: Selected tracer address cannot be undefined' };
+    const deposit = async (amount: number, _callback?: () => any) => {
+        if (!selectedTracer?.address) {
+            console.error('Failed to withdraw: Selected tracer address is undefined');
+        } else if (!account) {
+            console.error('Failed to withdraw: No connected account');
+        } else if (handleTransaction && !!selectedTracer) {
+            const approved = await selectedTracer?.checkAllowance(account, selectedTracer.insuranceContract);
+            if (approved === 0) {
+                // not approved
+                handleTransaction(selectedTracer?.approve, [account, selectedTracer.insuranceContract]);
             }
-            const err = await checkAllowance(selectedTracer.token, account, selectedTracer.insuranceContract, amount);
-            if (err.error) {
-                return err;
-            }
-            await contract?.methods
-                .stake(new BigNumber(amount).times(new BigNumber(10).pow(selectedTracer.quoteTokenDecimals)).toString())
-                .send({ from: account });
-            updatePoolBalances();
-            return { status: 'success', message: 'Transaction success: Successfully made deposit' };
-        } catch (err) {
-            console.error(err);
-            return { status: 'error', message: err, error: err };
+            const callFunc: (amount: number) => PromiEvent<TransactionReceipt> = (amount: number) =>
+                // @ts-ignore
+                contract?.methods.deposit(Web3.utils.toWei(amount.toString())).send({ from: account });
+            handleTransaction(callFunc, [amount], {
+                callback: () => {
+                    updatePoolBalances();
+                    _callback ? _callback() : null;
+                },
+            });
+        } else {
+            console.error(`Failed to withdraw from insurance pool: No deposit function found`);
         }
     };
 
-    const withdraw: (amount: number) => Promise<Result> = async (amount) => {
-        try {
-            if (!selectedTracer?.address) {
-                return { status: 'error', message: 'Failed to withdraw: Selected tracer address cannot be undefined' };
-            }
-            const result = await contract?.methods
-                .withdraw(Web3.utils.toWei(amount.toString()))
-                .send({ from: account });
-            updatePoolBalances();
-            return {
-                status: 'success',
-                message: `Transaction success: Successfully withdrew from insurance pool, ${result?.transactionHash}`,
-            };
-        } catch (err) {
-            return { status: 'error', message: `Transaction failed: ${err}` };
+    const withdraw = async (amount: number, _callback?: () => any) => {
+        if (!selectedTracer?.address) {
+            console.error('Failed to withdraw: Selected tracer address is undefined');
+        } else if (handleTransaction) {
+            // @ts-ignore
+            const callFunc: (amount: number) => PromiEvent<TransactionReceipt> = (amount: number) =>
+                contract?.methods.withdraw(Web3.utils.toWei(amount.toString())).send({ from: account });
+            handleTransaction(callFunc, [amount], {
+                callback: () => {
+                    updatePoolBalances();
+                    _callback ? _callback() : null;
+                },
+            });
+        } else {
+            console.error(`Failed to withdraw from insurance pool: No deposit function found`);
         }
     };
 
