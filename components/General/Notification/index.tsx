@@ -1,11 +1,11 @@
 import React from 'react';
 import {
-    CheckCircleOutlined,
     CloseOutlined,
     InfoCircleFilled,
     WarningOutlined,
-    FireFilled,
     LoadingOutlined,
+    CloseCircleTwoTone,
+    CheckCircleTwoTone,
 } from '@ant-design/icons';
 import styled from 'styled-components';
 import Timer from '@components/Timer';
@@ -46,14 +46,14 @@ const appearances: Record<
     }
 > = {
     success: {
-        icon: <CheckCircleOutlined />,
+        icon: <CheckCircleTwoTone twoToneColor={"#05CB3A"} />,
         text: '#05CB3A',
         fg: '#36B37E',
         bg: '#E3FCEF',
     },
     error: {
-        icon: <FireFilled />,
-        text: '#BF2600',
+        icon: <CloseCircleTwoTone twoToneColor={"#F15025"}/>,
+        text: '#F15025',
         fg: '#FF5630',
         bg: '#FFEBE6',
     },
@@ -138,8 +138,9 @@ const Content = styled((props: any) => (
     </div>
 ))`
     flex-grow: 1;
-    font-size: 14;
+    font-size: 18px;
     line-height: 1.4;
+    color: #005EA4;
     min-height: 40;
     width: 100%;
     padding: 5px;
@@ -195,7 +196,7 @@ const Hashie: React.FC<HProps | any> = ({
         <div
             className="rounded-md mb-2 flex flex-col p-2"
             style={{
-                backgroundColor: appearance.bg,
+                backgroundColor: '#00156C',
                 boxShadow: '0 3px 8px rgba(0, 0, 0, 0.175)',
                 color: appearance.text,
                 transition: `transform ${transitionDuration}ms cubic-bezier(0.2, 0, 0, 1), opacity ${transitionDuration}ms`,

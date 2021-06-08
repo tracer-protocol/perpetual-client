@@ -59,7 +59,7 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         const res = callMethod(...params);
         res.on('transactionHash', (hash) => {
             updateToast(toastId as unknown as string, {
-                content: ['Example Title', statusMessages?.pending ?? `Waiting for transaction ${hash}`],
+                content: ['Pending Transaction', statusMessages?.pending ?? `Waiting for transaction ${hash}`],
                 appearance: 'loading' as AppearanceTypes,
                 autoDismiss: false,
             });
