@@ -86,6 +86,21 @@ const Identicon = dynamic(import('../Identicon'), { ssr: false });
 const DropdownLogo = styled(({ className }) => {
     const [show, setShow] = useState(false);
 
+    useEffect(() => {
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('menu');
+            let target = e.target;
+            do {
+                if (target === menu) {
+                    return;
+                }
+                // @ts-ignore
+                target = target?.parentNode;
+            } while (target);
+            setShow(false);
+        });
+    }, []);
+
     const handleClick = (e: any) => {
         e.preventDefault();
         setShow(!show);
