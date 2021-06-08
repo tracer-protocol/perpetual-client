@@ -31,7 +31,7 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                 <meta name="language" content="English" />
 
                 {/** Color for Chrome tabs (Android only) */}
-                <meta name="theme-color" content="#03065E" />
+                <meta name="theme-color" content="#000240" />
             </Head>
             <ToastProvider components={{ Toast: Notification }}>
                 <Web3Store>

@@ -35,7 +35,7 @@ export const Order: React.FC<BProps> = styled(
     },
 )`
     position: relative;
-    border-bottom: 2px solid #03065e;
+    border-bottom: 2px solid #000240;
     text-align: left;
     font-size: 16px;
     letter-spacing: -0.32px;

@@ -48,7 +48,7 @@ const Button = styled.div`
     }
 
     &.primary:hover {
-        background: #03065e;
+        background: #000240;
         color: #3da8f5;
     }
 
@@ -148,6 +148,6 @@ export default styled(({ className }) => {
 })`
     min-height: 100vh;
     flex-direction: column;
-    background-color: #03065e;
+    background-color: #000240;
     color: #fff;
 `;
