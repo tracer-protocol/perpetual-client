@@ -40,11 +40,12 @@ const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
     font-size: 18px;
     width: 100%;
     position: absolute;
+    left: 0;
     text-align: center;
     bottom: ${(props) => (props.display ? '-40px' : '0px')};
     opacity: ${(props) => (props.display ? '1' : '0')};
     z-index: ${(props) => (props.display ? '1' : '-1')};
-    transition: ${(props) => (props.display ? 'bottom 0.3s, opacity 0.3s 0.1s' : 'bottom 0.3s 0.1s, opacity 0.3s')};
+    transition: ${(props) => (props.display ? 'bottom 0.3s, opacity 0.3s 0.1s' : 'bottom 0.3s 0.15s, opacity 0.3s, z-index 0.3s 0.3s')};
 `;
 
 const useEnsName = (account: string) => {
@@ -278,6 +279,7 @@ const NavBarContainer: React.FC = styled(({ className }) => {
     background-image: url('/img/nav-bg.png');
     background-repeat: no-repeat;
     background-size: cover;
+    position: relative;
 `;
 
 const NavBar: React.FC = styled(({ className }) => {
@@ -350,7 +352,6 @@ const NavBar: React.FC = styled(({ className }) => {
     display: flex;
     color: #fff;
     height: 10vh;
-    position: relative;
 
     > ul {
         display: flex;
