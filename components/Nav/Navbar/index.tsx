@@ -103,10 +103,9 @@ const DropdownLogo = styled(({ className }) => {
         <div id="menu" className={`${className} ${show ? 'show' : ''}`} onClick={handleClick}>
             <img alt="Tracer Logo" className="logo hidden lg:block z-10" src="/img/logos/tracer/tracer_perps.svg" />
             <img alt="down-arrow" className="down-arrow z-10" src="/img/general/triangle_down.svg" />
-            <div className="divide" />
             <div className={`dropdown-menu`}>
                 <ul className="dropdown-menu-list">
-                    <li className="nav-item">{/* <img alt="Tracer Logo" src="/img/logos/tracer_perps.svg"/> */}</li>
+                    <li className="nav-item" />
                     <li className="nav-item">
                         <img alt="Tracer Logo" src="/img/logos/tracer/tracer_main.svg" />
                     </li>
@@ -129,14 +128,6 @@ const DropdownLogo = styled(({ className }) => {
 
     &:hover {
         cursor: pointer;
-    }
-
-    > .divide {
-        height: 1px;
-        width: 100%;
-        position: absolute;
-        bottom: 20px;
-        background: #3da8f5;
     }
 
     > .logo {
@@ -260,7 +251,7 @@ const DropdownLogo = styled(({ className }) => {
 const ConnectButton: React.FC<any> = styled.button`
     display: flex;
     border: 2px solid #fff;
-    border-radius: 20px;
+    border-radius: 100px;
     width: 160px;
     height: 50px;
     transition: 0.2s;
@@ -350,6 +341,9 @@ const NavBar: React.FC = styled(({ className }) => {
     width: 100%;
     color: #fff;
     height: 10vh;
+    background-image: url('/img/nav-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
     position: relative;
     z-index: 5;
 

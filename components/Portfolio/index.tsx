@@ -80,6 +80,7 @@ export const TableHead = styled.th`
     text-align: left;
     color: #3da8f5;
     padding: 0 1rem;
+    font-weight: normal;
     border-right: ${(props: any) => props.theme.borderRight as string};
     border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
@@ -98,6 +99,7 @@ export const TableHeadEnd = styled.th`
     color: #3da8f5;
     padding: 1rem;
     font-weight: normal;
+    border-right: ${(props: any) => props.theme.borderRight as string};
     border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
 
