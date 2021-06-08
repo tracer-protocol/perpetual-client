@@ -125,13 +125,13 @@ const DropdownLogo = styled(({ className }) => {
             <div className={`dropdown-menu`}>
                 <ul className="dropdown-menu-list">
                     <li className="nav-item" />
-                    <li className="nav-item">
+                    <li className="nav-item highlight">
                         <img alt="Tracer Logo" src="/img/logos/tracer/tracer_main.svg" />
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item highlight">
                         <img alt="Tracer Logo" src="/img/logos/tracer/tracer_govern.svg" />
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item highlight">
                         <img alt="Tracer Logo" src="/img/logos/tracer/tracer_blog.svg" />
                     </li>
                 </ul>
@@ -238,8 +238,8 @@ const DropdownLogo = styled(({ className }) => {
     &.show > .dropdown-menu ul .nav-item:nth-child(4) {
         transition: all 0.3s ease-in-out 0.4s, background 0.5s ease;
     }
-
-    &.show > .dropdown-menu ul .nav-item:nth-child(2) {
+    
+    &.show > .dropdown-menu ul .nav-item.highlight {
         border-top: 1px solid #3da8f5;
         transform: translateX(0);
         opacity: 1;
@@ -250,30 +250,6 @@ const DropdownLogo = styled(({ className }) => {
         }
     }
 
-    &.show > .dropdown-menu ul .nav-item:nth-child(3) {
-        border-top: 1px solid #3da8f5;
-        transform: translateX(0);
-        opacity: 1;
-
-        &:hover {
-            cursor: pointer;
-            background-color: #3da8f5;
-        }
-    }
-
-    &.show > .dropdown-menu ul .nav-item:nth-child(4) {
-        border-top: 1px solid #3da8f5;
-        transform: translateX(0);
-        opacity: 1;
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
-
-        &:hover {
-            cursor: pointer;
-            background-color: #3da8f5;
-            border-right: 10px;
-        }
-    }
 
     &.show > .dropdown-menu ul {
         margin-top: calc(3vh - 30px);
