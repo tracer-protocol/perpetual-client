@@ -13,12 +13,12 @@ type Options = {
         success?: string;
         pending?: string;
     };
-}
+};
 type HandleTransactionType =
     | ((
           callMethod: (...args: any) => PromiEvent<TransactionReceipt>,
           params: any[], // eslint-disable-line
-          options?: Options 
+          options?: Options,
       ) => void)
     | undefined;
 
@@ -26,13 +26,13 @@ type HandleAsyncType =
     | ((
           callMethod: (...args: any) => Promise<Result>,
           params: any[], // eslint-disable-line
-          options?: Options
+          options?: Options,
       ) => void)
     | undefined;
 
-export const TransactionContext = createContext<{ 
-    handleTransaction: HandleTransactionType 
-    handleAsync: HandleAsyncType 
+export const TransactionContext = createContext<{
+    handleTransaction: HandleTransactionType;
+    handleAsync: HandleAsyncType;
 }>({
     handleTransaction: undefined,
     handleAsync: undefined,
@@ -49,21 +49,27 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     const handleTransaction: HandleTransactionType = async (callMethod, params, options) => {
         const { statusMessages, callback } = options ?? {};
         // actually returns a string error in the library
-        const toastId = addToast(statusMessages?.waiting ?? 'Approve transaction with provider', {
-            appearance: 'loading' as AppearanceTypes,
-            autoDismiss: false,
-        });
+        const toastId = addToast(
+            ['Pending Transaction', statusMessages?.waiting ?? 'Approve transaction with provider'],
+            {
+                appearance: 'loading' as AppearanceTypes,
+                autoDismiss: false,
+            },
+        );
         const res = callMethod(...params);
         res.on('transactionHash', (hash) => {
             updateToast(toastId as unknown as string, {
-                content: statusMessages?.pending ?? `Waiting for transaction ${hash}`,
+                content: ['Example Title', statusMessages?.pending ?? `Waiting for transaction ${hash}`],
                 appearance: 'loading' as AppearanceTypes,
                 autoDismiss: false,
             });
         })
             .on('receipt', (receipt) => {
                 updateToast(toastId as unknown as string, {
-                    content: statusMessages?.success ?? `Transaction successful: ${receipt.transactionHash}`,
+                    content: [
+                        'Transaction Successful',
+                        statusMessages?.success ?? `Transaction successful: ${receipt.transactionHash}`,
+                    ],
                     appearance: 'success',
                     autoDismiss: true,
                 });
@@ -71,7 +77,10 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
             .on('error', (error) => {
                 updateToast(toastId as unknown as string, {
                     // confirmed this is a string
-                    content: statusMessages?.error ?? `Transaction cancelled: ${error.message}`,
+                    content: [
+                        'Transaction Cancelled',
+                        statusMessages?.error ?? `Transaction cancelled: ${error.message}`,
+                    ],
                     appearance: 'error',
                     autoDismiss: true,
                 });
@@ -83,10 +92,13 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     const handleAsync: HandleAsyncType = async (callMethod, params, options) => {
         const { statusMessages, callback } = options ?? {};
         // actually returns a string error in the library
-        const toastId = addToast(statusMessages?.waiting ?? 'Approve transaction with provider', {
-            appearance: 'loading' as AppearanceTypes,
-            autoDismiss: false,
-        });
+        const toastId = addToast(
+            ['Pending Transaction', statusMessages?.waiting ?? 'Approve transaction with provider'],
+            {
+                appearance: 'loading' as AppearanceTypes,
+                autoDismiss: false,
+            },
+        );
 
         const res = callMethod(...params);
         Promise.resolve(res).then((res) => {
@@ -106,13 +118,13 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
             }
             callback ? callback(res) : null;
         });
-    }
+    };
 
     return (
         <TransactionContext.Provider
             value={{
                 handleTransaction,
-                handleAsync
+                handleAsync,
             }}
         >
             {children}

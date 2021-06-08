@@ -93,7 +93,7 @@ const OpenOrders: React.FC<{
     const { handleAsync } = useContext(TransactionContext);
     const _cancelOrder = (market: string, orderId: string) => {
         console.info(`Attempting to cancel order: ${orderId} on market: ${market}`);
-        handleAsync 
+        handleAsync
             ? handleAsync(cancelOrder, [market, orderId], {
                   statusMessages: {
                       waiting: `Cancelling order: ${orderId} on market ${market} `,
