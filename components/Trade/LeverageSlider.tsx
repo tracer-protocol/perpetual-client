@@ -86,7 +86,6 @@ export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }:
 
     .ant-slider-mark {
         font-size: 16px;
-        letter-spacing: -0.32px;
         color: #005ea4;
         margin-top: 18px;
     }
@@ -96,10 +95,10 @@ export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }:
     }
 
     .ant-slider-step {
-        width: 104%;
+        width: 106%;
         height: 10px;
         margin-top: -5px;
-        margin-left: -10px;
+        margin-left: -2px;
         background: #002886;
         border-radius: 10px;
     }
@@ -120,15 +119,14 @@ interface LSProps {
     className?: string;
     leverage: number;
 }
-
 const LeverageSlider: React.FC<LSProps> = styled(({ className, leverage }: LSProps) => {
     return (
         <div className={className}>
             <h3>
                 <Tooltip title={LeverageTip}>Increase Exposure</Tooltip>
             </h3>
-            <div className="w-full m-auto py-5 px-1">
-                <DefaultSlider leverage={leverage ?? 1} />
+            <div className="w-full m-auto py-5 pl-1 pr-4">
+                <DefaultSlider className="slider" leverage={leverage ?? 1} />
             </div>
         </div>
     );
@@ -136,6 +134,10 @@ const LeverageSlider: React.FC<LSProps> = styled(({ className, leverage }: LSPro
     display: flex;
     flex-direction: column;
     margin-top: 0.5rem;
+
+    .slider > .ant-slider-step {
+        margin-left: -10px;
+    }
 
     h3 {
         font-size: 16px;

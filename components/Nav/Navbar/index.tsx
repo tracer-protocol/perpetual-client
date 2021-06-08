@@ -19,6 +19,7 @@ const NetworkButton = styled.span`
         color: #f15025;
     }
 `;
+
 type UNProps = {
     display: boolean;
     className?: string;
@@ -84,6 +85,7 @@ const Identicon = dynamic(import('../Identicon'), { ssr: false });
 
 const DropdownLogo = styled(({ className }) => {
     const [show, setShow] = useState(false);
+
     const handleClick = (e: any) => {
         e.preventDefault();
         setShow(!show);
@@ -293,12 +295,10 @@ const ConnectButton: React.FC<any> = styled.button`
     }
 `;
 
-const linkStyles = 'mx-2 py-2';
-
-const NavBarContainer: React.FC = styled(({ className }) => {
+const NavBar: React.FC = styled(({ className }) => {
     return (
         <div className={className}>
-            <NavBar />
+            <NavBarContent />
         </div>
     );
 })`
@@ -308,7 +308,7 @@ const NavBarContainer: React.FC = styled(({ className }) => {
     position: relative;
 `;
 
-const NavBar: React.FC = styled(({ className }) => {
+const NavBarContent: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
     const route = routes[1];
     const secondaryRoute = routes[2];
@@ -332,6 +332,8 @@ const NavBar: React.FC = styled(({ className }) => {
             return 'Connect Wallet';
         }
     };
+
+    const linkStyles = 'mx-2 py-2';
 
     return (
         <nav className={`${className} container`}>
@@ -429,4 +431,4 @@ const NavBar: React.FC = styled(({ className }) => {
     }
 `;
 
-export default NavBarContainer;
+export default NavBar;

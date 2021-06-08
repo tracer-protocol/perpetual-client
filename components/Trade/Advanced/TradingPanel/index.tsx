@@ -26,7 +26,6 @@ type MarketSelectDropdownProps = {
     display: boolean;
     className?: string;
 };
-
 const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     ({ className, tracers, onMarketSelect }: MarketSelectDropdownProps) => {
         return (
@@ -114,7 +113,9 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     &:hover {
         cursor: pointer;
     }
+
     > .down-arrow {
+        margin-top: -5px;
         display: inline-block;
         transition: 0.3s;
         transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-3px)' : 'translateY(-2px)')};
@@ -294,7 +295,7 @@ const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
     return (
         <div className={`${className} m-3`}>
             <a className="label">Leverage</a>
-            <div className="w-3/4 p-2">
+            <div className="w-3/4 px-4 pb-4">
                 <DefaultSlider leverage={leverage} />
             </div>
         </div>
@@ -303,7 +304,7 @@ const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
     display: flex;
 
     > .label {
-        margin: auto auto 35px 0;
+        margin: 5px auto 35px 0;
         font-size: 16px;
         letter-spacing: -0.32px;
         color: #3da8f5;
