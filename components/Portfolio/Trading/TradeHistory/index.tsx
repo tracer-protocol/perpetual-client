@@ -1,7 +1,7 @@
 import React from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHead, TableHeadEnd, TableRow, TableCell } from '@components/Portfolio';
+import { TableHead, TableRow, TableCell } from '@components/Portfolio';
 import { DateAndTime } from '@components/General';
 
 const TradeHistory: React.FC = () => {
@@ -58,7 +58,7 @@ const TradeHistory: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 7 ? (
-                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                                <TableHead theme={tableHeadEnd}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),

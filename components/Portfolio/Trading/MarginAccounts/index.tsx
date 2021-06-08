@@ -3,7 +3,6 @@ import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 import {
     TableHead,
-    TableHeadEnd,
     TableRow,
     TableCell,
     Button,
@@ -56,7 +55,7 @@ const MarginAccounts: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 4 ? (
-                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                                <TableHead theme={tableHeadEnd}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),

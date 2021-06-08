@@ -3,7 +3,6 @@ import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 import {
     TableHead,
-    TableHeadEnd,
     TableRow,
     TableCell,
     SecondaryCell,
@@ -91,8 +90,8 @@ const Position: React.FC<{
             <table>
                 <thead>
                     <tr>
-                        {headings.map((heading, i) =>
-                            i === 7 ? <TableHeadEnd>{heading}</TableHeadEnd> : <TableHead>{heading}</TableHead>,
+                        {headings.map((heading) =>
+                            <TableHead>{heading}</TableHead>
                         )}
                     </tr>
                 </thead>

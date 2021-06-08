@@ -8,7 +8,7 @@ import { Button, Logo } from '@components/General';
 import { CaretDownFilled } from '@ant-design/icons';
 import Breakdown from '../PoolHealth/Breakdown';
 import { InsuranceModal } from '@components/Modals/InsuranceModal';
-import { TableHead, TableHeadEnd, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
+import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
 import { toPercent } from '@libs/utils';
 
 const Teaser = styled.div`
@@ -166,7 +166,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                 <tr>
                     {headings.map((heading, i) =>
                         i === 3 ? (
-                            <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                            <TableHead theme={tableHeadEnd}>{heading}</TableHead>
                         ) : (
                             <TableHead>{heading}</TableHead>
                         ),

@@ -45,7 +45,7 @@ const WithdrawalHistory: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 3 ? (
-                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                                <TableHead theme={tableHeadEnd}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),

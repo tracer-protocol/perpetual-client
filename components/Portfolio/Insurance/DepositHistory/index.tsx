@@ -1,7 +1,7 @@
 import React from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHead, TableHeadEnd, TableRow, TableCell } from '@components/Portfolio';
+import { TableHead, TableRow, TableCell } from '@components/Portfolio';
 import { DateAndTime } from '@components/General';
 
 const DepositHistory: React.FC = () => {
@@ -49,7 +49,7 @@ const DepositHistory: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 4 ? (
-                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                                <TableHead theme={tableHeadEnd}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),

@@ -85,20 +85,6 @@ TableHead.defaultProps = {
     },
 };
 
-const TableHeadEnd = styled.th`
-    width: ${(props: any) => props.theme.width as string};
-    text-align: left;
-    color: #3da8f5;
-    padding: 1rem;
-    font-weight: normal;
-`;
-
-TableHeadEnd.defaultProps = {
-    theme: {
-        width: '200px',
-    },
-};
-
 const TableRow = styled.tr`
     display: ${(props: any) => props.theme.display as string};
     color: ${(props: any) => props.theme.color as string};

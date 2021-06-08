@@ -77,9 +77,11 @@ Button.defaultProps = {
 
 export const TableHead = styled.th`
     max-width: ${(props: any) => props.theme.maxWidth as string};
+    width: ${props => props.theme.width};
+    min-height: 57px;
     text-align: left;
     color: #3da8f5;
-    padding: 0 1rem;
+    padding: 15px 1rem;
     font-weight: normal;
     border-right: ${(props: any) => props.theme.borderRight as string};
     border-bottom: ${(props: any) => props.theme.borderBottom as string};
@@ -88,24 +90,8 @@ export const TableHead = styled.th`
 TableHead.defaultProps = {
     theme: {
         maxWidth: '150px',
+        width: 'auto',
         borderRight: '1px solid #002886',
-        borderBottom: '1px solid #002886',
-    },
-};
-
-export const TableHeadEnd = styled.th`
-    width: ${(props: any) => props.theme.width as string};
-    text-align: left;
-    color: #3da8f5;
-    padding: 1rem;
-    font-weight: normal;
-    border-right: ${(props: any) => props.theme.borderRight as string};
-    border-bottom: ${(props: any) => props.theme.borderBottom as string};
-`;
-
-TableHeadEnd.defaultProps = {
-    theme: {
-        width: '200px',
         borderBottom: '1px solid #002886',
     },
 };
