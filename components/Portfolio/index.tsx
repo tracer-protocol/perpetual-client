@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 export const LeftPanel = styled.div`
-    width: 25%;
-    margin-left: 5vw;
+    width: 20%;
     display: flex;
     flex-direction: column;
     min-height: 90vh;
@@ -16,8 +15,7 @@ export const LeftPanel = styled.div`
 `;
 
 export const RightPanel = styled.div`
-    width: 75%;
-    margin-right: 5vw;
+    width: 80%;
     display: flex;
     flex-direction: column;
     min-height: 90vh;
@@ -77,6 +75,9 @@ Button.defaultProps = {
 
 export const TableHead = styled.th`
     max-width: ${(props: any) => props.theme.maxWidth as string};
+    min-width: ${(props: any) => props.theme.minWidth as string};
+    width: ${(props: any) => props.theme.width};
+    height: 57px;
     text-align: left;
     color: #3da8f5;
     padding: 0 1rem;
@@ -87,25 +88,10 @@ export const TableHead = styled.th`
 
 TableHead.defaultProps = {
     theme: {
-        maxWidth: '150px',
+        maxWidth: '300px',
+        minWidth: '140px',
+        width: 'auto',
         borderRight: '1px solid #002886',
-        borderBottom: '1px solid #002886',
-    },
-};
-
-export const TableHeadEnd = styled.th`
-    width: ${(props: any) => props.theme.width as string};
-    text-align: left;
-    color: #3da8f5;
-    padding: 1rem;
-    font-weight: normal;
-    border-right: ${(props: any) => props.theme.borderRight as string};
-    border-bottom: ${(props: any) => props.theme.borderBottom as string};
-`;
-
-TableHeadEnd.defaultProps = {
-    theme: {
-        width: '200px',
         borderBottom: '1px solid #002886',
     },
 };
@@ -135,13 +121,15 @@ TableRow.defaultProps = {
 export const TableCell = styled.td`
     color: ${(props: any) => props.color as string};
     font-size: 1rem;
-    padding: 0.5rem 1rem;
+    padding: 0 1rem;
+    height: ${(props: any) => props.theme.height as string};
     border-right: ${(props: any) => props.theme.borderRight as string};
     border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
 
 TableCell.defaultProps = {
     theme: {
+        height: '70px',
         borderRight: '1px solid #002886',
         borderBottom: '1px solid #002886',
     },

@@ -61,7 +61,6 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     top: 100%;
     left: 0;
     width: 100%;
-    height: 0;
     background: #011772;
     font-size: 16px;
     z-index: ${(props) => (props.display ? '10' : '-1')};

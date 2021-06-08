@@ -9,14 +9,14 @@ interface SNBProps {
     position?: 'end' | 'start';
 }
 
-const SubNavContainer = styled.div`
+export const SubNavContainer = styled.div`
     letter-spacing: -0.36px;
     font-size: 18px;
     border-bottom: 1px solid #0c3586;
     display: flex;
 `;
 
-const SubNavItem = styled.div`
+export const SubNavItem = styled.div`
     color: #fff;
     transition: 0.3s;
     border-right: 1px solid #0c3586;

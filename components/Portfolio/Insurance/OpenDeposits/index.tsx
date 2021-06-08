@@ -1,7 +1,7 @@
 import React from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHead, TableHeadEnd, TableRow, TableCell, Button } from '@components/Portfolio';
+import { TableHead, TableRow, TableCell, Button } from '@components/Portfolio';
 
 const OpenDeposits: React.FC = () => {
     const headings = [
@@ -35,8 +35,8 @@ const OpenDeposits: React.FC = () => {
         },
     ];
 
-    const tableHeadEnd = {
-        width: '300px',
+    const TableHeadEndTheme = {
+        minWidth: '300px',
         borderBottom: '1px solid #002886',
     };
 
@@ -47,7 +47,7 @@ const OpenDeposits: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 6 ? (
-                                <TableHeadEnd theme={tableHeadEnd}>{heading}</TableHeadEnd>
+                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),
