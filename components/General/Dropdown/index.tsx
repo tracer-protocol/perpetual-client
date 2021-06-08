@@ -39,7 +39,7 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
     text-align: left;
     font-size: 16px;
     letter-spacing: -0.32px;
-    background: #03065e;
+    background: #000240;
 
     & > .body {
         transition: 0.3s ease-in;
@@ -99,7 +99,7 @@ export const Dropdown: React.FC<DProps> = styled(({ className, header, body, def
     letter-spacing: -0.32px;
 
     &:hover {
-        background: #03065e;
+        background: #000240;
     }
 
     &.open > .body {
