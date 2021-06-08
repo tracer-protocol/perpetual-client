@@ -46,8 +46,9 @@ const TradeHistory: React.FC = () => {
         },
     ];
 
-    const tableHeadEnd = {
-        width: '200px',
+    const TableHeadEndTheme = {
+        minWidth: '200px',
+        borderBottom: '1px solid #002886',
     };
 
     return (
@@ -57,7 +58,7 @@ const TradeHistory: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 7 ? (
-                                <TableHead theme={tableHeadEnd}>{heading}</TableHead>
+                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),

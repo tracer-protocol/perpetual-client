@@ -154,8 +154,10 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
         setExpanded(index);
     };
 
-    const tableHeadEnd = {
-        width: '700px',
+    const TableHeadEndTheme = {
+        minWidth: '700px',
+        borderRight: '1px solid #002886',
+        borderBottom: '1px solid #002886',
     };
 
     return (
@@ -164,7 +166,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                 <tr>
                     {headings.map((heading, i) =>
                         i === 3 ? (
-                            <TableHead theme={tableHeadEnd}>{heading}</TableHead>
+                            <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
                         ) : (
                             <TableHead>{heading}</TableHead>
                         ),

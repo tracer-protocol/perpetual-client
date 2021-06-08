@@ -36,8 +36,9 @@ const Transfers: React.FC = () => {
         },
     ];
 
-    const tableHeadEnd = {
-        width: '700px',
+    const TableHeadEndTheme = {
+        minWidth: '700px',
+        borderBottom: '1px solid #002886',
     };
 
     return (
@@ -47,7 +48,7 @@ const Transfers: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 3 ? (
-                                <TableHead theme={tableHeadEnd}>{heading}</TableHead>
+                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),

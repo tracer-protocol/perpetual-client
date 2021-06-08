@@ -36,8 +36,8 @@ const MarginAccounts: React.FC = () => {
         },
     ];
 
-    const tableHeadEnd = {
-        width: '500px',
+    const TableHeadEndTheme = {
+        borderBottom: '1px solid #002886',
     };
 
     return (
@@ -47,7 +47,7 @@ const MarginAccounts: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 4 ? (
-                                <TableHead theme={tableHeadEnd}>{heading}</TableHead>
+                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),

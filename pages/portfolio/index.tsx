@@ -4,25 +4,7 @@ import styled from 'styled-components';
 import SideNav from '@components/Nav/SideNav';
 import TradingPortfolio from '@components/Portfolio/Trading';
 import InsurancePortfolio from '@components/Portfolio/Insurance';
-
-const LeftPanel = styled.div`
-    width: 25%;
-    display: flex;
-    flex-direction: column;
-    min-height: 90vh;
-    border-top: 1px solid #0c3586;
-    border-right: 1px solid #0c3586;
-    border-left: 1px solid #0c3586;
-`;
-
-const RightPanel = styled.div`
-    width: 75%;
-    display: flex;
-    flex-direction: column;
-    min-height: 90vh;
-    border-top: 1px solid #0c3586;
-    border-right: 1px solid #0c3586;
-`;
+import { LeftPanel, RightPanel } from '@components/Portfolio';
 
 export default styled(({ className }) => {
     const [tab, setTab] = useState(0);

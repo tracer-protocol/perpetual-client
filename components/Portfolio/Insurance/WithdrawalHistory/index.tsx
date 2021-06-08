@@ -33,8 +33,9 @@ const WithdrawalHistory: React.FC = () => {
         },
     ];
 
-    const tableHeadEnd = {
-        width: '500px',
+    const TableHeadEndTheme = {
+        minWidth: '500px',
+        borderBottom: '1px solid #002886',
     };
 
     return (
@@ -44,7 +45,7 @@ const WithdrawalHistory: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 3 ? (
-                                <TableHead theme={tableHeadEnd}>{heading}</TableHead>
+                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),

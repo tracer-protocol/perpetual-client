@@ -37,8 +37,9 @@ const DepositHistory: React.FC = () => {
         },
     ];
 
-    const tableHeadEnd = {
-        width: '300px',
+    const TableHeadEndTheme = {
+        minWidth: '300px',
+        borderBottom: '1px solid #002886',
     };
 
     return (
@@ -48,7 +49,7 @@ const DepositHistory: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 4 ? (
-                                <TableHead theme={tableHeadEnd}>{heading}</TableHead>
+                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),

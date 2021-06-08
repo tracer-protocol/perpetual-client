@@ -23,7 +23,6 @@ const SideNavItem = styled.div`
 
     &.selected {
         background: #005ea4;
-        border-bottom: 1px solid #005ea4;
         color: #fff;
     }
 

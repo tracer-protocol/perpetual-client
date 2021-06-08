@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 export const LeftPanel = styled.div`
-    width: 25%;
-    margin-left: 5vw;
+    width: 20%;
     display: flex;
     flex-direction: column;
     min-height: 90vh;
@@ -16,8 +15,7 @@ export const LeftPanel = styled.div`
 `;
 
 export const RightPanel = styled.div`
-    width: 75%;
-    margin-right: 5vw;
+    width: 80%;
     display: flex;
     flex-direction: column;
     min-height: 90vh;
@@ -77,7 +75,8 @@ Button.defaultProps = {
 
 export const TableHead = styled.th`
     max-width: ${(props: any) => props.theme.maxWidth as string};
-    width: ${(props) => props.theme.width};
+    min-width: ${(props: any) => props.theme.minWidth as string};
+    width: ${(props: any) => props.theme.width};
     height: 57px;
     text-align: left;
     color: #3da8f5;
@@ -89,7 +88,8 @@ export const TableHead = styled.th`
 
 TableHead.defaultProps = {
     theme: {
-        maxWidth: '150px',
+        maxWidth: '300px',
+        minWidth: '140px',
         width: 'auto',
         borderRight: '1px solid #002886',
         borderBottom: '1px solid #002886',
@@ -123,7 +123,7 @@ export const TableCell = styled.td`
     font-size: 1rem;
     padding: 0 1rem;
     height: ${(props: any) => props.theme.height as string};
-    border-right: ${(props) => props.theme.borderRight as string};
+    border-right: ${(props: any) => props.theme.borderRight as string};
     border-bottom: ${(props: any) => props.theme.borderBottom as string};
 `;
 
