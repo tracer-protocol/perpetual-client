@@ -45,7 +45,6 @@ const MarginAccounts: React.FC = () => {
 
     const tableHeadEnd = {
         width: '500px',
-        borderBottom: '1px solid #002886',
     };
 
     return (

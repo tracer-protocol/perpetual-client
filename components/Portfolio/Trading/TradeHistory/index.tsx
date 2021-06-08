@@ -48,7 +48,6 @@ const TradeHistory: React.FC = () => {
 
     const tableHeadEnd = {
         width: '200px',
-        borderBottom: '1px solid #002886',
     };
 
     return (

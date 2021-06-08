@@ -37,7 +37,6 @@ const OpenDeposits: React.FC = () => {
 
     const tableHeadEnd = {
         width: '300px',
-        borderBottom: '1px solid #002886',
     };
 
     return (

@@ -156,8 +156,6 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
 
     const tableHeadEnd = {
         width: '700px',
-        borderRight: '1px solid #002886',
-        borderBottom: '1px solid #002886',
     };
 
     return (

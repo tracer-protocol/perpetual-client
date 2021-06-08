@@ -38,7 +38,6 @@ const Transfers: React.FC = () => {
 
     const tableHeadEnd = {
         width: '700px',
-        borderBottom: '1px solid #002886',
     };
 
     return (
