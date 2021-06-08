@@ -19,6 +19,7 @@ const NetworkButton = styled.span`
         color: #f15025;
     }
 `;
+
 type UNProps = {
     display: boolean;
     className?: string;
@@ -84,6 +85,22 @@ const Identicon = dynamic(import('../Identicon'), { ssr: false });
 
 const DropdownLogo = styled(({ className }) => {
     const [show, setShow] = useState(false);
+
+    useEffect(() => {
+        document.addEventListener('click', (e) => {
+            const menu = document.getElementById('menu');
+            let target = e.target;
+            do {
+                if (target === menu) {
+                    return;
+                }
+                // @ts-ignore
+                target = target?.parentNode;
+            } while (target);
+            setShow(false);
+        });
+    }, []);
+
     const handleClick = (e: any) => {
         e.preventDefault();
         setShow(!show);
@@ -108,13 +125,13 @@ const DropdownLogo = styled(({ className }) => {
             <div className={`dropdown-menu`}>
                 <ul className="dropdown-menu-list">
                     <li className="nav-item" />
-                    <li className="nav-item">
+                    <li className="nav-item highlight">
                         <img alt="Tracer Logo" src="/img/logos/tracer/tracer_main.svg" />
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item highlight">
                         <img alt="Tracer Logo" src="/img/logos/tracer/tracer_govern.svg" />
                     </li>
-                    <li className="nav-item">
+                    <li className="nav-item highlight">
                         <img alt="Tracer Logo" src="/img/logos/tracer/tracer_blog.svg" />
                     </li>
                 </ul>
@@ -221,8 +238,8 @@ const DropdownLogo = styled(({ className }) => {
     &.show > .dropdown-menu ul .nav-item:nth-child(4) {
         transition: all 0.3s ease-in-out 0.4s, background 0.5s ease;
     }
-
-    &.show > .dropdown-menu ul .nav-item {
+    
+    &.show > .dropdown-menu ul .nav-item.highlight {
         border-top: 1px solid #3da8f5;
         transform: translateX(0);
         opacity: 1;
@@ -232,6 +249,7 @@ const DropdownLogo = styled(({ className }) => {
             background-color: #3da8f5;
         }
     }
+
 
     &.show > .dropdown-menu ul {
         margin-top: calc(3vh - 30px);
@@ -244,7 +262,7 @@ const DropdownLogo = styled(({ className }) => {
 
     &.show > .dropdown-menu {
         opacity: 1;
-        height: 400px;
+        height: 280px;
         z-index: 5;
     }
 `;
@@ -268,12 +286,10 @@ const ConnectButton: React.FC<any> = styled.button`
     }
 `;
 
-const linkStyles = 'mx-2 py-2';
-
-const NavBarContainer: React.FC = styled(({ className }) => {
+const NavBar: React.FC = styled(({ className }) => {
     return (
         <div className={className}>
-            <NavBar />
+            <NavBarContent />
         </div>
     );
 })`
@@ -283,7 +299,7 @@ const NavBarContainer: React.FC = styled(({ className }) => {
     position: relative;
 `;
 
-const NavBar: React.FC = styled(({ className }) => {
+const NavBarContent: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
     const route = routes[1];
     const secondaryRoute = routes[2];
@@ -307,6 +323,8 @@ const NavBar: React.FC = styled(({ className }) => {
             return 'Connect Wallet';
         }
     };
+
+    const linkStyles = 'mx-2 py-2';
 
     return (
         <nav className={`${className} container`}>
@@ -404,4 +422,4 @@ const NavBar: React.FC = styled(({ className }) => {
     }
 `;
 
-export default NavBarContainer;
+export default NavBar;

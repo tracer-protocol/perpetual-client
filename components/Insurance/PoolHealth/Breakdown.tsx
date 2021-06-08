@@ -187,6 +187,8 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
         </div>
     );
 })`
+    margin-top: 1rem;
+
     > .sections {
         display: flex;
         justify-content: space-between;
