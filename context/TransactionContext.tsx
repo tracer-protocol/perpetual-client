@@ -5,24 +5,37 @@ import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
 import { TransactionReceipt } from 'web3/types';
 
+type Options = {
+    callback?: (res: Result) => any; // eslint-disable-line
+    statusMessages?: {
+        waiting?: string;
+        error?: string;
+        success?: string;
+        pending?: string;
+    };
+}
 type HandleTransactionType =
     | ((
           callMethod: (...args: any) => PromiEvent<TransactionReceipt>,
           params: any[], // eslint-disable-line
-          options?: {
-              callback?: (res: Result) => any; // eslint-disable-line
-              statusMessages?: {
-                  waiting?: string;
-                  error?: string;
-                  success?: string;
-                  pending?: string;
-              };
-          },
+          options?: Options 
       ) => void)
     | undefined;
 
-export const TransactionContext = createContext<{ handleTransaction: HandleTransactionType }>({
+type HandleAsyncType =
+    | ((
+          callMethod: (...args: any) => Promise<Result>,
+          params: any[], // eslint-disable-line
+          options?: Options
+      ) => void)
+    | undefined;
+
+export const TransactionContext = createContext<{ 
+    handleTransaction: HandleTransactionType 
+    handleAsync: HandleAsyncType 
+}>({
     handleTransaction: undefined,
+    handleAsync: undefined,
 });
 
 // type Status = 'INITIALIZED' | 'PROCESSING' | 'ERROR' | 'SUCCESS'
@@ -32,6 +45,7 @@ export const TransactionContext = createContext<{ handleTransaction: HandleTrans
 export const TransactionStore: React.FC = ({ children }: Children) => {
     const { addToast, updateToast } = useToasts();
 
+    /** Specifically handles transactions */
     const handleTransaction: HandleTransactionType = async (callMethod, params, options) => {
         const { statusMessages, callback } = options ?? {};
         // actually returns a string error in the library
@@ -39,7 +53,6 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
             appearance: 'loading' as AppearanceTypes,
             autoDismiss: false,
         });
-
         const res = callMethod(...params);
         res.on('transactionHash', (hash) => {
             updateToast(toastId as unknown as string, {
@@ -66,10 +79,40 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         callback ? callback(await res) : null;
     };
 
+    /** Very similiar function to above but handles regular async functions, mainly signing */
+    const handleAsync: HandleAsyncType = async (callMethod, params, options) => {
+        const { statusMessages, callback } = options ?? {};
+        // actually returns a string error in the library
+        const toastId = addToast(statusMessages?.waiting ?? 'Approve transaction with provider', {
+            appearance: 'loading' as AppearanceTypes,
+            autoDismiss: false,
+        });
+
+        const res = callMethod(...params);
+        Promise.resolve(res).then((res) => {
+            if (res.status === 'error') {
+                updateToast(toastId as unknown as string, {
+                    // confirmed this is a string
+                    content: statusMessages?.error ?? `Transaction cancelled. ${res.message}`,
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+            } else {
+                updateToast(toastId as unknown as string, {
+                    content: statusMessages?.success ?? `${res.message}`,
+                    appearance: 'success',
+                    autoDismiss: true,
+                });
+            }
+            callback ? callback(res) : null;
+        });
+    }
+
     return (
         <TransactionContext.Provider
             value={{
                 handleTransaction,
+                handleAsync
             }}
         >
             {children}

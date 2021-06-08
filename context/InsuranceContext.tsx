@@ -12,6 +12,7 @@ import { BigNumber } from 'bignumber.js';
 import { initialFactoryState } from './FactoryContext';
 import PromiEvent from 'web3/promiEvent';
 import { TransactionContext } from './TransactionContext';
+// @ts-ignore
 import { TransactionReceipt } from 'web3/types';
 
 export const defaults: Record<string, any> = {
@@ -164,7 +165,8 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 handleTransaction(selectedTracer?.approve, [account, selectedTracer.insuranceContract]);
             }
             const callFunc: (amount: number) => PromiEvent<TransactionReceipt> = (amount: number) =>
-                contract?.methods.deposit(Web3.utils.toWei(amount.toString())).send({ from: account });
+                // @ts-ignore
+                contract?.methods.deposit(Web3.utils.toWei(amount.toString())).send({ from: account }); 
             handleTransaction(callFunc, [amount], {
                 callback: () => {
                     updatePoolBalances();
@@ -180,6 +182,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         if (!selectedTracer?.address) {
             console.error('Failed to withdraw: Selected tracer address is undefined');
         } else if (handleTransaction) {
+            // @ts-ignore
             const callFunc: (amount: number) => PromiEvent<TransactionReceipt> = (amount: number) =>
                 contract?.methods.withdraw(Web3.utils.toWei(amount.toString())).send({ from: account });
             handleTransaction(callFunc, [amount], {

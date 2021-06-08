@@ -46,14 +46,14 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
     const { placeOrder } = useContext(TracerContext);
     const { omeDispatch = () => console.error('OME dispatch is undefined') } = useContext(OMEContext);
     const { order } = useContext(OrderContext);
-    const { handleTransaction } = useContext(TransactionContext);
+    const { handleAsync } = useContext(TransactionContext);
     const { addToast } = useToasts();
 
     const handleOrder = async (_e: any) => {
         if (order?.error === -1) {
             if (placeOrder) {
-                if (handleTransaction) {
-                    handleTransaction(placeOrder, [order as OrderState], {
+                if (handleAsync) {
+                    handleAsync(placeOrder, [order as OrderState], {
                         statusMessages: {
                             waiting: 'Please sign the transaction through your web3 provider',
                         },

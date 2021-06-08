@@ -90,11 +90,11 @@ const OpenOrders: React.FC<{
     baseTicker: string;
     refetch: () => void;
 }> = React.memo(({ userOrders, baseTicker, refetch }) => {
-    const { handleTransaction } = useContext(TransactionContext);
+    const { handleAsync } = useContext(TransactionContext);
     const _cancelOrder = (market: string, orderId: string) => {
         console.info(`Attempting to cancel order: ${orderId} on market: ${market}`);
-        handleTransaction
-            ? handleTransaction(cancelOrder, [market, orderId], {
+        handleAsync 
+            ? handleAsync(cancelOrder, [market, orderId], {
                   statusMessages: {
                       waiting: `Cancelling order: ${orderId} on market ${market} `,
                   },
