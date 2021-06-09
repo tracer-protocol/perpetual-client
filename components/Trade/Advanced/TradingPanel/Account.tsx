@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
@@ -187,8 +187,18 @@ const AccountModal: React.FC<AMProps> = styled(
                   calcMinimumMargin(balances.quote, balances.base, price, maxLeverage),
               );
         const newBalance = isDeposit ? balances.quote.plus(amount) : balances.quote.minus(amount);
-        const invalid = amount > available.toNumber();
-
+        const checkErrors = useCallback(() => {
+            if (amount > available.toNumber()) {
+                return 5;
+            } else if (
+                amount < calcMinimumMargin(balances.quote, balances.base, price, maxLeverage).toNumber() ||
+                // TODO remove 160 for dynamic calculation of liquidation gas cost
+                amount < 160 - calcTotalMargin(balances.quote, balances.base, price).toNumber()
+            ) {
+                return 6;
+            }
+            return -1;
+        }, [amount]);
         return (
             <TracerModal
                 loading={false}
@@ -210,7 +220,7 @@ const AccountModal: React.FC<AMProps> = styled(
                 />
                 <Balance display={!!amount}>
                     <span className="mr-3">Balance</span>
-                    <SAfter className={invalid ? 'invalid' : ''}>{toApproxCurrency(newBalance)}</SAfter>
+                    <SAfter className={checkErrors() !== -1 ? 'invalid' : ''}>{toApproxCurrency(newBalance)}</SAfter>
                 </Balance>
                 <SHiddenExpand defaultHeight={0} open={!!amount}>
                     <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
@@ -233,7 +243,7 @@ const AccountModal: React.FC<AMProps> = styled(
                 <MButton onClick={() => (isDeposit ? deposit(amount, close) : withdraw(amount, close))}>
                     {isDeposit ? 'Deposit' : 'Withdraw'}
                 </MButton>
-                <Error error={invalid ? 5 : -1} />
+                <Error error={checkErrors()} />
             </TracerModal>
         );
     },
@@ -245,7 +255,7 @@ const AccountModal: React.FC<AMProps> = styled(
     }
 `;
 
-export const AccountPanel: React.FC<{
+const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
 }> = ({ selectedTracer, account }) => {
@@ -293,3 +303,5 @@ export const AccountPanel: React.FC<{
         </AccountInfo>
     );
 };
+
+export default AccountPanel;

@@ -8,6 +8,7 @@ type EProps = {
     message?: string; // this will override the rror message
 };
 const Error: React.FC<EProps> = styled(({ className, error, message }: EProps) => {
+    console.log(error);
     const _message = message ?? error !== -1 ? Errors[error].message : '';
     return <div className={`${className} ${error !== -1 || !!message ? 'show' : ''}`}>{_message}</div>;
 })`
