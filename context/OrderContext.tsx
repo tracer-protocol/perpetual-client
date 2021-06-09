@@ -1,11 +1,17 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
 import { TracerContext, Web3Context } from './';
 import { Children, OpenOrder, UserBalance } from 'types';
-import { calcTradeExposure } from '@tracer-protocol/tracer-utils';
+import {
+    calcMinimumMargin,
+    calcNotionalValue,
+    calcTotalMargin,
+    calcTradeExposure,
+} from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
 import { OMEOrder } from 'types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
+import { defaults } from '@libs/Tracer';
 
 calcTradeExposure;
 /**
@@ -41,7 +47,11 @@ export const Errors: Record<number, Error> = {
     6: {
         name: 'Invalid Minimum Margin',
         message:
-            'Our liquidators are required to pay 6 times the liquidation gas costs to liquidate your account. As a result we encourage you to deposit atleast $160 as this will ensure you will be able to place a trade without instantly being liquidated.',
+            'Our liquidators are required to pay 6 times the liquidation gas costs to liquidate your account. As a result we encourage you to deposit atleast $160 as this will ensure you will be able to place a trade without instantly being liquidated',
+    },
+    7: {
+        name: 'Invalid Order',
+        message: 'Order will put you into a liquidateable state',
     },
 };
 
@@ -57,7 +67,23 @@ const checkErrors: (
     orders: OMEOrder[],
     account: string | undefined,
     order: OrderState,
-) => number = (balances, orders, account, order) => {
+    maxLeverage: BigNumber | undefined,
+) => number = (balances, orders, account, order, maxLeverage) => {
+    let newBase = new BigNumber(0),
+        newQuote = new BigNumber(0);
+    const priceBN = new BigNumber(order.price);
+    const amountToBuyBN = new BigNumber(order.amountToBuy);
+    if (balances) {
+        if (order.position === 0) {
+            // short
+            newBase = balances?.base.minus(amountToBuyBN);
+            newQuote = balances?.quote.plus(calcNotionalValue(amountToBuyBN, priceBN));
+        } else {
+            // long
+            newBase = balances?.base.plus(amountToBuyBN);
+            newQuote = balances?.quote.minus(calcNotionalValue(amountToBuyBN, priceBN));
+        }
+    }
     if (!account) {
         return 4;
     } else if (orders?.length === 0 && order.orderType === 0) {
@@ -73,6 +99,13 @@ const checkErrors: (
     } else if (balances?.quote.eq(0)) {
         // user has no tcr margin balance
         return 2;
+    } else if (
+        calcTotalMargin(newQuote, newBase, priceBN).lt(
+            calcMinimumMargin(newQuote, newBase, priceBN, maxLeverage ?? defaults.maxLeverage),
+        )
+    ) {
+        // user has no tcr margin balance
+        return 7;
     } else {
         return -1;
     }
@@ -301,7 +334,13 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     useMemo(() => {
         if (omeState?.orders) {
             const oppositeOrders = order.position ? omeState.orders.askOrders : omeState.orders.bidOrders;
-            const error = checkErrors(selectedTracer?.getBalance(), oppositeOrders, account, order);
+            const error = checkErrors(
+                selectedTracer?.getBalance(),
+                oppositeOrders,
+                account,
+                order,
+                selectedTracer?.getMaxLeverage(),
+            );
             if (error !== order.error) {
                 orderDispatch({ type: 'setError', value: error });
             }

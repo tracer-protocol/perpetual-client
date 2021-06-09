@@ -246,7 +246,7 @@ const Popup: React.FC<PProps> = styled(
     }
 `;
 
-export const AccountPanel: React.FC<{
+const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
 }> = ({ selectedTracer, account }) => {
@@ -304,3 +304,5 @@ export const AccountPanel: React.FC<{
         </AccountInfo>
     );
 };
+
+export default AccountPanel;
