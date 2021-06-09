@@ -156,7 +156,6 @@ type PProps = {
     price: BigNumber;
     maxLeverage: BigNumber;
 };
-
 const Popup: React.FC<PProps> = styled(
     ({ className, close, isDeposit, unit, balances, price, maxLeverage }: PProps) => {
         const {
@@ -241,6 +240,7 @@ export const AccountPanel: React.FC<{
     account: string;
 }> = ({ selectedTracer, account }) => {
     const [popup, setPopup] = useState(false);
+    const [calculator, showCalculator] = useState(false);
     const [deposit, setDeposit] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
@@ -252,6 +252,13 @@ export const AccountPanel: React.FC<{
             popup ? overlay.classList.add('display') : overlay.classList.remove('display');
         }
     }, [popup]);
+
+    useEffect(() => {
+        const overlay = document.getElementById('trading-overlay');
+        if (overlay) {
+            calculator ? overlay.classList.add('display') : overlay.classList.remove('display');
+        }
+    }, [calculator]);
 
     const handleClick = (popup: boolean, deposit: boolean) => {
         setPopup(popup);
@@ -274,6 +281,9 @@ export const AccountPanel: React.FC<{
                     <a>{toApproxCurrency(calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage))}</a>
                 </span>
             </Item>
+            <Button className="ml-auto mr-2" onClick={() => showCalculator(true)}>
+                Calculator
+            </Button>
             <DepositButtons>
                 <Button className="w-full mr-2" onClick={(_e: any) => handleClick(true, true)}>
                     Deposit
