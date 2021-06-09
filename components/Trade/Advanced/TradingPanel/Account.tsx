@@ -3,13 +3,16 @@ import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
 import { calcTotalMargin, calcMinimumMargin } from '@tracer-protocol/tracer-utils';
-import { After, Box, Button, Close, HiddenExpand, Previous } from '@components/General';
+import { After, Box, Button, HiddenExpand, Previous } from '@components/General';
 import { TracerContext, Web3Context } from 'context';
 import { NumberSelect, Section } from '@components/General';
 import { UserBalance } from 'types';
 import Error from '@components/Trade/Error';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
+import TracerModal from '@components/Modals';
+import { SlideSelect } from '@components/Buttons';
+import { Option } from '@components/Buttons/SlideSelect';
 
 const MinHeight = 250;
 
@@ -124,7 +127,8 @@ const SPrevious = styled(Previous)`
     }
 `;
 const MButton = styled(Button)`
-    width: 100%;
+    width: 80%;
+    margin: auto;
     height: 40px;
     border: 1px solid #ffffff;
     color: #fff;
@@ -146,10 +150,18 @@ const SAfter = styled(After)`
     }
 `;
 
-type PProps = {
+const SSlideSelect = styled(SlideSelect)`
+    max-width: 250px;
+    margin-left: 0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+`;
+
+type AMProps = {
     className?: string;
     close: () => any;
     isDeposit: boolean;
+    setDeposit: React.Dispatch<React.SetStateAction<boolean>>;
     display: boolean;
     unit: string;
     balances: UserBalance;
@@ -157,8 +169,8 @@ type PProps = {
     maxLeverage: BigNumber;
 };
 
-const Popup: React.FC<PProps> = styled(
-    ({ className, close, isDeposit, unit, balances, price, maxLeverage }: PProps) => {
+const AccountModal: React.FC<AMProps> = styled(
+    ({ className, close, isDeposit, unit, balances, price, maxLeverage, display, setDeposit }: AMProps) => {
         const {
             deposit = () => console.error('Deposit is not defined'),
             withdraw = () => console.error('Withdraw is not defined'),
@@ -173,11 +185,17 @@ const Popup: React.FC<PProps> = styled(
         const invalid = amount > available.toNumber();
 
         return (
-            <div className={className}>
-                <div className="header">
-                    <p>{isDeposit ? 'Deposit' : 'Withdraw'} Margin</p>
-                    <Close onClick={() => close()} />
-                </div>
+            <TracerModal
+                loading={false}
+                className={className}
+                show={display}
+                title={`${isDeposit ? 'Deposit' : 'Withdraw'} Margin`}
+                onClose={close}
+            >
+                <SSlideSelect value={isDeposit ? 0 : 1} onClick={(val) => setDeposit(val === 0)}>
+                    <Option>Deposit</Option>
+                    <Option>Withdraw</Option>
+                </SSlideSelect>
                 <SNumberSelect
                     unit={unit}
                     title={'Amount'}
@@ -211,28 +229,14 @@ const Popup: React.FC<PProps> = styled(
                     {isDeposit ? 'Deposit' : 'Withdraw'}
                 </MButton>
                 <Error error={invalid ? 5 : -1} />
-            </div>
+            </TracerModal>
         );
     },
 )`
-    transition: 0.3s;
-    position: absolute;
-    padding: 10px;
-    top: 0;
-    left: 0;
-    min-height: 100%;
-    width: 100%;
-    background: #011772;
-    z-index: ${(props) => (props.display ? '10' : '-1')};
-    opacity: ${(props) => (props.display ? '1' : '0')};
+    max-width: 434px;
 
-    > .header {
-        color: #fff;
-        line-height: 20px;
-        font-size: 20px;
-        letter-spacing: -0.4px;
-        display: flex;
-        justify-content: space-between;
+    .content {
+        width: 434px;
     }
 `;
 
@@ -282,10 +286,11 @@ export const AccountPanel: React.FC<{
                     Withdraw
                 </Button>
             </DepositButtons>
-            <Popup
+            <AccountModal
                 display={popup}
                 close={() => setPopup(false)}
                 isDeposit={deposit}
+                setDeposit={setDeposit}
                 unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}
                 maxLeverage={maxLeverage}

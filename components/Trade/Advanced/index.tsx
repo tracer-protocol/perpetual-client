@@ -133,8 +133,8 @@ const Advanced: React.FC = () => {
         <div className="container flex h-full">
             <LeftPanel>
                 <MarketSelect account={account ?? ''} />
-                <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} />
                 <TradingInput selectedTracer={selectedTracer} account={account ?? ''} />
+                <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} />
             </LeftPanel>
             <RightPanel>
                 <TradingView selectedTracer={selectedTracer} />
