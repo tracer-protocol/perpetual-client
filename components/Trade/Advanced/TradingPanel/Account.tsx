@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
@@ -86,7 +86,6 @@ const DepositButtons = styled.div`
 
 const AccountInfo = styled(Box)`
     position: relative;
-    min-height: ${MinHeight}px;
     flex-direction: column;
 `;
 
@@ -155,6 +154,12 @@ const SSlideSelect = styled(SlideSelect)`
     margin-left: 0;
     margin-top: 1rem;
     margin-bottom: 1rem;
+`;
+
+const SButton = styled(Button)`
+    height: 28px;
+    line-height: 28px;
+    padding: 0;
 `;
 
 type AMProps = {
@@ -250,13 +255,6 @@ export const AccountPanel: React.FC<{
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const maxLeverage = selectedTracer?.maxLeverage ?? new BigNumber(1);
 
-    useEffect(() => {
-        const overlay = document.getElementById('trading-overlay');
-        if (overlay) {
-            popup ? overlay.classList.add('display') : overlay.classList.remove('display');
-        }
-    }, [popup]);
-
     const handleClick = (popup: boolean, deposit: boolean) => {
         setPopup(popup);
         setDeposit(deposit);
@@ -279,12 +277,8 @@ export const AccountPanel: React.FC<{
                 </span>
             </Item>
             <DepositButtons>
-                <Button className="w-full mr-2" onClick={(_e: any) => handleClick(true, true)}>
-                    Deposit
-                </Button>
-                <Button className="w-full ml-2" onClick={(_e: any) => handleClick(true, false)}>
-                    Withdraw
-                </Button>
+                <SButton onClick={(_e: any) => handleClick(true, true)}>Deposit</SButton>
+                <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
             </DepositButtons>
             <AccountModal
                 display={popup}
