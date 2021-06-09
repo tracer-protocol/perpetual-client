@@ -1,6 +1,18 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Children } from 'types';
 import styled from 'styled-components';
+
+const BGSlider = styled.div<{ position: number; width: number }>`
+    transition: 0.5s;
+    background-color: #3da8f5;
+    height: 39px;
+    width: ${(props) => props.width}%;
+    border-radius: 18px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: ${(props) => props.position}%;
+`;
 
 type TSSProps = {
     onClick: (index: number, e: any) => any;
@@ -8,6 +20,13 @@ type TSSProps = {
     className?: string;
 } & Children;
 const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, className }: TSSProps) => {
+    const [numChildren, setNumChildren] = useState(0);
+    const calcPosition = (numChildren: number) => value * (1 / numChildren) * 100;
+    useEffect(() => {
+        // on init
+        const numChildren = React.Children.toArray(children).length;
+        setNumChildren(numChildren);
+    }, []);
     return (
         <div className={className}>
             {React.Children.toArray(children).map((child, index) => {
@@ -21,7 +40,7 @@ const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, clas
                     </SlideOption>
                 );
             })}
-            <div className="bg" />
+            <BGSlider position={calcPosition(numChildren)} width={(1 / numChildren) * 100} />
         </div>
     );
 })`
@@ -31,21 +50,6 @@ const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, clas
     border-radius: 20px;
     height: 40px;
     position: relative;
-
-    .bg {
-        transition: 0.5s;
-        background-color: #3da8f5;
-        height: 39px;
-        width: 170px;
-        border-radius: 18px;
-        position: absolute;
-        top: 0;
-    }
-
-    .selected + .bg {
-        transition: 0.5s;
-        margin-left: 128px;
-    }
 `;
 
 export const SlideOption = styled.div`

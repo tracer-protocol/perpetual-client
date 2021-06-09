@@ -238,7 +238,7 @@ const DropdownLogo = styled(({ className }) => {
     &.show > .dropdown-menu ul .nav-item:nth-child(4) {
         transition: all 0.3s ease-in-out 0.4s, background 0.5s ease;
     }
-    
+
     &.show > .dropdown-menu ul .nav-item.highlight {
         border-top: 1px solid #3da8f5;
         transform: translateX(0);
@@ -249,7 +249,6 @@ const DropdownLogo = styled(({ className }) => {
             background-color: #3da8f5;
         }
     }
-
 
     &.show > .dropdown-menu ul {
         margin-top: calc(3vh - 30px);
