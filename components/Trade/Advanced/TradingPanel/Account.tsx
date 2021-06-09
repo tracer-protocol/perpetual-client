@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useCallback } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
@@ -173,6 +173,7 @@ type AMProps = {
     price: BigNumber;
     maxLeverage: BigNumber;
 };
+
 const AccountModal: React.FC<AMProps> = styled(
     ({ className, close, isDeposit, unit, balances, price, maxLeverage, display, setDeposit }: AMProps) => {
         const {
@@ -186,8 +187,18 @@ const AccountModal: React.FC<AMProps> = styled(
                   calcMinimumMargin(balances.quote, balances.base, price, maxLeverage),
               );
         const newBalance = isDeposit ? balances.quote.plus(amount) : balances.quote.minus(amount);
-        const invalid = amount > available.toNumber();
-
+        const checkErrors = useCallback(() => {
+            if (amount > available.toNumber()) {
+                return 5;
+            } else if (
+                amount < calcMinimumMargin(balances.quote, balances.base, price, maxLeverage).toNumber() ||
+                // TODO remove 160 for dynamic calculation of liquidation gas cost
+                amount < 160 - calcTotalMargin(balances.quote, balances.base, price).toNumber()
+            ) {
+                return 6;
+            }
+            return -1;
+        }, [amount]);
         return (
             <TracerModal
                 loading={false}
@@ -209,7 +220,7 @@ const AccountModal: React.FC<AMProps> = styled(
                 />
                 <Balance display={!!amount}>
                     <span className="mr-3">Balance</span>
-                    <SAfter className={invalid ? 'invalid' : ''}>{toApproxCurrency(newBalance)}</SAfter>
+                    <SAfter className={checkErrors() !== -1 ? 'invalid' : ''}>{toApproxCurrency(newBalance)}</SAfter>
                 </Balance>
                 <SHiddenExpand defaultHeight={0} open={!!amount}>
                     <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
@@ -232,7 +243,7 @@ const AccountModal: React.FC<AMProps> = styled(
                 <MButton onClick={() => (isDeposit ? deposit(amount, close) : withdraw(amount, close))}>
                     {isDeposit ? 'Deposit' : 'Withdraw'}
                 </MButton>
-                <Error error={invalid ? 5 : -1} />
+                <Error error={checkErrors()} />
             </TracerModal>
         );
     },
@@ -244,39 +255,7 @@ const AccountModal: React.FC<AMProps> = styled(
     }
 `;
 
-type CalculatorModalProps = {
-    className?: string;
-    close: () => any;
-    isDeposit: boolean;
-    display: boolean;
-    setDeposit: React.Dispatch<React.SetStateAction<boolean>>;
-};
-const CalculatorModal: React.FC<CalculatorModalProps> = styled(
-    ({ className, close, isDeposit, display, setDeposit }: CalculatorModalProps) => {
-        return (
-            <TracerModal
-                loading={false}
-                className={className}
-                show={display}
-                title={`${isDeposit ? 'Deposit' : 'Withdraw'} Margin`}
-                onClose={close}
-            >
-                <SSlideSelect value={isDeposit ? 0 : 1} onClick={(val) => setDeposit(val === 0)}>
-                    <Option>Deposit</Option>
-                    <Option>Withdraw</Option>
-                </SSlideSelect>
-            </TracerModal>
-        );
-    },
-)`
-    max-width: 434px;
-
-    .content {
-        width: 434px;
-    }
-`;
-
-export const AccountPanel: React.FC<{
+const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
 }> = ({ selectedTracer, account }) => {
@@ -296,13 +275,7 @@ export const AccountPanel: React.FC<{
     ) : (
         <AccountInfo>
             <Item>
-                <div className="flex">
-                    <h3>Total Margin</h3>
-                    <SButton className="ml-auto" onClick={(_e: any) => handleClick(true, true)}>
-                        Calculator
-                    </SButton>
-                </div>
-
+                <h3>Total Margin</h3>
                 <span>
                     <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
                 </span>
@@ -327,12 +300,8 @@ export const AccountPanel: React.FC<{
                 maxLeverage={maxLeverage}
                 price={Number.isNaN(fairPrice) ? 0 : fairPrice}
             />
-            <CalculatorModal
-                display={popup}
-                close={() => setPopup(false)}
-                isDeposit={deposit}
-                setDeposit={setDeposit}
-            />
         </AccountInfo>
     );
 };
+
+export default AccountPanel;
