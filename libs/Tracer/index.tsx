@@ -244,6 +244,10 @@ export default class Tracer {
         return this.insuranceContract.slice();
     };
 
+    getMaxLeverage: () => BigNumber = () => {
+        return this.maxLeverage;
+    };
+
     get24HourChange: () => number = () => {
         return this.twentyFourHourChange;
     };
