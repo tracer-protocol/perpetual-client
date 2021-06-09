@@ -173,7 +173,6 @@ type AMProps = {
     price: BigNumber;
     maxLeverage: BigNumber;
 };
-
 const AccountModal: React.FC<AMProps> = styled(
     ({ className, close, isDeposit, unit, balances, price, maxLeverage, display, setDeposit }: AMProps) => {
         const {
@@ -245,6 +244,38 @@ const AccountModal: React.FC<AMProps> = styled(
     }
 `;
 
+type CalculatorModalProps = {
+    className?: string;
+    close: () => any;
+    isDeposit: boolean;
+    display: boolean;
+    setDeposit: React.Dispatch<React.SetStateAction<boolean>>;
+};
+const CalculatorModal: React.FC<CalculatorModalProps> = styled(
+    ({ className, close, isDeposit, display, setDeposit }: CalculatorModalProps) => {
+        return (
+            <TracerModal
+                loading={false}
+                className={className}
+                show={display}
+                title={`${isDeposit ? 'Deposit' : 'Withdraw'} Margin`}
+                onClose={close}
+            >
+                <SSlideSelect value={isDeposit ? 0 : 1} onClick={(val) => setDeposit(val === 0)}>
+                    <Option>Deposit</Option>
+                    <Option>Withdraw</Option>
+                </SSlideSelect>
+            </TracerModal>
+        );
+    },
+)`
+    max-width: 434px;
+
+    .content {
+        width: 434px;
+    }
+`;
+
 export const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
@@ -265,7 +296,13 @@ export const AccountPanel: React.FC<{
     ) : (
         <AccountInfo>
             <Item>
-                <h3>Total Margin</h3>
+                <div className="flex">
+                    <h3>Total Margin</h3>
+                    <SButton className="ml-auto" onClick={(_e: any) => handleClick(true, true)}>
+                        Calculator
+                    </SButton>
+                </div>
+
                 <span>
                     <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
                 </span>
@@ -289,6 +326,12 @@ export const AccountPanel: React.FC<{
                 balances={balances}
                 maxLeverage={maxLeverage}
                 price={Number.isNaN(fairPrice) ? 0 : fairPrice}
+            />
+            <CalculatorModal
+                display={popup}
+                close={() => setPopup(false)}
+                isDeposit={deposit}
+                setDeposit={setDeposit}
             />
         </AccountInfo>
     );
