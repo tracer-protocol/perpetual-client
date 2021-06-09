@@ -92,10 +92,10 @@ type TIProps = {
     className?: string;
 };
 
-export default styled(({ selectedTracer, className }: TIProps) => {
+export default styled(({ selectedTracer, className, account }: TIProps) => {
     const { order } = useContext(OrderContext);
     return (
-        <Box className={`${className}`}>
+        <Box className={`${className} ${account === '' ? 'hide' : ''} `}>
             <div className="body text-xs">
                 {/* Position select */}
                 <div className="py-2">
@@ -137,8 +137,12 @@ export default styled(({ selectedTracer, className }: TIProps) => {
         </Box>
     );
 })`
-    transition: 0.8s;
+    transition: opacity 0.3s 0.1s, height: 0.3s 0.1s, padding 0.1s;
     overflow: scroll;
-    position: relative;
-    opacity: ${(props) => (props.account === '' ? 0 : 1)};
+    &.hide {
+        height: 0;
+        padding: 0;
+        opacity: 0;
+        border: none;
+    }
 ` as React.FC<TIProps>;
