@@ -38,6 +38,11 @@ export const Errors: Record<number, Error> = {
         name: 'Invalid Funds',
         message: 'You do not have enough funds in your wallet',
     },
+    6: {
+        name: 'Invalid Minimum Margin',
+        message:
+            'Our liquidators are required to pay 6 times the liquidation gas costs to liquidate your account. As a result we encourage you to deposit atleast $160 as this will ensure you will be able to place a trade without instantly being liquidated.',
+    },
 };
 
 /**
