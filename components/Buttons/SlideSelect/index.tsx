@@ -1,36 +1,55 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Children } from 'types';
 import styled from 'styled-components';
+
+const BGSlider = styled.div<{ position: number; width: number }>`
+    transition: 0.5s;
+    background-color: #3da8f5;
+    height: 39px;
+    width: ${(props) => props.width}%;
+    border-radius: 18px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: ${(props) => props.position}%;
+`;
 
 type TSSProps = {
     onClick: (index: number, e: any) => any;
     value: number;
     className?: string;
 } & Children;
-
 const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, className }: TSSProps) => {
+    const [numChildren, setNumChildren] = useState(0);
+    const calcPosition = (numChildren: number) => value * (1 / numChildren) * 100;
+    useEffect(() => {
+        // on init
+        const numChildren = React.Children.toArray(children).length;
+        setNumChildren(numChildren);
+    }, []);
     return (
-        <>
-            <div className={className}>
-                {React.Children.toArray(children).map((child, index) => {
-                    return (
-                        <SlideOption
-                            onClick={(e) => onClick(index, e)}
-                            key={`slide-option-${index}`}
-                            className={`${index === value ? 'selected' : ''}`}
-                        >
-                            {child}
-                        </SlideOption>
-                    );
-                })}
-            </div>
-        </>
+        <div className={className}>
+            {React.Children.toArray(children).map((child, index) => {
+                return (
+                    <SlideOption
+                        onClick={(e) => onClick(index, e)}
+                        key={`slide-option-${index}`}
+                        className={`${index === value ? 'selected' : ''}`}
+                    >
+                        {child}
+                    </SlideOption>
+                );
+            })}
+            <BGSlider position={calcPosition(numChildren)} width={(1 / numChildren) * 100} />
+        </div>
     );
 })`
     display: flex;
     margin: auto;
     border: 1px solid #3da8f5;
     border-radius: 20px;
+    height: 40px;
+    position: relative;
 `;
 
 export const SlideOption = styled.div`
@@ -39,18 +58,10 @@ export const SlideOption = styled.div`
     font-size: 16px;
     text-align: center;
     width: 100%;
-    color: #3da8f5;
-
-    transition: background 0.3;
+    z-index: 1;
 
     &:hover {
         cursor: pointer;
-    }
-
-    &.selected {
-        background: #3da8f5;
-        color: #fff;
-        border: 1px solid #3da8f5;
     }
 `;
 
