@@ -237,6 +237,8 @@ const DropdownLogo = styled(({ className }) => {
 
     &.show > .dropdown-menu ul .nav-item:nth-child(4) {
         transition: all 0.3s ease-in-out 0.4s, background 0.5s ease;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
 
     &.show > .dropdown-menu ul .nav-item.highlight {
