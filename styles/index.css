@@ -258,3 +258,7 @@ h4 {
 .advanced-card .body {
     @apply px-3 py-2;
 }
+
+.web3modal-modal-lightbox {
+    z-index: 4!important;
+}

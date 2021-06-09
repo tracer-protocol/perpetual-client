@@ -34,12 +34,14 @@ export const SubTitle = styled.p`
 const Header = styled.div`
     display: flex;
     justify-content: space-between;
-    padding: 1rem;
 `;
 
-const Overlay = styled.div`
+const Overlay = styled.div<{ show: boolean }>`
     background: rgba(0, 0, 0, 0.5);
+    transition: 0.3s;
     position: fixed;
+    opacity: ${(props) => (props.show ? '1' : '0')};
+    display: ${(props) => (props.show ? 'block' : 'none')};
     top: 0;
     left: 0;
     right: 0;
@@ -61,19 +63,19 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
         }
     }, [props.show]);
     return (
-        <div className={`${props.className} ${props.show ? 'show' : ''} model`} id={props.id}>
-            {/*content*/}
-            <div className={`content`} ref={ref}>
-                {/*header*/}
-                <Header>
-                    <Title>{props.title}</Title>
-                    <Close onClick={props.onClose} />
-                </Header>
-                <div className="flex flex-col">
+        <>
+            <div className={`${props.className} ${props.show ? 'show' : ''} model`} id={props.id}>
+                {/*content*/}
+                <div className={`content`} ref={ref}>
+                    {/*header*/}
+                    <Header>
+                        <Title>{props.title}</Title>
+                        <Close onClick={props.onClose} />
+                    </Header>
                     {!props.loading ? (
                         <>
                             {/* body */}
-                            <div className="w-full h-full">{props.children}</div>
+                            {props.children}
                         </>
                     ) : (
                         <div className="m-auto text-blue-100">
@@ -83,31 +85,35 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
                     )}
                 </div>
             </div>
-            <Overlay />
-        </div>
+            <Overlay show={props.show} />
+        </>
     );
 })`
     display: none;
     &.show {
         display: block;
     }
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    top: 10%;
+    max-width: 585px;
+    margin: auto;
+
     > .content {
         opacity: 0;
         transition: 0.3s;
+        padding: 1rem;
+        width: 100%;
         opacity: 0;
         background: #011772;
-        min-width: 585px;
         border: 0;
         box-shadow: 0px 5px 10px #00000029;
         border-radius: 5px;
-        z-index: 40;
-        position: fixed;
+        z-index: 1000;
         margin: auto;
-        top: 10%;
         overflow: scroll;
-        left: 0;
-        right: 0;
-        max-width: 40%;
         max-height: 80vh;
     }
     > .content.show {
