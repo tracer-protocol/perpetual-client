@@ -122,11 +122,11 @@ input {
 } */
 
 /** GLOBAL TABLE STYLES */
-.bid {
+.bid, .green {
     color: #00ff08;
 }
 
-.ask {
+.ask, .red {
     color: #f15025;
 }
 
@@ -157,60 +157,6 @@ input {
 
 @tailwind utilities;
 
-.button {
-    @apply border-2 cursor-pointer border-blue-100  rounded-xxl p-4 transform bg-blue-300 text-blue-100;
-}
-
-.button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #0000bd;
-}
-
-/** Used if you want custom sizing but the transform*/
-.button-grow {
-    @apply border-2 cursor-pointer transform;
-}
-
-.button-grow:hover {
-    transform: translateY(-0.1rem);
-    @apply appearance-none duration-100 shadow;
-}
-
-.button-grow:focus {
-    outline: none;
-}
-
-.button:hover {
-    transform: translateY(-0.1rem);
-    @apply appearance-none border-blue-100 rounded-xxl duration-100 shadow;
-}
-
-.button-inactive {
-    @apply border-2 cursor-pointer rounded-xxl p-4 opacity-50 bg-blue-300 text-blue-100 border-blue-100;
-}
-
-.button-disabled {
-    @apply cursor-not-allowed opacity-50 w-full;
-}
-
-.card {
-    @apply rounded-lg bg-white box-shadow;
-}
-
-.secondary-button {
-    border: 1px solid #707070;
-    border-radius: 10px;
-    @apply bg-white px-1 py-1 transform cursor-pointer;
-}
-
-.secondary-button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #707070;
-}
-
-.secondary-button:hover {
-    @apply appearance-none bg-blue-200 duration-100;
-}
 
 /** Table css */
 .cCell {
@@ -245,18 +191,6 @@ h1 {
 
 h4 {
     @apply text-blue-100 text-base;
-}
-
-.advanced-card {
-    @apply rounded-lg shadow-2xl bg-white my-1 mx-3;
-}
-
-.advanced-card .title {
-    @apply bg-blue-200 px-3;
-}
-
-.advanced-card .body {
-    @apply px-3 py-2;
 }
 
 .web3modal-modal-lightbox {
