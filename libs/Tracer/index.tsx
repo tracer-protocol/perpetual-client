@@ -119,7 +119,7 @@ export default class Tracer {
                 this._oracle = res[3]
                     ? (new web3.eth.Contract(oracleAbi as AbiItem[], res[3]) as unknown as Oracle)
                     : undefined;
-                this.maxLeverage = new BigNumber(parseFloat(res[4]) / 10000);
+                this.maxLeverage = new BigNumber(parseFloat(Web3.utils.fromWei(res[4])));
                 this.fundingRateSensitivity = new BigNumber(res[5]).div(priceMultiplier_);
                 this.feeRate = new BigNumber(res[6]).div(priceMultiplier_);
                 this.insuranceContract = res[7];
@@ -246,6 +246,10 @@ export default class Tracer {
 
     getMaxLeverage: () => BigNumber = () => {
         return this.maxLeverage;
+    };
+
+    getFeeRate: () => BigNumber = () => {
+        return this.feeRate;
     };
 
     get24HourChange: () => number = () => {
