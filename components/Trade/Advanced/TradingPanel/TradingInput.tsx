@@ -86,9 +86,10 @@ const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
     }
 `;
 
-const SError = styled(Error)`
+const SError = styled(Error)<{ account: string }>`
     position: relative;
     transform: translateY(-100%);
+    display: ${props => props.account === '' ? 'none' : 'block'};
     &.show {
         transform: translateY(0);
     }
@@ -144,8 +145,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 </div>
             </div>
         </Box>
-        
-        <SError error={order?.error ?? -1} />
+        <SError error={order?.error ?? -1} account={account} />
         </>
     );
 })`
