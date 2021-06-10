@@ -9,11 +9,11 @@ type EProps = {
 };
 const Error: React.FC<EProps> = styled(({ className, error, message }: EProps) => {
     const _message = message ?? error !== -1 ? Errors[error].message : '';
-    return <div className={`${className} ${error !== -1 || !!message ? 'show' : ''}`}>
-        <div className="message">
-            {_message}
+    return (
+        <div className={`${className} ${error !== -1 || !!message ? 'show' : ''}`}>
+            <div className="message">{_message}</div>
         </div>
-    </div>;
+    );
 })`
     background: #f15025;
     border-radius: 0px 0px 5px 5px;

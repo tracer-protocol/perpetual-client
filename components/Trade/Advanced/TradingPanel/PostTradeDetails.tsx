@@ -31,11 +31,7 @@ const PostTradeDetails: React.FC<PTDProps> = styled(
                 ? balances.quote.plus(calcNotionalValue(exposure, fairPrice)) // short
                 : balances.quote.minus(calcNotionalValue(exposure, fairPrice)); // long
         return (
-            <HiddenExpand 
-                open={!!exposure.toNumber()}
-                defaultHeight={0}
-                className={className}
-            >
+            <HiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
                 <h3>Order Summary</h3>
                 <Section label={'Liquidation Price'}>
                     <Previous>

@@ -83,7 +83,7 @@ const MarketInfo: React.FC<MIProps> = styled(
 const OrderBookContainer = styled.div`
     border-top: 1px solid #002886;
     padding: 10px;
-    
+
     max-height: 50vh;
 
     h3 {
@@ -123,10 +123,7 @@ const TradingView: React.FC<{
                     {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
                         <>
                             <Timer />
-                            <OrderBook
-                                askOrders={omeState.orders.askOrders}
-                                bidOrders={omeState.orders.bidOrders}
-                            />
+                            <OrderBook askOrders={omeState.orders.askOrders} bidOrders={omeState.orders.bidOrders} />
                         </>
                     ) : (
                         <p>No open orders</p>

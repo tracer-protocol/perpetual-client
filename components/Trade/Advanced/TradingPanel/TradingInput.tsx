@@ -89,11 +89,11 @@ const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
 const SError = styled(Error)<{ account: string }>`
     position: relative;
     transform: translateY(-100%);
-    display: ${props => props.account === '' ? 'none' : 'block'};
+    display: ${(props) => (props.account === '' ? 'none' : 'block')};
     &.show {
         transform: translateY(0);
     }
-`
+`;
 
 type TIProps = {
     selectedTracer: Tracer | undefined;
@@ -101,51 +101,50 @@ type TIProps = {
     className?: string;
 };
 
-
 export default styled(({ selectedTracer, className, account }: TIProps) => {
     const { order } = useContext(OrderContext);
     return (
         <>
-        <Box className={`${className} ${account === '' ? 'hide' : ''} `}>
-            <div className="body text-xs">
-                {/* Position select */}
-                <div className="py-2">
-                    <OrderTypeSelect selected={order?.orderType ?? 0} />
+            <Box className={`${className} ${account === '' ? 'hide' : ''} `}>
+                <div className="body text-xs">
+                    {/* Position select */}
+                    <div className="py-2">
+                        <OrderTypeSelect selected={order?.orderType ?? 0} />
+                    </div>
+
+                    {/* Position select */}
+                    <div className="py-2">
+                        <PositionSelect selected={order?.position ?? 0} />
+                    </div>
+
+                    {/* Quantity and Price Inputs */}
+                    <InputSelects amount={order?.amountToPay} price={order?.price} selectedTracer={selectedTracer} />
+
+                    {/* Dont display these if it is a limit order*/}
+                    {order?.orderType !== 1 ? (
+                        <>
+                            {/* Leverage select */}
+                            <Leverage leverage={order?.leverage ?? 1} />
+                        </>
+                    ) : (
+                        <></>
+                    )}
+
+                    <PostTradeDetails
+                        fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
+                        balances={selectedTracer?.getBalance() ?? defaults.balances}
+                        exposure={order?.amountToBuy ? new BigNumber(order.amountToBuy) : defaults.amountToBuy}
+                        position={order?.position ?? 0}
+                        maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                    />
+
+                    {/* Place Order */}
+                    <div className="py-1">
+                        <AdvancedOrderButton />
+                    </div>
                 </div>
-
-                {/* Position select */}
-                <div className="py-2">
-                    <PositionSelect selected={order?.position ?? 0} />
-                </div>
-
-                {/* Quantity and Price Inputs */}
-                <InputSelects amount={order?.amountToPay} price={order?.price} selectedTracer={selectedTracer} />
-
-                {/* Dont display these if it is a limit order*/}
-                {order?.orderType !== 1 ? (
-                    <>
-                        {/* Leverage select */}
-                        <Leverage leverage={order?.leverage ?? 1} />
-                    </>
-                ) : (
-                    <></>
-                )}
-
-                <PostTradeDetails
-                    fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
-                    balances={selectedTracer?.getBalance() ?? defaults.balances}
-                    exposure={order?.amountToBuy ? new BigNumber(order.amountToBuy) : defaults.amountToBuy}
-                    position={order?.position ?? 0}
-                    maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                />
-
-                {/* Place Order */}
-                <div className="py-1">
-                    <AdvancedOrderButton />
-                </div>
-            </div>
-        </Box>
-        <SError error={order?.error ?? -1} account={account} />
+            </Box>
+            <SError error={order?.error ?? -1} account={account} />
         </>
     );
 })`

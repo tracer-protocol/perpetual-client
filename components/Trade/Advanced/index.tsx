@@ -66,6 +66,6 @@ const Advanced: React.FC = styled(({ className }) => {
     display: flex;
     height: 100%;
     max-height: 90vh;
-`
+`;
 
 export default Advanced;
