@@ -2,7 +2,7 @@ import React, { useContext, useState, useCallback } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
-import { calcTotalMargin, calcMinimumMargin, calcLeverage } from '@tracer-protocol/tracer-utils';
+import { calcTotalMargin, calcMinimumMargin, calcLeverage, calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
 import { After, Box, Button, HiddenExpand, Previous } from '@components/General';
 import { TracerContext, Web3Context } from 'context';
 import { NumberSelect, Section } from '@components/General';
@@ -13,7 +13,6 @@ import { defaults } from '@libs/Tracer';
 import TracerModal from '@components/Modals';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
-import LeverageSlider from '@components/Trade/LeverageSlider';
 
 const MinHeight = 250;
 
@@ -274,39 +273,28 @@ const CalcButtons = styled.div`
 type CalculatorModalProps = {
     className?: string;
     close: () => any;
-    isDeposit: boolean;
-    setDeposit: React.Dispatch<React.SetStateAction<boolean>>;
     display: boolean;
     exposureUnit: string;
     marginUnit: string;
     balances: UserBalance;
     price: BigNumber;
-    maxLeverage: BigNumber;
 };
 const CalculatorModal: React.FC<CalculatorModalProps> = styled(
-    ({
-        className,
-        close,
-        isDeposit,
-        exposureUnit,
-        marginUnit,
-        balances,
-        price,
-        maxLeverage,
-        display,
-        setDeposit,
-    }: CalculatorModalProps) => {
+    ({ className, close, exposureUnit, marginUnit, balances, price, display }: CalculatorModalProps) => {
         const { selectedTracer, setTracerId } = useContext(TracerContext);
         const [leverage, setLeverage] = useState(1);
-        const [exposureAmount, setExposureAmount] = useState(50);
-        const [marginAmount, setMarginAmount] = useState(50);
+        const [exposureAmount, setExposureAmount] = useState(NaN);
+        const [marginAmount, setMarginAmount] = useState(NaN);
         const [liquidationAmount, setLiquidationAmount] = useState(NaN);
 
-        const available = isDeposit
-            ? balances.tokenBalance
-            : calcTotalMargin(balances.quote, balances.base, price).minus(
-                  calcMinimumMargin(balances.quote, balances.base, price, maxLeverage),
-              );
+        const [isLong, setPosition] = useState(true);
+        const [showResult, setShowResult] = useState(false);
+
+        const Reset = () => {
+            setExposureAmount(NaN);
+            setMarginAmount(NaN);
+            setShowResult(false);
+        };
 
         return (
             <TracerModal
@@ -317,7 +305,7 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                 onClose={close}
             >
                 <CalcSelectContainer>
-                    <CalcSlideSelect value={isDeposit ? 0 : 1} onClick={(val) => setDeposit(val === 0)}>
+                    <CalcSlideSelect value={isLong ? 0 : 1} onClick={() => setPosition(!isLong)}>
                         <Option>Long</Option>
                         <Option>Short</Option>
                     </CalcSlideSelect>
@@ -327,7 +315,6 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                     unit={exposureUnit}
                     title={'Exposure'}
                     amount={exposureAmount}
-                    balance={available.toNumber()}
                     setAmount={setExposureAmount}
                 />
 
@@ -335,27 +322,36 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                     unit={marginUnit}
                     title={'Margin'}
                     amount={marginAmount}
-                    balance={available.toNumber()}
+                    balance={balances.tokenBalance.toNumber()}
                     setAmount={setMarginAmount}
                 />
 
                 <div>
-                    {toApproxCurrency(
-                        calcLeverage(new BigNumber(marginAmount), new BigNumber(exposureAmount), new BigNumber(1)),
-                    )}
+                    Leverage:{' '}
+                    {showResult
+                        ? calcLeverage(
+                              new BigNumber(marginAmount).negated(),
+                              new BigNumber(exposureAmount),
+                              new BigNumber(1),
+                          ).toNumber()
+                        : null}
                 </div>
 
-                <SNumberSelect
-                    unit={marginUnit}
-                    title={'Liquidation Price'}
-                    amount={liquidationAmount}
-                    balance={available.toNumber()}
-                    setAmount={setLiquidationAmount}
-                />
+                <div>
+                    Liquidation Price:{' '}
+                    {showResult
+                        ? calcLiquidationPrice(
+                              new BigNumber(marginAmount).negated(),
+                              new BigNumber(exposureAmount),
+                              new BigNumber(1),
+                              new BigNumber(25),
+                          ).toNumber()
+                        : null}
+                </div>
 
                 <CalcButtons>
-                    <SButton>Calculate</SButton>
-                    <SButton>Reset</SButton>
+                    <SButton onClick={() => setShowResult(true)}>Calculate</SButton>
+                    <SButton onClick={Reset}>Reset</SButton>
                 </CalcButtons>
             </TracerModal>
         );
@@ -417,12 +413,9 @@ const AccountPanel: React.FC<{
             <CalculatorModal
                 display={calculator}
                 close={() => showCalculator(false)}
-                isDeposit={deposit}
-                setDeposit={setDeposit}
                 exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}
                 marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}
-                maxLeverage={maxLeverage}
                 price={Number.isNaN(fairPrice) ? 0 : fairPrice}
             />
         </AccountInfo>
