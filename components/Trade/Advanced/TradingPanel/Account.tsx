@@ -281,11 +281,11 @@ type CalculatorModalProps = {
 };
 const CalculatorModal: React.FC<CalculatorModalProps> = styled(
     ({ className, close, exposureUnit, marginUnit, balances, display }: CalculatorModalProps) => {
-        const { selectedTracer, setTracerId } = useContext(TracerContext);
-        const [leverage, setLeverage] = useState(1);
+        const { selectedTracer } = useContext(TracerContext);
+        // const [leverage, setLeverage] = useState(1);
         const [exposureAmount, setExposureAmount] = useState(NaN);
         const [marginAmount, setMarginAmount] = useState(NaN);
-        const [liquidationAmount, setLiquidationAmount] = useState(NaN);
+        // const [liquidationAmount, setLiquidationAmount] = useState(NaN);
 
         const [isLong, setPosition] = useState(true);
         const [showResult, setShowResult] = useState(false);
