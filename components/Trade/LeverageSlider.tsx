@@ -30,7 +30,7 @@ export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }:
         value.setAttribute('type', 'number');
         value.setAttribute('id', 'slider-value');
         value.classList.add('slider-value');
-        value.innerHTML = '1x';
+        value.innerHTML = `${leverage}x`;
         handle.appendChild(value);
     }, []);
 

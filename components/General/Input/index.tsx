@@ -5,7 +5,7 @@ export const Input = styled.input`
     font-size: 42px;
     height: 40px;
     line-height: 40px;
-    letter-spacing: 0px;
+    letter-spacing: 0;
     color: #ffffff;
     width: 100%;
     &::placeholder {
@@ -46,7 +46,7 @@ export const Checkbox: React.FC<CProps> = styled(({ className, checked, onClick 
     return (
         <span className={className} onClick={onClick}>
             <input type="checkbox" checked={checked} readOnly />
-            <span className="checkmark"></span>
+            <span className="checkmark"/>
         </span>
     );
 })`
@@ -60,7 +60,7 @@ export const Checkbox: React.FC<CProps> = styled(({ className, checked, onClick 
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    transoition: 0.3s;
+    transition: 0.3s;
 
     /* Hide the browser's default checkbox */
     & > input {
