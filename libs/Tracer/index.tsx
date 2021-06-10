@@ -5,8 +5,10 @@ import Web3 from 'web3';
 import tracerAbi from '@tracer-protocol/contracts/abi/contracts/TracerPerpetualSwaps.sol/TracerPerpetualSwaps.json';
 import ERC20Abi from '@tracer-protocol/contracts/abi/@openzeppelin/contracts/token/ERC20/ERC20.sol/ERC20.json';
 import oracleAbi from '@tracer-protocol/contracts/abi/contracts/oracle/Oracle.sol/Oracle.json';
+import pricingAbi from '@tracer-protocol/contracts/abi/contracts/Pricing.sol/Pricing.json';
 
 import { Oracle } from '@tracer-protocol/contracts/types/Oracle';
+import { Pricing } from '@tracer-protocol/contracts/types/Pricing';
 import { ERC20 as Erc20Type } from '@tracer-protocol/contracts/types/ERC20';
 import { TracerPerpetualSwaps as TracerType } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 import BigNumber from 'bignumber.js';
@@ -28,6 +30,7 @@ export const defaults: Record<string, any> = {
     },
     maxLeverage: new BigNumber(1),
     oraclePrice: new BigNumber(0),
+    fairPrice: new BigNumber(0),
     quoteTokenDecimals: new BigNumber(1),
     amountToBuy: new BigNumber(0),
     feeRate: new BigNumber(0),
@@ -49,12 +52,13 @@ export const defaults: Record<string, any> = {
 export default class Tracer {
     _instance: TracerType;
     _web3: Web3;
+    _oracle: Oracle | undefined;
+    _pricing: Pricing | undefined;
     public accountAddress: string | undefined;
     public address: string;
     public marketId: string;
     public baseTicker: string;
     public quoteTicker: string;
-    _oracle: Oracle | undefined;
     public token: Erc20Type | undefined;
     public liquidationGasCost: number | undefined;
     public quoteTokenDecimals: BigNumber;
@@ -64,6 +68,7 @@ export default class Tracer {
     public initialised: Promise<boolean>;
     public balances: UserBalance;
     public oraclePrice: BigNumber;
+    public fairPrice: BigNumber;
     public twentyFourHourChange: number;
     public insuranceContract: string;
 
@@ -82,6 +87,7 @@ export default class Tracer {
         this.insuranceContract = '';
         this.balances = defaults.balances;
         this.oraclePrice = defaults.oraclePrice;
+        this.fairPrice = defaults.fairPrice;
         this.maxLeverage = defaults.maxLeverage;
         this.initialised = this.init(web3);
     }
@@ -99,6 +105,7 @@ export default class Tracer {
         const fundingRateSensitivity = this._instance.methods.fundingRateSensitivity().call();
         const feeRate = this._instance.methods.feeRate().call();
         const insuranceContract = this._instance.methods.insuranceContract().call();
+        const pricingContract = this._instance.methods.pricingContract().call();
         return Promise.all([
             quoteTokenDecimals,
             liquidationGasCost,
@@ -108,6 +115,7 @@ export default class Tracer {
             fundingRateSensitivity,
             feeRate,
             insuranceContract,
+            pricingContract,
         ])
             .then((res) => {
                 const priceMultiplier_ = new BigNumber(res[0]);
@@ -119,11 +127,15 @@ export default class Tracer {
                 this._oracle = res[3]
                     ? (new web3.eth.Contract(oracleAbi as AbiItem[], res[3]) as unknown as Oracle)
                     : undefined;
-                this.maxLeverage = new BigNumber(parseFloat(res[4]) / 10000);
+                this.maxLeverage = new BigNumber(parseFloat(Web3.utils.fromWei(res[4])));
                 this.fundingRateSensitivity = new BigNumber(res[5]).div(priceMultiplier_);
                 this.feeRate = new BigNumber(res[6]).div(priceMultiplier_);
                 this.insuranceContract = res[7];
+                this._pricing = res[8]
+                    ? (new web3.eth.Contract(pricingAbi as AbiItem[], res[8]) as unknown as Pricing)
+                    : undefined;
                 this.updateOraclePrice();
+                this.updateFairPrice();
                 return true;
             })
             .catch((err) => {
@@ -180,6 +192,17 @@ export default class Tracer {
         } catch (err) {
             console.error('Failed to fetch oracle price', err);
             this.oraclePrice = new BigNumber(0);
+        }
+    };
+
+    updateFairPrice: () => Promise<void> = async () => {
+        try {
+            await this.initialised;
+            const fairPrice = await this._pricing?.methods.fairPrice().call();
+            this.fairPrice = new BigNumber(Web3.utils.fromWei(fairPrice ?? '0'));
+        } catch (err) {
+            console.error('Failed to fetch fair price', err);
+            this.fairPrice = new BigNumber(0);
         }
     };
 
@@ -240,12 +263,20 @@ export default class Tracer {
         return this.oraclePrice;
     };
 
+    getFairPrice: () => BigNumber = () => {
+        return this.fairPrice;
+    };
+
     getInsuranceContract: () => string = () => {
         return this.insuranceContract.slice();
     };
 
     getMaxLeverage: () => BigNumber = () => {
         return this.maxLeverage;
+    };
+
+    getFeeRate: () => BigNumber = () => {
+        return this.feeRate;
     };
 
     get24HourChange: () => number = () => {

@@ -169,7 +169,7 @@ type TSProps = {
     className?: string;
 };
 
-export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, className }: TSProps) => {
+export default styled(({ selectedTracer, className }: TSProps) => {
     const { account } = useContext(Web3Context);
     const [tab, setTab] = useState(0);
     const tabs = [`Position`, `Orders`, `Fills`];
@@ -217,4 +217,6 @@ export const AccountSummary: React.FC<TSProps> = styled(({ selectedTracer, class
     );
 })`
     border-top: 1px solid #0c3586;
-`;
+    max-height: 30vh;
+    overflow: scroll;
+` as React.FC<TSProps>;

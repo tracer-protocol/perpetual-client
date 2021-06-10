@@ -5,7 +5,7 @@ import { Section } from '@components/General';
 import PoolHealth from '@components/Insurance/PoolHealth';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
 
-export const InsuranceInfo: React.FC = styled(({ className }) => {
+export default styled(({ className }) => {
     const { poolInfo } = useContext(InsuranceContext);
     return (
         <div className={className}>
@@ -25,4 +25,6 @@ export const InsuranceInfo: React.FC = styled(({ className }) => {
         color: #ffffff;
         text-transform: capitalize;
     }
+
+    max-height: 25vh;
 `;
