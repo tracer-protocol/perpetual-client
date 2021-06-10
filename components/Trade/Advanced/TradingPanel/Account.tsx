@@ -2,7 +2,7 @@ import React, { useContext, useState, useCallback } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
-import { calcTotalMargin, calcMinimumMargin } from '@tracer-protocol/tracer-utils';
+import { calcTotalMargin, calcMinimumMargin, calcLeverage } from '@tracer-protocol/tracer-utils';
 import { After, Box, Button, HiddenExpand, Previous } from '@components/General';
 import { TracerContext, Web3Context } from 'context';
 import { NumberSelect, Section } from '@components/General';
@@ -13,6 +13,7 @@ import { defaults } from '@libs/Tracer';
 import TracerModal from '@components/Modals';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
+import LeverageSlider from '@components/Trade/LeverageSlider';
 
 const MinHeight = 250;
 
@@ -264,6 +265,12 @@ const CalcSlideSelect = styled(SlideSelect)`
     margin: 1rem auto;
 `;
 
+const CalcButtons = styled.div`
+    margin: 3rem 5rem;
+    display: flex;
+    justify-content: space-around;
+`;
+
 type CalculatorModalProps = {
     className?: string;
     close: () => any;
@@ -290,9 +297,9 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
         setDeposit,
     }: CalculatorModalProps) => {
         const { selectedTracer, setTracerId } = useContext(TracerContext);
-
-        const [exposureAmount, setExposureAmount] = useState(NaN);
-        const [marginAmount, setMarginAmount] = useState(NaN);
+        const [leverage, setLeverage] = useState(1);
+        const [exposureAmount, setExposureAmount] = useState(50);
+        const [marginAmount, setMarginAmount] = useState(50);
         const [liquidationAmount, setLiquidationAmount] = useState(NaN);
 
         const available = isDeposit
@@ -332,6 +339,12 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                     setAmount={setMarginAmount}
                 />
 
+                <div>
+                    {toApproxCurrency(
+                        calcLeverage(new BigNumber(marginAmount), new BigNumber(exposureAmount), new BigNumber(1)),
+                    )}
+                </div>
+
                 <SNumberSelect
                     unit={marginUnit}
                     title={'Liquidation Price'}
@@ -339,6 +352,11 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                     balance={available.toNumber()}
                     setAmount={setLiquidationAmount}
                 />
+
+                <CalcButtons>
+                    <SButton>Calculate</SButton>
+                    <SButton>Reset</SButton>
+                </CalcButtons>
             </TracerModal>
         );
     },

@@ -15,15 +15,15 @@ type SProps = {
     leverage: number;
     className?: string;
     onChange: (val: number) => any;
-    id: string
-}
+    id: string;
+};
 
 /**
  * Basic slider with no styling
  * @param leverage
  */
 export const DefaultSlider: React.FC<SProps> = styled(({ leverage, className, onChange, id }: SProps) => {
-    const handleRef = useRef<HTMLParagraphElement>()
+    const handleRef = useRef<HTMLParagraphElement>();
     useEffect(() => {
         const slider = document.getElementById(id);
         if (slider) {
@@ -120,13 +120,8 @@ export const DefaultSlider: React.FC<SProps> = styled(({ leverage, className, on
  * @param className custom classes
  */
 
-type LSProps = SProps
-const LeverageSlider: React.FC<LSProps> = styled(({ 
-    className, 
-    leverage,
-    onChange,
-    id
-}: SProps) => {
+type LSProps = SProps;
+const LeverageSlider: React.FC<LSProps> = styled(({ className, leverage, onChange, id }: SProps) => {
     return (
         <div className={className} id={id}>
             <h3>
