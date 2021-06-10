@@ -2,9 +2,9 @@ import React, { useContext, useEffect } from 'react';
 import { OrderContext, TracerContext, Web3Context } from 'context';
 import { MarketSelect, TradingInput, AccountPanel } from './TradingPanel';
 import styled from 'styled-components';
-import TradingView from './TradingView';
+import TradingView from './RightPanel';
 
-const LeftPanel = styled.div`
+const TradingPanel = styled.div`
     width: 25%;
     display: flex;
     flex-direction: column;
@@ -14,8 +14,7 @@ const LeftPanel = styled.div`
 
 const RightPanel = styled.div`
     width: 75%;
-    display: flex;
-    flex-direction: column;
+    display: flex:
     height: 90vh;
 `;
 
@@ -36,7 +35,7 @@ const Overlay = styled.div`
     }
 `;
 
-const Advanced: React.FC = () => {
+const Advanced: React.FC = styled(({ className }) => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     const { orderDispatch } = useContext(OrderContext);
@@ -51,18 +50,22 @@ const Advanced: React.FC = () => {
     }, []);
 
     return (
-        <div className="container flex h-full">
-            <LeftPanel>
+        <div className={`container ${className}`}>
+            <TradingPanel>
                 <MarketSelect account={account ?? ''} />
                 <TradingInput selectedTracer={selectedTracer} account={account ?? ''} />
                 <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} />
-            </LeftPanel>
+            </TradingPanel>
             <RightPanel>
                 <TradingView selectedTracer={selectedTracer} />
             </RightPanel>
             <Overlay id="trading-overlay" />
         </div>
     );
-};
+})`
+    display: flex;
+    height: 100%;
+    max-height: 90vh;
+`
 
 export default Advanced;

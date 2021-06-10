@@ -46,6 +46,7 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
 })`
     padding: 10px;
     height: 100%;
+    overflow: scroll;
     border-top: 1px solid #002886;
     h3 {
         font-size: 20px;

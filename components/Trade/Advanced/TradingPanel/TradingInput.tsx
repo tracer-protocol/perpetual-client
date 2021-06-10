@@ -153,6 +153,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
     overflow: scroll;
     position: relative;
     border-bottom: none;
+    height: 100%;
     &.hide {
         height: 0;
         padding: 0;
