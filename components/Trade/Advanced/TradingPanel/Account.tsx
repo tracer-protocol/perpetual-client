@@ -296,6 +296,16 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
             setShowResult(false);
         };
 
+        const ChangeExposure = (e: any) => {
+            setExposureAmount(Math.abs(parseFloat(e.target.value)));
+            setShowResult(false);
+        };
+
+        const ChangeMargin = (e: any) => {
+            setMarginAmount(Math.abs(parseFloat(e.target.value)));
+            setShowResult(false);
+        };
+
         return (
             <TracerModal
                 loading={false}
@@ -316,6 +326,7 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                     title={'Exposure'}
                     amount={exposureAmount}
                     setAmount={setExposureAmount}
+                    onChange={ChangeExposure}
                 />
 
                 <SNumberSelect
@@ -324,6 +335,7 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                     amount={marginAmount}
                     balance={balances.tokenBalance.toNumber()}
                     setAmount={setMarginAmount}
+                    onChange={ChangeMargin}
                 />
 
                 <div>

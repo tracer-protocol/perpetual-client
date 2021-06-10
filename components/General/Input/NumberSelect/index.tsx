@@ -40,9 +40,10 @@ type NSProps = {
     title: string;
     balance?: number;
     className?: string;
+    onChange?: (e: any) => any;
 } & Children;
 
-export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title, balance, className }: NSProps) => {
+export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title, balance, className, onChange }: NSProps) => {
     return (
         <div className={className}>
             <Header>
@@ -65,7 +66,7 @@ export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title
                     autoComplete="off"
                     min={0}
                     placeholder="0.0"
-                    onChange={(e) => setAmount(Math.abs(parseFloat(e.target.value)))}
+                    onChange={onChange ? onChange : (e) => setAmount(Math.abs(parseFloat(e.target.value)))}
                     value={!Number.isNaN(amount) ? amount : ''}
                 />
                 <Unit>{unit}</Unit>
