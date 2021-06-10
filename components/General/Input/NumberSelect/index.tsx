@@ -43,7 +43,15 @@ type NSProps = {
     onChange?: (e: any) => any;
 } & Children;
 
-export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title, balance, className, onChange }: NSProps) => {
+export const NumberSelect: React.FC<NSProps> = ({
+    setAmount,
+    amount,
+    unit,
+    title,
+    balance,
+    className,
+    onChange,
+}: NSProps) => {
     return (
         <div className={className}>
             <Header>

@@ -285,14 +285,38 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
         // const [leverage, setLeverage] = useState(1);
         const [exposureAmount, setExposureAmount] = useState(NaN);
         const [marginAmount, setMarginAmount] = useState(NaN);
-        // const [liquidationAmount, setLiquidationAmount] = useState(NaN);
+        const [liquidationAmount, setLiquidationAmount] = useState(NaN);
 
         const [isLong, setPosition] = useState(true);
         const [showResult, setShowResult] = useState(false);
 
+        const Calculate = () => {
+            if (isLong) {
+                setLiquidationAmount(
+                    calcLiquidationPrice(
+                        new BigNumber(marginAmount).negated(),
+                        new BigNumber(exposureAmount),
+                        new BigNumber(1),
+                        new BigNumber(25),
+                    ).toNumber(),
+                );
+            } else {
+                setLiquidationAmount(
+                    calcLiquidationPrice(
+                        new BigNumber(marginAmount).negated(),
+                        new BigNumber(-Math.abs(exposureAmount)),
+                        new BigNumber(1),
+                        new BigNumber(25),
+                    ).toNumber(),
+                );
+            }
+            setShowResult(true);
+        };
+
         const Reset = () => {
             setExposureAmount(NaN);
             setMarginAmount(NaN);
+            setLiquidationAmount(NaN);
             setShowResult(false);
         };
 
@@ -303,6 +327,11 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
 
         const ChangeMargin = (e: any) => {
             setMarginAmount(Math.abs(parseFloat(e.target.value)));
+            setShowResult(false);
+        };
+
+        const ChangeLiquidation = (e: any) => {
+            setLiquidationAmount(Math.abs(parseFloat(e.target.value)));
             setShowResult(false);
         };
 
@@ -374,8 +403,17 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                         : null}
                 </div>
 
+                <SNumberSelect
+                    unit={marginUnit}
+                    title={'Liquidation Price'}
+                    amount={liquidationAmount}
+                    balance={balances.tokenBalance.toNumber()}
+                    setAmount={setLiquidationAmount}
+                    onChange={ChangeLiquidation}
+                />
+
                 <CalcButtons>
-                    <SButton onClick={() => setShowResult(true)}>Calculate</SButton>
+                    <SButton onClick={Calculate}>Calculate</SButton>
                     <SButton onClick={Reset}>Reset</SButton>
                 </CalcButtons>
             </TracerModal>
