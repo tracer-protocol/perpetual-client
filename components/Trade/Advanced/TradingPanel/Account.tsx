@@ -280,7 +280,7 @@ type CalculatorModalProps = {
     price: BigNumber;
 };
 const CalculatorModal: React.FC<CalculatorModalProps> = styled(
-    ({ className, close, exposureUnit, marginUnit, balances, price, display }: CalculatorModalProps) => {
+    ({ className, close, exposureUnit, marginUnit, balances, display }: CalculatorModalProps) => {
         const { selectedTracer, setTracerId } = useContext(TracerContext);
         const [leverage, setLeverage] = useState(1);
         const [exposureAmount, setExposureAmount] = useState(NaN);
