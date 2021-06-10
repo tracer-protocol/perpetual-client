@@ -341,23 +341,36 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                 <div>
                     Leverage:{' '}
                     {showResult
-                        ? calcLeverage(
-                              new BigNumber(marginAmount).negated(),
-                              new BigNumber(exposureAmount),
-                              new BigNumber(1),
-                          ).toNumber()
+                        ? isLong
+                            ? calcLeverage(
+                                  new BigNumber(marginAmount).negated(),
+                                  new BigNumber(exposureAmount),
+                                  new BigNumber(1),
+                              ).toNumber()
+                            : calcLeverage(
+                                  new BigNumber(marginAmount).negated(),
+                                  new BigNumber(-Math.abs(exposureAmount)),
+                                  new BigNumber(1),
+                              ).toNumber()
                         : null}
                 </div>
 
                 <div>
                     Liquidation Price:{' '}
                     {showResult
-                        ? calcLiquidationPrice(
-                              new BigNumber(marginAmount).negated(),
-                              new BigNumber(exposureAmount),
-                              new BigNumber(1),
-                              new BigNumber(25),
-                          ).toNumber()
+                        ? isLong
+                            ? calcLiquidationPrice(
+                                  new BigNumber(marginAmount).negated(),
+                                  new BigNumber(exposureAmount),
+                                  new BigNumber(1),
+                                  new BigNumber(25),
+                              ).toNumber()
+                            : calcLiquidationPrice(
+                                  new BigNumber(marginAmount).negated(),
+                                  new BigNumber(-Math.abs(exposureAmount)),
+                                  new BigNumber(1),
+                                  new BigNumber(25),
+                              ).toNumber()
                         : null}
                 </div>
 
