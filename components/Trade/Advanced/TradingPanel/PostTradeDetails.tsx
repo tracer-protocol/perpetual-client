@@ -7,7 +7,7 @@ import {
     calcWithdrawable,
     calcNotionalValue,
 } from '@tracer-protocol/tracer-utils';
-import { Previous, Section } from '@components/General';
+import { HiddenExpand, Previous, Section } from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
 import styled from 'styled-components';
@@ -31,7 +31,11 @@ const PostTradeDetails: React.FC<PTDProps> = styled(
                 ? balances.quote.plus(calcNotionalValue(exposure, fairPrice)) // short
                 : balances.quote.minus(calcNotionalValue(exposure, fairPrice)); // long
         return (
-            <div className={className}>
+            <HiddenExpand 
+                open={!!exposure.toNumber()}
+                defaultHeight={0}
+                className={className}
+            >
                 <h3>Order Summary</h3>
                 <Section label={'Liquidation Price'}>
                     <Previous>
@@ -53,14 +57,13 @@ const PostTradeDetails: React.FC<PTDProps> = styled(
                     <Previous>{calcLeverage(balances.quote, balances.base, fairPrice).toPrecision(3)}</Previous>
                     {isVerySmall(calcLeverage(newQuote, newBase, fairPrice), false)}
                 </Section>
-            </div>
+            </HiddenExpand>
         );
     },
 )`
     margin: 10px;
     background: #002886;
     border-radius: 10px;
-    padding: 10px;
 
     h3 {
         font-size: 16px;

@@ -122,12 +122,18 @@ input {
 } */
 
 /** GLOBAL TABLE STYLES */
-.bid, .green {
+.bid {
     color: #00ff08;
 }
 
-.ask, .red {
+.ask {
     color: #f15025;
+}
+
+.button-disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    width: 100%;
 }
 
 @keyframes countdown {

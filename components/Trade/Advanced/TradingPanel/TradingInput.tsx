@@ -86,15 +86,25 @@ const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
     }
 `;
 
+const SError = styled(Error)`
+    position: relative;
+    transform: translateY(-100%);
+    &.show {
+        transform: translateY(0);
+    }
+`
+
 type TIProps = {
     selectedTracer: Tracer | undefined;
     account: string;
     className?: string;
 };
 
+
 export default styled(({ selectedTracer, className, account }: TIProps) => {
     const { order } = useContext(OrderContext);
     return (
+        <>
         <Box className={`${className} ${account === '' ? 'hide' : ''} `}>
             <div className="body text-xs">
                 {/* Position select */}
@@ -133,12 +143,16 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     <AdvancedOrderButton />
                 </div>
             </div>
-            <Error error={order?.error ?? -1} />
         </Box>
+        
+        <SError error={order?.error ?? -1} />
+        </>
     );
 })`
     transition: opacity 0.3s 0.1s, height: 0.3s 0.1s, padding 0.1s;
     overflow: scroll;
+    position: relative;
+    border-bottom: none;
     &.hide {
         height: 0;
         padding: 0;

@@ -8,7 +8,7 @@ const LeftPanel = styled.div`
     width: 25%;
     display: flex;
     flex-direction: column;
-    min-height: 90vh;
+    height: 90vh;
     position: relative;
 `;
 
@@ -16,7 +16,7 @@ const RightPanel = styled.div`
     width: 75%;
     display: flex;
     flex-direction: column;
-    min-height: 90vh;
+    height: 90vh;
 `;
 
 const Overlay = styled.div`
