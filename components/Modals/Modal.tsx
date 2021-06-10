@@ -46,8 +46,9 @@ const Overlay = styled.div<{ show: boolean }>`
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1;
+    z-index: 2;
 `;
+
 const TracerModal: React.FC<TProps> = styled((props: TProps) => {
     const ref = useRef(null);
     useEffect(() => {
@@ -106,10 +107,9 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
         transition: 0.3s;
         padding: 1rem;
         width: 100%;
-        opacity: 0;
         background: #011772;
         border: 0;
-        box-shadow: 0px 5px 10px #00000029;
+        box-shadow: 0 5px 10px #00000029;
         border-radius: 5px;
         z-index: 1000;
         margin: auto;

@@ -171,9 +171,8 @@ const DropdownLogo = styled(({ className }) => {
     }
 
     > .dropdown-menu {
-        opacity: 0;
         position: absolute;
-        display: block;
+        display: none;
         height: 0;
         top: 10px;
         left: -30px;
@@ -237,6 +236,8 @@ const DropdownLogo = styled(({ className }) => {
 
     &.show > .dropdown-menu ul .nav-item:nth-child(4) {
         transition: all 0.3s ease-in-out 0.4s, background 0.5s ease;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
 
     &.show > .dropdown-menu ul .nav-item.highlight {
@@ -260,7 +261,7 @@ const DropdownLogo = styled(({ className }) => {
     }
 
     &.show > .dropdown-menu {
-        opacity: 1;
+        display: block;
         height: 280px;
         z-index: 5;
     }
@@ -296,6 +297,7 @@ const NavBar: React.FC = styled(({ className }) => {
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
+    z-index: 3;
 `;
 
 const NavBarContent: React.FC = styled(({ className }) => {

@@ -173,7 +173,6 @@ type AMProps = {
     price: BigNumber;
     maxLeverage: BigNumber;
 };
-
 const AccountModal: React.FC<AMProps> = styled(
     ({ className, close, isDeposit, unit, balances, price, maxLeverage, display, setDeposit }: AMProps) => {
         const {
@@ -255,10 +254,101 @@ const AccountModal: React.FC<AMProps> = styled(
     }
 `;
 
+const CalcSelectContainer = styled.div`
+    margin-top: 1rem;
+    border-top: 1px solid #002886;
+`;
+
+const CalcSlideSelect = styled(SlideSelect)`
+    max-width: 300px;
+    margin: 1rem auto;
+`;
+
+type CalculatorModalProps = {
+    className?: string;
+    close: () => any;
+    isDeposit: boolean;
+    setDeposit: React.Dispatch<React.SetStateAction<boolean>>;
+    display: boolean;
+    exposureUnit: string;
+    marginUnit: string;
+    balances: UserBalance;
+    price: BigNumber;
+    maxLeverage: BigNumber;
+};
+const CalculatorModal: React.FC<CalculatorModalProps> = styled(
+    ({
+        className,
+        close,
+        isDeposit,
+        exposureUnit,
+        marginUnit,
+        balances,
+        price,
+        maxLeverage,
+        display,
+        setDeposit,
+    }: CalculatorModalProps) => {
+        const { selectedTracer, setTracerId } = useContext(TracerContext);
+
+        const [exposureAmount, setExposureAmount] = useState(NaN);
+        const [marginAmount, setMarginAmount] = useState(NaN);
+        const [liquidationAmount, setLiquidationAmount] = useState(NaN);
+
+        const available = isDeposit
+            ? balances.tokenBalance
+            : calcTotalMargin(balances.quote, balances.base, price).minus(
+                  calcMinimumMargin(balances.quote, balances.base, price, maxLeverage),
+              );
+
+        return (
+            <TracerModal
+                loading={false}
+                className={className}
+                show={display}
+                title={`${selectedTracer?.marketId} Calculator`}
+                onClose={close}
+            >
+                <CalcSelectContainer>
+                    <CalcSlideSelect value={isDeposit ? 0 : 1} onClick={(val) => setDeposit(val === 0)}>
+                        <Option>Long</Option>
+                        <Option>Short</Option>
+                    </CalcSlideSelect>
+                </CalcSelectContainer>
+
+                <SNumberSelect
+                    unit={exposureUnit}
+                    title={'Exposure'}
+                    amount={exposureAmount}
+                    balance={available.toNumber()}
+                    setAmount={setExposureAmount}
+                />
+
+                <SNumberSelect
+                    unit={marginUnit}
+                    title={'Margin'}
+                    amount={marginAmount}
+                    balance={available.toNumber()}
+                    setAmount={setMarginAmount}
+                />
+
+                <SNumberSelect
+                    unit={marginUnit}
+                    title={'Liquidation Price'}
+                    amount={liquidationAmount}
+                    balance={available.toNumber()}
+                    setAmount={setLiquidationAmount}
+                />
+            </TracerModal>
+        );
+    },
+)``;
+
 const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
 }> = ({ selectedTracer, account }) => {
+    const [calculator, showCalculator] = useState(false);
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
@@ -275,7 +365,13 @@ const AccountPanel: React.FC<{
     ) : (
         <AccountInfo>
             <Item>
-                <h3>Total Margin</h3>
+                <div className="flex">
+                    <h3>Total Margin</h3>
+                    <SButton className="ml-auto" onClick={() => showCalculator(true)}>
+                        Calculator
+                    </SButton>
+                </div>
+
                 <span>
                     <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
                 </span>
@@ -296,6 +392,17 @@ const AccountPanel: React.FC<{
                 isDeposit={deposit}
                 setDeposit={setDeposit}
                 unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
+                balances={balances}
+                maxLeverage={maxLeverage}
+                price={Number.isNaN(fairPrice) ? 0 : fairPrice}
+            />
+            <CalculatorModal
+                display={calculator}
+                close={() => showCalculator(false)}
+                isDeposit={deposit}
+                setDeposit={setDeposit}
+                exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}
+                marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}
                 maxLeverage={maxLeverage}
                 price={Number.isNaN(fairPrice) ? 0 : fairPrice}

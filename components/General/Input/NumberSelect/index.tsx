@@ -5,7 +5,7 @@ import { BasicInputContainer, Input } from '../';
 
 const Unit = styled.span`
     font-size: 18px;
-    letter-spacing: 0px;
+    letter-spacing: 0;
     color: #3da8f5;
     margin-top: auto;
     margin-bottom: 0.2rem;
