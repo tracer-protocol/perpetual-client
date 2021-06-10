@@ -4,7 +4,6 @@ import { MarketSelect, TradingInput, AccountPanel } from './TradingPanel';
 import styled from 'styled-components';
 import TradingView from './TradingView';
 
-
 const LeftPanel = styled.div`
     width: 25%;
     display: flex;

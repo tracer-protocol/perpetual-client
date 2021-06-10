@@ -80,6 +80,9 @@ export const timeAgo: (current: number, previous: number) => string = (current, 
     }
 };
 
+export const formatDate: (date: Date) => string = (date) =>
+    `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+
 export const isVerySmall: (num: BigNumber, currency: boolean) => string = (num, currency) => {
     const isSmall = num.lt(0.000001); // some arbitrarily small number
     if (currency) {

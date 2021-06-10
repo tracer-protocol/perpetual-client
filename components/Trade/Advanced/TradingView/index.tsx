@@ -12,7 +12,7 @@ import { CandleData } from 'types/TracerTypes';
 import { OMEContext } from '@context/OMEContext';
 import styled from 'styled-components';
 import FundingRateGraphic from '@components/FundingRateGraphic';
-import { toApproxCurrency } from '@libs/utils';
+import { formatDate, toApproxCurrency } from '@libs/utils';
 import BigNumber from 'bignumber.js';
 
 const TitledBox = styled(({ className, title, children }) => {
@@ -21,7 +21,7 @@ const TitledBox = styled(({ className, title, children }) => {
             <p>{title}</p>
             {children}
         </span>
-    )
+    );
 })`
     border-right: 1px solid #002886;
     padding: 0.5rem;
@@ -31,62 +31,54 @@ const TitledBox = styled(({ className, title, children }) => {
     font-size: 1rem;
 
     > p {
-        color: #005EA4;
+        color: #005ea4;
         font-size: 12px;
         letter-spacing: -0.24px;
     }
-`
+`;
 
 type MIProps = {
-    lastPrice: number,
-    markPrice: number,
-    oraclePrice: number,
-    fundingRate: number,
-    nextFunding: number,
-    tradingVolume: number,
-    maxLeverage: BigNumber
-    className?:string;
+    lastPrice: number;
+    fairPrice: BigNumber;
+    oraclePrice: number;
+    fundingRate: number;
+    nextFunding: Date;
+    tradingVolume: number;
+    maxLeverage: BigNumber;
+    className?: string;
 };
 
-const MarketInfo: React.FC<MIProps> = styled(({ 
-    lastPrice,
-    markPrice,
-    oraclePrice,
-    fundingRate,
-    nextFunding,
-    tradingVolume,
-    maxLeverage,
-    className 
-}: MIProps) => {
-    return (
-        <div className={className}>
-            <TitledBox title={"Last Price"}>
-                {toApproxCurrency(lastPrice)}
-            </TitledBox>
-            <TitledBox title={"Mark Price"}>
-                {toApproxCurrency(markPrice)}
-            </TitledBox>
-            <TitledBox title={"Oracle Price"}>
-                {toApproxCurrency(oraclePrice)}
-            </TitledBox>
-            <TitledBox title={"Funding Rate"}>
-                <FundingRateGraphic rate={fundingRate}/>
-            </TitledBox>
-            <TitledBox title={"Next Funding"}>
-               {nextFunding} 
-            </TitledBox>
-            <TitledBox title={"24H Trades"}>
-                {tradingVolume.toLocaleString()}
-            </TitledBox>
-            <TitledBox title={"Max Leverage"} className="border-r-0">
-                {maxLeverage.toNumber()}x
-            </TitledBox>
-        </div>
-    )
-})`
+const MarketInfo: React.FC<MIProps> = styled(
+    ({
+        lastPrice,
+        fairPrice,
+        oraclePrice,
+        fundingRate,
+        nextFunding,
+        tradingVolume,
+        maxLeverage,
+        className,
+    }: MIProps) => {
+        return (
+            <div className={className}>
+                <TitledBox title={'Last Price'}>{toApproxCurrency(lastPrice)}</TitledBox>
+                <TitledBox title={'Mark Price'}>{toApproxCurrency(fairPrice)}</TitledBox>
+                <TitledBox title={'Oracle Price'}>{toApproxCurrency(oraclePrice)}</TitledBox>
+                <TitledBox title={'Funding Rate'}>
+                    <FundingRateGraphic rate={fundingRate} />
+                </TitledBox>
+                <TitledBox title={'Next Funding'}>{formatDate(nextFunding)}</TitledBox>
+                <TitledBox title={'24H Trades'}>{tradingVolume.toLocaleString()}</TitledBox>
+                <TitledBox title={'Max Leverage'} className="border-r-0">
+                    {maxLeverage.toNumber()}x
+                </TitledBox>
+            </div>
+        );
+    },
+)`
     border-bottom: 1px solid #002886;
     display: flex;
-`
+`;
 
 const GraphWrap = styled.div`
     height: 500px;
@@ -119,9 +111,8 @@ const OrderBookContainer = styled.div`
     }
 `;
 
-
-const TradingView: React.FC<{ 
-    selectedTracer: Tracer | undefined 
+const TradingView: React.FC<{
+    selectedTracer: Tracer | undefined;
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
@@ -130,12 +121,12 @@ const TradingView: React.FC<{
         <div>
             <div className="flex">
                 <Box className="w-3/4 flex flex-col p-0">
-                    <MarketInfo 
+                    <MarketInfo
                         lastPrice={59853}
-                        markPrice={59853}
-                        oraclePrice={59853}
+                        fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
+                        oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
                         fundingRate={selectedTracer?.getFeeRate() ?? defaults.feeRate}
-                        nextFunding={Date.now()}
+                        nextFunding={new Date()}
                         tradingVolume={243512}
                         maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
                     />
