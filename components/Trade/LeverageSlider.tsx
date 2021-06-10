@@ -1,6 +1,5 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Slider from 'antd/lib/slider';
-import { OrderContext } from 'context';
 import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
 
@@ -12,26 +11,33 @@ const LeverageTip = (
     </p>
 );
 
-interface DSProps {
+type SProps = {
     leverage: number;
     className?: string;
+    onChange: (val: number) => any;
+    id: string
 }
 
 /**
  * Basic slider with no styling
  * @param leverage
  */
-export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }: DSProps) => {
-    const { orderDispatch } = useContext(OrderContext); // TODO update to generic onChange
-
+export const DefaultSlider: React.FC<SProps> = styled(({ leverage, className, onChange, id }: SProps) => {
+    const handleRef = useRef<HTMLParagraphElement>()
     useEffect(() => {
-        const handle = document.getElementsByClassName('ant-slider-handle')[0];
-        const value = document.createElement('p');
-        value.setAttribute('type', 'number');
-        value.setAttribute('id', 'slider-value');
-        value.classList.add('slider-value');
-        value.innerHTML = `${leverage}x`;
-        handle.appendChild(value);
+        const slider = document.getElementById(id);
+        if (slider) {
+            const handle = slider.getElementsByClassName('ant-slider-handle')[0];
+            if (handle) {
+                const value = document.createElement('p');
+                handleRef.current = value;
+                value.setAttribute('type', 'number');
+                value.setAttribute('id', 'slider-value');
+                value.classList.add('slider-value');
+                value.innerHTML = '1x';
+                handle.appendChild(value);
+            }
+        }
     }, []);
 
     const marks = {
@@ -59,12 +65,9 @@ export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }:
                     display: 'flex',
                 }}
                 onChange={(num: number) => {
-                    orderDispatch
-                        ? orderDispatch({ type: 'setLeverage', value: num })
-                        : console.error('Dispatch undefined');
-                    const val = document.getElementById('slider-value');
-                    if (val) {
-                        val.innerHTML = `${num} x`;
+                    onChange(num);
+                    if (handleRef.current) {
+                        handleRef.current.innerHTML = `${num} x`;
                     }
                 }}
                 value={leverage}
@@ -113,20 +116,24 @@ export const DefaultSlider: React.FC<DSProps> = styled(({ leverage, className }:
 
 /**
  * Wrapped slider with different sizing
+ *  also allows for having multiple leverage sliders on the same page
  * @param className custom classes
  */
-interface LSProps {
-    className?: string;
-    leverage: number;
-}
-const LeverageSlider: React.FC<LSProps> = styled(({ className, leverage }: LSProps) => {
+
+type LSProps = SProps
+const LeverageSlider: React.FC<LSProps> = styled(({ 
+    className, 
+    leverage,
+    onChange,
+    id
+}: SProps) => {
     return (
-        <div className={className}>
+        <div className={className} id={id}>
             <h3>
                 <Tooltip title={LeverageTip}>Increase Exposure</Tooltip>
             </h3>
             <div className="w-full m-auto py-5 pl-1 pr-4">
-                <DefaultSlider className="slider" leverage={leverage ?? 1} />
+                <DefaultSlider id={id} className="slider" leverage={leverage ?? 1} onChange={onChange} />
             </div>
         </div>
     );

@@ -180,6 +180,8 @@ const Basic: React.FC = styled(({ className }) => {
     const balances = _balances ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
 
+    const [leverage2, setLeverage2] = useState(1);
+
     useEffect(() => {
         // could have equally been checking on the margin variable
         if (order?.amountToBuy || order?.amountToPay) {
@@ -208,7 +210,21 @@ const Basic: React.FC = styled(({ className }) => {
                 {/** Display the variant basic interfaces, workout ab testing for this */}
                 <BasicInterface2 />
 
-                <LeverageSlider leverage={order?.leverage ?? 1} />
+                <LeverageSlider 
+                    leverage={order?.leverage ?? 1} 
+                    onChange={(val) => {
+                        orderDispatch
+                            ? orderDispatch({ type: 'setLeverage', value: val })
+                            : console.error('Dispatch undefined');
+                    }}
+                    id="unique-id"
+                />
+
+                <LeverageSlider 
+                    leverage={leverage2} 
+                    onChange={(val) => setLeverage2(val)}
+                    id="unique-id-2"
+                />
 
                 <OrderSummary
                     balances={balances}
