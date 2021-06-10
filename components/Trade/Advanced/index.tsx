@@ -1,101 +1,21 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { OrderContext, TracerContext, Web3Context } from 'context';
-import LightWeightChart from '@components/Charts/LightWeightChart';
-import Timer from '@components/Timer';
-import OrderBook from '@components/OrderBook/OrderBook';
 import { MarketSelect, TradingInput, AccountPanel } from './TradingPanel';
-import Tracer from '@libs/Tracer';
-import { AccountSummary } from './AccountDetails';
-import { InsuranceInfo } from './RightPanel/InsuranceInfo';
-import SubNav from '@components/Nav/SubNav';
-import { Box } from '@components/General';
 import styled from 'styled-components';
-import RecentTrades from './RightPanel/RecentTrades';
-import { useCandles, useMostRecentMatched } from '@libs/Graph/hooks/Tracer';
-import { CandleData } from 'types/TracerTypes';
-import { OMEContext } from '@context/OMEContext';
+import TradingView from './RightPanel';
 
-const GraphWrap = styled.div`
-    height: 500px;
-    width: calc(100% - 40px);
-    margin-bottom: 20px;
-    padding: 20px;
-`;
-
-const Graphs = () => {
-    const [tab, setTab] = useState(0);
-    const tabs = ['Price', 'Depth', 'Funding', 'Insurance'];
-    const { candles } = useCandles();
-    return (
-        <div className="3/4">
-            <SubNav tabs={tabs} setTab={setTab} selected={tab} />
-            <GraphWrap>
-                <LightWeightChart candleData={candles as CandleData} />
-            </GraphWrap>
-        </div>
-    );
-};
-
-const OrderBookContainer = styled.div`
-    border-top: 1px solid #002886;
-    padding: 10px;
-
-    h3 {
-        letter-spacing: -0.4px;
-        color: #ffffff;
-        text-transform: capitalize;
-        font-size: 20px;
-        margin-bottom: 5px;
-    }
-`;
-
-const TradingView: React.FC<{ selectedTracer: Tracer | undefined }> = ({ selectedTracer }) => {
-    const { omeState } = useContext(OMEContext);
-    const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
-
-    return (
-        <div>
-            <div className="flex">
-                <Box className="w-3/4 flex flex-col p-0">
-                    <Graphs />
-                    <AccountSummary selectedTracer={selectedTracer} />
-                </Box>
-                <Box className="w-1/4 flex flex-col p-0">
-                    <InsuranceInfo />
-                    <OrderBookContainer>
-                        <h3>Order Book</h3>
-                        {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
-                            <>
-                                <Timer />
-                                <OrderBook
-                                    askOrders={omeState.orders.askOrders}
-                                    bidOrders={omeState.orders.bidOrders}
-                                />
-                            </>
-                        ) : (
-                            <p>No open orders</p>
-                        )}
-                    </OrderBookContainer>
-                    <RecentTrades trades={mostRecentTrades} />
-                </Box>
-            </div>
-        </div>
-    );
-};
-
-const LeftPanel = styled.div`
+const TradingPanel = styled.div`
     width: 25%;
     display: flex;
     flex-direction: column;
-    min-height: 90vh;
+    height: 90vh;
     position: relative;
 `;
 
 const RightPanel = styled.div`
     width: 75%;
-    display: flex;
-    flex-direction: column;
-    min-height: 90vh;
+    display: flex:
+    height: 90vh;
 `;
 
 const Overlay = styled.div`
@@ -115,7 +35,7 @@ const Overlay = styled.div`
     }
 `;
 
-const Advanced: React.FC = () => {
+const Advanced: React.FC = styled(({ className }) => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     const { orderDispatch } = useContext(OrderContext);
@@ -130,18 +50,22 @@ const Advanced: React.FC = () => {
     }, []);
 
     return (
-        <div className="container flex h-full">
-            <LeftPanel>
+        <div className={`container ${className}`}>
+            <TradingPanel>
                 <MarketSelect account={account ?? ''} />
                 <TradingInput selectedTracer={selectedTracer} account={account ?? ''} />
                 <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} />
-            </LeftPanel>
+            </TradingPanel>
             <RightPanel>
                 <TradingView selectedTracer={selectedTracer} />
             </RightPanel>
             <Overlay id="trading-overlay" />
         </div>
     );
-};
+})`
+    display: flex;
+    height: 100%;
+    max-height: 90vh;
+`;
 
 export default Advanced;

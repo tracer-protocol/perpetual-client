@@ -1,19 +1,20 @@
 import React from 'react';
 
 interface IProps {
-    rate: number;
+    rate: number; // 0 <= rate <= 1
 }
 
+// TODO update this to fetch funding rate not feeRate
 const FundingRateGraphic: React.FC<IProps> = ({ rate }: IProps) => {
     const fundingRate = rate;
-    const green = Math.abs((-1 - fundingRate) * 10);
-    const red = (1 - fundingRate) * 10;
+    const green = Math.abs((-1 - fundingRate) * 5);
+    const red = (1 - fundingRate) * 5;
 
     function loop(n: number, char: string) {
         const array = [];
         for (let i = 0; i < n; i++) {
             array.push(
-                <span key={`fundingRate-${i}`} className={char === '>' ? 'text-green-900' : 'text-red-900'}>
+                <span key={`fundingRate-${i}`} className={char === '>' ? 'green' : 'red'}>
                     {char}
                 </span>,
             );
@@ -21,11 +22,14 @@ const FundingRateGraphic: React.FC<IProps> = ({ rate }: IProps) => {
         return array;
     }
     return (
-        <React.Fragment>
+        <div className="flex">
             {loop(green, '>')}
-            <span>{'|'}</span>
+            <span className={fundingRate >= 0.5 ? 'green' : 'red'}>{'|'}</span>
             {loop(red, '<')}
-        </React.Fragment>
+            <span className={`${fundingRate >= 0.5 ? 'green' : 'red'} ml-1`}>{`${(fundingRate * 100).toFixed(
+                2,
+            )}%`}</span>
+        </div>
     );
 };
 
