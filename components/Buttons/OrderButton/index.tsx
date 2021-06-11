@@ -3,37 +3,20 @@ import { useToasts } from 'react-toast-notifications';
 import { OrderState, Errors } from '@context/OrderContext';
 import { OrderContext, TracerContext, TransactionContext } from 'context';
 import { Children } from 'types';
-import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
 import { OMEContext } from '@context/OMEContext';
+import { Button } from '@components/General';
+import styled from 'styled-components';
 
-const TradeButton = styled.div`
-    letter-spacing: -0.32px;
-    width: 100%;
-    font-size: 16px;
-    text-align: center;
-    border: 1px solid #3da8f5;
-    border-radius: 10px;
-    padding: 10px 0;
-    background: #000240;
-    color: #3da8f5;
-    transition: 0.3s;
-
-    &:hover {
-        background: #3da8f5;
-        color: #fff;
-        cursor: pointer;
-    }
-
-    .button-disabled &:hover {
+const ParentDisable = styled(Button)`
+    .button-disabled & {
         cursor: not-allowed;
     }
 `;
-
 export const AdvancedOrderButton: React.FC = () => (
     <div className="w-full flex">
         <PlaceOrderButton>
-            <TradeButton>Place Trade</TradeButton>
+            <ParentDisable className="m-auto primary">Place Trade</ParentDisable>
         </PlaceOrderButton>
     </div>
 );

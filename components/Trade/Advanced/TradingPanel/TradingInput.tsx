@@ -13,10 +13,12 @@ import Error from '@components/Trade/Error';
 
 type SProps = {
     selected: number;
+    className?: string;
 };
 
 const SSlideSelect = styled(SlideSelect)`
-    height: 40px;
+    height: 32px;
+    width: 70%;
 `;
 
 const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
@@ -39,10 +41,11 @@ const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
     );
 };
 
-const OrderTypeSelect: React.FC<SProps> = ({ selected }: SProps) => {
+const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }: SProps) => {
     const { orderDispatch } = useContext(OrderContext);
     return (
-        <SSlideSelect
+        <SlideSelect
+            className={className}
             onClick={(index, _e) => {
                 if (orderDispatch) {
                     orderDispatch({ type: 'setOrderType', value: index });
@@ -57,9 +60,21 @@ const OrderTypeSelect: React.FC<SProps> = ({ selected }: SProps) => {
         >
             <Option>MARKET</Option>
             <Option>LIMIT</Option>
-        </SSlideSelect>
+        </SlideSelect>
     );
-};
+})`
+    border-radius: 0;
+    border-bottom: 1px solid #002886;
+    border-top: 0;
+    border-right: 0;
+    border-left: 0;
+    height: 50px;
+
+    > .bg-slider {
+        background: #002886;
+        border-radius: 0;
+    }
+`;
 
 type LProps = {
     leverage: number;
@@ -106,42 +121,38 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
     return (
         <>
             <Box className={`${className} ${account === '' ? 'hide' : ''} `}>
-                <div className="body text-xs">
-                    {/* Position select */}
-                    <div className="py-2">
-                        <OrderTypeSelect selected={order?.orderType ?? 0} />
-                    </div>
+                {/* Position select */}
+                <OrderTypeSelect selected={order?.orderType ?? 0} />
 
-                    {/* Position select */}
-                    <div className="py-2">
-                        <PositionSelect selected={order?.position ?? 0} />
-                    </div>
+                {/* Position select */}
+                <div className="m-5">
+                    <PositionSelect selected={order?.position ?? 0} />
+                </div>
 
-                    {/* Quantity and Price Inputs */}
-                    <InputSelects amount={order?.amountToPay} price={order?.price} selectedTracer={selectedTracer} />
+                {/* Quantity and Price Inputs */}
+                <InputSelects amount={order?.amountToPay} price={order?.price} selectedTracer={selectedTracer} />
 
-                    {/* Dont display these if it is a limit order*/}
-                    {order?.orderType !== 1 ? (
-                        <>
-                            {/* Leverage select */}
-                            <Leverage leverage={order?.leverage ?? 1} />
-                        </>
-                    ) : (
-                        <></>
-                    )}
+                {/* Dont display these if it is a limit order*/}
+                {order?.orderType !== 1 ? (
+                    <>
+                        {/* Leverage select */}
+                        <Leverage leverage={order?.leverage ?? 1} />
+                    </>
+                ) : (
+                    <></>
+                )}
 
-                    <PostTradeDetails
-                        fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
-                        balances={selectedTracer?.getBalance() ?? defaults.balances}
-                        exposure={order?.amountToBuy ? new BigNumber(order.amountToBuy) : defaults.amountToBuy}
-                        position={order?.position ?? 0}
-                        maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                    />
+                <PostTradeDetails
+                    fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
+                    balances={selectedTracer?.getBalance() ?? defaults.balances}
+                    exposure={order?.amountToBuy ? new BigNumber(order.amountToBuy) : defaults.amountToBuy}
+                    position={order?.position ?? 0}
+                    maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                />
 
-                    {/* Place Order */}
-                    <div className="py-1">
-                        <AdvancedOrderButton />
-                    </div>
+                {/* Place Order */}
+                <div className="p-2">
+                    <AdvancedOrderButton />
                 </div>
             </Box>
             <SError error={order?.error ?? -1} account={account} />
@@ -149,9 +160,12 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
     );
 })`
     transition: opacity 0.3s 0.1s, height: 0.3s 0.1s, padding 0.1s;
-    overflow: scroll;
+    overflow: auto;
     position: relative;
     border-bottom: none;
+    background: #00125D;
+    display: block;
+    padding: 0;
     height: 100%;
     &.hide {
         height: 0;
