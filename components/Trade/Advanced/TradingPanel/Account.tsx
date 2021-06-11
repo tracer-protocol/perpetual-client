@@ -252,16 +252,14 @@ const AccountModal: React.FC<AMProps> = styled(
                     </SSection>
                 </SHiddenExpand>
                 <div className="text-center">
-                    {isDeposit
-                        ?
-                            <ApproveButton
-                                disabled={selectedTracer?.getTracerApproved()}
-                                onClick={() => approve(selectedTracer?.address ?? '')}
-                            >
-                                Approve USD
-                            </ApproveButton>
-                        : null
-                    }
+                    {isDeposit ? (
+                        <ApproveButton
+                            disabled={selectedTracer?.getTracerApproved()}
+                            onClick={() => approve(selectedTracer?.address ?? '')}
+                        >
+                            Approve USD
+                        </ApproveButton>
+                    ) : null}
                     <MButton
                         disabled={!selectedTracer?.getTracerApproved()}
                         onClick={() => (isDeposit ? deposit(amount, close) : withdraw(amount, close))}
@@ -483,7 +481,7 @@ const AccountPanel: React.FC<{
             <Item>
                 <div className="flex">
                     <h3>Total Margin</h3>
-                    <SButton className="ml-auto" onClick={() => showCalculator(true)}>
+                    <SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>
                         Calculator
                     </SButton>
                 </div>
