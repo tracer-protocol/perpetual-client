@@ -14,6 +14,7 @@ import { UserBalance } from 'types';
 import Error from '../Error';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
+import DefaultSlider from "@components/Slider";
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;
@@ -209,6 +210,8 @@ const Basic: React.FC = styled(({ className }) => {
                 <BasicInterface2 />
 
                 <LeverageSlider leverage={order?.leverage ?? 1} />
+
+                <DefaultSlider value={order?.leverage ?? 1} />
 
                 <OrderSummary
                     balances={balances}

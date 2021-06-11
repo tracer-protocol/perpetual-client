@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
+const defaultValue = 1;
 const defaultMin = 1;
 const defaultMax = 100;
 
@@ -62,6 +63,7 @@ const DefaultHandle = (e: any) => {
 
 type DSProps = {
     className?: string;
+    value?: number;
     min?: number;
     max?: number;
     marks?: any;
@@ -70,10 +72,11 @@ type DSProps = {
     handleStyle?: React.CSSProperties;
 };
 const DefaultSlider: React.FC<DSProps> = styled(
-    ({ className, min, max, marks, railStyle, trackStyle, handleStyle }: DSProps) => {
+    ({ className, value, min, max, marks, railStyle, trackStyle, handleStyle }: DSProps) => {
         return (
             <div className={className}>
                 <Slider
+                    defaultValue={value ? value : defaultValue}
                     min={min ? min : defaultMin}
                     max={max ? max : defaultMax}
                     marks={marks ? marks : defaultMarks}
