@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import { Children } from 'types';
 import styled from 'styled-components';
 import { BasicInputContainer, Input } from '../';
@@ -43,7 +43,8 @@ type NSProps = {
     balance?: number;
     onChange?: (e: any) => any;
     hasLock?: boolean;
-    locked?: boolean;
+    isLocked?: boolean;
+    lockOnClick?: (e: any) => any;
 } & Children;
 
 export const NumberSelect: React.FC<NSProps> = ({
@@ -55,21 +56,15 @@ export const NumberSelect: React.FC<NSProps> = ({
     balance,
     onChange,
     hasLock,
-    locked,
+    isLocked,
+    lockOnClick,
 }: NSProps) => {
-    const [isLocked, setIsLocked] = useState(locked);
-
-    useEffect(() => {
-        setIsLocked(locked);
-        getLock(hasLock, isLocked);
-    }, [locked]);
-
-    function getLock(hasLock: any, isLocked: any) {
+    const getLock = (hasLock: any) => {
         if (hasLock) {
             if (isLocked) {
                 return (
                     <LockOutlined
-                        onClick={() => setIsLocked(!isLocked)}
+                        onClick={lockOnClick}
                         className="mt-2 mr-2"
                         style={{ color: '#F4AB57', fontSize: '200%' }}
                     />
@@ -77,7 +72,7 @@ export const NumberSelect: React.FC<NSProps> = ({
             } else {
                 return (
                     <UnlockOutlined
-                        onClick={() => setIsLocked(!isLocked)}
+                        onClick={lockOnClick}
                         className="mt-2 mr-2"
                         style={{ color: '#F4AB57', fontSize: '200%' }}
                     />
@@ -86,7 +81,7 @@ export const NumberSelect: React.FC<NSProps> = ({
         } else {
             return null;
         }
-    }
+    };
 
     return (
         <div className={className}>
@@ -114,7 +109,7 @@ export const NumberSelect: React.FC<NSProps> = ({
                     value={!Number.isNaN(amount) ? amount : ''}
                     disabled={isLocked}
                 />
-                {getLock(hasLock, isLocked)}
+                {getLock(hasLock)}
                 <Unit>{unit}</Unit>
             </BasicInputContainer>
         </div>
