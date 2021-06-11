@@ -14,7 +14,7 @@ const ParentDisable = styled(Button)`
     }
 `;
 export const AdvancedOrderButton: React.FC = () => (
-    <div className="w-full flex">
+    <div className="w-full flex text-center">
         <PlaceOrderButton>
             <ParentDisable className="m-auto primary">Place Trade</ParentDisable>
         </PlaceOrderButton>
@@ -75,7 +75,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
     } else {
         return (
             <Tooltip title={Errors[order?.error ?? -1]?.message}>
-                <div className={`button-disabled ${className}`}>{children}</div>
+                <div className={`button-disabled text-center ${className}`}>{children}</div>
             </Tooltip>
         );
     }

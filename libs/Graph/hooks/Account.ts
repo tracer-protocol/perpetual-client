@@ -70,7 +70,6 @@ export const useUsersMatched: (
     loading: any;
     refetch: any;
 } = (tracer, account) => {
-    console.log('Finding orders for: ', tracer.slice(), account.slice());
     const ref = useRef<FilledOrder[]>([]);
     const { data, error, loading, refetch } = useQuery(USER_TRACER_TRADES, {
         variables: { account: account?.toLowerCase(), tracer: tracer.toLowerCase() },
