@@ -54,7 +54,6 @@ export default class Tracer {
     _web3: Web3;
     _oracle: Oracle | undefined;
     _pricing: Pricing | undefined;
-    public accountAddress: string | undefined;
     public address: string;
     public marketId: string;
     public baseTicker: string;
@@ -71,6 +70,8 @@ export default class Tracer {
     public fairPrice: BigNumber;
     public twentyFourHourChange: number;
     public insuranceContract: string;
+    public insuranceApproved: boolean;
+    public tracerApproved: boolean;
 
     constructor(web3: Web3, address: string, marketId: string) {
         this._instance = new web3.eth.Contract(tracerAbi as unknown as AbiItem, address) as unknown as TracerType;
@@ -89,6 +90,8 @@ export default class Tracer {
         this.oraclePrice = defaults.oraclePrice;
         this.fairPrice = defaults.fairPrice;
         this.maxLeverage = defaults.maxLeverage;
+        this.insuranceApproved = false;
+        this.tracerApproved = false;
         this.initialised = this.init(web3);
     }
 
@@ -259,6 +262,17 @@ export default class Tracer {
         return this.token?.methods.approve(contract, Web3.utils.toWei(max.toString())).send({ from: account });
     };
 
+    checkApproved: (account: string) => void = async (account) => {
+        await this.initialised;
+        Promise.all([
+            checkAllowance(this.token, account, this.address),
+            checkAllowance(this.token, account, this.insuranceContract),
+        ]).then((res) => {
+            this.tracerApproved = res[0] !== 0;
+            this.insuranceApproved = res[0] !== 0;
+        });
+    };
+
     getOraclePrice: () => BigNumber = () => {
         return this.oraclePrice;
     };
@@ -281,5 +295,26 @@ export default class Tracer {
 
     get24HourChange: () => number = () => {
         return this.twentyFourHourChange;
+    };
+
+    getTracerApproved: () => boolean = () => {
+        return !!this.tracerApproved;
+    };
+
+    getInsuranceApproved: () => boolean = () => {
+        return !!this.insuranceApproved;
+    };
+
+    setApproved: (address: string) => void = (address) => {
+        switch (address) {
+            case this.address:
+                this.tracerApproved = true;
+                return;
+            case this.insuranceContract:
+                this.insuranceApproved = true;
+                return;
+            default:
+                return;
+        }
     };
 }
