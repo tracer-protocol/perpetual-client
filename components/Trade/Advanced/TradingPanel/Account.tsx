@@ -209,7 +209,7 @@ const AccountModal: React.FC<AMProps> = styled(
             }
             return -1;
         }, [amount]);
-        
+
         return (
             <TracerModal
                 loading={false}
@@ -252,12 +252,16 @@ const AccountModal: React.FC<AMProps> = styled(
                     </SSection>
                 </SHiddenExpand>
                 <div className="text-center">
-                    <ApproveButton
-                        disabled={selectedTracer?.getTracerApproved()}
-                        onClick={() => approve(selectedTracer?.address ?? '')}
-                    >
-                        Approve USD
-                    </ApproveButton>
+                    {isDeposit
+                        ?
+                            <ApproveButton
+                                disabled={selectedTracer?.getTracerApproved()}
+                                onClick={() => approve(selectedTracer?.address ?? '')}
+                            >
+                                Approve USD
+                            </ApproveButton>
+                        : null
+                    }
                     <MButton
                         disabled={!selectedTracer?.getTracerApproved()}
                         onClick={() => (isDeposit ? deposit(amount, close) : withdraw(amount, close))}
