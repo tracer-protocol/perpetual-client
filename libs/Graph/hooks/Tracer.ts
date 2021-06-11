@@ -45,7 +45,7 @@ export const useAllTracers: () => Tracers = () => {
 
 const TRACER_TRADES = gql`
     query Tracer_Trades($tracer: String!) {
-        trades(first: 15, tracer: $tracer, orderBy: timestamp, orderDirection: desc) {
+        trades(first: 15, where: { tracer: $tracer }, orderBy: timestamp, orderDirection: desc) {
             position
             amount
             price
