@@ -380,41 +380,41 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                     lockOnClick={() => setMarginLocked(!marginLocked)}
                 />
 
-                {/*<div>*/}
-                {/*    Leverage:{' '}*/}
-                {/*    {showResult*/}
-                {/*        ? isLong*/}
-                {/*            ? calcLeverage(*/}
-                {/*                  new BigNumber(marginAmount).negated(),*/}
-                {/*                  new BigNumber(exposureAmount),*/}
-                {/*                  new BigNumber(1),*/}
-                {/*              ).toNumber()*/}
-                {/*            : calcLeverage(*/}
-                {/*                  new BigNumber(marginAmount).negated(),*/}
-                {/*                  new BigNumber(-Math.abs(exposureAmount)),*/}
-                {/*                  new BigNumber(1),*/}
-                {/*              ).toNumber()*/}
-                {/*        : null}*/}
-                {/*</div>*/}
+                <div>
+                    Leverage:{' '}
+                    {showResult
+                        ? isLong
+                            ? calcLeverage(
+                                  new BigNumber(marginAmount).negated(),
+                                  new BigNumber(exposureAmount),
+                                  new BigNumber(1),
+                              ).toNumber()
+                            : calcLeverage(
+                                  new BigNumber(marginAmount).negated(),
+                                  new BigNumber(-Math.abs(exposureAmount)),
+                                  new BigNumber(1),
+                              ).toNumber()
+                        : null}
+                </div>
 
-                {/*<div>*/}
-                {/*    Liquidation Price:{' '}*/}
-                {/*    {showResult*/}
-                {/*        ? isLong*/}
-                {/*            ? calcLiquidationPrice(*/}
-                {/*                  new BigNumber(marginAmount).negated(),*/}
-                {/*                  new BigNumber(exposureAmount),*/}
-                {/*                  new BigNumber(1),*/}
-                {/*                  new BigNumber(25),*/}
-                {/*              ).toNumber()*/}
-                {/*            : calcLiquidationPrice(*/}
-                {/*                  new BigNumber(marginAmount).negated(),*/}
-                {/*                  new BigNumber(-Math.abs(exposureAmount)),*/}
-                {/*                  new BigNumber(1),*/}
-                {/*                  new BigNumber(25),*/}
-                {/*              ).toNumber()*/}
-                {/*        : null}*/}
-                {/*</div>*/}
+                <div>
+                    Liquidation Price:{' '}
+                    {showResult
+                        ? isLong
+                            ? calcLiquidationPrice(
+                                  new BigNumber(marginAmount).negated(),
+                                  new BigNumber(exposureAmount),
+                                  new BigNumber(1),
+                                  new BigNumber(25),
+                              ).toNumber()
+                            : calcLiquidationPrice(
+                                  new BigNumber(marginAmount).negated(),
+                                  new BigNumber(-Math.abs(exposureAmount)),
+                                  new BigNumber(1),
+                                  new BigNumber(25),
+                              ).toNumber()
+                        : null}
+                </div>
 
                 <AccountNumberSelect
                     unit={marginUnit}
