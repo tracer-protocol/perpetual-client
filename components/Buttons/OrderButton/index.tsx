@@ -14,7 +14,7 @@ const ParentDisable = styled(Button)`
     }
 `;
 export const AdvancedOrderButton: React.FC = () => (
-    <div className="w-full flex">
+    <div className="w-full flex text-center">
         <PlaceOrderButton>
             <ParentDisable className="m-auto primary">Place Trade</ParentDisable>
         </PlaceOrderButton>
