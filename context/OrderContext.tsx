@@ -89,7 +89,7 @@ const checkErrors: (
     } else if (orders?.length === 0 && order.orderType === 0) {
         // there are no orders
         return 3;
-    } else if (!balances?.base.eq(0) && order.orderType === 0) {
+    } else if (!balances?.base.eq(0) && order.orderType === 0 && !order.advanced) {
         // user has a position already
         return 0;
     } else if (balances?.tokenBalance.eq(0) && !order.advanced) {
