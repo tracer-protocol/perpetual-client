@@ -162,6 +162,14 @@ const SButton = styled(Button)`
     padding: 0;
 `;
 
+const ApproveButton = styled(Button)`
+    width: 80%;
+    margin: 1rem auto;
+    height: 40px;
+    border: 1px solid #ffffff;
+    color: #fff;
+`;
+
 type AMProps = {
     className?: string;
     close: () => any;
@@ -179,6 +187,8 @@ const AccountModal: React.FC<AMProps> = styled(
         const {
             deposit = () => console.error('Deposit is not defined'),
             withdraw = () => console.error('Withdraw is not defined'),
+            approve = () => console.error('Approve is not defined'),
+            selectedTracer,
         } = useContext(TracerContext);
         const [amount, setAmount] = useState(NaN);
         const available = isDeposit
@@ -199,6 +209,7 @@ const AccountModal: React.FC<AMProps> = styled(
             }
             return -1;
         }, [amount]);
+        
         return (
             <TracerModal
                 loading={false}
@@ -240,9 +251,20 @@ const AccountModal: React.FC<AMProps> = styled(
                         {`${toApproxCurrency(calcMinimumMargin(newBalance, balances.base, price, maxLeverage))}`}
                     </SSection>
                 </SHiddenExpand>
-                <MButton onClick={() => (isDeposit ? deposit(amount, close) : withdraw(amount, close))}>
-                    {isDeposit ? 'Deposit' : 'Withdraw'}
-                </MButton>
+                <div className="text-center">
+                    <ApproveButton
+                        disabled={selectedTracer?.getTracerApproved()}
+                        onClick={() => approve(selectedTracer?.address ?? '')}
+                    >
+                        Approve USD
+                    </ApproveButton>
+                    <MButton
+                        disabled={!selectedTracer?.getTracerApproved()}
+                        onClick={() => (isDeposit ? deposit(amount, close) : withdraw(amount, close))}
+                    >
+                        {isDeposit ? 'Deposit' : 'Withdraw'}
+                    </MButton>
+                </div>
                 <Error error={checkErrors()} />
             </TracerModal>
         );
