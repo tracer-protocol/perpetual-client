@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const BGSlider = styled.div<{ position: number; width: number }>`
     transition: 0.5s;
     background-color: #3da8f5;
-    height: 39px;
+    height: 100%;
     width: ${(props) => props.width}%;
     border-radius: 18px;
     position: absolute;
@@ -40,7 +40,7 @@ const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, clas
                     </SlideOption>
                 );
             })}
-            <BGSlider position={calcPosition(numChildren)} width={(1 / numChildren) * 100} />
+            <BGSlider className="bg-slider" position={calcPosition(numChildren)} width={(1 / numChildren) * 100} />
         </div>
     );
 })`

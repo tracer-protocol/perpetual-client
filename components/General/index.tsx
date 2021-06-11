@@ -52,12 +52,14 @@ export const Button = styled.div`
         color: #3da8f5;
     }
 
-    &.disabled {
+    &.disabled,
+    .button-disabled {
         opacity: 0.8;
     }
 
-    &.disabled:hover {
-        cursor: not-allowed;
+    &.disabled:hover,
+    .button-disabled:hover {
+        cursor: not-allowed !important;
     }
 `;
 
