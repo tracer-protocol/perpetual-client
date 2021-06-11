@@ -149,7 +149,7 @@ const Fills: React.FC<{
                     return (
                         <TRow key={`filled-order-${index}`}>
                             <TData>{timeAgo(now, parseInt(order.timestamp))}</TData>
-                            <TData className={!!order.position ? 'bid' : 'ask'}>
+                            <TData className={!!order.position ? 'ask' : 'bid'}>
                                 {!!order.position ? 'Short' : 'Long'}
                             </TData>
                             <TData>{order.amount.toNumber()}</TData>

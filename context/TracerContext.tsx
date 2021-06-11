@@ -123,6 +123,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 fetchUserData();
                 callback_ ? callback_() : null;
             };
+
+            console.log(account?.slice(), contract.slice())
             handleTransaction(selectedTracer.approve, [account, contract], {
                 callback,
             });
