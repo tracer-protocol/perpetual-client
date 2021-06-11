@@ -8,6 +8,7 @@ export const Input = styled.input`
     letter-spacing: 0;
     color: #ffffff;
     width: 100%;
+
     &::placeholder {
         /* Chrome, Firefox, Opera, Safari 10.1+ */
         color: #fff;
@@ -46,7 +47,7 @@ export const Checkbox: React.FC<CProps> = styled(({ className, checked, onClick 
     return (
         <span className={className} onClick={onClick}>
             <input type="checkbox" checked={checked} readOnly />
-            <span className="checkmark"/>
+            <span className="checkmark" />
         </span>
     );
 })`

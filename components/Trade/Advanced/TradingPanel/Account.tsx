@@ -89,7 +89,7 @@ const AccountInfo = styled(Box)`
     flex-direction: column;
 `;
 
-const SNumberSelect = styled(NumberSelect)`
+const AccountNumberSelect = styled(NumberSelect)`
     margin-top: 1rem;
     > * .balance {
         color: #3da8f5;
@@ -125,6 +125,7 @@ const SPrevious = styled(Previous)`
         margin: auto;
     }
 `;
+
 const MButton = styled(Button)`
     width: 80%;
     margin: auto;
@@ -210,7 +211,7 @@ const AccountModal: React.FC<AMProps> = styled(
                     <Option>Deposit</Option>
                     <Option>Withdraw</Option>
                 </SSlideSelect>
-                <SNumberSelect
+                <AccountNumberSelect
                     unit={unit}
                     title={'Amount'}
                     amount={amount}
@@ -290,6 +291,9 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
         const [isLong, setPosition] = useState(true);
         const [showResult, setShowResult] = useState(false);
 
+        const [exposureLocked, setExposureLocked] = useState(false);
+        const [marginLocked, setMarginLocked] = useState(false);
+
         const Calculate = () => {
             if (isLong) {
                 setLiquidationAmount(
@@ -318,6 +322,9 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
             setMarginAmount(NaN);
             setLiquidationAmount(NaN);
             setShowResult(false);
+
+            setExposureLocked(false);
+            setMarginLocked(false);
         };
 
         const ChangeExposure = (e: any) => {
@@ -350,21 +357,25 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                     </CalcSlideSelect>
                 </CalcSelectContainer>
 
-                <SNumberSelect
+                <AccountNumberSelect
                     unit={exposureUnit}
                     title={'Exposure'}
                     amount={exposureAmount}
                     setAmount={setExposureAmount}
                     onChange={ChangeExposure}
+                    hasLock={true}
+                    locked={exposureLocked}
                 />
 
-                <SNumberSelect
+                <AccountNumberSelect
                     unit={marginUnit}
                     title={'Margin'}
                     amount={marginAmount}
                     balance={balances.tokenBalance.toNumber()}
                     setAmount={setMarginAmount}
                     onChange={ChangeMargin}
+                    hasLock={true}
+                    locked={marginLocked}
                 />
 
                 <div>
@@ -403,7 +414,7 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                         : null}
                 </div>
 
-                <SNumberSelect
+                <AccountNumberSelect
                     unit={marginUnit}
                     title={'Liquidation Price'}
                     amount={liquidationAmount}
