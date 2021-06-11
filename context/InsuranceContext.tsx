@@ -158,15 +158,14 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             console.error('Failed to withdraw: Selected tracer address is undefined');
         } else if (!account) {
             console.error('Failed to withdraw: No connected account');
-        } else if (handleTransaction && !!selectedTracer) {
+        } else if (handleTransaction && !!selectedTracer && !!contract) {
             const approved = await selectedTracer?.checkAllowance(account, selectedTracer.insuranceContract);
             if (approved === 0) {
                 // not approved
                 handleTransaction(selectedTracer?.approve, [account, selectedTracer.insuranceContract]);
             }
             const callFunc: (amount: number) => PromiEvent<TransactionReceipt> = (amount: number) =>
-                // @ts-ignore
-                contract?.methods.deposit(Web3.utils.toWei(amount.toString())).send({ from: account });
+                contract?.methods.deposit(Web3.utils.toWei(amount.toString())).send({ from: account }) as PromiEvent<TransactionReceipt>;
             handleTransaction(callFunc, [amount], {
                 callback: () => {
                     updatePoolBalances();
