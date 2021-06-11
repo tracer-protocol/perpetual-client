@@ -13,6 +13,7 @@ interface ContextProps {
     tracerId: string | undefined;
     deposit: (amount: number, _callback?: () => void) => void;
     withdraw: (amount: number, _callback?: () => void) => void;
+    approve: (contract: string, _callback?: () => void) => void;
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
     balances: UserBalance;
@@ -24,6 +25,7 @@ export const TracerContext = React.createContext<Partial<ContextProps>>({} as Co
 type TracerState = {
     selectedTracer: Tracer | undefined;
     balances: UserBalance;
+    userApproved: boolean;
 };
 
 type StoreProps = {
@@ -38,6 +40,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     const initialState: TracerState = {
         selectedTracer: undefined,
         balances: defaults.balances,
+        userApproved: false,
     };
 
     const reducer = (state: TracerState, action: Record<string, any>) => {
@@ -46,6 +49,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 return { ...state, selectedTracer: action.value };
             case 'setUserBalance':
                 return { ...state, balance: action.value };
+            case 'setUserApproved':
+                return { ...state, userApproved: true };
             default:
                 throw new Error('Unexpected action');
         }
@@ -76,6 +81,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     const fetchUserData = async () => {
         if (factoryState?.hasSetTracers) {
             const userData = await selectedTracer?.updateUserBalance(account);
+            await selectedTracer?.checkApproved(account);
             tracerDispatch({ type: 'setUserBalance', value: userData });
         }
     };
@@ -106,6 +112,25 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     };
 
+    const approve = async (contract: string, callback_?: () => any) => {
+        if (handleTransaction) {
+            if (!contract) {
+                console.error('Failed to approve: contract is undefined');
+                return false;
+            }
+            const callback = () => {
+                selectedTracer?.setApproved(contract);
+                fetchUserData();
+                callback_ ? callback_() : null;
+            };
+            handleTransaction(selectedTracer.approve, [account, contract], {
+                callback,
+            });
+        } else {
+            console.error(`Failed to approve: handleTransaction is undefined `);
+        }
+    };
+
     const deposit = async (amount: number, _callback?: () => any) => {
         if (handleTransaction) {
             const approved = await selectedTracer?.checkAllowance(account, selectedTracer.address);
@@ -122,9 +147,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             };
             handleTransaction(selectedTracer?.deposit, [amount, account], { callback });
         } else {
-            console.error(`Failed to widthdraw handleTransaction is undefined `);
+            console.error(`Failed to deposit: handleTransaction is undefined `);
         }
-        handleTransaction;
     };
     const withdraw = async (amount: number, _callback?: () => any) => {
         const callback = async (res: Result) => {
@@ -163,6 +187,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 tracerId,
                 deposit: (amount, _callback) => deposit(amount, _callback),
                 withdraw: (amount, _callback) => withdraw(amount, _callback),
+                approve: (contract, _callback) => approve(contract, _callback),
                 setTracerId: (tracerId: string) =>
                     tracerDispatch({ type: 'setSelectedTracer', value: factoryState?.tracers?.[tracerId] }),
                 selectedTracer,
