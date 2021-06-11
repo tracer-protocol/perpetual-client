@@ -159,10 +159,10 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         } else if (!account) {
             console.error('Failed to withdraw: No connected account');
         } else if (handleTransaction && !!selectedTracer && !!contract) {
-            const approved = await selectedTracer?.checkAllowance(account, selectedTracer.insuranceContract);
+            const approved = await selectedTracer?.checkAllowance(account, selectedTracer.getInsuranceContract());
             if (approved === 0) {
                 // not approved
-                handleTransaction(selectedTracer?.approve, [account, selectedTracer.insuranceContract]);
+                handleTransaction(selectedTracer?.approve, [account, selectedTracer.getInsuranceContract()]);
             }
             const callFunc: (amount: number) => PromiEvent<TransactionReceipt> = (amount: number) =>
                 contract?.methods.deposit(Web3.utils.toWei(amount.toString())).send({ from: account }) as PromiEvent<TransactionReceipt>;
