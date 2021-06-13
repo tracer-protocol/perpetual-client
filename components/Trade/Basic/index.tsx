@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext } from 'context';
-import LeverageSlider from '@components/Trade/LeverageSlider';
 import BasicInterface2 from '@components/Trade/Basic/BasicInterface2';
 import { SlideSelect, PlaceOrderButton } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
