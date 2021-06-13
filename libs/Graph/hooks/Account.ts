@@ -48,12 +48,15 @@ export const useAccountData: (user: string | undefined) => any = (user) => {
 };
 
 const USER_TRACER_TRADES = gql`
-    query Tracer_Trades($account: String!, $tracer: String!) {
-        trades(trader: $account, tracer: $tracer) {
+    query Tracer_Trades($account: String, $tracer: String) {
+        trades(where: { trader: $account, tracer: $tracer }) {
             position
             amount
             price
             timestamp
+            trader {
+                id
+            }
         }
     }
 `;
@@ -88,7 +91,7 @@ export const useUsersMatched: (
 
 const USER_TRADES = gql`
     query Tracer_Trades($account: String!) {
-        trades(trader: $account, orderBy: timestamp, orderDirection: desc) {
+        trades(where: { trader: $account }, orderBy: timestamp, orderDirection: desc) {
             position
             amount
             price

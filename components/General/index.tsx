@@ -24,7 +24,7 @@ export const Box = styled.div`
     padding: 20px;
 `;
 
-export const Button = styled.div`
+export const Button = styled.button`
     transition: 0.3s;
     color: #3da8f5;
     font-size: 1rem;
@@ -35,6 +35,14 @@ export const Button = styled.div`
     text-align: center;
     padding: 10px 0;
     width: 160px;
+    margin: auto;
+
+    &:focus,
+    &:active {
+        border: 1px solid #fff;
+        outline: 0px;
+        box-shadow: none;
+    }
 
     &:hover {
         cursor: pointer;
@@ -52,12 +60,20 @@ export const Button = styled.div`
         color: #3da8f5;
     }
 
-    &.disabled {
+    &:disabled,
+    &[disabled] {
+        opacity: 0.8;
+        cursor: not-allowed;
+    }
+
+    &.disabled,
+    .button-disabled {
         opacity: 0.8;
     }
 
-    &.disabled:hover {
-        cursor: not-allowed;
+    &.disabled:hover,
+    .button-disabled:hover {
+        cursor: not-allowed !important;
     }
 `;
 

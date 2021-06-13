@@ -30,7 +30,7 @@ export const Errors: Record<number, Error> = {
     2: {
         name: 'No Margin Balance',
         message:
-            'You have nothing in your margin account. Use your wallet account or deposit to your margin account by switching to',
+            'Please deposit into your margin account'
     },
     3: {
         name: 'No Orders',
@@ -89,7 +89,7 @@ const checkErrors: (
     } else if (orders?.length === 0 && order.orderType === 0) {
         // there are no orders
         return 3;
-    } else if (!balances?.base.eq(0) && order.orderType === 0) {
+    } else if (!balances?.base.eq(0) && order.orderType === 0 && !order.advanced) {
         // user has a position already
         return 0;
     } else if (balances?.tokenBalance.eq(0) && !order.advanced) {

@@ -63,7 +63,6 @@ const HealthCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
 })``;
 
 const ButtonContainer = styled.div`
-    display: flex;
     margin-top: 5rem;
 `;
 
