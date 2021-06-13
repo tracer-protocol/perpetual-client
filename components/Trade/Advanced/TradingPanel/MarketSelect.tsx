@@ -58,6 +58,7 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
     height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 80}px` : '0')};
+
     > .market {
         // eventually this will have to change to be dynamic as more markets get added
         // this can be done with jQuery and a useEffect when tracers is updated and setting nth-child attr
@@ -111,7 +112,7 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
         margin-top: -5px;
         display: inline-block;
         transition: 0.3s;
-        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-3px)' : 'translateY(-2px)')};
+        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
     }
 `;
 

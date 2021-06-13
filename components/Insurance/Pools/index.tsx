@@ -11,15 +11,6 @@ import { InsuranceModal } from '@components/Modals/InsuranceModal';
 import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
 import { toPercent } from '@libs/utils';
 
-const Teaser = styled.div`
-    color: #fff;
-    height: 3vh;
-
-    &.column {
-        flex-direction: column;
-    }
-`;
-
 const Hidden = styled.div`
     color: #3da8f5;
     opacity: 0;
@@ -47,9 +38,7 @@ type CProps = {
 const HealthCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
     return (
         <div className={className}>
-            <Teaser>
-                <SProgressBar percent={pool?.health.toNumber()} />
-            </Teaser>
+            <SProgressBar percent={pool?.health.toNumber()} />
             <Hidden>
                 <Breakdown
                     target={pool.target.toNumber()}
@@ -87,10 +76,8 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
     };
     return (
         <div className={className}>
-            <Teaser className="column">
-                <span>{pool.userBalance.toNumber()} iTokens</span>
-                <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
-            </Teaser>
+            <span>{pool.userBalance.toNumber()} iTokens</span>
+            <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
             <Hidden>
                 <ButtonContainer>
                     <Button className="primary mr-3" onClick={(_e: any) => openModal('Deposit')}>
@@ -115,7 +102,7 @@ const Collapsible = styled.div`
     }
 `;
 
-const Market = styled.div`
+const MarketNameContainer = styled.div`
     display: flex;
     align-items: center;
 `;
@@ -182,13 +169,13 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                             className={show ? 'selected' : ''}
                             onClick={(e) => onClick(e, i)}
                         >
-                            <TableCell className="vertical-centre">
-                                <Collapsible className={show ? 'show' : ''}>
-                                    <Market>
+                            <TableCell>
+                                <Collapsible>
+                                    <MarketNameContainer>
                                         <SDownCaret />
                                         <Logo className="ml-2" ticker="ETH" />
                                         <span className="ml-2">{pool.market}</span>
-                                    </Market>
+                                    </MarketNameContainer>
                                 </Collapsible>
                             </TableCell>
                             <TableCell>
@@ -200,7 +187,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                                 </Collapsible>
                             </TableCell>
                             <TableCell>
-                                <Collapsible>
+                                <Collapsible className="pt-1">
                                     <OwnershipCell pool={pool} />
                                 </Collapsible>
                             </TableCell>
