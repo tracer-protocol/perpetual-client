@@ -20,6 +20,7 @@
         "graphql": "^15.4.0",
         "lightweight-charts": "^3.1.5",
         "next": "^10.0.9",
+        "rc-slider": "^9.7.2",
         "react": "^16.13.1",
         "react-apollo-network-status": "^5.0.1",
         "react-dom": "^16.13.1",
