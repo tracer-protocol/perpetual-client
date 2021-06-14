@@ -131,14 +131,17 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 {/* Quantity and Price Inputs */}
                 <InputSelects amount={order?.amountToPay} price={order?.price} selectedTracer={selectedTracer} />
 
-                {/* Dont display these if it is a limit order*/}
-                {order?.orderType !== 1 ? (
-                    <>
-                        <Leverage leverage={order?.leverage ?? 1} />
-                    </>
-                ) : (
-                    <></>
-                )}
+                {/*/!* Dont display these if it is a limit order*!/*/}
+                {/*{order?.orderType !== 1 ? (*/}
+                {/*    <>*/}
+                {/*        <Leverage leverage={order?.leverage ?? 1} />*/}
+                {/*    </>*/}
+                {/*) : (*/}
+                {/*    <></>*/}
+                {/*)}*/}
+
+                {/* Display for both market orders and limit orders */}
+                <Leverage leverage={order?.leverage ?? 1} />
 
                 <PostTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
