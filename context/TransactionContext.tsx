@@ -5,13 +5,15 @@ import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
 import { TransactionReceipt } from 'web3/types';
 
-type Options = {
-    callback?: (res: Result) => any; // eslint-disable-line
+export type Options = {
+    callback?: (...args: any) => any; // eslint-disable-line
+    afterConfirmation?: (hash: string) => any;
     statusMessages?: {
-        waiting?: string;
-        error?: string;
-        success?: string;
-        pending?: string;
+        waiting?: string; // transaction message for when we are waiting for the user to confirm
+        error?: string; // transaction message for when the transaction fails
+        success?: string; // transaction message for when the transaction succeeds
+        pending?: string; // transaction message for when the transaction is pending
+        userConfirmed?: string; // transaction method for when user confirms through provider
     };
 };
 type HandleTransactionType =
@@ -47,9 +49,9 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
 
     /** Specifically handles transactions */
     const handleTransaction: HandleTransactionType = async (callMethod, params, options) => {
-        const { statusMessages, callback } = options ?? {};
+        const { statusMessages, callback, afterConfirmation } = options ?? {};
         // actually returns a string error in the library
-        const toastId = addToast(
+        let toastId = addToast(
             ['Pending Transaction', statusMessages?.waiting ?? 'Approve transaction with provider'],
             {
                 appearance: 'loading' as AppearanceTypes,
@@ -58,11 +60,20 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         );
         const res = callMethod(...params);
         res.on('transactionHash', (hash) => {
+            afterConfirmation ? afterConfirmation(hash) : null;
             updateToast(toastId as unknown as string, {
-                content: ['Pending Transaction', statusMessages?.pending ?? `Waiting for transaction ${hash}`],
-                appearance: 'loading' as AppearanceTypes,
-                autoDismiss: false,
+                content: ['Transaction submitted', statusMessages?.userConfirmed ?? `Transaction submitted ${hash}`],
+                appearance: 'success' as AppearanceTypes,
+                autoDismiss: true,
             });
+            toastId = addToast(
+                ['Pending Transaction', statusMessages?.pending ?? 'Transaction pending'],
+                {
+                    appearance: 'loading' as AppearanceTypes,
+                    autoDismiss: false,
+                },
+            );
+
         })
             .on('receipt', (receipt) => {
                 updateToast(toastId as unknown as string, {

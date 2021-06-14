@@ -1,5 +1,4 @@
 import React, { MouseEvent, useEffect, useRef } from 'react';
-import TracerLoading from '@components/TracerLoading';
 
 import styled from 'styled-components';
 import { Close } from '../General';
@@ -20,6 +19,7 @@ export const Title = styled.h3`
     font-size: 20px;
     line-height: 40px;
     letter-spacing: -0.4px;
+    display: inline-block;
     color: #ffffff;
 `;
 
@@ -29,7 +29,15 @@ export const SubTitle = styled.p`
     letter-spacing: -0.32px;
     color: #3da8f5;
     margin: 1rem 0;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #002886;
 `;
+
+const Logo = styled.img`
+    height: 55px;
+    margin: auto;
+    margin-top: 3rem;
+`
 
 const Header = styled.div`
     display: flex;
@@ -72,15 +80,15 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
                         <Title>{props.title}</Title>
                         <Close onClick={props.onClose} />
                     </Header>
+                    { props.subTitle ? <SubTitle>{props.subTitle}</SubTitle> : null }
                     {!props.loading ? (
                         <>
                             {/* body */}
                             {props.children}
                         </>
                     ) : (
-                        <div className="m-auto text-blue-100">
-                            <TracerLoading />
-                            <div className="pt-2">...processing...</div>
+                        <div className="m-auto">
+                            <Logo src="/img/tracer-logo-no-text.png" />
                         </div>
                     )}
                 </div>
@@ -115,6 +123,7 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
         margin: auto;
         overflow: scroll;
         max-height: 80vh;
+        min-height: 280px;
     }
     > .content.show {
         opacity: 1;

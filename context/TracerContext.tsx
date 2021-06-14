@@ -7,13 +7,13 @@ import { OrderState } from './OrderContext';
 import Web3 from 'web3';
 import { orderToOMEOrder, OrderData, signOrdersV4 } from '@tracer-protocol/tracer-utils';
 import Tracer from '@libs/Tracer';
-import { TransactionContext } from './TransactionContext';
+import { TransactionContext, Options } from './TransactionContext';
 import { defaults } from '@libs/Tracer';
 interface ContextProps {
     tracerId: string | undefined;
     deposit: (amount: number, _callback?: () => void) => void;
     withdraw: (amount: number, _callback?: () => void) => void;
-    approve: (contract: string, _callback?: () => void) => void;
+    approve: (contract: string, options: Options) => void;
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
     balances: UserBalance;
@@ -112,7 +112,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     };
 
-    const approve = async (contract: string, callback_?: () => any) => {
+    const approve = async (contract: string, options: Options) => {
+        let { callback: callback_ } = options ?? {};
         if (handleTransaction) {
             if (!contract) {
                 console.error('Failed to approve: contract is undefined');
@@ -125,7 +126,12 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             };
 
             handleTransaction(selectedTracer.approve, [account, contract], {
-                callback,
+                ...options,
+                callback, 
+                statusMessages: {
+                    userConfirmed: 'Unlock USDC Submitted',
+                    pending: 'Transaction to unlock USDC is pending'
+                }
             });
         } else {
             console.error(`Failed to approve: handleTransaction is undefined `);
@@ -146,7 +152,12 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                     _callback ? _callback() : null;
                 }
             };
-            handleTransaction(selectedTracer?.deposit, [amount, account], { callback });
+            handleTransaction(selectedTracer?.deposit, [amount, account], { 
+                callback,
+                statusMessages: {
+                    pending: 'Transaction to deposit USDC is pending'
+                }
+            });
         } else {
             console.error(`Failed to deposit: handleTransaction is undefined `);
         }
@@ -160,7 +171,12 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             }
         };
         handleTransaction
-            ? handleTransaction(selectedTracer?.withdraw, [amount, account], { callback })
+            ? handleTransaction(selectedTracer?.withdraw, [amount, account], { 
+                callback,
+                statusMessages: {
+                    pending: 'Transaction to withdraw USDC is pending'
+                }
+            })
             : console.error(`Failed to widthdraw handleTransaction is undefined `);
     };
 
@@ -188,7 +204,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 tracerId,
                 deposit: (amount, _callback) => deposit(amount, _callback),
                 withdraw: (amount, _callback) => withdraw(amount, _callback),
-                approve: (contract, _callback) => approve(contract, _callback),
+                approve: (contract, options) => approve(contract, options),
                 setTracerId: (tracerId: string) =>
                     tracerDispatch({ type: 'setSelectedTracer', value: factoryState?.tracers?.[tracerId] }),
                 selectedTracer,
