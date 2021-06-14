@@ -210,13 +210,17 @@ const AccountModal: React.FC<AMProps> = styled(
             return -1;
         }, [amount]);
 
+        const handleClose = () => {
+            setAmount(NaN);
+            close();
+        };
         return (
             <TracerModal
                 loading={false}
                 className={className}
                 show={display}
                 title={`${isDeposit ? 'Deposit' : 'Withdraw'} Margin`}
-                onClose={close}
+                onClose={() => handleClose()}
             >
                 <SSlideSelect value={isDeposit ? 0 : 1} onClick={(val) => setDeposit(val === 0)}>
                     <Option>Deposit</Option>
@@ -252,19 +256,17 @@ const AccountModal: React.FC<AMProps> = styled(
                     </SSection>
                 </SHiddenExpand>
                 <div className="text-center">
-                    {isDeposit
-                        ?
-                            <ApproveButton
-                                disabled={selectedTracer?.getTracerApproved()}
-                                onClick={() => approve(selectedTracer?.address ?? '')}
-                            >
-                                Approve USD
-                            </ApproveButton>
-                        : null
-                    }
+                    {isDeposit ? (
+                        <ApproveButton
+                            disabled={selectedTracer?.getTracerApproved()}
+                            onClick={() => approve(selectedTracer?.address ?? '')}
+                        >
+                            Approve USD
+                        </ApproveButton>
+                    ) : null}
                     <MButton
                         disabled={!selectedTracer?.getTracerApproved()}
-                        onClick={() => (isDeposit ? deposit(amount, close) : withdraw(amount, close))}
+                        onClick={() => (isDeposit ? deposit(amount, handleClose) : withdraw(amount, handleClose))}
                     >
                         {isDeposit ? 'Deposit' : 'Withdraw'}
                     </MButton>
