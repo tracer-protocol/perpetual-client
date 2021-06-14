@@ -113,7 +113,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     };
 
     const approve = async (contract: string, options: Options) => {
-        let { callback: callback_ } = options ?? {};
+        const { callback: callback_ } = options ?? {};
         if (handleTransaction) {
             if (!contract) {
                 console.error('Failed to approve: contract is undefined');
@@ -127,11 +127,11 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
             handleTransaction(selectedTracer.approve, [account, contract], {
                 ...options,
-                callback, 
+                callback,
                 statusMessages: {
                     userConfirmed: 'Unlock USDC Submitted',
-                    pending: 'Transaction to unlock USDC is pending'
-                }
+                    pending: 'Transaction to unlock USDC is pending',
+                },
             });
         } else {
             console.error(`Failed to approve: handleTransaction is undefined `);
@@ -152,32 +152,34 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                     _callback ? _callback() : null;
                 }
             };
-            handleTransaction(selectedTracer?.deposit, [amount, account], { 
+            handleTransaction(selectedTracer?.deposit, [amount, account], {
                 callback,
                 statusMessages: {
-                    pending: 'Transaction to deposit USDC is pending'
-                }
+                    pending: 'Transaction to deposit USDC is pending',
+                },
             });
         } else {
             console.error(`Failed to deposit: handleTransaction is undefined `);
         }
     };
     const withdraw = async (amount: number, _callback?: () => any) => {
-        const callback = async (res: Result) => {
-            if (res.status !== 'error') {
-                const balance = await selectedTracer?.updateUserBalance(account);
-                tracerDispatch({ type: 'setUserBalance', value: balance });
-                _callback ? _callback() : null;
-            }
-        };
-        handleTransaction
-            ? handleTransaction(selectedTracer?.withdraw, [amount, account], { 
+        if (handleTransaction) {
+            const callback = async (res: Result) => {
+                if (res.status !== 'error') {
+                    const balance = await selectedTracer?.updateUserBalance(account);
+                    tracerDispatch({ type: 'setUserBalance', value: balance });
+                    _callback ? _callback() : null;
+                }
+            };
+            handleTransaction(selectedTracer?.withdraw, [amount, account], {
                 callback,
                 statusMessages: {
-                    pending: 'Transaction to withdraw USDC is pending'
-                }
-            })
-            : console.error(`Failed to widthdraw handleTransaction is undefined `);
+                    pending: 'Transaction to withdraw USDC is pending',
+                },
+            });
+        } else {
+            console.error(`Failed to widthdraw handleTransaction is undefined `);
+        }
     };
 
     useEffect(() => {

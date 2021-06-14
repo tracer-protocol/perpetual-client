@@ -100,48 +100,48 @@ type AMProps = {
 };
 
 type ModalState = {
-    amount: number,
-    loading: boolean,
-    title: string,
-    subTitle: string
+    amount: number;
+    loading: boolean;
+    title: string;
+    subTitle: string;
 };
 type ModalAction =
-    { type: 'setAmount'; amount: number }
-    | { type: 'setTitles'; title: string, subTitle: string }
-    | { type: 'setLoading'; loading: boolean }
+    | { type: 'setAmount'; amount: number }
+    | { type: 'setTitles'; title: string; subTitle: string }
+    | { type: 'setLoading'; loading: boolean };
 
 const initialState: ModalState = {
     amount: NaN,
     loading: false,
-    title: "Deposit Margin",
-    subTitle: ""
-}
+    title: 'Deposit Margin',
+    subTitle: '',
+};
 
 const reducer = (state: ModalState, action: ModalAction) => {
     switch (action.type) {
         case 'setAmount': {
             return {
                 ...state,
-                amount: action.amount
-            }
+                amount: action.amount,
+            };
         }
         case 'setTitles': {
             return {
                 ...state,
                 title: action.title,
-                subTitle: action.subTitle
-            }
+                subTitle: action.subTitle,
+            };
         }
         case 'setLoading': {
             return {
                 ...state,
-                loading: action.loading
-            }
+                loading: action.loading,
+            };
         }
         default:
             throw new Error('Unexpected action');
     }
-}
+};
 
 export default styled(
     ({ className, close, isDeposit, unit, balances, price, maxLeverage, display, setDeposit }: AMProps) => {
@@ -181,11 +181,11 @@ export default styled(
 
         useMemo(() => {
             if (isDeposit) {
-                dispatch({ type: 'setTitles', title: 'Deposit Margin', subTitle: ''});
+                dispatch({ type: 'setTitles', title: 'Deposit Margin', subTitle: '' });
             } else {
-                dispatch({ type: 'setTitles', title: 'Withdraw Margin', subTitle: ''});
+                dispatch({ type: 'setTitles', title: 'Withdraw Margin', subTitle: '' });
             }
-        }, [isDeposit])
+        }, [isDeposit]);
 
         return (
             <TracerModal
@@ -205,7 +205,7 @@ export default styled(
                     title={'Amount'}
                     amount={state.amount}
                     balance={available.toNumber()}
-                    setAmount={(amount: number) => dispatch({ type: 'setAmount', amount: amount})}
+                    setAmount={(amount: number) => dispatch({ type: 'setAmount', amount: amount })}
                 />
                 <Balance display={!!state.amount}>
                     <span className="mr-3">Balance</span>
@@ -230,41 +230,39 @@ export default styled(
                     </SSection>
                 </SHiddenExpand>
                 <div className="text-center">
-                    {isDeposit && !selectedTracer?.getTracerApproved()
-                        ?
-                            <ApproveButton
-                                disabled={selectedTracer?.getTracerApproved()}
-                                onClick={() => { 
-                                    dispatch({type: 'setLoading', loading: true });
-                                    dispatch({
-                                        type: 'setTitles', 
-                                        title: "Waiting for Confirmation",
-                                        subTitle: 'Confirm the transaction in your wallet to unlock USD'
-                                    });
-                                    approve(
-                                        selectedTracer?.address ?? '', {
-                                            afterConfirmation: () => {
-                                                dispatch({type: 'setLoading', loading: false })
-                                            }
-                                        }
-                                    )
-                                }}
-                            >
-                                Approve USD
-                            </ApproveButton>
-                        : null
-                    }
+                    {isDeposit && !selectedTracer?.getTracerApproved() ? (
+                        <ApproveButton
+                            disabled={selectedTracer?.getTracerApproved()}
+                            onClick={() => {
+                                dispatch({ type: 'setLoading', loading: true });
+                                dispatch({
+                                    type: 'setTitles',
+                                    title: 'Waiting for Confirmation',
+                                    subTitle: 'Confirm the transaction in your wallet to unlock USD',
+                                });
+                                approve(selectedTracer?.address ?? '', {
+                                    afterConfirmation: () => {
+                                        dispatch({ type: 'setLoading', loading: false });
+                                    },
+                                });
+                            }}
+                        >
+                            Approve USD
+                        </ApproveButton>
+                    ) : null}
                     <MButton
                         disabled={!selectedTracer?.getTracerApproved()}
                         onClick={() => {
-				dispatch({type: 'setLoading', loading: true });
-				dispatch({
-				type: 'setTitles', 
-				title: "Waiting for Confirmation",
-				subTitle: `Confirm the transaction in your wallet to ${isDeposit ? 'deposit' : 'withdraw'} USD`
-				});
-				(isDeposit ? deposit(state.amount, handleClose) : withdraw(state.amount, handleClose))
-			}}
+                            dispatch({ type: 'setLoading', loading: true });
+                            dispatch({
+                                type: 'setTitles',
+                                title: 'Waiting for Confirmation',
+                                subTitle: `Confirm the transaction in your wallet to ${
+                                    isDeposit ? 'deposit' : 'withdraw'
+                                } USD`,
+                            });
+                            isDeposit ? deposit(state.amount, handleClose) : withdraw(state.amount, handleClose);
+                        }}
                     >
                         {isDeposit ? 'Deposit' : 'Withdraw'}
                     </MButton>
@@ -274,5 +272,5 @@ export default styled(
         );
     },
 )`
-    max-width: 434px!important;
+    max-width: 434px !important;
 ` as React.FC<AMProps>;

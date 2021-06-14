@@ -66,14 +66,10 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
                 appearance: 'success' as AppearanceTypes,
                 autoDismiss: true,
             });
-            toastId = addToast(
-                ['Pending Transaction', statusMessages?.pending ?? 'Transaction pending'],
-                {
-                    appearance: 'loading' as AppearanceTypes,
-                    autoDismiss: false,
-                },
-            );
-
+            toastId = addToast(['Pending Transaction', statusMessages?.pending ?? 'Transaction pending'], {
+                appearance: 'loading' as AppearanceTypes,
+                autoDismiss: false,
+            });
         })
             .on('receipt', (receipt) => {
                 updateToast(toastId as unknown as string, {

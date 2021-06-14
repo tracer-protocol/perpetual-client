@@ -37,7 +37,7 @@ const Logo = styled.img`
     height: 55px;
     margin: auto;
     margin-top: 3rem;
-`
+`;
 
 const Header = styled.div`
     display: flex;
@@ -80,7 +80,7 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
                         <Title>{props.title}</Title>
                         <Close onClick={props.onClose} />
                     </Header>
-                    { props.subTitle ? <SubTitle>{props.subTitle}</SubTitle> : null }
+                    {props.subTitle ? <SubTitle>{props.subTitle}</SubTitle> : null}
                     {!props.loading ? (
                         <>
                             {/* body */}

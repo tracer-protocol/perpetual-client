@@ -89,7 +89,6 @@ const SButton = styled(Button)`
     padding: 0;
 `;
 
-
 const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
