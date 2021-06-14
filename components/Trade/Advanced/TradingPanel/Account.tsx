@@ -252,7 +252,7 @@ const AccountModal: React.FC<AMProps> = styled(
                     </SSection>
                 </SHiddenExpand>
                 <div className="text-center">
-                    {isDeposit
+                    {isDeposit && !selectedTracer?.getTracerApproved()
                         ?
                             <ApproveButton
                                 disabled={selectedTracer?.getTracerApproved()}
