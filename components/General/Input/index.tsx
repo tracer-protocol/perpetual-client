@@ -36,6 +36,7 @@ export const BasicInputContainer = styled.div`
     width: 100%;
     display: flex;
     border-bottom: 1px solid #002886;
+    padding-bottom: 0.2rem;
 `;
 
 type CProps = {

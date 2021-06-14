@@ -13,6 +13,7 @@ import { defaults } from '@libs/Tracer';
 import TracerModal from '@components/Modals';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
+import DefaultSlider from '@components/Slider';
 
 const MinHeight = 250;
 
@@ -295,6 +296,30 @@ const CalcButtons = styled.div`
     justify-content: space-around;
 `;
 
+type LProps = {
+    leverage: number;
+    className?: string;
+};
+const Leverage: React.FC<LProps> = styled(({ className, leverage }: LProps) => {
+    return (
+        <div className={className}>
+            <h3>Leverage</h3>
+            <DefaultSlider className="px-5" value={leverage ?? 1} />
+        </div>
+    );
+})`
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+
+    > h3 {
+        font-size: 1rem;
+        color: #3da8f5;
+        margin-bottom: 1rem;
+    }
+`;
+
 type CalculatorModalProps = {
     className?: string;
     close: () => any;
@@ -307,7 +332,7 @@ type CalculatorModalProps = {
 const CalculatorModal: React.FC<CalculatorModalProps> = styled(
     ({ className, close, exposureUnit, marginUnit, balances, display }: CalculatorModalProps) => {
         const { selectedTracer } = useContext(TracerContext);
-        // const [leverage, setLeverage] = useState(1);
+        const [leverage] = useState(1);
         const [exposureAmount, setExposureAmount] = useState(NaN);
         const [marginAmount, setMarginAmount] = useState(NaN);
         const [liquidationAmount, setLiquidationAmount] = useState(NaN);
@@ -403,6 +428,8 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                     isLocked={marginLocked}
                     lockOnClick={() => setMarginLocked(!marginLocked)}
                 />
+
+                <Leverage leverage={leverage} />
 
                 <div>
                     Leverage:{' '}
