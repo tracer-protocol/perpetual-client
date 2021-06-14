@@ -330,7 +330,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
             <DropdownLogo />
             <ul>
                 <li className={linkStyles + (route === 'trade' ? ' selected' : '')}>
-                    {/*TODO: Add back basic/advanced trading toggle*/}
+                    {/*TODO: Add back basic/advanced trading toggle (change the file name and path config too)*/}
                     {/*<span className="trade-toggle">*/}
                     {/*    <Link href="/trade/basic">*/}
                     {/*        <div className={`${secondaryRoute === 'basic' ? 'selected' : ''}`}>Basic</div>*/}
@@ -339,12 +339,20 @@ const NavBarContent: React.FC = styled(({ className }) => {
                     {/*        <div className={`${secondaryRoute === 'advanced' ? 'selected' : ''}`}>Advanced</div>*/}
                     {/*    </Link>*/}
                     {/*</span>*/}
-                    <Link href="/trade/basic">
+                    {/*<Link href="/trade/basic">*/}
+                    {/*    <a className="m-auto">Trade</a>*/}
+                    {/*</Link>*/}
+                    <Link href="/trade">
                         <a className="m-auto">Trade</a>
                     </Link>
                 </li>
+                {/*<li className={linkStyles + (route === 'insurance' ? ' selected' : '')}>*/}
+                {/*    <Link href="/insurance/pools">*/}
+                {/*        <a className="m-auto ">Insurance</a>*/}
+                {/*    </Link>*/}
+                {/*</li>*/}
                 <li className={linkStyles + (route === 'insurance' ? ' selected' : '')}>
-                    <Link href="/insurance/pools">
+                    <Link href="/insurance">
                         <a className="m-auto ">Insurance</a>
                     </Link>
                 </li>
