@@ -42,7 +42,7 @@ const DepositTerms = styled.p`
     overflow-y: scroll;
     min-width: 550px;
     width: 100%;
-    padding: 0 10px;
+    padding: 0 40px 0 10px;
     color: #fff;
 
     > .highlight {
@@ -164,7 +164,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 setIsDeposit(type === 'Deposit');
                 setShow(false);
             }}
-            title="[Market-Name] Insurance Pool"
+            title={`${tracerId} Insurance Pool`}
             subTitle={
                 isDeposit
                     ? `Add insurance to the ${tracerId} insurance pool for a specified period of time.`
@@ -231,14 +231,14 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     </SSection>
                 </SHiddenExpand>
                 {isDeposit ? (
-                    <div className="flex">
-                        <Checkbox
-                            checked={acceptedTerms}
-                            onClick={(e: any) => {
-                                e.preventDefault();
-                                acceptTerms(!acceptedTerms);
-                            }}
-                        />
+                    <div
+                        className="flex"
+                        onClick={(e: any) => {
+                            e.preventDefault();
+                            acceptTerms(!acceptedTerms);
+                        }}
+                    >
+                        <Checkbox checked={acceptedTerms} />
                         <AcceptTerms>I have read and accept Terms of Withdrawal</AcceptTerms>
                     </div>
                 ) : null}
