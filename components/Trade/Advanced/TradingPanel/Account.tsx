@@ -15,15 +15,13 @@ import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import DefaultSlider from '@components/Slider';
 
-const MinHeight = 250;
-
 const SBox = styled(Box)`
     background: #011772;
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    min-height: ${MinHeight}px;
+    min-height: 250px;
     z-index: 4;
 
     > p {
@@ -257,16 +255,14 @@ const AccountModal: React.FC<AMProps> = styled(
                     </SSection>
                 </SHiddenExpand>
                 <div className="text-center">
-                    {isDeposit && !selectedTracer?.getTracerApproved()
-                        ?
-                            <ApproveButton
-                                disabled={selectedTracer?.getTracerApproved()}
-                                onClick={() => approve(selectedTracer?.address ?? '')}
-                            >
-                                Approve USD
-                            </ApproveButton>
-                        : null
-                    }
+                    {isDeposit && !selectedTracer?.getTracerApproved() ? (
+                        <ApproveButton
+                            disabled={selectedTracer?.getTracerApproved()}
+                            onClick={() => approve(selectedTracer?.address ?? '')}
+                        >
+                            Approve USD
+                        </ApproveButton>
+                    ) : null}
                     <MButton
                         disabled={!selectedTracer?.getTracerApproved()}
                         onClick={() => (isDeposit ? deposit(amount, handleClose) : withdraw(amount, handleClose))}
