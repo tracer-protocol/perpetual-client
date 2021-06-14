@@ -54,12 +54,12 @@ export const Errors: Record<number, Error> = {
     },
 };
 
-const MARKET = 0;
-const SHORT = 0;
-// const ADJUST = 0;
-// const LIMIT = 1;
-const CLOSE = 1;
-// const LONG = 1;
+export const LONG = 0;
+export const ADJUST = 0;
+export const LIMIT = 0;
+export const MARKET = 1;
+export const SHORT = 1;
+export const CLOSE = 1;
 
 /**
  * Returns the Error ID relating to the mapping above
@@ -131,7 +131,6 @@ export type OrderState = {
     leverage: number;
     position: number; // long or short, 0 is short, 1 is long
     price: number; // price of the market asset in relation to the collateral asset
-    matchingEngine: number; // for basic this will always be 0 (OME)
     orderType: number; // for basic this will always be 0 (market order), 1 is limit and 2 is spot
     adjustType: number; // selection for adjust order 0 (adjust), 1 (close)
     adjustSummary: { // summary for when adjusting position
@@ -178,7 +177,6 @@ export type OrderAction =
         exposure: number,
         leverage: number
     }}
-    | { type: 'setMatchingEngine'; value: number }
     | { type: 'setError'; value: number }
     | { type: 'setWallet'; value: number }
     | { type: 'setLock'; value: boolean }
@@ -208,8 +206,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         leverage: 1, // default to 1x leverage
         position: 0, // long or short, 0 is short, 1 is long
         price: NaN, // price of the market asset in relation to the collateral asset
-        matchingEngine: 0, // for basic this will always be 0 (OME)
-        orderType: 0, // for basic this will always be 0 (market order), 1 is limit and 2 is spot
+        orderType: LIMIT, // orderType
         adjustType: 0,
         adjustSummary: {
             exposure: 0,
@@ -240,8 +237,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, orderType: action.value };
             case 'setAdjustType':
                 return { ...state, adjustType: action.value };
-            case 'setMatchingEngine':
-                return { ...state, matchingEngine: action.value };
             case 'setAdjustSummary': {
                 return { ...state, adjustSummary: action.adjustSummary }
             }
