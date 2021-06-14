@@ -7,9 +7,9 @@ import { Box } from '@components/General';
 import { DefaultSlider } from '@components/Trade/LeverageSlider';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
-import { Inputs as InputSelects } from './Inputs';
-import PostTradeDetails from './PostTradeDetails';
+import PostTradeDetails from '../PostTradeDetails';
 import Error from '@components/Trade/Error';
+import { Exposure, Price } from './Inputs';
 
 type SProps = {
     selected: number;
@@ -117,7 +117,7 @@ type TIProps = {
 };
 
 export default styled(({ selectedTracer, className, account }: TIProps) => {
-    const { order } = useContext(OrderContext);
+    const { order, orderDispatch } = useContext(OrderContext);
     return (
         <>
             <Box className={`${className} ${account === '' ? 'hide' : ''} `}>
@@ -130,7 +130,18 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 </div>
 
                 {/* Quantity and Price Inputs */}
-                <InputSelects amount={order?.amountToPay} price={order?.price} selectedTracer={selectedTracer} />
+                <div className="flex flex-wrap p-3">
+                    <Exposure 
+                        orderDispatch={orderDispatch}
+                        selectedTracer={selectedTracer}
+                        exposure={order?.exposure ?? NaN}
+                    />
+                    <Price 
+                        orderDispatch={orderDispatch}
+                        selectedTracer={selectedTracer}
+                        price={order?.price ?? NaN}
+                    />
+                </div>
 
                 {/* Dont display these if it is a limit order*/}
                 {order?.orderType !== 1 ? (
@@ -145,7 +156,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 <PostTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                     balances={selectedTracer?.getBalance() ?? defaults.balances}
-                    exposure={order?.amountToBuy ? new BigNumber(order.amountToBuy) : defaults.amountToBuy}
+                    exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
                     position={order?.position ?? 0}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                 />

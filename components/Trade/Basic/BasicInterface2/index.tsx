@@ -81,7 +81,7 @@ const RightContainer = styled.div`
 const BasicInterface2: React.FC = styled(({ className }) => {
     const { order, orderDispatch } = useContext(OrderContext);
     const { selectedTracer } = useContext(TracerContext);
-    const { amountToPay, market, collateral, amountToBuy } = order as OrderState;
+    const { amountToPay, market, collateral, exposure } = order as OrderState;
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const balance = order?.wallet === 0 ? balances?.tokenBalance?.toNumber() : balances?.quote?.toNumber();
     const marketPairs = useMarketPairs();
@@ -180,7 +180,7 @@ const BasicInterface2: React.FC = styled(({ className }) => {
                         autoComplete="off"
                         className="ml-2 mt-auto"
                         min="0"
-                        value={amountToBuy > 0 ? amountToBuy : ''}
+                        value={exposure > 0 ? exposure : ''}
                     />
                 </BasicInputContainer>
             </SSection>

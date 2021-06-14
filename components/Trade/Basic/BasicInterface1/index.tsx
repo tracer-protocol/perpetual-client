@@ -168,7 +168,7 @@ const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wall
 const BasicInterface1: React.FC = styled(({ className }) => {
     const { selectedTracer } = useContext(TracerContext);
     const { order, orderDispatch } = useContext(OrderContext);
-    const { amountToPay, market, collateral, amountToBuy } = order as OrderState;
+    const { amountToPay, market, collateral, exposure } = order as OrderState;
     const marketPairs = useMarketPairs();
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const balance = order?.wallet === 0 ? balances?.tokenBalance?.toNumber() : balances?.quote?.toNumber();
@@ -257,7 +257,7 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                 </div>
                 <BasicInputContainer>
                     <Input
-                        id="amountToBuy"
+                        id="exposure"
                         type="number"
                         placeholder="0.0"
                         autoComplete="off"
@@ -266,13 +266,13 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                             e.preventDefault();
                             if (orderDispatch) {
                                 if (order?.lockAmountToPay) {
-                                    orderDispatch({ type: 'setAmountToBuy', value: parseFloat(e.target.value) });
+                                    orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) });
                                 }
                             } else {
                                 console.error('Order dispatch not set');
                             }
                         }}
-                        value={!Number.isNaN(amountToBuy) ? amountToBuy : ''}
+                        value={!Number.isNaN(exposure) ? exposure : ''}
                     />
 
                     <RightContainer>

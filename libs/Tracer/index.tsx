@@ -32,7 +32,7 @@ export const defaults: Record<string, any> = {
     oraclePrice: new BigNumber(0),
     fairPrice: new BigNumber(0),
     quoteTokenDecimals: new BigNumber(1),
-    amountToBuy: new BigNumber(0),
+    exposure: new BigNumber(0),
     feeRate: new BigNumber(0),
     fundingRateSensitivity: new BigNumber(0),
     twentyFourHourChange: 0,
