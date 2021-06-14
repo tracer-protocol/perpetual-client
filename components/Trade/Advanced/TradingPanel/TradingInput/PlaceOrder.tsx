@@ -8,7 +8,7 @@ import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import PostTradeDetails from './PostTradeDetails';
 import Error from '@components/Trade/Error';
-import { Exposure, Price, Leverage } from '../Inputs';
+import { Exposure, Price, Leverage } from './Inputs';
 
 type SProps = {
     selected: number;

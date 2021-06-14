@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import { OrderContext } from 'context';
 import Tracer from '@libs/Tracer';
 import styled from 'styled-components';
-import { Box } from '@components/General';
-import { SlideSelect } from '@components/Buttons';
+import { Box, Button } from '@components/General';
+import { PlaceOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import Error from '@components/Trade/Error';
 import { Exposure, Leverage } from './Inputs';
@@ -57,6 +57,7 @@ type TIProps = {
 };
 
 export default styled(({ selectedTracer, className, account }: TIProps) => {
+    // switching to Close Position changes their position to the opposite side through OrderContext
     const { order, orderDispatch } = useContext(OrderContext);
     return (
         <>
@@ -71,13 +72,19 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
 					}} 
 				/>
 
-				<Exposure 
-					orderDispatch={orderDispatch}
-					selectedTracer={selectedTracer}
-					exposure={order?.exposure ?? NaN}
-				/>
+                {order?.adjustType !== 0
+                    ? 
+                        <Exposure 
+                            orderDispatch={orderDispatch}
+                            selectedTracer={selectedTracer}
+                            exposure={order?.exposure ?? NaN}
+                        />
+                    : <Leverage leverage={order?.leverage ?? 1} />
+                }
 
-				<Leverage leverage={order?.leverage ?? 1} />
+                <PlaceOrderButton className="text-center">
+                    <Button>{order?.adjustType === 0 ? 'Adjust Order' : 'Close Position'} </Button>
+                </PlaceOrderButton>
             </Box>
             <SError error={order?.error ?? -1} account={account} />
         </>
