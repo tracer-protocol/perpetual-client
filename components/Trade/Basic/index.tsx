@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext } from 'context';
-import LeverageSlider from '@components/Trade/LeverageSlider';
 import BasicInterface2 from '@components/Trade/Basic/BasicInterface2';
 import { SlideSelect, PlaceOrderButton } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect/Options';
@@ -14,6 +13,7 @@ import { UserBalance } from 'types';
 import Error from '../Error';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
+import DefaultSlider from '@components/Slider';
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;
@@ -208,15 +208,7 @@ const Basic: React.FC = styled(({ className }) => {
                 {/** Display the variant basic interfaces, workout ab testing for this */}
                 <BasicInterface2 />
 
-                <LeverageSlider
-                    leverage={order?.leverage ?? 1}
-                    onChange={(val) => {
-                        orderDispatch
-                            ? orderDispatch({ type: 'setLeverage', value: val })
-                            : console.error('Dispatch undefined');
-                    }}
-                    id="unique-id"
-                />
+                <DefaultSlider value={order?.leverage ?? 1} />
 
                 <OrderSummary
                     balances={balances}
