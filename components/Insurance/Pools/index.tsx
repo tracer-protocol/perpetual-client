@@ -88,7 +88,9 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
     return (
         <div className={className}>
             <Teaser className="column">
-                <span>{pool.userBalance.toNumber()} iTokens</span>
+                <span>
+                    {pool.userBalance.toNumber()} {pool.market}
+                </span>
                 <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
             </Teaser>
             <Hidden>
