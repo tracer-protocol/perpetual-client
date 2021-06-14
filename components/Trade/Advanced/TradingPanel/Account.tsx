@@ -256,14 +256,16 @@ const AccountModal: React.FC<AMProps> = styled(
                     </SSection>
                 </SHiddenExpand>
                 <div className="text-center">
-                    {isDeposit ? (
-                        <ApproveButton
-                            disabled={selectedTracer?.getTracerApproved()}
-                            onClick={() => approve(selectedTracer?.address ?? '')}
-                        >
-                            Approve USD
-                        </ApproveButton>
-                    ) : null}
+                    {isDeposit && !selectedTracer?.getTracerApproved()
+                        ?
+                            <ApproveButton
+                                disabled={selectedTracer?.getTracerApproved()}
+                                onClick={() => approve(selectedTracer?.address ?? '')}
+                            >
+                                Approve USD
+                            </ApproveButton>
+                        : null
+                    }
                     <MButton
                         disabled={!selectedTracer?.getTracerApproved()}
                         onClick={() => (isDeposit ? deposit(amount, handleClose) : withdraw(amount, handleClose))}
@@ -277,10 +279,6 @@ const AccountModal: React.FC<AMProps> = styled(
     },
 )`
     max-width: 434px;
-
-    .content {
-        width: 434px;
-    }
 `;
 
 const AccountPanel: React.FC<{
