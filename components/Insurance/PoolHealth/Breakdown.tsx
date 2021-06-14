@@ -151,7 +151,7 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
     return (
         <div className={className}>
             <div className="sections">
-                <Label title="Current Deposits" value={liquidity} />
+                <Label title="Holdings" value={liquidity} />
                 <Label title="Target" value={target} />
             </div>
             <BreakdownBar

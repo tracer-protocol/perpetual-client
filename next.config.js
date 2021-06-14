@@ -34,10 +34,12 @@ module.exports = withAntdLess({
     exportPathMap: () => {
         return {
             '/': { page: '/' },
-            '/trade/basic': { page: '/trade/[interface]' },
-            '/trade/advanced': { page: '/trade/[interface]' },
-            '/insurance/pools': { page: '/insurance/[interface]' },
-            '/insurance/portfolio': { page: '/insurance/[interface]' },
+            '/trade': { page: '/trade' },
+            // '/trade/basic': { page: '/trade/[interface]' },
+            // '/trade/advanced': { page: '/trade/[interface]' },
+            '/insurance': { page: '/insurance' },
+            // '/insurance/pools': { page: '/insurance/[interface]' },
+            // '/insurance/portfolio': { page: '/insurance/[interface]' },
             '/portfolio': { page: '/portfolio' },
         };
     },
