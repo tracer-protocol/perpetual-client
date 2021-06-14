@@ -231,14 +231,14 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     </SSection>
                 </SHiddenExpand>
                 {isDeposit ? (
-                    <div className="flex">
-                        <Checkbox
-                            checked={acceptedTerms}
-                            onClick={(e: any) => {
-                                e.preventDefault();
-                                acceptTerms(!acceptedTerms);
-                            }}
-                        />
+                    <div
+                        className="flex"
+                        onClick={(e: any) => {
+                            e.preventDefault();
+                            acceptTerms(!acceptedTerms);
+                        }}
+                    >
+                        <Checkbox checked={acceptedTerms} />
                         <AcceptTerms>I have read and accept Terms of Withdrawal</AcceptTerms>
                     </div>
                 ) : null}
