@@ -19,7 +19,6 @@ export const Title = styled.h3`
     font-size: 20px;
     line-height: 40px;
     letter-spacing: -0.4px;
-    display: inline-block;
     color: #ffffff;
 `;
 
