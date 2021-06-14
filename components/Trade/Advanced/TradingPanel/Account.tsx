@@ -275,10 +275,6 @@ const AccountModal: React.FC<AMProps> = styled(
     },
 )`
     max-width: 434px;
-
-    .content {
-        width: 434px;
-    }
 `;
 
 const AccountPanel: React.FC<{
