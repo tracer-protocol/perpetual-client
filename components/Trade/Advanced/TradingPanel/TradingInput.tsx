@@ -35,8 +35,8 @@ const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
             }}
             value={selected}
         >
-            <Option>SHORT</Option>
             <Option>LONG</Option>
+            <Option>SHORT</Option>
         </SSlideSelect>
     );
 };
@@ -58,8 +58,8 @@ const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }: SProp
             }}
             value={selected}
         >
-            <Option>MARKET</Option>
             <Option>LIMIT</Option>
+            <Option>MARKET</Option>
         </SlideSelect>
     );
 })`

@@ -42,7 +42,7 @@ export const BasicInputContainer = styled.div`
 type CProps = {
     className?: string;
     checked?: boolean;
-    onClick: any;
+    onClick?: any;
 };
 export const Checkbox: React.FC<CProps> = styled(({ className, checked, onClick }: CProps) => {
     return (
