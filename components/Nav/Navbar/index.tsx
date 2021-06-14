@@ -347,11 +347,12 @@ const NavBarContent: React.FC = styled(({ className }) => {
                         <a className="m-auto ">Insurance</a>
                     </Link>
                 </li>
-                <li className={linkStyles + (route === 'portfolio' ? ' selected' : '')}>
-                    <Link href="/portfolio">
-                        <a className="m-auto">Portfolio</a>
-                    </Link>
-                </li>
+                {/*TODO: Add back portfolio*/}
+                {/*<li className={linkStyles + (route === 'portfolio' ? ' selected' : '')}>*/}
+                {/*    <Link href="/portfolio">*/}
+                {/*        <a className="m-auto">Portfolio</a>*/}
+                {/*    </Link>*/}
+                {/*</li>*/}
             </ul>
             <ConnectButton
                 onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
