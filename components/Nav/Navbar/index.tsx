@@ -301,7 +301,7 @@ const NavBar: React.FC = styled(({ className }) => {
 const NavBarContent: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
     const route = routes[1];
-    const secondaryRoute = routes[2];
+    // const secondaryRoute = routes[2];
     const { handleConnect, account, networkId } = useContext(Web3Context);
     const ensName = useEnsName(account ?? '');
 
@@ -330,14 +330,15 @@ const NavBarContent: React.FC = styled(({ className }) => {
             <DropdownLogo />
             <ul>
                 <li className={linkStyles + (route === 'trade' ? ' selected' : '')}>
-                    <span className="trade-toggle">
-                        <Link href="/trade/basic">
-                            <div className={`${secondaryRoute === 'basic' ? 'selected' : ''}`}>Basic</div>
-                        </Link>
-                        <Link href="/trade/advanced">
-                            <div className={`${secondaryRoute === 'advanced' ? 'selected' : ''}`}>Advanced</div>
-                        </Link>
-                    </span>
+                    {/*TODO: Add back basic/advanced trading toggle*/}
+                    {/*<span className="trade-toggle">*/}
+                    {/*    <Link href="/trade/basic">*/}
+                    {/*        <div className={`${secondaryRoute === 'basic' ? 'selected' : ''}`}>Basic</div>*/}
+                    {/*    </Link>*/}
+                    {/*    <Link href="/trade/advanced">*/}
+                    {/*        <div className={`${secondaryRoute === 'advanced' ? 'selected' : ''}`}>Advanced</div>*/}
+                    {/*    </Link>*/}
+                    {/*</span>*/}
                     <Link href="/trade/basic">
                         <a className="m-auto">Trade</a>
                     </Link>
