@@ -29,8 +29,7 @@ export const Errors: Record<number, Error> = {
     },
     2: {
         name: 'No Margin Balance',
-        message:
-            'Please deposit into your margin account'
+        message: 'Please deposit into your margin account',
     },
     3: {
         name: 'No Orders',

@@ -165,7 +165,9 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 handleTransaction(selectedTracer?.approve, [account, selectedTracer.getInsuranceContract()]);
             }
             const callFunc: (amount: number) => PromiEvent<TransactionReceipt> = (amount: number) =>
-                contract?.methods.deposit(Web3.utils.toWei(amount.toString())).send({ from: account }) as PromiEvent<TransactionReceipt>;
+                contract?.methods
+                    .deposit(Web3.utils.toWei(amount.toString()))
+                    .send({ from: account }) as PromiEvent<TransactionReceipt>;
             handleTransaction(callFunc, [amount], {
                 callback: () => {
                     updatePoolBalances();
