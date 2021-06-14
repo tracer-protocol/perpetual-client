@@ -164,7 +164,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 setIsDeposit(type === 'Deposit');
                 setShow(false);
             }}
-            title="[Market-Name] Insurance Pool"
+            title={`${tracerId} Insurance Pool`}
             subTitle={
                 isDeposit
                     ? `Add insurance to the ${tracerId} insurance pool for a specified period of time.`
