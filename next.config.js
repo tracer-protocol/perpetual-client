@@ -35,11 +35,11 @@ module.exports = withAntdLess({
         return {
             '/': { page: '/' },
             '/trade': { page: '/trade' },
-            '/trade/basic': { page: '/trade/[interface]' },
-            '/trade/advanced': { page: '/trade/[interface]' },
+            // '/trade/basic': { page: '/trade/[interface]' },
+            // '/trade/advanced': { page: '/trade/[interface]' },
             '/insurance': { page: '/insurance' },
-            '/insurance/pools': { page: '/insurance/[interface]' },
-            '/insurance/portfolio': { page: '/insurance/[interface]' },
+            // '/insurance/pools': { page: '/insurance/[interface]' },
+            // '/insurance/portfolio': { page: '/insurance/[interface]' },
             '/portfolio': { page: '/portfolio' },
         };
     },
