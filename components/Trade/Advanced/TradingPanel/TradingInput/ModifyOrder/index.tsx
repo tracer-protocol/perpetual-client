@@ -3,11 +3,10 @@ import { OrderContext } from 'context';
 import Tracer from '@libs/Tracer';
 import styled from 'styled-components';
 import { Box } from '@components/General';
-import { DefaultSlider } from '@components/Trade/LeverageSlider';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import Error from '@components/Trade/Error';
-import { Exposure } from './Inputs';
+import { Exposure, Leverage } from './Inputs';
 
 type SProps = {
     selected: number;
@@ -39,31 +38,6 @@ const AdjustTypeSelect: React.FC<SProps> = styled(({ selected, className, setAdj
     > .bg-slider {
         background: #002886;
         border-radius: 0;
-    }
-`;
-
-type LProps = {
-    leverage: number;
-    className?: string;
-};
-
-const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
-    return (
-        <div className={`${className} m-3`}>
-            <a className="label">Leverage</a>
-            <div className="w-3/4 px-4 pb-4">
-                <DefaultSlider leverage={leverage} />
-            </div>
-        </div>
-    );
-})`
-    display: flex;
-
-    > .label {
-        margin: 5px auto 35px 0;
-        font-size: 16px;
-        letter-spacing: -0.32px;
-        color: #3da8f5;
     }
 `;
 

@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext, Web3Context } from 'context';
 import { MarketSelect, AccountPanel, InterfaceSelect } from './TradingPanel';
-import { AdjustOrder, PlaceOrder } from './TradingPanel/TradingInput';
+import { ModifyOrder, PlaceOrder } from './TradingPanel/TradingInput';
 import styled from 'styled-components';
 import TradingView from './RightPanel';
 
@@ -57,7 +57,7 @@ const Advanced: React.FC = styled(({ className }) => {
                 <MarketSelect account={account ?? ''} />
                 <InterfaceSelect isAdjust={isAdjust} setAdjust={setAdjust} />
                 {isAdjust
-		            ? <AdjustOrder selectedTracer={selectedTracer} account={account ?? ''} />
+		            ? <ModifyOrder selectedTracer={selectedTracer} account={account ?? ''} />
 		            : <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
                 }
                 <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} />

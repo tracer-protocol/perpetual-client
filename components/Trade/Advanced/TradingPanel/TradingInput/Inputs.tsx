@@ -2,6 +2,8 @@ import React from 'react';
 import SmallInput from '@components/General/Input/SmallInput';
 import { Tracer } from 'libs';
 import { OrderAction } from '@context/OrderContext';
+import { DefaultSlider } from '@components/Trade/LeverageSlider';
+import styled from 'styled-components';
 
 export const Exposure:React.FC<{
 	orderDispatch: React.Dispatch<OrderAction> | undefined,
@@ -55,3 +57,28 @@ export const Price: React.FC<{
 		/>
 	)
 }
+
+type LProps = {
+    leverage: number;
+    className?: string;
+};
+
+export const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
+    return (
+        <div className={`${className} m-3`}>
+            <a className="label">Leverage</a>
+            <div className="w-3/4 px-4 pb-4">
+                <DefaultSlider leverage={leverage} />
+            </div>
+        </div>
+    );
+})`
+    display: flex;
+
+    > .label {
+        margin: 5px auto 35px 0;
+        font-size: 16px;
+        letter-spacing: -0.32px;
+        color: #3da8f5;
+    }
+`;

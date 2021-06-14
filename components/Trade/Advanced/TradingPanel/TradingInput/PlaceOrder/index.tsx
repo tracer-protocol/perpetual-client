@@ -4,12 +4,11 @@ import Tracer, { defaults } from '@libs/Tracer';
 import BigNumber from 'bignumber.js';
 import styled from 'styled-components';
 import { Box } from '@components/General';
-import { DefaultSlider } from '@components/Trade/LeverageSlider';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
-import PostTradeDetails from '../PostTradeDetails';
+import PostTradeDetails from './PostTradeDetails';
 import Error from '@components/Trade/Error';
-import { Exposure, Price } from './Inputs';
+import { Exposure, Price, Leverage } from '../Inputs';
 
 type SProps = {
     selected: number;
@@ -76,31 +75,6 @@ const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }: SProp
     }
 `;
 
-type LProps = {
-    leverage: number;
-    className?: string;
-};
-
-const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
-    return (
-        <div className={`${className} m-3`}>
-            <a className="label">Leverage</a>
-            <div className="w-3/4 px-4 pb-4">
-                <DefaultSlider leverage={leverage} />
-            </div>
-        </div>
-    );
-})`
-    display: flex;
-
-    > .label {
-        margin: 5px auto 35px 0;
-        font-size: 16px;
-        letter-spacing: -0.32px;
-        color: #3da8f5;
-    }
-`;
-
 const SError = styled(Error)<{ account: string }>`
     position: relative;
     transform: translateY(-100%);
@@ -130,7 +104,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 </div>
 
                 {/* Quantity and Price Inputs */}
-                <div className="flex flex-wrap p-3">
+                <div className="flex flex-wrap">
                     <Exposure 
                         orderDispatch={orderDispatch}
                         selectedTracer={selectedTracer}
@@ -143,15 +117,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     />
                 </div>
 
-                {/* Dont display these if it is a limit order*/}
-                {order?.orderType !== 1 ? (
-                    <>
-                        {/* Leverage select */}
-                        <Leverage leverage={order?.leverage ?? 1} />
-                    </>
-                ) : (
-                    <></>
-                )}
+                <Leverage leverage={order?.leverage ?? 1} />
 
                 <PostTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
