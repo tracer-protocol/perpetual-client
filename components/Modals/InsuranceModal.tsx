@@ -42,7 +42,7 @@ const DepositTerms = styled.p`
     overflow-y: scroll;
     min-width: 550px;
     width: 100%;
-    padding: 0 10px;
+    padding: 0 40px 0 10px;
     color: #fff;
 
     > .highlight {
