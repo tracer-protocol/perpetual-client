@@ -99,8 +99,11 @@ export default class Tracer {
      * Initialises the tracer with all of its baby items
      * @param web3 provider to create the contracts
      */
-    init: (web3: Web3) => Promise<boolean> = (web3) => {
-        const oracleAddress = this._instance.methods.gasPriceOracle().call();
+    init: (web3: Web3) => Promise<boolean> = async (web3) => {
+        console.log(Object.keys(this._instance.methods))
+        console.log(this.address.slice())
+        const oracleAddress = await this._instance.methods.gasPriceOracle().call();
+       console.log(oracleAddress)
         const tokenAddr = this._instance.methods.tracerQuoteToken().call();
         const quoteTokenDecimals = this._instance.methods.quoteTokenDecimals().call();
         const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
@@ -121,6 +124,7 @@ export default class Tracer {
             pricingContract,
         ])
             .then((res) => {
+                console.log(res)
                 const priceMultiplier_ = new BigNumber(res[0]);
                 this.quoteTokenDecimals = priceMultiplier_;
                 this.liquidationGasCost = parseInt(res[1]);
@@ -132,6 +136,7 @@ export default class Tracer {
                     : undefined;
                 this.maxLeverage = new BigNumber(parseFloat(Web3.utils.fromWei(res[4])));
                 this.fundingRateSensitivity = new BigNumber(res[5]).div(priceMultiplier_);
+                console.log(res[6], "feerate")
                 this.feeRate = new BigNumber(res[6]).div(priceMultiplier_);
                 this.insuranceContract = res[7];
                 this._pricing = res[8]
@@ -214,8 +219,9 @@ export default class Tracer {
      */
     updateFeeRate: () => Promise<void> = async () => {
         const feeRate = await this._instance.methods.feeRate().call();
-        const set = new BigNumber(Web3.utils.fromWei(feeRate));
-        this.feeRate = set;
+        console.log(feeRate, "feeRate")
+        // const set = new BigNumber(Web3.utils.fromWei(feeRate));
+        // this.feeRate = set;
     };
 
     /**

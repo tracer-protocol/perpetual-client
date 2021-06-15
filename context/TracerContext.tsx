@@ -95,7 +95,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             {
                 amount: amount,
                 price: Web3.utils.toWei(price.toString()),
-                side: position ? 0 : 1,
+                side: position ? 1 : 0, // position === SHORT === 1 then 1 else 0
                 maker: account ?? '',
                 expires: now + fourDays,
                 market: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer.address) : '',
@@ -105,7 +105,9 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         try {
             const signedMakes = await signOrdersV4(web3, makes, config?.contracts.trader.address as string, networkId);
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
+            console.log(omeOrder.toString())
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
+            console.log(res)
             return res;
         } catch (err) {
             return { status: 'error', message: `Faiiled to place order ${err}` } as Result;

@@ -86,6 +86,42 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = 
         });
 };
 
+export const checkOrder: (market: string, data: OMEOrder) => Promise<Result> = async (market, data) => {
+    if (!market) {
+        return {
+            status: 'error',
+            message: 'Failed to create order: Market is invalid',
+        };
+    }
+    return fetch(`${BASE_URL}/${omefy(market)}/check`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then((res) => {
+            console.debug('Created order with ome', res);
+            if (res.status === 404) {
+                return {
+                    status: 'error',
+                    message: `Failed to create order 404 not found`,
+                } as Result;
+            } else {
+                return {
+                    status: 'success',
+                    message: 'Successfully placed order',
+                } as Result;
+            }
+        })
+        .catch((err) => {
+            return {
+                status: 'error',
+                message: `${err}`,
+            } as Result;
+        });
+};
+
 /**
  * Gets individual order specific information
  * @param market the market the order belongs to

@@ -13,7 +13,6 @@ import { OMEOrder } from 'types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
 import { defaults } from '@libs/Tracer';
 
-calcTradeExposure;
 /**
  * -1 is no error
  * 0 is reserved for unknown
@@ -54,12 +53,15 @@ export const Errors: Record<number, Error> = {
     },
 };
 
+// Position types
 export const LONG = 0;
+export const SHORT = 1;
+// Adjust types
 export const ADJUST = 0;
+export const CLOSE = 1;
+// Order types
 export const LIMIT = 0;
 export const MARKET = 1;
-export const SHORT = 1;
-export const CLOSE = 1;
 
 /**
  * Returns the Error ID relating to the mapping above
@@ -204,10 +206,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         amountToPay: NaN, // required margin / amount of margin being used
         exposure: NaN,
         leverage: 1, // default to 1x leverage
-        position: 0, // long or short, 0 is short, 1 is long
+        position: LONG, // long or short, 1 long, 0 is short 
         price: NaN, // price of the market asset in relation to the collateral asset
         orderType: LIMIT, // orderType
-        adjustType: 0,
+        adjustType: ADJUST,
         adjustSummary: {
             exposure: 0,
             leverage: 1
@@ -215,7 +217,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         oppositeOrders: [],
         error: -1,
         wallet: 0,
-        lockAmountToPay: false, // default lock amount to buy
+        lockAmountToPay: false, // deprecated with basic trade
         advanced: false,
     };
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import SmallInput from '@components/General/Input/SmallInput';
 import { Tracer } from 'libs';
-import { OrderAction } from '@context/OrderContext';
+import { LIMIT, OrderAction } from '@context/OrderContext';
 import { DefaultSlider } from '@components/Trade/LeverageSlider';
 import styled from 'styled-components';
 
@@ -47,7 +47,7 @@ export const Price: React.FC<{
 			onChange={(e) => {
 				if (orderDispatch) {
 					orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
-					orderDispatch({ type: 'setOrderType', value: 1 });
+					orderDispatch({ type: 'setOrderType', value: LIMIT });
 				} else {
 					console.error('No dispatch function set');
 				}
