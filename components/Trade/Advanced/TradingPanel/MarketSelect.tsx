@@ -112,20 +112,9 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
 //         margin-top: -5px;
 //         display: inline-block;
 //         transition: 0.3s;
-//         transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-3px)' : 'translateY(-2px)')};
+//         transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
 //     }
 // `;
-    &:hover {
-        cursor: pointer;
-    }
-
-    > .down-arrow {
-        margin-top: -5px;
-        display: inline-block;
-        transition: 0.3s;
-        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
-    }
-`;
 
 const MarketContainer = styled.div`
     font-size: 20px;
