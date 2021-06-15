@@ -171,6 +171,7 @@ export type OrderAction =
     | { type: 'setAmountToPay'; value: number }
     | { type: 'setExposure'; value: number }
     | { type: 'setMaxExposure' }
+    | { type: 'setBestPrice' }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
     | { type: 'setPrice'; value: number }
@@ -253,9 +254,11 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setExposure':
                 return { ...state, exposure: action.value };
             case 'setMaxExposure':
-                // todo calc max exposure
                 const exposure = 1;
                 return { ...state, exposure: exposure };
+            case 'setBestPrice':
+                const price = 1;
+                return { ...state, price: price };
             case 'setError':
                 return { ...state, error: action.value };
             case 'setWallet':

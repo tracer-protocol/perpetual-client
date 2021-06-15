@@ -42,6 +42,11 @@ export const Price: React.FC<{
         <SmallInput
             title={'Price'}
             className={className ?? ''}
+            setMax={(e) => {
+                e.preventDefault();
+                orderDispatch ? orderDispatch({ type: 'setBestPrice' }) : console.error('No dispatch function set');
+            }}
+            maxText={"Best"}
             onChange={(e) => {
                 if (orderDispatch) {
                     orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
