@@ -2,10 +2,11 @@ import React from 'react';
 import { Children } from 'types';
 import styled from 'styled-components';
 import { BasicInputContainer, Input } from '../';
+import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 
 const Unit = styled.span`
     font-size: 18px;
-    letter-spacing: 0px;
+    letter-spacing: 0;
     color: #3da8f5;
     margin-top: auto;
     margin-bottom: 0.2rem;
@@ -34,15 +35,54 @@ const Balance = styled.span`
 `;
 
 type NSProps = {
+    className?: string;
     amount: number;
     setAmount: (number: number) => void;
     unit: string;
     title: string;
     balance?: number;
-    className?: string;
+    onChange?: (e: any) => any;
+    hasLock?: boolean;
+    isLocked?: boolean;
+    lockOnClick?: (e: any) => any;
 } & Children;
 
-export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title, balance, className }: NSProps) => {
+export const NumberSelect: React.FC<NSProps> = ({
+    className,
+    setAmount,
+    amount,
+    unit,
+    title,
+    balance,
+    onChange,
+    hasLock,
+    isLocked,
+    lockOnClick,
+}: NSProps) => {
+    const getLock = (hasLock: any) => {
+        if (hasLock) {
+            if (isLocked) {
+                return (
+                    <LockOutlined
+                        onClick={lockOnClick}
+                        className="mt-2 mr-2"
+                        style={{ color: '#F4AB57', fontSize: '200%' }}
+                    />
+                );
+            } else {
+                return (
+                    <UnlockOutlined
+                        onClick={lockOnClick}
+                        className="mt-2 mr-2"
+                        style={{ color: '#F4AB57', fontSize: '200%' }}
+                    />
+                );
+            }
+        } else {
+            return null;
+        }
+    };
+
     return (
         <div className={className}>
             <Header>
@@ -65,9 +105,11 @@ export const NumberSelect: React.FC<NSProps> = ({ setAmount, amount, unit, title
                     autoComplete="off"
                     min={0}
                     placeholder="0.0"
-                    onChange={(e) => setAmount(Math.abs(parseFloat(e.target.value)))}
+                    onChange={onChange ? onChange : (e) => setAmount(Math.abs(parseFloat(e.target.value)))}
                     value={!Number.isNaN(amount) ? amount : ''}
+                    disabled={isLocked}
                 />
+                {getLock(hasLock)}
                 <Unit>{unit}</Unit>
             </BasicInputContainer>
         </div>
