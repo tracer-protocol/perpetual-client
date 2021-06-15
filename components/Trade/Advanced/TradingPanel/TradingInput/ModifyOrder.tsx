@@ -73,7 +73,7 @@ const Close: React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
 };
 
 type AProps = {
-    selectedTracer: Tracer | undefined,
+    selectedTracer: Tracer | undefined;
     orderDispatch: React.Dispatch<OrderAction> | undefined;
     order: OrderState | undefined;
     className?: string;
@@ -81,13 +81,13 @@ type AProps = {
 
 const Adjust: React.FC<AProps> = ({ order, orderDispatch, selectedTracer }) => {
     return (
-        <Leverage 
+        <Leverage
             min={selectedTracer?.getBalance().leverage}
             max={selectedTracer?.getMaxLeverage()}
-            leverage={order?.leverage ?? 1} 
+            leverage={order?.leverage ?? 1}
             orderDispatch={orderDispatch}
         />
-    )
+    );
 };
 
 type TIProps = {
@@ -125,6 +125,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     balances={selectedTracer?.getBalance() ?? defaults.balances}
                     exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
                     position={order?.position ?? 0}
+                    slippage={order?.slippage ?? 0}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                 />
 

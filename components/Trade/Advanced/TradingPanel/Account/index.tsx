@@ -82,7 +82,7 @@ const DepositButtons = styled.div`
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     position: relative;
     flex-direction: column;
-    background-color: ${props => props.zeroBalance ? '#00125D' : 'inherit'}
+    background-color: ${(props) => (props.zeroBalance ? '#00125D' : 'inherit')};
 `;
 
 const Title = styled.h2`
@@ -90,7 +90,7 @@ const Title = styled.h2`
     letter-spacing: -0.4px;
     color: #fff;
     margin-bottom: 0.5rem;
-`
+`;
 
 const SButton = styled(Button)`
     height: 28px;
@@ -101,10 +101,10 @@ const SButton = styled(Button)`
 
 const SubText = styled.span`
     letter-spacing: -0.32px;
-    color: #005EA4;
+    color: #005ea4;
     font-size: 16px;
-    display: inline!important;
-`
+    display: inline !important;
+`;
 
 const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
@@ -126,9 +126,7 @@ const AccountPanel: React.FC<{
     return account === '' ? (
         <WalletConnect />
     ) : (
-        <AccountInfo
-            zeroBalance={balances.quote.eq(0)}
-        >
+        <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title>Margin Account</Title>
             {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
             {/*    Calculator*/}
@@ -140,31 +138,36 @@ const AccountPanel: React.FC<{
                 </span>
             </Item>
             <Item>
-                <h3>Buying Power <SubText>@{maxLeverage.toNumber()}X Maximum Leverage</SubText></h3>
+                <h3>
+                    Buying Power <SubText>@{maxLeverage.toNumber()}X Maximum Leverage</SubText>
+                </h3>
                 <span>
-                    {!order?.exposure || !order.price
-                        ? 
-                            toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))
-                        :
-                            <>
-                                <Previous>
-                                    <a>{toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))}</a>
-                                </Previous>
-                                {
-                                    toApproxCurrency(
-                                        calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage)
-                                            .minus(new BigNumber(order.exposure * order.price))
-                                    )
-                                }
-                            </>
-                    }
+                    {!order?.exposure || !order.price ? (
+                        toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))
+                    ) : (
+                        <>
+                            <Previous>
+                                <a>
+                                    {toApproxCurrency(
+                                        calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
+                                    )}
+                                </a>
+                            </Previous>
+                            {toApproxCurrency(
+                                calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage).minus(
+                                    new BigNumber(order.exposure * order.price),
+                                ),
+                            )}
+                        </>
+                    )}
                 </span>
             </Item>
             <DepositButtons>
-                <SButton 
+                <SButton
                     className={balances.quote.eq(0) ? 'primary' : ''}
-                    onClick={(_e: any) => handleClick(true, true)}>
-                        Deposit
+                    onClick={(_e: any) => handleClick(true, true)}
+                >
+                    Deposit
                 </SButton>
                 <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
             </DepositButtons>

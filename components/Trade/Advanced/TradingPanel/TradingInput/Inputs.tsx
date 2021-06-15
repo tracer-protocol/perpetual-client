@@ -1,7 +1,7 @@
 import React from 'react';
 import SmallInput from '@components/General/Input/SmallInput';
 import { Tracer } from 'libs';
-import { LIMIT, OrderAction } from '@context/OrderContext';
+import { LIMIT, OrderAction, OrderState } from '@context/OrderContext';
 import DefaultSlider from '@components/Slider';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
@@ -10,9 +10,9 @@ import { defaults } from '@libs/Tracer';
 export const Exposure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
     selectedTracer: Tracer | undefined;
-    exposure: number;
+    order: OrderState;
     className?: string;
-}> = ({ selectedTracer, orderDispatch, exposure, className }) => {
+}> = ({ selectedTracer, orderDispatch, order, className }) => {
     return (
         <SmallInput
             title={'Amount'}
@@ -27,7 +27,7 @@ export const Exposure: React.FC<{
                 orderDispatch ? orderDispatch({ type: 'setMaxExposure' }) : console.error('No dispatch function set');
             }}
             unit={selectedTracer?.baseTicker ?? ''}
-            amount={exposure}
+            amount={order.exposure}
         />
     );
 };
@@ -71,7 +71,7 @@ export const Price: React.FC<{
                 e.preventDefault();
                 orderDispatch ? orderDispatch({ type: 'setBestPrice' }) : console.error('No dispatch function set');
             }}
-            maxText={"Best"}
+            maxText={'Best'}
             onChange={(e) => {
                 if (orderDispatch) {
                     orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
@@ -94,9 +94,9 @@ type LProps = {
     orderDispatch: React.Dispatch<OrderAction> | undefined;
 };
 
-export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max}: LProps) => {
-    console.log(min?.toNumber(), "min")
-    console.log(max?.toNumber(), "max")
+export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max }: LProps) => {
+    console.log(min?.toNumber(), 'min');
+    console.log(max?.toNumber(), 'max');
     return (
         <div className={`${className} m-3`}>
             <a className="label">Leverage</a>

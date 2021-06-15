@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { OrderContext } from 'context';
+import { orderDefaults } from '@context/OrderContext';
 import Tracer, { defaults } from '@libs/Tracer';
 import BigNumber from 'bignumber.js';
 import styled from 'styled-components';
@@ -8,6 +9,8 @@ import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import PostTradeDetails from './PostTradeDetails';
 import Error from '@components/Trade/Error';
+import { toApproxCurrency } from '@libs/utils';
+import { Approx } from '@components/General';
 import { Exposure, Price, Leverage } from './Inputs';
 
 type SProps = {
@@ -84,6 +87,15 @@ const SError = styled(Error)<{ account: string }>`
     }
 `;
 
+const Details = styled.span`
+    font-size: 16px;
+    letter-spacing: -0.32px;
+    color: #005ea4;
+    text-align: right;
+    width: 100%;
+    padding: 0 12px;
+`;
+
 type TIProps = {
     selectedTracer: Tracer | undefined;
     account: string;
@@ -92,6 +104,7 @@ type TIProps = {
 
 export default styled(({ selectedTracer, className, account }: TIProps) => {
     const { order, orderDispatch } = useContext(OrderContext);
+    const { exposure, price, leverage } = order ?? orderDefaults.order;
     return (
         <>
             <Box className={`${className} ${account === '' ? 'hide' : ''} `}>
@@ -107,9 +120,16 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 <div className="flex flex-wrap">
                     <Exposure
                         orderDispatch={orderDispatch}
+                        className="pb-0"
                         selectedTracer={selectedTracer}
-                        exposure={order?.exposure ?? defaults.exposure}
+                        order={order ?? orderDefaults.order}
                     />
+                    <Details>
+                        {order?.leverage !== 1 && exposure && price ? (
+                            <span>{`Leveraged at ${order?.leverage}x`}</span>
+                        ) : null}
+                        {exposure && price ? <Approx>{toApproxCurrency(exposure * price * leverage)}</Approx> : null}
+                    </Details>
                     <Price
                         orderDispatch={orderDispatch}
                         selectedTracer={selectedTracer}
@@ -117,10 +137,11 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     />
                 </div>
 
-                <Leverage 
+                <Leverage
                     min={selectedTracer?.getBalance().leverage}
                     max={selectedTracer?.getMaxLeverage()}
-                    leverage={order?.leverage ?? 1} orderDispatch={orderDispatch} 
+                    leverage={order?.leverage ?? 1}
+                    orderDispatch={orderDispatch}
                 />
 
                 <PostTradeDetails
@@ -128,6 +149,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     balances={selectedTracer?.getBalance() ?? defaults.balances}
                     exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
                     position={order?.position ?? 0}
+                    slippage={order?.slippage ?? 0}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                 />
 

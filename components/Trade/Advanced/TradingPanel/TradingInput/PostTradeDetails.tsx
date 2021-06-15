@@ -1,13 +1,7 @@
 import React from 'react';
-import { isVerySmall, toApproxCurrency } from '@libs/utils';
-import {
-    calcBorrowed,
-    calcLeverage,
-    calcLiquidationPrice,
-    calcWithdrawable,
-    calcNotionalValue,
-} from '@tracer-protocol/tracer-utils';
-import { HiddenExpand, Previous, Section } from '@components/General';
+import { toApproxCurrency } from '@libs/utils';
+import { calcLiquidationPrice, calcNotionalValue } from '@tracer-protocol/tracer-utils';
+import { HiddenExpand, Previous, Section, Approx } from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
 import styled from 'styled-components';
@@ -17,11 +11,12 @@ interface PTDProps {
     position: number;
     exposure: BigNumber;
     fairPrice: BigNumber;
+    slippage: number;
     maxLeverage: BigNumber;
     className?: string;
 }
 const PostTradeDetails: React.FC<PTDProps> = styled(
-    ({ balances, position, exposure, fairPrice, maxLeverage, className }: PTDProps) => {
+    ({ balances, position, exposure, fairPrice, maxLeverage, slippage, className }: PTDProps) => {
         const newBase =
             position === 0
                 ? balances.base.minus(exposure) // short
@@ -39,19 +34,9 @@ const PostTradeDetails: React.FC<PTDProps> = styled(
                     </Previous>
                     {toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage))}
                 </Section>
-                <Section label={'Borrowed'}>
-                    <Previous>{toApproxCurrency(calcBorrowed(balances.quote, balances.base, fairPrice))}</Previous>
-                    {toApproxCurrency(calcBorrowed(newQuote, newBase, fairPrice))}
-                </Section>
-                <Section label={'Withdrawable'}>
-                    <Previous>
-                        {toApproxCurrency(calcWithdrawable(balances.quote, balances.base, fairPrice, maxLeverage))}
-                    </Previous>
-                    {toApproxCurrency(calcWithdrawable(newQuote, newBase, fairPrice, maxLeverage))}
-                </Section>
-                <Section label={'Leverage'}>
-                    <Previous>{calcLeverage(balances.quote, balances.base, fairPrice).toPrecision(3)}</Previous>
-                    {isVerySmall(calcLeverage(newQuote, newBase, fairPrice), false)}
+                <Section label={'Last Price'}>{toApproxCurrency(0)}</Section>
+                <Section label={'Slippage & Fees'}>
+                    {slippage}% <Approx>$0.00</Approx>
                 </Section>
             </HiddenExpand>
         );

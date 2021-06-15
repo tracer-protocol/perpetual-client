@@ -28,7 +28,7 @@ export const defaults: Record<string, any> = {
         tokenBalance: new BigNumber(0),
         totalLeveragedValue: 0,
         lastUpdatedGasPrice: 0,
-        leverage: new BigNumber(0)
+        leverage: new BigNumber(1),
     },
     maxLeverage: new BigNumber(25),
     oraclePrice: new BigNumber(0),
@@ -182,7 +182,7 @@ export default class Tracer {
             console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
             this.balances = {
                 ...parsedBalances,
-                leverage: leverage
+                leverage: leverage.gt(1) ? leverage : defaults.balances.leverage,
             };
             return parsedBalances;
         } catch (error) {

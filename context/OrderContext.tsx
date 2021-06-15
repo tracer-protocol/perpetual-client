@@ -11,7 +11,7 @@ import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
 import { OMEOrder } from 'types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
-import { defaults } from '@libs/Tracer';
+import { defaults as tracerDefaults } from '@libs/Tracer';
 
 /**
  * -1 is no error
@@ -109,7 +109,7 @@ const checkErrors: (
         return 2;
     } else if (
         calcTotalMargin(newQuote, newBase, priceBN).lt(
-            calcMinimumMargin(newQuote, newBase, priceBN, maxLeverage ?? defaults.maxLeverage),
+            calcMinimumMargin(newQuote, newBase, priceBN, maxLeverage ?? tracerDefaults.maxLeverage),
         )
     ) {
         // user has no tcr margin balance
@@ -123,6 +123,30 @@ export const OrderTypeMapping: Record<number, string> = {
     0: 'market',
     1: 'limit',
     2: 'spot',
+};
+
+export const orderDefaults = {
+    order: {
+        market: 'Market', // exposed market asset
+        collateral: 'USD', // collateral asset
+        amountToPay: NaN, // required margin / amount of margin being used
+        exposure: NaN,
+        leverage: 1, // default to 1x leverage
+        position: LONG, // long or short, 1 long, 0 is short
+        price: NaN, // price of the market asset in relation to the collateral asset
+        orderType: LIMIT, // orderType
+        adjustType: ADJUST,
+        adjustSummary: {
+            exposure: 0,
+            leverage: 1,
+        },
+        oppositeOrders: [],
+        error: -1,
+        wallet: 0,
+        lockAmountToPay: false, // deprecated with basic trade
+        advanced: false,
+        slippage: 0,
+    },
 };
 
 export type OrderState = {
@@ -148,11 +172,10 @@ export type OrderState = {
     //  The lock helps avoiding infinite loops when setting these values
     lockAmountToPay: boolean;
     advanced: boolean; // boolean to check if on basic or advanced page
+    slippage: number;
 };
 
 interface ContextProps {
-    exposure: BigNumber;
-    tradePrice: BigNumber;
     oppositeOrders: OpenOrder[];
     order: OrderState;
     orderDispatch: React.Dispatch<OrderAction>;
@@ -173,6 +196,7 @@ export type OrderAction =
     | { type: 'setMaxExposure' }
     | { type: 'setBestPrice' }
     | { type: 'setMaxClosure' }
+    | { type: 'setSlippage'; value: number }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
     | { type: 'setPrice'; value: number }
@@ -206,26 +230,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [tracerId]);
 
-    const initialState: OrderState = {
-        market: 'Market', // exposed market asset
-        collateral: 'USD', // collateral asset
-        amountToPay: NaN, // required margin / amount of margin being used
-        exposure: NaN,
-        leverage: 1, // default to 1x leverage
-        position: LONG, // long or short, 1 long, 0 is short
-        price: NaN, // price of the market asset in relation to the collateral asset
-        orderType: LIMIT, // orderType
-        adjustType: ADJUST,
-        adjustSummary: {
-            exposure: 0,
-            leverage: 1,
-        },
-        oppositeOrders: [],
-        error: -1,
-        wallet: 0,
-        lockAmountToPay: false, // deprecated with basic trade
-        advanced: false,
-    };
+    const initialState: OrderState = orderDefaults.order;
 
     const reducer = (state: any, action: OrderAction) => {
         switch (action.type) {
@@ -255,14 +260,15 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setExposure':
                 return { ...state, exposure: action.value };
             case 'setMaxExposure':
-                let exposure = 1;
+                const exposure = 1;
                 return { ...state, exposure: exposure };
             case 'setMaxClosure':
-                let fullClosure = selectedTracer?.getBalance().base.abs();
+                const fullClosure = selectedTracer?.getBalance().base.abs();
                 return { ...state, exposure: fullClosure };
             case 'setBestPrice':
                 const price = state.oppositeOrders[0]?.price ?? NaN;
-                if (!price) { // if there is no price set error to no open orders
+                if (!price) {
+                    // if there is no price set error to no open orders
                     return { ...state, error: 3 };
                 } else {
                     return { ...state, price: price };
@@ -284,12 +290,12 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     useMemo(() => {
         if (omeState?.orders) {
-            const oppositeOrders = (order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders).map(
-                (order) => ({
-                    price: new BigNumber(order.price),
-                    amount: new BigNumber(order.quantity),
-                }),
-            );
+            const oppositeOrders = (
+                order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders
+            ).map((order) => ({
+                price: new BigNumber(order.price),
+                amount: new BigNumber(order.quantity),
+            }));
             orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
             if (order.orderType === MARKET) {
                 // market order set the price if on market order
@@ -302,7 +308,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         // when user swaps to close order, set opposite side
         // set the amount to the users position
         if (order.adjustType === CLOSE) {
-            const balances = selectedTracer?.getBalance() ?? defaults.balances;
+            const balances = selectedTracer?.getBalance() ?? tracerDefaults.balances;
             if (balances?.base.toNumber() < 0) {
                 orderDispatch({ type: 'setPosition', value: LONG });
             } else if (balances?.base > 0) {
@@ -323,11 +329,14 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         // calculate the exposure based on the opposite orders
         if (order.orderType === MARKET && order.oppositeOrders.length) {
             // convert orders
-            const { exposure } = calcTradeExposure(
+            const { exposure, slippage } = calcTradeExposure(
                 new BigNumber(order.amountToPay ?? 0),
                 order.leverage,
                 order.oppositeOrders,
             );
+            if (!slippage.eq(0)) {
+                orderDispatch({ type: 'setSlippage', value: slippage.toNumber() });
+            }
             if (!exposure.eq(0)) {
                 orderDispatch({ type: 'setExposure', value: exposure.toNumber() });
             }
@@ -359,13 +368,14 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 orderDispatch({ type: 'setError', value: error });
             }
         }
-    }, [ // listens to a lot, but not all
-        selectedTracer?.getBalance(), 
-        account, 
-        order.price, 
-        order.exposure, 
+    }, [
+        // listens to a lot, but not all
+        selectedTracer?.getBalance(),
+        account,
+        order.price,
+        order.exposure,
         order.orders,
-        order.orderType
+        order.orderType,
     ]);
 
     return (

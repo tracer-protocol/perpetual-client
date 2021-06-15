@@ -14,6 +14,7 @@ import Error from '../Error';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import DefaultSlider from '@components/Slider';
+import { orderDefaults } from '@context/OrderContext';
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;
@@ -72,49 +73,47 @@ interface SProps {
     balances: UserBalance;
     fairPrice: BigNumber;
     order: OrderState | undefined;
-    exposure: BigNumber;
     maxLeverage: BigNumber;
     className?: string;
 }
 
-const OrderSummary: React.FC<SProps> = styled(
-    ({ balances, fairPrice, order, maxLeverage, exposure, className }: SProps) => {
-        const position = order?.position ?? 0;
-        const notional: BigNumber = calcNotionalValue(exposure, fairPrice);
-        const newBase =
-            position === 0
-                ? balances.base.minus(exposure) // short
-                : balances.base.plus(exposure); // long
-        const newQuote: BigNumber =
-            position === 0
-                ? balances.quote.plus(notional) // short
-                : balances.quote.minus(notional); // long
-        return (
-            <HiddenExpand className={className} defaultHeight={0} open={!!order?.amountToPay || !!order?.exposure}>
-                <h3>Order Summary</h3>
-                <SSection label={'Order Type'}>Market</SSection>
-                <SSection label={'Market Price'}>
-                    {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
-                </SSection>
-                <LiquidationPrice label={'Liquidation Price'}>
-                    {`${toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage))} ${
-                        order?.collateral ?? ''
-                    }`}
-                </LiquidationPrice>
-                <SSection label={'Slippage % Fees'}>
-                    {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
-                </SSection>
-                <SSection label={'Wallet Balance'}>
-                    <Previous>{`${toApproxCurrency(order?.wallet ? balances.tokenBalance : balances.quote)}`}</Previous>
-                    {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
-                </SSection>
-                <SSection label={'Predicted Const Total'}>
-                    {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
-                </SSection>
-            </HiddenExpand>
-        );
-    },
-)`
+const OrderSummary: React.FC<SProps> = styled(({ balances, fairPrice, order, maxLeverage, className }: SProps) => {
+    const { exposure } = order ?? orderDefaults.order;
+    const position = order?.position ?? 0;
+    const notional: BigNumber = calcNotionalValue(new BigNumber(exposure), fairPrice);
+    const newBase =
+        position === 0
+            ? balances.base.minus(exposure) // short
+            : balances.base.plus(exposure); // long
+    const newQuote: BigNumber =
+        position === 0
+            ? balances.quote.plus(notional) // short
+            : balances.quote.minus(notional); // long
+    return (
+        <HiddenExpand className={className} defaultHeight={0} open={!!order?.amountToPay || !!order?.exposure}>
+            <h3>Order Summary</h3>
+            <SSection label={'Order Type'}>Market</SSection>
+            <SSection label={'Market Price'}>
+                {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
+            </SSection>
+            <LiquidationPrice label={'Liquidation Price'}>
+                {`${toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage))} ${
+                    order?.collateral ?? ''
+                }`}
+            </LiquidationPrice>
+            <SSection label={'Slippage % Fees'}>
+                {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
+            </SSection>
+            <SSection label={'Wallet Balance'}>
+                <Previous>{`${toApproxCurrency(order?.wallet ? balances.tokenBalance : balances.quote)}`}</Previous>
+                {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
+            </SSection>
+            <SSection label={'Predicted Const Total'}>
+                {`${toApproxCurrency(order?.price ?? 0)} ${order?.collateral ?? ''}`}
+            </SSection>
+        </HiddenExpand>
+    );
+})`
     overflow: scroll;
     background: #002886;
     margin: 10px 0;
@@ -175,7 +174,7 @@ const Header = styled.div`
 
 const Basic: React.FC = styled(({ className }) => {
     const { selectedTracer, balances: _balances } = useContext(TracerContext);
-    const { order, exposure, orderDispatch } = useContext(OrderContext);
+    const { order, orderDispatch } = useContext(OrderContext);
     const [showSummary, setShowSummary] = useState(false);
     const balances = _balances ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
@@ -222,7 +221,6 @@ const Basic: React.FC = styled(({ className }) => {
                     order={order}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                     fairPrice={fairPrice}
-                    exposure={exposure ?? defaults.exposure}
                 />
                 <PlaceOrderButton className="mt-auto mb-2">
                     <SButton className="mx-auto">Place Trade</SButton>
