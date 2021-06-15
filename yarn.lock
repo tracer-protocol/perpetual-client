@@ -3727,10 +3727,10 @@
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
   integrity sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==
 
-"@tracer-protocol/contracts@^0.2.6":
-  version "0.2.6"
-  resolved "https://registry.yarnpkg.com/@tracer-protocol/contracts/-/contracts-0.2.6.tgz#ac0301d1756631391e55cc86739c04205310b825"
-  integrity sha512-iRvE2nYMPnVbqaiA5jRNOH33kUgMT9oKdQyNojGdrNaXX5avShOJZ74wbeAd+U+Rsyoa9/bpo6MG5SNJvUSCOw==
+"@tracer-protocol/contracts@^0.2.7":
+  version "0.2.7"
+  resolved "https://registry.yarnpkg.com/@tracer-protocol/contracts/-/contracts-0.2.7.tgz#207f74f59128dda6282b90c15c8d7073d6e638c2"
+  integrity sha512-o/5JkjCm706mddKgRdaMzuURfTAOLg1oyHBQ6L15mHMV0g3b/J1T0XJvyQ5VXHQRhvq6Ktq+V8xyisq4SyiBNw==
   dependencies:
     "@eth-optimism/smock" "^1.1.4"
     "@nomiclabs/hardhat-ethers" "^2.0.2"
@@ -3745,7 +3745,6 @@
     ethereum-waffle "^3.3.0"
     ethers "^5.1.4"
     hardhat-deploy "^0.7.5"
-    hardhat-prettier "^0.0.1"
     prb-math "^1.0.5"
     prettier "^2.3.1"
     prettier-plugin-solidity "^1.0.0-beta.13"
@@ -11626,14 +11625,6 @@ hardhat-deploy@^0.7.5:
     match-all "^1.2.6"
     murmur-128 "^0.2.1"
     qs "^6.9.4"
-
-hardhat-prettier@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/hardhat-prettier/-/hardhat-prettier-0.0.1.tgz#6ddd1e775edaa66aeb119433e8866a3e6e787f3a"
-  integrity sha512-OisNbM2L/+hOPAC5AtPnaa4stH/6Js8bf2Zuhkj4uKzFo0uKu2hZjTupwZ67uDvQNVGJrzNwRBmOaZu2GO3PAA==
-  dependencies:
-    chalk "^4.1.0"
-    glob "^7.1.6"
 
 harmony-reflect@^1.4.6:
   version "1.6.2"
