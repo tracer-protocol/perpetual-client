@@ -8,6 +8,7 @@ import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
+// import CalculatorModal from './Calculator';
 
 const SBox = styled(Box)`
     background: #011772;
@@ -94,6 +95,7 @@ const AccountPanel: React.FC<{
 }> = ({ selectedTracer, account }) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
+    // const [calculator, showCalculator] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const maxLeverage = selectedTracer?.maxLeverage ?? new BigNumber(1);
@@ -138,14 +140,14 @@ const AccountPanel: React.FC<{
                 maxLeverage={maxLeverage}
                 price={Number.isNaN(fairPrice) ? 0 : fairPrice}
             />
-            {/* <CalculatorModal
-                display={calculator}
-                close={() => showCalculator(false)}
-                exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}
-                marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
-                balances={balances}
-                price={Number.isNaN(fairPrice) ? 0 : fairPrice}
-            /> */}
+            {/*<CalculatorModal*/}
+            {/*    display={calculator}*/}
+            {/*    close={() => showCalculator(false)}*/}
+            {/*    exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}*/}
+            {/*    marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}*/}
+            {/*    balances={balances}*/}
+            {/*    price={Number.isNaN(fairPrice) ? 0 : fairPrice}*/}
+            {/*/>*/}
         </AccountInfo>
     );
 };

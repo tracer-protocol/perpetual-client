@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { calcLeverage, calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
 import { TracerContext } from 'context';
@@ -89,10 +89,6 @@ export default styled(({ className, close, exposureUnit, marginUnit, balances, d
 
     const [exposureLocked, setExposureLocked] = useState(false);
     const [marginLocked, setMarginLocked] = useState(false);
-
-    useEffect(() => {
-        setLeverage(leverage);
-    }, [leverage]);
 
     const Calculate = () => {
         if (isLong) {
