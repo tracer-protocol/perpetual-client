@@ -99,8 +99,8 @@ export default class Tracer {
      * Initialises the tracer with all of its baby items
      * @param web3 provider to create the contracts
      */
-    init: (web3: Web3) => Promise<boolean> = async (web3) => {
-        const oracleAddress = await this._instance.methods.gasPriceOracle().call();
+    init: (web3: Web3) => Promise<boolean> = (web3) => {
+        const oracleAddress = this._instance.methods.gasPriceOracle().call();
         const tokenAddr = this._instance.methods.tracerQuoteToken().call();
         const quoteTokenDecimals = this._instance.methods.quoteTokenDecimals().call();
         const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
