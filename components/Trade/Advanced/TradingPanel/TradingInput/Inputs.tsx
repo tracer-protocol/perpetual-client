@@ -1,7 +1,7 @@
 import React from 'react';
 import SmallInput from '@components/General/Input/SmallInput';
 import { Tracer } from 'libs';
-import { LIMIT, OrderAction } from '@context/OrderContext';
+import { LIMIT, OrderAction, OrderState } from '@context/OrderContext';
 import DefaultSlider from '@components/Slider';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
@@ -10,11 +10,11 @@ import { defaults } from '@libs/Tracer';
 export const Exposure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
     selectedTracer: Tracer | undefined;
-    exposure: number;
+    order: OrderState;
     className?: string;
-}> = ({ selectedTracer, orderDispatch, exposure, className }) => {
+}> = ({ selectedTracer, orderDispatch, order, className }) => {
     return (
-        <SmallInput
+        <SmallInput 
             title={'Amount'}
             className={className ?? ''}
             onChange={(e) => {
@@ -27,7 +27,7 @@ export const Exposure: React.FC<{
                 orderDispatch ? orderDispatch({ type: 'setMaxExposure' }) : console.error('No dispatch function set');
             }}
             unit={selectedTracer?.baseTicker ?? ''}
-            amount={exposure}
+            amount={order.exposure}
         />
     );
 };

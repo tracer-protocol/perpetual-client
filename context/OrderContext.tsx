@@ -11,7 +11,7 @@ import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
 import { OMEOrder } from 'types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
-import { defaults } from '@libs/Tracer';
+import { defaults as tracerDefaults } from '@libs/Tracer';
 
 /**
  * -1 is no error
@@ -109,7 +109,7 @@ const checkErrors: (
         return 2;
     } else if (
         calcTotalMargin(newQuote, newBase, priceBN).lt(
-            calcMinimumMargin(newQuote, newBase, priceBN, maxLeverage ?? defaults.maxLeverage),
+            calcMinimumMargin(newQuote, newBase, priceBN, maxLeverage ?? tracerDefaults.maxLeverage),
         )
     ) {
         // user has no tcr margin balance
@@ -124,6 +124,30 @@ export const OrderTypeMapping: Record<number, string> = {
     1: 'limit',
     2: 'spot',
 };
+
+export const defaults = {
+    order: {
+        market: 'Market', // exposed market asset
+        collateral: 'USD', // collateral asset
+        amountToPay: NaN, // required margin / amount of margin being used
+        exposure: NaN,
+        leverage: 1, // default to 1x leverage
+        position: LONG, // long or short, 1 long, 0 is short
+        price: NaN, // price of the market asset in relation to the collateral asset
+        orderType: LIMIT, // orderType
+        adjustType: ADJUST,
+        adjustSummary: {
+            exposure: 0,
+            leverage: 1,
+        },
+        oppositeOrders: [],
+        error: -1,
+        wallet: 0,
+        lockAmountToPay: false, // deprecated with basic trade
+        advanced: false,
+        slippage: 0
+    }
+}
 
 export type OrderState = {
     market: string; // exposed market asset
@@ -206,27 +230,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [tracerId]);
 
-    const initialState: OrderState = {
-        market: 'Market', // exposed market asset
-        collateral: 'USD', // collateral asset
-        amountToPay: NaN, // required margin / amount of margin being used
-        exposure: NaN,
-        leverage: 1, // default to 1x leverage
-        position: LONG, // long or short, 1 long, 0 is short
-        price: NaN, // price of the market asset in relation to the collateral asset
-        orderType: LIMIT, // orderType
-        adjustType: ADJUST,
-        adjustSummary: {
-            exposure: 0,
-            leverage: 1,
-        },
-        oppositeOrders: [],
-        error: -1,
-        wallet: 0,
-        lockAmountToPay: false, // deprecated with basic trade
-        advanced: false,
-        slippage: 0
-    };
+    const initialState: OrderState = defaults.order;
 
     const reducer = (state: any, action: OrderAction) => {
         switch (action.type) {
@@ -303,7 +307,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         // when user swaps to close order, set opposite side
         // set the amount to the users position
         if (order.adjustType === CLOSE) {
-            const balances = selectedTracer?.getBalance() ?? defaults.balances;
+            const balances = selectedTracer?.getBalance() ?? tracerDefaults.balances;
             if (balances?.base.toNumber() < 0) {
                 orderDispatch({ type: 'setPosition', value: LONG });
             } else if (balances?.base > 0) {
@@ -319,10 +323,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             orderDispatch({ type: 'setPrice', value: order.oppositeOrders[0]?.price?.toNumber() ?? NaN });
         }
     }, [order.orderType]);
-    
-    useEffect(() => {
-        orderDispatch({ type: 'setExposure', value: order.exposure * order.leverage });
-    }, [order.leverage])
 
     useEffect(() => {
         // calculate the exposure based on the opposite orders
