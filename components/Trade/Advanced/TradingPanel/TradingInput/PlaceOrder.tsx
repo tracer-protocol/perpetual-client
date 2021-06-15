@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { OrderContext } from 'context';
-import { defaults as orderDefaults } from '@context/OrderContext';
+import { orderDefaults } from '@context/OrderContext';
 import Tracer, { defaults } from '@libs/Tracer';
 import BigNumber from 'bignumber.js';
 import styled from 'styled-components';

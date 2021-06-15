@@ -14,6 +14,7 @@ import Error from '../Error';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import DefaultSlider from '@components/Slider';
+import { orderDefaults } from '@context/OrderContext';
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;
@@ -72,15 +73,15 @@ interface SProps {
     balances: UserBalance;
     fairPrice: BigNumber;
     order: OrderState | undefined;
-    exposure: BigNumber;
     maxLeverage: BigNumber;
     className?: string;
 }
 
 const OrderSummary: React.FC<SProps> = styled(
-    ({ balances, fairPrice, order, maxLeverage, exposure, className }: SProps) => {
+    ({ balances, fairPrice, order, maxLeverage, className }: SProps) => {
+        const { exposure } = order ?? orderDefaults.order;
         const position = order?.position ?? 0;
-        const notional: BigNumber = calcNotionalValue(exposure, fairPrice);
+        const notional: BigNumber = calcNotionalValue(new BigNumber(exposure), fairPrice);
         const newBase =
             position === 0
                 ? balances.base.minus(exposure) // short
@@ -175,7 +176,7 @@ const Header = styled.div`
 
 const Basic: React.FC = styled(({ className }) => {
     const { selectedTracer, balances: _balances } = useContext(TracerContext);
-    const { order, exposure, orderDispatch } = useContext(OrderContext);
+    const { order, orderDispatch } = useContext(OrderContext);
     const [showSummary, setShowSummary] = useState(false);
     const balances = _balances ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
@@ -222,7 +223,6 @@ const Basic: React.FC = styled(({ className }) => {
                     order={order}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                     fairPrice={fairPrice}
-                    exposure={exposure ?? defaults.exposure}
                 />
                 <PlaceOrderButton className="mt-auto mb-2">
                     <SButton className="mx-auto">Place Trade</SButton>

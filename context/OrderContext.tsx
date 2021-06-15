@@ -125,7 +125,7 @@ export const OrderTypeMapping: Record<number, string> = {
     2: 'spot',
 };
 
-export const defaults = {
+export const orderDefaults = {
     order: {
         market: 'Market', // exposed market asset
         collateral: 'USD', // collateral asset
@@ -230,7 +230,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [tracerId]);
 
-    const initialState: OrderState = defaults.order;
+    const initialState: OrderState = orderDefaults.order;
 
     const reducer = (state: any, action: OrderAction) => {
         switch (action.type) {

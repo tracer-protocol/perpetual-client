@@ -6,6 +6,7 @@ import 'rc-slider/assets/index.css';
 const DEFAULT_VALUE = 1;
 const DEFAULT_MIN = 1;
 const DEFAULT_MAX = 100;
+const DEFAULT_STEP = 0.5;
 
 const createMarks = (min: number, max: number) => ({
     1: {
@@ -75,6 +76,7 @@ type DSProps = {
     value?: number;
     min?: number;
     max?: number;
+    step?: number;
     marks?: any;
     railStyle?: React.CSSProperties;
     trackStyle?: React.CSSProperties;
@@ -88,6 +90,7 @@ const DefaultSlider: React.FC<DSProps> = styled(
         value,
         min,
         max,
+        step,
         marks,
         railStyle,
         trackStyle,
@@ -104,6 +107,7 @@ const DefaultSlider: React.FC<DSProps> = styled(
                         value={value}
                         min={min_}
                         max={max_}
+                        step={step ?? DEFAULT_STEP}
                         marks={marks ?? createMarks(min_, max_)}
                         railStyle={railStyle ? railStyle : defaultRailStyle}
                         trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
@@ -116,6 +120,7 @@ const DefaultSlider: React.FC<DSProps> = styled(
                         defaultValue={defaultValue ? defaultValue : DEFAULT_VALUE}
                         min={min_}
                         max={max_}
+                        step={step ?? DEFAULT_STEP}
                         marks={marks ?? createMarks(min_, max_)}
                         railStyle={railStyle ? railStyle : defaultRailStyle}
                         trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
