@@ -8,7 +8,6 @@ import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
-// import CalculatorModal from './Calculator';
 
 const SBox = styled(Box)`
     background: #011772;
