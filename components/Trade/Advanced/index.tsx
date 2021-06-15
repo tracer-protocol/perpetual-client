@@ -11,12 +11,15 @@ const TradingPanel = styled.div`
     flex-direction: column;
     height: 90vh;
     position: relative;
+    border-left: 1px solid #0c3586;
+    border-right: 1px solid #0c3586;
 `;
 
 const RightPanel = styled.div`
     width: 75%;
     display: flex:
     height: 90vh;
+    // border: 1px solid #0c3586;
 `;
 
 const Overlay = styled.div`
@@ -55,7 +58,7 @@ const Advanced: React.FC = styled(({ className }) => {
         <div className={`container ${className}`}>
             <TradingPanel>
                 <MarketSelect account={account ?? ''} />
-                <InterfaceSelect isAdjust={isAdjust} setAdjust={setAdjust} />
+                <InterfaceSelect account={account ?? ''} isAdjust={isAdjust} setAdjust={setAdjust} />
                 {isAdjust
 		            ? <ModifyOrder selectedTracer={selectedTracer} account={account ?? ''} />
 		            : <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />

@@ -95,6 +95,12 @@ const OrderBookContainer = styled.div`
     }
 `;
 
+const SBox = styled(Box)`
+    border-right: 1px solid #0c3586;
+    border-left: 1px solid #0c3586;
+    
+`
+
 const TradingView: React.FC<{
     selectedTracer: Tracer | undefined;
 }> = ({ selectedTracer }) => {
@@ -116,7 +122,7 @@ const TradingView: React.FC<{
                 <Graphs />
                 <AccountSummary selectedTracer={selectedTracer} />
             </Box>
-            <Box className="w-1/4 flex-col p-0">
+            <SBox className="w-1/4 flex-col p-0">
                 <InsuranceInfo />
                 <OrderBookContainer>
                     <h3>Order Book</h3>
@@ -130,7 +136,7 @@ const TradingView: React.FC<{
                     )}
                 </OrderBookContainer>
                 <RecentTrades trades={mostRecentTrades} />
-            </Box>
+            </SBox>
         </>
     );
 };

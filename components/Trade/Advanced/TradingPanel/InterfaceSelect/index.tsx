@@ -27,7 +27,8 @@ const RightArrow = styled(CaretRightOutlined)`
 
 type ISProps = {
     isAdjust: boolean,
-    setAdjust: React.Dispatch<React.SetStateAction<boolean>>
+    setAdjust: React.Dispatch<React.SetStateAction<boolean>>,
+    account: string,
     className?: string,
 }
 
@@ -55,8 +56,10 @@ export default styled(({
     font-size: 20px;
     letter-spacing: -0.4px;
     color: #fff;
-	display: flex;
+	display: ${props => props.account === '' ? 'none' : 'flex'};
     justify-content: space-between;
+    background-color: #00125D;
+    border-bottom: 1px solid #0c3586;
 	padding: 20px;
 	z-index: 1;
 ` as React.FC<ISProps>;
