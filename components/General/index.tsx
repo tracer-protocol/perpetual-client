@@ -164,6 +164,14 @@ export const Previous = styled.span`
         content: '>>>';
     }
 `;
+export const Approx = styled.span`
+    color: #005ea4;
+    margin-right: 5px;
+    &:before {
+        padding-left: 2px;
+        content: '~';
+    }
+`;
 
 export const After = styled.span`
     color: #005ea4;

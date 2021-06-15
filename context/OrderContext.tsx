@@ -148,11 +148,10 @@ export type OrderState = {
     //  The lock helps avoiding infinite loops when setting these values
     lockAmountToPay: boolean;
     advanced: boolean; // boolean to check if on basic or advanced page
+    slippage: number;
 };
 
 interface ContextProps {
-    exposure: BigNumber;
-    tradePrice: BigNumber;
     oppositeOrders: OpenOrder[];
     order: OrderState;
     orderDispatch: React.Dispatch<OrderAction>;
@@ -173,6 +172,7 @@ export type OrderAction =
     | { type: 'setMaxExposure' }
     | { type: 'setBestPrice' }
     | { type: 'setMaxClosure' }
+    | { type: 'setSlippage'; value: number }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
     | { type: 'setPrice'; value: number }
@@ -225,6 +225,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         wallet: 0,
         lockAmountToPay: false, // deprecated with basic trade
         advanced: false,
+        slippage: 0
     };
 
     const reducer = (state: any, action: OrderAction) => {
@@ -318,16 +319,23 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             orderDispatch({ type: 'setPrice', value: order.oppositeOrders[0]?.price?.toNumber() ?? NaN });
         }
     }, [order.orderType]);
+    
+    useEffect(() => {
+        orderDispatch({ type: 'setExposure', value: order.exposure * order.leverage });
+    }, [order.leverage])
 
     useEffect(() => {
         // calculate the exposure based on the opposite orders
         if (order.orderType === MARKET && order.oppositeOrders.length) {
             // convert orders
-            const { exposure } = calcTradeExposure(
+            const { exposure, slippage } = calcTradeExposure(
                 new BigNumber(order.amountToPay ?? 0),
                 order.leverage,
                 order.oppositeOrders,
             );
+            if (!slippage.eq(0)) {
+                orderDispatch({ type: 'setSlippage', value: slippage.toNumber() });
+            }
             if (!exposure.eq(0)) {
                 orderDispatch({ type: 'setExposure', value: exposure.toNumber() });
             }
