@@ -108,7 +108,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
             return res;
         } catch (err) {
-            return { status: 'error', message: `Faiiled to place order ${err}` } as Result;
+            return { status: 'error', message: `Failed to place order ${err}` } as Result;
         }
     };
 

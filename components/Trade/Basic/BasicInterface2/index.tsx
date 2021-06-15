@@ -138,7 +138,7 @@ const BasicInterface2: React.FC = styled(({ className }) => {
                     />
                     <RightContainer>
                         <MaxButton
-                            className="mr-2 mt-auto"
+                            className="mr-2 mt-auto mb-0"
                             onClick={(e: any) => {
                                 e.preventDefault();
                                 if (orderDispatch) {

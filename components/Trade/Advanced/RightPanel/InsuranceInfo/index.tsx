@@ -9,7 +9,7 @@ export default styled(({ className }) => {
     const { poolInfo } = useContext(InsuranceContext);
     return (
         <div className={className}>
-            <h3>Insurance Health</h3>
+            <h3>Insurance Pool Health</h3>
             <PoolHealth health={poolInfo?.health?.toNumber() ?? defaults.health.toNumber()} />
             <Section label={'Current Funding Level'}>{`${toApproxCurrency(
                 poolInfo?.liquidity ?? defaults.liquidity,

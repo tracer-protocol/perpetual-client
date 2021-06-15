@@ -58,6 +58,7 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
     height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 80}px` : '0')};
+
     > .market {
         // eventually this will have to change to be dynamic as more markets get added
         // this can be done with jQuery and a useEffect when tracers is updated and setting nth-child attr
@@ -80,40 +81,40 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     }
 `;
 
-type MarketSelectDropdownButtonProps = {
-    className?: string;
-    arrowUp?: boolean;
-};
+// type MarketSelectDropdownButtonProps = {
+//     className?: string;
+//     arrowUp?: boolean;
+// };
 
-const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = styled(
-    ({ className, arrowUp }: MarketSelectDropdownButtonProps) => {
-        return (
-            <div className={className}>
-                <span>{arrowUp ? 'Hide Markets' : 'View Markets'}</span>
-                <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
-            </div>
-        );
-    },
-)`
-    color: #3da8f5;
-    font-size: 1rem;
-    border: 1px solid #3da8f5;
-    border-radius: 20px;
-    height: 28px;
-    width: 160px;
-    text-align: center;
-
-    &:hover {
-        cursor: pointer;
-    }
-
-    > .down-arrow {
-        margin-top: -5px;
-        display: inline-block;
-        transition: 0.3s;
-        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-3px)' : 'translateY(-2px)')};
-    }
-`;
+// const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = styled(
+//     ({ className, arrowUp }: MarketSelectDropdownButtonProps) => {
+//         return (
+//             <div className={className}>
+//                 <span>{arrowUp ? 'Hide Markets' : 'View Markets'}</span>
+//                 <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
+//             </div>
+//         );
+//     },
+// )`
+//     color: #3da8f5;
+//     font-size: 1rem;
+//     border: 1px solid #3da8f5;
+//     border-radius: 20px;
+//     height: 28px;
+//     width: 160px;
+//     text-align: center;
+//
+//     &:hover {
+//         cursor: pointer;
+//     }
+//
+//     > .down-arrow {
+//         margin-top: -5px;
+//         display: inline-block;
+//         transition: 0.3s;
+//         transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
+//     }
+// `;
 
 const MarketContainer = styled.div`
     font-size: 20px;
@@ -152,9 +153,10 @@ export default styled(({ className }: MSProps) => {
                     <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
                     <div className="my-auto">{selectedTracer?.marketId}</div>
                 </MarketContainer>
-                <div className="ml-auto" onMouseEnter={() => setPopup(true)}>
-                    <MarketSelectDropdownButton arrowUp={popup} />
-                </div>
+                {/*TODO: Add back market dropdown button*/}
+                {/*<div className="ml-auto" onMouseEnter={() => setPopup(true)}>*/}
+                {/*    <MarketSelectDropdownButton arrowUp={popup} />*/}
+                {/*</div>*/}
                 <MarketSelectDropdown
                     tracers={tracers ?? {}}
                     display={popup}

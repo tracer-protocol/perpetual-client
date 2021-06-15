@@ -163,7 +163,6 @@ input {
 
 @tailwind utilities;
 
-
 /** Table css */
 .cCell {
     @apply p-3;
@@ -200,5 +199,5 @@ h4 {
 }
 
 .web3modal-modal-lightbox {
-    z-index: 4!important;
+    z-index: 4 !important;
 }

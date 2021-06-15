@@ -151,7 +151,6 @@ const DropdownLogo = styled(({ className }) => {
     > .logo {
         height: 30px;
         margin-top: 3vh;
-        z-index: 2;
     }
 
     > .down-arrow {
@@ -160,7 +159,6 @@ const DropdownLogo = styled(({ className }) => {
         top: 2.5vh;
         right: 0;
         position: absolute;
-        z-index: 2;
         margin-top: 0;
         transition: 0.5s;
     }
@@ -171,9 +169,8 @@ const DropdownLogo = styled(({ className }) => {
     }
 
     > .dropdown-menu {
-        opacity: 0;
         position: absolute;
-        display: block;
+        opacity: 0;
         height: 0;
         top: 10px;
         left: -30px;
@@ -181,7 +178,6 @@ const DropdownLogo = styled(({ className }) => {
         background: #3372e8;
         border-radius: 10px;
         transition: all 0.3s ease-in-out;
-        z-index: -1;
     }
 
     > .dropdown-menu ul {
@@ -237,6 +233,8 @@ const DropdownLogo = styled(({ className }) => {
 
     &.show > .dropdown-menu ul .nav-item:nth-child(4) {
         transition: all 0.3s ease-in-out 0.4s, background 0.5s ease;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
 
     &.show > .dropdown-menu ul .nav-item.highlight {
