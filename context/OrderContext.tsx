@@ -257,8 +257,12 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 const exposure = 1;
                 return { ...state, exposure: exposure };
             case 'setBestPrice':
-                const price = 1;
-                return { ...state, price: price };
+                const price = state.oppositeOrders[0]?.price ?? NaN;
+                if (!price) { // if there is no price set error to no open orders
+                    return { ...state, error: 3 };
+                } else {
+                    return { ...state, price: price };
+                }
             case 'setError':
                 return { ...state, error: action.value };
             case 'setWallet':
@@ -276,7 +280,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     useMemo(() => {
         if (omeState?.orders) {
-            const oppositeOrders = (order.position ? omeState.orders.askOrders : omeState.orders.bidOrders).map(
+            const oppositeOrders = (order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders).map(
                 (order) => ({
                     price: new BigNumber(order.price),
                     amount: new BigNumber(order.quantity),
@@ -339,7 +343,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     // Check errors
     useMemo(() => {
         if (omeState?.orders) {
-            const oppositeOrders = order.position ? omeState.orders.askOrders : omeState.orders.bidOrders;
+            const oppositeOrders = order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders;
             const error = checkErrors(
                 selectedTracer?.getBalance(),
                 oppositeOrders,
@@ -351,7 +355,14 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 orderDispatch({ type: 'setError', value: error });
             }
         }
-    }, [selectedTracer, account, order]);
+    }, [ // listens to a lot, but not all
+        selectedTracer?.getBalance(), 
+        account, 
+        order.price, 
+        order.exposure, 
+        order.orders,
+        order.orderType
+    ]);
 
     return (
         <OrderContext.Provider
