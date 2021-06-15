@@ -11,7 +11,6 @@ export const Exposure: React.FC<{
     exposure: number;
     className?: string;
 }> = ({ selectedTracer, orderDispatch, exposure, className }) => {
-    const tracerId = selectedTracer?.marketId ?? '';
     return (
         <SmallInput
             title={'Amount'}
@@ -25,7 +24,32 @@ export const Exposure: React.FC<{
                 e.preventDefault();
                 orderDispatch ? orderDispatch({ type: 'setMaxExposure' }) : console.error('No dispatch function set');
             }}
-            unit={tracerId.split('/')[0]}
+            unit={selectedTracer?.baseTicker ?? ''}
+            amount={exposure}
+        />
+    );
+};
+
+export const Closure: React.FC<{
+    orderDispatch: React.Dispatch<OrderAction> | undefined;
+    selectedTracer: Tracer | undefined;
+    exposure: number;
+    className?: string;
+}> = ({ selectedTracer, orderDispatch, exposure, className }) => {
+    return (
+        <SmallInput
+            title={'Amount'}
+            className={className ?? ''}
+            onChange={(e) => {
+                orderDispatch
+                    ? orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) })
+                    : console.error('No dispatch function set');
+            }}
+            setMax={(e) => {
+                e.preventDefault();
+                orderDispatch ? orderDispatch({ type: 'setMaxClosure' }) : console.error('No dispatch function set');
+            }}
+            unit={selectedTracer?.baseTicker ?? ''}
             amount={exposure}
         />
     );
@@ -37,7 +61,6 @@ export const Price: React.FC<{
     price: number;
     className?: string;
 }> = ({ selectedTracer, orderDispatch, price, className }) => {
-    const tracerId = selectedTracer?.marketId ?? '';
     return (
         <SmallInput
             title={'Price'}
@@ -55,7 +78,7 @@ export const Price: React.FC<{
                     console.error('No dispatch function set');
                 }
             }}
-            unit={tracerId.split('/')[1]}
+            unit={selectedTracer?.quoteTicker ?? ''}
             amount={price}
         />
     );

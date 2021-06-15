@@ -172,6 +172,7 @@ export type OrderAction =
     | { type: 'setExposure'; value: number }
     | { type: 'setMaxExposure' }
     | { type: 'setBestPrice' }
+    | { type: 'setMaxClosure' }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
     | { type: 'setPrice'; value: number }
@@ -254,8 +255,11 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setExposure':
                 return { ...state, exposure: action.value };
             case 'setMaxExposure':
-                const exposure = 1;
+                let exposure = 1;
                 return { ...state, exposure: exposure };
+            case 'setMaxClosure':
+                let fullClosure = selectedTracer?.getBalance().base.abs();
+                return { ...state, exposure: fullClosure };
             case 'setBestPrice':
                 const price = state.oppositeOrders[0]?.price ?? NaN;
                 if (!price) { // if there is no price set error to no open orders
@@ -294,7 +298,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [order.position, omeState?.orders]);
 
-    useEffect(() => {
+    useMemo(() => {
         // when user swaps to close order, set opposite side
         // set the amount to the users position
         if (order.adjustType === CLOSE) {
