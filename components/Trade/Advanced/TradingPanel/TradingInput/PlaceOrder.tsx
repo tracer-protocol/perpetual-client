@@ -117,7 +117,11 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     />
                 </div>
 
-                <Leverage leverage={order?.leverage ?? 1} orderDispatch={orderDispatch} />
+                <Leverage 
+                    min={selectedTracer?.getBalance().leverage}
+                    max={selectedTracer?.getMaxLeverage()}
+                    leverage={order?.leverage ?? 1} orderDispatch={orderDispatch} 
+                />
 
                 <PostTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
