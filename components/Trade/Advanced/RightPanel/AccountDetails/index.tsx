@@ -107,8 +107,8 @@ const OpenOrders: React.FC<{
             <tbody>
                 {userOrders.map((order, index) => {
                     const amount = parseFloat(Web3.utils.fromWei(order.amount.toString())),
-                        filled = parseFloat(Web3.utils.fromWei(order.amount.toString())),
-                        remaining = amount - filled;
+                        amountLeft = parseFloat(Web3.utils.fromWei(order.amount_left.toString())),
+                        filled = amount - amountLeft;
                     return (
                         <TRow key={`open-order-${index}`}>
                             <TData>{calcStatus(order)}</TData>
@@ -122,7 +122,7 @@ const OpenOrders: React.FC<{
                                 {filled} {baseTicker}
                             </TData>
                             <TData>
-                                {remaining} {baseTicker}
+                                {amountLeft} {baseTicker}
                             </TData>
                             <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
                             <TData>

@@ -6,10 +6,9 @@ import styled from 'styled-components';
 import { Box } from '@components/General';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
-import { Inputs as InputSelects } from './Inputs';
 import PostTradeDetails from './PostTradeDetails';
 import Error from '@components/Trade/Error';
-import DefaultSlider from '@components/Slider';
+import { Exposure, Price, Leverage } from './Inputs';
 
 type SProps = {
     selected: number;
@@ -35,8 +34,8 @@ const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
             }}
             value={selected}
         >
-            <Option>LONG</Option>
-            <Option>SHORT</Option>
+            <Option>Long</Option>
+            <Option>Short</Option>
         </SSlideSelect>
     );
 };
@@ -58,8 +57,8 @@ const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }: SProp
             }}
             value={selected}
         >
-            <Option>LIMIT</Option>
-            <Option>MARKET</Option>
+            <Option>Limit</Option>
+            <Option>Market</Option>
         </SlideSelect>
     );
 })`
@@ -73,29 +72,6 @@ const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }: SProp
     > .bg-slider {
         background: #002886;
         border-radius: 0;
-    }
-`;
-
-type LProps = {
-    className?: string;
-};
-const Leverage: React.FC<LProps> = styled(({ className }: LProps) => {
-    return (
-        <div className={`${className} m-3`}>
-            <a className="label">Leverage</a>
-            <div className="w-full pl-12 pr-8 pb-4 mt-1">
-                <DefaultSlider />
-            </div>
-        </div>
-    );
-})`
-    display: flex;
-
-    > .label {
-        margin: 0 auto 35px 0;
-        font-size: 16px;
-        letter-spacing: -0.32px;
-        color: #3da8f5;
     }
 `;
 
@@ -115,7 +91,7 @@ type TIProps = {
 };
 
 export default styled(({ selectedTracer, className, account }: TIProps) => {
-    const { order } = useContext(OrderContext);
+    const { order, orderDispatch } = useContext(OrderContext);
     return (
         <>
             <Box className={`${className} ${account === '' ? 'hide' : ''} `}>
@@ -128,24 +104,25 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 </div>
 
                 {/* Quantity and Price Inputs */}
-                <InputSelects amount={order?.amountToPay} price={order?.price} selectedTracer={selectedTracer} />
+                <div className="flex flex-wrap">
+                    <Exposure
+                        orderDispatch={orderDispatch}
+                        selectedTracer={selectedTracer}
+                        exposure={order?.exposure ?? defaults.exposure}
+                    />
+                    <Price
+                        orderDispatch={orderDispatch}
+                        selectedTracer={selectedTracer}
+                        price={order?.price ?? defaults.price}
+                    />
+                </div>
 
-                {/*/!* Dont display these if it is a limit order*!/*/}
-                {/*{order?.orderType !== 1 ? (*/}
-                {/*    <>*/}
-                {/*        <Leverage leverage={order?.leverage ?? 1} />*/}
-                {/*    </>*/}
-                {/*) : (*/}
-                {/*    <></>*/}
-                {/*)}*/}
-
-                {/* Display for both market orders and limit orders */}
-                <Leverage />
+                <Leverage leverage={order?.leverage ?? 1} orderDispatch={orderDispatch} />
 
                 <PostTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                     balances={selectedTracer?.getBalance() ?? defaults.balances}
-                    exposure={order?.amountToBuy ? new BigNumber(order.amountToBuy) : defaults.amountToBuy}
+                    exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
                     position={order?.position ?? 0}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                 />

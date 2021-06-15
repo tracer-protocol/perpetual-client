@@ -13,7 +13,6 @@ import { OMEOrder } from 'types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
 import { defaults } from '@libs/Tracer';
 
-calcTradeExposure;
 /**
  * -1 is no error
  * 0 is reserved for unknown
@@ -54,6 +53,16 @@ export const Errors: Record<number, Error> = {
     },
 };
 
+// Position types
+export const LONG = 0;
+export const SHORT = 1;
+// Adjust types
+export const ADJUST = 0;
+export const CLOSE = 1;
+// Order types
+export const LIMIT = 0;
+export const MARKET = 1;
+
 /**
  * Returns the Error ID relating to the mapping above
  * These do not need to be in numeric order. It doesnt really matter.
@@ -71,24 +80,24 @@ const checkErrors: (
     let newBase = new BigNumber(0),
         newQuote = new BigNumber(0);
     const priceBN = new BigNumber(order.price);
-    const amountToBuyBN = new BigNumber(order.amountToBuy);
+    const exposureBN = new BigNumber(order.exposure);
     if (balances) {
-        if (order.position === 0) {
+        if (order.position === SHORT) {
             // short
-            newBase = balances?.base.minus(amountToBuyBN);
-            newQuote = balances?.quote.plus(calcNotionalValue(amountToBuyBN, priceBN));
+            newBase = balances?.base.minus(exposureBN);
+            newQuote = balances?.quote.plus(calcNotionalValue(exposureBN, priceBN));
         } else {
             // long
-            newBase = balances?.base.plus(amountToBuyBN);
-            newQuote = balances?.quote.minus(calcNotionalValue(amountToBuyBN, priceBN));
+            newBase = balances?.base.plus(exposureBN);
+            newQuote = balances?.quote.minus(calcNotionalValue(exposureBN, priceBN));
         }
     }
     if (!account) {
         return 4;
-    } else if (orders?.length === 0 && order.orderType === 0) {
+    } else if (orders?.length === 0 && order.orderType === MARKET) {
         // there are no orders
         return 3;
-    } else if (!balances?.base.eq(0) && order.orderType === 0 && !order.advanced) {
+    } else if (!balances?.base.eq(0) && order.orderType === MARKET && !order.advanced) {
         // user has a position already
         return 0;
     } else if (balances?.tokenBalance.eq(0) && !order.advanced) {
@@ -120,12 +129,17 @@ export type OrderState = {
     market: string; // exposed market asset
     collateral: string; // collateral asset
     amountToPay: number; // required margin / amount of margin being used
-    amountToBuy: number;
+    exposure: number;
     leverage: number;
     position: number; // long or short, 0 is short, 1 is long
     price: number; // price of the market asset in relation to the collateral asset
-    matchingEngine: number; // for basic this will always be 0 (OME)
     orderType: number; // for basic this will always be 0 (market order), 1 is limit and 2 is spot
+    adjustType: number; // selection for adjust order 0 (adjust), 1 (close)
+    adjustSummary: {
+        // summary for when adjusting position
+        exposure: number;
+        leverage: number;
+    };
     oppositeOrders: FlatOrder[];
     error: number; // number ID relating to the error map above
     wallet: number; // ID of corresponding wallet in use 0 -> web3, 1 -> TCR margin
@@ -155,12 +169,20 @@ export type OrderAction =
     | { type: 'setMarket'; value: string }
     | { type: 'setCollateral'; value: string }
     | { type: 'setAmountToPay'; value: number }
-    | { type: 'setAmountToBuy'; value: number }
+    | { type: 'setExposure'; value: number }
+    | { type: 'setMaxExposure' }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
     | { type: 'setPrice'; value: number }
     | { type: 'setOrderType'; value: number }
-    | { type: 'setMatchingEngine'; value: number }
+    | { type: 'setAdjustType'; value: number }
+    | {
+          type: 'setAdjustSummary';
+          adjustSummary: {
+              exposure: number;
+              leverage: number;
+          };
+      }
     | { type: 'setError'; value: number }
     | { type: 'setWallet'; value: number }
     | { type: 'setLock'; value: boolean }
@@ -186,16 +208,20 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         market: 'Market', // exposed market asset
         collateral: 'USD', // collateral asset
         amountToPay: NaN, // required margin / amount of margin being used
-        amountToBuy: NaN,
+        exposure: NaN,
         leverage: 1, // default to 1x leverage
-        position: 0, // long or short, 0 is short, 1 is long
+        position: LONG, // long or short, 1 long, 0 is short
         price: NaN, // price of the market asset in relation to the collateral asset
-        matchingEngine: 0, // for basic this will always be 0 (OME)
-        orderType: 0, // for basic this will always be 0 (market order), 1 is limit and 2 is spot
+        orderType: LIMIT, // orderType
+        adjustType: ADJUST,
+        adjustSummary: {
+            exposure: 0,
+            leverage: 1,
+        },
         oppositeOrders: [],
         error: -1,
         wallet: 0,
-        lockAmountToPay: false, // default lock amount to buy
+        lockAmountToPay: false, // deprecated with basic trade
         advanced: false,
     };
 
@@ -215,14 +241,21 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, price: action.value };
             case 'setOrderType':
                 return { ...state, orderType: action.value };
-            case 'setMatchingEngine':
-                return { ...state, matchingEngine: action.value };
+            case 'setAdjustType':
+                return { ...state, adjustType: action.value };
+            case 'setAdjustSummary': {
+                return { ...state, adjustSummary: action.adjustSummary };
+            }
             case 'setOppositeOrders':
                 return { ...state, oppositeOrders: action.orders };
             case 'setMarketPrice':
                 return { ...state, marketPrice: action.value };
-            case 'setAmountToBuy':
-                return { ...state, amountToBuy: action.value };
+            case 'setExposure':
+                return { ...state, exposure: action.value };
+            case 'setMaxExposure':
+                // todo calc max exposure
+                const exposure = 1;
+                return { ...state, exposure: exposure };
             case 'setError':
                 return { ...state, error: action.value };
             case 'setWallet':
@@ -247,89 +280,60 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 }),
             );
             orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
-            if (order.orderType === 0) {
-                // market order
-                if (order.advanced && !order.amountToBuy) {
-                    return;
-                } // dont set if advanced and no amount
+            if (order.orderType === MARKET) {
+                // market order set the price if on market order
                 orderDispatch({ type: 'setPrice', value: oppositeOrders[0]?.price?.toNumber() ?? NaN });
             }
         }
     }, [order.position, omeState?.orders]);
 
     useEffect(() => {
-        if (order.orderType === 0) {
-            if (!order.lockAmountToPay) {
-                // locked amount to buy input so increase amount to buy
-                orderDispatch({
-                    type: 'setAmountToBuy',
-                    value: order?.amountToPay * order.leverage * order.price,
-                });
-            } else {
-                // locked exposure decrease margin
-                orderDispatch({
-                    type: 'setAmountToPay',
-                    value: order?.amountToBuy.toNumber() / order.price / order.leverage,
-                });
+        // when user swaps to close order, set opposite side
+        // set the amount to the users position
+        if (order.adjustType === CLOSE) {
+            const balances = selectedTracer?.getBalance() ?? defaults.balances;
+            if (balances?.base.toNumber() < 0) {
+                orderDispatch({ type: 'setPosition', value: LONG });
+            } else if (balances?.base > 0) {
+                orderDispatch({ type: 'setPosition', value: SHORT });
             }
+            orderDispatch({ type: 'setExposure', value: balances.base.abs() });
         }
-    }, [order.leverage]);
+    }, [order.adjustType]);
 
     useEffect(() => {
-        if (order.orderType === 0) {
+        // when user swaps to market order setPrice
+        if (order.orderType === MARKET) {
             orderDispatch({ type: 'setPrice', value: order.oppositeOrders[0]?.price?.toNumber() ?? NaN });
         }
     }, [order.orderType]);
 
     useEffect(() => {
         // calculate the exposure based on the opposite orders
-        if (order.orderType === 0 && order.oppositeOrders.length) {
+        if (order.orderType === MARKET && order.oppositeOrders.length) {
             // convert orders
-            const { exposure, tradePrice } = calcTradeExposure(
+            const { exposure } = calcTradeExposure(
                 new BigNumber(order.amountToPay ?? 0),
                 order.leverage,
                 order.oppositeOrders,
             );
             if (!exposure.eq(0)) {
-                orderDispatch({ type: 'setAmountToBuy', value: exposure.toNumber() });
-            }
-            if (!tradePrice.eq(0)) {
-                orderDispatch({ type: 'setPrice', value: tradePrice.toNumber() });
+                orderDispatch({ type: 'setExposure', value: exposure.toNumber() });
             }
         }
     }, [order.amountToPay, order.leverage, order.oppositeOrders]);
 
-    useEffect(() => {
-        // calculate and set the exposure based on the orderPrice for limit
-        if (order.orderType === 1) {
-            orderDispatch({ type: 'setAmountToBuy', value: order.price * order.amountToPay });
-        }
-    }, [order.amountToPay, order.price, order.orderType]);
-
     // Resets the trading screen
     const reset = () => {
-        // setMarket('TEST0');
-        // setCollateral('USD');
-        // setAmountToPay(0);
-        // setLeverage(1);
-        // setPosition(0);
-        // setPrice(0);
-        // setMatchingEngine(0);
-        // setOrderType(0);
+        console.error('Reset is not implemented ');
     };
-
-    // Resets the required margin and leverage on an update trigger
-    // TODO this is outdated and should probably be removed, not sure of the reprecussions
-    // useEffect(() => {
-    //     orderDispatch({ type: 'setAmountToPay', value: 0 });
-    //     orderDispatch({ type: 'setLeverage', value: 1 });
-    // }, [updateTrigger]);
 
     // Handles setting the selected tracer Id on a market or collateral change
     useEffect(() => {
         setTracerId ? setTracerId(`${order.market}/${order.collateral}`) : console.error('Error setting tracerId');
     }, [order.market, order.collateral]);
 
+    // Check errors
     useMemo(() => {
         if (omeState?.orders) {
             const oppositeOrders = order.position ? omeState.orders.askOrders : omeState.orders.bidOrders;

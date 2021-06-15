@@ -127,6 +127,7 @@ export const web3Machine = Machine<MachineContext, Web3StateSchema, Web3Event>({
                             target: 'idle',
                             actions: assign({
                                 networkId: (_context, event) => {
+                                    console.info(`Setting network ${event.networkId}`);
                                     return parseInt(event.networkId);
                                 },
                             }),

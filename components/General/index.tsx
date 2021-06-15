@@ -19,7 +19,6 @@ export const DateAndTime = styled(({ className, date, time }) => {
 `;
 
 export const Box = styled.div`
-    border: 1px solid #0c3586;
     display: flex;
     padding: 20px;
 `;

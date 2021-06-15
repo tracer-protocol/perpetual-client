@@ -90,7 +90,7 @@ const OrderSummary: React.FC<SProps> = styled(
                 ? balances.quote.plus(notional) // short
                 : balances.quote.minus(notional); // long
         return (
-            <HiddenExpand className={className} defaultHeight={0} open={!!order?.amountToPay || !!order?.amountToBuy}>
+            <HiddenExpand className={className} defaultHeight={0} open={!!order?.amountToPay || !!order?.exposure}>
                 <h3>Order Summary</h3>
                 <SSection label={'Order Type'}>Market</SSection>
                 <SSection label={'Market Price'}>
@@ -182,7 +182,7 @@ const Basic: React.FC = styled(({ className }) => {
 
     useEffect(() => {
         // could have equally been checking on the margin variable
-        if (order?.amountToBuy || order?.amountToPay) {
+        if (order?.exposure || order?.amountToPay) {
             setShowSummary(true);
         } else {
             setShowSummary(false);
@@ -208,14 +208,21 @@ const Basic: React.FC = styled(({ className }) => {
                 {/** Display the variant basic interfaces, workout ab testing for this */}
                 <BasicInterface2 />
 
-                <DefaultSlider value={order?.leverage ?? 1} />
+                <DefaultSlider
+                    value={order?.leverage ?? 1}
+                    handleChange={(num) => {
+                        orderDispatch
+                            ? orderDispatch({ type: 'setLeverage', value: num })
+                            : console.error('Order dispatch not set');
+                    }}
+                />
 
                 <OrderSummary
                     balances={balances}
                     order={order}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                     fairPrice={fairPrice}
-                    exposure={exposure ?? defaults.amountToBuy}
+                    exposure={exposure ?? defaults.exposure}
                 />
                 <PlaceOrderButton className="mt-auto mb-2">
                     <SButton className="mx-auto">Place Trade</SButton>

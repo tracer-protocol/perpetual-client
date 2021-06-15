@@ -87,15 +87,15 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     };
 
     const placeOrder: (order: OrderState) => Promise<Result> = async (order) => {
-        const { amountToPay, price, position } = order;
-        const amount = Web3.utils.toWei(amountToPay.toString()) ?? 0;
+        const { exposure, price, position } = order;
+        const amount = Web3.utils.toWei(exposure.toString()) ?? 0;
         const now = Math.floor(Date.now() / 1000); // timestamp in seconds
         const fourDays = 345600; // four days in seconds
         const makes: OrderData[] = [
             {
                 amount: amount,
                 price: Web3.utils.toWei(price.toString()),
-                side: position ? 0 : 1,
+                side: position ? 1 : 0, // position === SHORT === 1 then 1 else 0
                 maker: account ?? '',
                 expires: now + fourDays,
                 market: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer.address) : '',

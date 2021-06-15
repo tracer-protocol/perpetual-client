@@ -68,14 +68,14 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
 
     if (order?.error === -1) {
         return (
-            <div className={`w-full ${className}`} onClick={handleOrder}>
+            <div className={`w-full ${className ?? ''}`} onClick={handleOrder}>
                 {children}
             </div>
         );
     } else {
         return (
             <Tooltip title={Errors[order?.error ?? -1]?.message}>
-                <div className={`button-disabled text-center ${className}`}>{children}</div>
+                <div className={`button-disabled ${className ?? ''}`}>{children}</div>
             </Tooltip>
         );
     }

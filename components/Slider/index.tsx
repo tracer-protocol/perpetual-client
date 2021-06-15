@@ -71,7 +71,7 @@ type DSProps = {
     railStyle?: React.CSSProperties;
     trackStyle?: React.CSSProperties;
     handleStyle?: React.CSSProperties;
-    handleChange?: (val: number) => any;
+    handleChange: (val: number) => any;
 };
 const DefaultSlider: React.FC<DSProps> = styled(
     ({
