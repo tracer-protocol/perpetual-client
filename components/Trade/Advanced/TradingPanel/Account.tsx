@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
@@ -121,14 +121,15 @@ const AccountNumberSelect = styled(NumberSelect)`
 `;
 
 type LProps = {
-    leverage: number;
     className?: string;
+    value?: number;
+    handleChange?: (val: number) => any;
 };
-const Leverage: React.FC<LProps> = styled(({ className, leverage }: LProps) => {
+const Leverage: React.FC<LProps> = styled(({ className, value, handleChange }: LProps) => {
     return (
         <div className={className}>
             <h3>Leverage</h3>
-            <DefaultSlider className="px-5" value={leverage ?? 1} />
+            <DefaultSlider className="px-5" value={value} handleChange={handleChange} />
         </div>
     );
 })`
@@ -156,7 +157,7 @@ type CalculatorModalProps = {
 const CalculatorModal: React.FC<CalculatorModalProps> = styled(
     ({ className, close, exposureUnit, marginUnit, balances, display }: CalculatorModalProps) => {
         const { selectedTracer } = useContext(TracerContext);
-        const [leverage] = useState(1);
+        const [leverage, setLeverage] = useState(1);
         const [exposureAmount, setExposureAmount] = useState(NaN);
         const [marginAmount, setMarginAmount] = useState(NaN);
         const [liquidationAmount, setLiquidationAmount] = useState(NaN);
@@ -166,6 +167,10 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
 
         const [exposureLocked, setExposureLocked] = useState(false);
         const [marginLocked, setMarginLocked] = useState(false);
+
+        useEffect(() => {
+            setLeverage(leverage);
+        }, [leverage]);
 
         const Calculate = () => {
             if (isLong) {
@@ -253,7 +258,8 @@ const CalculatorModal: React.FC<CalculatorModalProps> = styled(
                     lockOnClick={() => setMarginLocked(!marginLocked)}
                 />
 
-                <Leverage leverage={leverage} />
+                <Leverage value={leverage} handleChange={(val) => setLeverage(val)} />
+                <input value={leverage} onChange={(e) => setLeverage(Number(e.target.value))} />
 
                 <div>
                     Leverage:{' '}

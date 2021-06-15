@@ -77,15 +77,14 @@ const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }: SProp
 `;
 
 type LProps = {
-    leverage: number;
     className?: string;
 };
-const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
+const Leverage: React.FC<LProps> = styled(({ className }: LProps) => {
     return (
         <div className={`${className} m-3`}>
             <a className="label">Leverage</a>
-            <div className="w-3/4 px-4 pb-4 mt-1">
-                <DefaultSlider value={leverage} />
+            <div className="w-full pl-12 pr-8 pb-4 mt-1">
+                <DefaultSlider />
             </div>
         </div>
     );
@@ -141,7 +140,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 {/*)}*/}
 
                 {/* Display for both market orders and limit orders */}
-                <Leverage leverage={order?.leverage ?? 1} />
+                <Leverage />
 
                 <PostTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
