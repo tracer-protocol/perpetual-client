@@ -38,6 +38,8 @@ export const defaults: Record<string, any> = {
     feeRate: new BigNumber(0),
     fundingRateSensitivity: new BigNumber(0),
     twentyFourHourChange: 0,
+    baseTicker: '',
+    quoteTicker: '',
 };
 
 /**
