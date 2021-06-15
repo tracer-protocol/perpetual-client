@@ -2,7 +2,7 @@ import React from 'react';
 import SmallInput from '@components/General/Input/SmallInput';
 import { Tracer } from 'libs';
 import { LIMIT, OrderAction } from '@context/OrderContext';
-import { DefaultSlider } from '@components/Trade/LeverageSlider';
+import DefaultSlider from '@components/Slider';
 import styled from 'styled-components';
 
 export const Exposure: React.FC<{
@@ -59,14 +59,22 @@ export const Price: React.FC<{
 type LProps = {
     leverage: number;
     className?: string;
+    orderDispatch: React.Dispatch<OrderAction> | undefined;
 };
 
-export const Leverage: React.FC<LProps> = styled(({ leverage, className }: LProps) => {
+export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className }: LProps) => {
     return (
         <div className={`${className} m-3`}>
             <a className="label">Leverage</a>
             <div className="w-3/4 px-4 pb-4">
-                <DefaultSlider leverage={leverage} />
+                <DefaultSlider 
+                    value={leverage}
+                    handleChange={(num) => {
+                        orderDispatch
+                            ? orderDispatch({ type: 'setLeverage', value: num })
+                            : console.error('Order dispatch not set');
+                    }}
+                />
             </div>
         </div>
     );

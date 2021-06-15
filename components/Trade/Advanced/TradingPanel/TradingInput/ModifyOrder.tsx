@@ -74,13 +74,18 @@ const Close: React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
 
 type AProps = {
     // selectedTracer: Tracer | undefined,
-    // orderDispatch: React.Dispatch<OrderAction> | undefined,
+    orderDispatch: React.Dispatch<OrderAction> | undefined,
     order: OrderState | undefined;
     className?: string;
 };
 
-const Adjust: React.FC<AProps> = ({ order }) => {
-    return <Leverage leverage={order?.leverage ?? 1} />;
+const Adjust: React.FC<AProps> = ({ order, orderDispatch }) => {
+    return (
+        <Leverage 
+            leverage={order?.leverage ?? 1} 
+            orderDispatch={orderDispatch}
+        />
+    );
 };
 
 type TIProps = {
@@ -109,7 +114,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     {order?.adjustType !== 0 ? (
                         <Close orderDispatch={orderDispatch} selectedTracer={selectedTracer} order={order} />
                     ) : (
-                        <Adjust order={order} />
+                        <Adjust orderDispatch={orderDispatch} order={order} />
                     )}
                 </div>
 
