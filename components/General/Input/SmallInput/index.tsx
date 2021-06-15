@@ -49,7 +49,7 @@ const InputContainer = styled.div`
     }
     > .unit {
         letter-spacing: -0.4px;
-        color: #3da8f5;
+        color: #005ea4;
         font-size: 20px;
         margin: auto 0;
         margin-left: auto;
