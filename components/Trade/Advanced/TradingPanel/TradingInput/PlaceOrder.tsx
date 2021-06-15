@@ -108,12 +108,12 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     <Exposure 
                         orderDispatch={orderDispatch}
                         selectedTracer={selectedTracer}
-                        exposure={order?.exposure ?? NaN}
+                        exposure={order?.exposure ?? defaults.exposure}
                     />
                     <Price 
                         orderDispatch={orderDispatch}
                         selectedTracer={selectedTracer}
-                        price={order?.price ?? NaN}
+                        price={order?.price ?? defaults.price}
                     />
                 </div>
 

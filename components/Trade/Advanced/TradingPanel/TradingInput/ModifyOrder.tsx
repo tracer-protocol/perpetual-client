@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import { OrderContext } from 'context';
-import Tracer from '@libs/Tracer';
+import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import { Box, Button } from '@components/General';
 import { PlaceOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import Error from '@components/Trade/Error';
 import { Exposure, Leverage } from './Inputs';
+import { OrderAction, OrderState } from '@context/OrderContext';
+import PostTradeDetails from './PostTradeDetails';
+import { BigNumber } from 'bignumber.js';
 
 type SProps = {
     selected: number;
@@ -50,6 +53,40 @@ const SError = styled(Error)<{ account: string }>`
     }
 `;
 
+type CProps = {
+    selectedTracer: Tracer | undefined,
+    orderDispatch: React.Dispatch<OrderAction> | undefined,
+    order: OrderState | undefined,
+    className?: string;
+};
+
+const Close:React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
+    return (
+        <>
+            <Exposure 
+                orderDispatch={orderDispatch}
+                selectedTracer={selectedTracer}
+                exposure={order?.exposure ?? defaults.exposure}
+            />
+
+        </>
+    )
+
+}
+
+type AProps = {
+    // selectedTracer: Tracer | undefined,
+    // orderDispatch: React.Dispatch<OrderAction> | undefined,
+    order: OrderState | undefined,
+    className?: string;
+};
+
+const Adjust:React.FC<AProps> = ({ order }) => {
+    return (
+        <Leverage leverage={order?.leverage ?? 1} />
+    )
+}
+
 type TIProps = {
     selectedTracer: Tracer | undefined;
     account: string;
@@ -72,15 +109,28 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
 					}} 
 				/>
 
-                {order?.adjustType !== 0
-                    ? 
-                        <Exposure 
-                            orderDispatch={orderDispatch}
-                            selectedTracer={selectedTracer}
-                            exposure={order?.exposure ?? NaN}
-                        />
-                    : <Leverage leverage={order?.leverage ?? 1} />
-                }
+                <div className="pt-3 pb-3">
+                    {order?.adjustType !== 0
+                        ? 
+                            <Close 
+                                orderDispatch={orderDispatch}
+                                selectedTracer={selectedTracer}
+                                order={order}
+                            />
+                        : 
+                            <Adjust 
+                                order={order}
+                            />
+                   }
+                </div>
+
+                <PostTradeDetails
+                    fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
+                    balances={selectedTracer?.getBalance() ?? defaults.balances}
+                    exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                    position={order?.position ?? 0}
+                    maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                />
 
                 <PlaceOrderButton className="text-center">
                     <Button>{order?.adjustType === 0 ? 'Adjust Order' : 'Close Position'} </Button>

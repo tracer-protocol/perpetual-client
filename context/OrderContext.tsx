@@ -277,10 +277,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             );
             orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
             if (order.orderType === MARKET) {
-                // market order
-                if (order.advanced && !order.exposure) {
-                    return;
-                } // dont set if advanced and no amount
+                // market order set the price if on market order
                 orderDispatch({ type: 'setPrice', value: oppositeOrders[0]?.price?.toNumber() ?? NaN });
             }
         }
@@ -292,9 +289,9 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         if (order.adjustType === CLOSE) {  
             let balances = selectedTracer?.getBalance() ?? defaults.balances;
             if (balances?.base.toNumber() < 0) {
-                orderDispatch({ type: 'setPosition', value: 1 })
+                orderDispatch({ type: 'setPosition', value: LONG })
             } else if (balances?.base > 0) {
-                orderDispatch({ type: 'setPosition', value: 0 })
+                orderDispatch({ type: 'setPosition', value: SHORT })
             }
             orderDispatch({ type: 'setExposure', value: balances.base.abs() })
         }
