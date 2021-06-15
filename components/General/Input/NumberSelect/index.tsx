@@ -41,7 +41,6 @@ type NSProps = {
     unit: string;
     title: string;
     balance?: number;
-    onChange?: (e: any) => any;
     hasLock?: boolean;
     isLocked?: boolean;
     lockOnClick?: (e: any) => any;
@@ -54,7 +53,6 @@ export const NumberSelect: React.FC<NSProps> = ({
     unit,
     title,
     balance,
-    onChange,
     hasLock,
     isLocked,
     lockOnClick,
@@ -105,7 +103,7 @@ export const NumberSelect: React.FC<NSProps> = ({
                     autoComplete="off"
                     min={0}
                     placeholder="0.0"
-                    onChange={onChange ? onChange : (e) => setAmount(Math.abs(parseFloat(e.target.value)))}
+                    onChange={(e) => setAmount(Math.abs(parseFloat(e.target.value)))}
                     value={!Number.isNaN(amount) ? amount : ''}
                     disabled={isLocked}
                 />

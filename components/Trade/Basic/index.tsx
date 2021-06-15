@@ -208,7 +208,14 @@ const Basic: React.FC = styled(({ className }) => {
                 {/** Display the variant basic interfaces, workout ab testing for this */}
                 <BasicInterface2 />
 
-                <DefaultSlider value={order?.leverage ?? 1} />
+                <DefaultSlider
+                    value={order?.leverage ?? 1}
+                    handleChange={(num) => {
+                        orderDispatch
+                            ? orderDispatch({ type: 'setLeverage', value: num })
+                            : console.error('Order dispatch not set');
+                    }}
+                />
 
                 <OrderSummary
                     balances={balances}

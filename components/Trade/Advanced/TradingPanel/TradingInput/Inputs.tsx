@@ -67,7 +67,7 @@ export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, cla
         <div className={`${className} m-3`}>
             <a className="label">Leverage</a>
             <div className="w-3/4 px-4 pb-4">
-                <DefaultSlider 
+                <DefaultSlider
                     value={leverage}
                     handleChange={(num) => {
                         orderDispatch

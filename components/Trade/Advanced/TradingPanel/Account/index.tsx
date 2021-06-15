@@ -1,19 +1,13 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
-import { calcTotalMargin, calcMinimumMargin, calcLeverage, calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
+import { calcTotalMargin, calcMinimumMargin } from '@tracer-protocol/tracer-utils';
 import { Box, Button } from '@components/General';
-import { Web3Context, TracerContext } from 'context';
+import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
-import DefaultSlider from '@components/Slider';
-import { UserBalance } from 'types';
-import { SlideSelect } from '@components/Buttons';
-import TracerModal from '@components/Modals';
-import { NumberSelect } from '@components/General';
-import { Option } from '@components/Buttons/SlideSelect';
 
 const SBox = styled(Box)`
     background: #011772;
@@ -98,7 +92,6 @@ const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
 }> = ({ selectedTracer, account }) => {
-    const [calculator, showCalculator] = useState(false);
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
@@ -145,14 +138,14 @@ const AccountPanel: React.FC<{
                 maxLeverage={maxLeverage}
                 price={Number.isNaN(fairPrice) ? 0 : fairPrice}
             />
-            <CalculatorModal
+            {/* <CalculatorModal
                 display={calculator}
                 close={() => showCalculator(false)}
                 exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}
                 marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}
                 price={Number.isNaN(fairPrice) ? 0 : fairPrice}
-            />
+            /> */}
         </AccountInfo>
     );
 };
