@@ -105,12 +105,12 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
 
                 {/* Quantity and Price Inputs */}
                 <div className="flex flex-wrap">
-                    <Exposure 
+                    <Exposure
                         orderDispatch={orderDispatch}
                         selectedTracer={selectedTracer}
                         exposure={order?.exposure ?? defaults.exposure}
                     />
-                    <Price 
+                    <Price
                         orderDispatch={orderDispatch}
                         selectedTracer={selectedTracer}
                         price={order?.price ?? defaults.price}

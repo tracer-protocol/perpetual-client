@@ -52,7 +52,8 @@ export interface OpenOrders {
     longOrders: OpenOrder[];
 }
 
-export type OMEOrder = { // this type is for the ui book
+export type OMEOrder = {
+    // this type is for the ui book
     cumulative: number;
     quantity: number;
     price: number;

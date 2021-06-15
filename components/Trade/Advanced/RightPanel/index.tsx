@@ -98,8 +98,7 @@ const OrderBookContainer = styled.div`
 const SBox = styled(Box)`
     border-right: 1px solid #0c3586;
     border-left: 1px solid #0c3586;
-    
-`
+`;
 
 const TradingView: React.FC<{
     selectedTracer: Tracer | undefined;

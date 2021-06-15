@@ -135,10 +135,11 @@ export type OrderState = {
     price: number; // price of the market asset in relation to the collateral asset
     orderType: number; // for basic this will always be 0 (market order), 1 is limit and 2 is spot
     adjustType: number; // selection for adjust order 0 (adjust), 1 (close)
-    adjustSummary: { // summary for when adjusting position
-        exposure: number,
-        leverage: number
-    }
+    adjustSummary: {
+        // summary for when adjusting position
+        exposure: number;
+        leverage: number;
+    };
     oppositeOrders: FlatOrder[];
     error: number; // number ID relating to the error map above
     wallet: number; // ID of corresponding wallet in use 0 -> web3, 1 -> TCR margin
@@ -175,10 +176,13 @@ export type OrderAction =
     | { type: 'setPrice'; value: number }
     | { type: 'setOrderType'; value: number }
     | { type: 'setAdjustType'; value: number }
-    | { type: 'setAdjustSummary'; adjustSummary: {
-        exposure: number,
-        leverage: number
-    }}
+    | {
+          type: 'setAdjustSummary';
+          adjustSummary: {
+              exposure: number;
+              leverage: number;
+          };
+      }
     | { type: 'setError'; value: number }
     | { type: 'setWallet'; value: number }
     | { type: 'setLock'; value: boolean }
@@ -206,13 +210,13 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         amountToPay: NaN, // required margin / amount of margin being used
         exposure: NaN,
         leverage: 1, // default to 1x leverage
-        position: LONG, // long or short, 1 long, 0 is short 
+        position: LONG, // long or short, 1 long, 0 is short
         price: NaN, // price of the market asset in relation to the collateral asset
         orderType: LIMIT, // orderType
         adjustType: ADJUST,
         adjustSummary: {
             exposure: 0,
-            leverage: 1
+            leverage: 1,
         },
         oppositeOrders: [],
         error: -1,
@@ -240,7 +244,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setAdjustType':
                 return { ...state, adjustType: action.value };
             case 'setAdjustSummary': {
-                return { ...state, adjustSummary: action.adjustSummary }
+                return { ...state, adjustSummary: action.adjustSummary };
             }
             case 'setOppositeOrders':
                 return { ...state, oppositeOrders: action.orders };
@@ -250,7 +254,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, exposure: action.value };
             case 'setMaxExposure':
                 // todo calc max exposure
-                let exposure = 1;
+                const exposure = 1;
                 return { ...state, exposure: exposure };
             case 'setError':
                 return { ...state, error: action.value };
@@ -286,16 +290,16 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     useEffect(() => {
         // when user swaps to close order, set opposite side
         // set the amount to the users position
-        if (order.adjustType === CLOSE) {  
-            let balances = selectedTracer?.getBalance() ?? defaults.balances;
+        if (order.adjustType === CLOSE) {
+            const balances = selectedTracer?.getBalance() ?? defaults.balances;
             if (balances?.base.toNumber() < 0) {
-                orderDispatch({ type: 'setPosition', value: LONG })
+                orderDispatch({ type: 'setPosition', value: LONG });
             } else if (balances?.base > 0) {
-                orderDispatch({ type: 'setPosition', value: SHORT })
+                orderDispatch({ type: 'setPosition', value: SHORT });
             }
-            orderDispatch({ type: 'setExposure', value: balances.base.abs() })
+            orderDispatch({ type: 'setExposure', value: balances.base.abs() });
         }
-    }, [order.adjustType])
+    }, [order.adjustType]);
 
     useEffect(() => {
         // when user swaps to market order setPrice
@@ -320,7 +324,9 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     }, [order.amountToPay, order.leverage, order.oppositeOrders]);
 
     // Resets the trading screen
-    const reset = () => { console.error("Reset is not implemented ")};
+    const reset = () => {
+        console.error('Reset is not implemented ');
+    };
 
     // Handles setting the selected tracer Id on a market or collateral change
     useEffect(() => {

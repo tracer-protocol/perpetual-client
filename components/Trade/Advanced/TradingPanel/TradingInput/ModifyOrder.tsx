@@ -13,7 +13,7 @@ import { BigNumber } from 'bignumber.js';
 
 type SProps = {
     selected: number;
-	setAdjustType: (index: number) => void;
+    setAdjustType: (index: number) => void;
     className?: string;
 };
 
@@ -22,7 +22,7 @@ const AdjustTypeSelect: React.FC<SProps> = styled(({ selected, className, setAdj
         <SlideSelect
             className={className}
             onClick={(index, _e) => {
-				setAdjustType(index)
+                setAdjustType(index);
             }}
             value={selected}
         >
@@ -54,38 +54,34 @@ const SError = styled(Error)<{ account: string }>`
 `;
 
 type CProps = {
-    selectedTracer: Tracer | undefined,
-    orderDispatch: React.Dispatch<OrderAction> | undefined,
-    order: OrderState | undefined,
+    selectedTracer: Tracer | undefined;
+    orderDispatch: React.Dispatch<OrderAction> | undefined;
+    order: OrderState | undefined;
     className?: string;
 };
 
-const Close:React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
+const Close: React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
     return (
         <>
-            <Exposure 
+            <Exposure
                 orderDispatch={orderDispatch}
                 selectedTracer={selectedTracer}
                 exposure={order?.exposure ?? defaults.exposure}
             />
-
         </>
-    )
-
-}
+    );
+};
 
 type AProps = {
     // selectedTracer: Tracer | undefined,
     // orderDispatch: React.Dispatch<OrderAction> | undefined,
-    order: OrderState | undefined,
+    order: OrderState | undefined;
     className?: string;
 };
 
-const Adjust:React.FC<AProps> = ({ order }) => {
-    return (
-        <Leverage leverage={order?.leverage ?? 1} />
-    )
-}
+const Adjust: React.FC<AProps> = ({ order }) => {
+    return <Leverage leverage={order?.leverage ?? 1} />;
+};
 
 type TIProps = {
     selectedTracer: Tracer | undefined;
@@ -100,28 +96,21 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
         <>
             <Box className={`${className} ${account === '' ? 'hide' : ''} `}>
                 {/* Position select */}
-                <AdjustTypeSelect 
-					selected={order?.adjustType ?? 0}
-					setAdjustType={(index) => {
+                <AdjustTypeSelect
+                    selected={order?.adjustType ?? 0}
+                    setAdjustType={(index) => {
                         orderDispatch
                             ? orderDispatch({ type: 'setAdjustType', value: index })
                             : console.error('No dispatch function set');
-					}} 
-				/>
+                    }}
+                />
 
                 <div className="pt-3 pb-3">
-                    {order?.adjustType !== 0
-                        ? 
-                            <Close 
-                                orderDispatch={orderDispatch}
-                                selectedTracer={selectedTracer}
-                                order={order}
-                            />
-                        : 
-                            <Adjust 
-                                order={order}
-                            />
-                   }
+                    {order?.adjustType !== 0 ? (
+                        <Close orderDispatch={orderDispatch} selectedTracer={selectedTracer} order={order} />
+                    ) : (
+                        <Adjust order={order} />
+                    )}
                 </div>
 
                 <PostTradeDetails

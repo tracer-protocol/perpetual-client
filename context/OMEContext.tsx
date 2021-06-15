@@ -14,9 +14,7 @@ type Orders = {
 };
 
 export const parseOrders: (res: any) => Orders = (res) => {
-    const parseOrders = (orders: {
-        
-    }) => {
+    const parseOrders = (orders: OMEOrder) => {
         const sections = Object.values(orders);
         const flattenedOrders = sections.map((orders: any) =>
             orders.reduce(

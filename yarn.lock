@@ -3765,10 +3765,10 @@
     tslib "^2.1.0"
     web3 "^1.3.4"
 
-"@tracer-protocol/tracer-utils@^0.2.9":
-  version "0.2.9"
-  resolved "https://registry.yarnpkg.com/@tracer-protocol/tracer-utils/-/tracer-utils-0.2.9.tgz#2c5023c3330ce7cf59c2077db8979ae313a25ce3"
-  integrity sha512-wWqmHAT2oMsRTEH0FKZwIyEpFaorSVsOffd/2gW0wyZIL2gmP4ogIi0iZmxXs+avZcC9urBgIYFSqRC2/uEdqw==
+"@tracer-protocol/tracer-utils@^0.2.10":
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/@tracer-protocol/tracer-utils/-/tracer-utils-0.2.10.tgz#8f505156924d7caf507614a2fa68a35ff75ef23b"
+  integrity sha512-PPLi7kyF96hSzv8t8qCxkJzKNTLuXwtTgW0iGL8MvtnAtBz2Z9w4BZaXu9FqjSGgcwtJAEVE10V9hJvj8g1T+A==
   dependencies:
     "@types/node" "^14.14.37"
     bignumber.js "^9.0.1"
