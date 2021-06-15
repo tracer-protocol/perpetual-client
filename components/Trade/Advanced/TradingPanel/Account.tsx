@@ -338,9 +338,9 @@ const AccountPanel: React.FC<{
             <Item>
                 <div className="flex">
                     <h3>Total Margin</h3>
-                    <SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>
-                        Calculator
-                    </SButton>
+                    {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
+                    {/*    Calculator*/}
+                    {/*</SButton>*/}
                 </div>
                 <span>
                     <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
