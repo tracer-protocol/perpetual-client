@@ -373,7 +373,10 @@ const NavBarContent: React.FC = styled(({ className }) => {
             </ConnectButton>
 
             {/** TODO this will need to change to arbritrum network id */}
-            <UnknownNetwork display={networkId !== 42 && !!networkId} />
+            {process.env.NEXT_PUBLIC_DEPLOYMENT !== 'DEVELOPMENT' ? 
+                <UnknownNetwork display={networkId !== 42 && !!networkId} />
+                : null
+            }
         </nav>
     );
 })`

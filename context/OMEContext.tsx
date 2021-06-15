@@ -14,13 +14,15 @@ type Orders = {
 };
 
 export const parseOrders: (res: any) => Orders = (res) => {
-    const parseOrders = (orders: any) => {
+    const parseOrders = (orders: {
+        
+    }) => {
         const sections = Object.values(orders);
         const flattenedOrders = sections.map((orders: any) =>
             orders.reduce(
-                (prev: any, order: { amount: number; price: number }) => ({
+                (prev: any, order: { amount_left: number; price: number }) => ({
                     price: new BigNumber(Web3.utils.fromWei(order.price.toString())), // price remains the same,
-                    quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.amount.toString())),
+                    quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.amount_left.toString())),
                 }),
                 {
                     quantity: 0,
