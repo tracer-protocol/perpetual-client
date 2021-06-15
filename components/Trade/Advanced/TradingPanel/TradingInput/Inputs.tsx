@@ -4,6 +4,8 @@ import { Tracer } from 'libs';
 import { LIMIT, OrderAction } from '@context/OrderContext';
 import DefaultSlider from '@components/Slider';
 import styled from 'styled-components';
+import BigNumber from 'bignumber.js';
+import { defaults } from '@libs/Tracer';
 
 export const Exposure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
@@ -11,7 +13,6 @@ export const Exposure: React.FC<{
     exposure: number;
     className?: string;
 }> = ({ selectedTracer, orderDispatch, exposure, className }) => {
-    const tracerId = selectedTracer?.marketId ?? '';
     return (
         <SmallInput
             title={'Amount'}
@@ -25,7 +26,32 @@ export const Exposure: React.FC<{
                 e.preventDefault();
                 orderDispatch ? orderDispatch({ type: 'setMaxExposure' }) : console.error('No dispatch function set');
             }}
-            unit={tracerId.split('/')[0]}
+            unit={selectedTracer?.baseTicker ?? ''}
+            amount={exposure}
+        />
+    );
+};
+
+export const Closure: React.FC<{
+    orderDispatch: React.Dispatch<OrderAction> | undefined;
+    selectedTracer: Tracer | undefined;
+    exposure: number;
+    className?: string;
+}> = ({ selectedTracer, orderDispatch, exposure, className }) => {
+    return (
+        <SmallInput
+            title={'Amount'}
+            className={className ?? ''}
+            onChange={(e) => {
+                orderDispatch
+                    ? orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) })
+                    : console.error('No dispatch function set');
+            }}
+            setMax={(e) => {
+                e.preventDefault();
+                orderDispatch ? orderDispatch({ type: 'setMaxClosure' }) : console.error('No dispatch function set');
+            }}
+            unit={selectedTracer?.baseTicker ?? ''}
             amount={exposure}
         />
     );
@@ -37,11 +63,15 @@ export const Price: React.FC<{
     price: number;
     className?: string;
 }> = ({ selectedTracer, orderDispatch, price, className }) => {
-    const tracerId = selectedTracer?.marketId ?? '';
     return (
         <SmallInput
             title={'Price'}
             className={className ?? ''}
+            setMax={(e) => {
+                e.preventDefault();
+                orderDispatch ? orderDispatch({ type: 'setBestPrice' }) : console.error('No dispatch function set');
+            }}
+            maxText={"Best"}
             onChange={(e) => {
                 if (orderDispatch) {
                     orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
@@ -50,7 +80,7 @@ export const Price: React.FC<{
                     console.error('No dispatch function set');
                 }
             }}
-            unit={tracerId.split('/')[1]}
+            unit={selectedTracer?.quoteTicker ?? ''}
             amount={price}
         />
     );
@@ -59,15 +89,21 @@ export const Price: React.FC<{
 type LProps = {
     leverage: number;
     className?: string;
+    min?: BigNumber;
+    max?: BigNumber;
     orderDispatch: React.Dispatch<OrderAction> | undefined;
 };
 
-export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className }: LProps) => {
+export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max}: LProps) => {
+    console.log(min?.toNumber(), "min")
+    console.log(max?.toNumber(), "max")
     return (
         <div className={`${className} m-3`}>
             <a className="label">Leverage</a>
             <div className="w-3/4 pl-4 pr-6 pb-4 mt-2">
                 <DefaultSlider
+                    min={Math.ceil(min?.toNumber() ?? 1) ?? 1}
+                    max={max?.toNumber() ?? defaults.maxLeverage.toNumber()}
                     value={leverage}
                     handleChange={(num) => {
                         orderDispatch

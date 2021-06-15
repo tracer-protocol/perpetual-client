@@ -171,6 +171,8 @@ export type OrderAction =
     | { type: 'setAmountToPay'; value: number }
     | { type: 'setExposure'; value: number }
     | { type: 'setMaxExposure' }
+    | { type: 'setBestPrice' }
+    | { type: 'setMaxClosure' }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
     | { type: 'setPrice'; value: number }
@@ -253,9 +255,18 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setExposure':
                 return { ...state, exposure: action.value };
             case 'setMaxExposure':
-                // todo calc max exposure
-                const exposure = 1;
+                let exposure = 1;
                 return { ...state, exposure: exposure };
+            case 'setMaxClosure':
+                let fullClosure = selectedTracer?.getBalance().base.abs();
+                return { ...state, exposure: fullClosure };
+            case 'setBestPrice':
+                const price = state.oppositeOrders[0]?.price ?? NaN;
+                if (!price) { // if there is no price set error to no open orders
+                    return { ...state, error: 3 };
+                } else {
+                    return { ...state, price: price };
+                }
             case 'setError':
                 return { ...state, error: action.value };
             case 'setWallet':
@@ -273,7 +284,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     useMemo(() => {
         if (omeState?.orders) {
-            const oppositeOrders = (order.position ? omeState.orders.askOrders : omeState.orders.bidOrders).map(
+            const oppositeOrders = (order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders).map(
                 (order) => ({
                     price: new BigNumber(order.price),
                     amount: new BigNumber(order.quantity),
@@ -287,7 +298,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [order.position, omeState?.orders]);
 
-    useEffect(() => {
+    useMemo(() => {
         // when user swaps to close order, set opposite side
         // set the amount to the users position
         if (order.adjustType === CLOSE) {
@@ -336,7 +347,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     // Check errors
     useMemo(() => {
         if (omeState?.orders) {
-            const oppositeOrders = order.position ? omeState.orders.askOrders : omeState.orders.bidOrders;
+            const oppositeOrders = order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders;
             const error = checkErrors(
                 selectedTracer?.getBalance(),
                 oppositeOrders,
@@ -348,7 +359,14 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 orderDispatch({ type: 'setError', value: error });
             }
         }
-    }, [selectedTracer, account, order]);
+    }, [ // listens to a lot, but not all
+        selectedTracer?.getBalance(), 
+        account, 
+        order.price, 
+        order.exposure, 
+        order.orders,
+        order.orderType
+    ]);
 
     return (
         <OrderContext.Provider
