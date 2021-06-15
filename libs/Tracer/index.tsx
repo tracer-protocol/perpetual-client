@@ -19,6 +19,7 @@ import { checkAllowance } from '../web3/utils';
 import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
 import { TransactionReceipt } from 'web3/types';
+import { calcLeverage } from '@tracer-protocol/tracer-utils';
 
 export const defaults: Record<string, any> = {
     balances: {
@@ -27,8 +28,9 @@ export const defaults: Record<string, any> = {
         tokenBalance: new BigNumber(0),
         totalLeveragedValue: 0,
         lastUpdatedGasPrice: 0,
+        leverage: new BigNumber(0)
     },
-    maxLeverage: new BigNumber(1),
+    maxLeverage: new BigNumber(25),
     oraclePrice: new BigNumber(0),
     fairPrice: new BigNumber(0),
     quoteTokenDecimals: new BigNumber(1),
@@ -176,8 +178,12 @@ export default class Tracer {
                     ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
                     : new BigNumber(0),
             };
+            const leverage = calcLeverage(parsedBalances.quote, parsedBalances.base, this.oraclePrice);
             console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
-            this.balances = parsedBalances;
+            this.balances = {
+                ...parsedBalances,
+                leverage: leverage
+            };
             return parsedBalances;
         } catch (error) {
             console.error(`Failed to fetch user balance: ${error}`);

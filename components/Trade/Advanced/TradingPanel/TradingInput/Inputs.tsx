@@ -4,6 +4,8 @@ import { Tracer } from 'libs';
 import { LIMIT, OrderAction } from '@context/OrderContext';
 import DefaultSlider from '@components/Slider';
 import styled from 'styled-components';
+import BigNumber from 'bignumber.js';
+import { defaults } from '@libs/Tracer';
 
 export const Exposure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
@@ -59,15 +61,21 @@ export const Price: React.FC<{
 type LProps = {
     leverage: number;
     className?: string;
+    min?: BigNumber;
+    max?: BigNumber;
     orderDispatch: React.Dispatch<OrderAction> | undefined;
 };
 
-export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className }: LProps) => {
+export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max}: LProps) => {
+    console.log(min?.toNumber(), "min")
+    console.log(max?.toNumber(), "max")
     return (
         <div className={`${className} m-3`}>
             <a className="label">Leverage</a>
             <div className="w-3/4 pl-4 pr-6 pb-4 mt-2">
                 <DefaultSlider
+                    min={Math.ceil(min?.toNumber() ?? 1) ?? 1}
+                    max={max?.toNumber() ?? defaults.maxLeverage.toNumber()}
                     value={leverage}
                     handleChange={(num) => {
                         orderDispatch

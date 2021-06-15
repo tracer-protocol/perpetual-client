@@ -15,6 +15,7 @@ export type UserBalance = {
     totalLeveragedValue: BigNumber;
     lastUpdatedGasPrice: BigNumber;
     tokenBalance: BigNumber;
+    leverage: BigNumber; // the users current leverage
 };
 
 export type FundingRate = {

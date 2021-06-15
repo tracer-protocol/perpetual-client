@@ -7,32 +7,40 @@ const DEFAULT_VALUE = 1;
 const DEFAULT_MIN = 1;
 const DEFAULT_MAX = 100;
 
-const defaultMarks = {
+const createMarks = (min: number, max: number) => ({
     1: {
         style: {
             marginTop: '1rem',
             color: '#005EA4',
             fontSize: '1rem',
         },
-        label: '1x',
+        label: `1x`,
     },
-    50: {
+    [min]: {
         style: {
             marginTop: '1rem',
             color: '#005EA4',
             fontSize: '1rem',
         },
-        label: '50x',
+        label: `${min}x`,
     },
-    100: {
+    [max/2]: {
         style: {
             marginTop: '1rem',
             color: '#005EA4',
             fontSize: '1rem',
         },
-        label: '100x',
+        label: `${max/2}x`,
     },
-};
+    [max]: {
+        style: {
+            marginTop: '1rem',
+            color: '#005EA4',
+            fontSize: '1rem',
+        },
+        label: `${max}x`,
+    },
+});
 
 const defaultRailStyle = { backgroundColor: '#002886', height: 10 };
 const defaultTrackStyle = { backgroundColor: '#002886', height: 10 };
@@ -86,15 +94,17 @@ const DefaultSlider: React.FC<DSProps> = styled(
         handleStyle,
         handleChange,
     }: DSProps) => {
+        const min_ = min ?? DEFAULT_MIN;
+        const max_ = max ?? DEFAULT_MAX;
         return (
             <div className={className}>
                 {value ? (
                     <Slider
                         defaultValue={defaultValue ? defaultValue : DEFAULT_VALUE}
                         value={value}
-                        min={min ? min : DEFAULT_MIN}
-                        max={max ? max : DEFAULT_MAX}
-                        marks={marks ? marks : defaultMarks}
+                        min={min_}
+                        max={max_}
+                        marks={marks ?? createMarks(min_, max_)}
                         railStyle={railStyle ? railStyle : defaultRailStyle}
                         trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
                         handleStyle={handleStyle ? handleStyle : defaultHandleStyle}
@@ -104,9 +114,9 @@ const DefaultSlider: React.FC<DSProps> = styled(
                 ) : (
                     <Slider
                         defaultValue={defaultValue ? defaultValue : DEFAULT_VALUE}
-                        min={min ? min : DEFAULT_MIN}
-                        max={max ? max : DEFAULT_MAX}
-                        marks={marks ? marks : defaultMarks}
+                        min={min_}
+                        max={max_}
+                        marks={marks ?? createMarks(min_, max_)}
                         railStyle={railStyle ? railStyle : defaultRailStyle}
                         trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
                         handleStyle={handleStyle ? handleStyle : defaultHandleStyle}
