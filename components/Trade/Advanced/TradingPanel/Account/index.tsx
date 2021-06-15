@@ -2,12 +2,13 @@ import React, { useContext, useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
-import { calcTotalMargin, calcMinimumMargin, calcBuyingPower } from '@tracer-protocol/tracer-utils';
-import { Box, Button } from '@components/General';
+import { calcTotalMargin, calcBuyingPower } from '@tracer-protocol/tracer-utils';
+import { Box, Button, Previous } from '@components/General';
 import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
+import { OrderState } from '@context/OrderContext';
 // import CalculatorModal from './Calculator';
 
 const SBox = styled(Box)`
@@ -108,7 +109,8 @@ const SubText = styled.span`
 const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
-}> = ({ selectedTracer, account }) => {
+    order: OrderState | undefined;
+}> = ({ selectedTracer, account, order }) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
     // const [calculator, showCalculator] = useState(false);
@@ -140,13 +142,22 @@ const AccountPanel: React.FC<{
             <Item>
                 <h3>Buying Power <SubText>@{maxLeverage.toNumber()}X Maximum Leverage</SubText></h3>
                 <span>
-                    <a>{toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))}</a>
-                </span>
-            </Item>
-            <Item>
-                <h3>Available Margin</h3>
-                <span>
-                    <a>{toApproxCurrency(calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage))}</a>
+                    {!order?.exposure || !order.price
+                        ? 
+                            toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))
+                        :
+                            <>
+                                <Previous>
+                                    <a>{toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))}</a>
+                                </Previous>
+                                {
+                                    toApproxCurrency(
+                                        calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage)
+                                            .minus(new BigNumber(order.exposure * order.price))
+                                    )
+                                }
+                            </>
+                    }
                 </span>
             </Item>
             <DepositButtons>

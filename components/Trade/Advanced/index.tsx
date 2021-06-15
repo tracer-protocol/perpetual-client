@@ -42,7 +42,7 @@ const Overlay = styled.div`
 const Advanced: React.FC = styled(({ className }) => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
-    const { orderDispatch } = useContext(OrderContext);
+    const { order, orderDispatch } = useContext(OrderContext);
     const [isAdjust, setAdjust] = useState(false);
 
     useEffect(() => {
@@ -64,7 +64,7 @@ const Advanced: React.FC = styled(({ className }) => {
                 ) : (
                     <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
                 )}
-                <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} />
+                <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} order={order} />
             </TradingPanel>
             <RightPanel>
                 <TradingView selectedTracer={selectedTracer} />
