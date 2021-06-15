@@ -3,6 +3,25 @@ import { Children } from 'types';
 import styled from 'styled-components';
 import { NumberInput } from '@components/General';
 
+const Max = styled.a`
+    transition: 0.3s;
+    margin: auto 0;
+    margin-left: 20px;
+    letter-spacing: -0.32px;
+    font-size: 16px;
+    color: #3da8f5;
+    text-decoration: underline;
+
+    &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+    &.hide {
+        display: none;
+    }
+`;
+
 const InputContainer = styled.div`
     background: #002886;
     border-radius: 20px;
@@ -10,17 +29,6 @@ const InputContainer = styled.div`
     padding: 5px 10px;
     width: 250px;
     position: relative;
-
-    > .max {
-        margin: auto 0;
-        margin-left: 20px;
-        letter-spacing: -0.32px;
-        font-size: 16px;
-    }
-
-    > .max.hide {
-        display: none;
-    }
 
     > input {
         width: 100%;
@@ -40,7 +48,7 @@ const InputContainer = styled.div`
     }
     > .unit {
         letter-spacing: -0.4px;
-        color: #3da8f5;
+        color: #005ea4;
         font-size: 20px;
         margin: auto 0;
         margin-left: auto;
@@ -54,30 +62,31 @@ type SIProps = {
     setMax?: (e: any) => void;
     unit: string;
     title: string;
+    maxText?: string; // used if you dont want it to be max
     className?: string;
 } & Children;
 
-const SmallInput: React.FC<SIProps> = styled(({ title, amount, onChange, unit, setMax, className }: SIProps) => (
-    <div className={className}>
-        <a className="label" data-tip="" data-for={title.toLowerCase()}>
-            {title}
-        </a>
-        <InputContainer>
-            <a className={`max ${!setMax ? 'hide' : ''}`} onClick={setMax}>
-                Max
-            </a>
-            <NumberInput
-                id="margin"
-                type="number"
-                placeholder="0.0"
-                min="0"
-                onChange={onChange}
-                value={!Number.isNaN(amount) ? amount : ''}
-            />
-            <a className="unit">{unit}</a>
-        </InputContainer>
-    </div>
-))`
+const SmallInput: React.FC<SIProps> = styled(
+    ({ title, amount, onChange, unit, setMax, maxText, className }: SIProps) => (
+        <div className={className}>
+            <a className="label">{title}</a>
+            <InputContainer>
+                <Max className={`${!setMax ? 'hide' : ''}`} onClick={setMax}>
+                    {maxText}
+                </Max>
+                <NumberInput
+                    id="margin"
+                    type="number"
+                    placeholder="0.0"
+                    min="0"
+                    onChange={onChange}
+                    value={!Number.isNaN(amount) ? amount : ''}
+                />
+                <a className="unit">{unit}</a>
+            </InputContainer>
+        </div>
+    ),
+)`
     display: flex;
     width: 100%;
     justify-content: space-between;
@@ -91,5 +100,9 @@ const SmallInput: React.FC<SIProps> = styled(({ title, amount, onChange, unit, s
         text-transform: capitalize;
     }
 `;
+
+SmallInput.defaultProps = {
+    maxText: 'Max',
+};
 
 export default SmallInput;

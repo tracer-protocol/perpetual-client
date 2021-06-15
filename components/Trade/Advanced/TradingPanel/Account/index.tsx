@@ -2,12 +2,13 @@ import React, { useContext, useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
-import { calcTotalMargin, calcMinimumMargin } from '@tracer-protocol/tracer-utils';
-import { Box, Button } from '@components/General';
+import { calcTotalMargin, calcBuyingPower } from '@tracer-protocol/tracer-utils';
+import { Box, Button, Previous } from '@components/General';
 import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
+import { OrderState } from '@context/OrderContext';
 import {TotalMarginTip} from "@components/Tooltips";
 // import CalculatorModal from './Calculator';
 
@@ -53,7 +54,7 @@ const Item = styled.div`
     font-size: 16px;
     margin-bottom: 10px;
 
-    span {
+    > span {
         width: 100%;
         display: flex;
         font-size: 16px;
@@ -65,7 +66,7 @@ const Item = styled.div`
         color: #21dd53;
     }
 
-    h3 {
+    > h3 {
         letter-spacing: -0.32px;
         color: #3da8f5;
         text-transform: capitalize;
@@ -79,27 +80,44 @@ const DepositButtons = styled.div`
     justify-content: space-between;
 `;
 
-const AccountInfo = styled(Box)`
+const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     position: relative;
     flex-direction: column;
+    background-color: ${(props) => (props.zeroBalance ? '#00125D' : 'inherit')};
+`;
+
+const Title = styled.h2`
+    font-size: 20px;
+    letter-spacing: -0.4px;
+    color: #fff;
+    margin-bottom: 0.5rem;
 `;
 
 const SButton = styled(Button)`
     height: 28px;
     line-height: 28px;
     padding: 0;
+    margin: 0;
+`;
+
+const SubText = styled.span`
+    letter-spacing: -0.32px;
+    color: #005ea4;
+    font-size: 16px;
+    display: inline !important;
 `;
 
 const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
-}> = ({ selectedTracer, account }) => {
+    order: OrderState | undefined;
+}> = ({ selectedTracer, account, order }) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
     // const [calculator, showCalculator] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
-    const maxLeverage = selectedTracer?.maxLeverage ?? new BigNumber(1);
+    const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
 
     const handleClick = (popup: boolean, deposit: boolean) => {
         setPopup(popup);
@@ -109,29 +127,49 @@ const AccountPanel: React.FC<{
     return account === '' ? (
         <WalletConnect />
     ) : (
-        <AccountInfo>
+        <AccountInfo zeroBalance={balances.quote.eq(0)}>
+            <Title>Margin Account</Title>
+            {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
+            {/*    Calculator*/}
+            {/*</SButton>*/}
             <Item>
-                <div className="flex">
-                    <h3 data-tip="" data-for="total-margin">
-                        <a>Total Margin</a>
-                    </h3>
-                    <TotalMarginTip base={selectedTracer?.marketId?.split('/')[0]} />
-                    {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
-                    {/*    Calculator*/}
-                    {/*</SButton>*/}
-                </div>
+                <h3>Equity</h3>
                 <span>
                     <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
                 </span>
             </Item>
             <Item>
-                <h3>Minimum Margin</h3>
+                <h3>
+                    Buying Power <SubText>@{maxLeverage.toNumber()}X Maximum Leverage</SubText>
+                </h3>
                 <span>
-                    <a>{toApproxCurrency(calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage))}</a>
+                    {!order?.exposure || !order.price ? (
+                        toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))
+                    ) : (
+                        <>
+                            <Previous>
+                                <a>
+                                    {toApproxCurrency(
+                                        calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
+                                    )}
+                                </a>
+                            </Previous>
+                            {toApproxCurrency(
+                                calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage).minus(
+                                    new BigNumber(order.exposure * order.price),
+                                ),
+                            )}
+                        </>
+                    )}
                 </span>
             </Item>
             <DepositButtons>
-                <SButton onClick={(_e: any) => handleClick(true, true)}>Deposit</SButton>
+                <SButton
+                    className={balances.quote.eq(0) ? 'primary' : ''}
+                    onClick={(_e: any) => handleClick(true, true)}
+                >
+                    Deposit
+                </SButton>
                 <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
             </DepositButtons>
             <AccountModal
