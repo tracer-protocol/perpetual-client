@@ -1,9 +1,6 @@
 import React from 'react';
 import { toApproxCurrency } from '@libs/utils';
-import {
-    calcLiquidationPrice,
-    calcNotionalValue,
-} from '@tracer-protocol/tracer-utils';
+import { calcLiquidationPrice, calcNotionalValue } from '@tracer-protocol/tracer-utils';
 import { HiddenExpand, Previous, Section, Approx } from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
@@ -19,9 +16,7 @@ interface PTDProps {
     className?: string;
 }
 const PostTradeDetails: React.FC<PTDProps> = styled(
-    ({ 
-        balances, position, exposure, fairPrice, maxLeverage, slippage, className
-    }: PTDProps) => {
+    ({ balances, position, exposure, fairPrice, maxLeverage, slippage, className }: PTDProps) => {
         const newBase =
             position === 0
                 ? balances.base.minus(exposure) // short
@@ -39,9 +34,7 @@ const PostTradeDetails: React.FC<PTDProps> = styled(
                     </Previous>
                     {toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage))}
                 </Section>
-                <Section label={'Last Price'}>
-                    {toApproxCurrency(0)}
-                </Section>
+                <Section label={'Last Price'}>{toApproxCurrency(0)}</Section>
                 <Section label={'Slippage & Fees'}>
                     {slippage}% <Approx>$0.00</Approx>
                 </Section>

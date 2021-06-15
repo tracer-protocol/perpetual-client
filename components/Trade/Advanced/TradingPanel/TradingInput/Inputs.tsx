@@ -14,7 +14,7 @@ export const Exposure: React.FC<{
     className?: string;
 }> = ({ selectedTracer, orderDispatch, order, className }) => {
     return (
-        <SmallInput 
+        <SmallInput
             title={'Amount'}
             className={className ?? ''}
             onChange={(e) => {
@@ -71,7 +71,7 @@ export const Price: React.FC<{
                 e.preventDefault();
                 orderDispatch ? orderDispatch({ type: 'setBestPrice' }) : console.error('No dispatch function set');
             }}
-            maxText={"Best"}
+            maxText={'Best'}
             onChange={(e) => {
                 if (orderDispatch) {
                     orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
@@ -94,9 +94,9 @@ type LProps = {
     orderDispatch: React.Dispatch<OrderAction> | undefined;
 };
 
-export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max}: LProps) => {
-    console.log(min?.toNumber(), "min")
-    console.log(max?.toNumber(), "max")
+export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max }: LProps) => {
+    console.log(min?.toNumber(), 'min');
+    console.log(max?.toNumber(), 'max');
     return (
         <div className={`${className} m-3`}>
             <a className="label">Leverage</a>

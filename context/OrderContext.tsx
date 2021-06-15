@@ -145,9 +145,9 @@ export const orderDefaults = {
         wallet: 0,
         lockAmountToPay: false, // deprecated with basic trade
         advanced: false,
-        slippage: 0
-    }
-}
+        slippage: 0,
+    },
+};
 
 export type OrderState = {
     market: string; // exposed market asset
@@ -260,14 +260,15 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setExposure':
                 return { ...state, exposure: action.value };
             case 'setMaxExposure':
-                let exposure = 1;
+                const exposure = 1;
                 return { ...state, exposure: exposure };
             case 'setMaxClosure':
-                let fullClosure = selectedTracer?.getBalance().base.abs();
+                const fullClosure = selectedTracer?.getBalance().base.abs();
                 return { ...state, exposure: fullClosure };
             case 'setBestPrice':
                 const price = state.oppositeOrders[0]?.price ?? NaN;
-                if (!price) { // if there is no price set error to no open orders
+                if (!price) {
+                    // if there is no price set error to no open orders
                     return { ...state, error: 3 };
                 } else {
                     return { ...state, price: price };
@@ -289,12 +290,12 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     useMemo(() => {
         if (omeState?.orders) {
-            const oppositeOrders = (order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders).map(
-                (order) => ({
-                    price: new BigNumber(order.price),
-                    amount: new BigNumber(order.quantity),
-                }),
-            );
+            const oppositeOrders = (
+                order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders
+            ).map((order) => ({
+                price: new BigNumber(order.price),
+                amount: new BigNumber(order.quantity),
+            }));
             orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
             if (order.orderType === MARKET) {
                 // market order set the price if on market order
@@ -367,13 +368,14 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 orderDispatch({ type: 'setError', value: error });
             }
         }
-    }, [ // listens to a lot, but not all
-        selectedTracer?.getBalance(), 
-        account, 
-        order.price, 
-        order.exposure, 
+    }, [
+        // listens to a lot, but not all
+        selectedTracer?.getBalance(),
+        account,
+        order.price,
+        order.exposure,
         order.orders,
-        order.orderType
+        order.orderType,
     ]);
 
     return (

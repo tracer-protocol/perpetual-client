@@ -90,11 +90,11 @@ const SError = styled(Error)<{ account: string }>`
 const Details = styled.span`
     font-size: 16px;
     letter-spacing: -0.32px;
-    color: #005EA4;
+    color: #005ea4;
     text-align: right;
     width: 100%;
     padding: 0 12px;
-`
+`;
 
 type TIProps = {
     selectedTracer: Tracer | undefined;
@@ -125,18 +125,10 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                         order={order ?? orderDefaults.order}
                     />
                     <Details>
-                        {order?.leverage !== 1 && exposure && price
-                            ? 
-                                <span>
-                                    {`Leveraged at ${order?.leverage}x`}
-                                </span>
-                            : 
-                                null
-                        }
-                        {exposure && price 
-                            ? <Approx>{toApproxCurrency(exposure * price * leverage)}</Approx>
-                            : null
-                        }
+                        {order?.leverage !== 1 && exposure && price ? (
+                            <span>{`Leveraged at ${order?.leverage}x`}</span>
+                        ) : null}
+                        {exposure && price ? <Approx>{toApproxCurrency(exposure * price * leverage)}</Approx> : null}
                     </Details>
                     <Price
                         orderDispatch={orderDispatch}
@@ -145,10 +137,11 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     />
                 </div>
 
-                <Leverage 
+                <Leverage
                     min={selectedTracer?.getBalance().leverage}
                     max={selectedTracer?.getMaxLeverage()}
-                    leverage={order?.leverage ?? 1} orderDispatch={orderDispatch} 
+                    leverage={order?.leverage ?? 1}
+                    orderDispatch={orderDispatch}
                 />
 
                 <PostTradeDetails

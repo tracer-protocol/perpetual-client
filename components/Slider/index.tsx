@@ -25,13 +25,13 @@ const createMarks = (min: number, max: number) => ({
         },
         label: `${min}x`,
     },
-    [max/2]: {
+    [max / 2]: {
         style: {
             marginTop: '1rem',
             color: '#005EA4',
             fontSize: '1rem',
         },
-        label: `${max/2}x`,
+        label: `${max / 2}x`,
     },
     [max]: {
         style: {
