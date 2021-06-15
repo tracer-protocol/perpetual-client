@@ -26,6 +26,7 @@
         "react-dom": "^16.13.1",
         "react-jazzicon": "^0.1.3",
         "react-toast-notifications": "^2.4.0",
+        "react-tooltip": "^4.2.21",
         "react-websocket": "^2.1.0",
         "styled-components": "^5.2.1",
         "web3": "^1.3.3",

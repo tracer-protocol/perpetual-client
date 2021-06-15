@@ -8,6 +8,7 @@ import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
+import {TotalMarginTip} from "@components/Tooltips";
 // import CalculatorModal from './Calculator';
 
 const SBox = styled(Box)`
@@ -111,7 +112,10 @@ const AccountPanel: React.FC<{
         <AccountInfo>
             <Item>
                 <div className="flex">
-                    <h3>Total Margin</h3>
+                    <h3 data-tip="" data-for="total-margin">
+                        <a>Total Margin</a>
+                    </h3>
+                    <TotalMarginTip base={selectedTracer?.marketId?.split('/')[0]} />
                     {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
                     {/*    Calculator*/}
                     {/*</SButton>*/}

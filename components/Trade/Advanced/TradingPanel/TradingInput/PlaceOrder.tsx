@@ -117,10 +117,11 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     />
                 </div>
 
-                <Leverage 
+                <Leverage
                     min={selectedTracer?.getBalance().leverage}
                     max={selectedTracer?.getMaxLeverage()}
-                    leverage={order?.leverage ?? 1} orderDispatch={orderDispatch} 
+                    leverage={order?.leverage ?? 1}
+                    orderDispatch={orderDispatch}
                 />
 
                 <PostTradeDetails

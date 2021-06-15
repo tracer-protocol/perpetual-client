@@ -6,6 +6,7 @@ import DefaultSlider from '@components/Slider';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
+import { AmountTip, LeverageTip, PriceTip } from '@components/Tooltips';
 
 export const Exposure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
@@ -15,21 +16,26 @@ export const Exposure: React.FC<{
 }> = ({ selectedTracer, orderDispatch, exposure, className }) => {
     const tracerId = selectedTracer?.marketId ?? '';
     return (
-        <SmallInput
-            title={'Amount'}
-            className={className ?? ''}
-            onChange={(e) => {
-                orderDispatch
-                    ? orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) })
-                    : console.error('No dispatch function set');
-            }}
-            setMax={(e) => {
-                e.preventDefault();
-                orderDispatch ? orderDispatch({ type: 'setMaxExposure' }) : console.error('No dispatch function set');
-            }}
-            unit={tracerId.split('/')[0]}
-            amount={exposure}
-        />
+        <>
+            <SmallInput
+                title={'Amount'}
+                className={className ?? ''}
+                onChange={(e) => {
+                    orderDispatch
+                        ? orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) })
+                        : console.error('No dispatch function set');
+                }}
+                setMax={(e) => {
+                    e.preventDefault();
+                    orderDispatch
+                        ? orderDispatch({ type: 'setMaxExposure' })
+                        : console.error('No dispatch function set');
+                }}
+                unit={tracerId.split('/')[0]}
+                amount={exposure}
+            />
+            <AmountTip base={tracerId.split('/')[0]} />
+        </>
     );
 };
 
@@ -41,20 +47,23 @@ export const Price: React.FC<{
 }> = ({ selectedTracer, orderDispatch, price, className }) => {
     const tracerId = selectedTracer?.marketId ?? '';
     return (
-        <SmallInput
-            title={'Price'}
-            className={className ?? ''}
-            onChange={(e) => {
-                if (orderDispatch) {
-                    orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
-                    orderDispatch({ type: 'setOrderType', value: LIMIT });
-                } else {
-                    console.error('No dispatch function set');
-                }
-            }}
-            unit={tracerId.split('/')[1]}
-            amount={price}
-        />
+        <>
+            <SmallInput
+                title={'Price'}
+                className={className ?? ''}
+                onChange={(e) => {
+                    if (orderDispatch) {
+                        orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
+                        orderDispatch({ type: 'setOrderType', value: LIMIT });
+                    } else {
+                        console.error('No dispatch function set');
+                    }
+                }}
+                unit={tracerId.split('/')[1]}
+                amount={price}
+            />
+            <PriceTip base={tracerId.split('/')[0]} />
+        </>
     );
 };
 
@@ -66,12 +75,14 @@ type LProps = {
     orderDispatch: React.Dispatch<OrderAction> | undefined;
 };
 
-export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max}: LProps) => {
-    console.log(min?.toNumber(), "min")
-    console.log(max?.toNumber(), "max")
+export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max }: LProps) => {
+    console.log(min?.toNumber(), 'min');
+    console.log(max?.toNumber(), 'max');
     return (
         <div className={`${className} m-3`}>
-            <a className="label">Leverage</a>
+            <a className="label" data-tip="" data-for="leverage">
+                Leverage
+            </a>
             <div className="w-3/4 pl-4 pr-6 pb-4 mt-2">
                 <DefaultSlider
                     min={Math.ceil(min?.toNumber() ?? 1) ?? 1}
@@ -84,6 +95,7 @@ export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, cla
                     }}
                 />
             </div>
+            <LeverageTip />
         </div>
     );
 })`
