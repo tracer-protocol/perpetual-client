@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import SubNav from '@components/Nav/SubNav';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import { Web3Context } from '@context/Web3Context';
@@ -11,45 +10,165 @@ import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { FilledOrder } from 'types/OrderTypes';
 import {
     calcLeverage,
-    calcLiquidationPrice,
-    calcProfitableLiquidationPrice,
-    calcNotionalValue,
 } from '@tracer-protocol/tracer-utils';
-import { Button, Section } from '@components/General';
+import { 
+    Button, 
+    // Previous, 
+    Section 
+} from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
 import { TransactionContext } from '@context/TransactionContext';
 import { cancelOrder } from '@libs/Ome';
 import { OMEContext } from '@context/OMEContext';
+import { SlideSelect } from '@components/Buttons';
+import { Option } from '@components/Buttons/SlideSelect';
+import CustomSubNav from './CustomSubNav';
+
+const AccountDetails = styled.div`
+    width: 40%;
+    display: flex;
+    flex-wrap: wrap;
+`
+const PositionGraph = styled.div`
+    width: 40%;
+    padding: 12px;
+`
+const GraphLegend = styled.div`
+    width: 20%;
+    padding: 12px;
+`
+
+const SSection = styled(Section)`
+    display: block;
+    padding: 5px 10px;
+    margin: 0;
+    color: #005EA4;
+    > .label {
+        display: block;
+        font-size: 12px;
+    }
+    > .content {
+        padding-left: 0;
+    }
+`
+
+const SectionContainer = styled.div`
+    border-right: 1px solid #002886;
+    width: 100%;
+    display: block;
+`
+
+const SSlideSelect = styled(SlideSelect)`
+    height: 28px;
+    width: 120px;
+    margin-left: 0;
+    margin-top: 0.25rem;
+`
+
+// const SPrevious = styled(Previous)`
+//     &:after {
+//         content: '>>';
+//         padding-left: 0;
+//     }
+// `
+const Content = styled.div`
+    font-size: 18px;
+    color: #fff;
+    text-align: left;
+`
 
 interface IProps {
     balance: UserBalance;
-    fairPrice: BigNumber;
+    price: BigNumber;
     maxLeverage: BigNumber;
     baseTicker: string;
+    quoteTicker: string;
 }
 
-const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, maxLeverage, baseTicker }: IProps) => {
-    const { base, quote, totalLeveragedValue } = balance;
-    const l = calcLeverage(quote, base, fairPrice);
+const PositionDetails: React.FC<IProps> = ({ 
+    balance, price, baseTicker, quoteTicker
+}: IProps) => {
+    const [currency, setCurrency] = useState(0); // 0 quoted in base
+    const { base, quote } = balance;
+    const l = calcLeverage(quote, base, price);
     return (
         <div className="flex">
-            <div className="w-1/2 p-3">
-                <Section label={'Eligible liquidation price (exc. gas)'}>
-                    {toApproxCurrency(calcLiquidationPrice(quote, base, fairPrice, maxLeverage))}
-                </Section>
-                <Section label={'Likely Liquidation Price (incl. gas)'}>
-                    {toApproxCurrency(calcProfitableLiquidationPrice(quote, base, fairPrice, maxLeverage))}
-                </Section>
-                <Section label={`${base.lt(0) ? 'Short' : 'Long'} Positions`}>
-                    {`${base.abs().toNumber()} ${baseTicker}`}
-                </Section>
-            </div>
-            <div className="w-1/2 p-3">
-                <Section label={'Notional Value'}>{toApproxCurrency(calcNotionalValue(base, fairPrice))}</Section>
-                <Section label={'Leverage Multiplier'}>{l.gt(1) ? `${l.toNumber()}` : '0'}</Section>
-                <Section label={'Borrowed Amount'}>{toApproxCurrency(totalLeveragedValue)}</Section>
-            </div>
+            <AccountDetails>
+                <SectionContainer className="w-1/2">
+                    <SSection label={'Side'}>
+                        {!balance.quote.eq(0)
+                            ? 
+                            <Content>
+                                {/* <SPrevious /> */}
+                                {balance.quote.lt(0) ? 'SHORT' : 'LONG'}
+                            </Content>
+                            : `-`
+                        }
+                    </SSection>
+                    <SSection label={'Leverage'}>
+                        {!balance.quote.eq(0)
+                            ? 
+                            <Content>
+                                {/* <SPrevious /> */}
+                                {`${l.toPrecision(3)}x`}
+                            </Content>
+                            : `-`
+                        }
+                    </SSection>
+                </SectionContainer>
+                <SectionContainer className="w-1/2">
+                    <SSection label={'Unrealised PnL'}>
+                        {!balance.quote.eq(0)
+                            ?
+                            <Content>
+                                {toApproxCurrency(0)}
+                            </Content>
+                            : `-`
+                        }
+                    </SSection>
+                    <SSection label={'Realised PnL'}>
+                        {!balance.quote.eq(0)
+                            ? 
+                                <Content>
+                                    {toApproxCurrency(0)}
+                                </Content>
+                            : `-`
+                        }
+                    </SSection>
+                </SectionContainer>
+                <SectionContainer>
+                    <SSection label={'Exposure'} className="w-full">
+                        {!balance.quote.eq(0)
+                            ?   
+                                <Content>
+                                    {currency === 0
+                                        ? `${base.abs().toNumber()} ${baseTicker}`
+                                        : `${toApproxCurrency(base.abs().times(price))} ${quoteTicker}`
+                                    
+                                    }
+                                    <SSlideSelect
+                                        onClick={(index, _e) => {
+                                            setCurrency(index);
+                                        }}
+                                        value={currency}
+                                    >
+                                        <Option>
+                                            {baseTicker}
+                                        </Option>
+                                        <Option>
+                                            {quoteTicker}
+                                        </Option>
+                                    </SSlideSelect>
+                                </Content>
+                            : `-`
+                        }
+                    </SSection>
+                </SectionContainer>
+            </AccountDetails>
+            <PositionGraph>
+            </PositionGraph>
+            <GraphLegend />
         </div>
     );
 };
@@ -57,25 +176,27 @@ const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, maxLeverage, ba
 const STable = styled(Table)`
     > tbody {
         display: block;
-        max-height: 20vh;
-        overflow: auto;
+        max-height: 15vh;
+        overflow-y: scroll;
     }
-    > thead,
+    > thead {
+        display: table;
+        table-layout: fixed; /* even columns width , fix width of table too*/
+        width: calc(100% - 5px)!important; /* scrollbar is 5px */
+    }
     > tbody tr {
         display: table;
         width: 100%;
         table-layout: fixed; /* even columns width , fix width of table too*/
-    }
-    > thead {
-        width: calc(100% - 5px); /* scrollbar is 5px */
+        overflow: auto;
     }
 `;
 
 const Cancel = styled(Button)`
     height: 28px;
     opacity: 0.8;
-    padding: 0;
     width: auto;
+    padding: 0 5px;
     max-width: 80px;
     margin: auto;
     line-height: 25px;
@@ -103,7 +224,7 @@ const OpenOrders: React.FC<{
             : console.error('Failed to cancel order: Handle transaction not defined');
     };
     return (
-        <STable headings={['Status', 'Side', 'Amount', 'Filled', 'Remaining', 'Price', '']}>
+        <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
             <tbody>
                 {userOrders.map((order, index) => {
                     const amount = parseFloat(Web3.utils.fromWei(order.amount.toString())),
@@ -111,10 +232,11 @@ const OpenOrders: React.FC<{
                         filled = amount - amountLeft;
                     return (
                         <TRow key={`open-order-${index}`}>
-                            <TData>{calcStatus(order)}</TData>
+                            <TData>{calcStatus(filled)}</TData>
                             <TData className={order.side.toLowerCase() /** This will be the global .bid or .ask */}>
                                 {order.side}
                             </TData>
+                            <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
                             <TData>
                                 {amount} {baseTicker}
                             </TData>
@@ -124,7 +246,6 @@ const OpenOrders: React.FC<{
                             <TData>
                                 {amountLeft} {baseTicker}
                             </TData>
-                            <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
                             <TData>
                                 <Cancel onClick={(_e) => _cancelOrder(order.target_tracer, order.id)}>Cancel</Cancel>
                             </TData>
@@ -162,7 +283,9 @@ const Fills: React.FC<{
         </STable>
     );
 });
+
 Fills.displayName = 'Fills';
+
 
 type TSProps = {
     selectedTracer: Tracer | undefined;
@@ -172,9 +295,8 @@ type TSProps = {
 export default styled(({ selectedTracer, className }: TSProps) => {
     const { account } = useContext(Web3Context);
     const [tab, setTab] = useState(0);
-    const tabs = [`Position`, `Orders`, `Fills`];
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
+    const price = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
     const { filledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');
     const {
         omeState,
@@ -183,23 +305,23 @@ export default styled(({ selectedTracer, className }: TSProps) => {
         },
     } = useContext(OMEContext);
 
-    const baseTicker = 'BTC';
     const content = () => {
         switch (tab) {
             case 0:
                 return (
                     <PositionDetails
                         balance={balances}
-                        fairPrice={fairPrice}
+                        price={price}
                         maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                        baseTicker={baseTicker}
+                        baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
+                        quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
                     />
                 );
             case 1:
                 return (
                     <OpenOrders
                         userOrders={omeState?.userOrders ?? []}
-                        baseTicker={baseTicker}
+                        baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
                         refetch={() => omeDispatch({ type: 'refetchUserOrders' })}
                     />
                 );
@@ -211,12 +333,17 @@ export default styled(({ selectedTracer, className }: TSProps) => {
     };
     return (
         <div className={className}>
-            <SubNav tabs={tabs} setTab={setTab} selected={tab} />
+            <CustomSubNav 
+                selected={tab}
+                setTab={setTab}
+                fills={filledOrders.length}
+                orders={omeState?.userOrders?.length ?? 0}
+            />
             {content()}
         </div>
     );
 })`
     border-top: 1px solid #0c3586;
     max-height: 30vh;
-    overflow: scroll;
+    overflow: auto;
 ` as React.FC<TSProps>;

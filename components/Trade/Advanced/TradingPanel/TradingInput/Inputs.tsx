@@ -104,8 +104,6 @@ type LProps = {
 };
 
 export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max }: LProps) => {
-    console.log(min?.toNumber(), 'min');
-    console.log(max?.toNumber(), 'max');
     return (
         <div className={`${className} m-3`}>
             <a className="label" data-tip="" data-for="leverage">

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-interface SNBProps {
+export interface SNBProps {
     selected: number;
     tabs: string[];
     setTab: (id: number) => void;
