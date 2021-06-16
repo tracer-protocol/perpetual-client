@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Box, Button } from '@components/General';
 import { PlaceOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
-import Error from '@components/Trade/Error';
+import Error from '@components/General/Error';
 import { Closure, Leverage } from './Inputs';
 import { OrderAction, OrderState } from '@context/OrderContext';
 import PostTradeDetails from './PostTradeDetails';

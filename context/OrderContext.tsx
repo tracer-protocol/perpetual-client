@@ -3,7 +3,6 @@ import { TracerContext, Web3Context } from './';
 import { Children, OpenOrder, UserBalance } from 'types';
 import {
     calcMinimumMargin,
-    calcNotionalValue,
     calcTotalMargin,
     calcTradeExposure,
 } from '@tracer-protocol/tracer-utils';
@@ -12,46 +11,7 @@ import { OMEContext } from './OMEContext';
 import { OMEOrder } from 'types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
 import { defaults as tracerDefaults } from '@libs/Tracer';
-
-/**
- * -1 is no error
- * 0 is reserved for unknown
- */
-export const Errors: Record<number, Error> = {
-    0: {
-        name: 'User has position',
-        message: 'You have an open trade. Switch to',
-    },
-    1: {
-        name: 'No Wallet Balance',
-        message: 'No balance found in web3 wallet',
-    },
-    2: {
-        name: 'No Margin Balance',
-        message: 'Please deposit into your margin account',
-    },
-    3: {
-        name: 'No Orders',
-        message: 'No open orders for this market',
-    },
-    4: {
-        name: 'Account Disconnected',
-        message: 'Please connect your wallet',
-    },
-    5: {
-        name: 'Invalid Funds',
-        message: 'You do not have enough funds in your wallet',
-    },
-    6: {
-        name: 'Invalid Minimum Margin',
-        message:
-            'Our liquidators are required to pay 6 times the liquidation gas costs to liquidate your account. As a result we encourage you to deposit atleast $160 as this will ensure you will be able to place a trade without instantly being liquidated',
-    },
-    7: {
-        name: 'Invalid Order',
-        message: 'Order will put you into a liquidateable state',
-    },
-};
+import { ErrorKey } from '@components/General/Error';
 
 // Position types
 export const LONG = 0;
@@ -76,46 +36,32 @@ const checkErrors: (
     account: string | undefined,
     order: OrderState,
     maxLeverage: BigNumber | undefined,
-) => number = (balances, orders, account, order, maxLeverage) => {
-    let newBase = new BigNumber(0),
-        newQuote = new BigNumber(0);
+) => ErrorKey = (balances, orders, account, order, maxLeverage) => {
     const priceBN = new BigNumber(order.price);
-    const exposureBN = new BigNumber(order.exposure);
-    if (balances) {
-        if (order.position === SHORT) {
-            // short
-            newBase = balances?.base.minus(exposureBN);
-            newQuote = balances?.quote.plus(calcNotionalValue(exposureBN, priceBN));
-        } else {
-            // long
-            newBase = balances?.base.plus(exposureBN);
-            newQuote = balances?.quote.minus(calcNotionalValue(exposureBN, priceBN));
-        }
-    }
+    const { quote: newQuote, base: newBase } = order.nextPosition;
     if (!account) {
-        return 4;
+        return 'ACCOUNT_DISCONNECTED';
     } else if (orders?.length === 0 && order.orderType === MARKET) {
         // there are no orders
-        return 3;
+        return 'NO_ORDERS';
     } else if (!balances?.base.eq(0) && order.orderType === MARKET && !order.advanced) {
         // user has a position already
-        return 0;
+        return 'NO_POSITION';
     } else if (balances?.tokenBalance.eq(0) && !order.advanced) {
         // ignore if on advanced
         // user has no web3 wallet balance
-        return 1;
+        return 'NO_WALLET_BALANCE';
     } else if (balances?.quote.eq(0)) {
         // user has no tcr margin balance
-        return 2;
+        return 'NO_MARGIN_BALANCE';
     } else if (
         calcTotalMargin(newQuote, newBase, priceBN).lt(
             calcMinimumMargin(newQuote, newBase, priceBN, maxLeverage ?? tracerDefaults.maxLeverage),
         )
     ) {
-        // user has no tcr margin balance
-        return 7;
+        return 'INVALID_ORDER';
     } else {
-        return -1;
+        return 'NO_ERROR';
     }
 };
 
@@ -221,7 +167,7 @@ export type OrderAction =
               leverage: number;
           };
       }
-    | { type: 'setError'; value: number }
+    | { type: 'setError'; value: ErrorKey }
     | { type: 'setWallet'; value: number }
     | { type: 'setLock'; value: boolean }
     | { type: 'setAdvanced'; value: boolean }

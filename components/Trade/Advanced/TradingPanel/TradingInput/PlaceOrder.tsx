@@ -8,7 +8,7 @@ import { Box } from '@components/General';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import PostTradeDetails from './PostTradeDetails';
-import Error from '@components/Trade/Error';
+import Error from '@components/General/Error';
 import { toApproxCurrency } from '@libs/utils';
 import { Approx } from '@components/General';
 import { Exposure, Price, Leverage } from './Inputs';
