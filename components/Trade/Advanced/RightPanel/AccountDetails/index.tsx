@@ -44,7 +44,6 @@ const SSection = styled(Section)`
     padding: 5px 10px;
     margin: 0;
     color: #005EA4;
-    width: 50%;
     > .label {
         display: block;
         font-size: 12px;
@@ -53,6 +52,13 @@ const SSection = styled(Section)`
         padding-left: 0;
     }
 `
+
+const SectionContainer = styled.div`
+    border-right: 1px solid #002886;
+    width: 100%;
+    display: block;
+`
+
 const SSlideSelect = styled(SlideSelect)`
     height: 28px;
     width: 120px;
@@ -89,70 +95,76 @@ const PositionDetails: React.FC<IProps> = ({
     return (
         <div className="flex">
             <AccountDetails>
-                <SSection label={'Side'}>
-                    {!balance.quote.eq(0)
-                        ? 
-                        <Content>
-                            {/* <SPrevious /> */}
-                            {balance.quote.lt(0) ? 'SHORT' : 'LONG'}
-                        </Content>
-                        : `-`
-                    }
-                </SSection>
-                <SSection label={'Unrealised PnL'}>
-                    {!balance.quote.eq(0)
-                        ?
-                        <Content>
-                            {toApproxCurrency(0)}
-                        </Content>
-                        : `-`
-                    }
-                </SSection>
-                <SSection label={'Leverage'}>
-                    {!balance.quote.eq(0)
-		                ? 
-                        <Content>
-                            {/* <SPrevious /> */}
-			                {`${l.toPrecision(3)}x`}
-                        </Content>
-                        : `-`
-                    }
-                </SSection>
-                <SSection label={'Realised PnL'}>
-                    {!balance.quote.eq(0)
-		                ? 
+                <SectionContainer className="w-1/2">
+                    <SSection label={'Side'}>
+                        {!balance.quote.eq(0)
+                            ? 
+                            <Content>
+                                {/* <SPrevious /> */}
+                                {balance.quote.lt(0) ? 'SHORT' : 'LONG'}
+                            </Content>
+                            : `-`
+                        }
+                    </SSection>
+                    <SSection label={'Leverage'}>
+                        {!balance.quote.eq(0)
+                            ? 
+                            <Content>
+                                {/* <SPrevious /> */}
+                                {`${l.toPrecision(3)}x`}
+                            </Content>
+                            : `-`
+                        }
+                    </SSection>
+                </SectionContainer>
+                <SectionContainer className="w-1/2">
+                    <SSection label={'Unrealised PnL'}>
+                        {!balance.quote.eq(0)
+                            ?
                             <Content>
                                 {toApproxCurrency(0)}
                             </Content>
-                        : `-`
-                    }
-                </SSection>
-                <SSection label={'Exposure'} className="w-full">
-                    {!balance.quote.eq(0)
-		                ?   
-                            <Content>
-                                {currency === 0
-                                    ? `${base.abs().toNumber()} ${baseTicker}`
-                                    : `${toApproxCurrency(base.abs().times(price))} ${quoteTicker}`
-                                
-                                }
-                                <SSlideSelect
-                                    onClick={(index, _e) => {
-                                        setCurrency(index);
-                                    }}
-                                    value={currency}
-                                >
-                                    <Option>
-                                        {baseTicker}
-                                    </Option>
-                                    <Option>
-                                        {quoteTicker}
-                                    </Option>
-                                </SSlideSelect>
-                            </Content>
-                        : `-`
-                    }
-                </SSection>
+                            : `-`
+                        }
+                    </SSection>
+                    <SSection label={'Realised PnL'}>
+                        {!balance.quote.eq(0)
+                            ? 
+                                <Content>
+                                    {toApproxCurrency(0)}
+                                </Content>
+                            : `-`
+                        }
+                    </SSection>
+                </SectionContainer>
+                <SectionContainer>
+                    <SSection label={'Exposure'} className="w-full">
+                        {!balance.quote.eq(0)
+                            ?   
+                                <Content>
+                                    {currency === 0
+                                        ? `${base.abs().toNumber()} ${baseTicker}`
+                                        : `${toApproxCurrency(base.abs().times(price))} ${quoteTicker}`
+                                    
+                                    }
+                                    <SSlideSelect
+                                        onClick={(index, _e) => {
+                                            setCurrency(index);
+                                        }}
+                                        value={currency}
+                                    >
+                                        <Option>
+                                            {baseTicker}
+                                        </Option>
+                                        <Option>
+                                            {quoteTicker}
+                                        </Option>
+                                    </SSlideSelect>
+                                </Content>
+                            : `-`
+                        }
+                    </SSection>
+                </SectionContainer>
             </AccountDetails>
             <PositionGraph>
             </PositionGraph>
