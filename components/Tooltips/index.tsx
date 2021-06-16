@@ -31,25 +31,25 @@ export const ReactTooltipStyled = styled(ReactTooltip)`
 
 type TProps = {
     className?: string;
-    market?: any;
+    quote?: any;
     availableMargin?: any;
     maxLeverage?: any;
 };
 
-export const AmountTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+export const AmountTip: React.FC<TProps> = styled(({ className, quote }: TProps) => {
     return (
         <ReactTooltipStyled id="amount" className={className} effect="solid">
-            <strong>Amount</strong> Amount of {market} you would like to go long or short on for this order. If you have
+            <strong>Amount</strong> Amount of {quote} you would like to go long or short on for this order. If you have
             have an open position, your exposure will be updated by this specified amount.
         </ReactTooltipStyled>
     );
 })``;
 
-export const PriceTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+export const PriceTip: React.FC<TProps> = styled(({ className, quote }: TProps) => {
     return (
         <ReactTooltipStyled id="price" className={className} effect="solid">
-            <strong>Price</strong> The price of {market} you would like to go long or short on. The order will execute
-            at the specified price or better.
+            <strong>Price</strong> The price of {quote} you would like to go long or short on. The order will execute at
+            the specified price or better.
         </ReactTooltipStyled>
     );
 })``;
@@ -63,26 +63,23 @@ export const LeverageTip: React.FC<TProps> = styled(({ className }: TProps) => {
     );
 })``;
 
-export const TotalMarginTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+export const TotalMarginTip: React.FC<TProps> = styled(({ className, quote }: TProps) => {
     return (
         <ReactTooltipStyled id="total-margin" className={className} effect="solid">
             <strong>Total Margin</strong> The total value of your account. Total margin is equal to your net transfers
-            from your wallet plus your profit and losses from your {market} position.
+            from your wallet plus your profit and losses from your {quote} position.
         </ReactTooltipStyled>
     );
 })``;
 
-export const BuyingPowerTip: React.FC<TProps> = styled(
-    ({ className, market, availableMargin, maxLeverage }: TProps) => {
-        return (
-            <ReactTooltipStyled id="buying-power" className={className} effect="solid">
-                <strong>Buying Power</strong> Your maximum potential exposure to {market} given your available margin.
-                It is equal to your available margin of {availableMargin} multiplied by the maximum leverage of{' '}
-                {maxLeverage}.
-            </ReactTooltipStyled>
-        );
-    },
-)``;
+export const BuyingPowerTip: React.FC<TProps> = styled(({ className, quote, availableMargin, maxLeverage }: TProps) => {
+    return (
+        <ReactTooltipStyled id="buying-power" className={className} effect="solid">
+            <strong>Buying Power</strong> Your maximum potential exposure to {quote} given your available margin. It is
+            equal to your available margin of {availableMargin} multiplied by the maximum leverage of {maxLeverage}.
+        </ReactTooltipStyled>
+    );
+})``;
 
 export const AvailableMarginTip: React.FC<TProps> = styled(({ className }: TProps) => {
     return (
@@ -93,20 +90,20 @@ export const AvailableMarginTip: React.FC<TProps> = styled(({ className }: TProp
     );
 })``;
 
-export const RealisedPnLTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+export const RealisedPnLTip: React.FC<TProps> = styled(({ className, quote }: TProps) => {
     return (
         <ReactTooltipStyled id="realised-pnl" className={className} effect="solid">
             <strong>Realised PnL</strong> The amount of profit or loss you have realised through partially closing your{' '}
-            {market} position, and/or paying trading fees, funding rate payments, insurance funding rate payments and
-            gas costs.
+            {quote} position, and/or paying trading fees, funding rate payments, insurance funding rate payments and gas
+            costs.
         </ReactTooltipStyled>
     );
 })``;
 
-export const UnrealisedPnLTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+export const UnrealisedPnLTip: React.FC<TProps> = styled(({ className, quote }: TProps) => {
     return (
         <ReactTooltipStyled id="unrealised-pnl" className={className} effect="solid">
-            <strong>Unrealised PnL</strong> The amount of profit or loss you would realise if you closed your {market}{' '}
+            <strong>Unrealised PnL</strong> The amount of profit or loss you would realise if you closed your {quote}{' '}
             position at the current mark price.
         </ReactTooltipStyled>
     );
@@ -121,30 +118,30 @@ export const InsurancePoolHealthTip: React.FC<TProps> = styled(({ className }: T
     );
 })``;
 
-export const PoolHoldingsTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+export const PoolHoldingsTip: React.FC<TProps> = styled(({ className, quote }: TProps) => {
     return (
         <ReactTooltipStyled id="pool-holdings" className={className} effect="solid">
-            <strong>Pool Holdings</strong> The current holdings in the the {market} insurance pool that have been
+            <strong>Pool Holdings</strong> The current holdings in the the {quote} insurance pool that have been
             accumulated through a combination of deposits and insurance funding rate payments.
         </ReactTooltipStyled>
     );
 })``;
 
-export const PoolTargetTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+export const PoolTargetTip: React.FC<TProps> = styled(({ className, quote }: TProps) => {
     return (
         <ReactTooltipStyled id="pool-target" className={className} effect="solid">
             <strong>Pool Target</strong> The target value for the insurance pool borrowed by leveraged traders in the{' '}
-            {market} market. <a>Learn more.</a>
+            {quote} market. <a>Learn more.</a>
         </ReactTooltipStyled>
     );
 })``;
 
-export const InsuranceFundingRateTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+export const InsuranceFundingRateTip: React.FC<TProps> = styled(({ className, quote }: TProps) => {
     return (
         <ReactTooltipStyled id="insurance-funding-rate" className={className} effect="solid">
             <strong>Insurance Funding Rate</strong> A fee that is applied to the borrowings of leveraged traders in the{' '}
-            {market} market to capitalise the {market} insurance pool. The fee is applied is continuously paid and
-            updated every 8 hours. <a>Learn more.</a>
+            {quote} market to capitalise the {quote} insurance pool. The fee is applied is continuously paid and updated
+            every 8 hours. <a>Learn more.</a>
         </ReactTooltipStyled>
     );
 })``;
