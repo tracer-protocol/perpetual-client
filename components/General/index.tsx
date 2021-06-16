@@ -1,6 +1,5 @@
 import { CloseOutlined } from '@ant-design/icons';
 import { Children } from 'types';
-import Tooltip from 'antd/lib/tooltip';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -90,22 +89,23 @@ export const Card = styled.div`
 `;
 
 type SProps = {
-    label: string;
     className?: string;
-    tooltip?: React.ReactChild;
+    label: string;
+    slug?: string;
 } & Children;
 
-export const Section: React.FC<SProps> = styled(({ label, children, className, tooltip }: SProps) => {
-    return tooltip ? (
-        <Tooltip title={tooltip} placement="right">
-            <div className={`${className}`}>
-                <span className={`label`}>{label}</span>
-                <span className={`content`}>{children}</span>
-            </div>
-        </Tooltip>
-    ) : (
+export const Section: React.FC<SProps> = styled(({ className, children, label, slug }: SProps) => {
+    return (
         <div className={`${className}`}>
-            <span className={`label`}>{label}</span>
+            {slug ? (
+                <a className={`label`} data-tip="" data-for={slug}>
+                    {label}
+                </a>
+            ) : (
+                <div className={`label`} data-tip="" data-for={slug}>
+                    {label}
+                </div>
+            )}
             <span className={`content`}>{children}</span>
         </div>
     );
@@ -114,8 +114,7 @@ export const Section: React.FC<SProps> = styled(({ label, children, className, t
     display: flex;
     margin: 10px 0;
     font-size: 16px;
-    letter-spacing: -0.32px;
-    border-bottom: 1px solid #011772;
+
     > .label {
         text-align: left;
         white-space: nowrap;

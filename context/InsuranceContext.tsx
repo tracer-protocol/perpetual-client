@@ -65,28 +65,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     const [contract, setContract] = useState<Insurance>();
 
     const initialState = {
-        pools: {
-            'LINK/USDC': {
-                market: 'LINK/USDC',
-                userBalance: new BigNumber(100),
-                target: new BigNumber(6000),
-                liquidity: new BigNumber(5000),
-                rewards: new BigNumber(0),
-                health: new BigNumber(0),
-                apy: new BigNumber(0),
-                buffer: new BigNumber(200),
-            } as InsurancePoolInfo,
-            'ETH/USDC': {
-                market: 'ETH/USDC',
-                userBalance: new BigNumber(200),
-                target: new BigNumber(5000),
-                liquidity: new BigNumber(6000),
-                rewards: new BigNumber(0),
-                health: new BigNumber(0),
-                apy: new BigNumber(0),
-                buffer: new BigNumber(200),
-            } as InsurancePoolInfo,
-        },
+        pools: {},
     };
 
     const reducer = (state: State, action: InsuranceAction) => {

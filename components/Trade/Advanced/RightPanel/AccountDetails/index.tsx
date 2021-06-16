@@ -20,6 +20,7 @@ import { OMEContext } from '@context/OMEContext';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import CustomSubNav from './CustomSubNav';
+import { RealisedPnLTip, UnrealisedPnLTip} from "@components/Tooltips";
 
 const AccountDetails = styled.div`
     width: 40%;
@@ -112,12 +113,14 @@ const PositionDetails: React.FC<IProps> = ({ balance, price, baseTicker, quoteTi
                     </SSection>
                 </SectionContainer>
                 <SectionContainer className="w-1/2">
-                    <SSection label={'Unrealised PnL'}>
+                    <SSection label={'Unrealised PnL'} slug={`unrealised-pnl`}>
                         {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                     </SSection>
-                    <SSection label={'Realised PnL'}>
+                    <UnrealisedPnLTip />
+                    <SSection label={'Realised PnL'} slug={`realised-pnl`}>
                         {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                     </SSection>
+                    <RealisedPnLTip />
                 </SectionContainer>
                 <SectionContainer>
                     <SSection label={'Exposure'} className="w-full">
@@ -142,7 +145,7 @@ const PositionDetails: React.FC<IProps> = ({ balance, price, baseTicker, quoteTi
                     </SSection>
                 </SectionContainer>
             </AccountDetails>
-            <PositionGraph></PositionGraph>
+            <PositionGraph />
             <GraphLegend />
         </div>
     );

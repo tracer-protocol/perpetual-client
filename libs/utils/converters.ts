@@ -37,7 +37,7 @@ export const round: (value: number) => number = (value) => {
 export const toApproxCurrency: (num_: BigNumber | number) => string = (num_) => {
     let num = num_;
     if (!num_) {
-        // reject if num is falsey
+        // reject if num is false
         return '$0.000000';
     }
     if (typeof num !== 'number') {
@@ -51,7 +51,7 @@ export const toApproxCurrency: (num_: BigNumber | number) => string = (num_) => 
 };
 
 // order prices are in cents * 1000
-// so converstion is fromCents(price / (100 * 1000))
+// so conversion is fromCents(price / (100 * 1000))
 // toCents(price * 100 * 1000)
 export const fromCents: (val: number) => number = (val) => {
     return val / (100 * 10000);

@@ -178,6 +178,7 @@ const DropdownLogo = styled(({ className }) => {
         background: #3372e8;
         border-radius: 10px;
         transition: all 0.3s ease-in-out;
+        z-index: -1;
     }
 
     > .dropdown-menu ul {
