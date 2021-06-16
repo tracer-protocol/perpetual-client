@@ -11,7 +11,7 @@ export const ReactTooltipStyled = styled(ReactTooltip)`
         padding: 0.5rem 0.2rem 0.5rem 0.5rem !important;
         text-transform: none !important;
 
-        a:hover {
+        a {
             text-decoration: underline !important;
         }
 
@@ -109,14 +109,6 @@ export const UnrealisedPnLTip: React.FC<TProps> = styled(({ className, market }:
     );
 })``;
 
-export const ExposureTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
-    return (
-        <ReactTooltipStyled id="exposure" className={className} effect="solid">
-            <strong>Exposure</strong> The size of your {market} position.
-        </ReactTooltipStyled>
-    );
-})``;
-
 export const InsurancePoolHealthTip: React.FC<TProps> = styled(({ className }: TProps) => {
     return (
         <ReactTooltipStyled id="insurance-pool-health" className={className} effect="solid" place="left">
@@ -140,6 +132,16 @@ export const PoolTargetTip: React.FC<TProps> = styled(({ className, market }: TP
         <ReactTooltipStyled id="pool-target" className={className} effect="solid">
             <strong>Pool Target</strong> The target value for the insurance pool borrowed by leveraged traders in the{' '}
             {market} market. <a>Learn more.</a>
+        </ReactTooltipStyled>
+    );
+})``;
+
+export const InsuranceFundingRateTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+    return (
+        <ReactTooltipStyled id="insurance-funding-rate" className={className} effect="solid">
+            <strong>Insurance Funding Rate</strong> A fee that is applied to the borrowings of leveraged traders in the{' '}
+            {market} market to capitalise the {market} insurance pool. The fee is applied is continuously paid and
+            updated every 8 hours. <a>Learn more.</a>
         </ReactTooltipStyled>
     );
 })``;
