@@ -274,7 +274,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     return { ...state, price: price };
                 }
             case 'setSlippage':
-                return { ...state, slippage: action.value }
+                return { ...state, slippage: action.value };
             case 'setError':
                 return { ...state, error: action.value };
             case 'setWallet':
@@ -301,11 +301,9 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
             if (order.orderType === MARKET) {
                 // market order set the price if on market order
-                orderDispatch({ 
-                    type: 'setPrice', 
-                    value: order.position === LONG 
-                        ? omeState.lowestBid 
-                        : omeState.highestAsk 
+                orderDispatch({
+                    type: 'setPrice',
+                    value: order.position === LONG ? omeState.lowestBid : omeState.highestAsk,
                 });
             }
         }
@@ -313,11 +311,11 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     useMemo(() => {
         if (order.orderType === MARKET) {
-            orderDispatch({ type: 'setBestPrice' })
+            orderDispatch({ type: 'setBestPrice' });
         } else {
-            orderDispatch({ type: 'setPrice', value: NaN })
+            orderDispatch({ type: 'setPrice', value: NaN });
         }
-    }, [order.position, order.orderType])
+    }, [order.position, order.orderType]);
 
     useMemo(() => {
         // when user swaps to close order, set opposite side
