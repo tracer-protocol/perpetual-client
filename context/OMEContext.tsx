@@ -69,7 +69,7 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
     const fetchUserData = async () => {
         if (!account) {
             if (isMounted.current) {
-                omeDispatch({ type: 'setUserOrders', orders: []});
+                omeDispatch({ type: 'setUserOrders', orders: [] });
             }
         }
         if (selectedTracer?.address && account) {

@@ -272,7 +272,7 @@ export default styled(({ selectedTracer, className }: TSProps) => {
     const { account } = useContext(Web3Context);
     const [tab, setTab] = useState(0);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const price = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
+    const price = selectedTracer?.getOraclePrice() ?? defaults.oraclePrice;
     const { filledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');
     const {
         omeState,
