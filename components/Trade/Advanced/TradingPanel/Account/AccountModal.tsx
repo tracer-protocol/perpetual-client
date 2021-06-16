@@ -2,24 +2,29 @@ import React, { useContext, useCallback, useReducer, useMemo } from 'react';
 import styled from 'styled-components';
 import { NumberSelect, Section } from '@components/General';
 import { UserBalance } from 'types';
-import ErrorComponent from '@components/Trade/Error';
+import ErrorComponent from '@components/General/Error';
 import TracerModal from '@components/Modals';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import { After, Button, HiddenExpand, Previous } from '@components/General';
 import { TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
-import { calcTotalMargin, calcMinimumMargin } from '@tracer-protocol/tracer-utils';
+import {
+    calcTotalMargin,
+    calcMinimumMargin,
+    calcBuyingPower,
+    calcAvailableMarginPercent,
+} from '@tracer-protocol/tracer-utils';
 import { toApproxCurrency } from '@libs/utils';
+import { defaults } from '@libs/Tracer';
 
 const SNumberSelect = styled(NumberSelect)`
     margin-top: 1rem;
-    > * .balance {
-        color: #3da8f5;
-        margin-left: 2rem;
+    .balance {
+        color: #005ea4;
     }
-    > * .balance > .max {
-        margin-left: 2rem;
+    > .balance > .max {
+        margin-left: 1rem;
     }
 `;
 
@@ -30,25 +35,6 @@ const SHiddenExpand = styled(HiddenExpand)`
     margin-bottom: 1rem;
 `;
 
-const SSection = styled(Section)`
-    flex-direction: column;
-    margin-top: 0.5rem;
-    margin-bottom: 0;
-
-    > .content {
-        display: flex;
-        justify-content: space-between;
-        padding: 0;
-    }
-`;
-
-const SPrevious = styled(Previous)`
-    width: 100%;
-    display: flex;
-    &:after {
-        margin: auto;
-    }
-`;
 const MButton = styled(Button)`
     width: 80%;
     margin: auto;
@@ -163,15 +149,22 @@ export default styled(
 
         const checkErrors = useCallback(() => {
             if (state.amount > available.toNumber()) {
-                return 5;
+                return 'INSUFFICIENT_FUNDS';
             } else if (
-                state.amount < calcMinimumMargin(balances.quote, balances.base, price, maxLeverage).toNumber() ||
-                // TODO remove 160 for dynamic calculation of liquidation gas cost
-                state.amount < 160 - calcTotalMargin(balances.quote, balances.base, price).toNumber()
+                (state.amount < calcMinimumMargin(balances.quote, balances.base, price, maxLeverage).toNumber() ||
+                    // TODO remove 160 for dynamic calculation of liquidation gas cost
+                    state.amount < 150 - calcTotalMargin(balances.quote, balances.base, price).toNumber()) &&
+                isDeposit
             ) {
-                return 6;
+                return 'DEPOSIT_MORE';
+            } else if (
+                calcTotalMargin(newBalance, balances.base, price).lt(
+                    calcMinimumMargin(newBalance, balances.base, price, maxLeverage ?? defaults.maxLeverage),
+                )
+            ) {
+                return 'WITHDRAW_INVALID';
             }
-            return -1;
+            return 'NO_ERROR';
         }, [state.amount]);
 
         const handleClose = () => {
@@ -187,7 +180,6 @@ export default styled(
                 dispatch({ type: 'setTitles', title: 'Withdraw Margin', subTitle: '' });
             }
         }, [isDeposit]);
-
         return (
             <TracerModal
                 loading={state.loading}
@@ -210,22 +202,33 @@ export default styled(
                 />
                 <Balance display={!!state.amount}>
                     <span className="mr-3">Balance</span>
-                    <SAfter className={checkErrors() !== -1 ? 'invalid' : ''}>{toApproxCurrency(newBalance)}</SAfter>
+                    <SAfter className={checkErrors() !== 'NO_ERROR' ? 'invalid' : ''}>
+                        {toApproxCurrency(newBalance)}
+                    </SAfter>
                 </Balance>
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>
                     <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
-                    <SSection label={`Total Margin`}>
-                        <SPrevious>{`${toApproxCurrency(
+                    <Section label={`Total Margin`}>
+                        <Previous>{`${toApproxCurrency(
                             calcTotalMargin(balances.quote, balances.base, price),
-                        )}`}</SPrevious>
+                        )}`}</Previous>
                         {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, price))}`}
-                    </SSection>
-                    <SSection label={`Maintenance Margin`}>
-                        <SPrevious>{`${toApproxCurrency(
-                            calcMinimumMargin(balances.quote, balances.base, price, maxLeverage),
-                        )}`}</SPrevious>
-                        {`${toApproxCurrency(calcMinimumMargin(newBalance, balances.base, price, maxLeverage))}`}
-                    </SSection>
+                    </Section>
+                    <Section label={`Buying Power`}>
+                        <Previous>{`${toApproxCurrency(
+                            calcBuyingPower(balances.quote, balances.base, price, maxLeverage),
+                        )}`}</Previous>
+                        {`${toApproxCurrency(calcBuyingPower(newBalance, balances.base, price, maxLeverage))}`}
+                    </Section>
+                    <Section label={`Available Margin`}>
+                        <Previous>{`${calcAvailableMarginPercent(
+                            balances.quote,
+                            balances.base,
+                            price,
+                            maxLeverage,
+                        ).toPrecision(3)}%`}</Previous>
+                        {`${calcAvailableMarginPercent(newBalance, balances.base, price, maxLeverage).toPrecision(3)}%`}
+                    </Section>
                 </SHiddenExpand>
                 <div className="text-center">
                     {isDeposit && !selectedTracer?.getTracerApproved() ? (
@@ -249,7 +252,7 @@ export default styled(
                         </ApproveButton>
                     ) : null}
                     <MButton
-                        disabled={!selectedTracer?.getTracerApproved()}
+                        disabled={!selectedTracer?.getTracerApproved() || checkErrors() !== 'NO_ERROR'}
                         onClick={() => {
                             dispatch({ type: 'setLoading', loading: true });
                             dispatch({
@@ -265,7 +268,7 @@ export default styled(
                         {isDeposit ? 'Deposit' : 'Withdraw'}
                     </MButton>
                 </div>
-                <ErrorComponent error={checkErrors()} />
+                <ErrorComponent context="margin" error={checkErrors()} />
             </TracerModal>
         );
     },

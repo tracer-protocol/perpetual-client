@@ -2,7 +2,12 @@ import React, { useContext, useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
-import { calcTotalMargin, calcBuyingPower, calcMinimumMargin } from '@tracer-protocol/tracer-utils';
+import {
+    calcTotalMargin,
+    calcBuyingPower,
+    calcMinimumMargin,
+    calcAvailableMarginPercent,
+} from '@tracer-protocol/tracer-utils';
 import { Box, Button, Previous } from '@components/General';
 import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
@@ -116,8 +121,10 @@ const AccountPanel: React.FC<{
     const [deposit, setDeposit] = useState(false);
     // const [calculator, showCalculator] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
+    const price = selectedTracer?.getOraclePrice() ?? defaults.oraclePrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
+    const newBase = order?.nextPosition.base ?? balances.base;
+    const newQuote = order?.nextPosition.quote ?? balances.quote;
 
     const handleClick = (popup: boolean, deposit: boolean) => {
         setPopup(popup);
@@ -139,9 +146,7 @@ const AccountPanel: React.FC<{
                     </a>
                     <TotalMarginTip base={selectedTracer?.baseTicker} />
                 </h3>
-                <span>
-                    <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
-                </span>
+                <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}</span>
             </Item>
             <Item>
                 <h3>
@@ -150,8 +155,8 @@ const AccountPanel: React.FC<{
                         <BuyingPowerTip
                             base={selectedTracer?.baseTicker}
                             availableMargin={
-                                calcTotalMargin(balances.quote, balances.base, fairPrice).toNumber() -
-                                calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage).toNumber()
+                                calcTotalMargin(balances.quote, balances.base, price).toNumber() -
+                                calcMinimumMargin(balances.quote, balances.base, price, maxLeverage).toNumber()
                             }
                             maxLeverage={maxLeverage.toNumber()}
                         />
@@ -160,18 +165,14 @@ const AccountPanel: React.FC<{
                 </h3>
                 <span>
                     {!order?.exposure || !order.price ? (
-                        toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))
+                        toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))
                     ) : (
                         <>
                             <Previous>
-                                <a>
-                                    {toApproxCurrency(
-                                        calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
-                                    )}
-                                </a>
+                                {toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))}
                             </Previous>
                             {toApproxCurrency(
-                                calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage).minus(
+                                calcBuyingPower(balances.quote, balances.base, price, maxLeverage).minus(
                                     new BigNumber(order.exposure * order.price),
                                 ),
                             )}
@@ -187,12 +188,23 @@ const AccountPanel: React.FC<{
                     <AvailableMarginTip />
                 </h3>
                 <span>
-                    <a>
-                        {toApproxCurrency(
-                            calcTotalMargin(balances.quote, balances.base, fairPrice).toNumber() -
-                                calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage).toNumber(),
-                        )}
-                    </a>
+                    {!order?.exposure || !order.price ? (
+                        `${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(
+                            3,
+                        )}%`
+                    ) : (
+                        <>
+                            <Previous>
+                                {`${calcAvailableMarginPercent(
+                                    balances.quote,
+                                    balances.base,
+                                    price,
+                                    maxLeverage,
+                                ).toPrecision(3)}%`}
+                            </Previous>
+                            {`${calcAvailableMarginPercent(newQuote, newBase, price, maxLeverage).toPrecision(3)}%`}
+                        </>
+                    )}
                 </span>
             </Item>
             <DepositButtons>
@@ -212,7 +224,7 @@ const AccountPanel: React.FC<{
                 unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}
                 maxLeverage={maxLeverage}
-                price={Number.isNaN(fairPrice) ? 0 : fairPrice}
+                price={price}
             />
             {/*<CalculatorModal*/}
             {/*    display={calculator}*/}
@@ -220,7 +232,7 @@ const AccountPanel: React.FC<{
             {/*    exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}*/}
             {/*    marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}*/}
             {/*    balances={balances}*/}
-            {/*    price={Number.isNaN(fairPrice) ? 0 : fairPrice}*/}
+            {/*    price={Number.isNaN(price) ? 0 : price}*/}
             {/*/>*/}
         </AccountInfo>
     );

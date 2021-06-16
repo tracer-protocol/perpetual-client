@@ -1,12 +1,13 @@
 import React, { useContext } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import { OrderState, Errors } from '@context/OrderContext';
+import { OrderState } from '@context/OrderContext';
 import { OrderContext, TracerContext, TransactionContext } from 'context';
 import { Children } from 'types';
 import Tooltip from 'antd/lib/tooltip';
 import { OMEContext } from '@context/OMEContext';
 import { Button } from '@components/General';
 import styled from 'styled-components';
+import { OrderErrors } from '@components/General/Error';
 
 const ParentDisable = styled(Button)`
     .button-disabled & {
@@ -33,7 +34,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
     const { addToast } = useToasts();
 
     const handleOrder = async (_e: any) => {
-        if (order?.error === -1) {
+        if (order?.error === 'NO_ERROR') {
             if (placeOrder) {
                 if (handleAsync) {
                     handleAsync(placeOrder, [order as OrderState], {
@@ -53,7 +54,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
             }
         } else {
             if (order?.error) {
-                addToast(['Transaction Failed', `Invalid order: ${Errors[order.error]?.message}`], {
+                addToast(['Transaction Failed', `Invalid order: ${OrderErrors[order.error]?.message}`], {
                     appearance: 'error',
                     autoDismiss: true,
                 });
@@ -66,7 +67,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
         }
     };
 
-    if (order?.error === -1) {
+    if (order?.error === 'NO_ERROR') {
         return (
             <div className={`w-full ${className ?? ''}`} onClick={handleOrder}>
                 {children}
@@ -74,7 +75,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
         );
     } else {
         return (
-            <Tooltip title={Errors[order?.error ?? -1]?.message}>
+            <Tooltip title={OrderErrors[order?.error ?? -1]?.message}>
                 <div className={`button-disabled ${className ?? ''}`}>{children}</div>
             </Tooltip>
         );

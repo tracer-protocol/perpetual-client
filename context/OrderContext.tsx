@@ -1,57 +1,13 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
 import { TracerContext, Web3Context } from './';
 import { Children, OpenOrder, UserBalance } from 'types';
-import {
-    calcMinimumMargin,
-    calcNotionalValue,
-    calcTotalMargin,
-    calcTradeExposure,
-} from '@tracer-protocol/tracer-utils';
+import { calcMinimumMargin, calcTotalMargin, calcTradeExposure } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
 import { OMEOrder } from 'types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
 import { defaults as tracerDefaults } from '@libs/Tracer';
-
-/**
- * -1 is no error
- * 0 is reserved for unknown
- */
-export const Errors: Record<number, Error> = {
-    0: {
-        name: 'User has position',
-        message: 'You have an open trade. Switch to',
-    },
-    1: {
-        name: 'No Wallet Balance',
-        message: 'No balance found in web3 wallet',
-    },
-    2: {
-        name: 'No Margin Balance',
-        message: 'Please deposit into your margin account',
-    },
-    3: {
-        name: 'No Orders',
-        message: 'No open orders for this market',
-    },
-    4: {
-        name: 'Account Disconnected',
-        message: 'Please connect your wallet',
-    },
-    5: {
-        name: 'Invalid Funds',
-        message: 'You do not have enough funds in your wallet',
-    },
-    6: {
-        name: 'Invalid Minimum Margin',
-        message:
-            'Our liquidators are required to pay 6 times the liquidation gas costs to liquidate your account. As a result we encourage you to deposit atleast $160 as this will ensure you will be able to place a trade without instantly being liquidated',
-    },
-    7: {
-        name: 'Invalid Order',
-        message: 'Order will put you into a liquidateable state',
-    },
-};
+import { ErrorKey } from '@components/General/Error';
 
 // Position types
 export const LONG = 0;
@@ -76,46 +32,32 @@ const checkErrors: (
     account: string | undefined,
     order: OrderState,
     maxLeverage: BigNumber | undefined,
-) => number = (balances, orders, account, order, maxLeverage) => {
-    let newBase = new BigNumber(0),
-        newQuote = new BigNumber(0);
+) => ErrorKey = (balances, orders, account, order, maxLeverage) => {
     const priceBN = new BigNumber(order.price);
-    const exposureBN = new BigNumber(order.exposure);
-    if (balances) {
-        if (order.position === SHORT) {
-            // short
-            newBase = balances?.base.minus(exposureBN);
-            newQuote = balances?.quote.plus(calcNotionalValue(exposureBN, priceBN));
-        } else {
-            // long
-            newBase = balances?.base.plus(exposureBN);
-            newQuote = balances?.quote.minus(calcNotionalValue(exposureBN, priceBN));
-        }
-    }
+    const { quote: newQuote, base: newBase } = order.nextPosition;
     if (!account) {
-        return 4;
+        return 'ACCOUNT_DISCONNECTED';
     } else if (orders?.length === 0 && order.orderType === MARKET) {
         // there are no orders
-        return 3;
+        return 'NO_ORDERS';
     } else if (!balances?.base.eq(0) && order.orderType === MARKET && !order.advanced) {
         // user has a position already
-        return 0;
+        return 'NO_POSITION';
     } else if (balances?.tokenBalance.eq(0) && !order.advanced) {
         // ignore if on advanced
         // user has no web3 wallet balance
-        return 1;
+        return 'NO_WALLET_BALANCE';
     } else if (balances?.quote.eq(0)) {
         // user has no tcr margin balance
-        return 2;
+        return 'NO_MARGIN_BALANCE';
     } else if (
         calcTotalMargin(newQuote, newBase, priceBN).lt(
             calcMinimumMargin(newQuote, newBase, priceBN, maxLeverage ?? tracerDefaults.maxLeverage),
         )
     ) {
-        // user has no tcr margin balance
-        return 7;
+        return 'INVALID_ORDER';
     } else {
-        return -1;
+        return 'NO_ERROR';
     }
 };
 
@@ -140,8 +82,12 @@ export const orderDefaults = {
             exposure: 0,
             leverage: 1,
         },
+        nextPosition: {
+            quote: new BigNumber(0),
+            base: new BigNumber(0),
+        },
         oppositeOrders: [],
-        error: -1,
+        error: 'NO_ERROR',
         wallet: 0,
         lockAmountToPay: false, // deprecated with basic trade
         advanced: false,
@@ -164,8 +110,12 @@ export type OrderState = {
         exposure: number;
         leverage: number;
     };
+    nextPosition: {
+        base: BigNumber;
+        quote: BigNumber;
+    };
     oppositeOrders: FlatOrder[];
-    error: number; // number ID relating to the error map above
+    error: ErrorKey; // number ID relating to the error map above
     wallet: number; // ID of corresponding wallet in use 0 -> web3, 1 -> TCR margin
     // boolean to tell if the amount to buy or amount to pay inputs are locked. eg
     //  by changing the amount to pay field it should update the amount to buy and vice versa.
@@ -199,6 +149,13 @@ export type OrderAction =
     | { type: 'setSlippage'; value: number }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
+    | {
+          type: 'setNextPosition';
+          nextPosition: {
+              base: BigNumber;
+              quote: BigNumber;
+          };
+      }
     | { type: 'setPrice'; value: number }
     | { type: 'setOrderType'; value: number }
     | { type: 'setAdjustType'; value: number }
@@ -209,7 +166,7 @@ export type OrderAction =
               leverage: number;
           };
       }
-    | { type: 'setError'; value: number }
+    | { type: 'setError'; value: ErrorKey }
     | { type: 'setWallet'; value: number }
     | { type: 'setLock'; value: boolean }
     | { type: 'setAdvanced'; value: boolean }
@@ -259,6 +216,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, marketPrice: action.value };
             case 'setExposure':
                 return { ...state, exposure: action.value };
+            case 'setNextPosition':
+                return { ...state, nextPosition: action.nextPosition };
             case 'setMaxExposure':
                 const exposure = 1;
                 return { ...state, exposure: exposure };
@@ -355,6 +314,23 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     useEffect(() => {
         setTracerId ? setTracerId(`${order.market}/${order.collateral}`) : console.error('Error setting tracerId');
     }, [order.market, order.collateral]);
+
+    useEffect(() => {
+        const balances = selectedTracer?.getBalance();
+        let totalExposure = order.exposure * order.leverage;
+        if (order.position === SHORT) {
+            totalExposure = totalExposure * -1; // negate base if its short
+        }
+        const newQuote = balances?.quote.minus(totalExposure * order.price) ?? tracerDefaults.balances.quote; // subtract how much it costs
+        const newBase = balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base; // add how much exposure you get
+        orderDispatch({
+            type: 'setNextPosition',
+            nextPosition: {
+                base: newBase,
+                quote: newQuote,
+            },
+        });
+    }, [order.exposure, order.price]);
 
     // Check errors
     useMemo(() => {

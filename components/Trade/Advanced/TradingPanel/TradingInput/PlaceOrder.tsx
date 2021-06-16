@@ -8,7 +8,7 @@ import { Box } from '@components/General';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import PostTradeDetails from './PostTradeDetails';
-import Error from '@components/Trade/Error';
+import Error from '@components/General/Error';
 import { toApproxCurrency } from '@libs/utils';
 import { Approx } from '@components/General';
 import { Exposure, Price, Leverage } from './Inputs';
@@ -158,7 +158,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     <AdvancedOrderButton />
                 </div>
             </Box>
-            <SError error={order?.error ?? -1} account={account} />
+            <SError error={order?.error ?? 'NO_ERROR'} account={account} />
         </>
     );
 })`

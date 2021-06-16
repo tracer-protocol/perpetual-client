@@ -3,6 +3,8 @@ import { Children } from 'types';
 import styled from 'styled-components';
 import { BasicInputContainer, Input } from '../';
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import { toApproxCurrency } from '@libs/utils';
+import { After } from '@components/General';
 
 const Unit = styled.span`
     font-size: 18px;
@@ -22,13 +24,25 @@ const Header = styled.h3`
 
 const Balance = styled.span`
     color: #fff;
-    .max {
-        color: #3da8f5;
-        text-decoration: underline;
-        transition: 0.3s;
-        margin-left: 5px;
+    margin-left: auto;
+    &.invalid {
+        background: #f15025;
+        border-radius: 20px;
+        color: #fff !important;
+        padding: 0 10px;
     }
-    .max:hover {
+    &.invalid > .after {
+        color: #fff !important;
+    }
+`;
+
+const Max = styled.span`
+    color: #3da8f5;
+    text-decoration: underline;
+    transition: 0.3s;
+    margin-left: 5px;
+
+    &:hover {
         opacity: 0.8;
         cursor: pointer;
     }
@@ -85,13 +99,16 @@ export const NumberSelect: React.FC<NSProps> = ({
         <div className={className}>
             <Header>
                 {title}
-                {balance ? ( // if there is a balance then display it
-                    <Balance className="balance">
-                        {`Available Balance: ${balance}`}
-                        <span className="max" onClick={(_e) => setAmount(balance)}>
+                {balance || balance === 0 ? ( // if there is a balance then display it
+                    <>
+                        <Balance className={`balance ${amount > balance ? 'invalid' : ''}`}>
+                            {`Available: ${balance}`}
+                            {amount ? <After className="ml-2 after">{toApproxCurrency(balance - amount)}</After> : null}
+                        </Balance>
+                        <Max className="max" onClick={(_e) => setAmount(balance)}>
                             Max
-                        </span>
-                    </Balance>
+                        </Max>
+                    </>
                 ) : (
                     ''
                 )}

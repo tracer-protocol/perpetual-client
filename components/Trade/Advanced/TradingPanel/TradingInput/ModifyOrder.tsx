@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { Box, Button } from '@components/General';
 import { PlaceOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
-import Error from '@components/Trade/Error';
+import Error from '@components/General/Error';
 import { Closure, Leverage } from './Inputs';
 import { OrderAction, OrderState } from '@context/OrderContext';
 import PostTradeDetails from './PostTradeDetails';
@@ -133,7 +133,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     <Button>{order?.adjustType === 0 ? 'Adjust Order' : 'Close Position'} </Button>
                 </PlaceOrderButton>
             </Box>
-            <SError error={order?.error ?? -1} account={account} />
+            <SError error={order?.error ?? 'NO_ERROR'} account={account} />
         </>
     );
 })`

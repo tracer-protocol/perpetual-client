@@ -10,7 +10,7 @@ import { calcLiquidationPrice, calcNotionalValue } from '@tracer-protocol/tracer
 import { toApproxCurrency } from '@libs/utils';
 import { Section } from '@components/General';
 import { UserBalance } from 'types';
-import Error from '../Error';
+import Error from '@components/General/Error';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import DefaultSlider from '@components/Slider';
@@ -225,7 +225,7 @@ const Basic: React.FC = styled(({ className }) => {
                 <PlaceOrderButton className="mt-auto mb-2">
                     <SButton className="mx-auto">Place Trade</SButton>
                 </PlaceOrderButton>
-                <Error error={order?.error ?? -1} />
+                <Error error={order?.error ?? 'NO_ERROR'} />
             </SCard>
         </div>
     );

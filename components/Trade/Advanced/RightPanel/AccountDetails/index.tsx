@@ -20,7 +20,7 @@ import { OMEContext } from '@context/OMEContext';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import CustomSubNav from './CustomSubNav';
-import { RealisedPnLTip, UnrealisedPnLTip} from "@components/Tooltips";
+import { RealisedPnLTip, UnrealisedPnLTip } from '@components/Tooltips';
 
 const AccountDetails = styled.div`
     width: 40%;
@@ -205,8 +205,8 @@ const OpenOrders: React.FC<{
         <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
             <tbody>
                 {userOrders.map((order, index) => {
-                    const amount = parseFloat(Web3.utils.fromWei(order?.amount?.toString() ?? 0)),
-                        amountLeft = parseFloat(Web3.utils.fromWei(order?.amount_left?.toString() ?? 0)),
+                    const amount = parseFloat(Web3.utils.fromWei(order?.amount?.toString() ?? '0')),
+                        amountLeft = parseFloat(Web3.utils.fromWei(order?.amount_left?.toString() ?? '0')),
                         filled = amount - amountLeft;
                     return (
                         <TRow key={`open-order-${index}`}>
