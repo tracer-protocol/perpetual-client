@@ -1,6 +1,6 @@
 import { getOrders, getUsersOrders } from '@libs/Ome';
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
-import React, { useContext, useEffect, useReducer, useRef } from 'react';
+import React, { useContext, useEffect, useMemo, useReducer, useRef } from 'react';
 import { Children } from 'types';
 import { TracerContext } from './TracerContext';
 import { Web3Context } from './Web3Context';
@@ -67,6 +67,11 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
     };
 
     const fetchUserData = async () => {
+        if (!account) {
+            if (isMounted.current) {
+                omeDispatch({ type: 'setUserOrders', orders: []});
+            }
+        }
         if (selectedTracer?.address && account) {
             const res = await getUsersOrders(selectedTracer?.address as string, account);
             if (isMounted.current) {
@@ -112,7 +117,7 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
 
     const [omeState, omeDispatch] = useReducer(reducer, initialState);
 
-    useEffect(() => {
+    useMemo(() => {
         fetchUserData();
     }, [selectedTracer?.address, account]);
 
