@@ -26,13 +26,13 @@ const Balance = styled.span`
     color: #fff;
     margin-left: auto;
     &.invalid {
-        background: #F15025;
+        background: #f15025;
         border-radius: 20px;
-        color: #fff!important;
+        color: #fff !important;
         padding: 0 10px;
     }
     &.invalid > .after {
-        color: #fff!important;
+        color: #fff !important;
     }
 `;
 
@@ -46,8 +46,7 @@ const Max = styled.span`
         opacity: 0.8;
         cursor: pointer;
     }
-
-`
+`;
 
 type NSProps = {
     className?: string;
@@ -102,12 +101,9 @@ export const NumberSelect: React.FC<NSProps> = ({
                 {title}
                 {balance || balance === 0 ? ( // if there is a balance then display it
                     <>
-                        <Balance className={`balance ${amount > balance ? 'invalid' : ''}`} >
+                        <Balance className={`balance ${amount > balance ? 'invalid' : ''}`}>
                             {`Available: ${balance}`}
-                            {amount 
-                                ? <After className="ml-2 after">{toApproxCurrency(balance - amount)}</After>
-                                : null
-                            }
+                            {amount ? <After className="ml-2 after">{toApproxCurrency(balance - amount)}</After> : null}
                         </Balance>
                         <Max className="max" onClick={(_e) => setAmount(balance)}>
                             Max

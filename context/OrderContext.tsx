@@ -1,11 +1,7 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
 import { TracerContext, Web3Context } from './';
 import { Children, OpenOrder, UserBalance } from 'types';
-import {
-    calcMinimumMargin,
-    calcTotalMargin,
-    calcTradeExposure,
-} from '@tracer-protocol/tracer-utils';
+import { calcMinimumMargin, calcTotalMargin, calcTradeExposure } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
 import { OMEOrder } from 'types/OrderTypes';
@@ -88,10 +84,10 @@ export const orderDefaults = {
         },
         nextPosition: {
             quote: new BigNumber(0),
-            base: new BigNumber(0)
+            base: new BigNumber(0),
         },
         oppositeOrders: [],
-        error: -1,
+        error: 'NO_ERROR',
         wallet: 0,
         lockAmountToPay: false, // deprecated with basic trade
         advanced: false,
@@ -115,11 +111,11 @@ export type OrderState = {
         leverage: number;
     };
     nextPosition: {
-        base: BigNumber,
-        quote: BigNumber
-    }
+        base: BigNumber;
+        quote: BigNumber;
+    };
     oppositeOrders: FlatOrder[];
-    error: number; // number ID relating to the error map above
+    error: ErrorKey; // number ID relating to the error map above
     wallet: number; // ID of corresponding wallet in use 0 -> web3, 1 -> TCR margin
     // boolean to tell if the amount to buy or amount to pay inputs are locked. eg
     //  by changing the amount to pay field it should update the amount to buy and vice versa.
@@ -153,10 +149,13 @@ export type OrderAction =
     | { type: 'setSlippage'; value: number }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
-    | { type: 'setNextPosition'; nextPosition: {
-        base: BigNumber;
-        quote: BigNumber;
-    }}
+    | {
+          type: 'setNextPosition';
+          nextPosition: {
+              base: BigNumber;
+              quote: BigNumber;
+          };
+      }
     | { type: 'setPrice'; value: number }
     | { type: 'setOrderType'; value: number }
     | { type: 'setAdjustType'; value: number }
@@ -218,7 +217,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setExposure':
                 return { ...state, exposure: action.value };
             case 'setNextPosition':
-                return { ...state, nextPosition: action.nextPosition }
+                return { ...state, nextPosition: action.nextPosition };
             case 'setMaxExposure':
                 const exposure = 1;
                 return { ...state, exposure: exposure };
@@ -316,20 +315,23 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         setTracerId ? setTracerId(`${order.market}/${order.collateral}`) : console.error('Error setting tracerId');
     }, [order.market, order.collateral]);
 
-
     useEffect(() => {
-        let balances = selectedTracer?.getBalance();
+        const balances = selectedTracer?.getBalance();
         let totalExposure = order.exposure * order.leverage;
         if (order.position === SHORT) {
             totalExposure = totalExposure * -1; // negate base if its short
         }
-        let newQuote = balances?.quote.minus(totalExposure * order.price) ?? tracerDefaults.balances.quote; // subtract how much it costs
-        let newBase = balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base; // add how much exposure you get
-        orderDispatch({ type: 'setNextPosition', nextPosition: {
-            base: newBase, quote: newQuote
-        }})
-    }, [order.exposure, order.price])
- 
+        const newQuote = balances?.quote.minus(totalExposure * order.price) ?? tracerDefaults.balances.quote; // subtract how much it costs
+        const newBase = balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base; // add how much exposure you get
+        orderDispatch({
+            type: 'setNextPosition',
+            nextPosition: {
+                base: newBase,
+                quote: newQuote,
+            },
+        });
+    }, [order.exposure, order.price]);
+
     // Check errors
     useMemo(() => {
         if (omeState?.orders) {

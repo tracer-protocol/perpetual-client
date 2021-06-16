@@ -20,7 +20,7 @@ import { OMEContext } from '@context/OMEContext';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import CustomSubNav from './CustomSubNav';
-import { RealisedPnLTip, UnrealisedPnLTip} from "@components/Tooltips";
+import { RealisedPnLTip, UnrealisedPnLTip } from '@components/Tooltips';
 
 const AccountDetails = styled.div`
     width: 40%;

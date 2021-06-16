@@ -34,7 +34,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
     const { addToast } = useToasts();
 
     const handleOrder = async (_e: any) => {
-        if (order?.error === -1) {
+        if (order?.error === 'NO_ERROR') {
             if (placeOrder) {
                 if (handleAsync) {
                     handleAsync(placeOrder, [order as OrderState], {
@@ -67,7 +67,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
         }
     };
 
-    if (order?.error === -1) {
+    if (order?.error === 'NO_ERROR') {
         return (
             <div className={`w-full ${className ?? ''}`} onClick={handleOrder}>
                 {children}

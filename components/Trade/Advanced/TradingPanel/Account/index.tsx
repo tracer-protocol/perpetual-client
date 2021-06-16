@@ -2,14 +2,19 @@ import React, { useContext, useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
-import { calcTotalMargin, calcBuyingPower, calcMinimumMargin, calcAvailableMarginPercent } from '@tracer-protocol/tracer-utils';
+import {
+    calcTotalMargin,
+    calcBuyingPower,
+    calcMinimumMargin,
+    calcAvailableMarginPercent,
+} from '@tracer-protocol/tracer-utils';
 import { Box, Button, Previous } from '@components/General';
 import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { OrderState } from '@context/OrderContext';
-import { AvailableMarginTip, BuyingPowerTip, TotalMarginTip,} from '@components/Tooltips';
+import { AvailableMarginTip, BuyingPowerTip, TotalMarginTip } from '@components/Tooltips';
 // import CalculatorModal from './Calculator';
 
 const SBox = styled(Box)`
@@ -141,9 +146,7 @@ const AccountPanel: React.FC<{
                     </a>
                     <TotalMarginTip base={selectedTracer?.baseTicker} />
                 </h3>
-                <span>
-                    {toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}
-                </span>
+                <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}</span>
             </Item>
             <Item>
                 <h3>
@@ -166,14 +169,12 @@ const AccountPanel: React.FC<{
                     ) : (
                         <>
                             <Previous>
-                                {toApproxCurrency(
-                                    calcBuyingPower(balances.quote, balances.base, price, maxLeverage),
-                                )}
+                                {toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))}
                             </Previous>
                             {toApproxCurrency(
                                 calcBuyingPower(balances.quote, balances.base, price, maxLeverage).minus(
                                     new BigNumber(order.exposure * order.price),
-                                )
+                                ),
                             )}
                         </>
                     )}
@@ -188,11 +189,18 @@ const AccountPanel: React.FC<{
                 </h3>
                 <span>
                     {!order?.exposure || !order.price ? (
-                        `${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(3)}%`
+                        `${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(
+                            3,
+                        )}%`
                     ) : (
                         <>
                             <Previous>
-                                {`${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(3)}%`}
+                                {`${calcAvailableMarginPercent(
+                                    balances.quote,
+                                    balances.base,
+                                    price,
+                                    maxLeverage,
+                                ).toPrecision(3)}%`}
                             </Previous>
                             {`${calcAvailableMarginPercent(newQuote, newBase, price, maxLeverage).toPrecision(3)}%`}
                         </>
