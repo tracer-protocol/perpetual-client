@@ -116,7 +116,7 @@ const AccountPanel: React.FC<{
     const [deposit, setDeposit] = useState(false);
     // const [calculator, showCalculator] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const fairPrice = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
+    const price = selectedTracer?.getOraclePrice() ?? defaults.oraclePrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
 
     const handleClick = (popup: boolean, deposit: boolean) => {
@@ -140,7 +140,7 @@ const AccountPanel: React.FC<{
                     <TotalMarginTip base={selectedTracer?.marketId.split('/')[0]} />
                 </h3>
                 <span>
-                    <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
+                    <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}</a>
                 </span>
             </Item>
             <Item>
@@ -153,18 +153,18 @@ const AccountPanel: React.FC<{
                 </h3>
                 <span>
                     {!order?.exposure || !order.price ? (
-                        toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))
+                        toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))
                     ) : (
                         <>
                             <Previous>
                                 <a>
                                     {toApproxCurrency(
-                                        calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
+                                        calcBuyingPower(balances.quote, balances.base, price, maxLeverage),
                                     )}
                                 </a>
                             </Previous>
                             {toApproxCurrency(
-                                calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage).minus(
+                                calcBuyingPower(balances.quote, balances.base, price, maxLeverage).minus(
                                     new BigNumber(order.exposure * order.price),
                                 ),
                             )}
@@ -189,7 +189,7 @@ const AccountPanel: React.FC<{
                 unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}
                 maxLeverage={maxLeverage}
-                price={Number.isNaN(fairPrice) ? 0 : fairPrice}
+                price={price}
             />
             {/*<CalculatorModal*/}
             {/*    display={calculator}*/}
@@ -197,7 +197,7 @@ const AccountPanel: React.FC<{
             {/*    exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}*/}
             {/*    marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}*/}
             {/*    balances={balances}*/}
-            {/*    price={Number.isNaN(fairPrice) ? 0 : fairPrice}*/}
+            {/*    price={Number.isNaN(price) ? 0 : price}*/}
             {/*/>*/}
         </AccountInfo>
     );

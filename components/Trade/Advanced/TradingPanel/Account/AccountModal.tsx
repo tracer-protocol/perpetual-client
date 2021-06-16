@@ -9,17 +9,21 @@ import { Option } from '@components/Buttons/SlideSelect';
 import { After, Button, HiddenExpand, Previous } from '@components/General';
 import { TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
-import { calcTotalMargin, calcMinimumMargin } from '@tracer-protocol/tracer-utils';
+import { 
+    calcTotalMargin, 
+    calcMinimumMargin, 
+    calcBuyingPower, 
+    calcAvailableMarginPercent,
+} from '@tracer-protocol/tracer-utils';
 import { toApproxCurrency } from '@libs/utils';
 
 const SNumberSelect = styled(NumberSelect)`
     margin-top: 1rem;
-    > * .balance {
-        color: #3da8f5;
-        margin-left: 2rem;
+    .balance {
+        color: #005EA4;
     }
-    > * .balance > .max {
-        margin-left: 2rem;
+    > .balance > .max {
+        margin-left: 1rem;
     }
 `;
 
@@ -31,22 +35,22 @@ const SHiddenExpand = styled(HiddenExpand)`
 `;
 
 const SSection = styled(Section)`
-    flex-direction: column;
-    margin-top: 0.5rem;
-    margin-bottom: 0;
-    > .content {
-        display: flex;
-        justify-content: space-between;
-        padding: 0;
-    }
+    // flex-direction: column;
+    // margin-top: 0.5rem;
+    // margin-bottom: 0;
+    // > .content {
+    //     display: flex;
+    //     justify-content: space-between;
+    //     padding: 0;
+    // }
 `;
 
 const SPrevious = styled(Previous)`
-    width: 100%;
-    display: flex;
-    &:after {
-        margin: auto;
-    }
+    // width: 100%;
+    // display: flex;
+    // &:after {
+    //     margin: auto;
+    // }
 `;
 const MButton = styled(Button)`
     width: 80%;
@@ -186,7 +190,6 @@ export default styled(
                 dispatch({ type: 'setTitles', title: 'Withdraw Margin', subTitle: '' });
             }
         }, [isDeposit]);
-
         return (
             <TracerModal
                 loading={state.loading}
@@ -222,11 +225,17 @@ export default styled(
                         )}`}</SPrevious>
                         {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, price))}`}
                     </SSection>
-                    <SSection label={`Maintenance Margin`}>
+                    <SSection label={`Buying Power`}>
                         <SPrevious>{`${toApproxCurrency(
-                            calcMinimumMargin(balances.quote, balances.base, price, maxLeverage),
+                            calcBuyingPower(balances.quote, balances.base, price, maxLeverage),
                         )}`}</SPrevious>
-                        {`${toApproxCurrency(calcMinimumMargin(newBalance, balances.base, price, maxLeverage))}`}
+                        {`${toApproxCurrency(calcBuyingPower(newBalance, balances.base, price, maxLeverage))}`}
+                    </SSection>
+                    <SSection label={`Available Margin`}>
+                        <SPrevious>{`${
+                            calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage)
+                        }%`}</SPrevious>
+                        {`${calcAvailableMarginPercent(newBalance, balances.base, price, maxLeverage)}%`}
                     </SSection>
                 </SHiddenExpand>
                 <div className="text-center">

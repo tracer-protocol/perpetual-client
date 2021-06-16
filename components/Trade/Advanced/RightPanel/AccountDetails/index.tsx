@@ -202,8 +202,8 @@ const OpenOrders: React.FC<{
         <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
             <tbody>
                 {userOrders.map((order, index) => {
-                    const amount = parseFloat(Web3.utils.fromWei(order?.amount?.toString() ?? 0)),
-                        amountLeft = parseFloat(Web3.utils.fromWei(order?.amount_left?.toString() ?? 0)),
+                    const amount = parseFloat(Web3.utils.fromWei(order?.amount?.toString() ?? '0')),
+                        amountLeft = parseFloat(Web3.utils.fromWei(order?.amount_left?.toString() ?? '0')),
                         filled = amount - amountLeft;
                     return (
                         <TRow key={`open-order-${index}`}>
