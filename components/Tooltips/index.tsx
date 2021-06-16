@@ -33,6 +33,7 @@ type TProps = {
     className?: string;
     market?: any;
     availableMargin?: any;
+    maxLeverage?: any;
 };
 
 export const AmountTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
@@ -71,15 +72,17 @@ export const TotalMarginTip: React.FC<TProps> = styled(({ className, market }: T
     );
 })``;
 
-export const BuyingPowerTip: React.FC<TProps> = styled(({ className, market, availableMargin }: TProps) => {
-    return (
-        <ReactTooltipStyled id="buying-power" className={className} effect="solid">
-            <strong>Buying Power</strong> Your maximum potential exposure to {market} given your available margin. It is
-            equal to your available margin of {availableMargin} multiplied by the maximum leverage of [insert maximum
-            maximum leverage].
-        </ReactTooltipStyled>
-    );
-})``;
+export const BuyingPowerTip: React.FC<TProps> = styled(
+    ({ className, market, availableMargin, maxLeverage }: TProps) => {
+        return (
+            <ReactTooltipStyled id="buying-power" className={className} effect="solid">
+                <strong>Buying Power</strong> Your maximum potential exposure to {market} given your available margin.
+                It is equal to your available margin of {availableMargin} multiplied by the maximum leverage of{' '}
+                {maxLeverage}.
+            </ReactTooltipStyled>
+        );
+    },
+)``;
 
 export const AvailableMarginTip: React.FC<TProps> = styled(({ className }: TProps) => {
     return (
