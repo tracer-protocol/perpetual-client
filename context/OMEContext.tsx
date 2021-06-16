@@ -4,9 +4,13 @@ import React, { useContext, useEffect, useMemo, useReducer, useRef } from 'react
 import { Children } from 'types';
 import { TracerContext } from './TracerContext';
 import { Web3Context } from './Web3Context';
-import { OMEOrder as FlattenedOMEOrder } from 'types/OrderTypes';
+import { FilledOrder, OMEOrder as FlattenedOMEOrder } from 'types/OrderTypes';
 import Web3 from 'web3';
 import BigNumber from 'bignumber.js';
+// @ts-ignore
+import { Callback } from 'web3/types';
+import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
+import { useUsersMatched } from '@libs/Graph/hooks/Account';
 
 type Orders = {
     askOrders: FlattenedOMEOrder[];
@@ -18,9 +22,9 @@ export const parseOrders: (res: any) => Orders = (res) => {
         const sections = Object.values(orders);
         const flattenedOrders = sections.map((orders: any) =>
             orders.reduce(
-                (prev: any, order: { amount_left: number; price: number }) => ({
+                (prev: any, order: { remaining: number; price: number }) => ({
                     price: new BigNumber(Web3.utils.fromWei(order.price.toString())), // price remains the same,
-                    quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.amount_left.toString())),
+                    quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.remaining.toString())),
                 }),
                 {
                     quantity: 0,
@@ -39,6 +43,8 @@ export const parseOrders: (res: any) => Orders = (res) => {
 interface ContextProps {
     omeState: OMEState;
     omeDispatch: React.Dispatch<OMEAction>;
+    filledOrders: FilledOrder[];
+    refetchFilledOrders: (...args: any) => any;
 }
 
 type OMEState = {
@@ -57,6 +63,8 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
     const isMounted = useRef(true);
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
+
+    const { filledOrders, refetchFilledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');
 
     const initialState: OMEState = {
         userOrders: [],
@@ -79,6 +87,27 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             }
         }
     };
+
+    const matchedOrders: Callback<MatchedOrders> = (err: Error, res: MatchedOrders) => {
+        if (err) {
+            console.error('Failed to listen on matched orders', err.message);
+        } else if (
+            account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
+            account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
+        ) {
+            refetchFilledOrders();
+        }
+    };
+
+    useEffect(() => {
+        if (selectedTracer) {
+            fetchUserData();
+            selectedTracer?.updateFeeRate();
+            if (!selectedTracer?.hasSubscribed) {
+                selectedTracer?.subscribeToMatchedOrders(matchedOrders);
+            }
+        }
+    }, [selectedTracer]);
 
     const fetchOrders = async () => {
         if (selectedTracer?.address) {
@@ -139,6 +168,8 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             value={{
                 omeDispatch,
                 omeState,
+                filledOrders,
+                refetchFilledOrders,
             }}
         >
             {children}

@@ -71,10 +71,15 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = 
                     status: 'error',
                     message: `Failed to create order 404 not found`,
                 } as Result;
+            } else if (res.status === 400) {
+                return {
+                    status: 'error',
+                    message: `Failed to create order 400 bad request`,
+                } as Result;
             } else {
                 return {
                     status: 'success',
-                    message: 'Successfully placed order',
+                    message: `Successfully created order`,
                 } as Result;
             }
         })
