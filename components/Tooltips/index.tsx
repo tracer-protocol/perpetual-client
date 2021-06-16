@@ -6,6 +6,11 @@ export const ReactTooltipStyled = styled(ReactTooltip)`
     width: 12rem !important;
     color: #005ea4 !important;
     opacity: 1 !important;
+    text-transform: none !important;
+
+    a:hover {
+        text-decoration: underline;
+    }
 
     strong {
         color: #3da8f5 !important;
@@ -82,4 +87,56 @@ export const AvailableMarginTip: React.FC<TProps> = styled(({ className }: TProp
     );
 })``;
 
+export const RealisedPnLTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+    return (
+        <ReactTooltipStyled id="realised-pnl" className={className} effect="solid">
+            <strong>Realised PnL</strong> The amount of profit or loss you have realised through partially closing your{' '}
+            {market} position, and/or paying trading fees, funding rate payments, insurance funding rate payments and
+            gas costs.
+        </ReactTooltipStyled>
+    );
+})``;
 
+export const UnrealisedPnLTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+    return (
+        <ReactTooltipStyled id="unrealised-pnl" className={className} effect="solid">
+            <strong>Unrealised PnL</strong> The amount of profit or loss you would realise if you closed your {market}{' '}
+            position at the current mark price.
+        </ReactTooltipStyled>
+    );
+})``;
+
+export const ExposureTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+    return (
+        <ReactTooltipStyled id="exposure" className={className} effect="solid">
+            <strong>Exposure</strong> The size of your {market} position.
+        </ReactTooltipStyled>
+    );
+})``;
+
+export const InsurancePoolHealthTip: React.FC<TProps> = styled(({ className }: TProps) => {
+    return (
+        <ReactTooltipStyled id="insurance-pool-health" className={className} effect="solid">
+            <strong>Insurance Pool Health</strong> The percentage of the pool target that is met by the pool holdings. A
+            higher insurance health indicates the pool holdings are approaching the pool target.
+        </ReactTooltipStyled>
+    );
+})``;
+
+export const PoolHoldingsTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+    return (
+        <ReactTooltipStyled id="pool-holdings" className={className} effect="solid">
+            <strong>Pool Holdings</strong> The current holdings in the the {market} insurance pool that have been
+            accumulated through a combination of deposits and insurance funding rate payments.
+        </ReactTooltipStyled>
+    );
+})``;
+
+export const PoolTargetTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
+    return (
+        <ReactTooltipStyled id="pool-target" className={className} effect="solid">
+            <strong>Pool Target</strong> The target value for the insurance pool borrowed by leveraged traders in the{' '}
+            {market} market. <a>Learn more.</a>
+        </ReactTooltipStyled>
+    );
+})``;
