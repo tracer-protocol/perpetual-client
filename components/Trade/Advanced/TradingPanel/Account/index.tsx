@@ -9,6 +9,7 @@ import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { OrderState } from '@context/OrderContext';
+import { BuyingPowerTip, TotalMarginTip } from '@components/Tooltips';
 // import CalculatorModal from './Calculator';
 
 const SBox = styled(Box)`
@@ -132,14 +133,23 @@ const AccountPanel: React.FC<{
             {/*    Calculator*/}
             {/*</SButton>*/}
             <Item>
-                <h3>Equity</h3>
+                <h3>
+                    <a data-tip="" data-for="total-margin">
+                        Total Margin
+                    </a>
+                    <TotalMarginTip base={selectedTracer?.marketId.split('/')[0]} />
+                </h3>
                 <span>
                     <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
                 </span>
             </Item>
             <Item>
                 <h3>
-                    Buying Power <SubText>@{maxLeverage.toNumber()}X Maximum Leverage</SubText>
+                    <a data-tip="" data-for="buying-power">
+                        Buying Power
+                        <BuyingPowerTip base={selectedTracer?.marketId.split('/')[0]} />
+                    </a>{' '}
+                    <SubText>@{maxLeverage.toNumber()}X Maximum Leverage</SubText>
                 </h3>
                 <span>
                     {!order?.exposure || !order.price ? (

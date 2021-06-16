@@ -147,14 +147,14 @@ input {
 
 /** Ant tooltip styles */
 .ant-tooltip-inner {
-    background: #002886;
-    color: #005ea4;
+   background: #002886;
+   color: #005ea4;
 }
 .ant-tooltip-inner strong {
-    color: #3da8f5;
+   color: #3da8f5;
 }
 .ant-tooltip-arrow-content {
-    background-color: #002886;
+   background-color: #002886;
 }
 
 @tailwind base;
