@@ -3,25 +3,28 @@ import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 
 export const ReactTooltipStyled = styled(ReactTooltip)`
-    width: 12rem !important;
-    color: #005ea4 !important;
-    opacity: 1 !important;
-    text-transform: none !important;
-
-    a:hover {
-        text-decoration: underline;
-    }
-
-    strong {
-        color: #3da8f5 !important;
-    }
-
-    &.type-dark.place-top {
+    &.type-dark {
+        color: #005ea4 !important;
         background-color: #002886 !important;
+        width: 12rem !important;
+        opacity: 1 !important;
         padding: 0.5rem 0.2rem 0.5rem 0.5rem !important;
+        text-transform: none !important;
 
-        &:after {
+        a:hover {
+            text-decoration: underline !important;
+        }
+
+        strong {
+            color: #3da8f5 !important;
+        }
+
+        &.place-top:after {
             border-top-color: #002886 !important;
+        }
+
+        &.place-left:after {
+            border-left-color: #002886 !important;
         }
     }
 `;
@@ -116,7 +119,7 @@ export const ExposureTip: React.FC<TProps> = styled(({ className, market }: TPro
 
 export const InsurancePoolHealthTip: React.FC<TProps> = styled(({ className }: TProps) => {
     return (
-        <ReactTooltipStyled id="insurance-pool-health" className={className} effect="solid">
+        <ReactTooltipStyled id="insurance-pool-health" className={className} effect="solid" place="left">
             <strong>Insurance Pool Health</strong> The percentage of the pool target that is met by the pool holdings. A
             higher insurance health indicates the pool holdings are approaching the pool target.
         </ReactTooltipStyled>

@@ -4,12 +4,18 @@ import styled from 'styled-components';
 import { Section } from '@components/General';
 import PoolHealth from '@components/Insurance/PoolHealth';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
+import { InsurancePoolHealthTip } from '@components/Tooltips';
 
 export default styled(({ className }) => {
     const { poolInfo } = useContext(InsuranceContext);
     return (
         <div className={className}>
-            <h3>Insurance Pool Health</h3>
+            <h3>
+                <a data-tip="" data-for="insurance-pool-health">
+                    Insurance Pool Health
+                </a>
+                <InsurancePoolHealthTip />
+            </h3>
             <PoolHealth health={poolInfo?.health?.toNumber() ?? defaults.health.toNumber()} />
             <Section label={'Pool Holdings'}>{`${toApproxCurrency(
                 poolInfo?.liquidity ?? defaults.liquidity,
