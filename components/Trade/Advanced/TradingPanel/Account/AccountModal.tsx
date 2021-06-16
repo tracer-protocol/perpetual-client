@@ -35,24 +35,6 @@ const SHiddenExpand = styled(HiddenExpand)`
     margin-bottom: 1rem;
 `;
 
-const SSection = styled(Section)`
-    // flex-direction: column;
-    // margin-top: 0.5rem;
-    // margin-bottom: 0;
-    // > .content {
-    //     display: flex;
-    //     justify-content: space-between;
-    //     padding: 0;
-    // }
-`;
-
-const SPrevious = styled(Previous)`
-    // width: 100%;
-    // display: flex;
-    // &:after {
-    //     margin: auto;
-    // }
-`;
 const MButton = styled(Button)`
     width: 80%;
     margin: auto;
@@ -226,27 +208,27 @@ export default styled(
                 </Balance>
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>
                     <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
-                    <SSection label={`Total Margin`}>
-                        <SPrevious>{`${toApproxCurrency(
+                    <Section label={`Total Margin`}>
+                        <Previous>{`${toApproxCurrency(
                             calcTotalMargin(balances.quote, balances.base, price),
-                        )}`}</SPrevious>
+                        )}`}</Previous>
                         {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, price))}`}
-                    </SSection>
-                    <SSection label={`Buying Power`}>
-                        <SPrevious>{`${toApproxCurrency(
+                    </Section>
+                    <Section label={`Buying Power`}>
+                        <Previous>{`${toApproxCurrency(
                             calcBuyingPower(balances.quote, balances.base, price, maxLeverage),
-                        )}`}</SPrevious>
+                        )}`}</Previous>
                         {`${toApproxCurrency(calcBuyingPower(newBalance, balances.base, price, maxLeverage))}`}
-                    </SSection>
-                    <SSection label={`Available Margin`}>
-                        <SPrevious>{`${calcAvailableMarginPercent(
+                    </Section>
+                    <Section label={`Available Margin`}>
+                        <Previous>{`${calcAvailableMarginPercent(
                             balances.quote,
                             balances.base,
                             price,
                             maxLeverage,
-                        ).toPrecision(3)}%`}</SPrevious>
+                        ).toPrecision(3)}%`}</Previous>
                         {`${calcAvailableMarginPercent(newBalance, balances.base, price, maxLeverage).toPrecision(3)}%`}
-                    </SSection>
+                    </Section>
                 </SHiddenExpand>
                 <div className="text-center">
                     {isDeposit && !selectedTracer?.getTracerApproved() ? (
