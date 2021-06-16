@@ -269,7 +269,7 @@ type TSProps = {
 export default styled(({ selectedTracer, className }: TSProps) => {
     const [tab, setTab] = useState(0);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const price = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
+    const price = selectedTracer?.getOraclePrice() ?? defaults.oraclePrice;
     const {
         omeState,
         omeDispatch = () => {
