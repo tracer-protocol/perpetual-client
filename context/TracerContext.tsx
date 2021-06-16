@@ -184,9 +184,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
     useEffect(() => {
         const fetch = async () => {
-            if (account) {
-                fetchUserData();
-            }
+            fetchUserData();
         };
         fetch();
     }, [account]);

@@ -165,7 +165,8 @@ export default class Tracer {
     updateUserBalance: (account: string | undefined) => Promise<UserBalance> = async (account) => {
         try {
             if (!account) {
-                return Promise.resolve(false);
+                this.balances = defaults.balances;
+                return defaults.balances;
             }
             await this.initialised;
             // if accounts is undefined the catch should get it
