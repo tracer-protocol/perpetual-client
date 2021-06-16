@@ -176,7 +176,7 @@ const PositionDetails: React.FC<IProps> = ({
 const STable = styled(Table)`
     > tbody {
         display: block;
-        max-height: 20vh;
+        max-height: 15vh;
         overflow-y: scroll;
     }
     > thead {
@@ -345,5 +345,5 @@ export default styled(({ selectedTracer, className }: TSProps) => {
 })`
     border-top: 1px solid #0c3586;
     max-height: 30vh;
-    overflow: scroll;
+    overflow: auto;
 ` as React.FC<TSProps>;
