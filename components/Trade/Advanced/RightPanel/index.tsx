@@ -110,7 +110,7 @@ const TradingView: React.FC<{
         <>
             <Box className="w-3/4 flex-col p-0">
                 <MarketInfo
-                    lastPrice={59853}
+                    lastPrice={omeState?.highestAsk ?? 0}
                     fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
                     oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
                     fundingRate={selectedTracer?.getFeeRate() ?? defaults.feeRate}
