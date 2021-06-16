@@ -1,11 +1,9 @@
 import React, { useState, useContext } from 'react';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
-import { Web3Context } from '@context/Web3Context';
 import { Table, TRow, TData } from '@components/General/Table';
 import { calcStatus, timeAgo, toApproxCurrency } from '@libs/utils';
 import Web3 from 'web3';
-import { useUsersMatched } from '@libs/Graph/hooks/Account';
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { FilledOrder } from 'types/OrderTypes';
 import {
@@ -101,7 +99,7 @@ const PositionDetails: React.FC<IProps> = ({
                             ? 
                             <Content>
                                 {/* <SPrevious /> */}
-                                {balance.quote.lt(0) ? 'SHORT' : 'LONG'}
+                                {balance.base.lt(0) ? 'SHORT' : 'LONG'}
                             </Content>
                             : `-`
                         }
@@ -227,8 +225,8 @@ const OpenOrders: React.FC<{
         <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
             <tbody>
                 {userOrders.map((order, index) => {
-                    const amount = parseFloat(Web3.utils.fromWei(order.amount.toString())),
-                        amountLeft = parseFloat(Web3.utils.fromWei(order.amount_left.toString())),
+                    const amount = parseFloat(Web3.utils.fromWei(order.quantity.toString())),
+                        amountLeft = parseFloat(Web3.utils.fromWei(order.remaining.toString())),
                         filled = amount - amountLeft;
                     return (
                         <TRow key={`open-order-${index}`}>
@@ -293,16 +291,15 @@ type TSProps = {
 };
 
 export default styled(({ selectedTracer, className }: TSProps) => {
-    const { account } = useContext(Web3Context);
     const [tab, setTab] = useState(0);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const price = selectedTracer?.oraclePrice ?? defaults.oraclePrice;
-    const { filledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');
     const {
         omeState,
         omeDispatch = () => {
             console.error('OME dispatch is underfined');
         },
+        filledOrders
     } = useContext(OMEContext);
 
     const content = () => {
@@ -326,7 +323,7 @@ export default styled(({ selectedTracer, className }: TSProps) => {
                     />
                 );
             case 2:
-                return <Fills filledOrders={filledOrders} />;
+                return <Fills filledOrders={filledOrders ?? []} />;
             default:
                 return;
         }
@@ -336,7 +333,7 @@ export default styled(({ selectedTracer, className }: TSProps) => {
             <CustomSubNav 
                 selected={tab}
                 setTab={setTab}
-                fills={filledOrders.length}
+                fills={filledOrders?.length ?? 0}
                 orders={omeState?.userOrders?.length ?? 0}
             />
             {content()}

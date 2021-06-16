@@ -68,7 +68,7 @@ export const useUsersMatched: (
     filledOrders: FilledOrder[];
     error: any;
     loading: any;
-    refetch: any;
+    refetchFilledOrders: (...args: any) => any;
 } = (tracer, account) => {
     const ref = useRef<FilledOrder[]>([]);
     const { data, error, loading, refetch } = useQuery(USER_TRACER_TRADES, {
@@ -85,7 +85,7 @@ export const useUsersMatched: (
         filledOrders: data?.trades ? toBigNumbers(data?.trades) : ref.current,
         error,
         loading,
-        refetch,
+        refetchFilledOrders: refetch,
     };
 };
 
