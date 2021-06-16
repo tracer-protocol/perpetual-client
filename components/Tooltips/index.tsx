@@ -72,3 +72,12 @@ export const BuyingPowerTip: React.FC<TProps> = styled(({ className, base, avail
         </ReactTooltipStyled>
     );
 })``;
+
+export const AvailableMarginTip: React.FC<TProps> = styled(({ className }: TProps) => {
+    return (
+        <ReactTooltipStyled id="available-margin" className={className} effect="solid">
+            <strong>Available Margin</strong> The percentage of margin that can be used or withdrawn without liquidating
+            your current position.
+        </ReactTooltipStyled>
+    );
+})``;

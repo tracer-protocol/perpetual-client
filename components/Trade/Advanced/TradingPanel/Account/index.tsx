@@ -2,14 +2,14 @@ import React, { useContext, useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
-import { calcTotalMargin, calcBuyingPower } from '@tracer-protocol/tracer-utils';
+import {calcTotalMargin, calcBuyingPower, calcMinimumMargin} from '@tracer-protocol/tracer-utils';
 import { Box, Button, Previous } from '@components/General';
 import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { OrderState } from '@context/OrderContext';
-import { BuyingPowerTip, TotalMarginTip } from '@components/Tooltips';
+import {AvailableMarginTip, BuyingPowerTip, TotalMarginTip} from '@components/Tooltips';
 // import CalculatorModal from './Calculator';
 
 const SBox = styled(Box)`
@@ -170,6 +170,22 @@ const AccountPanel: React.FC<{
                             )}
                         </>
                     )}
+                </span>
+            </Item>
+            <Item>
+                <h3>
+                    <a data-tip="" data-for="available-margin">
+                        Available Margin
+                    </a>
+                    <AvailableMarginTip />
+                </h3>
+                <span>
+                    <a>
+                        {toApproxCurrency(
+                            calcTotalMargin(balances.quote, balances.base, fairPrice).toNumber() -
+                                calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage).toNumber(),
+                        )}
+                    </a>
                 </span>
             </Item>
             <DepositButtons>
