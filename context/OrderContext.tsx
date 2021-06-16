@@ -266,13 +266,15 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 const fullClosure = selectedTracer?.getBalance().base.abs();
                 return { ...state, exposure: fullClosure };
             case 'setBestPrice':
-                const price = state.oppositeOrders[0]?.price ?? NaN;
+                const price = state.position === LONG ? omeState?.lowestBid : omeState?.highestAsk;
                 if (!price) {
                     // if there is no price set error to no open orders
                     return { ...state, error: 3 };
                 } else {
                     return { ...state, price: price };
                 }
+            case 'setSlippage':
+                return { ...state, slippage: action.value }
             case 'setError':
                 return { ...state, error: action.value };
             case 'setWallet':
@@ -282,7 +284,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setAdvanced':
                 return { ...state, advanced: action.value };
             default:
-                throw new Error('Unexpected action');
+                throw new Error(`Unexpected action`);
         }
     };
 
@@ -299,10 +301,23 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
             if (order.orderType === MARKET) {
                 // market order set the price if on market order
-                orderDispatch({ type: 'setPrice', value: oppositeOrders[0]?.price?.toNumber() ?? NaN });
+                orderDispatch({ 
+                    type: 'setPrice', 
+                    value: order.position === LONG 
+                        ? omeState.lowestBid 
+                        : omeState.highestAsk 
+                });
             }
         }
     }, [order.position, omeState?.orders]);
+
+    useMemo(() => {
+        if (order.orderType === MARKET) {
+            orderDispatch({ type: 'setBestPrice' })
+        } else {
+            orderDispatch({ type: 'setPrice', value: NaN })
+        }
+    }, [order.position, order.orderType])
 
     useMemo(() => {
         // when user swaps to close order, set opposite side
@@ -319,26 +334,16 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     }, [order.adjustType]);
 
     useEffect(() => {
-        // when user swaps to market order setPrice
-        if (order.orderType === MARKET) {
-            orderDispatch({ type: 'setPrice', value: order.oppositeOrders[0]?.price?.toNumber() ?? NaN });
-        }
-    }, [order.orderType]);
-
-    useEffect(() => {
         // calculate the exposure based on the opposite orders
         if (order.orderType === MARKET && order.oppositeOrders.length) {
             // convert orders
-            const { exposure, slippage } = calcTradeExposure(
+            const { slippage } = calcTradeExposure(
                 new BigNumber(order.amountToPay ?? 0),
                 order.leverage,
                 order.oppositeOrders,
             );
             if (!slippage.eq(0)) {
                 orderDispatch({ type: 'setSlippage', value: slippage.toNumber() });
-            }
-            if (!exposure.eq(0)) {
-                orderDispatch({ type: 'setExposure', value: exposure.toNumber() });
             }
         }
     }, [order.amountToPay, order.leverage, order.oppositeOrders]);

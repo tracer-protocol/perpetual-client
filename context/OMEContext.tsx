@@ -50,11 +50,14 @@ interface ContextProps {
 type OMEState = {
     userOrders: OMEOrder[];
     orders: Orders;
+    lowestBid: number,
+    highestAsk: number
 };
 type OMEAction =
     | { type: 'setUserOrders'; orders: OMEOrder[] }
     | { type: 'setOrders'; orders: Orders }
     | { type: 'refetchUserOrders' }
+    | { type: 'setBestPrices'; bidPrice: number; askPrice: number } 
     | { type: 'refetchOrders' };
 
 export const OMEContext = React.createContext<Partial<ContextProps>>({});
@@ -72,6 +75,8 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             askOrders: [],
             bidOrders: [],
         },
+        lowestBid: 0,
+        highestAsk: 0
     };
 
     const fetchUserData = async () => {
@@ -113,7 +118,15 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
         if (selectedTracer?.address) {
             const res = await getOrders(selectedTracer?.address);
             if (isMounted.current) {
-                omeDispatch({ type: 'setOrders', orders: parseOrders(res) });
+                const parsedOrders = parseOrders(res);
+                const lowestBid = parsedOrders.askOrders[0]?.price ?? 0;
+                const highestAsk = parsedOrders.bidOrders.slice(-1)[0]?.price ?? 0;
+                omeDispatch({ type: 'setOrders', orders: parsedOrders });
+                omeDispatch({ 
+                    type: 'setBestPrices', 
+                    bidPrice: lowestBid,
+                    askPrice: highestAsk 
+                });
             }
         }
     };
@@ -130,6 +143,13 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, userOrders: action.orders };
             case 'setOrders': {
                 return { ...state, orders: action.orders };
+            }
+            case 'setBestPrices': {
+                return { 
+                    ...state, 
+                    lowestBid: action.bidPrice,
+                    highestAsk: action.askPrice
+                };
             }
             case 'refetchUserOrders': {
                 fetchUserData();
