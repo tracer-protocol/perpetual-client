@@ -56,6 +56,7 @@ export const defaults: Record<string, any> = {
 export default class Tracer {
     _instance: TracerType;
     _web3: Web3;
+    _gasOracle: Oracle | undefined;
     _oracle: Oracle | undefined;
     _pricing: Pricing | undefined;
     public address: string;
@@ -131,7 +132,7 @@ export default class Tracer {
                 this.token = res[2]
                     ? (new web3.eth.Contract(ERC20Abi as AbiItem[], res[2]) as unknown as Erc20Type)
                     : undefined;
-                this._oracle = res[3]
+                this._gasOracle = res[3]
                     ? (new web3.eth.Contract(oracleAbi as AbiItem[], res[3]) as unknown as Oracle)
                     : undefined;
                 this.maxLeverage = new BigNumber(parseFloat(Web3.utils.fromWei(res[4])));
@@ -141,7 +142,16 @@ export default class Tracer {
                 this._pricing = res[8]
                     ? (new web3.eth.Contract(pricingAbi as AbiItem[], res[8]) as unknown as Pricing)
                     : undefined;
-                this.updateOraclePrice();
+
+                this._pricing?.methods
+                    .oracle()
+                    .call()
+                    .then((oracleAddress) => {
+                        this._oracle = oracleAddress
+                            ? (new web3.eth.Contract(oracleAbi as AbiItem[], oracleAddress) as unknown as Oracle)
+                            : undefined;
+                        this.updateOraclePrice();
+                    });
                 this.updateFairPrice();
                 return true;
             })
@@ -203,7 +213,7 @@ export default class Tracer {
             this.oraclePrice = new BigNumber(Web3.utils.fromWei(price ?? '0'));
         } catch (err) {
             console.error('Failed to fetch oracle price', err);
-            this.oraclePrice = new BigNumber(0);
+            this.oraclePrice = defaults.oraclePrice;
         }
     };
 
