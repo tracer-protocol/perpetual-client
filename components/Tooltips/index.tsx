@@ -3,19 +3,20 @@ import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
 
 export const ReactTooltipStyled = styled(ReactTooltip)`
-    width: 12rem;
-    color: #005ea4;
+    width: 12rem !important;
+    color: #005ea4 !important;
+    opacity: 1 !important;
 
     strong {
-        color: #3da8f5;
+        color: #3da8f5 !important;
     }
 
     &.type-dark.place-top {
-        background-color: #002886;
-        padding: 0.5rem 0.2rem 0.5rem 0.5rem;
+        background-color: #002886 !important;
+        padding: 0.5rem 0.2rem 0.5rem 0.5rem !important;
 
         &:after {
-            border-top-color: #002886;
+            border-top-color: #002886 !important;
         }
     }
 `;
@@ -23,6 +24,7 @@ export const ReactTooltipStyled = styled(ReactTooltip)`
 type TProps = {
     className?: string;
     base?: any;
+    availableMargin?: any;
 };
 
 export const AmountTip: React.FC<TProps> = styled(({ className, base }: TProps) => {
@@ -57,6 +59,16 @@ export const TotalMarginTip: React.FC<TProps> = styled(({ className, base }: TPr
         <ReactTooltipStyled id="total-margin" className={className} effect="solid">
             <strong>Total Margin</strong> The total value of your account. Total margin is equal to your net transfers
             from your wallet plus your profit and losses from your {base} position.
+        </ReactTooltipStyled>
+    );
+})``;
+
+export const BuyingPowerTip: React.FC<TProps> = styled(({ className, base, availableMargin }: TProps) => {
+    return (
+        <ReactTooltipStyled id="buying-power" className={className} effect="solid">
+            <strong>Buying Power</strong> Your maximum potential exposure to {base} given your available margin. It is
+            equal to your available margin of {availableMargin} multiplied by the maximum leverage of [insert maximum
+            maximum leverage].
         </ReactTooltipStyled>
     );
 })``;

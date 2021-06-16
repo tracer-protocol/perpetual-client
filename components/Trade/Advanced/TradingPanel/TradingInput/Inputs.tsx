@@ -15,21 +15,58 @@ export const Exposure: React.FC<{
     className?: string;
 }> = ({ selectedTracer, orderDispatch, order, className }) => {
     return (
-        <SmallInput
-            title={'Amount'}
-            className={className ?? ''}
-            onChange={(e) => {
-                orderDispatch
-                    ? orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) })
-                    : console.error('No dispatch function set');
-            }}
-            setMax={(e) => {
-                e.preventDefault();
-                orderDispatch ? orderDispatch({ type: 'setMaxExposure' }) : console.error('No dispatch function set');
-            }}
-            unit={selectedTracer?.baseTicker ?? ''}
-            amount={order.exposure}
-        />
+        <>
+            <SmallInput
+                title={'Amount'}
+                className={className ?? ''}
+                onChange={(e) => {
+                    orderDispatch
+                        ? orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) })
+                        : console.error('No dispatch function set');
+                }}
+                setMax={(e) => {
+                    e.preventDefault();
+                    orderDispatch
+                        ? orderDispatch({ type: 'setMaxExposure' })
+                        : console.error('No dispatch function set');
+                }}
+                unit={selectedTracer?.baseTicker ?? ''}
+                amount={order.exposure}
+            />
+            <AmountTip base={selectedTracer?.marketId.split('/')[0]} />
+        </>
+    );
+};
+
+export const Price: React.FC<{
+    orderDispatch: React.Dispatch<OrderAction> | undefined;
+    selectedTracer: Tracer | undefined;
+    price: number;
+    className?: string;
+}> = ({ selectedTracer, orderDispatch, price, className }) => {
+    return (
+        <>
+            <SmallInput
+                title={'Price'}
+                className={className ?? ''}
+                setMax={(e) => {
+                    e.preventDefault();
+                    orderDispatch ? orderDispatch({ type: 'setBestPrice' }) : console.error('No dispatch function set');
+                }}
+                maxText={'Best'}
+                onChange={(e) => {
+                    if (orderDispatch) {
+                        orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
+                        orderDispatch({ type: 'setOrderType', value: LIMIT });
+                    } else {
+                        console.error('No dispatch function set');
+                    }
+                }}
+                unit={selectedTracer?.quoteTicker ?? ''}
+                amount={price}
+            />
+            <PriceTip base={selectedTracer?.marketId.split('/')[0]} />
+        </>
     );
 };
 
@@ -54,35 +91,6 @@ export const Closure: React.FC<{
             }}
             unit={selectedTracer?.baseTicker ?? ''}
             amount={exposure}
-        />
-    );
-};
-
-export const Price: React.FC<{
-    orderDispatch: React.Dispatch<OrderAction> | undefined;
-    selectedTracer: Tracer | undefined;
-    price: number;
-    className?: string;
-}> = ({ selectedTracer, orderDispatch, price, className }) => {
-    return (
-        <SmallInput
-            title={'Price'}
-            className={className ?? ''}
-            setMax={(e) => {
-                e.preventDefault();
-                orderDispatch ? orderDispatch({ type: 'setBestPrice' }) : console.error('No dispatch function set');
-            }}
-            maxText={'Best'}
-            onChange={(e) => {
-                if (orderDispatch) {
-                    orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
-                    orderDispatch({ type: 'setOrderType', value: LIMIT });
-                } else {
-                    console.error('No dispatch function set');
-                }
-            }}
-            unit={selectedTracer?.quoteTicker ?? ''}
-            amount={price}
         />
     );
 };
