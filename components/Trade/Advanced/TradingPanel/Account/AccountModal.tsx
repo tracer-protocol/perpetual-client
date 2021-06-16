@@ -34,6 +34,7 @@ const SSection = styled(Section)`
     flex-direction: column;
     margin-top: 0.5rem;
     margin-bottom: 0;
+
     > .content {
         display: flex;
         justify-content: space-between;

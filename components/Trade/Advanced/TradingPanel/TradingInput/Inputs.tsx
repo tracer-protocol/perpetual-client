@@ -33,7 +33,7 @@ export const Exposure: React.FC<{
                 unit={selectedTracer?.baseTicker ?? ''}
                 amount={order.exposure}
             />
-            <AmountTip base={selectedTracer?.marketId.split('/')[0]} />
+            <AmountTip market={selectedTracer?.marketId.split('/')[0]} />
         </>
     );
 };
@@ -65,7 +65,7 @@ export const Price: React.FC<{
                 unit={selectedTracer?.quoteTicker ?? ''}
                 amount={price}
             />
-            <PriceTip base={selectedTracer?.marketId.split('/')[0]} />
+            <PriceTip market={selectedTracer?.marketId.split('/')[0]} />
         </>
     );
 };

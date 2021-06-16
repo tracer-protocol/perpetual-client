@@ -11,10 +11,11 @@ export default styled(({ className }) => {
         <div className={className}>
             <h3>Insurance Pool Health</h3>
             <PoolHealth health={poolInfo?.health?.toNumber() ?? defaults.health.toNumber()} />
-            <Section label={'Current Funding Level'}>{`${toApproxCurrency(
+            <Section label={'Pool Holdings'}>{`${toApproxCurrency(
                 poolInfo?.liquidity ?? defaults.liquidity,
             )}`}</Section>
-            <Section label={'Target'}>{`${toApproxCurrency(poolInfo?.target ?? defaults.target)}`}</Section>
+            <Section label={'Pool Target'}>{`${toApproxCurrency(poolInfo?.target ?? defaults.target)}`}</Section>
+            <Section label={'Insurance Funding Rate'}>0.001%</Section>
         </div>
     );
 })`

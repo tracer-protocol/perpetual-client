@@ -23,24 +23,24 @@ export const ReactTooltipStyled = styled(ReactTooltip)`
 
 type TProps = {
     className?: string;
-    base?: any;
+    market?: any;
     availableMargin?: any;
 };
 
-export const AmountTip: React.FC<TProps> = styled(({ className, base }: TProps) => {
+export const AmountTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
     return (
         <ReactTooltipStyled id="amount" className={className} effect="solid">
-            <strong>Amount</strong> Amount of {base} you would like to go long or short on for this order. If you have
+            <strong>Amount</strong> Amount of {market} you would like to go long or short on for this order. If you have
             have an open position, your exposure will be updated by this specified amount.
         </ReactTooltipStyled>
     );
 })``;
 
-export const PriceTip: React.FC<TProps> = styled(({ className, base }: TProps) => {
+export const PriceTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
     return (
         <ReactTooltipStyled id="price" className={className} effect="solid">
-            <strong>Price</strong> The price of {base} you would like to go long or short on. The order will execute at
-            the specified price or better.
+            <strong>Price</strong> The price of {market} you would like to go long or short on. The order will execute
+            at the specified price or better.
         </ReactTooltipStyled>
     );
 })``;
@@ -54,19 +54,19 @@ export const LeverageTip: React.FC<TProps> = styled(({ className }: TProps) => {
     );
 })``;
 
-export const TotalMarginTip: React.FC<TProps> = styled(({ className, base }: TProps) => {
+export const TotalMarginTip: React.FC<TProps> = styled(({ className, market }: TProps) => {
     return (
         <ReactTooltipStyled id="total-margin" className={className} effect="solid">
             <strong>Total Margin</strong> The total value of your account. Total margin is equal to your net transfers
-            from your wallet plus your profit and losses from your {base} position.
+            from your wallet plus your profit and losses from your {market} position.
         </ReactTooltipStyled>
     );
 })``;
 
-export const BuyingPowerTip: React.FC<TProps> = styled(({ className, base, availableMargin }: TProps) => {
+export const BuyingPowerTip: React.FC<TProps> = styled(({ className, market, availableMargin }: TProps) => {
     return (
         <ReactTooltipStyled id="buying-power" className={className} effect="solid">
-            <strong>Buying Power</strong> Your maximum potential exposure to {base} given your available margin. It is
+            <strong>Buying Power</strong> Your maximum potential exposure to {market} given your available margin. It is
             equal to your available margin of {availableMargin} multiplied by the maximum leverage of [insert maximum
             maximum leverage].
         </ReactTooltipStyled>
@@ -81,3 +81,5 @@ export const AvailableMarginTip: React.FC<TProps> = styled(({ className }: TProp
         </ReactTooltipStyled>
     );
 })``;
+
+
