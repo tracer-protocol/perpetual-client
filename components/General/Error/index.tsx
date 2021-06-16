@@ -98,8 +98,6 @@ const Error: React.FC<EProps> = styled(({ className, error, message, context }: 
                   message: '',
                   moreInfo: '',
               };
-
-    console.log(error, 'error', !!message);
     return (
         <div className={`${className} ${error !== 'NO_ERROR' || !!message ? 'show' : ''}`}>
             <div className="message">
