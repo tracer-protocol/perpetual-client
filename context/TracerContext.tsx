@@ -9,6 +9,9 @@ import { orderToOMEOrder, OrderData, signOrdersV4 } from '@tracer-protocol/trace
 import Tracer from '@libs/Tracer';
 import { TransactionContext, Options } from './TransactionContext';
 import { defaults } from '@libs/Tracer';
+// @ts-ignore
+import { Callback } from 'web3/types';
+import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 interface ContextProps {
     tracerId: string | undefined;
     deposit: (amount: number, _callback?: () => void) => void;
@@ -83,6 +86,17 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const userData = await selectedTracer?.updateUserBalance(account);
             await selectedTracer?.checkApproved(account);
             tracerDispatch({ type: 'setUserBalance', value: userData });
+        }
+    };
+
+    const matchedOrders: Callback<MatchedOrders> = (err: Error, res: MatchedOrders) => {
+        if (err) {
+            console.error('Failed to listen on matched orders', err.message);
+        } else if (
+            account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
+            account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
+        ) {
+            fetchUserData();
         }
     };
 
@@ -193,6 +207,9 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         if (selectedTracer) {
             fetchUserData();
             selectedTracer?.updateFeeRate();
+            if (!selectedTracer?.hasSubscribed) {
+                selectedTracer?.subscribeToMatchedOrders(matchedOrders);
+            }
         }
     }, [selectedTracer]);
 
