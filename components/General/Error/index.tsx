@@ -10,10 +10,6 @@ type ErrorBox = {
     severity?: 'warning';
 };
 
-/**
- * -1 is no error
- * 0 is reserved for unknown
- */
 export const OrderErrors: Record<string, ErrorBox> = {
     NO_POSITION: {
         name: 'User has position',

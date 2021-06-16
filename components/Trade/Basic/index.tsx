@@ -10,7 +10,7 @@ import { calcLiquidationPrice, calcNotionalValue } from '@tracer-protocol/tracer
 import { toApproxCurrency } from '@libs/utils';
 import { Section } from '@components/General';
 import { UserBalance } from 'types';
-import Error from '../../General/Error';
+import Error from '@components/General/Error';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import DefaultSlider from '@components/Slider';
