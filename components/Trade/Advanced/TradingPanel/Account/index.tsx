@@ -2,14 +2,14 @@ import React, { useContext, useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
-import { calcTotalMargin, calcBuyingPower } from '@tracer-protocol/tracer-utils';
+import { calcTotalMargin, calcBuyingPower, calcMinimumMargin } from '@tracer-protocol/tracer-utils';
 import { Box, Button, Previous } from '@components/General';
 import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { OrderState } from '@context/OrderContext';
-import { BuyingPowerTip, TotalMarginTip } from '@components/Tooltips';
+import { AvailableMarginTip, BuyingPowerTip, TotalMarginTip } from '@components/Tooltips';
 // import CalculatorModal from './Calculator';
 
 const SBox = styled(Box)`
@@ -137,7 +137,7 @@ const AccountPanel: React.FC<{
                     <a data-tip="" data-for="total-margin">
                         Total Margin
                     </a>
-                    <TotalMarginTip base={selectedTracer?.marketId.split('/')[0]} />
+                    <TotalMarginTip base={selectedTracer?.baseTicker} />
                 </h3>
                 <span>
                     <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
@@ -147,7 +147,14 @@ const AccountPanel: React.FC<{
                 <h3>
                     <a data-tip="" data-for="buying-power">
                         Buying Power
-                        <BuyingPowerTip base={selectedTracer?.marketId.split('/')[0]} />
+                        <BuyingPowerTip
+                            base={selectedTracer?.baseTicker}
+                            availableMargin={
+                                calcTotalMargin(balances.quote, balances.base, fairPrice).toNumber() -
+                                calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage).toNumber()
+                            }
+                            maxLeverage={maxLeverage.toNumber()}
+                        />
                     </a>{' '}
                     <SubText>@{maxLeverage.toNumber()}X Maximum Leverage</SubText>
                 </h3>
@@ -170,6 +177,22 @@ const AccountPanel: React.FC<{
                             )}
                         </>
                     )}
+                </span>
+            </Item>
+            <Item>
+                <h3>
+                    <a data-tip="" data-for="available-margin">
+                        Available Margin
+                    </a>
+                    <AvailableMarginTip />
+                </h3>
+                <span>
+                    <a>
+                        {toApproxCurrency(
+                            calcTotalMargin(balances.quote, balances.base, fairPrice).toNumber() -
+                                calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage).toNumber(),
+                        )}
+                    </a>
                 </span>
             </Item>
             <DepositButtons>

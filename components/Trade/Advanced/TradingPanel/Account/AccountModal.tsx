@@ -34,6 +34,7 @@ const SSection = styled(Section)`
     flex-direction: column;
     margin-top: 0.5rem;
     margin-bottom: 0;
+
     > .content {
         display: flex;
         justify-content: space-between;
@@ -213,10 +214,7 @@ export default styled(
                 </Balance>
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>
                     <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
-                    <SSection
-                        label={`Total Margin`}
-                        tooltip={'This can be thought of as total equity or total account value'}
-                    >
+                    <SSection label={`Total Margin`}>
                         <SPrevious>{`${toApproxCurrency(
                             calcTotalMargin(balances.quote, balances.base, price),
                         )}`}</SPrevious>
