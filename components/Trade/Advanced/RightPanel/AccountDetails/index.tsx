@@ -11,7 +11,11 @@ import { FilledOrder } from 'types/OrderTypes';
 import {
     calcLeverage,
 } from '@tracer-protocol/tracer-utils';
-import { Button, Section } from '@components/General';
+import { 
+    Button, 
+    // Previous, 
+    Section 
+} from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
 import { TransactionContext } from '@context/TransactionContext';
@@ -55,6 +59,19 @@ const SSlideSelect = styled(SlideSelect)`
     margin-left: 0;
     margin-top: 0.25rem;
 `
+
+// const SPrevious = styled(Previous)`
+//     &:after {
+//         content: '>>';
+//         padding-left: 0;
+//     }
+// `
+const Content = styled.div`
+    font-size: 18px;
+    color: #fff;
+    text-align: left;
+`
+
 interface IProps {
     balance: UserBalance;
     price: BigNumber;
@@ -69,41 +86,54 @@ const PositionDetails: React.FC<IProps> = ({
     const [currency, setCurrency] = useState(0); // 0 quoted in base
     const { base, quote } = balance;
     const l = calcLeverage(quote, base, price);
-
     return (
         <div className="flex">
             <AccountDetails>
                 <SSection label={'Side'}>
                     {!balance.quote.eq(0)
-                        ? `${balance.quote.lt(0) ? 'SHORT' : 'LONG'}`
+                        ? 
+                        <Content>
+                            {/* <SPrevious /> */}
+                            {balance.quote.lt(0) ? 'SHORT' : 'LONG'}
+                        </Content>
                         : `-`
                     }
                 </SSection>
                 <SSection label={'Unrealised PnL'}>
                     {!balance.quote.eq(0)
-                        ? `${toApproxCurrency(0)}`
+                        ?
+                        <Content>
+                            {toApproxCurrency(0)}
+                        </Content>
                         : `-`
                     }
                 </SSection>
                 <SSection label={'Leverage'}>
                     {!balance.quote.eq(0)
-		                ? `${l.toPrecision(3)}x`
+		                ? 
+                        <Content>
+                            {/* <SPrevious /> */}
+			                {`${l.toPrecision(3)}x`}
+                        </Content>
                         : `-`
                     }
                 </SSection>
                 <SSection label={'Realised PnL'}>
                     {!balance.quote.eq(0)
-		                ? `${toApproxCurrency(0)}`
+		                ? 
+                            <Content>
+                                {toApproxCurrency(0)}
+                            </Content>
                         : `-`
                     }
                 </SSection>
                 <SSection label={'Exposure'} className="w-full">
                     {!balance.quote.eq(0)
 		                ?   
-                            <>
+                            <Content>
                                 {currency === 0
-                                    ? `${base.toNumber()} ${baseTicker}`
-                                    : `${toApproxCurrency(base.times(price))} ${quoteTicker}`
+                                    ? `${base.abs().toNumber()} ${baseTicker}`
+                                    : `${toApproxCurrency(base.abs().times(price))} ${quoteTicker}`
                                 
                                 }
                                 <SSlideSelect
@@ -119,7 +149,7 @@ const PositionDetails: React.FC<IProps> = ({
                                         {quoteTicker}
                                     </Option>
                                 </SSlideSelect>
-                            </>
+                            </Content>
                         : `-`
                     }
                 </SSection>
@@ -260,8 +290,6 @@ export default styled(({ selectedTracer, className }: TSProps) => {
             console.error('OME dispatch is underfined');
         },
     } = useContext(OMEContext);
-
-    console.log(filledOrders)
 
     const content = () => {
         switch (tab) {
