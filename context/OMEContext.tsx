@@ -77,7 +77,7 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
     const fetchUserData = async () => {
         if (!account) {
             if (isMounted.current) {
-                omeDispatch({ type: 'setUserOrders', orders: []});
+                omeDispatch({ type: 'setUserOrders', orders: [] });
             }
         }
         if (selectedTracer?.address && account) {
@@ -90,14 +90,14 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
 
     const matchedOrders: Callback<MatchedOrders> = (err: Error, res: MatchedOrders) => {
         if (err) {
-            console.error("Failed to listen on matched orders", err.message)
+            console.error('Failed to listen on matched orders', err.message);
         } else if (
             account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
             account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
         ) {
             refetchFilledOrders();
         }
-    }
+    };
 
     useEffect(() => {
         if (selectedTracer) {
@@ -169,7 +169,7 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
                 omeDispatch,
                 omeState,
                 filledOrders,
-                refetchFilledOrders
+                refetchFilledOrders,
             }}
         >
             {children}

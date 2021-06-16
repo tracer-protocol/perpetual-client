@@ -91,14 +91,14 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
     const matchedOrders: Callback<MatchedOrders> = (err: Error, res: MatchedOrders) => {
         if (err) {
-            console.error("Failed to listen on matched orders", err.message)
+            console.error('Failed to listen on matched orders', err.message);
         } else if (
             account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
             account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
         ) {
             fetchUserData();
         }
-    }
+    };
 
     const placeOrder: (order: OrderState) => Promise<Result> = async (order) => {
         const { exposure, price, position, leverage } = order;

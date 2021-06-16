@@ -6,13 +6,11 @@ import { calcStatus, timeAgo, toApproxCurrency } from '@libs/utils';
 import Web3 from 'web3';
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { FilledOrder } from 'types/OrderTypes';
+import { calcLeverage } from '@tracer-protocol/tracer-utils';
 import {
-    calcLeverage,
-} from '@tracer-protocol/tracer-utils';
-import { 
-    Button, 
-    // Previous, 
-    Section 
+    Button,
+    // Previous,
+    Section,
 } from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
@@ -27,21 +25,21 @@ const AccountDetails = styled.div`
     width: 40%;
     display: flex;
     flex-wrap: wrap;
-`
+`;
 const PositionGraph = styled.div`
     width: 40%;
     padding: 12px;
-`
+`;
 const GraphLegend = styled.div`
     width: 20%;
     padding: 12px;
-`
+`;
 
 const SSection = styled(Section)`
     display: block;
     padding: 5px 10px;
     margin: 0;
-    color: #005EA4;
+    color: #005ea4;
     > .label {
         display: block;
         font-size: 12px;
@@ -49,20 +47,20 @@ const SSection = styled(Section)`
     > .content {
         padding-left: 0;
     }
-`
+`;
 
 const SectionContainer = styled.div`
     border-right: 1px solid #002886;
     width: 100%;
     display: block;
-`
+`;
 
 const SSlideSelect = styled(SlideSelect)`
     height: 28px;
     width: 120px;
     margin-left: 0;
     margin-top: 0.25rem;
-`
+`;
 
 // const SPrevious = styled(Previous)`
 //     &:after {
@@ -74,7 +72,7 @@ const Content = styled.div`
     font-size: 18px;
     color: #fff;
     text-align: left;
-`
+`;
 
 interface IProps {
     balance: UserBalance;
@@ -84,9 +82,7 @@ interface IProps {
     quoteTicker: string;
 }
 
-const PositionDetails: React.FC<IProps> = ({ 
-    balance, price, baseTicker, quoteTicker
-}: IProps) => {
+const PositionDetails: React.FC<IProps> = ({ balance, price, baseTicker, quoteTicker }: IProps) => {
     const [currency, setCurrency] = useState(0); // 0 quoted in base
     const { base, quote } = balance;
     const l = calcLeverage(quote, base, price);
@@ -95,77 +91,58 @@ const PositionDetails: React.FC<IProps> = ({
             <AccountDetails>
                 <SectionContainer className="w-1/2">
                     <SSection label={'Side'}>
-                        {!balance.quote.eq(0)
-                            ? 
+                        {!balance.quote.eq(0) ? (
                             <Content>
                                 {/* <SPrevious /> */}
                                 {balance.base.lt(0) ? 'SHORT' : 'LONG'}
                             </Content>
-                            : `-`
-                        }
+                        ) : (
+                            `-`
+                        )}
                     </SSection>
                     <SSection label={'Leverage'}>
-                        {!balance.quote.eq(0)
-                            ? 
+                        {!balance.quote.eq(0) ? (
                             <Content>
                                 {/* <SPrevious /> */}
                                 {`${l.toPrecision(3)}x`}
                             </Content>
-                            : `-`
-                        }
+                        ) : (
+                            `-`
+                        )}
                     </SSection>
                 </SectionContainer>
                 <SectionContainer className="w-1/2">
                     <SSection label={'Unrealised PnL'}>
-                        {!balance.quote.eq(0)
-                            ?
-                            <Content>
-                                {toApproxCurrency(0)}
-                            </Content>
-                            : `-`
-                        }
+                        {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                     </SSection>
                     <SSection label={'Realised PnL'}>
-                        {!balance.quote.eq(0)
-                            ? 
-                                <Content>
-                                    {toApproxCurrency(0)}
-                                </Content>
-                            : `-`
-                        }
+                        {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                     </SSection>
                 </SectionContainer>
                 <SectionContainer>
                     <SSection label={'Exposure'} className="w-full">
-                        {!balance.quote.eq(0)
-                            ?   
-                                <Content>
-                                    {currency === 0
-                                        ? `${base.abs().toNumber()} ${baseTicker}`
-                                        : `${toApproxCurrency(base.abs().times(price))} ${quoteTicker}`
-                                    
-                                    }
-                                    <SSlideSelect
-                                        onClick={(index, _e) => {
-                                            setCurrency(index);
-                                        }}
-                                        value={currency}
-                                    >
-                                        <Option>
-                                            {baseTicker}
-                                        </Option>
-                                        <Option>
-                                            {quoteTicker}
-                                        </Option>
-                                    </SSlideSelect>
-                                </Content>
-                            : `-`
-                        }
+                        {!balance.quote.eq(0) ? (
+                            <Content>
+                                {currency === 0
+                                    ? `${base.abs().toNumber()} ${baseTicker}`
+                                    : `${toApproxCurrency(base.abs().times(price))} ${quoteTicker}`}
+                                <SSlideSelect
+                                    onClick={(index, _e) => {
+                                        setCurrency(index);
+                                    }}
+                                    value={currency}
+                                >
+                                    <Option>{baseTicker}</Option>
+                                    <Option>{quoteTicker}</Option>
+                                </SSlideSelect>
+                            </Content>
+                        ) : (
+                            `-`
+                        )}
                     </SSection>
                 </SectionContainer>
             </AccountDetails>
-            <PositionGraph>
-            </PositionGraph>
+            <PositionGraph></PositionGraph>
             <GraphLegend />
         </div>
     );
@@ -180,7 +157,7 @@ const STable = styled(Table)`
     > thead {
         display: table;
         table-layout: fixed; /* even columns width , fix width of table too*/
-        width: calc(100% - 5px)!important; /* scrollbar is 5px */
+        width: calc(100% - 5px) !important; /* scrollbar is 5px */
     }
     > tbody tr {
         display: table;
@@ -225,8 +202,8 @@ const OpenOrders: React.FC<{
         <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
             <tbody>
                 {userOrders.map((order, index) => {
-                    const amount = parseFloat(Web3.utils.fromWei(order.quantity.toString())),
-                        amountLeft = parseFloat(Web3.utils.fromWei(order.remaining.toString())),
+                    const amount = parseFloat(Web3.utils.fromWei(order?.amount?.toString() ?? 0)),
+                        amountLeft = parseFloat(Web3.utils.fromWei(order?.amount_left?.toString() ?? 0)),
                         filled = amount - amountLeft;
                     return (
                         <TRow key={`open-order-${index}`}>
@@ -284,7 +261,6 @@ const Fills: React.FC<{
 
 Fills.displayName = 'Fills';
 
-
 type TSProps = {
     selectedTracer: Tracer | undefined;
     className?: string;
@@ -299,7 +275,7 @@ export default styled(({ selectedTracer, className }: TSProps) => {
         omeDispatch = () => {
             console.error('OME dispatch is underfined');
         },
-        filledOrders
+        filledOrders,
     } = useContext(OMEContext);
 
     const content = () => {
@@ -330,7 +306,7 @@ export default styled(({ selectedTracer, className }: TSProps) => {
     };
     return (
         <div className={className}>
-            <CustomSubNav 
+            <CustomSubNav
                 selected={tab}
                 setTab={setTab}
                 fills={filledOrders?.length ?? 0}

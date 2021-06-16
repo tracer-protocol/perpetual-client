@@ -10,7 +10,10 @@ import pricingAbi from '@tracer-protocol/contracts/abi/contracts/Pricing.sol/Pri
 import { Oracle } from '@tracer-protocol/contracts/types/Oracle';
 import { Pricing } from '@tracer-protocol/contracts/types/Pricing';
 import { ERC20 as Erc20Type } from '@tracer-protocol/contracts/types/ERC20';
-import { MatchedOrders, TracerPerpetualSwaps as TracerType } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
+import {
+    MatchedOrders,
+    TracerPerpetualSwaps as TracerType,
+} from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 import BigNumber from 'bignumber.js';
 
 import { AbiItem } from 'web3-utils';
@@ -157,8 +160,8 @@ export default class Tracer {
 
     subscribeToMatchedOrders: (callback: Callback<MatchedOrders>) => void = (callback) => {
         this.hasSubscribed = true;
-        this._instance.events.MatchedOrders(callback)
-    }
+        this._instance.events.MatchedOrders(callback);
+    };
 
     /**
      * Gets the users total margin and position balances

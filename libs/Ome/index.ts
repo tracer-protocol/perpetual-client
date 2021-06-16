@@ -77,14 +77,11 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = 
                     message: `Failed to create order 400 bad request`,
                 } as Result;
             } else {
-                return res.json()
+                return {
+                    status: 'success',
+                    message: `Successfully created order`,
+                } as Result;
             }
-        }).then((res) => {
-            console.log(res)
-            return {
-                status: 'success',
-                message: `Successfully created order`,
-            } as Result;
         })
         .catch((err) => {
             return {
