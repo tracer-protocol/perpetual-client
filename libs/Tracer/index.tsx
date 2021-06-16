@@ -10,7 +10,7 @@ import pricingAbi from '@tracer-protocol/contracts/abi/contracts/Pricing.sol/Pri
 import { Oracle } from '@tracer-protocol/contracts/types/Oracle';
 import { Pricing } from '@tracer-protocol/contracts/types/Pricing';
 import { ERC20 as Erc20Type } from '@tracer-protocol/contracts/types/ERC20';
-import { TracerPerpetualSwaps as TracerType } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
+import { MatchedOrders, TracerPerpetualSwaps as TracerType } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 import BigNumber from 'bignumber.js';
 
 import { AbiItem } from 'web3-utils';
@@ -20,6 +20,8 @@ import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
 import { TransactionReceipt } from 'web3/types';
 import { calcLeverage } from '@tracer-protocol/tracer-utils';
+// @ts-ignore
+import { Callback } from 'web3/types';
 
 export const defaults: Record<string, any> = {
     balances: {
@@ -76,6 +78,7 @@ export default class Tracer {
     public insuranceContract: string;
     public insuranceApproved: boolean;
     public tracerApproved: boolean;
+    public hasSubscribed: boolean;
 
     constructor(web3: Web3, address: string, marketId: string) {
         this._instance = new web3.eth.Contract(tracerAbi as unknown as AbiItem, address) as unknown as TracerType;
@@ -97,6 +100,7 @@ export default class Tracer {
         this.insuranceApproved = false;
         this.tracerApproved = false;
         this.initialised = this.init(web3);
+        this.hasSubscribed = false;
     }
 
     /**
@@ -150,6 +154,11 @@ export default class Tracer {
                 return false;
             });
     };
+
+    subscribeToMatchedOrders: (callback: Callback<MatchedOrders>) => void = (callback) => {
+        this.hasSubscribed = true;
+        this._instance.events.MatchedOrders(callback)
+    }
 
     /**
      * Gets the users total margin and position balances
