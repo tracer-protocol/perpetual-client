@@ -44,5 +44,5 @@ export const TRow = styled.tr`
 
 export const TData = styled.td`
     padding: 0.5rem;
-    // border: 1px solid #002886;
+    border: 1px solid #002886;
 `;

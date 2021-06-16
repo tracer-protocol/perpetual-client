@@ -1,9 +1,7 @@
-import { OMEOrder } from '@tracer-protocol/tracer-utils';
 
-export const calcStatus: (order: OMEOrder) => 'Unfilled' | 'Partially Filled' = ({ amount }) => {
-    if (amount) {
-        // if amount === filled
-        return 'Unfilled';
+export const calcStatus: (filled: number) => 'Unfilled' | 'Partially Filled' = (filled) => {
+    if (filled > 0) {
+        return 'Partially Filled';
     }
-    return 'Partially Filled';
+    return 'Unfilled';
 };

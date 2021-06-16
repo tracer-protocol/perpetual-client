@@ -165,24 +165,26 @@ const STable = styled(Table)`
     > tbody {
         display: block;
         max-height: 20vh;
-        overflow: auto;
+        overflow-y: scroll;
     }
-    > thead,
+    > thead {
+        display: table;
+        table-layout: fixed; /* even columns width , fix width of table too*/
+        width: calc(100% - 5px)!important; /* scrollbar is 5px */
+    }
     > tbody tr {
         display: table;
         width: 100%;
         table-layout: fixed; /* even columns width , fix width of table too*/
-    }
-    > thead {
-        width: calc(100% - 5px); /* scrollbar is 5px */
+        overflow: auto;
     }
 `;
 
 const Cancel = styled(Button)`
     height: 28px;
     opacity: 0.8;
-    padding: 0;
     width: auto;
+    padding: 0 5px;
     max-width: 80px;
     margin: auto;
     line-height: 25px;
@@ -210,7 +212,7 @@ const OpenOrders: React.FC<{
             : console.error('Failed to cancel order: Handle transaction not defined');
     };
     return (
-        <STable headings={['Status', 'Side', 'Amount', 'Filled', 'Remaining', 'Price', '']}>
+        <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
             <tbody>
                 {userOrders.map((order, index) => {
                     const amount = parseFloat(Web3.utils.fromWei(order.amount.toString())),
@@ -218,10 +220,11 @@ const OpenOrders: React.FC<{
                         filled = amount - amountLeft;
                     return (
                         <TRow key={`open-order-${index}`}>
-                            <TData>{calcStatus(order)}</TData>
+                            <TData>{calcStatus(filled)}</TData>
                             <TData className={order.side.toLowerCase() /** This will be the global .bid or .ask */}>
                                 {order.side}
                             </TData>
+                            <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
                             <TData>
                                 {amount} {baseTicker}
                             </TData>
@@ -231,7 +234,6 @@ const OpenOrders: React.FC<{
                             <TData>
                                 {amountLeft} {baseTicker}
                             </TData>
-                            <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
                             <TData>
                                 <Cancel onClick={(_e) => _cancelOrder(order.target_tracer, order.id)}>Cancel</Cancel>
                             </TData>
