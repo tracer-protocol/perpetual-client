@@ -137,7 +137,7 @@ const AccountPanel: React.FC<{
                     <a data-tip="" data-for="total-margin">
                         Total Margin
                     </a>
-                    <TotalMarginTip quote={selectedTracer?.marketId.split('/')[0]} />
+                    <TotalMarginTip base={selectedTracer?.baseTicker} />
                 </h3>
                 <span>
                     <a>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</a>
@@ -148,7 +148,7 @@ const AccountPanel: React.FC<{
                     <a data-tip="" data-for="buying-power">
                         Buying Power
                         <BuyingPowerTip
-                            quote={selectedTracer?.marketId.split('/')[0]}
+                            base={selectedTracer?.baseTicker}
                             availableMargin={
                                 calcTotalMargin(balances.quote, balances.base, fairPrice).toNumber() -
                                 calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage).toNumber()

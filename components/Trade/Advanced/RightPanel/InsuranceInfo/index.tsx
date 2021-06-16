@@ -20,15 +20,15 @@ export default styled(({ className }) => {
             <Section label={'Pool Holdings'} slug={`pool-holdings`}>
                 {toApproxCurrency(poolInfo?.liquidity ?? defaults.liquidity)}
             </Section>
-            <PoolHoldingsTip quote={poolInfo?.market?.split('/')[0]} />
+            <PoolHoldingsTip base={poolInfo?.market?.split('/')[0]} />
             <Section label={'Pool Target'} slug={`pool-target`}>
                 {toApproxCurrency(poolInfo?.target ?? defaults.target)}
             </Section>
-            <PoolTargetTip quote={poolInfo?.market?.split('/')[0]} />
+            <PoolTargetTip base={poolInfo?.market?.split('/')[0]} />
             <Section label={'Insurance Funding Rate'} slug={`insurance-funding-rate`}>
                 0.001%
             </Section>
-            <InsuranceFundingRateTip quote={poolInfo?.market?.split('/')[0]} />
+            <InsuranceFundingRateTip base={poolInfo?.market?.split('/')[0]} />
         </div>
     );
 })`
