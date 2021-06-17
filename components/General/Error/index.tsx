@@ -1,5 +1,5 @@
 import { InfoCircleOutlined } from '@ant-design/icons';
-import { ReactTooltipStyled } from '@components/Tooltips';
+import { STooltip } from '@components/Tooltips';
 import React from 'react';
 import styled from 'styled-components';
 
@@ -100,10 +100,9 @@ const Error: React.FC<EProps> = styled(({ className, error, message, context }: 
                 {error_?.message ?? message ?? ''}
                 {error_?.moreInfo ? (
                     <>
-                        <ReactTooltipStyled id="error-info-tooltip" effect="solid">
-                            {error_?.moreInfo}
-                        </ReactTooltipStyled>
-                        <SInfoCircleOutlined data-tip="" data-for="error-info-tooltip" />
+                        <STooltip title={error_?.moreInfo}>
+                            <SInfoCircleOutlined />
+                        </STooltip>
                     </>
                 ) : null}
             </div>

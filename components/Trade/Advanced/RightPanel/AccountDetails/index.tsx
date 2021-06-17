@@ -20,7 +20,6 @@ import { OMEContext } from '@context/OMEContext';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import CustomSubNav from './CustomSubNav';
-import { RealisedPnLTip, UnrealisedPnLTip } from '@components/Tooltips';
 
 const AccountDetails = styled.div`
     width: 40%;
@@ -113,14 +112,30 @@ const PositionDetails: React.FC<IProps> = ({ balance, price, baseTicker, quoteTi
                     </SSection>
                 </SectionContainer>
                 <SectionContainer className="w-1/2">
-                    <SSection label={'Unrealised PnL'} slug={`unrealised-pnl`}>
+                    <SSection
+                        label={'Unrealised PnL'}
+                        tooltip={{
+                            key: `unrealised-pnl`,
+                            props: {
+                                baseTicker: baseTicker,
+                            },
+                        }}
+                    >
                         {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                     </SSection>
-                    <UnrealisedPnLTip />
-                    <SSection label={'Realised PnL'} slug={`realised-pnl`}>
+                    {/* <UnrealisedPnLTip /> */}
+                    <SSection
+                        label={'Realised PnL'}
+                        tooltip={{
+                            key: `realised-pnl`,
+                            props: {
+                                baseTicker: baseTicker,
+                            },
+                        }}
+                    >
                         {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                     </SSection>
-                    <RealisedPnLTip />
+                    {/* <RealisedPnLTip /> */}
                 </SectionContainer>
                 <SectionContainer>
                     <SSection label={'Exposure'} className="w-full">
