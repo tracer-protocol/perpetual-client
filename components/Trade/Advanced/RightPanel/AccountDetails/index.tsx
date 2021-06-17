@@ -7,11 +7,7 @@ import Web3 from 'web3';
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { FilledOrder } from 'types/OrderTypes';
 import { calcLeverage } from '@tracer-protocol/tracer-utils';
-import {
-    Button,
-    // Previous,
-    Section,
-} from '@components/General';
+import { Button, Section } from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
 import { TransactionContext } from '@context/TransactionContext';
@@ -68,12 +64,6 @@ const SSlideSelect = styled(SlideSelect)`
     margin-top: 0.25rem;
 `;
 
-// const SPrevious = styled(Previous)`
-//     &:after {
-//         content: '>>';
-//         padding-left: 0;
-//     }
-// `
 const Content = styled.div`
     font-size: 18px;
     color: #fff;
@@ -120,28 +110,16 @@ const PositionDetails: React.FC<IProps> = ({ balance, price, baseTicker, quoteTi
                 <SectionContainer className="w-1/2">
                     <SSection
                         label={'Unrealised PnL'}
-                        tooltip={{
-                            key: `unrealised-pnl`,
-                            props: {
-                                baseTicker: baseTicker,
-                            },
-                        }}
+                        tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
                     >
                         {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                     </SSection>
-                    {/* <UnrealisedPnLTip /> */}
                     <SSection
                         label={'Realised PnL'}
-                        tooltip={{
-                            key: `realised-pnl`,
-                            props: {
-                                baseTicker: baseTicker,
-                            },
-                        }}
+                        tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
                     >
                         {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                     </SSection>
-                    {/* <RealisedPnLTip /> */}
                 </SectionContainer>
                 <SectionContainer className="exposure">
                     <SSection label={'Exposure'} className="w-full">
@@ -268,7 +246,7 @@ const Fills: React.FC<{
                     const price = order.price;
                     return (
                         <TRow key={`filled-order-${index}`}>
-                            <TData>{timeAgo(now, parseInt(order.timestamp))}</TData>
+                            <TData>{timeAgo(now, parseInt(order.timestamp)*1000)}</TData>
                             <TData className={!!order.position ? 'ask' : 'bid'}>
                                 {!!order.position ? 'Short' : 'Long'}
                             </TData>
@@ -297,8 +275,9 @@ export default styled(({ selectedTracer, className }: TSProps) => {
     const {
         omeState,
         omeDispatch = () => {
-            console.error('OME dispatch is underfined');
+            console.error('OME dispatch is undefined');
         },
+        // @ts-ignore
         filledOrders,
     } = useContext(OMEContext);
 
