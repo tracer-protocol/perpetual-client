@@ -37,6 +37,7 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
                 return {
                     ...state,
                     tracers: {
+                        ...state.tracers,
                         [action.marketId]: {
                             ...state.tracers[action.marketId],
                             loading: false,

@@ -1,6 +1,6 @@
 import React from 'react';
 import { toApproxCurrency } from '@libs/utils';
-import { calcLiquidationPrice, calcNotionalValue } from '@tracer-protocol/tracer-utils';
+import { calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
 import { HiddenExpand, Previous, Section, Approx } from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
@@ -8,7 +8,10 @@ import styled from 'styled-components';
 
 interface PTDProps {
     balances: UserBalance;
-    position: number;
+    nextPosition: {
+        quote: BigNumber;
+        base: BigNumber;
+    };
     exposure: BigNumber;
     fairPrice: BigNumber;
     slippage: number;
@@ -16,15 +19,7 @@ interface PTDProps {
     className?: string;
 }
 const PostTradeDetails: React.FC<PTDProps> = styled(
-    ({ balances, position, exposure, fairPrice, maxLeverage, slippage, className }: PTDProps) => {
-        const newBase =
-            position === 0
-                ? balances.base.minus(exposure) // short
-                : balances.base.plus(exposure); // long
-        const newQuote =
-            position === 0
-                ? balances.quote.plus(calcNotionalValue(exposure, fairPrice)) // short
-                : balances.quote.minus(calcNotionalValue(exposure, fairPrice)); // long
+    ({ balances, nextPosition, exposure, fairPrice, maxLeverage, slippage, className }: PTDProps) => {
         return (
             <HiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
                 <h3>Order Summary</h3>
@@ -32,7 +27,9 @@ const PostTradeDetails: React.FC<PTDProps> = styled(
                     <Previous>
                         {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
                     </Previous>
-                    {toApproxCurrency(calcLiquidationPrice(newQuote, newBase, fairPrice, maxLeverage))}
+                    {toApproxCurrency(
+                        calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage),
+                    )}
                 </Section>
                 <Section label={'Last Price'}>{toApproxCurrency(0)}</Section>
                 <Section label={'Slippage & Fees'}>

@@ -34,7 +34,7 @@ export const round: (value: number) => number = (value) => {
  * Custom to locale which replaces - with ~
  */
 
-export const toApproxCurrency: (num_: BigNumber | number) => string = (num_) => {
+export const toApproxCurrency: (num_: BigNumber | number, precision?: number) => string = (num_, precision) => {
     let num = num_;
     if (!num_) {
         // reject if num is false
@@ -46,7 +46,7 @@ export const toApproxCurrency: (num_: BigNumber | number) => string = (num_) => 
     return num.toLocaleString('en-us', {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: Math.min(getPrecision(num), 6),
+        minimumFractionDigits: Math.min(getPrecision(num), precision ?? 6),
     });
 };
 

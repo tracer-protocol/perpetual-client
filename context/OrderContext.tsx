@@ -319,7 +319,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         const balances = selectedTracer?.getBalance();
         let totalExposure = order.exposure * order.leverage;
         if (order.position === SHORT) {
-            totalExposure = totalExposure * -1; // negate base if its short
+            totalExposure = totalExposure * -1; // negate total exposure if short
         }
         const newQuote = balances?.quote.minus(totalExposure * order.price) ?? tracerDefaults.balances.quote; // subtract how much it costs
         const newBase = balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base; // add how much exposure you get
@@ -351,10 +351,9 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         // listens to a lot, but not all
         selectedTracer?.getBalance(),
         account,
-        order.price,
-        order.exposure,
         order.orders,
         order.orderType,
+        order.nextPosition,
     ]);
 
     return (

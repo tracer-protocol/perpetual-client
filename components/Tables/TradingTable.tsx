@@ -16,6 +16,12 @@ export const TradingTable = styled.table`
         font-weight: normal;
         padding-bottom: 5px;
     }
+    thead tr th:first-child {
+        width: 40%;
+    }
+    thead tr th:last-child {
+        width: 30%;
+    }
 
     > * tr.ask:last-of-type,
     > * tr.bid:first-of-type {

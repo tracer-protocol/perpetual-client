@@ -317,6 +317,7 @@ export default class Tracer {
     };
 
     getMaxLeverage: () => BigNumber = () => {
+        console.log(this.maxLeverage.toNumber());
         return this.maxLeverage;
     };
 
