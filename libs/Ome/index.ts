@@ -11,6 +11,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_OME_BASE_URL || 'http://localhost:8989'
 export const getOrders: (market: string) => Promise<Response> = async (market) => {
     return fetch(`${BASE_URL}/book/${omefy(market)}`, {
         method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
     })
         .then((res) => res.json())
         .then((res) => {

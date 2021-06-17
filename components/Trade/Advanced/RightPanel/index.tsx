@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import Timer from '@components/Timer';
 import OrderBook from '@components/OrderBook/OrderBook';
 import Tracer, { defaults } from '@libs/Tracer';
 import { Box } from '@components/General';
@@ -96,8 +95,17 @@ const OrderBookContainer = styled.div`
 `;
 
 const SBox = styled(Box)`
-    border-right: 1px solid #0c3586;
-    border-left: 1px solid #0c3586;
+    flex-direction: column;
+    padding: 0;
+    &.sidePanel {
+        border-right: 1px solid #0c3586;
+        border-left: 1px solid #0c3586;
+        width: 32%;
+    }
+
+    &.middlePanel {
+        width: 68%;
+    }
 `;
 
 const TradingView: React.FC<{
@@ -108,7 +116,7 @@ const TradingView: React.FC<{
 
     return (
         <>
-            <Box className="w-3/4 flex-col p-0">
+            <SBox className="middlePanel">
                 <MarketInfo
                     lastPrice={omeState?.highestAsk ?? 0}
                     fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
@@ -120,14 +128,13 @@ const TradingView: React.FC<{
                 />
                 <Graphs />
                 <AccountSummary selectedTracer={selectedTracer} />
-            </Box>
-            <SBox className="w-1/4 flex-col p-0">
+            </SBox>
+            <SBox className="sidePanel">
                 <InsuranceInfo />
                 <OrderBookContainer>
                     <h3>Order Book</h3>
                     {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
                         <>
-                            <Timer />
                             <OrderBook askOrders={omeState.orders.askOrders} bidOrders={omeState.orders.bidOrders} />
                         </>
                     ) : (
