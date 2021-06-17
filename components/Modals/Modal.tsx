@@ -1,4 +1,4 @@
-import React, { MouseEvent, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import styled from 'styled-components';
 import { Close } from '../General';
@@ -7,7 +7,7 @@ interface TProps {
     show: boolean;
     title?: string;
     subTitle?: string;
-    onClose: (event: MouseEvent) => void;
+    onClose: () => void;
     children: React.ReactNode;
     loading: boolean;
     className?: string;
@@ -58,6 +58,7 @@ const Overlay = styled.div<{ show: boolean }>`
 
 const TracerModal: React.FC<TProps> = styled((props: TProps) => {
     const ref = useRef(null);
+
     useEffect(() => {
         const content: HTMLDivElement = ref.current as unknown as HTMLDivElement;
         if (props.show) {
@@ -69,7 +70,19 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
                 content.classList.remove('show');
             }
         }
+
+        function handleClickOutside(event: any) {
+            // @ts-ignore
+            if (!ref.current.contains(event.target)) {
+                props.onClose();
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
     }, [props.show]);
+
     return (
         <>
             <div className={`${props.className} ${props.show ? 'show' : ''} model`} id={props.id}>
