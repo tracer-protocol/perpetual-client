@@ -22,7 +22,7 @@ export const Order: React.FC<BProps> = styled(
     ({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
         return (
             <tr className={className}>
-                <td className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price)}</td>
+                <td className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price, 4)}</td>
                 <td>{quantity}</td>
                 <td
                     className={`fill-${bid ? 'bid' : 'ask'}`}
