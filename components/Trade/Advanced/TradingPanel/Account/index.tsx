@@ -141,27 +141,23 @@ const AccountPanel: React.FC<{
             {/*</SButton>*/}
             <Item>
                 <h3>
-                    <a data-tip="" data-for="total-margin">
-                        Total Margin
-                    </a>
-                    <TotalMarginTip base={selectedTracer?.baseTicker} />
+                    <TotalMarginTip baseTicker={selectedTracer?.baseTicker ?? ''}>Total Margin</TotalMarginTip>
                 </h3>
                 <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}</span>
             </Item>
             <Item>
                 <h3>
-                    <a data-tip="" data-for="buying-power">
+                    <BuyingPowerTip
+                        baseTicker={selectedTracer?.baseTicker ?? ''}
+                        availableMargin={
+                            calcTotalMargin(balances.quote, balances.base, price).toNumber() -
+                            calcMinimumMargin(balances.quote, balances.base, price, maxLeverage).toNumber()
+                        }
+                        maxLeverage={maxLeverage.toNumber()}
+                    >
                         Buying Power
-                        <BuyingPowerTip
-                            base={selectedTracer?.baseTicker}
-                            availableMargin={
-                                calcTotalMargin(balances.quote, balances.base, price).toNumber() -
-                                calcMinimumMargin(balances.quote, balances.base, price, maxLeverage).toNumber()
-                            }
-                            maxLeverage={maxLeverage.toNumber()}
-                        />
-                    </a>{' '}
-                    <SubText>@{maxLeverage.toNumber()}X Maximum Leverage</SubText>
+                    </BuyingPowerTip>
+                    <SubText>{` @${maxLeverage.toNumber()}X Maximum Leverage`}</SubText>
                 </h3>
                 <span>
                     {!order?.exposure || !order.price ? (
@@ -182,10 +178,7 @@ const AccountPanel: React.FC<{
             </Item>
             <Item>
                 <h3>
-                    <a data-tip="" data-for="available-margin">
-                        Available Margin
-                    </a>
-                    <AvailableMarginTip />
+                    <AvailableMarginTip>Available Margin</AvailableMarginTip>
                 </h3>
                 <span>
                     {!order?.exposure || !order.price ? (

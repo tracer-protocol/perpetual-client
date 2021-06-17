@@ -145,7 +145,10 @@ input {
     }
 }
 
-/** Ant tooltip styles */
+/** 
+    Ant tooltip styles 
+    Tried to remove but styles werent getting applied
+*/
 .ant-tooltip-inner {
    background: #002886;
    color: #005ea4;
