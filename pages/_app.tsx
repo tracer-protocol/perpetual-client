@@ -13,8 +13,8 @@ import { Notification } from '@components/General/Notification';
 import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
 
-const USERSNAP_GLOBAL_API_KEY = '4a12cbf7-62f5-4cf4-be95-95526eadbcbb';
-const USERSNAP_API_KEY = '75dd7bec-5327-452a-bb9d-cc8755f18bce';
+const USERSNAP_GLOBAL_API_KEY = '2588e01d-f08f-41be-b127-1c036f878c0b';
+const USERSNAP_API_KEY = '01bf5b32-7165-4485-a985-3624a96d21c3';
 
 const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
     return (
