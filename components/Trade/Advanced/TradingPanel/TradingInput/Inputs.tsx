@@ -6,7 +6,7 @@ import DefaultSlider from '@components/Slider';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
-import { LeverageTip } from '@components/Tooltips';
+import TooltipSelector from '@components/Tooltips/TooltipSelector';
 
 export const Exposure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
@@ -116,7 +116,7 @@ type LProps = {
 export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max }: LProps) => {
     return (
         <div className={`${className} m-3`}>
-            <LeverageTip className="label">Leverage</LeverageTip>
+            <TooltipSelector tooltip={{ key: 'leverage' }}>Leverage</TooltipSelector>
             <div className="w-3/4 pl-4 pr-6 pb-4 mt-2">
                 <DefaultSlider
                     min={Math.ceil(min?.toNumber() ?? 1) ?? 1}

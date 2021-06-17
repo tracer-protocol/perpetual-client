@@ -4,18 +4,18 @@ import styled from 'styled-components';
 import { Section } from '@components/General';
 import PoolHealth from '@components/Insurance/PoolHealth';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
-import { InsurancePoolHealthTip } from '@components/Tooltips';
+import TooltipSelector from '@components/Tooltips/TooltipSelector';
 
 export default styled(({ className }) => {
     const { poolInfo } = useContext(InsuranceContext);
     return (
         <div className={className}>
             <h3>
-                <InsurancePoolHealthTip>Insurance Pool Health</InsurancePoolHealthTip>
+                <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Insurance Pool Health</TooltipSelector>
             </h3>
             <PoolHealth health={poolInfo?.health?.toNumber() ?? defaults.health.toNumber()} />
             <Section
-                label={'Pool Holdings'}
+                label="Pool Holdings"
                 tooltip={{
                     key: `pool-holdings`,
                     props: {
@@ -26,7 +26,7 @@ export default styled(({ className }) => {
                 {toApproxCurrency(poolInfo?.liquidity ?? defaults.liquidity)}
             </Section>
             <Section
-                label={'Pool Target'}
+                label="Pool Target"
                 tooltip={{
                     key: `pool-target`,
                     props: {
@@ -37,7 +37,7 @@ export default styled(({ className }) => {
                 {toApproxCurrency(poolInfo?.target ?? defaults.target)}
             </Section>
             <Section
-                label={'Insurance Funding Rate'}
+                label="Insurance Funding Rate"
                 tooltip={{
                     key: `insurance-funding-rate`,
                     props: {
@@ -45,6 +45,7 @@ export default styled(({ className }) => {
                     },
                 }}
             >
+                {/*TODO: Add insurance funding rate*/}
                 0.001%
             </Section>
         </div>

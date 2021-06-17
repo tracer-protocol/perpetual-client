@@ -14,7 +14,7 @@ import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { OrderState } from '@context/OrderContext';
-import { AvailableMarginTip, BuyingPowerTip, TotalMarginTip } from '@components/Tooltips';
+import TooltipSelector from '@components/Tooltips/TooltipSelector';
 // import CalculatorModal from './Calculator';
 
 const SBox = styled(Box)`
@@ -123,7 +123,9 @@ const AccountPanel: React.FC<{
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const price = selectedTracer?.getOraclePrice() ?? defaults.oraclePrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
+    // @ts-ignore
     const newBase = order?.nextPosition.base ?? balances.base;
+    // @ts-ignore
     const newQuote = order?.nextPosition.quote ?? balances.quote;
 
     const handleClick = (popup: boolean, deposit: boolean) => {
@@ -141,22 +143,35 @@ const AccountPanel: React.FC<{
             {/*</SButton>*/}
             <Item>
                 <h3>
-                    <TotalMarginTip baseTicker={selectedTracer?.baseTicker ?? ''}>Total Margin</TotalMarginTip>
+                    <TooltipSelector
+                        tooltip={{ key: 'total-margin', props: { baseTicker: selectedTracer?.baseTicker ?? '' } }}
+                    >
+                        Total Margin
+                    </TooltipSelector>
                 </h3>
                 <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}</span>
             </Item>
             <Item>
                 <h3>
-                    <BuyingPowerTip
-                        baseTicker={selectedTracer?.baseTicker ?? ''}
-                        availableMargin={
-                            calcTotalMargin(balances.quote, balances.base, price).toNumber() -
-                            calcMinimumMargin(balances.quote, balances.base, price, maxLeverage).toNumber()
-                        }
-                        maxLeverage={maxLeverage.toNumber()}
+                    <TooltipSelector
+                        tooltip={{
+                            key: 'buying-power',
+                            props: {
+                                baseTicker: selectedTracer?.baseTicker ?? '',
+                                availableMargin:
+                                    calcTotalMargin(balances.quote, balances.base, price).toNumber() -
+                                        calcMinimumMargin(
+                                            balances.quote,
+                                            balances.base,
+                                            price,
+                                            maxLeverage,
+                                        ).toNumber() ?? NaN,
+                                maxLeverage: maxLeverage.toNumber() ?? NaN,
+                            },
+                        }}
                     >
                         Buying Power
-                    </BuyingPowerTip>
+                    </TooltipSelector>
                     <SubText>{` @${maxLeverage.toNumber()}X Maximum Leverage`}</SubText>
                 </h3>
                 <span>
@@ -178,7 +193,7 @@ const AccountPanel: React.FC<{
             </Item>
             <Item>
                 <h3>
-                    <AvailableMarginTip>Available Margin</AvailableMarginTip>
+                    <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
                 </h3>
                 <span>
                     {!order?.exposure || !order.price ? (
