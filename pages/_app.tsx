@@ -1,7 +1,7 @@
 // prevent creating full trace
 process.traceDeprecation = true;
 
-import React from 'react';
+import React, { useEffect} from 'react';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import 'antd/dist/antd.css';
@@ -17,6 +17,15 @@ const USERSNAP_GLOBAL_API_KEY = '2588e01d-f08f-41be-b127-1c036f878c0b';
 const USERSNAP_API_KEY = '01bf5b32-7165-4485-a985-3624a96d21c3';
 
 const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
+    useEffect(() => {
+        // @ts-ignore
+        window.onUsersnapCXLoad = function(api) {
+            // @ts-ignore
+            window.Usersnap = api; 
+            api.init();
+            api.show(USERSNAP_API_KEY) 
+        }         
+    }, [])
     return (
         <div>
             <Head>
@@ -39,18 +48,6 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                 <script
                     async
                     src={`https://widget.usersnap.com/global/load/${USERSNAP_GLOBAL_API_KEY}?onload=onUsersnapCXLoad`}
-                />
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `
-              window.onUsersnapCXLoad = function(api) {
-                // store the Usersnap global api on the window, if case you want to use it in other contexts
-                window.Usersnap = api; 
-                api.init();
-                api.show('${USERSNAP_API_KEY}') 
-            }         
-            `,
-                    }}
                 />
             </Head>
             <ToastProvider components={{ Toast: Notification }}>
