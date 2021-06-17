@@ -133,7 +133,7 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     };
 
     const setPending = (status: 'PartialMatch' | 'FullMatch') => {
-        const toastId = addToast([status, 'Order is being matched on chain'], {
+        const toastId = addToast([status === 'PartialMatch' ? 'Partially matched order': 'Fully matched order', 'Order is being matched on chain'], {
             appearance: 'loading' as AppearanceTypes,
             autoDismiss: false,
         });
