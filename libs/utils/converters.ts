@@ -46,7 +46,7 @@ export const toApproxCurrency: (num_: BigNumber | number, precision?: number) =>
     return num.toLocaleString('en-us', {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: Math.min(getPrecision(num), (precision ?? 6)),
+        minimumFractionDigits: Math.min(getPrecision(num), precision ?? 6),
     });
 };
 

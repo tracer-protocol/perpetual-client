@@ -23,7 +23,6 @@ export const TradingTable = styled.table`
         width: 30%;
     }
 
-
     > * tr.ask:last-of-type,
     > * tr.bid:first-of-type {
         font-weight: bold;
