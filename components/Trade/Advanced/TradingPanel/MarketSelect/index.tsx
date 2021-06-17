@@ -5,7 +5,7 @@ import { Box, Logo } from '@components/General';
 import styled from 'styled-components';
 import { initialFactoryState } from '@context/FactoryContext';
 import { toApproxCurrency } from '@libs/utils';
-import MarketChange from '@components/General/MarketChange';
+// import MarketChange from '@components/General/MarketChange';
 
 const SLogo = styled(Logo)`
     margin-top: 0;
@@ -34,12 +34,12 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
                             <div className="my-auto">{tracer.marketId}</div>
                         </MarketContainer>
                         <div className="info">
-                            <MarketChange
+                            {/* <MarketChange
                                 className="mr-2"
                                 size={'lg'}
                                 before={false}
-                                amount={tracer.get24HourChange()}
-                            />
+                                amount={240}
+                            /> */}
                             <div>{toApproxCurrency(tracer.getOraclePrice())}</div>
                         </div>
                     </Box>
@@ -81,40 +81,40 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     }
 `;
 
-// type MarketSelectDropdownButtonProps = {
-//     className?: string;
-//     arrowUp?: boolean;
-// };
+type MarketSelectDropdownButtonProps = {
+    className?: string;
+    arrowUp?: boolean;
+};
 
-// const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = styled(
-//     ({ className, arrowUp }: MarketSelectDropdownButtonProps) => {
-//         return (
-//             <div className={className}>
-//                 <span>{arrowUp ? 'Hide Markets' : 'View Markets'}</span>
-//                 <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
-//             </div>
-//         );
-//     },
-// )`
-//     color: #3da8f5;
-//     font-size: 1rem;
-//     border: 1px solid #3da8f5;
-//     border-radius: 20px;
-//     height: 28px;
-//     width: 160px;
-//     text-align: center;
-//
-//     &:hover {
-//         cursor: pointer;
-//     }
-//
-//     > .down-arrow {
-//         margin-top: -5px;
-//         display: inline-block;
-//         transition: 0.3s;
-//         transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
-//     }
-// `;
+const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = styled(
+    ({ className, arrowUp }: MarketSelectDropdownButtonProps) => {
+        return (
+            <div className={className}>
+                <span>{arrowUp ? 'Hide Markets' : 'View Markets'}</span>
+                <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
+            </div>
+        );
+    },
+)`
+    color: #3da8f5;
+    font-size: 1rem;
+    border: 1px solid #3da8f5;
+    border-radius: 20px;
+    height: 28px;
+    width: 160px;
+    text-align: center;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    > .down-arrow {
+        margin-top: -5px;
+        display: inline-block;
+        transition: 0.3s;
+        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
+    }
+`;
 
 const MarketContainer = styled.div`
     font-size: 20px;
@@ -153,10 +153,9 @@ export default styled(({ className }: MSProps) => {
                     <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
                     <div className="my-auto">{selectedTracer?.marketId}</div>
                 </MarketContainer>
-                {/*TODO: Add back market dropdown button*/}
-                {/*<div className="ml-auto" onMouseEnter={() => setPopup(true)}>*/}
-                {/*    <MarketSelectDropdownButton arrowUp={popup} />*/}
-                {/*</div>*/}
+                <div className="ml-auto" onMouseEnter={() => setPopup(true)}>
+                    <MarketSelectDropdownButton arrowUp={popup} />
+                </div>
                 <MarketSelectDropdown
                     tracers={tracers ?? {}}
                     display={popup}

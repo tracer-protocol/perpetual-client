@@ -64,7 +64,12 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     useEffect(() => {
         // for initialising the tracer store through props
         if (tracer && factoryState?.hasSetTracers) {
-            tracerDispatch({ type: 'setSelectedTracer', value: factoryState?.tracers[tracer] });
+            const t = factoryState?.tracers[tracer];
+            if (t) {
+                tracerDispatch({ type: 'setSelectedTracer', value: t });
+            } else {
+                console.error(`Failed to set tracer with address ${tracer}`);
+            }
         }
     }, [tracer, factoryState?.hasSetTracers]);
 
@@ -72,8 +77,12 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         // detecting when tracers changes so we can set a default tracer
         if (factoryState?.hasSetTracers) {
             const defaultTracer = Object.values(factoryState?.tracers)[0];
-            tracerDispatch({ type: 'setSelectedTracer', value: defaultTracer });
-            fetchUserData();
+            if (defaultTracer) {
+                tracerDispatch({ type: 'setSelectedTracer', value: defaultTracer });
+                fetchUserData();
+            } else {
+                console.error(`Failed to set tracer with address ${tracer}`);
+            }
             // for testing purposes this will not be done each time someone opens the app
             // createBook(defaultTracer);
         }
