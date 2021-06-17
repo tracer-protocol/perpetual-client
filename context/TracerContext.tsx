@@ -136,7 +136,10 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                     ? setPending(res.message)
                     : console.error('Partial or full match but setPending function is not defined');
             }
-            return res;
+            return {
+                status: res.status,
+                message: 'Successfully matched order'
+            };
         } catch (err) {
             return { status: 'error', message: `Failed to place order ${err}` } as Result;
         }

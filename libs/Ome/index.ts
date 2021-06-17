@@ -36,6 +36,10 @@ export const getUsersOrders: (market: string, account: string) => Promise<OMEOrd
     })
         .then((res) => res.json())
         .then((res) => {
+            if (res === 'Market does not exist') {
+                console.error('Failed to fetch user orders', res);
+                return []
+            }
             return res;
         })
         .catch((err) => {
@@ -82,7 +86,7 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = 
             } else {
                 return {
                     status: 'success',
-                    message: res,
+                    message: res?.message,
                 } as Result;
             }
         })

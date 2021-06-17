@@ -143,7 +143,7 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     const closePending = () => {
         if (pendingRef.current) {
             updateToast(pendingRef.current as unknown as string, {
-                content: 'Orders Matched',
+                content: 'Successfully matched orders on chain',
                 appearance: 'success',
                 autoDismiss: true,
             });
