@@ -22,13 +22,13 @@ export const Order: React.FC<BProps> = styled(
     ({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
         return (
             <tr className={className}>
-                <td className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price, 4)}</td>
-                <td>{quantity}</td>
+                <td className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price, 3)}</td>
+                <td>{quantity.toFixed(3)}</td>
                 <td
                     className={`fill-${bid ? 'bid' : 'ask'}`}
                     style={{ backgroundSize: getPercentage(cumulative, maxCumulative) + '% 100%' }}
                 >
-                    {cumulative}
+                    {cumulative.toFixed(3)}
                 </td>
             </tr>
         );
