@@ -19,17 +19,6 @@ export type TooltipProps = {
 };
 
 export const STooltip = styled(Tooltip)`
-    /** Ant tooltip styles */
-    * .ant-tooltip-inner {
-        background: #002886;
-        color: #005ea4;
-    }
-    * .ant-tooltip-inner strong {
-        color: #3da8f5;
-    }
-    * .ant-tooltip-arrow-content {
-        background-color: #002886;
-    }
     color: inherit;
     &:hover {
         cursor: pointer;
