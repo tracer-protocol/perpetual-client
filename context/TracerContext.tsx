@@ -38,7 +38,7 @@ type StoreProps = {
 export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
     const { account, web3, config, networkId } = useContext(Web3Context);
     const { factoryState } = useContext(FactoryContext);
-    const { handleTransaction } = useContext(TransactionContext);
+    const { handleTransaction, setPending, closePending } = useContext(TransactionContext);
 
     const initialState: TracerState = {
         selectedTracer: undefined,
@@ -106,6 +106,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
         ) {
             fetchUserData();
+            closePending ? closePending() : console.error('Close pending is undefined');
         }
     };
 
@@ -129,6 +130,12 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const signedMakes = await signOrdersV4(web3, makes, config?.contracts.trader.address as string, networkId);
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
+            if (res.message === 'PartialMatch' || res.message === 'FullMatch') {
+                // if there is a partial or full match add a toaster
+                setPending
+                    ? setPending(res.message)
+                    : console.error('Partial or full match but setPending function is not defined');
+            }
             return res;
         } catch (err) {
             return { status: 'error', message: `Failed to place order ${err}` } as Result;
