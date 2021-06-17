@@ -117,12 +117,10 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
     const fetchOrders = async () => {
         if (selectedTracer?.address) {
             const res = await getOrders(selectedTracer?.address);
-            console.log(selectedTracer?.address.slice(), "address")
             if (isMounted.current) {
                 const parsedOrders = parseOrders(res);
                 const lowestBid = parsedOrders.askOrders[0]?.price ?? 0;
                 const highestAsk = parsedOrders.bidOrders.slice(-1)[0]?.price ?? 0;
-                console.log(parsedOrders)
                 omeDispatch({ type: 'setOrders', orders: parsedOrders });
                 omeDispatch({
                     type: 'setBestPrices',

@@ -9,8 +9,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_OME_BASE_URL || 'http://localhost:8989'
  * Gets the orders related to a specific book
  */
 export const getOrders: (market: string) => Promise<Response> = async (market) => {
-    console.log(market, 'market')
-    return fetch(`https://order.tracer.finance/book/${omefy(market)}`, {
+    return fetch(`${BASE_URL}/book/${omefy(market)}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -18,7 +17,6 @@ export const getOrders: (market: string) => Promise<Response> = async (market) =
     })
         .then((res) => res.json())
         .then((res) => {
-            console.log(res, "res")
             return res;
         })
         .catch((err) => {
