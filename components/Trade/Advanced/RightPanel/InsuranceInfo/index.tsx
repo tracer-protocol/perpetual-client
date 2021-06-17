@@ -4,31 +4,42 @@ import styled from 'styled-components';
 import { Section } from '@components/General';
 import PoolHealth from '@components/Insurance/PoolHealth';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
-import { InsuranceFundingRateTip, InsurancePoolHealthTip, PoolHoldingsTip, PoolTargetTip } from '@components/Tooltips';
+import { InsurancePoolHealthTip } from '@components/Tooltips';
 
 export default styled(({ className }) => {
     const { poolInfo } = useContext(InsuranceContext);
     return (
         <div className={className}>
             <h3>
-                <a data-tip="" data-for="insurance-pool-health">
+                <InsurancePoolHealthTip>
                     Insurance Pool Health
-                </a>
-                <InsurancePoolHealthTip />
+                </InsurancePoolHealthTip>
             </h3>
             <PoolHealth health={poolInfo?.health?.toNumber() ?? defaults.health.toNumber()} />
-            <Section label={'Pool Holdings'} slug={`pool-holdings`}>
+            <Section label={'Pool Holdings'} tooltip={{
+                key: `pool-holdings`,
+                props: {
+                    baseTicker: poolInfo?.market?.split('/')[0]
+                }
+            }}>
                 {toApproxCurrency(poolInfo?.liquidity ?? defaults.liquidity)}
             </Section>
-            <PoolHoldingsTip base={poolInfo?.market?.split('/')[0]} />
-            <Section label={'Pool Target'} slug={`pool-target`}>
+            <Section label={'Pool Target'} tooltip={{
+                key: `pool-target`,
+                props: {
+                    baseTicker: poolInfo?.market?.split('/')[0]
+                }
+            }}>
                 {toApproxCurrency(poolInfo?.target ?? defaults.target)}
             </Section>
-            <PoolTargetTip base={poolInfo?.market?.split('/')[0]} />
-            <Section label={'Insurance Funding Rate'} slug={`insurance-funding-rate`}>
+            <Section label={'Insurance Funding Rate'} tooltip={{
+                key: `insurance-funding-rate`,
+                props: {
+                    baseTicker: poolInfo?.market?.split('/')[0]
+                }
+            }}>
                 0.001%
             </Section>
-            <InsuranceFundingRateTip base={poolInfo?.market?.split('/')[0]} />
         </div>
     );
 })`

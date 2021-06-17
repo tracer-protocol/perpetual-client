@@ -2,6 +2,15 @@ import { CloseOutlined } from '@ant-design/icons';
 import { Children } from 'types';
 import React from 'react';
 import styled from 'styled-components';
+import { 
+    PoolHoldingsTip,
+    PoolTargetTip,
+    RealisedPnLTip,
+    UnrealisedPnLTip,
+    InsuranceFundingRateTip,
+    STooltip,
+    TooltipProps
+} from '@components/Tooltips';
 
 export const DateAndTime = styled(({ className, date, time }) => {
     return (
@@ -88,21 +97,44 @@ export const Card = styled.div`
     }
 `;
 
+const SectionTooltip: React.FC<{ tooltip: TooltipProps }> = ({ 
+    tooltip, children 
+}) => {
+    switch (tooltip.key) {
+        case 'pool-holdings':
+            return (
+                <PoolHoldingsTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                {children}
+            </PoolHoldingsTip>
+            )
+        case 'pool-target':
+            return <PoolTargetTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">{children}</PoolTargetTip>
+        case 'insurance-funding-rate':
+            return <InsuranceFundingRateTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">{children}</InsuranceFundingRateTip>
+        case 'realised-pnl':
+            return <RealisedPnLTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">{children}</RealisedPnLTip>
+        case 'unrealised-pnl':
+            return <UnrealisedPnLTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">{children}</UnrealisedPnLTip>
+        default:
+            return <STooltip className="label">{children}</STooltip>;
+    }
+}
+
 type SProps = {
     className?: string;
     label: string;
-    slug?: string;
+    tooltip?: TooltipProps
 } & Children;
 
-export const Section: React.FC<SProps> = styled(({ className, children, label, slug }: SProps) => {
+export const Section: React.FC<SProps> = styled(({ className, children, label, tooltip }: SProps) => {
     return (
         <div className={`${className}`}>
-            {slug ? (
-                <a className={`label`} data-tip="" data-for={slug}>
+            {tooltip ? (
+                <SectionTooltip tooltip={tooltip}>
                     {label}
-                </a>
+                </SectionTooltip>
             ) : (
-                <div className={`label`} data-tip="" data-for={slug}>
+                <div className={`label`}>
                     {label}
                 </div>
             )}
@@ -128,7 +160,7 @@ export const Section: React.FC<SProps> = styled(({ className, children, label, s
         padding-left: 0.25rem;
     }
 `;
-
+ 
 const clearLogos: Record<string, string> = {
     ETH: '/img/logos/currencies/eth_clear.svg',
     TEST1: '/img/logos/currencies/eth_clear.svg',

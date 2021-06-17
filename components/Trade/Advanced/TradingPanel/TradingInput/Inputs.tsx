@@ -6,7 +6,7 @@ import DefaultSlider from '@components/Slider';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
-import { AmountTip, LeverageTip, PriceTip } from '@components/Tooltips';
+import { LeverageTip } from '@components/Tooltips';
 
 export const Exposure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
@@ -18,6 +18,12 @@ export const Exposure: React.FC<{
         <>
             <SmallInput
                 title={'Amount'}
+                tooltip={{
+                    key: 'amount',
+                    props: {
+                        baseTicker: selectedTracer?.baseTicker ?? ''
+                    }
+                }}
                 className={className ?? ''}
                 onChange={(e) => {
                     orderDispatch
@@ -33,7 +39,6 @@ export const Exposure: React.FC<{
                 unit={selectedTracer?.baseTicker ?? ''}
                 amount={order.exposure}
             />
-            <AmountTip base={selectedTracer?.baseTicker} />
         </>
     );
 };
@@ -48,6 +53,12 @@ export const Price: React.FC<{
         <>
             <SmallInput
                 title={'Price'}
+                tooltip={{
+                    key: 'price',
+                    props: {
+                        baseTicker: selectedTracer?.baseTicker ?? ''
+                    }
+                }}
                 className={className ?? ''}
                 setMax={(e) => {
                     e.preventDefault();
@@ -65,7 +76,6 @@ export const Price: React.FC<{
                 unit={selectedTracer?.quoteTicker ?? ''}
                 amount={price}
             />
-            <PriceTip base={selectedTracer?.baseTicker} />
         </>
     );
 };
@@ -106,9 +116,9 @@ type LProps = {
 export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max }: LProps) => {
     return (
         <div className={`${className} m-3`}>
-            <a className="label" data-tip="" data-for="leverage">
+            <LeverageTip className="label">
                 Leverage
-            </a>
+            </LeverageTip>
             <div className="w-3/4 pl-4 pr-6 pb-4 mt-2">
                 <DefaultSlider
                     min={Math.ceil(min?.toNumber() ?? 1) ?? 1}
@@ -121,7 +131,6 @@ export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, cla
                     }}
                 />
             </div>
-            <LeverageTip />
         </div>
     );
 })`
