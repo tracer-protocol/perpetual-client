@@ -65,32 +65,32 @@ type SIProps = {
     title: string;
     maxText?: string; // used if you dont want it to be max
     className?: string;
-    tooltip?: TooltipProps
+    tooltip?: TooltipProps;
 } & Children;
 
-const InputTooltips: React.FC<{ tooltip: TooltipProps }> = ({ 
-    tooltip, children 
-}) => {
+const InputTooltips: React.FC<{ tooltip: TooltipProps }> = ({ tooltip, children }) => {
     switch (tooltip.key) {
         case 'amount':
-            return <AmountTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">{children}</AmountTip>;
+            return (
+                <AmountTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                    {children}
+                </AmountTip>
+            );
         case 'price':
-            return <PriceTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">{children}</PriceTip>;
+            return (
+                <PriceTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                    {children}
+                </PriceTip>
+            );
         default:
             return <STooltip className="label">{children}</STooltip>;
     }
-}
+};
 
 const SmallInput: React.FC<SIProps> = styled(
     ({ title, amount, onChange, unit, setMax, maxText, tooltip, className }: SIProps) => (
         <div className={className}>
-            {tooltip 
-                ?
-                    <InputTooltips tooltip={tooltip}>
-                        {title}
-                    </InputTooltips>
-                : `${title}`
-            }
+            {tooltip ? <InputTooltips tooltip={tooltip}>{title}</InputTooltips> : `${title}`}
             <InputContainer>
                 <Max className={`${!setMax ? 'hide' : ''}`} onClick={setMax}>
                     {maxText}

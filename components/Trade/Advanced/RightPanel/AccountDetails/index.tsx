@@ -112,21 +112,27 @@ const PositionDetails: React.FC<IProps> = ({ balance, price, baseTicker, quoteTi
                     </SSection>
                 </SectionContainer>
                 <SectionContainer className="w-1/2">
-                    <SSection label={'Unrealised PnL'} tooltip={{
-                        key: `unrealised-pnl`,
-                        props: {
-                            baseTicker: baseTicker
-                        }
-                    }}>
+                    <SSection
+                        label={'Unrealised PnL'}
+                        tooltip={{
+                            key: `unrealised-pnl`,
+                            props: {
+                                baseTicker: baseTicker,
+                            },
+                        }}
+                    >
                         {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                     </SSection>
                     {/* <UnrealisedPnLTip /> */}
-                    <SSection label={'Realised PnL'} tooltip={{
-                        key: `realised-pnl`,
-                        props: {
-                            baseTicker: baseTicker
-                        }
-                    }}>
+                    <SSection
+                        label={'Realised PnL'}
+                        tooltip={{
+                            key: `realised-pnl`,
+                            props: {
+                                baseTicker: baseTicker,
+                            },
+                        }}
+                    >
                         {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                     </SSection>
                     {/* <RealisedPnLTip /> */}

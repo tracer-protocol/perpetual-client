@@ -21,8 +21,8 @@ export const Exposure: React.FC<{
                 tooltip={{
                     key: 'amount',
                     props: {
-                        baseTicker: selectedTracer?.baseTicker ?? ''
-                    }
+                        baseTicker: selectedTracer?.baseTicker ?? '',
+                    },
                 }}
                 className={className ?? ''}
                 onChange={(e) => {
@@ -56,8 +56,8 @@ export const Price: React.FC<{
                 tooltip={{
                     key: 'price',
                     props: {
-                        baseTicker: selectedTracer?.baseTicker ?? ''
-                    }
+                        baseTicker: selectedTracer?.baseTicker ?? '',
+                    },
                 }}
                 className={className ?? ''}
                 setMax={(e) => {
@@ -116,9 +116,7 @@ type LProps = {
 export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max }: LProps) => {
     return (
         <div className={`${className} m-3`}>
-            <LeverageTip className="label">
-                Leverage
-            </LeverageTip>
+            <LeverageTip className="label">Leverage</LeverageTip>
             <div className="w-3/4 pl-4 pr-6 pb-4 mt-2">
                 <DefaultSlider
                     min={Math.ceil(min?.toNumber() ?? 1) ?? 1}

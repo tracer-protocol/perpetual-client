@@ -141,9 +141,7 @@ const AccountPanel: React.FC<{
             {/*</SButton>*/}
             <Item>
                 <h3>
-                    <TotalMarginTip baseTicker={selectedTracer?.baseTicker ??''}>
-                        Total Margin
-                    </TotalMarginTip>
+                    <TotalMarginTip baseTicker={selectedTracer?.baseTicker ?? ''}>Total Margin</TotalMarginTip>
                 </h3>
                 <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}</span>
             </Item>
@@ -180,9 +178,7 @@ const AccountPanel: React.FC<{
             </Item>
             <Item>
                 <h3>
-                    <AvailableMarginTip>
-                        Available Margin
-                    </AvailableMarginTip>
+                    <AvailableMarginTip>Available Margin</AvailableMarginTip>
                 </h3>
                 <span>
                     {!order?.exposure || !order.price ? (
