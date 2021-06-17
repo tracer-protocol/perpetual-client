@@ -2,15 +2,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import { Children } from 'types';
 import React from 'react';
 import styled from 'styled-components';
-import {
-    PoolHoldingsTip,
-    PoolTargetTip,
-    RealisedPnLTip,
-    UnrealisedPnLTip,
-    InsuranceFundingRateTip,
-    STooltip,
-    TooltipProps,
-} from '@components/Tooltips';
+import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/TooltipSelector';
 
 export const DateAndTime = styled(({ className, date, time }) => {
     return (
@@ -21,6 +13,7 @@ export const DateAndTime = styled(({ className, date, time }) => {
     );
 })`
     font-size: 1rem;
+
     .secondary {
         color: #005ea4;
     }
@@ -47,7 +40,7 @@ export const Button = styled.button`
     &:focus,
     &:active {
         border: 1px solid #fff;
-        outline: 0px;
+        outline: 0;
         box-shadow: none;
     }
 
@@ -97,54 +90,16 @@ export const Card = styled.div`
     }
 `;
 
-const SectionTooltip: React.FC<{ tooltip: TooltipProps }> = ({ tooltip, children }) => {
-    switch (tooltip.key) {
-        case 'pool-holdings':
-            return (
-                <PoolHoldingsTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
-                    {children}
-                </PoolHoldingsTip>
-            );
-        case 'pool-target':
-            return (
-                <PoolTargetTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
-                    {children}
-                </PoolTargetTip>
-            );
-        case 'insurance-funding-rate':
-            return (
-                <InsuranceFundingRateTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
-                    {children}
-                </InsuranceFundingRateTip>
-            );
-        case 'realised-pnl':
-            return (
-                <RealisedPnLTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
-                    {children}
-                </RealisedPnLTip>
-            );
-        case 'unrealised-pnl':
-            return (
-                <UnrealisedPnLTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
-                    {children}
-                </UnrealisedPnLTip>
-            );
-        default:
-            return <STooltip className="label">{children}</STooltip>;
-    }
-};
-
 type SProps = {
     className?: string;
     label: string;
-    tooltip?: TooltipProps;
+    tooltip?: TooltipSelectorProps;
 } & Children;
-
 export const Section: React.FC<SProps> = styled(({ className, children, label, tooltip }: SProps) => {
     return (
         <div className={`${className}`}>
             {tooltip ? (
-                <SectionTooltip tooltip={tooltip}>{label}</SectionTooltip>
+                <TooltipSelector tooltip={tooltip}>{label}</TooltipSelector>
             ) : (
                 <div className={`label`}>{label}</div>
             )}
