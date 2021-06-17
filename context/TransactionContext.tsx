@@ -1,4 +1,4 @@
-import React, { createContext } from 'react';
+import React, { createContext, useRef } from 'react';
 import { AppearanceTypes, useToasts } from 'react-toast-notifications';
 import { Children, Result } from 'types';
 import PromiEvent from 'web3/promiEvent';
@@ -35,9 +35,13 @@ type HandleAsyncType =
 export const TransactionContext = createContext<{
     handleTransaction: HandleTransactionType;
     handleAsync: HandleAsyncType;
+    setPending: ((status: 'PartialMatch' | 'FullMatch') => void) | undefined;
+    closePending: (() => void) | undefined;
 }>({
     handleTransaction: undefined,
     handleAsync: undefined,
+    setPending: undefined,
+    closePending: undefined,
 });
 
 // type Status = 'INITIALIZED' | 'PROCESSING' | 'ERROR' | 'SUCCESS'
@@ -46,6 +50,7 @@ export const TransactionContext = createContext<{
 // The list can be populate when the user visits the page
 export const TransactionStore: React.FC = ({ children }: Children) => {
     const { addToast, updateToast } = useToasts();
+    const pendingRef = useRef('');
 
     /** Specifically handles transactions */
     const handleTransaction: HandleTransactionType = async (callMethod, params, options) => {
@@ -127,11 +132,32 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         });
     };
 
+    const setPending = (status: 'PartialMatch' | 'FullMatch') => {
+        const toastId = addToast([status === 'PartialMatch' ? 'Partially matched order': 'Fully matched order', 'Order is being matched on chain'], {
+            appearance: 'loading' as AppearanceTypes,
+            autoDismiss: false,
+        });
+        pendingRef.current = toastId as unknown as string;
+    };
+
+    const closePending = () => {
+        if (pendingRef.current) {
+            updateToast(pendingRef.current as unknown as string, {
+                content: 'Successfully matched orders on chain',
+                appearance: 'success',
+                autoDismiss: true,
+            });
+            pendingRef.current = '';
+        }
+    };
+
     return (
         <TransactionContext.Provider
             value={{
                 handleTransaction,
                 handleAsync,
+                setPending,
+                closePending,
             }}
         >
             {children}

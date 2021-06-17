@@ -60,7 +60,7 @@ export const networkConfig: Record<string, Network> = {
                 abi: oracleJSON as AbiItem[],
             },
             trader: {
-                address: '0xD456623ce354F6Cd810DfaA42f34d176bD192aC0',
+                address: '0x03dC8c890f2ad778aed18C572bDea011f347825B',
                 abi: traderJSON as AbiItem[],
             },
         },

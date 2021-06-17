@@ -36,6 +36,10 @@ export const getUsersOrders: (market: string, account: string) => Promise<OMEOrd
     })
         .then((res) => res.json())
         .then((res) => {
+            if (res === 'Market does not exist') {
+                console.error('Failed to fetch user orders', res);
+                return []
+            }
             return res;
         })
         .catch((err) => {
@@ -67,14 +71,14 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = 
         },
         body: JSON.stringify(data),
     })
+        .then((res) => res.json())
         .then((res) => {
-            console.debug('Created order with ome', res);
-            if (res.status === 404) {
+            if (res?.status === 404) {
                 return {
                     status: 'error',
                     message: `Failed to create order 404 not found`,
                 } as Result;
-            } else if (res.status === 400) {
+            } else if (res?.status === 400) {
                 return {
                     status: 'error',
                     message: `Failed to create order 400 bad request`,
@@ -82,7 +86,7 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = 
             } else {
                 return {
                     status: 'success',
-                    message: `Successfully created order`,
+                    message: res?.message,
                 } as Result;
             }
         })
