@@ -12,15 +12,21 @@ import { OrderErrors } from '@components/General/Error';
 const ParentDisable = styled(Button)`
     .button-disabled & {
         cursor: not-allowed;
+        opacity: 0.5;
     }
 `;
-export const AdvancedOrderButton: React.FC = () => (
-    <div className="w-full flex text-center">
+export const AdvancedOrderButton: React.FC = styled(({ className }) => (
+    <div className={className}>
         <PlaceOrderButton>
             <ParentDisable className="m-auto primary">Place Order</ParentDisable>
         </PlaceOrderButton>
     </div>
-);
+))`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+`;
 
 type POBProps = {
     className?: string;
@@ -67,9 +73,9 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
         }
     };
 
-    if (order?.error === 'NO_ERROR') {
+    if (order?.error === 'NO_ERROR' && order?.exposure && order?.price) {
         return (
-            <div className={`w-full ${className ?? ''}`} onClick={handleOrder}>
+            <div className={`${className ?? ''}`} onClick={handleOrder}>
                 {children}
             </div>
         );

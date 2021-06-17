@@ -130,11 +130,10 @@ input {
     color: #f15025;
 }
 
-.button-disabled {
+/* .button-disabled {
     cursor: not-allowed;
     opacity: 0.5;
-    width: 100%;
-}
+} */
 
 @keyframes countdown {
     from {
