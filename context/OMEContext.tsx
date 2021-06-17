@@ -22,9 +22,9 @@ export const parseOrders: (res: any) => Orders = (res) => {
         const sections = Object.values(orders);
         const flattenedOrders = sections.map((orders: any) =>
             orders.reduce(
-                (prev: any, order: { remaining: number; price: number }) => ({
+                (prev: any, order: { amount_left: number; price: number }) => ({
                     price: new BigNumber(Web3.utils.fromWei(order.price.toString())), // price remains the same,
-                    quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.remaining.toString())),
+                    quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.amount_left.toString())),
                 }),
                 {
                     quantity: 0,
@@ -117,10 +117,12 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
     const fetchOrders = async () => {
         if (selectedTracer?.address) {
             const res = await getOrders(selectedTracer?.address);
+            console.log(selectedTracer?.address.slice(), "address")
             if (isMounted.current) {
                 const parsedOrders = parseOrders(res);
                 const lowestBid = parsedOrders.askOrders[0]?.price ?? 0;
                 const highestAsk = parsedOrders.bidOrders.slice(-1)[0]?.price ?? 0;
+                console.log(parsedOrders)
                 omeDispatch({ type: 'setOrders', orders: parsedOrders });
                 omeDispatch({
                     type: 'setBestPrices',
