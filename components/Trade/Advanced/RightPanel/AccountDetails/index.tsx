@@ -53,11 +53,17 @@ const SectionContainer = styled.div`
     border-right: 1px solid #002886;
     width: 100%;
     display: block;
+
+    &.exposure {
+        border-top: 1px solid #002886;
+        border-bottom: 1px solid #002886;
+        padding-bottom: 0.25rem;
+    }
 `;
 
 const SSlideSelect = styled(SlideSelect)`
     height: 28px;
-    width: 120px;
+    width: 150px;
     margin-left: 0;
     margin-top: 0.25rem;
 `;
@@ -137,7 +143,7 @@ const PositionDetails: React.FC<IProps> = ({ balance, price, baseTicker, quoteTi
                     </SSection>
                     {/* <RealisedPnLTip /> */}
                 </SectionContainer>
-                <SectionContainer>
+                <SectionContainer className="exposure">
                     <SSection label={'Exposure'} className="w-full">
                         {!balance.quote.eq(0) ? (
                             <Content>
