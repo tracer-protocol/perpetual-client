@@ -113,14 +113,6 @@ input {
     background: transparent;
 }
 
-/* input[type="search"]::-webkit-search-cancel-button {
-  /* Remove default */
-/* -webkit-appearance: none;
-  
-  color: #0000bd;
-  background: #0000bd;
-} */
-
 /** GLOBAL TABLE STYLES */
 .bid {
     color: #00ff08;
@@ -128,12 +120,6 @@ input {
 
 .ask {
     color: #f15025;
-}
-
-.button-disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
-    width: 100%;
 }
 
 @keyframes countdown {
