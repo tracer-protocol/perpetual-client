@@ -197,9 +197,22 @@ const AccountPanel: React.FC<{
                 </h3>
                 <span>
                     {!order?.exposure || !order.price ? (
-                        `${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(
-                            3,
-                        )}%`
+                        <div className="flex flex-col">
+                            <div>
+                                {`${calcAvailableMarginPercent(
+                                    balances.quote,
+                                    balances.base,
+                                    price,
+                                    maxLeverage,
+                                ).toPrecision(3)}%`}
+                            </div>
+                            <SubText>
+                                {toApproxCurrency(
+                                    calcTotalMargin(balances.quote, balances.base, price).toNumber() -
+                                        calcMinimumMargin(balances.quote, balances.base, price, maxLeverage).toNumber(),
+                                )}
+                            </SubText>
+                        </div>
                     ) : (
                         <>
                             <Previous>
