@@ -3,11 +3,19 @@ import { TracerContext } from '@context/TracerContext';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
 import { Children } from 'types';
 import { toApproxCurrency } from '@libs/utils';
-import SlideSelect from '../Buttons/SlideSelect';
+import SlideSelect from '@components/Buttons/SlideSelect';
 import { Option } from '@components/Buttons/SlideSelect/Options';
-import { Button, Checkbox, Dropdown, HiddenExpand, Previous, NumberSelect, Section } from '@components/General';
+import { 
+    Button, 
+    Checkbox,
+    Dropdown, 
+    HiddenExpand, 
+    Previous, 
+    NumberSelect, 
+    Section,
+} from '@components/General';
+import TracerModal, { SubTitle } from '@components/General/TracerModal';
 import styled from 'styled-components';
-import TracerModal, { SubTitle } from './Modal';
 import { CaretDownFilled } from '@ant-design/icons';
 
 const SSlideSelect = styled(SlideSelect)`
@@ -84,35 +92,6 @@ const AcceptTerms = styled.span`
     margin-left: 1rem;
 `;
 
-// const profitibleWithdrawTip = (
-//     <p>
-//         <strong>Predicted Date for Profitable Withdrawal:</strong> Estimated date for profitable withdrawal despite
-//         withdrawal fee. Assuming current gross APY continues with no expenses to the insurance fund.This trade will use
-//         funds from your connected Web3 wallet.
-//     </p>
-// );
-//
-// const rewardsTip = (
-//     <p>
-//         <strong>Rewards:</strong> You will receive insurance tokens representing your deposit, which will earn fees.
-//     </p>
-// );
-//
-// const ownershipTip = (
-//     <p>
-//         <strong>Pool Ownership</strong>
-//         <br />
-//         <Previous>0 USDC</Previous>
-//         <span className="text-white">4.5 USDC</span>
-//         <br />
-//         <Previous>0 iBTC-USDC</Previous>
-//         <span className="text-white">4.5 iBTC-USDC</span>
-//         <br />
-//         <Previous>0%</Previous>
-//         <span className="text-white">4%</span>
-//     </p>
-// );
-
 type BProps = {
     type: 'Deposit' | 'Withdraw';
     show: boolean;
@@ -125,7 +104,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
     const poolBalance = poolInfo?.userBalance ?? defaults.userBalance;
     const balance = isDeposit ? selectedTracer?.getBalance().tokenBalance : poolBalance;
     const [valid, setValid] = useState(false);
-    const [amount, setAmount] = useState(0); // The amount within the input
+    const [amount, setAmount] = useState(NaN); // The amount within the input
     const [acceptedTerms, acceptTerms] = useState(false);
     useEffect(() => {
         setIsDeposit(type === 'Deposit');

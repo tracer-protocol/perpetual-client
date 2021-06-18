@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import { calcLeverage, calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
 import { TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
-import DefaultSlider from '@components/Slider';
+import DefaultSlider from '@components/General/Slider';
 import { UserBalance } from 'types';
 import { SlideSelect } from '@components/Buttons';
-import TracerModal from '@components/Modals';
+import TracerModal from '@components/General/TracerModal';
 import { Button, NumberSelect } from '@components/General';
 import { Option } from '@components/Buttons/SlideSelect';
 
