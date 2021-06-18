@@ -8,17 +8,17 @@ import styled from 'styled-components';
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import { Web3Context } from 'context';
 
-const NetworkButton = styled.span`
-    border: 1px solid #fff;
-    transition: 0.3s;
-    border-radius: 20px;
-    padding: 0 10px;
-    &:hover {
-        cursor: pointer;
-        background: #fff;
-        color: #f15025;
-    }
-`;
+// const NetworkButton = styled.span`
+//     border: 1px solid #fff;
+//     transition: 0.3s;
+//     border-radius: 20px;
+//     padding: 0 10px;
+//     &:hover {
+//         cursor: pointer;
+//         background: #fff;
+//         color: #f15025;
+//     }
+// `;
 
 type UNProps = {
     display: boolean;
@@ -29,7 +29,8 @@ const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
     // https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
     return (
         <div className={className}>
-            You are connected to the wrong network. Switch to <NetworkButton>Kovan Testnet.</NetworkButton>
+            You are connected to the wrong network.
+            {/*Switch to <NetworkButton>Kovan Testnet.</NetworkButton>*/}
         </div>
     );
 })`
