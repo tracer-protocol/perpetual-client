@@ -256,6 +256,7 @@ const AccountPanel: React.FC<{
                 maxLeverage={maxLeverage}
                 price={price}
             />
+            {/*TODO: Add calculator*/}
             {/*<CalculatorModal*/}
             {/*    display={calculator}*/}
             {/*    close={() => showCalculator(false)}*/}
