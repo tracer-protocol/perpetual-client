@@ -6,7 +6,7 @@ import ErrorComponent from '@components/General/Error';
 import TracerModal from '@components/General/TracerModal';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
-import { After, Button, HiddenExpand, Previous } from '@components/General';
+import { Button, HiddenExpand, Previous } from '@components/General';
 import { TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
 import {
@@ -41,22 +41,6 @@ const MButton = styled(Button)`
     height: 40px;
     border: 1px solid #ffffff;
     color: #fff;
-`;
-
-const Balance = styled.div<{
-    display: boolean;
-}>`
-    color: #3da8f5;
-    font-size: 1rem;
-    letter-spacing: -0.32px;
-    transition: 0.3s;
-    opacity: ${(props) => (props.display ? 1 : 0)};
-`;
-
-const SAfter = styled(After)`
-    &.invalid {
-        color: #f15025;
-    }
 `;
 
 const SSlideSelect = styled(SlideSelect)`
@@ -200,12 +184,6 @@ export default styled(
                     balance={available.toNumber()}
                     setAmount={(amount: number) => dispatch({ type: 'setAmount', amount: amount })}
                 />
-                <Balance display={!!state.amount}>
-                    <span className="mr-3">Balance</span>
-                    <SAfter className={checkErrors() !== 'NO_ERROR' ? 'invalid' : ''}>
-                        {toApproxCurrency(newBalance)}
-                    </SAfter>
-                </Balance>
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>
                     <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
                     <Section label={`Total Margin`}>
