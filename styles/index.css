@@ -53,8 +53,11 @@ button:focus {
     border: none;
 }
 
+input:focus::placeholder {
+    color: transparent;
+}
+
 /* Scroll bar stuff */
-/* width */
 ::-webkit-scrollbar {
     width: 5px;
     height: 8px;
@@ -131,10 +134,6 @@ input {
     }
 }
 
-/** 
-    Ant tooltip styles 
-    Tried to remove but styles werent getting applied
-*/
 .ant-tooltip-inner {
     background: #002886;
     color: #005ea4;
@@ -178,7 +177,6 @@ input {
 }
 
 /** Fonts */
-
 h1 {
     @apply text-blue-100 font-bold text-2xl py-5;
 }
