@@ -342,7 +342,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
                     {/*<Link href="/trade/basic">*/}
                     {/*    <a className="m-auto">Trade</a>*/}
                     {/*</Link>*/}
-                    <Link href="/trade">
+                    <Link href="/">
                         <a className="m-auto">Trade</a>
                     </Link>
                 </li>

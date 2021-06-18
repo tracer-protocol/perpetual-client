@@ -11,35 +11,14 @@ module.exports = withAntdLess({
     // // optional https://github.com/webpack-contrib/css-loader#object
     // cssLoaderOptions: {},
     trailingSlash: true,
-    async redirects() {
-        return [
-            {
-                source: '/trade',
-                destination: '/trade/basic.html',
-                permanent: true,
-            },
-            {
-                source: '/account',
-                destination: '/account/positions.html',
-                permanent: true,
-            },
-            {
-                source: '/insurance',
-                destination: '/insurance/pools.html',
-                permanent: true,
-            },
-        ];
-    },
 
     exportPathMap: () => {
         return {
             '/': { page: '/' },
-            '/trade': { page: '/trade' },
+            // '/trade': { page: '/trade' },
             // '/trade/basic': { page: '/trade/[interface]' },
             // '/trade/advanced': { page: '/trade/[interface]' },
             '/insurance': { page: '/insurance' },
-            // '/insurance/pools': { page: '/insurance/[interface]' },
-            // '/insurance/portfolio': { page: '/insurance/[interface]' },
             '/portfolio': { page: '/portfolio' },
         };
     },
