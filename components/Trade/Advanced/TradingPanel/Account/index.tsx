@@ -197,9 +197,16 @@ const AccountPanel: React.FC<{
                 </h3>
                 <span>
                     {!order?.exposure || !order.price ? (
-                        `${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(
-                            3,
-                        )}%`
+                        `${
+                            calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).isNaN()
+                                ? 100
+                                : calcAvailableMarginPercent(
+                                      balances.quote,
+                                      balances.base,
+                                      price,
+                                      maxLeverage,
+                                  ).toPrecision(3)
+                        }%`
                     ) : (
                         <>
                             <Previous>
@@ -234,6 +241,7 @@ const AccountPanel: React.FC<{
                 maxLeverage={maxLeverage}
                 price={price}
             />
+            {/*TODO: Add calculator*/}
             {/*<CalculatorModal*/}
             {/*    display={calculator}*/}
             {/*    close={() => showCalculator(false)}*/}
