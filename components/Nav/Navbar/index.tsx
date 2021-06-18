@@ -81,7 +81,7 @@ const useEnsName = (account: string) => {
     return ensName;
 };
 
-const Identicon = dynamic(import('../Indenticon'), { ssr: false });
+const Identicon = dynamic(import('../Identicon'), { ssr: false });
 
 const DropdownLogo = styled(({ className }) => {
     const [show, setShow] = useState(false);
