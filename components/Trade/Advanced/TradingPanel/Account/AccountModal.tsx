@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { NumberSelect, Section } from '@components/General';
 import { UserBalance } from 'types';
 import ErrorComponent from '@components/General/Error';
-import TracerModal from '@components/Modals';
+import TracerModal from '@components/General/TracerModal';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import { After, Button, HiddenExpand, Previous } from '@components/General';

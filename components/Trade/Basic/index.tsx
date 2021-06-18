@@ -13,7 +13,7 @@ import { UserBalance } from 'types';
 import Error from '@components/General/Error';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
-import DefaultSlider from '@components/Slider';
+import DefaultSlider from '@components/General/Slider';
 import { orderDefaults } from '@context/OrderContext';
 
 type PProps = {

@@ -3,11 +3,19 @@ import { TracerContext } from '@context/TracerContext';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
 import { Children } from 'types';
 import { toApproxCurrency } from '@libs/utils';
-import SlideSelect from '../Buttons/SlideSelect';
+import SlideSelect from '@components/Buttons/SlideSelect';
 import { Option } from '@components/Buttons/SlideSelect/Options';
-import { Button, Checkbox, Dropdown, HiddenExpand, Previous, NumberSelect, Section } from '@components/General';
+import { 
+    Button, 
+    Checkbox,
+    Dropdown, 
+    HiddenExpand, 
+    Previous, 
+    NumberSelect, 
+    Section,
+} from '@components/General';
+import TracerModal, { SubTitle } from '@components/General/TracerModal';
 import styled from 'styled-components';
-import TracerModal, { SubTitle } from './Modal';
 import { CaretDownFilled } from '@ant-design/icons';
 
 const SSlideSelect = styled(SlideSelect)`
