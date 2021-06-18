@@ -1,6 +1,6 @@
-export type { TakenOrder, OpenOrder, OpenOrders } from './OrderTypes';
+export type { OpenOrder, OpenOrders } from './OrderTypes';
 
-export type { TracerData, UserBalance, FundingRate, TracerInfo } from './TracerTypes';
+export type { UserBalance, FundingRate } from './TracerTypes';
 
 export type { Children, Result, ErrorVariant } from './General';
 

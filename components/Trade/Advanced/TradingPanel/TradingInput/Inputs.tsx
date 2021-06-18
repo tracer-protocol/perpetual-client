@@ -2,7 +2,7 @@ import React from 'react';
 import SmallInput from '@components/General/Input/SmallInput';
 import { Tracer } from 'libs';
 import { LIMIT, OrderAction, OrderState } from '@context/OrderContext';
-import DefaultSlider from '@components/Slider';
+import DefaultSlider from '@components/General/Slider';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 import { defaults } from '@libs/Tracer';

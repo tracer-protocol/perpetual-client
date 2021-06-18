@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 import styled from 'styled-components';
-import { Close } from '../General';
+import { Close } from '..';
 
 interface TProps {
     show: boolean;
