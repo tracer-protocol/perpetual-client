@@ -200,7 +200,7 @@ const OpenOrders: React.FC<{
               })
             : console.error('Failed to cancel order: Handle transaction not defined');
     };
-    console.log(userOrders)
+    console.log(userOrders);
     return (
         <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
             <tbody>
@@ -247,7 +247,7 @@ const Fills: React.FC<{
                     const price = order.price;
                     return (
                         <TRow key={`filled-order-${index}`}>
-                            <TData>{timeAgo(now, parseInt(order.timestamp)*1000)}</TData>
+                            <TData>{timeAgo(now, parseInt(order.timestamp) * 1000)}</TData>
                             <TData className={!!order.position ? 'ask' : 'bid'}>
                                 {!!order.position ? 'Short' : 'Long'}
                             </TData>

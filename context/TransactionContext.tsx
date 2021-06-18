@@ -133,10 +133,16 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     };
 
     const setPending = (status: 'PartialMatch' | 'FullMatch') => {
-        const toastId = addToast([status === 'PartialMatch' ? 'Partially matched order': 'Fully matched order', 'Order is being matched on chain'], {
-            appearance: 'loading' as AppearanceTypes,
-            autoDismiss: false,
-        });
+        const toastId = addToast(
+            [
+                status === 'PartialMatch' ? 'Partially matched order' : 'Fully matched order',
+                'Order is being matched on chain',
+            ],
+            {
+                appearance: 'loading' as AppearanceTypes,
+                autoDismiss: false,
+            },
+        );
         pendingRef.current = toastId as unknown as string;
     };
 
