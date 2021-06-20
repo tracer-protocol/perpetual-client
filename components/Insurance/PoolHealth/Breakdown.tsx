@@ -44,9 +44,11 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
     border-radius: 20px;
     display: flex;
     margin: 20px 0;
+
     > * {
         transition: 0.3s;
     }
+
     > .buffer {
         background: #011772;
         width: ${(props) => (props.buffer / denom(props.target, props.liquidity)) * 100}%;
@@ -54,12 +56,15 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         border-bottom-left-radius: 20px;
         margin-left: 0;
     }
+
     > .liquidity {
+        border-radius: 20px;
         background: #3da8f5;
         width: calc(
             ${(props) => ((props.liquidity - props.userBalance) / denom(props.target, props.liquidity)) * 100}% - 4px
         );
     }
+
     > .userBalance {
         background: #005ea4;
         width: ${(props) => (props.userBalance / denom(props.target, props.liquidity)) * 100}%;
@@ -70,6 +75,7 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         border-top-left-radius: ${(props) => (hasFullOwnership(props.liquidity, props.userBalance) ? '20px' : '')};
         border-bottom-left-radius: ${(props) => (hasFullOwnership(props.liquidity, props.userBalance) ? '20px' : '')};
     }
+
     > .remainder {
         background: transparent;
         width: ${(props) => calcRemainder(props.target, props.liquidity, props.userBalance, props.buffer) * 100}%;
@@ -110,6 +116,7 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
     transition: 0.3s;
     min-width: 100px;
     justify-content: space-between;
+
     > .bar {
         height: 7px;
         width: 100%;
@@ -140,6 +147,7 @@ const Label: React.FC<LProps> = styled(({ title, value, className }: LProps) => 
         color: #3da8f5;
         font-size: 1rem;
     }
+
     > .value {
         font-size: 1.25rem;
         letter-spacing: -0.4px;
@@ -194,6 +202,7 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
     &:hover > .hoverHide > *:hover {
         opacity: 1;
     }
+
     .visible {
         opacity: 1 !important;
     }
