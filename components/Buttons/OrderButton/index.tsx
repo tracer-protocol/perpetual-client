@@ -13,12 +13,17 @@ const ParentDisable = styled(Button)`
     .button-disabled & {
         cursor: not-allowed;
         opacity: 0.5;
+
+        &:hover {
+            color: #3da8f5;
+            background: none;
+        }
     }
 `;
 export const AdvancedOrderButton: React.FC = styled(({ className }) => (
     <div className={className}>
         <PlaceOrderButton>
-            <ParentDisable className="m-auto primary">Place Order</ParentDisable>
+            <ParentDisable className="m-auto">Place Order</ParentDisable>
         </PlaceOrderButton>
     </div>
 ))`
