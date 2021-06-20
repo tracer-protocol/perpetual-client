@@ -113,7 +113,6 @@ const TradingView: React.FC<{
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
-
     return (
         <>
             <SBox className="middlePanel">
@@ -121,7 +120,7 @@ const TradingView: React.FC<{
                     lastPrice={omeState?.highestAsk ?? 0}
                     fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
                     oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
-                    fundingRate={selectedTracer?.getFeeRate() ?? defaults.feeRate}
+                    fundingRate={selectedTracer?.getFundingRate() ?? defaults.feeRate}
                     nextFunding={new Date()}
                     tradingVolume={243512}
                     maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}

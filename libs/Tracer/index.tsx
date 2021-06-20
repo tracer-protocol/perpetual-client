@@ -74,6 +74,7 @@ export default class Tracer {
     public maxLeverage: BigNumber;
     public fundingRateSensitivity: BigNumber;
     public feeRate: BigNumber;
+    public fundingRate: BigNumber;
     public initialised: Promise<boolean>;
     public balances: UserBalance;
     public oraclePrice: BigNumber;
@@ -101,6 +102,7 @@ export default class Tracer {
         this.oraclePrice = defaults.oraclePrice;
         this.fairPrice = defaults.fairPrice;
         this.maxLeverage = defaults.maxLeverage;
+        this.fundingRate = defaults.fundingRate;
         this.insuranceApproved = false;
         this.tracerApproved = false;
         this.initialised = this.init(web3);
@@ -160,6 +162,7 @@ export default class Tracer {
                         this.updateOraclePrice();
                     });
                 this.updateFairPrice();
+                this.updateFundingRate()
                 return true;
             })
             .catch((err) => {
@@ -241,12 +244,34 @@ export default class Tracer {
     };
 
     /**
-     * A function that returns the funding rate for the market
+     * A function that returns the fee rate for the market
      */
     updateFeeRate: () => Promise<void> = async () => {
         const feeRate = await this._instance.methods.feeRate().call();
         const set = new BigNumber(Web3.utils.fromWei(feeRate));
         this.feeRate = set;
+    };
+
+        /**
+     * A function that returns the funding rate for the market
+     */
+    updateFundingRate: () => Promise<void> = async () => {
+            try {
+                // fair price is needed. This avoids it being not set when this method is called.
+                // this could probably be optimised
+                const fairPrice = await this._pricing?.methods.fairPrice().call();
+                this.fairPrice = new BigNumber(Web3.utils.fromWei(fairPrice ?? '0'));
+                const currentFundingIndex = await this._pricing?.methods.currentFundingIndex().call();
+                // @ts-ignore
+                const fundingRate = await this._pricing?.methods.fundingRates(currentFundingIndex - 1).call();
+                let numerator = new BigNumber(Web3.utils.fromWei(fundingRate?.fundingRate.toString() ?? "0"))
+                let denominator = new BigNumber(Web3.utils.fromWei(fairPrice ?? "1"))
+                let set = numerator.div(denominator).multipliedBy(new BigNumber("100"))
+                this.fundingRate = set;
+            } catch (err) {
+                console.error('Failed to fetch funding rate', err);
+                this.fundingRate = defaults.fundingRate;
+            }
     };
 
     /**
@@ -348,4 +373,8 @@ export default class Tracer {
                 return;
         }
     };
+
+    getFundingRate: () => BigNumber = () => {
+        return this.fundingRate;
+    }
 }
