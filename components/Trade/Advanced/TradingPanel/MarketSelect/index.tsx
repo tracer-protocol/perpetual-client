@@ -147,7 +147,7 @@ export default styled(({ className }: MSProps) => {
     }, [popup]);
 
     return (
-        <div className={className}>
+        <div className={`${className}`}>
             <SBox color={popup ? '#011772' : '#000240'} display={popup} onMouseLeave={() => setPopup(false)}>
                 <MarketContainer>
                     <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
