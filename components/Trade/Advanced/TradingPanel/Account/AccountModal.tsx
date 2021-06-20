@@ -35,12 +35,18 @@ const SHiddenExpand = styled(HiddenExpand)`
     margin-bottom: 1rem;
 `;
 
-const MButton = styled(Button)`
+const ModalButton = styled(Button)`
     width: 80%;
     margin: auto;
     height: 40px;
     border: 1px solid #ffffff;
     color: #fff;
+
+    &:disabled {
+        &:hover {
+            background: none;
+        }
+    }
 `;
 
 const Balance = styled.div<{
@@ -233,6 +239,7 @@ export default styled(
                 <div className="text-center">
                     {isDeposit && !selectedTracer?.getTracerApproved() ? (
                         <ApproveButton
+                            className="primary"
                             disabled={selectedTracer?.getTracerApproved()}
                             onClick={() => {
                                 dispatch({ type: 'setLoading', loading: true });
@@ -251,7 +258,7 @@ export default styled(
                             Approve USD
                         </ApproveButton>
                     ) : null}
-                    <MButton
+                    <ModalButton
                         disabled={!selectedTracer?.getTracerApproved() || checkErrors() !== 'NO_ERROR'}
                         onClick={() => {
                             dispatch({ type: 'setLoading', loading: true });
@@ -266,7 +273,7 @@ export default styled(
                         }}
                     >
                         {isDeposit ? 'Deposit' : 'Withdraw'}
-                    </MButton>
+                    </ModalButton>
                 </div>
                 <ErrorComponent context="margin" error={checkErrors()} />
             </TracerModal>
