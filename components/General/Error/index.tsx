@@ -21,7 +21,7 @@ export const OrderErrors: Record<string, ErrorBox> = {
     },
     NO_MARGIN_BALANCE: {
         name: 'No Margin Balance',
-        message: 'Please deposit into your margin account',
+        message: 'You must deposit funds before placing an order.',
     },
     NO_ORDERS: {
         name: 'No Orders',
