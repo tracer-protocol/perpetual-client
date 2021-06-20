@@ -5,11 +5,13 @@ import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 't
 import styled from 'styled-components';
 import { ProgressBar } from '@components/General';
 import { Button, Logo } from '@components/General';
-import { CaretDownFilled } from '@ant-design/icons';
+import { CaretDownFilled, LinkOutlined } from '@ant-design/icons';
 import Breakdown from '../PoolHealth/Breakdown';
 import { InsuranceModal } from '../InsuranceModal';
 import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
 import { toPercent } from '@libs/utils';
+import Link from 'next/link';
+import { StyledTooltip } from '@components/Tooltips';
 
 const Hidden = styled.div`
     color: #3da8f5;
@@ -77,8 +79,13 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
     return (
         <div className={className}>
             <span>
-                {pool.userBalance.toNumber()} {pool.market}
+                {pool.userBalance.toNumber()} {pool.iPoolTokenName} 
             </span>
+            <Link href={pool.iPoolTokenURL}>
+            <StyledTooltip title="View on Etherscan">
+                <LinkOutlined style={{margin: '5px', marginBottom:'2px'}}/>
+            </StyledTooltip>
+            </Link>
             <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
             <Hidden>
                 <ButtonContainer>
