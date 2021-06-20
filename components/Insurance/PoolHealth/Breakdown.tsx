@@ -26,8 +26,7 @@ interface BProps {
 /**
  * Displays the insurance pool breakdown
  *
- * @requires
- *  liquidity > userBalance
+ * @requires liquidity > userBalance
  *
  */
 const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
@@ -175,13 +174,6 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
                     value={liquidity}
                     color="#3DA8F5"
                     target="liquidityTarget"
-                />
-                <Section
-                    title="My Shares"
-                    percentage={parseFloat(((userBalance / liquidity) * 100).toFixed(3))}
-                    value={userBalance}
-                    color="#005EA4"
-                    target="userBalanceTarget"
                 />
             </div>
         </div>
