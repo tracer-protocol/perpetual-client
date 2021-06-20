@@ -58,7 +58,7 @@ interface State {
 export const InsuranceContext = React.createContext<Partial<ContextProps>>({});
 
 export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
-    const { account, web3 } = useContext(Web3Context);
+    const { account, web3, config } = useContext(Web3Context);
     const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const { selectedTracer } = useContext(TracerContext);
     const { handleTransaction } = useContext(TransactionContext);
@@ -195,6 +195,11 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             const liquidity = res[3] ? new BigNumber(Web3.utils.fromWei(res[3])) : defaults.liquidity;
             const target = res[2] ? new BigNumber(Web3.utils.fromWei(res[2])) : defaults.target;
             const health = liquidity.div(target);
+            let splitId = marketId.split("/")
+            const iPoolTokenName = `i${splitId[0]}-${splitId[1]}`
+            const iTokenAddress = await contract?.methods.token().call()
+            const iTokenURL = `${config?.previewUrl}/address/${iTokenAddress}`
+            // const etherscanLink = `https://${network}.etherscan.io/address/${iTokenAddress}`
             dispatch({
                 type: 'setAll',
                 marketId: marketId,
@@ -207,6 +212,8 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     health: health.lt(1) ? health.times(100) : defaults.health,
                     apy: defaults.apy,
                     buffer: res[4] ? new BigNumber(Web3.utils.fromWei(res[4])) : defaults.buffer,
+                    iPoolTokenURL: iTokenURL,
+                    iPoolTokenName: iPoolTokenName
                 },
             });
         } // else
