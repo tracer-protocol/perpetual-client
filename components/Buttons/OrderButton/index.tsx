@@ -10,9 +10,19 @@ import styled from 'styled-components';
 import { OrderErrors } from '@components/General/Error';
 
 const ParentDisable = styled(Button)`
+    background: #3da8f5;
+    color: #fff;
+
+    &:hover {
+        background: #000240;
+        color: #3da8f5;
+    }
+
     .button-disabled & {
         cursor: not-allowed;
         opacity: 0.5;
+        background: none;
+        color: #3da8f5;
 
         &:hover {
             color: #3da8f5;
