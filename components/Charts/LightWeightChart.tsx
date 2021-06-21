@@ -88,14 +88,20 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
     }, []);
 
     useMemo(() => {
-        setGraphData({
-            ...setGraphOptions(),
-            candlestickSeries: [
-                {
-                    data: candleData,
-                },
-            ],
-        });
+        if (candleData.length) {
+            setGraphData({
+                ...setGraphOptions(),
+                candlestickSeries: [
+                    {
+                        data: candleData,
+                    },
+                ],
+            });
+        } else {
+            setGraphData({
+                ...setGraphOptions(),
+            });
+        }
     }, [candleData]);
 
     if (!graphData || !(graphData?.candlestickSeries as any[])?.length) {
