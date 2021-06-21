@@ -82,14 +82,13 @@ const MarketInfo: React.FC<MIProps> = styled(
 const OrderBookContainer = styled.div`
     border-top: 1px solid #002886;
     padding: 10px;
-    max-height: 50vh;
-    overflow-y: auto;
-    height: 100%;
+    padding-right: 0;
+    height: 35vh;
     h3 {
         letter-spacing: -0.4px;
         color: #ffffff;
         text-transform: capitalize;
-        font-size: 20px;
+        font-size: 1.25rem;
         margin-bottom: 5px;
     }
 `;

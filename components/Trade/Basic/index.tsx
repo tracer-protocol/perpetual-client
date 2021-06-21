@@ -129,7 +129,7 @@ const OrderSummary: React.FC<SProps> = styled(({ balances, fairPrice, order, max
 `;
 
 const Title = styled.h1`
-    font-size: 20px;
+    font-size: 1.25rem;
     letter-spacing: -0.4px;
     color: #ffffff;
     font-weight: normal;

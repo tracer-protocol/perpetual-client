@@ -8,9 +8,7 @@ import { ProgressBar } from '@components/General';
  */
 const PoolHealth: React.FC<{ health: number }> = ({ health }) => {
     return (
-        <span className="w-3/4">
-            <ProgressBar percent={health} />
-        </span>
+        <ProgressBar percent={health} />
     );
 };
 
