@@ -145,6 +145,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
     display: block;
     padding: 0;
     height: 100%;
+    z-index: 1;
     &.hide {
         height: 0;
         padding: 0;
