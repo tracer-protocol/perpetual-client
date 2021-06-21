@@ -4,7 +4,6 @@ import React from 'react';
 import { Order } from './Orders';
 import styled from 'styled-components';
 import { TradingTable } from '@components/Tables/TradingTable';
-import MarketChange from '@components/General/MarketChange';
 interface OProps {
     askOrders: OMEOrder[]; //TODO change these
     bidOrders: OMEOrder[];
@@ -45,13 +44,13 @@ const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className }:
                     </tr>
                 </thead>
                 <tbody>{renderOrders(false, askOrdersCopy).reverse()}</tbody>
-                <tbody>
+                {/* <tbody>
                     <tr>
                         <td>Market</td>
                         <td />
                         <MarketChange amount={1} />
                     </tr>
-                </tbody>
+                </tbody> */}
                 <tbody>{renderOrders(true, bidOrdersCopy)}</tbody>
             </TradingTable>
         </div>
