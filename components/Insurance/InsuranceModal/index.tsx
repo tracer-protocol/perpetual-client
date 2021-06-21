@@ -64,6 +64,7 @@ const WithdrawalFee = styled(Section)`
     border-bottom: 1px solid #011772;
     padding: 5px 0;
     margin: 0;
+
     .label {
         color: #fff;
         padding: 0 10px;
@@ -142,7 +143,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     : `Withdraw from the ${tracerId} insurance pool`
             }
         >
-            <div className="p-6 flex-auto">
+            <div className="px-6 flex-auto">
                 <SSlideSelect onClick={(index: number, _e: any) => setIsDeposit(index === 0)} value={isDeposit ? 0 : 1}>
                     <Option>Deposit</Option>
                     <Option>Withdraw</Option>
@@ -214,7 +215,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                         <AcceptTerms>I have read and accept Terms of Withdrawal</AcceptTerms>
                     </div>
                 ) : null}
-                <div className="flex items-center justify-center p-6 rounded-b" id="insurance-submit">
+                <div className="flex items-center justify-center px-6 pt-6 rounded-b" id="insurance-submit">
                     {valid ? (
                         <Button onClick={() => submit(amount)}>{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
                     ) : (
