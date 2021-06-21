@@ -158,6 +158,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     balances={selectedTracer?.getBalance() ?? defaults.balances}
                     exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
                     nextPosition={order?.nextPosition ?? defaults.balances}
+                    tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
                     slippage={order?.slippage ?? 0}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                 />

@@ -17,6 +17,8 @@ type Orders = {
     bidOrders: FlattenedOMEOrder[];
 };
 
+const sortDesc: (orders: FlattenedOMEOrder[]) => FlattenedOMEOrder[] = (orders: FlattenedOMEOrder[]) => orders.sort((a, b) => b.price - a.price);
+
 export const parseOrders: (res: any) => Orders = (res) => {
     const parseOrders = (orders: OMEOrder) => {
         const sections = Object.values(orders);
@@ -35,8 +37,8 @@ export const parseOrders: (res: any) => Orders = (res) => {
     };
 
     return {
-        askOrders: parseOrders(res?.asks ?? {}),
-        bidOrders: parseOrders(res?.bids ?? {}),
+        askOrders: parseOrders(res?.asks ?? []),
+        bidOrders: sortDesc(parseOrders(res?.bids ?? [])),
     };
 };
 

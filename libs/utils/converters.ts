@@ -38,7 +38,7 @@ export const toApproxCurrency: (num_: BigNumber | number, precision?: number) =>
     let num = num_;
     if (!num_) {
         // reject if num is false
-        return '$0.00';
+        return '$0.000';
     }
     if (typeof num !== 'number') {
         num = (num_ as BigNumber).toNumber();
@@ -46,7 +46,7 @@ export const toApproxCurrency: (num_: BigNumber | number, precision?: number) =>
     return num.toLocaleString('en-us', {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: Math.min(getPrecision(num), precision ?? 2),
+        minimumFractionDigits: Math.min(getPrecision(num), precision ?? 3),
     });
 };
 

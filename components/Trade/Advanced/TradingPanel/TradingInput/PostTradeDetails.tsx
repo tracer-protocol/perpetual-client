@@ -1,7 +1,7 @@
 import React from 'react';
 import { toApproxCurrency } from '@libs/utils';
 import { calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
-import { HiddenExpand, Previous, Section, Approx } from '@components/General';
+import { HiddenExpand, Previous, Section } from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
 import styled from 'styled-components';
@@ -16,10 +16,11 @@ interface PTDProps {
     fairPrice: BigNumber;
     slippage: number;
     maxLeverage: BigNumber;
+    tradePrice: BigNumber;
     className?: string;
 }
 const PostTradeDetails: React.FC<PTDProps> = styled(
-    ({ balances, nextPosition, exposure, fairPrice, maxLeverage, slippage, className }: PTDProps) => {
+    ({ balances, nextPosition, exposure, fairPrice, maxLeverage, slippage, tradePrice, className }: PTDProps) => {
         return (
             <HiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
                 <h3>Order Summary</h3>
@@ -31,9 +32,9 @@ const PostTradeDetails: React.FC<PTDProps> = styled(
                         calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage),
                     )}
                 </Section>
-                <Section label={'Last Price'}>{toApproxCurrency(0)}</Section>
-                <Section label={'Slippage & Fees'}>
-                    {slippage}% <Approx>$0.00</Approx>
+                <Section label={'Trade Price'}>{toApproxCurrency(tradePrice)}</Section>
+                <Section label={'Slippage'}>
+                    {slippage.toFixed(3)}% 
                 </Section>
             </HiddenExpand>
         );

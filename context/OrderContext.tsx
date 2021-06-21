@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
 import { TracerContext, Web3Context } from './';
 import { Children, OpenOrder, UserBalance } from 'types';
-import { calcMinimumMargin, calcTotalMargin, calcTradeExposure } from '@tracer-protocol/tracer-utils';
+import { calcMinimumMargin, calcTotalMargin, calcSlippage } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
 import { OMEOrder } from 'types/OrderTypes';
@@ -92,6 +92,7 @@ export const orderDefaults = {
         lockAmountToPay: false, // deprecated with basic trade
         advanced: false,
         slippage: 0,
+        marketTradePrice: new BigNumber(0)
     },
 };
 
@@ -123,6 +124,7 @@ export type OrderState = {
     lockAmountToPay: boolean;
     advanced: boolean; // boolean to check if on basic or advanced page
     slippage: number;
+    marketTradePrice: BigNumber; // trade price calculated when fetching slippage
 };
 
 interface ContextProps {
@@ -147,6 +149,7 @@ export type OrderAction =
     | { type: 'setBestPrice' }
     | { type: 'setMaxClosure' }
     | { type: 'setSlippage'; value: number }
+    | { type: 'setMarketTradePrice'; value: number }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
     | {
@@ -231,6 +234,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 }
             case 'setSlippage':
                 return { ...state, slippage: action.value };
+            case 'setMarketTradePrice':
+                return { ...state, marketTradePrice: action.value };
             case 'setError':
                 return { ...state, error: action.value };
             case 'setWallet':
@@ -290,20 +295,25 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [order.adjustType]);
 
-    useEffect(() => {
+    useMemo(() => {
         // calculate the exposure based on the opposite orders
         if (order.orderType === MARKET && order.oppositeOrders.length) {
             // convert orders
-            const { slippage } = calcTradeExposure(
-                new BigNumber(order.amountToPay ?? 0),
+            const { slippage, tradePrice } = calcSlippage(
+                new BigNumber(order.exposure),
                 order.leverage,
                 order.oppositeOrders,
             );
             if (!slippage.eq(0)) {
                 orderDispatch({ type: 'setSlippage', value: slippage.toNumber() });
+            } else {
+                orderDispatch({ type: 'setSlippage', value: 0 });
+            }
+            if (!tradePrice.eq(0)) {
+	            orderDispatch({ type: 'setMarketTradePrice', value: tradePrice });
             }
         }
-    }, [order.amountToPay, order.leverage, order.oppositeOrders]);
+    }, [order.exposure, order.leverage, order.oppositeOrders]);
 
     // Resets the trading screen
     const reset = () => {

@@ -7,7 +7,7 @@ import { PlaceOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import Error from '@components/General/Error';
 import { Closure, Leverage } from './Inputs';
-import { OrderAction, OrderState } from '@context/OrderContext';
+import { OrderAction, orderDefaults, OrderState } from '@context/OrderContext';
 import PostTradeDetails from './PostTradeDetails';
 import { BigNumber } from 'bignumber.js';
 
@@ -126,6 +126,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
                     nextPosition={order?.nextPosition ?? defaults.balances}
                     slippage={order?.slippage ?? 0}
+                    tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                 />
 
