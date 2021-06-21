@@ -1,12 +1,12 @@
 import React, { useState, useContext } from 'react';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
-import { calcStatus, timeAgo, toApproxCurrency } from '@libs/utils';
+import { calcStatus, timeAgo, toApproxCurrency, getPositionText } from '@libs/utils';
 import Web3 from 'web3';
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { FilledOrder } from 'types/OrderTypes';
 import { calcLeverage } from '@tracer-protocol/tracer-utils';
-import { Button, Section } from '@components/General';
+import { Button, Previous, Section } from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
 import { TransactionContext } from '@context/TransactionContext';
@@ -16,6 +16,7 @@ import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import CustomSubNav from './CustomSubNav';
 import { TableCell, TableHead, TableRow } from '@components/Portfolio';
+import { OrderContext } from '@context/OrderContext';
 
 const AccountDetails = styled.div`
     width: 40%;
@@ -30,6 +31,12 @@ const GraphLegend = styled.div`
     width: 20%;
     padding: 12px;
 `;
+
+const SPrevious = styled(Previous)`
+    &:after {
+        content: ">>";
+    }
+`
 
 const SSection = styled(Section)`
     display: block;
@@ -70,41 +77,104 @@ const Content = styled.div`
     text-align: left;
 `;
 
+type ContentProps = {
+    exposure: number,
+    tradePrice: number,
+    nextPosition: {
+        base: BigNumber,
+        quote: BigNumber
+    },
+    balances: UserBalance
+}
+
+const Position:React.FC<ContentProps> = ({
+    nextPosition ,
+    exposure,
+    tradePrice,
+    balances
+}) => {
+    if (balances.quote.eq(0)) return <Content>-</Content>
+    else if (exposure && tradePrice) {
+        return (
+            <Content>
+                <SPrevious>
+                    {getPositionText(balances.base)}
+                </SPrevious>
+                {getPositionText(nextPosition.base)}
+            </Content>
+        )
+    } // else
+    return (
+        <Content>
+            {getPositionText(balances.base)}
+        </Content>
+    )
+}
+
+const Leverage:React.FC<ContentProps & { fairPrice: BigNumber }> = ({
+    nextPosition,
+    exposure,
+    tradePrice,
+    fairPrice,
+    balances
+}) => {
+    const l = calcLeverage(balances.quote, balances.base, fairPrice);
+    if (balances.quote.eq(0)) return <Content>-</Content>
+    else if (exposure && tradePrice) {
+        return (
+            <Content>
+                <SPrevious>
+                    {`${l.toFixed(2)}x`}
+                </SPrevious>
+                {`${calcLeverage(nextPosition.quote, nextPosition.base, new BigNumber(tradePrice)).toFixed(2)}x`}
+            </Content>
+        )
+    } // else
+    return (
+        <Content>
+            {`${l.toPrecision(3)}x`}
+        </Content>
+    )
+
+}
+
 interface IProps {
     balance: UserBalance;
-    price: BigNumber;
+    fairPrice: BigNumber;
     maxLeverage: BigNumber;
     baseTicker: string;
     quoteTicker: string;
 }
 
-const PositionDetails: React.FC<IProps> = ({ balance, price, baseTicker, quoteTicker }: IProps) => {
+const PositionDetails: React.FC<IProps> = ({
+    balance,
+    fairPrice,
+    baseTicker,
+    quoteTicker
+}: IProps) => {
+    const { order } = useContext(OrderContext);
     const [currency, setCurrency] = useState(0); // 0 quoted in base
-    const { base, quote } = balance;
-    const l = calcLeverage(quote, base, price);
+    const { base } = balance;
     return (
         <div className="flex">
             <AccountDetails>
                 <SectionContainer className="w-1/2">
                     <SSection label={'Side'}>
-                        {!balance.quote.eq(0) ? (
-                            <Content>
-                                {/* <SPrevious /> */}
-                                {balance.base.lt(0) ? 'SHORT' : 'LONG'}
-                            </Content>
-                        ) : (
-                            `-`
-                        )}
+                        <Position
+                            balances={balance}
+                            nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
+                            tradePrice={order?.price ?? 0}
+                            exposure={order?.exposure ?? 0}
+                        />
                     </SSection>
                     <SSection label={'Leverage'}>
-                        {!balance.quote.eq(0) ? (
-                            <Content>
-                                {/* <SPrevious /> */}
-                                {`${l.toPrecision(3)}x`}
-                            </Content>
-                        ) : (
-                            `-`
-                        )}
+                        <Leverage
+                            balances={balance}
+                            nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
+                            tradePrice={order?.price ?? 0}
+                            fairPrice={fairPrice}
+                            exposure={order?.exposure ?? 0}
+                        />
                     </SSection>
                 </SectionContainer>
                 <SectionContainer className="w-1/2">
@@ -127,7 +197,7 @@ const PositionDetails: React.FC<IProps> = ({ balance, price, baseTicker, quoteTi
                             <Content>
                                 {currency === 0
                                     ? `${base.abs().toNumber()} ${baseTicker}`
-                                    : `${toApproxCurrency(base.abs().times(price))} ${quoteTicker}`}
+                                    : `${toApproxCurrency(base.abs().times(fairPrice))} ${quoteTicker}`}
                                 <SSlideSelect
                                     onClick={(index, _e) => {
                                         setCurrency(index);
@@ -311,7 +381,7 @@ type TSProps = {
 export default styled(({ selectedTracer, className }: TSProps) => {
     const [tab, setTab] = useState(0);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const price = selectedTracer?.getOraclePrice() ?? defaults.oraclePrice;
+    const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
     const {
         omeState,
         omeDispatch = () => {
@@ -327,7 +397,7 @@ export default styled(({ selectedTracer, className }: TSProps) => {
                 return (
                     <PositionDetails
                         balance={balances}
-                        price={price}
+                        fairPrice={fairPrice}
                         maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                         baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
                         quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}

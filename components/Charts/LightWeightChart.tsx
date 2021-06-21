@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { CandleData } from 'types/TracerTypes';
+import styled from 'styled-components';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const ChartWrapper = dynamic(import('./LightWeightWrapper'), { ssr: false });
 // @ts-ignore
@@ -60,9 +62,19 @@ const setGraphOptions: () => Record<string, unknown> = () => {
     return data;
 };
 
+const SLoadingOutlined = styled(LoadingOutlined)`
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 16px;
+    height: 16px;
+`
+
 const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
-
     useEffect(() => {
         //TODO: Fetch data
         setGraphData({
@@ -75,8 +87,19 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
         });
     }, []);
 
-    if (!graphData) {
-        return <p>Loading...</p>;
+    useMemo(() => {
+        setGraphData({
+            ...setGraphOptions(),
+            candlestickSeries: [
+                {
+                    data: candleData,
+                },
+            ],
+        });
+    }, [candleData])
+
+    if (!graphData || !(graphData?.candlestickSeries as any[])?.length) {
+        return <SLoadingOutlined />
     } else {
         return (
             <ChartWrapper

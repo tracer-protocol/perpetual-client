@@ -10,6 +10,7 @@ const GraphWrap = styled.div`
     margin-bottom: 20px;
     padding: 20px;
     max-height: 50vh;
+    position: relative;
 `;
 
 export default (() => {

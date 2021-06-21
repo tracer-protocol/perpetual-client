@@ -117,11 +117,11 @@ input {
 }
 
 /** GLOBAL TABLE STYLES */
-.bid {
+.bid, .green {
     color: #00ff08;
 }
 
-.ask {
+.ask, .red {
     color: #f15025;
 }
 
