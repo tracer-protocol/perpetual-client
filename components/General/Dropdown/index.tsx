@@ -64,7 +64,7 @@ type DProps = {
     body: React.ReactNode;
 };
 export const Dropdown: React.FC<DProps> = styled(({ className, defaultOpen, header, body, defaultHeight }: DProps) => {
-    const [open, setOpen] = useState(defaultOpen);
+    const [open, setOpen] = useState(!!defaultOpen);
     const main = useRef(null);
     const _header = useRef(null);
     const _body = useRef(null);
