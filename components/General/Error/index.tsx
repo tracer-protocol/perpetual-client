@@ -82,14 +82,14 @@ const SInfoCircleOutlined = styled(InfoCircleOutlined)`
 type EProps = {
     className?: string;
     error: ErrorKey;
-    context?: 'orders' | 'margin';
+    context: 'orders' | 'margin';
     message?: string; // this will override the rror message
 };
 
 const Error: React.FC<EProps> = styled(({ className, error, message, context }: EProps) => {
     const error_ =
         error !== 'NO_ERROR'
-            ? Errors[context ?? 'orders'][error]
+            ? Errors[context][error]
             : {
                   message: '',
                   moreInfo: '',
