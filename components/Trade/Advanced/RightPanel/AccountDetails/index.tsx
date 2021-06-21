@@ -270,7 +270,6 @@ const OpenOrders: React.FC<{
               })
             : console.error('Failed to cancel order: Handle transaction not defined');
     };
-    console.log(userOrders);
     return (
         <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
             <tbody>

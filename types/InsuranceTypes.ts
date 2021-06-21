@@ -34,5 +34,5 @@ export type InsurancePoolInfo = {
     apy: BigNumber;
     buffer: BigNumber;
     iPoolTokenURL: string;
-    iPoolTokenName: string
+    iPoolTokenName: string;
 };
