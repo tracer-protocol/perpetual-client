@@ -49,16 +49,16 @@ export const useTracerOrders: (web3: Web3 | undefined, tracer: Tracer | undefine
     const [contract, setContract] = useState<TracerType>();
 
     useEffect(() => {
-        if (web3 && tracer) {
+        if (web3 && tracer?.address) {
             setContract(new web3.eth.Contract(tracerJSON as AbiItem[], tracer.address) as unknown as TracerType);
         }
     }, [web3, tracer]);
     const [openOrders, setOpenOrders] = useState<Record<string, OpenOrder[]>>({ longOrders: [], shortOrders: [] });
 
     const getOpenOrders: () => Promise<Record<string, OpenOrder[]>> = async () => {
-        if (tracer) {
+        if (tracer?.address) {
             // does nothing for now
-            await getOrders(tracer.address);
+            await getOrders(tracer?.address);
         }
         return {
             shortOrders: [],

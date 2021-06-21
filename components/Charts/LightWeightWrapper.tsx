@@ -217,7 +217,9 @@ class ChartWrapper extends React.Component<Props> {
 
     handleTimeRange = () => {
         const { from, to } = this.props;
-        from && to && this.chart.timeScale().setVisibleRange({ from, to });
+        if (from && to && this.chart) {
+            this.chart.timeScale().setVisibleRange({ from, to });
+        }
     };
 
     handleLinearInterpolation = (data: any, candleTime: any) => {
