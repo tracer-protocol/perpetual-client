@@ -14,7 +14,7 @@ const STradingTable = styled(TradingTable)`
         overflow-y: scroll;
         max-height: 18vh;
     }
-`
+`;
 
 const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) => {
     return (

@@ -167,7 +167,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     <AdvancedOrderButton />
                 </div>
             </Box>
-            <SError error={order?.error ?? 'NO_ERROR'} account={account} context={"orders"} />
+            <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
         </>
     );
 })`

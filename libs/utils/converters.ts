@@ -50,12 +50,15 @@ export const toApproxCurrency: (num_: BigNumber | number, precision?: number) =>
     });
 };
 
-
-export const getPositionText = (balance: BigNumber) => {
-    if (balance.eq(0)) return 'NONE'
-    else if (balance.lt(0)) return 'SHORT'
-    else return 'LONG'
-}
+export const getPositionText: (balance: BigNumber) => 'NONE' | 'SHORT' | 'LONG' = (balance) => {
+    if (balance.eq(0)) {
+        return 'NONE';
+    } else if (balance.lt(0)) {
+        return 'SHORT';
+    } else {
+        return 'LONG';
+    }
+};
 
 // order prices are in cents * 1000
 // so conversion is fromCents(price / (100 * 1000))

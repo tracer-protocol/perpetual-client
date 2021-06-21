@@ -17,10 +17,11 @@ export const TradingTable = styled.table`
         padding-bottom: 5px;
     }
 
-    thead, tbody tr {
+    thead,
+    tbody tr {
         display: table;
         width: 100%;
-        table-layout: fixed;/* even columns width , fix width of table too*/
+        table-layout: fixed; /* even columns width , fix width of table too*/
     }
 
     tbody {

@@ -41,20 +41,20 @@ const OrderBook: React.FC<OProps> = ({ askOrders, bidOrders }: OProps) => {
         const setter = (_e: any) => {
             setHasScrolled(true);
             tableBody?.removeEventListener('scroll', setter);
-        }
+        };
         tableBody?.addEventListener('scroll', setter);
-    }, [])
+    }, []);
 
     useEffect(() => {
         const tableBody = document.getElementById('trading-table-body');
         if (tableBody && !hasScrolled) {
-            const middle = document.getElementById('market-middle')
+            const middle = document.getElementById('market-middle');
             if (middle) {
-                const scrollTo = middle.offsetTop - (tableBody.offsetHeight / 2) - ROW_HEIGHT ;
+                const scrollTo = middle.offsetTop - tableBody.offsetHeight / 2 - ROW_HEIGHT;
                 tableBody.scrollTo(0, scrollTo);
             }
         }
-    }, [askOrders, bidOrders])
+    }, [askOrders, bidOrders]);
     return (
         <TradingTable>
             <thead>
@@ -76,6 +76,6 @@ const OrderBook: React.FC<OProps> = ({ askOrders, bidOrders }: OProps) => {
             </tbody>
         </TradingTable>
     );
-}
+};
 
 export default OrderBook;
