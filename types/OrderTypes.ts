@@ -18,7 +18,7 @@ export type OMEOrder = {
     // this type is for the ui book
     cumulative: number;
     quantity: number;
-    price: BigNumber;
+    price: number;
     maxCumulative?: number;
 };
 
