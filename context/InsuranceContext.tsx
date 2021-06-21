@@ -195,10 +195,10 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             const liquidity = res[3] ? new BigNumber(Web3.utils.fromWei(res[3])) : defaults.liquidity;
             const target = res[2] ? new BigNumber(Web3.utils.fromWei(res[2])) : defaults.target;
             const health = liquidity.div(target);
-            let splitId = marketId.split("/")
-            const iPoolTokenName = `i${splitId[0]}-${splitId[1]}`
-            const iTokenAddress = await contract?.methods.token().call()
-            const iTokenURL = `${config?.previewUrl}/address/${iTokenAddress}`
+            const splitId = marketId.split('/');
+            const iPoolTokenName = `i${splitId[0]}-${splitId[1]}`;
+            const iTokenAddress = await contract?.methods.token().call();
+            const iTokenURL = `${config?.previewUrl}/address/${iTokenAddress}`;
             // const etherscanLink = `https://${network}.etherscan.io/address/${iTokenAddress}`
             dispatch({
                 type: 'setAll',
@@ -213,7 +213,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     apy: defaults.apy,
                     buffer: res[4] ? new BigNumber(Web3.utils.fromWei(res[4])) : defaults.buffer,
                     iPoolTokenURL: iTokenURL,
-                    iPoolTokenName: iPoolTokenName
+                    iPoolTokenName: iPoolTokenName,
                 },
             });
         } // else
