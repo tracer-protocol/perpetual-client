@@ -149,21 +149,21 @@ const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, pr
     } else if (!order?.exposure || !order.price) {
         return (
             <span>
-                ${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(3)}%
+                ${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toFixed(3)}%
             </span>
         );
     } else {
         return (
             <span>
                 <Previous>
-                    {`${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(3)}%`}
+                    {`${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toFixed(3)}%`}
                 </Previous>
                 {`${calcAvailableMarginPercent(
                     order?.nextPosition.quote ?? balances.quote,
                     order?.nextPosition.base ?? balances.base,
                     new BigNumber(order.price),
                     maxLeverage,
-                ).toPrecision(3)}
+                ).toFixed(3)}
                 %`}
             </span>
         );
@@ -239,6 +239,7 @@ const AccountPanel: React.FC<{
                     <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
                 </h3>
                 <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} price={price} />
+               
             </Item>
             <DepositButtons>
                 <SButton
@@ -259,6 +260,7 @@ const AccountPanel: React.FC<{
                 maxLeverage={maxLeverage}
                 price={price}
             />
+            {/*TODO: Add calculator*/}
             {/*<CalculatorModal*/}
             {/*    display={calculator}*/}
             {/*    close={() => showCalculator(false)}*/}

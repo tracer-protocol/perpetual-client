@@ -239,7 +239,7 @@ const Fills: React.FC<{
     filledOrders: FilledOrder[];
 }> = React.memo(({ filledOrders }) => {
     return (
-        <STable headings={['Time', 'Side', 'Amount', 'Price', 'Total/Fee']}>
+        <STable headings={['Time', 'Side', 'Price', 'Amount']}>
             <tbody>
                 {filledOrders.map((order, index) => {
                     const now = Date.now();
@@ -250,9 +250,10 @@ const Fills: React.FC<{
                             <TData className={!!order.position ? 'ask' : 'bid'}>
                                 {!!order.position ? 'Short' : 'Long'}
                             </TData>
-                            <TData>{order.amount.toNumber()}</TData>
                             <TData>{toApproxCurrency(price)}</TData>
-                            <TData>{toApproxCurrency(order.amount.times(price))}/$0</TData>
+                            <TData>{order.amount.toNumber()}</TData>
+                            {/*TODO: Fee value*/}
+                            {/*<TData>{toApproxCurrency(order.amount.times(price))}/$0</TData>*/}
                         </TRow>
                     );
                 })}

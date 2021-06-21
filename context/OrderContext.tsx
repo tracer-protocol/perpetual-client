@@ -47,7 +47,7 @@ const checkErrors: (
         // ignore if on advanced
         // user has no web3 wallet balance
         return 'NO_WALLET_BALANCE';
-    } else if (balances?.quote.eq(0)) {
+    } else if (balances?.quote.eq(0) && order.exposure && order.price) {
         // user has no tcr margin balance
         return 'NO_MARGIN_BALANCE';
     } else if (
