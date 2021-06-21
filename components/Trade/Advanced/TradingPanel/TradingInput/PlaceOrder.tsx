@@ -130,11 +130,20 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                         ) : null}
                         {exposure && price ? <Approx>{toApproxCurrency(exposure * price * leverage)}</Approx> : null}
                     </Details>
-                    <Price
-                        orderDispatch={orderDispatch}
-                        selectedTracer={selectedTracer}
-                        price={order?.price ?? defaults.price}
-                    />
+
+                    {/*Dont display price select if it is a market order*/}
+                    {order?.orderType !== 1 ? (
+                        <>
+                            {/* Price select */}
+                            <Price
+                                orderDispatch={orderDispatch}
+                                selectedTracer={selectedTracer}
+                                price={order?.price ?? defaults.price}
+                            />
+                        </>
+                    ) : (
+                        <></>
+                    )}
                 </div>
 
                 <Leverage

@@ -60,6 +60,13 @@ export const Button = styled.button`
         color: #3da8f5;
     }
 
+    &.disabled {
+        &:hover {
+            color: #3da8f5;
+            background: none;
+        }
+    }
+
     &:disabled,
     &[disabled] {
         opacity: 0.8;
