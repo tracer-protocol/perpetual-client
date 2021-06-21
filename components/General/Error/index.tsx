@@ -40,6 +40,10 @@ export const OrderErrors: Record<string, ErrorBox> = {
         message:
             'Our liquidators are required to pay 6 times the liquidation gas costs to liquidate your account. As a result we encourage you to deposit atleast $160 as this will ensure you will be able to place a trade without instantly being liquidated',
     },
+    INVALID_INPUTS: {
+        name: 'Invalid Inputs',
+        message: 'Order is invalid more input required'
+    },
     INVALID_ORDER: {
         name: 'Invalid Order',
         message: 'Order will put you into a liquidateable state',

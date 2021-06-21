@@ -6,7 +6,7 @@ import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
 import styled from 'styled-components';
 
-interface PTDProps {
+interface MTDProps {
     balances: UserBalance;
     nextPosition: {
         quote: BigNumber;
@@ -19,8 +19,8 @@ interface PTDProps {
     tradePrice: BigNumber;
     className?: string;
 }
-const PostTradeDetails: React.FC<PTDProps> = styled(
-    ({ balances, nextPosition, exposure, fairPrice, maxLeverage, slippage, tradePrice, className }: PTDProps) => {
+export const MarketTradeDetails: React.FC<MTDProps> = styled(
+    ({ balances, nextPosition, exposure, fairPrice, maxLeverage, slippage, tradePrice, className }: MTDProps) => {
         return (
             <HiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
                 <h3>Order Summary</h3>
@@ -52,4 +52,44 @@ const PostTradeDetails: React.FC<PTDProps> = styled(
     }
 `;
 
-export default PostTradeDetails;
+interface LTDProps{
+    balances: UserBalance;
+    nextPosition: {
+        quote: BigNumber;
+        base: BigNumber;
+    };
+    exposure: BigNumber;
+    fairPrice: BigNumber;
+    maxLeverage: BigNumber; 
+    orderPrice: number;
+    className?: string;
+}
+export const LimitTradeDetails: React.FC<LTDProps> = styled(
+    ({ balances, nextPosition, exposure, fairPrice, maxLeverage, orderPrice, className }: LTDProps) => {
+        return (
+            <HiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
+                <h3>Order Summary</h3>
+                <Section label={'Liquidation Price'}>
+                    <Previous>
+                        {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
+                    </Previous>
+                    {toApproxCurrency(
+                        calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage),
+                    )}
+                </Section>
+                <Section label={'Trade Price'}>{toApproxCurrency(orderPrice)}</Section>
+            </HiddenExpand>
+        );
+    },
+)`
+    margin: 10px;
+    background: #002886;
+    border-radius: 10px;
+
+    h3 {
+        font-size: 16px;
+        letter-spacing: -0.32px;
+        color: #ffffff;
+        margin-bottom: 20px;
+    }
+`;

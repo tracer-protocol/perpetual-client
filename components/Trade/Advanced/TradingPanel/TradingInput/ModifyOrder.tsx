@@ -8,7 +8,7 @@ import { Option } from '@components/Buttons/SlideSelect';
 import Error from '@components/General/Error';
 import { Closure, Leverage } from './Inputs';
 import { OrderAction, orderDefaults, OrderState } from '@context/OrderContext';
-import PostTradeDetails from './PostTradeDetails';
+import { MarketTradeDetails } from './PostTradeDetails';
 import { BigNumber } from 'bignumber.js';
 
 type SProps = {
@@ -120,7 +120,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     )}
                 </div>
 
-                <PostTradeDetails
+                <MarketTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                     balances={selectedTracer?.getBalance() ?? defaults.balances}
                     exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}

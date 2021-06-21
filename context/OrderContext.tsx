@@ -149,7 +149,7 @@ export type OrderAction =
     | { type: 'setBestPrice' }
     | { type: 'setMaxClosure' }
     | { type: 'setSlippage'; value: number }
-    | { type: 'setMarketTradePrice'; value: number }
+    | { type: 'setMarketTradePrice'; value: BigNumber }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
     | {
@@ -206,7 +206,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setPrice':
                 return { ...state, price: action.value };
             case 'setOrderType':
-                return { ...state, orderType: action.value };
+                return { 
+                    ...state, 
+                    orderType: action.value,
+                };
             case 'setAdjustType':
                 return { ...state, adjustType: action.value };
             case 'setAdjustSummary': {
@@ -225,7 +228,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 const fullClosure = selectedTracer?.getBalance().base.abs();
                 return { ...state, exposure: fullClosure };
             case 'setBestPrice':
-                const price = state.position === LONG ? omeState?.maxAndMins?.minBid : omeState?.maxAndMins?.maxAsk;
+                const price = state.position === LONG ? omeState?.maxAndMins?.minAsk : omeState?.maxAndMins?.maxBid;
                 if (!price) {
                     // if there is no price set error to no open orders
                     return { ...state, error: 'NO_ORDERS' };

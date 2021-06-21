@@ -6,7 +6,6 @@ import { TracerContext } from './TracerContext';
 import { Web3Context } from './Web3Context';
 import { FilledOrder, OMEOrder as FlattenedOMEOrder } from 'types/OrderTypes';
 import Web3 from 'web3';
-import BigNumber from 'bignumber.js';
 // @ts-ignore
 import { Callback } from 'web3/types';
 import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
@@ -25,7 +24,7 @@ export const parseOrders: (res: any) => Orders = (res) => {
         const flattenedOrders = sections.map((orders: any) =>
             orders.reduce(
                 (prev: any, order: { amount_left: number; price: number }) => ({
-                    price: new BigNumber(Web3.utils.fromWei(order.price.toString())), // price remains the same,
+                    price: parseFloat(Web3.utils.fromWei(order.price.toString())), // price remains the same,
                     quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.amount_left.toString())),
                 }),
                 {
@@ -136,10 +135,11 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             const res = await getOrders(selectedTracer?.address);
             if (isMounted.current) {
                 const parsedOrders = parseOrders(res);
-                const minBid = parsedOrders.askOrders[0]?.price ?? 0;
-                const minAsk = parsedOrders.bidOrders[0]?.price ?? 0;
+                const minAsk = parsedOrders.askOrders[0]?.price ?? 0;
                 const maxAsk = parsedOrders.askOrders.slice(-1)[0]?.price ?? 0;
-                const maxBid = parsedOrders.bidOrders.slice(-1)[0]?.price ?? 0;
+                // swapped for bids since they are descending
+                const minBid = parsedOrders.bidOrders.slice(-1)[0]?.price ?? 0;
+                const maxBid = parsedOrders.bidOrders[0]?.price ?? 0;
                 omeDispatch({ type: 'setOrders', orders: parsedOrders });
                 omeDispatch({
                     type: 'setBestPrices',
