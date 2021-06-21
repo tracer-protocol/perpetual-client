@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Table, TRow, TData } from '@components/General/Table';
 import { calcStatus, timeAgo, toApproxCurrency, getPositionText } from '@libs/utils';
 import Web3 from 'web3';
-import { OMEOrder } from '@tracer-protocol/tracer-utils';
+import { calcLiquidationPrice, OMEOrder } from '@tracer-protocol/tracer-utils';
 import { FilledOrder } from 'types/OrderTypes';
 import { calcLeverage } from '@tracer-protocol/tracer-utils';
 import { Button, Previous, Section } from '@components/General';
@@ -19,19 +19,10 @@ import CustomSubNav from './CustomSubNav';
 import { OrderContext } from '@context/OrderContext';
 
 const AccountDetails = styled.div`
-    width: 40%;
+    width: 100%%;
     display: flex;
     flex-wrap: wrap;
 `;
-const PositionGraph = styled.div`
-    width: 40%;
-    padding: 12px;
-`;
-const GraphLegend = styled.div`
-    width: 20%;
-    padding: 12px;
-`;
-
 const SPrevious = styled(Previous)`
     &:after {
         content: '>>';
@@ -39,10 +30,17 @@ const SPrevious = styled(Previous)`
 `;
 
 const SSection = styled(Section)`
-    display: block;
+    display: inline-block;
     padding: 5px 10px;
     margin: 0;
     color: #005ea4;
+    min-height: 60px;
+    border-bottom: 1px solid #002886;
+
+    &.border-right {
+        border-right: 1px solid #002886;
+    }
+
     > .label {
         display: block;
         font-size: 12px;
@@ -65,11 +63,15 @@ const SectionContainer = styled.div`
 `;
 
 const SSlideSelect = styled(SlideSelect)`
-    height: 28px;
-    width: 150px;
-    margin-left: 0;
-    margin-top: 0.25rem;
+    height: 25px;
+    width: 100px;
+    font-size: 8px;
+    margin-right: 0;
 `;
+
+const SOption = styled(Option)`
+    font-size: 13px;
+`
 
 const Content = styled.div`
     font-size: 18px;
@@ -123,79 +125,89 @@ const Leverage: React.FC<ContentProps & { fairPrice: BigNumber }> = ({
 };
 
 interface IProps {
-    balance: UserBalance;
+    balances: UserBalance;
     fairPrice: BigNumber;
     maxLeverage: BigNumber;
     baseTicker: string;
     quoteTicker: string;
 }
 
-const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, baseTicker, quoteTicker }: IProps) => {
+const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, quoteTicker, maxLeverage }: IProps) => {
     const { order } = useContext(OrderContext);
     const [currency, setCurrency] = useState(0); // 0 quoted in base
-    const { base } = balance;
+    const { base } = balances;
     return (
-        <div className="flex">
-            <AccountDetails>
-                <SectionContainer className="w-1/2">
-                    <SSection label={'Side'}>
-                        <Position
-                            balances={balance}
-                            nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
-                            tradePrice={order?.price ?? 0}
-                            exposure={order?.exposure ?? 0}
-                        />
-                    </SSection>
-                    <SSection label={'Leverage'}>
-                        <Leverage
-                            balances={balance}
-                            nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
-                            tradePrice={order?.price ?? 0}
-                            fairPrice={fairPrice}
-                            exposure={order?.exposure ?? 0}
-                        />
-                    </SSection>
-                </SectionContainer>
-                <SectionContainer className="w-1/2">
-                    <SSection
-                        label={'Unrealised PnL'}
-                        tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
-                    >
-                        {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
-                    </SSection>
-                    <SSection
-                        label={'Realised PnL'}
-                        tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
-                    >
-                        {!balance.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
-                    </SSection>
-                </SectionContainer>
-                <SectionContainer className="exposure">
-                    <SSection label={'Exposure'} className="w-full">
-                        {!balance.quote.eq(0) ? (
-                            <Content>
-                                {currency === 0
-                                    ? `${base.abs().toNumber()} ${baseTicker}`
-                                    : `${toApproxCurrency(base.abs().times(fairPrice))} ${quoteTicker}`}
-                                <SSlideSelect
-                                    onClick={(index, _e) => {
-                                        setCurrency(index);
-                                    }}
-                                    value={currency}
-                                >
-                                    <Option>{baseTicker}</Option>
-                                    <Option>{quoteTicker}</Option>
-                                </SSlideSelect>
-                            </Content>
-                        ) : (
-                            `-`
-                        )}
-                    </SSection>
-                </SectionContainer>
-            </AccountDetails>
-            <PositionGraph />
-            <GraphLegend />
-        </div>
+        <AccountDetails>
+            <SectionContainer className="w-1/4 inline-block">
+                <SSection label={'Side'}>
+                    <Position
+                        balances={balances}
+                        nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
+                        tradePrice={order?.price ?? 0}
+                        exposure={order?.exposure ?? 0}
+                    />
+                </SSection>
+                <SSection label={'Exposure'} className="w-full">
+                    {!balances.quote.eq(0) ? (
+                        <Content className="flex">
+                            {currency === 0
+                                ? `${base.abs().toNumber()} ${baseTicker}`
+                                : `${toApproxCurrency(base.abs().times(fairPrice))} ${quoteTicker}`}
+                            <SSlideSelect
+                                onClick={(index, _e) => {
+                                    setCurrency(index);
+                                }}
+                                value={currency}
+                            >
+                                <SOption>{baseTicker}</SOption>
+                                <SOption>{quoteTicker}</SOption>
+                            </SSlideSelect>
+                        </Content>
+                    ) : (
+                        `-`
+                    )}
+                </SSection>
+                <SSection label={'Leverage'}>
+                    <Leverage
+                        balances={balances}
+                        nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
+                        tradePrice={order?.price ?? 0}
+                        fairPrice={fairPrice}
+                        exposure={order?.exposure ?? 0}
+                    />
+                </SSection>
+            </SectionContainer>
+            <SectionContainer className="w-3/4 inline-block">
+                <SSection
+                    label={'Liquidation Price'}
+                    className="w-1/2 border-right"
+                >
+                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(
+                        calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage)
+                    )}</Content> : `-`}
+                </SSection>
+                <SSection
+                    label={'Unrealised PnL'}
+                    className="w-1/2"
+                    tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
+                >
+                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
+                </SSection>
+                <SSection
+                    label={'Mark Price'}
+                    className="w-1/2 border-right"
+                >
+                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
+                </SSection>
+                <SSection
+                    label={'Realised PnL'}
+                    className="w-1/2"
+                    tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
+                >
+                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
+                </SSection>
+            </SectionContainer>
+        </AccountDetails>
     );
 };
 
@@ -336,7 +348,7 @@ export default styled(({ selectedTracer, className }: TSProps) => {
             case 0:
                 return (
                     <PositionDetails
-                        balance={balances}
+                        balances={balances}
                         fairPrice={fairPrice}
                         maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                         baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
