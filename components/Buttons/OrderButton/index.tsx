@@ -13,6 +13,13 @@ const ParentDisable = styled(Button)`
     .button-disabled & {
         cursor: not-allowed;
         opacity: 0.5;
+        background: none;
+        color: #3da8f5;
+
+        &:hover {
+            color: #3da8f5;
+            background: none;
+        }
     }
 `;
 export const AdvancedOrderButton: React.FC = styled(({ className }) => (
