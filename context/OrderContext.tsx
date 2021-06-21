@@ -317,12 +317,13 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     useEffect(() => {
         const balances = selectedTracer?.getBalance();
-        let totalExposure = order.exposure * order.leverage;
+        const totalExposure = order.exposure * order.leverage;
+        let newBase = balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base; // add how much exposure you get
+        let newQuote = balances?.quote.minus(totalExposure * order.price) ?? tracerDefaults.balances.quote; // subtract how much it costs
         if (order.position === SHORT) {
-            totalExposure = totalExposure * -1; // negate total exposure if short
+            newBase = balances?.base.minus(totalExposure) ?? tracerDefaults.balances.base; // add how much exposure you get
+            newQuote = balances?.quote.plus(totalExposure * order.price) ?? tracerDefaults.balances.quote; // subtract how much it costs
         }
-        const newQuote = balances?.quote.minus(totalExposure * order.price) ?? tracerDefaults.balances.quote; // subtract how much it costs
-        const newBase = balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base; // add how much exposure you get
         orderDispatch({
             type: 'setNextPosition',
             nextPosition: {

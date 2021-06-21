@@ -15,7 +15,7 @@ import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { OrderState } from '@context/OrderContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
-import { UserBalance } from 'types/General';
+import { UserBalance } from 'types';
 // import CalculatorModal from './Calculator';
 
 const SBox = styled(Box)`
@@ -54,6 +54,10 @@ const WalletConnect: React.FC = () => {
         </SBox>
     );
 };
+
+const NoBalance = styled.span`
+    color: #3da8f5;
+`
 
 const Item = styled.div`
     width: 100%;
@@ -113,18 +117,17 @@ const SubText = styled.span`
     display: inline !important;
 `;
 
-
 type InfoProps = {
-    order: OrderState | undefined,
-    balances: UserBalance,
-    maxLeverage: BigNumber,
-    price: BigNumber
-}
+    order: OrderState | undefined;
+    balances: UserBalance;
+    maxLeverage: BigNumber;
+    price: BigNumber;
+};
 const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, price }) => {
     if (balances.quote.eq(0)) {
-        return <span>-</span>
+        return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
-        return <span>{toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))}</span>
+        return <span>{toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))}</span>;
     } else {
         return (
             <span>
@@ -137,36 +140,35 @@ const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, price 
                     ),
                 )}
             </span>
-        )
+        );
     }
-}
+};
 const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, price }) => {
     if (balances.quote.eq(0)) {
-        return <span>-</span>
+        return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
         return (
             <span>
-                ${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(
-                    3,
-                )}%
+                ${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(3)}%
             </span>
-        )
+        );
     } else {
         return (
             <span>
                 <Previous>
-                    {`${calcAvailableMarginPercent(
-                        balances.quote,
-                        balances.base,
-                        price,
-                        maxLeverage,
-                    ).toPrecision(3)}%`}
+                    {`${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(3)}%`}
                 </Previous>
-                {`${calcAvailableMarginPercent(newQuote, newBase, price, maxLeverage).toPrecision(3)}%`}
+                {`${calcAvailableMarginPercent(
+                    order?.nextPosition.quote ?? balances.quote,
+                    order?.nextPosition.base ?? balances.base,
+                    new BigNumber(order.price),
+                    maxLeverage,
+                ).toPrecision(3)}
+                %`}
             </span>
-        )
+        );
     }
-}
+};
 
 const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
@@ -177,12 +179,8 @@ const AccountPanel: React.FC<{
     const [deposit, setDeposit] = useState(false);
     // const [calculator, showCalculator] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const price = selectedTracer?.getOraclePrice() ?? defaults.oraclePrice;
+    const price = selectedTracer?.getFairPrice() ?? defaults.oraclePrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
-    // @ts-ignore
-    const newBase = order?.nextPosition.base ?? balances.base;
-    // @ts-ignore
-    const newQuote = order?.nextPosition.quote ?? balances.quote;
 
     const handleClick = (popup: boolean, deposit: boolean) => {
         setPopup(popup);
@@ -190,7 +188,7 @@ const AccountPanel: React.FC<{
     };
 
     if (account === '') {
-        return (<WalletConnect />)
+        return <WalletConnect />;
     }
     return (
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
@@ -206,7 +204,10 @@ const AccountPanel: React.FC<{
                         Total Margin
                     </TooltipSelector>
                 </h3>
-                <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}</span>
+                {balances.quote.eq(0) 
+                    ? <NoBalance>-</NoBalance>
+                    : <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}</span>
+                }
             </Item>
             <Item>
                 <h3>
@@ -222,8 +223,8 @@ const AccountPanel: React.FC<{
                                             balances.base,
                                             price,
                                             maxLeverage,
-                                        ).toNumber() ?? NaN,
-                                maxLeverage: maxLeverage.toNumber() ?? NaN,
+                                        ).toNumber() ?? 0,
+                                maxLeverage: maxLeverage.toNumber() ?? 0,
                             },
                         }}
                     >
@@ -231,23 +232,13 @@ const AccountPanel: React.FC<{
                     </TooltipSelector>
                     <SubText>{` @${maxLeverage.toNumber()}X Maximum Leverage`}</SubText>
                 </h3>
-                <BuyingPower 
-                    order={order}
-                    balances={balances}
-                    maxLeverage={maxLeverage}
-                    price={price}
-                />
+                <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} price={price} />
             </Item>
             <Item>
                 <h3>
                     <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
                 </h3>
-                <AvailableMargin
-                    order={order}
-                    balances={balances}
-                    maxLeverage={maxLeverage}
-                    price={price}
-                />
+                <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} price={price} />
             </Item>
             <DepositButtons>
                 <SButton

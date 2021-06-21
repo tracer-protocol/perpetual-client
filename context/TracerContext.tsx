@@ -115,7 +115,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         const amount = Web3.utils.toWei((exposure * leverage).toString()) ?? 0;
         const now = Math.floor(Date.now() / 1000); // timestamp in seconds
         const fourDays = 345600; // four days in seconds
-        const fiveMins = 5*60; // five minutes in seconds
+        const fiveMins = 5 * 60; // five minutes in seconds
         const makes: OrderData[] = [
             {
                 amount: amount,
