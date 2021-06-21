@@ -71,7 +71,7 @@ const SSlideSelect = styled(SlideSelect)`
 
 const SOption = styled(Option)`
     font-size: 13px;
-`
+`;
 
 const Content = styled.div`
     font-size: 18px;
@@ -178,13 +178,16 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                 </SSection>
             </SectionContainer>
             <SectionContainer className="w-3/4 inline-block">
-                <SSection
-                    label={'Liquidation Price'}
-                    className="w-1/2 border-right"
-                >
-                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(
-                        calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage)
-                    )}</Content> : `-`}
+                <SSection label={'Liquidation Price'} className="w-1/2 border-right">
+                    {!balances.quote.eq(0) ? (
+                        <Content>
+                            {toApproxCurrency(
+                                calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage),
+                            )}
+                        </Content>
+                    ) : (
+                        `-`
+                    )}
                 </SSection>
                 <SSection
                     label={'Unrealised PnL'}
@@ -193,10 +196,7 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                 >
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                 </SSection>
-                <SSection
-                    label={'Mark Price'}
-                    className="w-1/2 border-right"
-                >
+                <SSection label={'Mark Price'} className="w-1/2 border-right">
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
                 </SSection>
                 <SSection
