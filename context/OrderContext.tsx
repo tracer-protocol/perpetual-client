@@ -6,7 +6,7 @@ import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
 import { OMEOrder } from 'types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
-import { defaults as tracerDefaults } from '@libs/Tracer';
+import { defaults, defaults as tracerDefaults } from '@libs/Tracer';
 import { ErrorKey } from '@components/General/Error';
 
 // Position types
@@ -211,6 +211,17 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     orderType: action.value,
                 };
             case 'setAdjustType':
+                const base = selectedTracer?.getBalance().base ?? defaults.balances.base;
+                const short = base.lt(0);
+                const long = base.gt(0);
+                if (action.value === CLOSE) {
+                    if (short) {
+                        return { ...state, adjustType: action.value, position: LONG };
+                    }
+                    if (long) {
+                        return { ...state, adjustType: action.value, position: SHORT };
+                    }
+                }
                 return { ...state, adjustType: action.value };
             case 'setAdjustSummary': {
                 return { ...state, adjustSummary: action.adjustSummary };
