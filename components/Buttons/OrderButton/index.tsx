@@ -80,9 +80,9 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
         }
     };
 
-    // if there is NO_ERROR and exposure
+    // if there is NO_ERROR
     //  and
-    //      price has been inputted for limit
+    //      exposure and price has been inputted for limit
     //      or exposure has been entered for market
     if (
         order?.error === 'NO_ERROR' &&
