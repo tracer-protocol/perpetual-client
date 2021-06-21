@@ -15,6 +15,7 @@ import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { OrderState } from '@context/OrderContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
+import { UserBalance } from 'types/General';
 // import CalculatorModal from './Calculator';
 
 const SBox = styled(Box)`
@@ -112,6 +113,61 @@ const SubText = styled.span`
     display: inline !important;
 `;
 
+
+type InfoProps = {
+    order: OrderState | undefined,
+    balances: UserBalance,
+    maxLeverage: BigNumber,
+    price: BigNumber
+}
+const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, price }) => {
+    if (balances.quote.eq(0)) {
+        return <span>-</span>
+    } else if (!order?.exposure || !order.price) {
+        return <span>{toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))}</span>
+    } else {
+        return (
+            <span>
+                <Previous>
+                    {toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))}
+                </Previous>
+                {toApproxCurrency(
+                    calcBuyingPower(balances.quote, balances.base, price, maxLeverage).minus(
+                        new BigNumber(order.exposure * order.price),
+                    ),
+                )}
+            </span>
+        )
+    }
+}
+const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, price }) => {
+    if (balances.quote.eq(0)) {
+        return <span>-</span>
+    } else if (!order?.exposure || !order.price) {
+        return (
+            <span>
+                ${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(
+                    3,
+                )}%
+            </span>
+        )
+    } else {
+        return (
+            <span>
+                <Previous>
+                    {`${calcAvailableMarginPercent(
+                        balances.quote,
+                        balances.base,
+                        price,
+                        maxLeverage,
+                    ).toPrecision(3)}%`}
+                </Previous>
+                {`${calcAvailableMarginPercent(newQuote, newBase, price, maxLeverage).toPrecision(3)}%`}
+            </span>
+        )
+    }
+}
+
 const AccountPanel: React.FC<{
     selectedTracer: Tracer | undefined;
     account: string;
@@ -133,9 +189,10 @@ const AccountPanel: React.FC<{
         setDeposit(deposit);
     };
 
-    return account === '' ? (
-        <WalletConnect />
-    ) : (
+    if (account === '') {
+        return (<WalletConnect />)
+    }
+    return (
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title>Margin Account</Title>
             {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
@@ -174,46 +231,23 @@ const AccountPanel: React.FC<{
                     </TooltipSelector>
                     <SubText>{` @${maxLeverage.toNumber()}X Maximum Leverage`}</SubText>
                 </h3>
-                <span>
-                    {!order?.exposure || !order.price ? (
-                        toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))
-                    ) : (
-                        <>
-                            <Previous>
-                                {toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))}
-                            </Previous>
-                            {toApproxCurrency(
-                                calcBuyingPower(balances.quote, balances.base, price, maxLeverage).minus(
-                                    new BigNumber(order.exposure * order.price),
-                                ),
-                            )}
-                        </>
-                    )}
-                </span>
+                <BuyingPower 
+                    order={order}
+                    balances={balances}
+                    maxLeverage={maxLeverage}
+                    price={price}
+                />
             </Item>
             <Item>
                 <h3>
                     <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
                 </h3>
-                <span>
-                    {!order?.exposure || !order.price ? (
-                        `${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toPrecision(
-                            3,
-                        )}%`
-                    ) : (
-                        <>
-                            <Previous>
-                                {`${calcAvailableMarginPercent(
-                                    balances.quote,
-                                    balances.base,
-                                    price,
-                                    maxLeverage,
-                                ).toPrecision(3)}%`}
-                            </Previous>
-                            {`${calcAvailableMarginPercent(newQuote, newBase, price, maxLeverage).toPrecision(3)}%`}
-                        </>
-                    )}
-                </span>
+                <AvailableMargin
+                    order={order}
+                    balances={balances}
+                    maxLeverage={maxLeverage}
+                    price={price}
+                />
             </Item>
             <DepositButtons>
                 <SButton
