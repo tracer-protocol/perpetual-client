@@ -3,7 +3,7 @@ import { Children } from 'types';
 import styled from 'styled-components';
 
 /**
- * Similiar component to dropdown only there is no content to begin with
+ * Similar component to dropdown only there is no content to begin with
  */
 type HEProps = {
     defaultHeight: number; // defaults to 0
@@ -57,13 +57,14 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
  * @param defaultHeight prevents jumpiness when initialising the dropdown
  */
 type DProps = {
-    defaultHeight: number; // defaults to 0
+    defaultOpen: boolean;
+    defaultHeight: number;
     className?: string;
     header: React.ReactNode;
     body: React.ReactNode;
 };
-export const Dropdown: React.FC<DProps> = styled(({ className, header, body, defaultHeight }: DProps) => {
-    const [open, setOpen] = useState(false);
+export const Dropdown: React.FC<DProps> = styled(({ className, defaultOpen, header, body, defaultHeight }: DProps) => {
+    const [open, setOpen] = useState(defaultOpen);
     const main = useRef(null);
     const _header = useRef(null);
     const _body = useRef(null);
@@ -72,15 +73,17 @@ export const Dropdown: React.FC<DProps> = styled(({ className, header, body, def
         const b = _body.current as unknown as HTMLDivElement;
         if (open) {
             // all heights plus 10px for padding
-            (main.current as unknown as HTMLDivElement).style.height = `${h.clientHeight + b.clientHeight + 10}px`;
+            (main.current as unknown as HTMLDivElement).style.height = `${
+                h.clientHeight ? h.clientHeight + b.clientHeight + 10 : defaultHeight
+            }px`;
         } else {
             (main.current as unknown as HTMLDivElement).style.height = `${
-                !!h.clientHeight ? h.clientHeight : defaultHeight
+                h.clientHeight ? h.clientHeight : defaultHeight
             }px`;
         }
     }, [open]);
     return (
-        <div className={`${className} ${open ? 'open' : ''}`} onClick={(_e) => setOpen(!open)} ref={main}>
+        <div className={className} onClick={(_e) => setOpen(!open)} ref={main}>
             <div ref={_header}>{header}</div>
             <div className="body" ref={_body}>
                 {body}
@@ -88,26 +91,13 @@ export const Dropdown: React.FC<DProps> = styled(({ className, header, body, def
         </div>
     );
 })`
+    background: #000240;
     overflow: hidden;
     transition: 0.3s ease-in-out;
     margin-left: -10px;
-    height: ${(props) => props.defaultHeight}px;
     margin-bottom: 2rem;
     border-radius: 5px;
     text-align: left;
     font-size: 16px;
     letter-spacing: -0.32px;
-
-    &:hover {
-        background: #000240;
-    }
-
-    &.open > .body {
-        transition: 0.3s ease-in;
-        opacity: 0;
-    }
-
-    &.open .body {
-        opacity: 1;
-    }
 `;

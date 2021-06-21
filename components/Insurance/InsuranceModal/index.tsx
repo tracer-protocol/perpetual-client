@@ -5,15 +5,7 @@ import { Children } from 'types';
 import { toApproxCurrency } from '@libs/utils';
 import SlideSelect from '@components/Buttons/SlideSelect';
 import { Option } from '@components/Buttons/SlideSelect/Options';
-import { 
-    Button, 
-    Checkbox,
-    Dropdown, 
-    HiddenExpand, 
-    Previous, 
-    NumberSelect, 
-    Section,
-} from '@components/General';
+import { Button, Checkbox, Dropdown, HiddenExpand, Previous, NumberSelect, Section } from '@components/General';
 import TracerModal, { SubTitle } from '@components/General/TracerModal';
 import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';
@@ -162,7 +154,8 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 </SubTitle>
                 {isDeposit ? (
                     <Dropdown
-                        defaultHeight={50}
+                        defaultOpen={true}
+                        defaultHeight={200}
                         header={
                             <DepositTermsHeader>
                                 <span>Terms of deposit</span>
