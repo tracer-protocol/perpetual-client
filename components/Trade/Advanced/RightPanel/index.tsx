@@ -87,6 +87,8 @@ const OrderBookContainer = styled.div`
     padding: 10px;
     padding-right: 0;
     height: 35vh;
+    display: flex;
+    flex-direction: column;
     h3 {
         letter-spacing: -0.4px;
         color: #ffffff;
@@ -119,7 +121,7 @@ const TradingView: React.FC<{
         <>
             <SBox className="middlePanel">
                 <MarketInfo
-                    lastPrice={omeState?.highestAsk ?? 0}
+                    lastPrice={omeState?.maxAndMins?.maxAsk ?? 0}
                     fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
                     oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
                     fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.fundingRate.toNumber()}

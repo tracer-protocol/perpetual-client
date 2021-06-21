@@ -1,5 +1,6 @@
 import { OMEOrder } from 'types/OrderTypes';
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 import { Order } from './Orders';
 import { TradingTable } from '@components/Tables/TradingTable';
@@ -11,7 +12,7 @@ interface OProps {
     className?: string;
 }
 
-const OrderBook: React.FC<OProps> = ({ askOrders, bidOrders }: OProps) => {
+const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className}: OProps) => {
     const [hasScrolled, setHasScrolled] = useState(false);
     const sumQuantities = (orders: OMEOrder[]) => {
         return orders.reduce((total, order) => total + order.quantity, 0);
@@ -56,26 +57,30 @@ const OrderBook: React.FC<OProps> = ({ askOrders, bidOrders }: OProps) => {
         }
     }, [askOrders, bidOrders]);
     return (
-        <TradingTable>
-            <thead>
-                <tr>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Cumulative</th>
-                </tr>
-            </thead>
-            <tbody id="trading-table-body">
-                {renderOrders(false, askOrdersCopy).reverse()}
-                <tr id="market-middle">
-                    <td>Market</td>
-                    <td />
-                    <td />
-                    {/* <MarketChange amount={0} /> */}
-                </tr>
-                {renderOrders(true, bidOrdersCopy)}
-            </tbody>
-        </TradingTable>
+        <div className={className}>
+            <TradingTable>
+                <thead>
+                    <tr>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Cumulative</th>
+                    </tr>
+                </thead>
+                <tbody id="trading-table-body">
+                    {renderOrders(false, askOrdersCopy).reverse()}
+                    <tr id="market-middle">
+                        <td>Market</td>
+                        <td />
+                        <td />
+                        {/* <MarketChange amount={0} /> */}
+                    </tr>
+                    {renderOrders(true, bidOrdersCopy)}
+                </tbody>
+            </TradingTable>
+        </div>
     );
-};
+})`
+    height: 100%;
+`
 
 export default OrderBook;

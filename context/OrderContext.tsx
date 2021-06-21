@@ -170,7 +170,6 @@ export type OrderAction =
     | { type: 'setWallet'; value: number }
     | { type: 'setLock'; value: boolean }
     | { type: 'setAdvanced'; value: boolean }
-    | { type: 'setMarketPrice'; value: number }
     | { type: 'setOppositeOrders'; orders: FlatOrder[] };
 
 // amountToPay => require margin
@@ -212,8 +211,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             }
             case 'setOppositeOrders':
                 return { ...state, oppositeOrders: action.orders };
-            case 'setMarketPrice':
-                return { ...state, marketPrice: action.value };
             case 'setExposure':
                 return { ...state, exposure: action.value };
             case 'setNextPosition':
@@ -225,7 +222,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 const fullClosure = selectedTracer?.getBalance().base.abs();
                 return { ...state, exposure: fullClosure };
             case 'setBestPrice':
-                const price = state.position === LONG ? omeState?.lowestBid : omeState?.highestAsk;
+                const price = state.position === LONG ? omeState?.maxAndMins?.minBid : omeState?.maxAndMins?.maxAsk;
                 if (!price) {
                     // if there is no price set error to no open orders
                     return { ...state, error: 'NO_ORDERS' };
@@ -259,10 +256,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             }));
             orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
             if (order.orderType === MARKET) {
-                // market order set the price if on market order
+                // market order set the price to the bottom of the book
                 orderDispatch({
                     type: 'setPrice',
-                    value: order.position === LONG ? omeState.lowestBid : omeState.highestAsk,
+                    value: (order.position === LONG ? omeState?.maxAndMins?.maxBid : omeState?.maxAndMins?.minAsk) ?? NaN
                 });
             }
         }
@@ -270,7 +267,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     useMemo(() => {
         if (order.orderType === MARKET) {
-            orderDispatch({ type: 'setBestPrice' });
+            orderDispatch({
+                type: 'setPrice',
+                value: (order.position === LONG ? omeState?.maxAndMins?.maxBid : omeState?.maxAndMins?.minAsk) ?? NaN
+            });
         } else {
             orderDispatch({ type: 'setPrice', value: NaN });
         }

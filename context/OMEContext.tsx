@@ -50,14 +50,25 @@ interface ContextProps {
 type OMEState = {
     userOrders: OMEOrder[];
     orders: Orders;
-    lowestBid: number;
-    highestAsk: number;
+    maxAndMins: {
+        minBid: number;
+        maxBid: number;
+        minAsk: number;
+        maxAsk: number;
+    }
 };
 type OMEAction =
     | { type: 'setUserOrders'; orders: OMEOrder[] }
     | { type: 'setOrders'; orders: Orders }
     | { type: 'refetchUserOrders' }
-    | { type: 'setBestPrices'; bidPrice: number; askPrice: number }
+    | { type: 'setBestPrices';
+        maxAndMins: {
+            minBid: number;
+            maxBid: number;
+            minAsk: number;
+            maxAsk: number;
+        }
+    }
     | { type: 'refetchOrders' };
 
 export const OMEContext = React.createContext<Partial<ContextProps>>({});
@@ -75,8 +86,12 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             askOrders: [],
             bidOrders: [],
         },
-        lowestBid: 0,
-        highestAsk: 0,
+        maxAndMins: {
+            minBid: 0,
+            maxBid: 0,
+            minAsk: 0,
+            maxAsk: 0,
+        }
     };
 
     const fetchUserData = async () => {
@@ -119,13 +134,19 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             const res = await getOrders(selectedTracer?.address);
             if (isMounted.current) {
                 const parsedOrders = parseOrders(res);
-                const lowestBid = parsedOrders.askOrders[0]?.price ?? 0;
-                const highestAsk = parsedOrders.bidOrders.slice(-1)[0]?.price ?? 0;
+                const minBid = parsedOrders.askOrders[0]?.price ?? 0;
+                const minAsk = parsedOrders.bidOrders[0]?.price ?? 0;
+                const maxAsk = parsedOrders.askOrders.slice(-1)[0]?.price ?? 0;
+                const maxBid = parsedOrders.bidOrders.slice(-1)[0]?.price ?? 0;
                 omeDispatch({ type: 'setOrders', orders: parsedOrders });
                 omeDispatch({
                     type: 'setBestPrices',
-                    bidPrice: lowestBid,
-                    askPrice: highestAsk,
+                    maxAndMins: {
+                        minBid: minBid,
+                        maxBid: maxBid,
+                        minAsk: minAsk,
+                        maxAsk: maxAsk
+                    }
                 });
             }
         }
@@ -147,8 +168,7 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             case 'setBestPrices': {
                 return {
                     ...state,
-                    lowestBid: action.bidPrice,
-                    highestAsk: action.askPrice,
+                    maxAndMins: action.maxAndMins
                 };
             }
             case 'refetchUserOrders': {

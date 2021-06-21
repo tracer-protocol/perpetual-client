@@ -8,44 +8,38 @@ interface RTProps {
     className?: string;
 }
 
-const STradingTable = styled(TradingTable)`
-    tbody {
-        display: block;
-        overflow-y: scroll;
-        max-height: 18vh;
-    }
-`;
-
 const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) => {
     return (
         <div className={className}>
             <h3>Recent Trades</h3>
             {trades?.length ? (
-                <STradingTable>
-                    <thead>
-                        <tr>
-                            <th>Price</th>
-                            <th>Amount</th>
-                            <th>Time</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {trades.map((trade, index) => {
-                            const d = new Date(parseInt(trade.timestamp) * 1000);
-                            return (
-                                <tr key={`row-${index}`}>
-                                    <td className={!!trade.position ? 'bid' : 'ask'}>
-                                        {toApproxCurrency(trade.price)}
-                                    </td>
-                                    <td>{trade.amount.toPrecision(3)}</td>
-                                    <td>
-                                        {d.getHours()}:{d.getMinutes()}
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                    </tbody>
-                </STradingTable>
+                <div className="h-full">
+                    <TradingTable>
+                        <thead>
+                            <tr>
+                                <th>Price</th>
+                                <th>Amount</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {trades.map((trade, index) => {
+                                const d = new Date(parseInt(trade.timestamp) * 1000);
+                                return (
+                                    <tr key={`row-${index}`}>
+                                        <td className={!!trade.position ? 'bid' : 'ask'}>
+                                            {toApproxCurrency(trade.price)}
+                                        </td>
+                                        <td>{trade.amount.toPrecision(3)}</td>
+                                        <td>
+                                            {d.getHours()}:{d.getMinutes()}
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </TradingTable>
+                </div>
             ) : (
                 <p>No recent trades</p>
             )}
@@ -54,8 +48,10 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
 })`
     padding: 10px;
     padding-right: 0;
-    height: 30vh;
+    height: 100%;
     position: relative;
+    display: flex;
+    flex-direction: column;
     border-top: 1px solid #002886;
     h3 {
         font-size: 1.25rem;

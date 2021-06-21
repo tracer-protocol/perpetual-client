@@ -3,9 +3,10 @@ import styled from 'styled-components';
 export const TradingTable = styled.table`
     border-collapse: collapse;
     table-layout: fixed;
+    height: 100%;
     width: 100%;
+    overflow: hidden;
     font-size: 1rem;
-    margin-top: 1vh;
 
     thead tr th {
         font-size: 16px;
@@ -26,7 +27,7 @@ export const TradingTable = styled.table`
 
     tbody {
         display: block;
-        height: 24vh;
+        height: 100%;
         overflow-y: scroll;
     }
 
