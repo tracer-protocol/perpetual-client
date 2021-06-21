@@ -279,7 +279,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 orderDispatch({
                     type: 'setPrice',
                     value:
-                        (order.position === LONG ? omeState?.maxAndMins?.maxBid : omeState?.maxAndMins?.minAsk) ?? NaN,
+                        (order.position === LONG ? omeState?.maxAndMins?.maxAsk : omeState?.maxAndMins?.minBid) ?? NaN,
                 });
             }
         }
@@ -289,7 +289,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         if (order.orderType === MARKET) {
             orderDispatch({
                 type: 'setPrice',
-                value: (order.position === LONG ? omeState?.maxAndMins?.maxBid : omeState?.maxAndMins?.minAsk) ?? NaN,
+                value: (order.position === LONG ? omeState?.maxAndMins?.maxAsk : omeState?.maxAndMins?.minBid) ?? NaN,
             });
         } else {
             orderDispatch({ type: 'setPrice', value: NaN });
