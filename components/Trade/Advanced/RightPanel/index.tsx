@@ -41,8 +41,8 @@ type MIProps = {
     fairPrice: BigNumber;
     oraclePrice: number;
     fundingRate: number;
-    nextFunding: Date;
-    tradingVolume: number;
+    // nextFunding: Date;
+    // tradingVolume: number;
     maxLeverage: BigNumber;
     className?: string;
 };
@@ -53,8 +53,8 @@ const MarketInfo: React.FC<MIProps> = styled(
         fairPrice,
         oraclePrice,
         fundingRate,
-        nextFunding,
-        tradingVolume,
+        // nextFunding,
+        // tradingVolume,
         maxLeverage,
         className,
     }: MIProps) => {
@@ -66,8 +66,8 @@ const MarketInfo: React.FC<MIProps> = styled(
                 <TitledBox title={'Funding Rate'}>
                     <FundingRateGraphic rate={fundingRate} />
                 </TitledBox>
-                <TitledBox title={'Next Funding'}>{formatDate(nextFunding)}</TitledBox>
-                <TitledBox title={'24H Trades'}>{tradingVolume.toLocaleString()}</TitledBox>
+                {/* <TitledBox title={'Next Funding'}>{formatDate(nextFunding)}</TitledBox>
+                <TitledBox title={'24H Trades'}>{tradingVolume.toLocaleString()}</TitledBox> */}
                 <TitledBox title={'Max Leverage'} className="border-r-0">
                     {maxLeverage.toNumber()}x
                 </TitledBox>
@@ -120,8 +120,8 @@ const TradingView: React.FC<{
                     fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
                     oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
                     fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.fundingRate.toNumber()}
-                    nextFunding={new Date()}
-                    tradingVolume={243512}
+                    // nextFunding={new Date()}
+                    // tradingVolume={243512}
                     maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
                 />
                 <Graphs />
