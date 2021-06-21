@@ -6,7 +6,6 @@ import { TracerContext } from './TracerContext';
 import { Web3Context } from './Web3Context';
 import { FilledOrder, OMEOrder as FlattenedOMEOrder } from 'types/OrderTypes';
 import Web3 from 'web3';
-import BigNumber from 'bignumber.js';
 // @ts-ignore
 import { Callback } from 'web3/types';
 import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
@@ -17,13 +16,16 @@ type Orders = {
     bidOrders: FlattenedOMEOrder[];
 };
 
+const sortDesc: (orders: FlattenedOMEOrder[]) => FlattenedOMEOrder[] = (orders: FlattenedOMEOrder[]) =>
+    orders.sort((a, b) => b.price - a.price);
+
 export const parseOrders: (res: any) => Orders = (res) => {
     const parseOrders = (orders: OMEOrder) => {
         const sections = Object.values(orders);
         const flattenedOrders = sections.map((orders: any) =>
             orders.reduce(
                 (prev: any, order: { amount_left: number; price: number }) => ({
-                    price: new BigNumber(Web3.utils.fromWei(order.price.toString())), // price remains the same,
+                    price: parseFloat(Web3.utils.fromWei(order.price.toString())), // price remains the same,
                     quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.amount_left.toString())),
                 }),
                 {
@@ -35,8 +37,8 @@ export const parseOrders: (res: any) => Orders = (res) => {
     };
 
     return {
-        askOrders: parseOrders(res?.asks ?? {}),
-        bidOrders: parseOrders(res?.bids ?? {}),
+        askOrders: parseOrders(res?.asks ?? []),
+        bidOrders: sortDesc(parseOrders(res?.bids ?? [])),
     };
 };
 
@@ -55,20 +57,21 @@ type OMEState = {
         maxBid: number;
         minAsk: number;
         maxAsk: number;
-    }
+    };
 };
 type OMEAction =
     | { type: 'setUserOrders'; orders: OMEOrder[] }
     | { type: 'setOrders'; orders: Orders }
     | { type: 'refetchUserOrders' }
-    | { type: 'setBestPrices';
-        maxAndMins: {
-            minBid: number;
-            maxBid: number;
-            minAsk: number;
-            maxAsk: number;
-        }
-    }
+    | {
+          type: 'setBestPrices';
+          maxAndMins: {
+              minBid: number;
+              maxBid: number;
+              minAsk: number;
+              maxAsk: number;
+          };
+      }
     | { type: 'refetchOrders' };
 
 export const OMEContext = React.createContext<Partial<ContextProps>>({});
@@ -91,7 +94,7 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             maxBid: 0,
             minAsk: 0,
             maxAsk: 0,
-        }
+        },
     };
 
     const fetchUserData = async () => {
@@ -134,10 +137,11 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             const res = await getOrders(selectedTracer?.address);
             if (isMounted.current) {
                 const parsedOrders = parseOrders(res);
-                const minBid = parsedOrders.askOrders[0]?.price ?? 0;
-                const minAsk = parsedOrders.bidOrders[0]?.price ?? 0;
+                const minAsk = parsedOrders.askOrders[0]?.price ?? 0;
                 const maxAsk = parsedOrders.askOrders.slice(-1)[0]?.price ?? 0;
-                const maxBid = parsedOrders.bidOrders.slice(-1)[0]?.price ?? 0;
+                // swapped for bids since they are descending
+                const minBid = parsedOrders.bidOrders.slice(-1)[0]?.price ?? 0;
+                const maxBid = parsedOrders.bidOrders[0]?.price ?? 0;
                 omeDispatch({ type: 'setOrders', orders: parsedOrders });
                 omeDispatch({
                     type: 'setBestPrices',
@@ -145,8 +149,8 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
                         minBid: minBid,
                         maxBid: maxBid,
                         minAsk: minAsk,
-                        maxAsk: maxAsk
-                    }
+                        maxAsk: maxAsk,
+                    },
                 });
             }
         }
@@ -168,7 +172,7 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             case 'setBestPrices': {
                 return {
                     ...state,
-                    maxAndMins: action.maxAndMins
+                    maxAndMins: action.maxAndMins,
                 };
             }
             case 'refetchUserOrders': {

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import { OrderState } from '@context/OrderContext';
+import { LIMIT, MARKET, OrderState } from '@context/OrderContext';
 import { OrderContext, TracerContext, TransactionContext } from 'context';
 import { Children } from 'types';
 import Tooltip from 'antd/lib/tooltip';
@@ -80,7 +80,15 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
         }
     };
 
-    if (order?.error === 'NO_ERROR' && order?.exposure && order?.price) {
+    // if there is NO_ERROR    
+    //  and
+    //      exposure and price has been inputted for limit
+    //      or exposure has been entered for market
+    if (
+        order?.error === 'NO_ERROR' &&
+        ((order?.exposure && order?.price && order.orderType === LIMIT) ||
+            (order?.exposure && order.orderType === MARKET))
+    ) {
         return (
             <div className={`${className ?? ''}`} onClick={handleOrder}>
                 {children}

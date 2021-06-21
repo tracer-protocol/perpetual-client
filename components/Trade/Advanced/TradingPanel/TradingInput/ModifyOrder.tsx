@@ -6,9 +6,9 @@ import { Box, Button } from '@components/General';
 import { PlaceOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import Error from '@components/General/Error';
-import { Closure, Leverage } from './Inputs';
-import { OrderAction, OrderState } from '@context/OrderContext';
-import PostTradeDetails from './PostTradeDetails';
+import { Exposure, Leverage } from './Inputs';
+import { OrderAction, orderDefaults, OrderState } from '@context/OrderContext';
+import { MarketTradeDetails } from './PostTradeDetails';
 import { BigNumber } from 'bignumber.js';
 
 type SProps = {
@@ -63,10 +63,11 @@ type CProps = {
 const Close: React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
     return (
         <>
-            <Closure
+            <Exposure
                 orderDispatch={orderDispatch}
                 selectedTracer={selectedTracer}
-                exposure={order?.exposure ?? defaults.exposure}
+                order={order ?? orderDefaults.order}
+                closeInput={true}
             />
         </>
     );
@@ -120,12 +121,13 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     )}
                 </div>
 
-                <PostTradeDetails
+                <MarketTradeDetails
                     fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                     balances={selectedTracer?.getBalance() ?? defaults.balances}
                     exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
                     nextPosition={order?.nextPosition ?? defaults.balances}
                     slippage={order?.slippage ?? 0}
+                    tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
                     maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                 />
 

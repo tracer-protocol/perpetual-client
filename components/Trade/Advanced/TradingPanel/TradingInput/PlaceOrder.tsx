@@ -7,11 +7,11 @@ import styled from 'styled-components';
 import { Box } from '@components/General';
 import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
-import PostTradeDetails from './PostTradeDetails';
 import Error from '@components/General/Error';
 import { toApproxCurrency } from '@libs/utils';
 import { Approx } from '@components/General';
 import { Exposure, Price, Leverage } from './Inputs';
+import { MarketTradeDetails, LimitTradeDetails } from './PostTradeDetails';
 
 type SProps = {
     selected: number;
@@ -117,50 +117,57 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 </div>
 
                 {/* Quantity and Price Inputs */}
-                <div className="flex flex-wrap">
-                    <Exposure
-                        orderDispatch={orderDispatch}
-                        className="pb-0"
-                        selectedTracer={selectedTracer}
-                        order={order ?? orderDefaults.order}
-                    />
-                    <Details>
-                        {order?.leverage !== 1 && exposure && price ? (
-                            <span>{`Leveraged at ${order?.leverage}x`}</span>
-                        ) : null}
-                        {exposure && price ? <Approx>{toApproxCurrency(exposure * price * leverage)}</Approx> : null}
-                    </Details>
-
-                    {/*Dont display price select if it is a market order*/}
-                    {order?.orderType !== 1 ? (
-                        <>
-                            {/* Price select */}
-                            <Price
-                                orderDispatch={orderDispatch}
-                                selectedTracer={selectedTracer}
-                                price={order?.price ?? defaults.price}
-                            />
-                        </>
-                    ) : (
-                        <></>
-                    )}
-                </div>
-
-                <Leverage
-                    min={selectedTracer?.getBalance().leverage}
-                    max={selectedTracer?.getMaxLeverage()}
-                    leverage={order?.leverage ?? 1}
+                <Exposure
                     orderDispatch={orderDispatch}
+                    className="pb-0"
+                    selectedTracer={selectedTracer}
+                    order={order ?? orderDefaults.order}
                 />
+                <Details>
+                    {order?.leverage !== 1 && exposure && price ? (
+                        <span>{`Leveraged at ${order?.leverage}x`}</span>
+                    ) : null}
+                    {exposure && price ? <Approx>{toApproxCurrency(exposure * price * leverage)}</Approx> : null}
+                </Details>
 
-                <PostTradeDetails
-                    fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
-                    balances={selectedTracer?.getBalance() ?? defaults.balances}
-                    exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
-                    nextPosition={order?.nextPosition ?? defaults.balances}
-                    slippage={order?.slippage ?? 0}
-                    maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                />
+                {/*Dont display price select if it is a market order*/}
+                {order?.orderType !== 1 ? (
+                    <>
+                        {/* LIMIT ORDER */}
+                        <Price
+                            orderDispatch={orderDispatch}
+                            selectedTracer={selectedTracer}
+                            price={order?.price ?? defaults.price}
+                        />
+                        <LimitTradeDetails
+                            fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
+                            balances={selectedTracer?.getBalance() ?? defaults.balances}
+                            exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                            nextPosition={order?.nextPosition ?? defaults.balances}
+                            orderPrice={order?.price ?? 0}
+                            maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                        />
+                    </>
+                ) : (
+                    <>
+                        {/* MARKET ORDER */}
+                        <Leverage
+                            min={selectedTracer?.getBalance().leverage}
+                            max={selectedTracer?.getMaxLeverage()}
+                            leverage={order?.leverage ?? 1}
+                            orderDispatch={orderDispatch}
+                        />
+                        <MarketTradeDetails
+                            fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
+                            balances={selectedTracer?.getBalance() ?? defaults.balances}
+                            exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                            nextPosition={order?.nextPosition ?? defaults.balances}
+                            tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
+                            slippage={order?.slippage ?? 0}
+                            maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                        />
+                    </>
+                )}
 
                 {/* Place Order */}
                 <div className="p-2">
