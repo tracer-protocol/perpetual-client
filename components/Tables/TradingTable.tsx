@@ -28,6 +28,7 @@ export const TradingTable = styled.table`
     tbody {
         display: block;
         height: 100%;
+        max-height: 25vh; 
         overflow-y: scroll;
     }
 
