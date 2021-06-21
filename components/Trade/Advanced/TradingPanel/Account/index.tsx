@@ -57,7 +57,7 @@ const WalletConnect: React.FC = () => {
 
 const NoBalance = styled.span`
     color: #3da8f5;
-`
+`;
 
 const Item = styled.div`
     width: 100%;
@@ -148,9 +148,7 @@ const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, pr
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
         return (
-            <span>
-                ${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toFixed(3)}%
-            </span>
+            <span>${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toFixed(3)}%</span>
         );
     } else {
         return (
@@ -204,10 +202,11 @@ const AccountPanel: React.FC<{
                         Total Margin
                     </TooltipSelector>
                 </h3>
-                {balances.quote.eq(0) 
-                    ? <NoBalance>-</NoBalance>
-                    : <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}</span>
-                }
+                {balances.quote.eq(0) ? (
+                    <NoBalance>-</NoBalance>
+                ) : (
+                    <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}</span>
+                )}
             </Item>
             <Item>
                 <h3>
@@ -239,7 +238,6 @@ const AccountPanel: React.FC<{
                     <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
                 </h3>
                 <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} price={price} />
-               
             </Item>
             <DepositButtons>
                 <SButton
