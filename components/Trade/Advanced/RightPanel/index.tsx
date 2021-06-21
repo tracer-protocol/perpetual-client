@@ -7,9 +7,9 @@ import { useMostRecentMatched } from '@libs/Graph/hooks/Tracer';
 import { OMEContext } from '@context/OMEContext';
 import styled from 'styled-components';
 import FundingRateGraphic from '@components/FundingRateGraphic';
-import { 
-    // formatDate, 
-    toApproxCurrency
+import {
+    // formatDate,
+    toApproxCurrency,
 } from '@libs/utils';
 import BigNumber from 'bignumber.js';
 
