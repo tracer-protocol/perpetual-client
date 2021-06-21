@@ -12,7 +12,7 @@ interface OProps {
     className?: string;
 }
 
-const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className}: OProps) => {
+const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className }: OProps) => {
     const [hasScrolled, setHasScrolled] = useState(false);
     const sumQuantities = (orders: OMEOrder[]) => {
         return orders.reduce((total, order) => total + order.quantity, 0);
@@ -81,6 +81,6 @@ const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className}: 
     );
 })`
     height: 100%;
-`
+`;
 
 export default OrderBook;

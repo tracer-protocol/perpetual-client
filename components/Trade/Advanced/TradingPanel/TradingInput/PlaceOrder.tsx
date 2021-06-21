@@ -132,7 +132,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
 
                 {/*Dont display price select if it is a market order*/}
                 {order?.orderType !== 1 ? (
-                    <> 
+                    <>
                         {/* LIMIT ORDER */}
                         <Price
                             orderDispatch={orderDispatch}

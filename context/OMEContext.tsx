@@ -16,7 +16,8 @@ type Orders = {
     bidOrders: FlattenedOMEOrder[];
 };
 
-const sortDesc: (orders: FlattenedOMEOrder[]) => FlattenedOMEOrder[] = (orders: FlattenedOMEOrder[]) => orders.sort((a, b) => b.price - a.price);
+const sortDesc: (orders: FlattenedOMEOrder[]) => FlattenedOMEOrder[] = (orders: FlattenedOMEOrder[]) =>
+    orders.sort((a, b) => b.price - a.price);
 
 export const parseOrders: (res: any) => Orders = (res) => {
     const parseOrders = (orders: OMEOrder) => {
@@ -56,20 +57,21 @@ type OMEState = {
         maxBid: number;
         minAsk: number;
         maxAsk: number;
-    }
+    };
 };
 type OMEAction =
     | { type: 'setUserOrders'; orders: OMEOrder[] }
     | { type: 'setOrders'; orders: Orders }
     | { type: 'refetchUserOrders' }
-    | { type: 'setBestPrices';
-        maxAndMins: {
-            minBid: number;
-            maxBid: number;
-            minAsk: number;
-            maxAsk: number;
-        }
-    }
+    | {
+          type: 'setBestPrices';
+          maxAndMins: {
+              minBid: number;
+              maxBid: number;
+              minAsk: number;
+              maxAsk: number;
+          };
+      }
     | { type: 'refetchOrders' };
 
 export const OMEContext = React.createContext<Partial<ContextProps>>({});
@@ -92,7 +94,7 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             maxBid: 0,
             minAsk: 0,
             maxAsk: 0,
-        }
+        },
     };
 
     const fetchUserData = async () => {
@@ -147,8 +149,8 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
                         minBid: minBid,
                         maxBid: maxBid,
                         minAsk: minAsk,
-                        maxAsk: maxAsk
-                    }
+                        maxAsk: maxAsk,
+                    },
                 });
             }
         }
@@ -170,7 +172,7 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             case 'setBestPrices': {
                 return {
                     ...state,
-                    maxAndMins: action.maxAndMins
+                    maxAndMins: action.maxAndMins,
                 };
             }
             case 'refetchUserOrders': {

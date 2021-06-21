@@ -92,7 +92,7 @@ export const orderDefaults = {
         lockAmountToPay: false, // deprecated with basic trade
         advanced: false,
         slippage: 0,
-        marketTradePrice: new BigNumber(0)
+        marketTradePrice: new BigNumber(0),
     },
 };
 
@@ -206,8 +206,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setPrice':
                 return { ...state, price: action.value };
             case 'setOrderType':
-                return { 
-                    ...state, 
+                return {
+                    ...state,
                     orderType: action.value,
                 };
             case 'setAdjustType':
@@ -267,7 +267,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 // market order set the price to the bottom of the book
                 orderDispatch({
                     type: 'setPrice',
-                    value: (order.position === LONG ? omeState?.maxAndMins?.maxBid : omeState?.maxAndMins?.minAsk) ?? NaN
+                    value:
+                        (order.position === LONG ? omeState?.maxAndMins?.maxBid : omeState?.maxAndMins?.minAsk) ?? NaN,
                 });
             }
         }
@@ -277,7 +278,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         if (order.orderType === MARKET) {
             orderDispatch({
                 type: 'setPrice',
-                value: (order.position === LONG ? omeState?.maxAndMins?.maxBid : omeState?.maxAndMins?.minAsk) ?? NaN
+                value: (order.position === LONG ? omeState?.maxAndMins?.maxBid : omeState?.maxAndMins?.minAsk) ?? NaN,
             });
         } else {
             orderDispatch({ type: 'setPrice', value: NaN });
@@ -313,7 +314,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 orderDispatch({ type: 'setSlippage', value: 0 });
             }
             if (!tradePrice.eq(0)) {
-	            orderDispatch({ type: 'setMarketTradePrice', value: tradePrice });
+                orderDispatch({ type: 'setMarketTradePrice', value: tradePrice });
             }
         }
     }, [order.exposure, order.leverage, order.oppositeOrders]);

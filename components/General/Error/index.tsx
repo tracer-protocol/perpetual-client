@@ -42,7 +42,7 @@ export const OrderErrors: Record<string, ErrorBox> = {
     },
     INVALID_INPUTS: {
         name: 'Invalid Inputs',
-        message: 'Order is invalid more input required'
+        message: 'Order is invalid more input required',
     },
     INVALID_ORDER: {
         name: 'Invalid Order',

@@ -81,14 +81,13 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
     };
 
     // if there is NO_ERROR and exposure
-    //  and 
-    //      price has been inputted for limit 
+    //  and
+    //      price has been inputted for limit
     //      or exposure has been entered for market
     if (
-        order?.error === 'NO_ERROR' 
-        && 
-            ((order?.exposure && order?.price && (order.orderType === LIMIT))
-            || (order?.exposure && (order.orderType === MARKET)))
+        order?.error === 'NO_ERROR' &&
+        ((order?.exposure && order?.price && order.orderType === LIMIT) ||
+            (order?.exposure && order.orderType === MARKET))
     ) {
         return (
             <div className={`${className ?? ''}`} onClick={handleOrder}>

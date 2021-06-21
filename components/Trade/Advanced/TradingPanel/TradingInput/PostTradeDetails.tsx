@@ -33,9 +33,7 @@ export const MarketTradeDetails: React.FC<MTDProps> = styled(
                     )}
                 </Section>
                 <Section label={'Trade Price'}>{toApproxCurrency(tradePrice)}</Section>
-                <Section label={'Slippage'}>
-                    {slippage.toFixed(3)}% 
-                </Section>
+                <Section label={'Slippage'}>{slippage.toFixed(3)}%</Section>
             </HiddenExpand>
         );
     },
@@ -52,7 +50,7 @@ export const MarketTradeDetails: React.FC<MTDProps> = styled(
     }
 `;
 
-interface LTDProps{
+interface LTDProps {
     balances: UserBalance;
     nextPosition: {
         quote: BigNumber;
@@ -60,7 +58,7 @@ interface LTDProps{
     };
     exposure: BigNumber;
     fairPrice: BigNumber;
-    maxLeverage: BigNumber; 
+    maxLeverage: BigNumber;
     orderPrice: number;
     className?: string;
 }
