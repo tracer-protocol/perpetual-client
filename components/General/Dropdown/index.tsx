@@ -57,7 +57,7 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
  * @param defaultHeight prevents jumpiness when initialising the dropdown
  */
 type DProps = {
-    defaultOpen: boolean;
+    defaultOpen?: boolean;
     defaultHeight: number;
     className?: string;
     header: React.ReactNode;
