@@ -118,7 +118,7 @@ export default class Tracer {
         const tokenAddr = this._instance.methods.tracerQuoteToken().call();
         const quoteTokenDecimals = this._instance.methods.quoteTokenDecimals().call();
         const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
-        const maxLeverage = this._instance.methods.maxLeverage().call();
+        const maxLeverage = this._instance.methods.trueMaxLeverage().call();
         const fundingRateSensitivity = this._instance.methods.fundingRateSensitivity().call();
         const feeRate = this._instance.methods.feeRate().call();
         const insuranceContract = this._instance.methods.insuranceContract().call();
