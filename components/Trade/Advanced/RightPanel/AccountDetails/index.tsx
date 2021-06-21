@@ -67,6 +67,7 @@ const SSlideSelect = styled(SlideSelect)`
     width: 100px;
     font-size: 8px;
     margin-right: 0;
+    margin-top: 0;
 `;
 
 const SOption = styled(Option)`
