@@ -4,7 +4,6 @@ interface IProps {
     rate: number; // 0 <= rate <= 1
 }
 
-// TODO update this to fetch funding rate not feeRate
 const FundingRateGraphic: React.FC<IProps> = ({ rate }: IProps) => {
     const fundingRate = rate;
     const green = Math.abs((-1 - fundingRate) * 5);
@@ -26,9 +25,7 @@ const FundingRateGraphic: React.FC<IProps> = ({ rate }: IProps) => {
             {loop(green, '>')}
             <span className={fundingRate >= 0.5 ? 'green' : 'red'}>{'|'}</span>
             {loop(red, '<')}
-            <span className={`${fundingRate >= 0.5 ? 'green' : 'red'} ml-1`}>{`${(fundingRate * 1).toFixed(
-                2,
-            )}%`}</span>
+            <span className={`${fundingRate >= 0.5 ? 'green' : 'red'} ml-1`}>{`${fundingRate.toFixed(2)}%`}</span>
         </div>
     );
 };
