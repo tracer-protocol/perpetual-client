@@ -20,7 +20,7 @@ const SSlideSelect = styled(SlideSelect)`
 `;
 
 const SDown = styled(CaretDownFilled)`
-    font-size: 20px;
+    font-size: 1.25rem;
     & svg {
         transition: 0.3s ease-in-out;
     }

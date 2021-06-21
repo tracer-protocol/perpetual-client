@@ -52,9 +52,8 @@ export default styled(({ className }) => {
     );
 })`
     padding: 10px;
-
     h3 {
-        font-size: 20px;
+        font-size: 1.25rem;
         letter-spacing: -0.4px;
         color: #ffffff;
         text-transform: capitalize;

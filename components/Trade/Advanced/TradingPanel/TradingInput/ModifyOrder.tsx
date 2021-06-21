@@ -133,7 +133,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     <Button>{order?.adjustType === 0 ? 'Adjust Order' : 'Close Position'} </Button>
                 </PlaceOrderButton>
             </Box>
-            <SError error={order?.error ?? 'NO_ERROR'} account={account} context={"orders"} />
+            <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
         </>
     );
 })`

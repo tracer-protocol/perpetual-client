@@ -34,9 +34,9 @@ const GraphLegend = styled.div`
 
 const SPrevious = styled(Previous)`
     &:after {
-        content: ">>";
+        content: '>>';
     }
-`
+`;
 
 const SSection = styled(Section)`
     display: block;
@@ -78,65 +78,49 @@ const Content = styled.div`
 `;
 
 type ContentProps = {
-    exposure: number,
-    tradePrice: number,
+    exposure: number;
+    tradePrice: number;
     nextPosition: {
-        base: BigNumber,
-        quote: BigNumber 
-    },
-    balances: UserBalance
-}
+        base: BigNumber;
+        quote: BigNumber;
+    };
+    balances: UserBalance;
+};
 
-const Position:React.FC<ContentProps> = ({ 
-    nextPosition ,
-    exposure,
-    tradePrice,
-    balances
-}) => {
-    if (balances.quote.eq(0)) return <Content>-</Content>
-    else if (exposure && tradePrice) {
+const Position: React.FC<ContentProps> = ({ nextPosition, exposure, tradePrice, balances }) => {
+    if (balances.quote.eq(0)) {
+        return <Content>-</Content>;
+    } else if (exposure && tradePrice) {
         return (
             <Content>
-                <SPrevious>
-                    {getPositionText(balances.base)}
-                </SPrevious>
+                <SPrevious>{getPositionText(balances.base)}</SPrevious>
                 {getPositionText(nextPosition.base)}
             </Content>
-        )
+        );
     } // else
-    return (
-        <Content>
-            {getPositionText(balances.base)}
-        </Content>
-    )
-}
+    return <Content>{getPositionText(balances.base)}</Content>;
+};
 
-const Leverage:React.FC<ContentProps & { fairPrice: BigNumber }> = ({
+const Leverage: React.FC<ContentProps & { fairPrice: BigNumber }> = ({
     nextPosition,
     exposure,
     tradePrice,
     fairPrice,
-    balances
+    balances,
 }) => {
     const l = calcLeverage(balances.quote, balances.base, fairPrice);
-    if (balances.quote.eq(0)) return <Content>-</Content>
-    else if (exposure && tradePrice) {
+    if (balances.quote.eq(0)) {
+        return <Content>-</Content>;
+    } else if (exposure && tradePrice) {
         return (
             <Content>
-                <SPrevious>
-                    {`${l.toFixed(2)}x`}
-                </SPrevious>
+                <SPrevious>{`${l.toFixed(2)}x`}</SPrevious>
                 {`${calcLeverage(nextPosition.quote, nextPosition.base, new BigNumber(tradePrice)).toFixed(2)}x`}
             </Content>
-        )
+        );
     } // else
-    return (
-        <Content>
-            {`${l.toPrecision(3)}x`}
-        </Content>
-    )
-
-}
+    return <Content>{`${l.toPrecision(3)}x`}</Content>;
+};
 
 interface IProps {
     balance: UserBalance;
@@ -146,12 +130,7 @@ interface IProps {
     quoteTicker: string;
 }
 
-const PositionDetails: React.FC<IProps> = ({ 
-    balance, 
-    fairPrice,
-    baseTicker, 
-    quoteTicker 
-}: IProps) => {
+const PositionDetails: React.FC<IProps> = ({ balance, fairPrice, baseTicker, quoteTicker }: IProps) => {
     const { order } = useContext(OrderContext);
     const [currency, setCurrency] = useState(0); // 0 quoted in base
     const { base } = balance;
@@ -160,7 +139,7 @@ const PositionDetails: React.FC<IProps> = ({
             <AccountDetails>
                 <SectionContainer className="w-1/2">
                     <SSection label={'Side'}>
-                        <Position 
+                        <Position
                             balances={balance}
                             nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
                             tradePrice={order?.price ?? 0}
@@ -168,7 +147,7 @@ const PositionDetails: React.FC<IProps> = ({
                         />
                     </SSection>
                     <SSection label={'Leverage'}>
-                        <Leverage 
+                        <Leverage
                             balances={balance}
                             nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
                             tradePrice={order?.price ?? 0}
@@ -273,7 +252,7 @@ const OpenOrders: React.FC<{
     return (
         <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
             <tbody>
-                {userOrders.map((order, index) => {
+                {userOrders?.map((order, index) => {
                     const amount = parseFloat(Web3.utils.fromWei(order?.amount?.toString() ?? '0')),
                         amountLeft = parseFloat(Web3.utils.fromWei(order?.amount_left?.toString() ?? '0')),
                         filled = amount - amountLeft;

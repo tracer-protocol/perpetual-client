@@ -71,7 +71,7 @@ const SLoadingOutlined = styled(LoadingOutlined)`
     bottom: 0;
     width: 16px;
     height: 16px;
-`
+`;
 
 const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
@@ -96,10 +96,10 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
                 },
             ],
         });
-    }, [candleData])
+    }, [candleData]);
 
     if (!graphData || !(graphData?.candlestickSeries as any[])?.length) {
-        return <SLoadingOutlined />
+        return <SLoadingOutlined />;
     } else {
         return (
             <ChartWrapper

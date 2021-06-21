@@ -8,12 +8,20 @@ interface RTProps {
     className?: string;
 }
 
+const STradingTable = styled(TradingTable)`
+    tbody {
+        display: block;
+        overflow-y: scroll;
+        max-height: 18vh;
+    }
+`;
+
 const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) => {
     return (
         <div className={className}>
             <h3>Recent Trades</h3>
             {trades?.length ? (
-                <TradingTable>
+                <STradingTable>
                     <thead>
                         <tr>
                             <th>Price</th>
@@ -37,7 +45,7 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                             );
                         })}
                     </tbody>
-                </TradingTable>
+                </STradingTable>
             ) : (
                 <p>No recent trades</p>
             )}
@@ -45,11 +53,12 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
     );
 })`
     padding: 10px;
-    height: 100%;
-    overflow: scroll;
+    padding-right: 0;
+    height: 30vh;
+    position: relative;
     border-top: 1px solid #002886;
     h3 {
-        font-size: 20px;
+        font-size: 1.25rem;
         letter-spacing: -0.4px;
         color: #ffffff;
         text-transform: capitalize;

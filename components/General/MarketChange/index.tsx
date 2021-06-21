@@ -13,11 +13,11 @@ const MarketChange: React.FC<MCProps> = styled(({ className, amount, size, befor
         {before ? (
             <>
                 <div className={`${amount >= 0 ? 'arrow-up' : 'arrow-down'} ${size} ${before ? 'before' : ''}`} />
-                <p className={amount >= 0 ? 'up' : 'down'}>20%</p>
+                <p className={amount >= 0 ? 'up' : 'down'}>0%</p>
             </>
         ) : (
             <>
-                <p className={amount >= 0 ? 'up' : 'down'}>20%</p>
+                <p className={amount >= 0 ? 'up' : 'down'}>0%</p>
                 <div className={`${amount >= 0 ? 'arrow-up' : 'arrow-down'} ${size}`} />
             </>
         )}

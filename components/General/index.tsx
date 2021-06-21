@@ -91,7 +91,7 @@ export const Card = styled.div`
     transition: 0.3s;
 
     h1 {
-        font-size: 20px;
+        font-size: 1.25rem;
         letter-spacing: -0.4px;
         color: #ffffff;
     }
