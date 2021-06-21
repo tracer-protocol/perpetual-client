@@ -41,6 +41,7 @@ export const defaults: Record<string, any> = {
     quoteTokenDecimals: new BigNumber(1),
     exposure: new BigNumber(0),
     feeRate: new BigNumber(0),
+    fundingRate: new BigNumber(0),
     fundingRateSensitivity: new BigNumber(0),
     twentyFourHourChange: 0,
     baseTicker: '',

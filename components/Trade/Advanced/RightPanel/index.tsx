@@ -120,7 +120,7 @@ const TradingView: React.FC<{
                     lastPrice={omeState?.highestAsk ?? 0}
                     fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
                     oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
-                    fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.feeRate}
+                    fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.fundingRate.toNumber()}
                     nextFunding={new Date()}
                     tradingVolume={243512}
                     maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
