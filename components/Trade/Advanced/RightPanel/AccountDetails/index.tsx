@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
-import { Table, TRow, TData } from '@components/General/Table';
 import { calcStatus, timeAgo, toApproxCurrency } from '@libs/utils';
 import Web3 from 'web3';
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
@@ -16,6 +15,7 @@ import { OMEContext } from '@context/OMEContext';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import CustomSubNav from './CustomSubNav';
+import { TableCell, TableHead, TableRow } from '@components/Portfolio';
 
 const AccountDetails = styled.div`
     width: 40%;
@@ -150,24 +150,24 @@ const PositionDetails: React.FC<IProps> = ({ balance, price, baseTicker, quoteTi
     );
 };
 
-const STable = styled(Table)`
-    > tbody {
-        display: block;
-        max-height: 15vh;
-        overflow-y: scroll;
-    }
-    > thead {
-        display: table;
-        table-layout: fixed; /* even columns width , fix width of table too*/
-        width: calc(100% - 5px) !important; /* scrollbar is 5px */
-    }
-    > tbody tr {
-        display: table;
-        width: 100%;
-        table-layout: fixed; /* even columns width , fix width of table too*/
-        overflow: auto;
-    }
-`;
+// const STable = styled(Table)`
+//     > tbody {
+//         display: block;
+//         max-height: 15vh;
+//         overflow-y: scroll;
+//     }
+//     > thead {
+//         display: table;
+//         table-layout: fixed; /* even columns width , fix width of table too*/
+//         width: calc(100% - 5px) !important; /* scrollbar is 5px */
+//     }
+//     > tbody tr {
+//         display: table;
+//         width: 100%;
+//         table-layout: fixed; /* even columns width , fix width of table too*/
+//         overflow: auto;
+//     }
+// `;
 
 const Cancel = styled(Button)`
     height: 28px;
@@ -189,6 +189,17 @@ const OpenOrders: React.FC<{
     refetch: () => void;
 }> = React.memo(({ userOrders, baseTicker, refetch }) => {
     const { handleAsync } = useContext(TransactionContext);
+    const TableHeadTheme = {
+        maxWidth: '180px',
+        minWidth: '80px',
+        width: 'auto',
+        borderRight: '1px solid #002886',
+        borderBottom: '1px solid #002886',
+    };
+    const TableHeadEndTheme = {
+        minWidth: '200px',
+        borderBottom: '1px solid #002886',
+    };
     const _cancelOrder = (market: string, orderId: string) => {
         console.info(`Attempting to cancel order: ${orderId} on market: ${market}`);
         handleAsync
@@ -201,36 +212,49 @@ const OpenOrders: React.FC<{
             : console.error('Failed to cancel order: Handle transaction not defined');
     };
     return (
-        <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
+        <table className="w-full">
+            <thead>
+                <tr>
+                    {['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', ''].map((heading, i) =>
+                        i === 6 ? (
+                            <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
+                        ) : (
+                            <TableHead theme={TableHeadTheme}>{heading}</TableHead>
+                        ),
+                    )}
+                </tr>
+            </thead>
             <tbody>
                 {userOrders.map((order, index) => {
                     const amount = parseFloat(Web3.utils.fromWei(order?.amount?.toString() ?? '0')),
                         amountLeft = parseFloat(Web3.utils.fromWei(order?.amount_left?.toString() ?? '0')),
                         filled = amount - amountLeft;
                     return (
-                        <TRow key={`open-order-${index}`}>
-                            <TData>{calcStatus(filled)}</TData>
-                            <TData className={order.side.toLowerCase() /** This will be the global .bid or .ask */}>
+                        <TableRow key={`open-order-${index}`}>
+                            <TableCell>{calcStatus(filled)}</TableCell>
+                            <TableCell className={order.side.toLowerCase() /** This will be the global .bid or .ask */}>
                                 {order.side}
-                            </TData>
-                            <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
-                            <TData>
+                            </TableCell>
+                            <TableCell>
+                                {toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}
+                            </TableCell>
+                            <TableCell>
                                 {amount} {baseTicker}
-                            </TData>
-                            <TData>
+                            </TableCell>
+                            <TableCell>
                                 {filled} {baseTicker}
-                            </TData>
-                            <TData>
+                            </TableCell>
+                            <TableCell>
                                 {amountLeft} {baseTicker}
-                            </TData>
-                            <TData>
+                            </TableCell>
+                            <TableCell>
                                 <Cancel onClick={(_e) => _cancelOrder(order.target_tracer, order.id)}>Cancel</Cancel>
-                            </TData>
-                        </TRow>
+                            </TableCell>
+                        </TableRow>
                     );
                 })}
             </tbody>
-        </STable>
+        </table>
     );
 });
 OpenOrders.displayName = 'OpenOrders';
@@ -238,27 +262,42 @@ OpenOrders.displayName = 'OpenOrders';
 const Fills: React.FC<{
     filledOrders: FilledOrder[];
 }> = React.memo(({ filledOrders }) => {
+    const TableHeadEndTheme = {
+        minWidth: '200px',
+        borderBottom: '1px solid #002886',
+    };
     return (
-        <STable headings={['Time', 'Side', 'Price', 'Amount']}>
+        <table className="w-full">
+            <thead>
+                <tr>
+                    {['Time', 'Side', 'Price', 'Amount'].map((heading, i) =>
+                        i === 3 ? (
+                            <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
+                        ) : (
+                            <TableHead>{heading}</TableHead>
+                        ),
+                    )}
+                </tr>
+            </thead>
             <tbody>
                 {filledOrders.map((order, index) => {
                     const now = Date.now();
                     const price = order.price;
                     return (
-                        <TRow key={`filled-order-${index}`}>
-                            <TData>{timeAgo(now, parseInt(order.timestamp) * 1000)}</TData>
-                            <TData className={!!order.position ? 'ask' : 'bid'}>
+                        <TableRow key={`filled-order-${index}`}>
+                            <TableCell>{timeAgo(now, parseInt(order.timestamp) * 1000)}</TableCell>
+                            <TableCell className={!!order.position ? 'ask' : 'bid'}>
                                 {!!order.position ? 'Short' : 'Long'}
-                            </TData>
-                            <TData>{toApproxCurrency(price)}</TData>
-                            <TData>{order.amount.toNumber()}</TData>
+                            </TableCell>
+                            <TableCell>{toApproxCurrency(price)}</TableCell>
+                            <TableCell>{order.amount.toNumber()}</TableCell>
                             {/*TODO: Fee value*/}
                             {/*<TData>{toApproxCurrency(order.amount.times(price))}/$0</TData>*/}
-                        </TRow>
+                        </TableRow>
                     );
                 })}
             </tbody>
-        </STable>
+        </table>
     );
 });
 
