@@ -12,8 +12,9 @@ export const Exposure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
     selectedTracer: Tracer | undefined;
     order: OrderState;
+    closeInput?: boolean; // optional boolean if it is for closing defaults to false
     className?: string;
-}> = ({ selectedTracer, orderDispatch, order, className }) => {
+}> = ({ selectedTracer, orderDispatch, order, closeInput, className }) => {
     return (
         <>
             <SmallInput
@@ -33,7 +34,7 @@ export const Exposure: React.FC<{
                 setMax={(e) => {
                     e.preventDefault();
                     orderDispatch
-                        ? orderDispatch({ type: 'setMaxExposure' })
+                        ? orderDispatch({ type: closeInput ? 'setMaxClosure' : 'setMaxExposure' })
                         : console.error('No dispatch function set');
                 }}
                 unit={selectedTracer?.baseTicker ?? ''}

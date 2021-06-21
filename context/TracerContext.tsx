@@ -145,7 +145,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             }
             return {
                 status: res.status,
-                message: `Successfully created order with status message: ${res.message}`,
+                message: res.message
             };
         } catch (err) {
             return { status: 'error', message: `Failed to place order ${err}` } as Result;

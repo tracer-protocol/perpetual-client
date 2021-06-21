@@ -6,7 +6,7 @@ import { Box, Button } from '@components/General';
 import { PlaceOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import Error from '@components/General/Error';
-import { Closure, Leverage } from './Inputs';
+import { Exposure, Leverage } from './Inputs';
 import { OrderAction, orderDefaults, OrderState } from '@context/OrderContext';
 import { MarketTradeDetails } from './PostTradeDetails';
 import { BigNumber } from 'bignumber.js';
@@ -63,10 +63,11 @@ type CProps = {
 const Close: React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
     return (
         <>
-            <Closure
+            <Exposure
                 orderDispatch={orderDispatch}
                 selectedTracer={selectedTracer}
-                exposure={order?.exposure ?? defaults.exposure}
+                order={order ?? orderDefaults.order}
+                closeInput={true}
             />
         </>
     );

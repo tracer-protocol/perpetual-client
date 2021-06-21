@@ -73,6 +73,7 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = 
     })
         .then((res) => res.json())
         .then((res) => {
+            console.log(res.status === 400)
             if (res?.status === 404) {
                 return {
                     status: 'error',
@@ -129,7 +130,7 @@ export const cancelOrder: (market: string, orderId: string) => Promise<Result> =
             return res.text();
         })
         .then((res) => {
-            console.info('Succesfully cancelled order', res);
+            console.info('Successfully cancelled order', res);
             return {
                 status: 'success',
                 message: `Successfully cancelled order: ${orderId}`,
