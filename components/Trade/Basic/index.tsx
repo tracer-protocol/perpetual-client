@@ -225,7 +225,7 @@ const Basic: React.FC = styled(({ className }) => {
                 <PlaceOrderButton className="mt-auto mb-2">
                     <SButton className="mx-auto">Place Trade</SButton>
                 </PlaceOrderButton>
-                <Error error={order?.error ?? 'NO_ERROR'} />
+                <Error error={order?.error ?? 'NO_ERROR'} context="orders" />
             </SCard>
         </div>
     );
