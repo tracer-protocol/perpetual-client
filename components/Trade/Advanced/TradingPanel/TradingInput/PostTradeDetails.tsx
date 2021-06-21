@@ -17,7 +17,7 @@ const SHiddenExpand = styled(HiddenExpand)`
         color: #ffffff;
         margin-bottom: 20px;
     }
-`
+`;
 interface MTDProps {
     balances: UserBalance;
     nextPosition: {
@@ -31,8 +31,15 @@ interface MTDProps {
     tradePrice: BigNumber;
     className?: string;
 }
-export const MarketTradeDetails: React.FC<MTDProps> = ({ 
-    balances, nextPosition, exposure, fairPrice, maxLeverage, slippage, tradePrice, className 
+export const MarketTradeDetails: React.FC<MTDProps> = ({
+    balances,
+    nextPosition,
+    exposure,
+    fairPrice,
+    maxLeverage,
+    slippage,
+    tradePrice,
+    className,
 }: MTDProps) => {
     return (
         <SHiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
@@ -41,15 +48,13 @@ export const MarketTradeDetails: React.FC<MTDProps> = ({
                 <Previous>
                     {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
                 </Previous>
-                {toApproxCurrency(
-                    calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage),
-                )}
+                {toApproxCurrency(calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage))}
             </Section>
             <Section label={'Trade Price'}>{toApproxCurrency(tradePrice)}</Section>
             <Section label={'Slippage'}>{slippage.toFixed(3)}%</Section>
         </SHiddenExpand>
     );
-}
+};
 
 interface LTDProps {
     balances: UserBalance;
@@ -63,8 +68,14 @@ interface LTDProps {
     orderPrice: number;
     className?: string;
 }
-export const LimitTradeDetails: React.FC<LTDProps> = ({ 
-    balances, nextPosition, exposure, fairPrice, maxLeverage, orderPrice, className 
+export const LimitTradeDetails: React.FC<LTDProps> = ({
+    balances,
+    nextPosition,
+    exposure,
+    fairPrice,
+    maxLeverage,
+    orderPrice,
+    className,
 }: LTDProps) => {
     return (
         <SHiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
@@ -73,14 +84,12 @@ export const LimitTradeDetails: React.FC<LTDProps> = ({
                 <Previous>
                     {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
                 </Previous>
-                {toApproxCurrency(
-                    calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage),
-                )}
+                {toApproxCurrency(calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage))}
             </Section>
             <Section label={'Trade Price'}>{toApproxCurrency(orderPrice)}</Section>
         </SHiddenExpand>
     );
-}
+};
 
 interface ASProps {
     balances: UserBalance;
@@ -91,11 +100,17 @@ interface ASProps {
     exposure: BigNumber;
     fairPrice: BigNumber;
     maxLeverage: BigNumber;
-    baseTicker: string
+    baseTicker: string;
     className?: string;
 }
-export const AdjustSummary: React.FC<ASProps> = ({ 
-    balances, nextPosition, exposure, fairPrice, maxLeverage, baseTicker, className 
+export const AdjustSummary: React.FC<ASProps> = ({
+    balances,
+    nextPosition,
+    exposure,
+    fairPrice,
+    maxLeverage,
+    baseTicker,
+    className,
 }: ASProps) => {
     return (
         <SHiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
@@ -105,12 +120,9 @@ export const AdjustSummary: React.FC<ASProps> = ({
                 <Previous>
                     {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
                 </Previous>
-                {toApproxCurrency(
-                    calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage),
-                )}
+                {toApproxCurrency(calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage))}
             </Section>
             <Section label={'Trade Price'}>{toApproxCurrency(fairPrice)}</Section>
         </SHiddenExpand>
     );
 };
-

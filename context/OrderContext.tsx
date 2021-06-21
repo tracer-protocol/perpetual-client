@@ -1,8 +1,10 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
 import { TracerContext, Web3Context } from './';
 import { Children, OpenOrder, UserBalance } from 'types';
-import { 
-    calcMinimumMargin, calcTotalMargin, calcSlippage,
+import {
+    calcMinimumMargin,
+    calcTotalMargin,
+    calcSlippage,
     calcFromMarginAndLeverage,
 } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
@@ -222,10 +224,18 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 const long = base.gt(0);
                 if (action.value === CLOSE) {
                     if (short) {
-                        return { ...state, adjustType: action.value, position: LONG };
+                        return {
+                            ...state,
+                            adjustType: action.value,
+                            position: LONG,
+                        };
                     }
                     if (long) {
-                        return { ...state, adjustType: action.value, position: SHORT };
+                        return {
+                            ...state,
+                            adjustType: action.value,
+                            position: SHORT,
+                        };
                     }
                 }
                 return { ...state, adjustType: action.value };
@@ -279,44 +289,44 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     };
 
     // calculates the newQuote and newBase based on a given exposre
-    const calcNewBalance: (totalExposure: number, price: number) => { base: BigNumber, quote: BigNumber } = (
-        totalExposure, price
+    const calcNewBalance: (totalExposure: number, price: number) => { base: BigNumber; quote: BigNumber } = (
+        totalExposure,
+        price,
     ) => {
         const balances = selectedTracer?.getBalance();
         if (order.position === SHORT) {
-            return ({
+            return {
                 base: balances?.base.minus(totalExposure) ?? tracerDefaults.balances.base, // add how much exposure you get
-                quote: balances?.quote.plus(totalExposure * price) ?? tracerDefaults.balances.quote // subtract how much it costs
-            })
+                quote: balances?.quote.plus(totalExposure * price) ?? tracerDefaults.balances.quote, // subtract how much it costs
+            };
         }
-        return ({
-            base: balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base, // add how much exposure you get 
-            quote:  balances?.quote.minus(totalExposure * price) ?? tracerDefaults.balances.quote // subtract how much it costs
-        })
-    }
+        return {
+            base: balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base, // add how much exposure you get
+            quote: balances?.quote.minus(totalExposure * price) ?? tracerDefaults.balances.quote, // subtract how much it costs
+        };
+    };
 
     useMemo(() => {
         const { quote, base } = selectedTracer?.getBalance() ?? defaults.balances;
         const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
-        const margin = calcTotalMargin(quote, base, fairPrice)
+        const margin = calcTotalMargin(quote, base, fairPrice);
         const position = base.gt(0);
-        // it doesnt matter that it will default to short when base === 0 since 
+        // it doesnt matter that it will default to short when base === 0 since
         const { exposure } = calcFromMarginAndLeverage(
-            margin, 
-            new BigNumber(order.adjustLeverage), 
+            margin,
+            new BigNumber(order.adjustLeverage),
             fairPrice,
-            selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage, 
-            !!position
-        )
-        orderDispatch({ type: 'setExposure', value: exposure.toNumber()});
+            selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
+            !!position,
+        );
+        orderDispatch({ type: 'setExposure', value: exposure.toNumber() });
         orderDispatch({
             type: 'setNextPosition',
             nextPosition: {
-                ...calcNewBalance(exposure.toNumber(), fairPrice)
+                ...calcNewBalance(exposure.toNumber(), fairPrice),
             },
         });
-    }, [order.adjustLeverage])
-
+    }, [order.adjustLeverage]);
 
     useMemo(() => {
         if (omeState?.orders) {
@@ -332,7 +342,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 orderDispatch({
                     type: 'setPrice',
                     value:
-                        (order.position === LONG ? omeState?.maxAndMins?.maxBid : omeState?.maxAndMins?.minAsk) ?? NaN,
+                        (order.position === LONG ? omeState?.maxAndMins?.minAsk : omeState?.maxAndMins?.maxBid) ?? NaN,
                 });
             }
         }
@@ -340,9 +350,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     useMemo(() => {
         if (order.orderType === MARKET) {
+            console.log(omeState?.maxAndMins);
             orderDispatch({
                 type: 'setPrice',
-                value: (order.position === LONG ? omeState?.maxAndMins?.maxBid : omeState?.maxAndMins?.minAsk) ?? NaN,
+                value: (order.position === LONG ? omeState?.maxAndMins?.minAsk : omeState?.maxAndMins?.maxBid) ?? NaN,
             });
         } else {
             orderDispatch({ type: 'setPrice', value: NaN });
@@ -392,7 +403,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         orderDispatch({
             type: 'setNextPosition',
             nextPosition: {
-                ...calcNewBalance(order.exposure * order.leverage, order.price)
+                ...calcNewBalance(order.exposure * order.leverage, order.price),
             },
         });
     }, [order.exposure, order.price]);

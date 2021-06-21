@@ -2,14 +2,15 @@ import React, { useContext } from 'react';
 import { OrderContext } from 'context';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
-import { Box, Button } from '@components/General';
-import { PlaceOrderButton, SlideSelect } from '@components/Buttons';
+import { Box } from '@components/General';
+import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import Error from '@components/General/Error';
 import { Exposure, Leverage } from './Inputs';
 import { OrderAction, orderDefaults, OrderState } from '@context/OrderContext';
 import { AdjustSummary, MarketTradeDetails } from './PostTradeDetails';
 import { BigNumber } from 'bignumber.js';
+import { PositionSelect } from './Selects';
 
 type SProps = {
     selected: number;
@@ -93,6 +94,10 @@ type AProps = {
 const Adjust: React.FC<AProps> = ({ order, orderDispatch, selectedTracer }) => {
     return (
         <>
+            {/* Position select */}
+            <div className="m-5">
+                <PositionSelect selected={order?.position ?? 0} />
+            </div>
             <Leverage
                 min={new BigNumber(0)}
                 max={selectedTracer?.getMaxLeverage()}
@@ -141,10 +146,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                         <Adjust orderDispatch={orderDispatch} order={order} selectedTracer={selectedTracer} />
                     )}
                 </div>
-
-                <PlaceOrderButton className="text-center">
-                    <Button>{order?.adjustType === 0 ? 'Adjust Order' : 'Close Position'} </Button>
-                </PlaceOrderButton>
+                <AdvancedOrderButton>{order?.adjustType === 0 ? 'Adjust Order' : 'Close Position'}</AdvancedOrderButton>
             </Box>
             <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
         </>
