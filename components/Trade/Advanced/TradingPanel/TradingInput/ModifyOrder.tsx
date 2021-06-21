@@ -8,7 +8,7 @@ import { Option } from '@components/Buttons/SlideSelect';
 import Error from '@components/General/Error';
 import { Exposure, Leverage } from './Inputs';
 import { OrderAction, orderDefaults, OrderState } from '@context/OrderContext';
-import { MarketTradeDetails } from './PostTradeDetails';
+import { AdjustSummary, MarketTradeDetails } from './PostTradeDetails';
 import { BigNumber } from 'bignumber.js';
 
 type SProps = {
@@ -69,6 +69,16 @@ const Close: React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
                 order={order ?? orderDefaults.order}
                 closeInput={true}
             />
+
+            <MarketTradeDetails
+                fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
+                balances={selectedTracer?.getBalance() ?? defaults.balances}
+                exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                nextPosition={order?.nextPosition ?? defaults.balances}
+                slippage={order?.slippage ?? 0}
+                tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
+                maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+            />
         </>
     );
 };
@@ -82,12 +92,23 @@ type AProps = {
 
 const Adjust: React.FC<AProps> = ({ order, orderDispatch, selectedTracer }) => {
     return (
-        <Leverage
-            min={selectedTracer?.getBalance().leverage}
-            max={selectedTracer?.getMaxLeverage()}
-            leverage={order?.leverage ?? 1}
-            orderDispatch={orderDispatch}
-        />
+        <>
+            <Leverage
+                min={new BigNumber(0)}
+                max={selectedTracer?.getMaxLeverage()}
+                leverage={order?.adjustLeverage ?? 0}
+                adjustLeverage={true}
+                orderDispatch={orderDispatch}
+            />
+            <AdjustSummary
+                fairPrice={selectedTracer?.getFairPrice() ?? defaults.oraclePrice}
+                balances={selectedTracer?.getBalance() ?? defaults.balances}
+                exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                nextPosition={order?.nextPosition ?? defaults.balances}
+                baseTicker={selectedTracer?.baseTicker ?? ''}
+                maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+            />
+        </>
     );
 };
 
@@ -120,16 +141,6 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                         <Adjust orderDispatch={orderDispatch} order={order} selectedTracer={selectedTracer} />
                     )}
                 </div>
-
-                <MarketTradeDetails
-                    fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
-                    balances={selectedTracer?.getBalance() ?? defaults.balances}
-                    exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
-                    nextPosition={order?.nextPosition ?? defaults.balances}
-                    slippage={order?.slippage ?? 0}
-                    tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
-                    maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                />
 
                 <PlaceOrderButton className="text-center">
                     <Button>{order?.adjustType === 0 ? 'Adjust Order' : 'Close Position'} </Button>
