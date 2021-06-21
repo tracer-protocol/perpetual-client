@@ -38,7 +38,7 @@ export const toApproxCurrency: (num_: BigNumber | number, precision?: number) =>
     let num = num_;
     if (!num_) {
         // reject if num is false
-        return '$0.000000';
+        return '$0.00';
     }
     if (typeof num !== 'number') {
         num = (num_ as BigNumber).toNumber();
@@ -46,8 +46,18 @@ export const toApproxCurrency: (num_: BigNumber | number, precision?: number) =>
     return num.toLocaleString('en-us', {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: Math.min(getPrecision(num), precision ?? 6),
+        minimumFractionDigits: Math.min(getPrecision(num), precision ?? 2),
     });
+};
+
+export const getPositionText: (balance: BigNumber) => 'NONE' | 'SHORT' | 'LONG' = (balance) => {
+    if (balance.eq(0)) {
+        return 'NONE';
+    } else if (balance.lt(0)) {
+        return 'SHORT';
+    } else {
+        return 'LONG';
+    }
 };
 
 // order prices are in cents * 1000

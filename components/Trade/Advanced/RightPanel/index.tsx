@@ -7,7 +7,10 @@ import { useMostRecentMatched } from '@libs/Graph/hooks/Tracer';
 import { OMEContext } from '@context/OMEContext';
 import styled from 'styled-components';
 import FundingRateGraphic from '@components/FundingRateGraphic';
-import { formatDate, toApproxCurrency } from '@libs/utils';
+import {
+    // formatDate,
+    toApproxCurrency,
+} from '@libs/utils';
 import BigNumber from 'bignumber.js';
 
 import AccountSummary from './AccountDetails';
@@ -41,8 +44,8 @@ type MIProps = {
     fairPrice: BigNumber;
     oraclePrice: number;
     fundingRate: number;
-    nextFunding: Date;
-    tradingVolume: number;
+    // nextFunding: Date;
+    // tradingVolume: number;
     maxLeverage: BigNumber;
     className?: string;
 };
@@ -53,8 +56,8 @@ const MarketInfo: React.FC<MIProps> = styled(
         fairPrice,
         oraclePrice,
         fundingRate,
-        nextFunding,
-        tradingVolume,
+        // nextFunding,
+        // tradingVolume,
         maxLeverage,
         className,
     }: MIProps) => {
@@ -66,8 +69,8 @@ const MarketInfo: React.FC<MIProps> = styled(
                 <TitledBox title={'Funding Rate'}>
                     <FundingRateGraphic rate={fundingRate} />
                 </TitledBox>
-                <TitledBox title={'Next Funding'}>{formatDate(nextFunding)}</TitledBox>
-                <TitledBox title={'24H Trades'}>{tradingVolume.toLocaleString()}</TitledBox>
+                {/* <TitledBox title={'Next Funding'}>{formatDate(nextFunding)}</TitledBox>
+                <TitledBox title={'24H Trades'}>{tradingVolume.toLocaleString()}</TitledBox> */}
                 <TitledBox title={'Max Leverage'} className="border-r-0">
                     {maxLeverage.toNumber()}x
                 </TitledBox>
@@ -82,14 +85,13 @@ const MarketInfo: React.FC<MIProps> = styled(
 const OrderBookContainer = styled.div`
     border-top: 1px solid #002886;
     padding: 10px;
-    max-height: 50vh;
-    overflow-y: auto;
-    height: 100%;
+    padding-right: 0;
+    height: 35vh;
     h3 {
         letter-spacing: -0.4px;
         color: #ffffff;
         text-transform: capitalize;
-        font-size: 20px;
+        font-size: 1.25rem;
         margin-bottom: 5px;
     }
 `;
@@ -120,9 +122,9 @@ const TradingView: React.FC<{
                     lastPrice={omeState?.highestAsk ?? 0}
                     fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
                     oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
-                    fundingRate={selectedTracer?.getFundingRate() ?? defaults.feeRate}
-                    nextFunding={new Date()}
-                    tradingVolume={243512}
+                    fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.fundingRate.toNumber()}
+                    // nextFunding={new Date()}
+                    // tradingVolume={243512}
                     maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
                 />
                 <Graphs />

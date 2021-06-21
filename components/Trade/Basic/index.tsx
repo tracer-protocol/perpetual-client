@@ -129,7 +129,7 @@ const OrderSummary: React.FC<SProps> = styled(({ balances, fairPrice, order, max
 `;
 
 const Title = styled.h1`
-    font-size: 20px;
+    font-size: 1.25rem;
     letter-spacing: -0.4px;
     color: #ffffff;
     font-weight: normal;
@@ -225,7 +225,7 @@ const Basic: React.FC = styled(({ className }) => {
                 <PlaceOrderButton className="mt-auto mb-2">
                     <SButton className="mx-auto">Place Trade</SButton>
                 </PlaceOrderButton>
-                <Error error={order?.error ?? 'NO_ERROR'} />
+                <Error error={order?.error ?? 'NO_ERROR'} context="orders" />
             </SCard>
         </div>
     );

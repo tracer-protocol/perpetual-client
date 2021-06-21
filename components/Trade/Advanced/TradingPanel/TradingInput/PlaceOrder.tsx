@@ -130,11 +130,20 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                         ) : null}
                         {exposure && price ? <Approx>{toApproxCurrency(exposure * price * leverage)}</Approx> : null}
                     </Details>
-                    <Price
-                        orderDispatch={orderDispatch}
-                        selectedTracer={selectedTracer}
-                        price={order?.price ?? defaults.price}
-                    />
+
+                    {/*Dont display price select if it is a market order*/}
+                    {order?.orderType !== 1 ? (
+                        <>
+                            {/* Price select */}
+                            <Price
+                                orderDispatch={orderDispatch}
+                                selectedTracer={selectedTracer}
+                                price={order?.price ?? defaults.price}
+                            />
+                        </>
+                    ) : (
+                        <></>
+                    )}
                 </div>
 
                 <Leverage
@@ -158,7 +167,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     <AdvancedOrderButton />
                 </div>
             </Box>
-            <SError error={order?.error ?? 'NO_ERROR'} account={account} />
+            <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
         </>
     );
 })`
@@ -170,6 +179,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
     display: block;
     padding: 0;
     height: 100%;
+    z-index: 1;
     &.hide {
         height: 0;
         padding: 0;

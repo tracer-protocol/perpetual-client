@@ -35,7 +35,7 @@ const InputContainer = styled.div`
         color: #fff;
         text-align: right;
         padding-left: 10px;
-        font-size: 20px;
+        font-size: 1.25rem;
         &:focus {
             outline: none;
         }
@@ -44,7 +44,7 @@ const InputContainer = styled.div`
     > .unit {
         letter-spacing: -0.4px;
         color: #005ea4;
-        font-size: 20px;
+        font-size: 1.25rem;
         margin: auto 0 auto auto;
         padding-left: 4px;
     }

@@ -60,6 +60,13 @@ export const Button = styled.button`
         color: #3da8f5;
     }
 
+    &.disabled {
+        &:hover {
+            color: #3da8f5;
+            background: none;
+        }
+    }
+
     &:disabled,
     &[disabled] {
         opacity: 0.8;
@@ -84,7 +91,7 @@ export const Card = styled.div`
     transition: 0.3s;
 
     h1 {
-        font-size: 20px;
+        font-size: 1.25rem;
         letter-spacing: -0.4px;
         color: #ffffff;
     }
