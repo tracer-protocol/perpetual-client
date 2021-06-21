@@ -228,7 +228,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 const price = state.position === LONG ? omeState?.lowestBid : omeState?.highestAsk;
                 if (!price) {
                     // if there is no price set error to no open orders
-                    return { ...state, error: 3 };
+                    return { ...state, error: "NO_ORDERS"};
                 } else {
                     return { ...state, price: price };
                 }
