@@ -36,7 +36,7 @@ export const getUsersOrders: (market: string, account: string) => Promise<OMEOrd
     })
         .then((res) => res.json())
         .then((res) => {
-            if (res === 'Market does not exist') {
+            if (res.status === 404) {
                 console.error('Failed to fetch user orders', res);
                 return [];
             }
