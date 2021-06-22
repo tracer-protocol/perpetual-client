@@ -127,13 +127,19 @@ const DropdownLogo = styled(({ className }) => {
                 <ul className="dropdown-menu-list">
                     <li className="nav-item" />
                     <li className="nav-item highlight">
-                        <img alt="Tracer Logo" src="/img/logos/tracer/tracer_main.svg" />
+                        <Link href="https://tracer.finance">
+                            <img alt="Tracer Logo" src="/img/logos/tracer/tracer_main.svg" />
+                        </Link>
                     </li>
                     <li className="nav-item highlight">
-                        <img alt="Tracer Logo" src="/img/logos/tracer/tracer_govern.svg" />
+                        <Link href="https://tracer.finance/govern/">
+                            <img alt="Tracer Logo" src="/img/logos/tracer/tracer_govern.svg" />
+                        </Link>
                     </li>
                     <li className="nav-item highlight">
-                        <img alt="Tracer Logo" src="/img/logos/tracer/tracer_blog.svg" />
+                        <Link href="https://tracer.finance/radar/">
+                            <img alt="Tracer Logo" src="/img/logos/tracer/tracer_blog.svg" />
+                        </Link>
                     </li>
                     <li className="nav-item flex">
                         <Link href="https://discourse.tracer.finance/">
