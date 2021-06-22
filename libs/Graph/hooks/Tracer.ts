@@ -90,9 +90,11 @@ export const useMostRecentMatched: (tracer: string) => {
         refetch,
     };
 };
+
+// fetches 15 minute candles 15*60 === 900
 const ALL_CANDLES = gql`
-    query {
-        candles(where: { period: 3600 }) {
+    query Tracer_Candles($tracer: String) {
+        candles(where: { period: 900, tracer: $tracer }) { 
             id
             time
             open
@@ -104,35 +106,49 @@ const ALL_CANDLES = gql`
     }
 `;
 
-const parseCandles: (data: any) => CandleData = (data) =>
-    data?.map((candle: any) => ({
-        time: candle.time,
-        open: parseFloat(Web3.utils.fromWei(candle.open)),
-        close: parseFloat(Web3.utils.fromWei(candle.close)),
-        low: parseFloat(Web3.utils.fromWei(candle.low)),
-        high: parseFloat(Web3.utils.fromWei(candle.high)),
-        totalAmount: parseFloat(Web3.utils.fromWei(candle.totalAmount)),
-    }));
+const parseCandles: (data: any) => CandleData = (data) => {
+    const foundTimes: Record<number, boolean> = {};
+    let parsedData = [];
+    for (let i = 0; i < data?.length ?? 0; i++) {
+        let candle = data[i]
+        if (foundTimes[candle.time]) continue;
+        if (i === 0) {
+            console.log({
+                time: candle.time,
+                open: parseFloat(Web3.utils.fromWei(candle.open)),
+                close: parseFloat(Web3.utils.fromWei(candle.close)),
+                low: parseFloat(Web3.utils.fromWei(candle.low)),
+                high: parseFloat(Web3.utils.fromWei(candle.high)),
+                totalAmount: parseFloat(Web3.utils.fromWei(candle.totalAmount)),
+            })
+            continue;
+        }
+        foundTimes[candle.time] = true;
+        parsedData.push({
+            time: candle.time,
+            open: parseFloat(Web3.utils.fromWei(candle.open)),
+            close: parseFloat(Web3.utils.fromWei(candle.close)),
+            low: parseFloat(Web3.utils.fromWei(candle.low)),
+            high: parseFloat(Web3.utils.fromWei(candle.high)),
+            totalAmount: parseFloat(Web3.utils.fromWei(candle.totalAmount)),
+        })
+    }
+    return (parsedData)
+}
 
-export const useCandles: () => {
+export const useCandles: (tracer: string) => {
     candles: CandleData;
     error: any;
     loading: any;
     refetch: any;
-} = () => {
+} = (tracer) => {
     const ref = useRef<[]>([]);
-    const { addToast } = useToasts();
     const { data, error, loading, refetch } = useQuery(ALL_CANDLES, {
+        variables: { tracer: tracer.toLowerCase() },
         errorPolicy: 'all',
-        onError: ({ graphQLErrors, networkError }) => {
+        onError: ({ graphQLErrors }) => {
             if (graphQLErrors) {
                 graphQLErrors.map((err) => console.error(`Failed to fetch candle trades: ${err}`));
-            }
-            if (networkError) {
-                addToast(['Failed to fetch', `Failed to connect to the graph. ${networkError}`], {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
             }
         },
     });

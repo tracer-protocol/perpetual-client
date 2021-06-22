@@ -13,11 +13,11 @@ const GraphWrap = styled.div`
     position: relative;
 `;
 
-export default (() => {
-    const { candles } = useCandles();
+export default (({ selectedTracerAddress }: { selectedTracerAddress: string }) => {
+    const { candles } = useCandles(selectedTracerAddress);
     return (
         <GraphWrap>
             <LightWeightChart candleData={candles as CandleData} />
         </GraphWrap>
     );
-}) as React.FC;
+}) as React.FC<{ selectedTracerAddress: string }>;
