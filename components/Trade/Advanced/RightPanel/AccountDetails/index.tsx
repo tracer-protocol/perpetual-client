@@ -19,7 +19,7 @@ import CustomSubNav from './CustomSubNav';
 import { OrderContext } from '@context/OrderContext';
 
 const AccountDetails = styled.div`
-    width: 100%%;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
 `;
@@ -300,21 +300,10 @@ OpenOrders.displayName = 'OpenOrders';
 const Fills: React.FC<{
     filledOrders: FilledOrder[];
 }> = React.memo(({ filledOrders }) => {
-    const Orders = [
-        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
-        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
-        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
-        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
-        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
-        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
-        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
-        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
-        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
-    ];
     return (
         <STable headings={['Time', 'Side', 'Price', 'Amount']}>
             <tbody>
-                {Orders.map((order, index) => {
+                {filledOrders.map((order, index) => {
                     const now = Date.now();
                     const price = order.price;
                     return (
