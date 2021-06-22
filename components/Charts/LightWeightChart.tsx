@@ -99,7 +99,7 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
     }, [candleData]);
     
     const now = Math.floor(Date.now() / 1000); // timestamp in seconds
-    const twoHour = 2 * 60 * 60; // five minutes in seconds
+    const twoHour = 2 * 60 * 60; // two hours in seconds
 
     if (!graphData || !(graphData?.candlestickSeries as any[])?.length) {
         return <SLoadingOutlined />;
