@@ -141,6 +141,9 @@ input {
 .ant-tooltip-inner strong {
     color: #FFFFFF;
 }
+.ant-tooltip-inner a {
+    text-decoration: underline;
+}
 .ant-tooltip-arrow-content {
     background-color: #002886;
 }
