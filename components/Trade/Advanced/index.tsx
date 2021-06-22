@@ -4,6 +4,7 @@ import { MarketSelect, AccountPanel, InterfaceSelect } from './TradingPanel';
 import { ModifyOrder, PlaceOrder } from './TradingPanel/TradingInput';
 import styled from 'styled-components';
 import TradingView from './RightPanel';
+import { MARKET } from '@context/OrderContext';
 
 const TradingPanel = styled.div`
     width: 25%;
@@ -53,6 +54,16 @@ const Advanced: React.FC = styled(({ className }) => {
             console.error('Order dispatch undefined');
         }
     }, []);
+
+    useEffect(() => {
+        if (isAdjust) {
+            if (orderDispatch) {
+                orderDispatch({ type: 'setOrderType', value: MARKET });
+            } else {
+                console.error('Order dispatch undefined');
+            }
+        }
+    }, [isAdjust]);
 
     return (
         <div className={`container ${className}`}>

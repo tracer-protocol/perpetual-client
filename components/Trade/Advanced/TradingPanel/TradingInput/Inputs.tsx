@@ -109,30 +109,36 @@ export const Closure: React.FC<{
 type LProps = {
     leverage: number;
     className?: string;
+    adjustLeverage?: boolean; // boolean to tell if it is the adjust order leverage slider
     min?: BigNumber;
     max?: BigNumber;
     orderDispatch: React.Dispatch<OrderAction> | undefined;
 };
 
-export const Leverage: React.FC<LProps> = styled(({ leverage, orderDispatch, className, min, max }: LProps) => {
-    return (
-        <div className={`${className} m-3`}>
-            <TooltipSelector tooltip={{ key: 'leverage' }}>Leverage</TooltipSelector>
-            <div className="w-3/4 pl-4 pr-6 pb-4 mt-2">
-                <DefaultSlider
-                    min={Math.ceil(min?.toNumber() ?? 1) ?? 1}
-                    max={max?.toNumber() ?? defaults.maxLeverage.toNumber()}
-                    value={leverage}
-                    handleChange={(num) => {
-                        orderDispatch
-                            ? orderDispatch({ type: 'setLeverage', value: num })
-                            : console.error('Order dispatch not set');
-                    }}
-                />
+export const Leverage: React.FC<LProps> = styled(
+    ({ leverage, orderDispatch, adjustLeverage, className, min, max }: LProps) => {
+        return (
+            <div className={`${className} m-3`}>
+                <TooltipSelector tooltip={{ key: 'leverage' }}>Leverage</TooltipSelector>
+                <div className="w-3/4 pl-4 pr-6 pb-4 mt-2">
+                    <DefaultSlider
+                        min={Math.ceil(min?.toNumber() ?? 1)}
+                        max={max?.toNumber() ?? defaults.maxLeverage.toNumber()}
+                        value={leverage}
+                        handleChange={(num) => {
+                            orderDispatch
+                                ? orderDispatch({
+                                      type: adjustLeverage ? 'setAdjustLeverage' : 'setLeverage',
+                                      value: num,
+                                  })
+                                : console.error('Order dispatch not set');
+                        }}
+                    />
+                </div>
             </div>
-        </div>
-    );
-})`
+        );
+    },
+)`
     display: flex;
 
     > .label {

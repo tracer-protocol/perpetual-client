@@ -2,14 +2,15 @@ import React, { useContext } from 'react';
 import { OrderContext } from 'context';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
-import { Box, Button } from '@components/General';
-import { PlaceOrderButton, SlideSelect } from '@components/Buttons';
+import { Box } from '@components/General';
+import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import Error from '@components/General/Error';
 import { Exposure, Leverage } from './Inputs';
 import { OrderAction, orderDefaults, OrderState } from '@context/OrderContext';
-import { MarketTradeDetails } from './PostTradeDetails';
+import { AdjustSummary, MarketTradeDetails } from './PostTradeDetails';
 import { BigNumber } from 'bignumber.js';
+import { PositionSelect } from './Selects';
 
 type SProps = {
     selected: number;
@@ -69,6 +70,16 @@ const Close: React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
                 order={order ?? orderDefaults.order}
                 closeInput={true}
             />
+
+            <MarketTradeDetails
+                fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
+                balances={selectedTracer?.getBalance() ?? defaults.balances}
+                exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                nextPosition={order?.nextPosition ?? defaults.balances}
+                slippage={order?.slippage ?? 0}
+                tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
+                maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+            />
         </>
     );
 };
@@ -82,12 +93,27 @@ type AProps = {
 
 const Adjust: React.FC<AProps> = ({ order, orderDispatch, selectedTracer }) => {
     return (
-        <Leverage
-            min={selectedTracer?.getBalance().leverage}
-            max={selectedTracer?.getMaxLeverage()}
-            leverage={order?.leverage ?? 1}
-            orderDispatch={orderDispatch}
-        />
+        <>
+            {/* Position select */}
+            <div className="m-5">
+                <PositionSelect selected={order?.position ?? 0} />
+            </div>
+            <Leverage
+                min={new BigNumber(0)}
+                max={selectedTracer?.getMaxLeverage()}
+                leverage={order?.adjustLeverage ?? 0}
+                adjustLeverage={true}
+                orderDispatch={orderDispatch}
+            />
+            <AdjustSummary
+                fairPrice={selectedTracer?.getFairPrice() ?? defaults.oraclePrice}
+                balances={selectedTracer?.getBalance() ?? defaults.balances}
+                exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                nextPosition={order?.nextPosition ?? defaults.balances}
+                baseTicker={selectedTracer?.baseTicker ?? ''}
+                maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+            />
+        </>
     );
 };
 
@@ -120,20 +146,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                         <Adjust orderDispatch={orderDispatch} order={order} selectedTracer={selectedTracer} />
                     )}
                 </div>
-
-                <MarketTradeDetails
-                    fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
-                    balances={selectedTracer?.getBalance() ?? defaults.balances}
-                    exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
-                    nextPosition={order?.nextPosition ?? defaults.balances}
-                    slippage={order?.slippage ?? 0}
-                    tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
-                    maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                />
-
-                <PlaceOrderButton className="text-center">
-                    <Button>{order?.adjustType === 0 ? 'Adjust Order' : 'Close Position'} </Button>
-                </PlaceOrderButton>
+                <AdvancedOrderButton>{order?.adjustType === 0 ? 'Adjust Order' : 'Close Position'}</AdvancedOrderButton>
             </Box>
             <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
         </>

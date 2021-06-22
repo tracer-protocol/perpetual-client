@@ -9,14 +9,6 @@ const DEFAULT_MAX = 100;
 const DEFAULT_STEP = 0.5;
 
 const createMarks = (min: number, max: number) => ({
-    1: {
-        style: {
-            marginTop: '1rem',
-            color: '#005EA4',
-            fontSize: '1rem',
-        },
-        label: `1x`,
-    },
     [min]: {
         style: {
             marginTop: '1rem',
