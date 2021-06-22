@@ -68,7 +68,7 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                 />
             </Head>
             <ToastProvider components={{ Toast: Notification }}>
-                <ThemeProvider theme={theme}>
+                {/* <ThemeProvider theme={theme}> */}
                     <Web3Store>
                         <GraphProvider>
                             <FactoryStore>
@@ -79,7 +79,7 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                             </FactoryStore>
                         </GraphProvider>
                     </Web3Store>
-                </ThemeProvider>
+                {/* </ThemeProvider> */}
             </ToastProvider>
         </div>
     );
