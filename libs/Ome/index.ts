@@ -73,7 +73,6 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = 
     })
         .then((res) => res.json())
         .then((res) => {
-            console.log(res.status === 400);
             if (res?.status === 404) {
                 return {
                     status: 'error',

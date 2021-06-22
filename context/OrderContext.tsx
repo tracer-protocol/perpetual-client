@@ -296,8 +296,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         const balances = selectedTracer?.getBalance();
         if (order.position === SHORT) {
             return {
-                base: balances?.base.minus(totalExposure) ?? tracerDefaults.balances.base, // add how much exposure you get
-                quote: balances?.quote.plus(totalExposure * price) ?? tracerDefaults.balances.quote, // subtract how much it costs
+                base: balances?.base.minus(totalExposure) ?? tracerDefaults.balances.base, // subtract how much exposure you get
+                quote: balances?.quote.plus(totalExposure * price) ?? tracerDefaults.balances.quote, // add how much it costs
             };
         }
         return {
@@ -350,7 +350,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     useMemo(() => {
         if (order.orderType === MARKET) {
-            console.log(omeState?.maxAndMins);
             orderDispatch({
                 type: 'setPrice',
                 value: (order.position === LONG ? omeState?.maxAndMins?.maxAsk : omeState?.maxAndMins?.minBid) ?? NaN,
