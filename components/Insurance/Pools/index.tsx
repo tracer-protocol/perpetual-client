@@ -12,6 +12,8 @@ import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portf
 import { toPercent } from '@libs/utils';
 import Link from 'next/link';
 import { StyledTooltip } from '@components/Tooltips';
+import { Option } from '@components/Buttons/SlideSelect';
+import { SlideSelect } from '@components/Buttons';
 
 const Hidden = styled.div`
     color: #3da8f5;
@@ -54,7 +56,7 @@ const HealthCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
 })``;
 
 const ButtonContainer = styled.div`
-    margin-top: 5rem;
+    margin-top: 2rem;
 `;
 
 const SDownCaret = styled(CaretDownFilled)`
@@ -69,8 +71,17 @@ const SDownCaret = styled(CaretDownFilled)`
     }
 `;
 
+const CurrencySelect = styled(SlideSelect)`
+    font-size: 1rem;
+    color: #ffffff;
+    width: 15rem;
+    height: 2rem;
+    margin: 2rem 0;
+`;
+
 const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
     const [show, setShow] = useState(false);
+    const [isIBTC, setCurrency] = useState(true);
     const [type, setType] = useState('Deposit');
     const openModal: (type: 'Deposit' | 'Withdraw') => void = (type: 'Deposit' | 'Withdraw') => {
         setType(type);
@@ -88,6 +99,10 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
             </Link>
             <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
             <Hidden>
+                <CurrencySelect value={isIBTC ? 0 : 1} onClick={(val) => setCurrency(val === 0)}>
+                    <Option>iBTC-USDC</Option>
+                    <Option>USDC</Option>
+                </CurrencySelect>
                 <ButtonContainer>
                     <Button className="primary mr-3" onClick={(_e: any) => openModal('Deposit')}>
                         Deposit
