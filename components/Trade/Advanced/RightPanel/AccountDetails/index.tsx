@@ -35,10 +35,10 @@ const SSection = styled(Section)`
     margin: 0;
     color: #005ea4;
     min-height: 60px;
-    border-bottom: 1px solid #002886;
+    border-bottom: 1px solid var(--color-accent);
 
     &.border-right {
-        border-right: 1px solid #002886;
+        border-right: 1px solid var(--color-accent);
     }
 
     > .label {
@@ -51,13 +51,13 @@ const SSection = styled(Section)`
 `;
 
 const SectionContainer = styled.div`
-    border-right: 1px solid #002886;
+    border-right: 1px solid var(--color-accent);
     width: 100%;
     display: block;
 
     &.exposure {
-        border-top: 1px solid #002886;
-        border-bottom: 1px solid #002886;
+        border-top: 1px solid var(--color-accent);
+        border-bottom: 1px solid var(--color-accent);
         padding-bottom: 0.25rem;
     }
 `;

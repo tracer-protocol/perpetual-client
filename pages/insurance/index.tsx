@@ -8,8 +8,8 @@ import { Button } from '@components/Portfolio';
 
 const InsurancePoolsContent = styled.div`
     width: 100%;
-    border-top: 1px solid #002886;
-    border-left: 1px solid #002886;
+    border-top: 1px solid var(--color-accent);
+    border-left: 1px solid var(--color-accent);
 `;
 
 const InsurancePoolsHeader = styled.div`
@@ -18,8 +18,8 @@ const InsurancePoolsHeader = styled.div`
     color: white;
     padding: 1rem;
     font-size: 1rem;
-    border-left: 1px solid #002886;
-    border-right: 1px solid #002886;
+    border-left: 1px solid var(--color-accent);
+    border-right: 1px solid var(--color-accent);
 `;
 
 const InsurancePoolsFooter = styled.div`

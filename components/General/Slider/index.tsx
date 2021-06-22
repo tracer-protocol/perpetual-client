@@ -35,8 +35,8 @@ const createMarks = (min: number, max: number) => ({
     },
 });
 
-const defaultRailStyle = { backgroundColor: '#002886', height: 10 };
-const defaultTrackStyle = { backgroundColor: '#002886', height: 10 };
+const defaultRailStyle = { backgroundColor: 'var(--color-accent)', height: 10 };
+const defaultTrackStyle = { backgroundColor: 'var(--color-accent)', height: 10 };
 const defaultHandleStyle = {
     width: '50px',
     height: '30px',

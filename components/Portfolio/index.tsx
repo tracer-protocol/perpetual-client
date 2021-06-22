@@ -91,8 +91,8 @@ TableHead.defaultProps = {
         maxWidth: '300px',
         minWidth: '140px',
         width: 'auto',
-        borderRight: '1px solid #002886',
-        borderBottom: '1px solid #002886',
+        borderRight: '1px solid var(--color-accent)',
+        borderBottom: '1px solid var(--color-accent)',
     },
 };
 
@@ -113,7 +113,7 @@ TableRow.defaultProps = {
         display: 'normal',
         color: '#fff',
         opacity: 1,
-        hoverBG: '#002886',
+        hoverBG: 'var(--color-accent)',
         hoverCursor: 'pointer',
     },
 };
@@ -130,8 +130,8 @@ export const TableCell = styled.td`
 TableCell.defaultProps = {
     theme: {
         height: '70px',
-        borderRight: '1px solid #002886',
-        borderBottom: '1px solid #002886',
+        borderRight: '1px solid var(--color-accent)',
+        borderBottom: '1px solid var(--color-accent)',
     },
 };
 

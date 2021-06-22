@@ -185,7 +185,7 @@ export const After = styled.span`
 `;
 
 export const Close = styled(CloseOutlined)`
-    background: #002886;
+    background: var(--color-accent);
     border-radius: 20px;
     width: 58px;
     height: 40px;
@@ -221,7 +221,7 @@ export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IPr
         </div>
     );
 })`
-    background: #002886;
+    background: var(--color-accent);
     position: relative;
     height: 32px;
     border-radius: 20px;

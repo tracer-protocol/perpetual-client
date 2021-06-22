@@ -13,6 +13,19 @@ export default createGlobalStyle`
         color: var(--color-text);
   	}
 
+
+	/* ANTD overides */
+	.ant-tooltip-inner {
+		background: var(--color-accent);
+		color: #fff;
+	}
+	.ant-tooltip-inner strong {
+		color: var(--color-primary);
+	}
+	.ant-tooltip-arrow-content {
+		background-color: var(--color-accent);
+	}
+
     /* Scroll bar stuff */
     ::-webkit-scrollbar {
         width: 5px;

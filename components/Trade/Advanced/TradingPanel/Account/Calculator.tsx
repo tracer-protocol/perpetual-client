@@ -12,7 +12,7 @@ import { Option } from '@components/Buttons/SlideSelect';
 
 const CalcSelectContainer = styled.div`
     margin-top: 1rem;
-    border-top: 1px solid #002886;
+    border-top: 1px solid var(--color-accent);
 `;
 
 const CalcSlideSelect = styled(SlideSelect)`

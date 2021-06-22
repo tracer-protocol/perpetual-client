@@ -29,7 +29,7 @@ export const SubTitle = styled.p`
     color: var(--color-primary);
     margin: 1rem 0;
     padding-bottom: 1rem;
-    border-bottom: 1px solid #002886;
+    border-bottom: 1px solid var(--color-accent);
 `;
 
 const Logo = styled.img`

@@ -19,7 +19,7 @@ const Timer: React.FC = styled(({ className }) => {
 
     #refetchLoader {
         animation: countdown-width 5s linear infinite;
-        background: #002886;
+        background: var(--color-accent);
         position: absolute; 
         height: 0.25rem;
         right: 0;

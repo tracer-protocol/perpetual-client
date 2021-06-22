@@ -31,8 +31,8 @@ export const THead = styled.thead`
     text-align: left;
     > th {
         padding: 0.7rem 0.5rem;
-        border-bottom: 1px solid #002886;
-        border-right: 1px solid #002886;
+        border-bottom: 1px solid var(--color-accent);
+        border-right: 1px solid var(--color-accent);
         font-weight: normal;
     }
 `;
@@ -45,6 +45,6 @@ export const TRow = styled.tr`
 
 export const TData = styled.td`
     padding: 0.5rem;
-    border-bottom: 1px solid #002886;
-    border-right: 1px solid #002886;
+    border-bottom: 1px solid var(--color-accent);
+    border-right: 1px solid var(--color-accent);
 `;

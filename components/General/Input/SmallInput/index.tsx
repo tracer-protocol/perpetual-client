@@ -23,7 +23,7 @@ const Max = styled.a`
 `;
 
 const InputContainer = styled.div`
-    background: #002886;
+    background: var(--color-accent);
     border-radius: 20px;
     display: flex;
     padding: 5px 10px;

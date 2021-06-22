@@ -30,7 +30,7 @@ const SNumberSelect = styled(NumberSelect)`
 
 const SHiddenExpand = styled(HiddenExpand)`
     margin-left: 0;
-    background: #002886;
+    background: var(--color-accent);
     margin-top: 1rem;
     margin-bottom: 1rem;
 `;

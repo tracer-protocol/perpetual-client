@@ -25,7 +25,7 @@ export const SubNavItem = styled.div`
     min-width: 125px;
 
     &.selected {
-        background: #002886;
+        background: var(--color-accent);
         color: #fff;
     }
 

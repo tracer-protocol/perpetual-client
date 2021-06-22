@@ -5,7 +5,7 @@ import { CaretRightOutlined } from '@ant-design/icons';
 
 const SButton = styled(Button)`
     height: 24px;
-    background: #002886;
+    background: var(--color-accent);
     line-height: 24px;
     font-size: 12px;
     letter-spacing: -0.24px;

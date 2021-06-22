@@ -35,7 +35,7 @@ export const Input = styled.input`
 export const BasicInputContainer = styled.div`
     width: 100%;
     display: flex;
-    border-bottom: 1px solid #002886;
+    border-bottom: 1px solid var(--color-accent);
     padding-bottom: 0.2rem;
 `;
 

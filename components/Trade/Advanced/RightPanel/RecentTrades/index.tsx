@@ -59,7 +59,7 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
     display: flex;
     overflow: auto;
     flex-direction: column;
-    border-top: 1px solid #002886;
+    border-top: 1px solid var(--color-accent);
     h3 {
         font-size: 1.25rem;
         letter-spacing: -0.4px;

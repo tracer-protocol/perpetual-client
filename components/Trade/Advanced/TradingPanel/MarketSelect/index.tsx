@@ -68,7 +68,7 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     }
 
     > .market:hover {
-        background: #002886;
+        background: var(--color-accent);
         cursor: pointer;
     }
 

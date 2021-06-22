@@ -115,7 +115,7 @@ const OrderSummary: React.FC<SProps> = styled(({ balances, fairPrice, order, max
     );
 })`
     overflow: scroll;
-    background: #002886;
+    background: var(--color-accent);
     margin: 10px 0;
     > .body {
         padding: 0;
@@ -167,7 +167,7 @@ const SButton = styled(Button)`
 
 const Header = styled.div`
     display: flex;
-    border-bottom: 1px solid #002886;
+    border-bottom: 1px solid var(--color-accent);
     padding-bottom: 0.5rem;
     letter-spacing: -0.32px;
 `;

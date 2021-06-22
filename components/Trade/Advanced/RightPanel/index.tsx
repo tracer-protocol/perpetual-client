@@ -25,7 +25,7 @@ const TitledBox = styled(({ className, title, children }) => {
         </span>
     );
 })`
-    border-right: 1px solid #002886;
+    border-right: 1px solid var(--color-accent);
     padding: 0.5rem;
     width: 100%;
     color: #fff;
@@ -78,12 +78,12 @@ const MarketInfo: React.FC<MIProps> = styled(
         );
     },
 )`
-    border-bottom: 1px solid #002886;
+    border-bottom: 1px solid var(--color-accent);
     display: flex;
 `;
 
 const OrderBookContainer = styled.div`
-    border-top: 1px solid #002886;
+    border-top: 1px solid var(--color-accent);
     padding: 10px;
     padding-right: 0;
     height: 35vh;

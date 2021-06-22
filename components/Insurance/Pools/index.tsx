@@ -61,7 +61,7 @@ const SDownCaret = styled(CaretDownFilled)`
     transition: 0.3s;
     margin: auto 0;
     transform: rotate(-90deg);
-    color: #002886;
+    color: var(--color-accent);
 
     .selected & {
         transform: rotate(0);
@@ -151,8 +151,8 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
 
     const TableHeadEndTheme = {
         minWidth: '700px',
-        borderRight: '1px solid #002886',
-        borderBottom: '1px solid #002886',
+        borderRight: '1px solid var(--color-accent)',
+        borderBottom: '1px solid var(--color-accent)',
     };
 
     return (
