@@ -22,10 +22,10 @@ const ParentDisable = styled(Button)`
         }
     }
 `;
-export const AdvancedOrderButton: React.FC = styled(({ className }) => (
+export const AdvancedOrderButton: React.FC = styled(({ className, children }) => (
     <div className={className}>
         <PlaceOrderButton>
-            <ParentDisable className="m-auto primary">Place Order</ParentDisable>
+            <ParentDisable className="m-auto primary">{children}</ParentDisable>
         </PlaceOrderButton>
     </div>
 ))`
