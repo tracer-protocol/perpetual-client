@@ -129,7 +129,7 @@ const TradingView: React.FC<{
                     // tradingVolume={243512}
                     maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
                 />
-                <Graphs />
+                <Graphs selectedTracerAddress={selectedTracer?.address ?? ''} />
                 <AccountSummary selectedTracer={selectedTracer} />
             </SBox>
             <SBox className="sidePanel">

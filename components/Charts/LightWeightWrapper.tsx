@@ -218,7 +218,7 @@ class ChartWrapper extends React.Component<Props> {
     handleTimeRange = () => {
         const { from, to } = this.props;
         if (from && to && this.chart) {
-            this.chart.timeScale().setVisibleRange({ from, to });
+            // this.chart.timeScale().setVisibleRange({ from, to });
         }
     };
 

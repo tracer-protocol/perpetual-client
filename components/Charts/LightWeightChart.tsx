@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { CandleData } from 'types/TracerTypes';
 import styled from 'styled-components';
@@ -75,20 +75,10 @@ const SLoadingOutlined = styled(LoadingOutlined)`
 
 const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
-    useEffect(() => {
-        //TODO: Fetch data
-        setGraphData({
-            ...setGraphOptions(),
-            candlestickSeries: [
-                {
-                    data: candleData,
-                },
-            ],
-        });
-    }, []);
-
+    const hasReset = useRef<boolean>(false);
     useMemo(() => {
         if (candleData.length) {
+            console.log('setting graphData', candleData);
             setGraphData({
                 ...setGraphOptions(),
                 candlestickSeries: [
@@ -97,12 +87,19 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
                     },
                 ],
             });
+            hasReset.current = false;
         } else {
-            setGraphData({
-                ...setGraphOptions(),
-            });
+            if (!hasReset.current) {
+                setGraphData({
+                    ...setGraphOptions(),
+                });
+                hasReset.current = true;
+            }
         }
     }, [candleData]);
+
+    const now = Math.floor(Date.now() / 1000); // timestamp in seconds
+    const twoHour = 2 * 60 * 60; // two hours in seconds
 
     if (!graphData || !(graphData?.candlestickSeries as any[])?.length) {
         return <SLoadingOutlined />;
@@ -110,8 +107,8 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
         return (
             <ChartWrapper
                 options={graphData.options as Record<string, unknown>}
-                from={'2018-10-19'}
-                to={'2018-11-05'}
+                from={now + twoHour}
+                to={now - twoHour}
                 candlestickSeries={graphData.candlestickSeries as any[]}
                 autoWidth
                 autoHeight
