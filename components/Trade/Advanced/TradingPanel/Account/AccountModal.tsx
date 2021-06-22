@@ -237,7 +237,7 @@ export default styled(
                         </ApproveButton>
                     ) : null}
                     <ModalButton
-                        disabled={!selectedTracer?.getTracerApproved() || checkErrors() !== 'NO_ERROR'}
+                        disabled={!selectedTracer?.getTracerApproved() || checkErrors() !== 'NO_ERROR' || !state.amount}
                         onClick={() => {
                             dispatch({ type: 'setLoading', loading: true });
                             dispatch({

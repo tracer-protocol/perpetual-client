@@ -106,8 +106,11 @@ const ALL_CANDLES = gql`
     }
 `;
 
-const parseCandles: (data: any) => CandleData = (data) => {
+const parseCandles: (data: any) => CandleData | undefined = (data) => {
     const foundTimes: Record<number, boolean> = {};
+    if (!data) {
+        return;
+    }
     const parsedData = [];
     for (let i = 0; i < data?.length ?? 0; i++) {
         const candle = data[i];
@@ -115,14 +118,6 @@ const parseCandles: (data: any) => CandleData = (data) => {
             continue;
         }
         if (i === 0) {
-            console.log({
-                time: candle.time,
-                open: parseFloat(Web3.utils.fromWei(candle.open)),
-                close: parseFloat(Web3.utils.fromWei(candle.close)),
-                low: parseFloat(Web3.utils.fromWei(candle.low)),
-                high: parseFloat(Web3.utils.fromWei(candle.high)),
-                totalAmount: parseFloat(Web3.utils.fromWei(candle.totalAmount)),
-            });
             continue;
         }
         foundTimes[candle.time] = true;

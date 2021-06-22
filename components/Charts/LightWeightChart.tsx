@@ -78,7 +78,6 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
     const hasReset = useRef<boolean>(false);
     useMemo(() => {
         if (candleData.length) {
-            console.log('setting graphData', candleData);
             setGraphData({
                 ...setGraphOptions(),
                 candlestickSeries: [
