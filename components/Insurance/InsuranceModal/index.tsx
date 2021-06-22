@@ -170,9 +170,8 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                                 time. At the time of withdrawal,{' '}
                                 <span className="highlight">
                                     you will be required to pay a withdrawal fee if the current value of the insurance
-                                    fund is less than the target
+                                    fund is less than the target.
                                 </span>
-                                {/*TODO: Add link*/}. To understand more about the withdrawal fee, <a>learn more.</a>
                             </DepositTerms>
                         }
                     />
