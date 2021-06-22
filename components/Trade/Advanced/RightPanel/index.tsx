@@ -26,7 +26,10 @@ const TitledBox = styled(({ className, title, children }) => {
     );
 })`
     border-right: 1px solid var(--color-accent);
-    padding: 0.5rem;
+    padding:  0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
     width: 100%;
     color: var(--color-text);
     letter-spacing: -0.32px;
@@ -36,6 +39,7 @@ const TitledBox = styled(({ className, title, children }) => {
         color: #005ea4;
         font-size: 12px;
         letter-spacing: -0.24px;
+        margin-bottom: 0.2rem;
     }
 `;
 
@@ -79,6 +83,7 @@ const MarketInfo: React.FC<MIProps> = styled(
     },
 )`
     border-bottom: 1px solid var(--color-accent);
+    height: var(--height-small-container);
     display: flex;
 `;
 

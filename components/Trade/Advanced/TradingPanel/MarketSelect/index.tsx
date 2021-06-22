@@ -57,13 +57,14 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     font-size: var(--font-size-small);
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
-    height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 80}px` : '0')};
+    height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 75}px` : '0')};
 
     > .market {
         // eventually this will have to change to be dynamic as more markets get added
         // this can be done with jQuery and a useEffect when tracers is updated and setting nth-child attr
         transition-delay: 0.5s;
         transition: 0.3s;
+        padding: 10px 20px;
         opacity: ${(props) => (props.display ? '1' : '0')};
     }
 
@@ -73,7 +74,8 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     }
 
     > .market .info {
-        margin-left: auto;
+        margin: auto;
+        margin-right: 0;
         display: flex;
         justify-content: space-between;
         font-size: var(--font-size-small);
@@ -100,9 +102,19 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     font-size: var(--font-size-small);
     border: 1px solid var(--color-primary);
     border-radius: 20px;
-    height: 28px;
-    width: 160px;
+    padding: 0 12px;
+    height: var(--height-small-button);
     text-align: center;
+    margin: 15px 0;
+
+    @media (max-width: 1535px) { 
+        height: 22px;
+        & > .down-arrow {
+            margin-top: -2px!important;
+            width: 15px;
+            height: 15px;
+        }
+    }
 
     &:hover {
         cursor: pointer;
@@ -120,13 +132,16 @@ const MarketContainer = styled.div`
     font-size: var(--font-size-medium);
     letter-spacing: -0.4px;
     display: flex;
-    max-height: 30px;
+    height: var(--height-small-container);
 `;
 
 const SBox = styled<any>(Box)`
     background-color: ${(props) => props.color as string}!important;
     position: relative;
     z-index: ${(props) => (props.display ? 4 : 1)};
+    height: var(--height-small-container);
+    border-bottom: 1px solid var(--color-accent);
+    padding: 0 20px;
 `;
 
 type MSProps = {

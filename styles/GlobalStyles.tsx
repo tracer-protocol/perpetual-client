@@ -13,10 +13,15 @@ export default createGlobalStyle`
         --font-size-small: 16px;
         --font-size-medium: 20px;
 
-        @media (min-width: 1024px) { 
+        --height-small-container: 60px;
+        --height-small-button: 28px;
+        --height-extra-small-button: 22px;
+
+        @media (max-width: 1535px) { 
             --font-size-extra-small: 11px;
             --font-size-small: 13px;
-            --font-size-medium: 26px;
+            --font-size-medium: 16px;
+            --height-small-container: 45px;
         }
 
       

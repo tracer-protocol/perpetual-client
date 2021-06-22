@@ -13,9 +13,33 @@ import { Notification } from '@components/General/Notification';
 import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
 import GlobalStyles from 'styles/GlobalStyles';
+import styled from 'styled-components';
 const USERSNAP_GLOBAL_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_GLOBAL_API_KEY;
 const USERSNAP_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_API_KEY;
 
+const Desktop = styled.div`
+    display: block;
+    @media (max-width: 1024px) { 
+        display: none;
+    }
+`
+
+const Mobile = styled.div`
+    display: none;
+    padding-top: 10vh;
+    padding-left: 10vh;
+    background: var(--color-background);
+    color: var(--color-text);
+    @media (max-width: 1024px) { 
+        display: block;
+    }
+    > h1 {
+        font-size: 55px;
+        letter-spacing: -1.1px;
+        font-weight: lighter;
+    }
+
+`
 const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
     useEffect(() => {
         // @ts-ignore
@@ -50,20 +74,31 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                     src={`https://widget.usersnap.com/global/load/${USERSNAP_GLOBAL_API_KEY}?onload=onUsersnapCXLoad`}
                 />
             </Head>
-            <ToastProvider components={{ Toast: Notification }}>
-                {/* <ThemeProvider theme={theme}> */}
-                <Web3Store>
-                    <GraphProvider>
-                        <FactoryStore>
-                            <TransactionStore>
-                                <GlobalStyles />
-                                <Component {...pageProps} />
-                            </TransactionStore>
-                        </FactoryStore>
-                    </GraphProvider>
-                </Web3Store>
-                {/* </ThemeProvider> */}
-            </ToastProvider>
+            <GlobalStyles />
+            <Desktop>
+                <ToastProvider components={{ Toast: Notification }}>
+                    {/* <ThemeProvider theme={theme}> */}
+                    <Web3Store>
+                        <GraphProvider>
+                            <FactoryStore>
+                                <TransactionStore>
+                                    <Component {...pageProps} />
+                                </TransactionStore>
+                            </FactoryStore>
+                        </GraphProvider>
+                    </Web3Store>
+                    {/* </ThemeProvider> */}
+                </ToastProvider>
+            </Desktop>
+            <Mobile>
+                <h1>
+                    Mobile coming soon.
+                </h1>
+                <p>
+                    Alpha testing is available on desktop only. <br />
+                    Switch to desktop to conduct testing.
+                </p>
+            </Mobile>
         </div>
     );
 };

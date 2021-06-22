@@ -11,7 +11,7 @@ interface SNBProps {
 
 const SideNavContainer = styled.div`
     letter-spacing: -0.36px;
-    font-size: 18px;
+    font-size: var(--font-size-medium);
     border-bottom: 1px solid #0c3586;
 `;
 

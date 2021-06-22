@@ -11,9 +11,10 @@ export interface SNBProps {
 
 export const SubNavContainer = styled.div`
     letter-spacing: -0.36px;
-    font-size: 18px;
+    font-size: var(--font-size-medium);
     border-bottom: 1px solid #0c3586;
     display: flex;
+    height: var(--height-small-container);
 `;
 
 export const SubNavItem = styled.div`
@@ -21,7 +22,7 @@ export const SubNavItem = styled.div`
     transition: 0.3s;
     border-right: 1px solid #0c3586;
     text-align: center;
-    padding: 15px;
+    padding: 0 15px;
     min-width: 125px;
 
     &.selected {

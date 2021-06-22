@@ -34,7 +34,7 @@ const SSection = styled(Section)`
     padding: 5px 10px;
     margin: 0;
     color: #005ea4;
-    min-height: 60px;
+    min-height: var(--height-small-container);
     border-bottom: 1px solid var(--color-accent);
 
     &.border-right {
@@ -63,19 +63,18 @@ const SectionContainer = styled.div`
 `;
 
 const SSlideSelect = styled(SlideSelect)`
-    height: 25px;
+    height: var(--height-extra-small-button);
     width: 100px;
-    font-size: 8px;
-    margin-right: 0;
-    margin-top: 0;
+    margin-left: 0;
+    margin-top: 0.2rem; 
 `;
 
 const SOption = styled(Option)`
-    font-size: 13px;
+    font-size: var(--font-size-extra-small);
 `;
 
 const Content = styled.div`
-    font-size: 18px;
+    font-size: var(--font-size-small);
     color: var(--color-text);
     text-align: left;
 `;
@@ -150,7 +149,7 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                 </SSection>
                 <SSection label={'Exposure'} className="w-full">
                     {!balances.quote.eq(0) ? (
-                        <Content className="flex">
+                        <Content>
                             {currency === 0
                                 ? `${base.abs().toNumber()} ${baseTicker}`
                                 : `${toApproxCurrency(base.abs().times(fairPrice))} ${quoteTicker}`}

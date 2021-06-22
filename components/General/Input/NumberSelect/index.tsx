@@ -7,7 +7,7 @@ import { toApproxCurrency } from '@libs/utils';
 import { After } from '@components/General';
 
 const Unit = styled.span`
-    font-size: 18px;
+    font-size: var(--font-size-medium);
     letter-spacing: 0;
     color: var(--color-primary);
     margin-top: auto;

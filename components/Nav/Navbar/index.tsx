@@ -39,7 +39,7 @@ const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
     letter-spacing: -0.36px;
     height: 40px;
     line-height: 40px;
-    font-size: 18px;
+    font-size: var(--font-size-medium);
     width: 100%;
     position: absolute;
     left: 0;

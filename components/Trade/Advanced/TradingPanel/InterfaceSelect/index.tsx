@@ -4,10 +4,10 @@ import { Button } from '@components/General';
 import { CaretRightOutlined } from '@ant-design/icons';
 
 const SButton = styled(Button)`
-    height: 24px;
+    height: var(--height-small-button);
     background: var(--color-accent);
-    line-height: 24px;
-    font-size: 12px;
+    line-height: var(--height-small-button);
+    font-size: var(--font-size-extra-small);
     letter-spacing: -0.24px;
     padding: 0;
     margin-right: 0;
@@ -56,7 +56,8 @@ export default styled(({ className, isAdjust, setAdjust }: ISProps) => {
     display: ${(props) => (props.account === '' ? 'none' : 'flex')};
     justify-content: space-between;
     background-color: #00125d;
+    height: var(--height-small-container);
     border-bottom: 1px solid #0c3586;
-    padding: 20px;
+    padding: 15px;
     z-index: 1;
 ` as React.FC<ISProps>;
