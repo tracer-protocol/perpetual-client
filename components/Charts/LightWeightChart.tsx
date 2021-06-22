@@ -78,7 +78,7 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
     const hasReset = useRef<boolean>(false);
     useMemo(() => {
         if (candleData.length) {
-            console.log("setting graphData", candleData)
+            console.log('setting graphData', candleData);
             setGraphData({
                 ...setGraphOptions(),
                 candlestickSeries: [
@@ -97,7 +97,7 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
             }
         }
     }, [candleData]);
-    
+
     const now = Math.floor(Date.now() / 1000); // timestamp in seconds
     const twoHour = 2 * 60 * 60; // two hours in seconds
 

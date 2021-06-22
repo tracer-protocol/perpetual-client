@@ -94,7 +94,7 @@ export const useMostRecentMatched: (tracer: string) => {
 // fetches 15 minute candles 15*60 === 900
 const ALL_CANDLES = gql`
     query Tracer_Candles($tracer: String) {
-        candles(where: { period: 900, tracer: $tracer }) { 
+        candles(where: { period: 900, tracer: $tracer }) {
             id
             time
             open
@@ -108,10 +108,12 @@ const ALL_CANDLES = gql`
 
 const parseCandles: (data: any) => CandleData = (data) => {
     const foundTimes: Record<number, boolean> = {};
-    let parsedData = [];
+    const parsedData = [];
     for (let i = 0; i < data?.length ?? 0; i++) {
-        let candle = data[i]
-        if (foundTimes[candle.time]) continue;
+        const candle = data[i];
+        if (foundTimes[candle.time]) {
+            continue;
+        }
         if (i === 0) {
             console.log({
                 time: candle.time,
@@ -120,7 +122,7 @@ const parseCandles: (data: any) => CandleData = (data) => {
                 low: parseFloat(Web3.utils.fromWei(candle.low)),
                 high: parseFloat(Web3.utils.fromWei(candle.high)),
                 totalAmount: parseFloat(Web3.utils.fromWei(candle.totalAmount)),
-            })
+            });
             continue;
         }
         foundTimes[candle.time] = true;
@@ -131,10 +133,10 @@ const parseCandles: (data: any) => CandleData = (data) => {
             low: parseFloat(Web3.utils.fromWei(candle.low)),
             high: parseFloat(Web3.utils.fromWei(candle.high)),
             totalAmount: parseFloat(Web3.utils.fromWei(candle.totalAmount)),
-        })
+        });
     }
-    return (parsedData)
-}
+    return parsedData;
+};
 
 export const useCandles: (tracer: string) => {
     candles: CandleData;
