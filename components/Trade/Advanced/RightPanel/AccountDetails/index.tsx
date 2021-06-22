@@ -221,7 +221,7 @@ const STable = styled(Table)`
     > thead {
         display: table;
         table-layout: fixed; /* even columns width , fix width of table too*/
-        width: calc(100% - 5px) !important; /* scrollbar is 5px */
+        width: 100%; /* scrollbar is 5px */
     }
     > tbody tr {
         display: table;
@@ -300,10 +300,21 @@ OpenOrders.displayName = 'OpenOrders';
 const Fills: React.FC<{
     filledOrders: FilledOrder[];
 }> = React.memo(({ filledOrders }) => {
+    const Orders = [
+        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
+        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
+        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
+        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
+        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
+        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
+        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
+        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
+        { price: new BigNumber(1111), timestamp: '111111', position: 'long', amount: new BigNumber(222222) },
+    ];
     return (
         <STable headings={['Time', 'Side', 'Price', 'Amount']}>
             <tbody>
-                {filledOrders.map((order, index) => {
+                {Orders.map((order, index) => {
                     const now = Date.now();
                     const price = order.price;
                     return (
