@@ -221,7 +221,7 @@ const STable = styled(Table)`
     > thead {
         display: table;
         table-layout: fixed; /* even columns width , fix width of table too*/
-        width: 100%; /* scrollbar is 5px */
+        width: calc(100% - 5px) !important; /* scrollbar is 5px */
     }
     > tbody tr {
         display: table;
