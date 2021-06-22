@@ -43,7 +43,7 @@ const SSection = styled(Section)`
 
     > .label {
         display: block;
-        font-size: 12px;
+        font-size: var(--font-size-extra-small);
     }
     > .content {
         padding-left: 0;

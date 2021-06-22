@@ -9,7 +9,7 @@ export default createGlobalStyle`
         --color-primary: #3da8f5;
         --color-accent: #002886;
 
-        --font-size-extra-small: 12px;
+        --font-size-extra-small: 13px;
         --font-size-small: 16px;
         --font-size-medium: 20px;
 
@@ -18,7 +18,7 @@ export default createGlobalStyle`
         --height-extra-small-button: 22px;
 
         @media (max-width: 1535px) { 
-            --font-size-extra-small: 11px;
+            --font-size-extra-small: 12px;
             --font-size-small: 13px;
             --font-size-medium: 16px;
             --height-small-container: 45px;
