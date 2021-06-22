@@ -121,40 +121,43 @@ type InfoProps = {
     order: OrderState | undefined;
     balances: UserBalance;
     maxLeverage: BigNumber;
-    price: BigNumber;
+    fairPrice: BigNumber
 };
-const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, price }) => {
+const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }) => {
     if (balances.quote.eq(0)) {
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
-        return <span>{toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))}</span>;
+        return <span>{toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))}</span>;
     } else {
         return (
             <span>
                 <Previous>
-                    {toApproxCurrency(calcBuyingPower(balances.quote, balances.base, price, maxLeverage))}
+                    {toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))}
                 </Previous>
                 {toApproxCurrency(
-                    calcBuyingPower(balances.quote, balances.base, price, maxLeverage).minus(
-                        new BigNumber(order.exposure * order.price),
-                    ),
+                    calcBuyingPower(
+                        order?.nextPosition.quote ?? balances.quote,
+                        order?.nextPosition.base ?? balances.base, 
+                        new BigNumber(order.price), 
+                        maxLeverage
+                    )
                 )}
             </span>
         );
     }
 };
-const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, price }) => {
+const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }) => {
     if (balances.quote.eq(0)) {
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
         return (
-            <span>${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toFixed(3)}%</span>
+            <span>${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(3)}%</span>
         );
     } else {
         return (
             <span>
                 <Previous>
-                    {`${calcAvailableMarginPercent(balances.quote, balances.base, price, maxLeverage).toFixed(3)}%`}
+                    {`${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(3)}%`}
                 </Previous>
                 {`${calcAvailableMarginPercent(
                     order?.nextPosition.quote ?? balances.quote,
@@ -177,7 +180,7 @@ const AccountPanel: React.FC<{
     const [deposit, setDeposit] = useState(false);
     // const [calculator, showCalculator] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const price = selectedTracer?.getFairPrice() ?? defaults.oraclePrice;
+    const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
 
     const handleClick = (popup: boolean, deposit: boolean) => {
@@ -205,7 +208,7 @@ const AccountPanel: React.FC<{
                 {balances.quote.eq(0) ? (
                     <NoBalance>-</NoBalance>
                 ) : (
-                    <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, price))}</span>
+                    <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</span>
                 )}
             </Item>
             <Item>
@@ -216,11 +219,11 @@ const AccountPanel: React.FC<{
                             props: {
                                 baseTicker: selectedTracer?.baseTicker ?? '',
                                 availableMargin:
-                                    calcTotalMargin(balances.quote, balances.base, price).toNumber() -
+                                    calcTotalMargin(balances.quote, balances.base, fairPrice).toNumber() -
                                         calcMinimumMargin(
                                             balances.quote,
                                             balances.base,
-                                            price,
+                                            fairPrice,
                                             maxLeverage,
                                         ).toNumber() ?? 0,
                                 maxLeverage: maxLeverage.toNumber() ?? 0,
@@ -231,13 +234,13 @@ const AccountPanel: React.FC<{
                     </TooltipSelector>
                     <SubText>{` @${maxLeverage.toNumber()}X Maximum Leverage`}</SubText>
                 </h3>
-                <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} price={price} />
+                <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
             </Item>
             <Item>
                 <h3>
                     <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
                 </h3>
-                <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} price={price} />
+                <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
             </Item>
             <DepositButtons>
                 <SButton
@@ -256,7 +259,7 @@ const AccountPanel: React.FC<{
                 unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}
                 maxLeverage={maxLeverage}
-                price={price}
+                price={fairPrice}
             />
             {/*TODO: Add calculator*/}
             {/*<CalculatorModal*/}

@@ -40,6 +40,7 @@ const checkErrors: (
 ) => ErrorKey = (balances, orders, account, order, maxLeverage) => {
     const priceBN = new BigNumber(order.price);
     const { quote: newQuote, base: newBase } = order.nextPosition;
+    console.log(newQuote.toNumber(), newBase.toNumber())
     if (!account) {
         return 'ACCOUNT_DISCONNECTED';
     } else if (orders?.length === 0 && order.orderType === MARKET) {
