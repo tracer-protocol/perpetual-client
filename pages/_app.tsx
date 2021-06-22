@@ -24,12 +24,15 @@ const theme = {
 
 const GlobalStyles = createGlobalStyle`
   html {
-      --font-size-small: 1rem;
-      --font-size-medium: 1.25rem;
-      --color-background: #000240;
-      --color-text: #fff;
-      --color-primary: #3da8f5;
-      --color-accent: #002886;
+        --font-size-small: 1rem;
+        --font-size-medium: 1.25rem;
+        --color-background: #000240;
+        --color-text: #fff;
+        --color-primary: #3da8f5;
+        --color-accent: #002886;
+      
+        background-color: var(--color-background);
+        color: var(--color-text);
   }
 `;
 

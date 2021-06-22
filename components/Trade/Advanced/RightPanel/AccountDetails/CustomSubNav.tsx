@@ -10,7 +10,7 @@ const TableEntries: React.FC<TEProps> = styled(({ amount, className }: TEProps) 
     <span className={className}>{amount}</span>
 ))`
     background: #005ea4;
-    color: #000240;
+    color: var(--color-background);
     border-radius: 20px;
     text-align: center;
     padding: 5px 15px;

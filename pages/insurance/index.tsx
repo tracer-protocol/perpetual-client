@@ -67,7 +67,7 @@ const Insurance: React.FC = styled(({ className }) => {
     );
 })`
     position: relative;
-    background: #000240;
+    background: var(--color-background);
 `;
 
 export default Insurance;

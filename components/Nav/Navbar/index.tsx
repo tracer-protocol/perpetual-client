@@ -427,7 +427,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
     }
 
     > ul li.selected .trade-toggle div.selected {
-        color: #000240;
+        color: var(--color-background);
         background-color: #3da8f5;
         border-radius: 20px;
     }
