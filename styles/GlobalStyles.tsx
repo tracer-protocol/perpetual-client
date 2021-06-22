@@ -12,6 +12,13 @@ export default createGlobalStyle`
         --font-size-extra-small: 12px;
         --font-size-small: 16px;
         --font-size-medium: 20px;
+
+        @media (min-width: 1024px) { 
+            --font-size-extra-small: 11px;
+            --font-size-small: 13px;
+            --font-size-medium: 26px;
+        }
+
       
         background-color: var(--color-background);
         color: var(--color-text);
