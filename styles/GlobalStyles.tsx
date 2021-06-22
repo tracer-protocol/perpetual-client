@@ -1,0 +1,42 @@
+import { createGlobalStyle } from 'styled-components';
+
+export default createGlobalStyle`
+  html {
+        --font-size-small: 1rem;
+        --font-size-medium: 1.25rem;
+        --color-background: #000240;
+        --color-text: #fff;
+        --color-primary: #3da8f5;
+        --color-accent: #002886;
+      
+        background-color: var(--color-background);
+        color: var(--color-text);
+  }
+
+    /* Scroll bar stuff */
+    ::-webkit-scrollbar {
+        width: 5px;
+        height: 8px;
+    }
+
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    /* Corner piece */
+    ::-webkit-scrollbar-corner {
+        display: none;
+    }
+
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background: var(--color-primary);
+        cursor: pointer;
+    }
+
+    /* Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--color-accent);
+    }
+`;
