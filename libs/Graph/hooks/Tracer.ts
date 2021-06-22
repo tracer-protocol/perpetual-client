@@ -114,17 +114,7 @@ const parseCandles: (data: any) => CandleData = (data) => {
         if (foundTimes[candle.time]) {
             continue;
         }
-        if (i === 0) {
-            console.log({
-                time: candle.time,
-                open: parseFloat(Web3.utils.fromWei(candle.open)),
-                close: parseFloat(Web3.utils.fromWei(candle.close)),
-                low: parseFloat(Web3.utils.fromWei(candle.low)),
-                high: parseFloat(Web3.utils.fromWei(candle.high)),
-                totalAmount: parseFloat(Web3.utils.fromWei(candle.totalAmount)),
-            });
-            continue;
-        }
+        if (i === 0) continue;
         foundTimes[candle.time] = true;
         parsedData.push({
             time: candle.time,
