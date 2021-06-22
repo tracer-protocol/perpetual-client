@@ -19,7 +19,7 @@ import CustomSubNav from './CustomSubNav';
 import { OrderContext } from '@context/OrderContext';
 
 const AccountDetails = styled.div`
-    width: 100%%;
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
 `;
@@ -92,7 +92,7 @@ type ContentProps = {
 
 const Position: React.FC<ContentProps> = ({ nextPosition, exposure, tradePrice, balances }) => {
     if (balances.quote.eq(0)) {
-        return <Content>-</Content>;
+        return <>-</>;
     } else if (exposure && tradePrice) {
         return (
             <Content>
@@ -113,7 +113,7 @@ const Leverage: React.FC<ContentProps & { fairPrice: BigNumber }> = ({
 }) => {
     const l = calcLeverage(balances.quote, balances.base, fairPrice);
     if (balances.quote.eq(0)) {
-        return <Content>-</Content>;
+        return <>-</>;
     } else if (exposure && tradePrice) {
         return (
             <Content>
@@ -148,7 +148,11 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                         exposure={order?.exposure ?? 0}
                     />
                 </SSection>
-                <SSection label={'Exposure'} className="w-full">
+                <SSection
+                    label={'Exposure'}
+                    className="w-full"
+                    tooltip={{ key: 'exposure', props: { baseTicker: baseTicker } }}
+                >
                     {!balances.quote.eq(0) ? (
                         <Content className="flex">
                             {currency === 0

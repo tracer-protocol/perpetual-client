@@ -21,6 +21,7 @@ type BTProps = {
     baseTicker: string;
 } & TProps;
 
+// Market select section
 export const AmountTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
     const tooltip = (
         <p>
@@ -63,6 +64,7 @@ export const LeverageTip: React.FC<TProps> = ({ className, children }: TProps) =
     );
 };
 
+// Margin account section
 export const TotalMarginTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
     const tooltip = (
         <p>
@@ -117,6 +119,7 @@ export const AvailableMarginTip: React.FC<TProps> = ({ className, children }: TP
     );
 };
 
+// Insurance pool health section
 export const InsurancePoolHealthTip: React.FC<TProps> = ({ className, children }: TProps) => {
     const tooltip = (
         <p>
@@ -174,6 +177,7 @@ export const InsuranceFundingRateTip: React.FC<BTProps> = ({ baseTicker, classNa
     );
 };
 
+// Position account section
 export const RealisedPnLTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
     const tooltip = (
         <p>
@@ -194,6 +198,19 @@ export const UnrealisedPnLTip: React.FC<BTProps> = ({ className, baseTicker, chi
         <p>
             <strong>Unrealised PnL</strong> The amount of profit or loss you would realise if you closed your{' '}
             {baseTicker} position at the current mark price.
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+export const ExposureTip: React.FC<BTProps> = ({ className, baseTicker, children }: BTProps) => {
+    const tooltip = (
+        <p>
+            <strong>Exposure</strong> The size of your {baseTicker} position.
         </p>
     );
     return (

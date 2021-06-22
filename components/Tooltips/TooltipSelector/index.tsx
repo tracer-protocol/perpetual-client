@@ -13,6 +13,7 @@ import {
     InsuranceFundingRateTip,
     RealisedPnLTip,
     UnrealisedPnLTip,
+    ExposureTip,
 } from '@components/Tooltips';
 
 export type TooltipSelectorProps = {
@@ -28,7 +29,8 @@ export type TooltipSelectorProps = {
         | 'pool-target'
         | 'insurance-funding-rate'
         | 'realised-pnl'
-        | 'unrealised-pnl';
+        | 'unrealised-pnl'
+        | 'exposure';
     props?: {
         baseTicker?: string;
         availableMargin?: number;
@@ -108,6 +110,12 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
                 <UnrealisedPnLTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
                     {children}
                 </UnrealisedPnLTip>
+            );
+        case 'exposure':
+            return (
+                <ExposureTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                    {children}
+                </ExposureTip>
             );
 
         default:
