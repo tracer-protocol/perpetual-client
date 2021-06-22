@@ -3,6 +3,12 @@ import { toApproxCurrency } from '@libs/utils';
 import { FilledOrder } from 'types/OrderTypes';
 import React from 'react';
 import styled from 'styled-components';
+
+const STradingTable = styled(TradingTable)`
+    tbody {
+        max-height: 100%;
+    }
+`;
 interface RTProps {
     trades: FilledOrder[];
     className?: string;
@@ -14,7 +20,7 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
             <h3>Recent Trades</h3>
             {trades?.length ? (
                 <div className="h-full">
-                    <TradingTable>
+                    <STradingTable>
                         <thead>
                             <tr>
                                 <th>Price</th>
@@ -38,7 +44,7 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                                 );
                             })}
                         </tbody>
-                    </TradingTable>
+                    </STradingTable>
                 </div>
             ) : (
                 <p>No recent trades</p>
@@ -51,6 +57,7 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
     height: 100%;
     position: relative;
     display: flex;
+    overflow: auto;
     flex-direction: column;
     border-top: 1px solid #002886;
     h3 {

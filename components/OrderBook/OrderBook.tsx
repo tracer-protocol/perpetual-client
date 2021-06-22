@@ -80,7 +80,7 @@ const OrderBook: React.FC<OProps> = styled(({ askOrders, bidOrders, className }:
         </div>
     );
 })`
-    max-height: 30vh;
+    height: 100%;
 `;
 
 export default OrderBook;
