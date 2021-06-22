@@ -1,7 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
-  html {
+  	html {
         --font-size-small: 1rem;
         --font-size-medium: 1.25rem;
         --color-background: #000240;
@@ -11,7 +11,7 @@ export default createGlobalStyle`
       
         background-color: var(--color-background);
         color: var(--color-text);
-  }
+  	}
 
     /* Scroll bar stuff */
     ::-webkit-scrollbar {
