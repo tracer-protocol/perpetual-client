@@ -17,7 +17,7 @@ const InsurancePoolsHeader = styled.div`
     margin: 0 auto;
     color: white;
     padding: 1rem;
-    font-size: 1rem;
+    font-size: var(--font-size-small);
     border-left: 1px solid var(--color-accent);
     border-right: 1px solid var(--color-accent);
 `;
@@ -29,7 +29,7 @@ const InsurancePoolsFooter = styled.div`
     margin: 0 auto;
     color: white;
     padding: 2rem 1rem;
-    font-size: 1rem;
+    font-size: var(--font-size-small);
 
     > .learn-more {
         margin-left: 1rem;

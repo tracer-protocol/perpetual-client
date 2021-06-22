@@ -15,7 +15,7 @@ const TableEntries: React.FC<TEProps> = styled(({ amount, className }: TEProps) 
     text-align: center;
     padding: 5px 15px;
     margin: 5px;
-    font-size: 16px;
+    font-size: var(--font-size-small);
 `;
 type CSNProps = {
     selected: number;

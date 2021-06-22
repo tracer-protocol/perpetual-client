@@ -8,6 +8,10 @@ export default createGlobalStyle`
         --color-text: #fff;
         --color-primary: #3da8f5;
         --color-accent: #002886;
+
+        --font-size-extra-small: 12px;
+        --font-size-small: 16px;
+        --font-size-medium: 20px;
       
         background-color: var(--color-background);
         color: var(--color-text);

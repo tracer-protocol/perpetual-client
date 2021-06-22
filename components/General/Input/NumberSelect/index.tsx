@@ -15,7 +15,7 @@ const Unit = styled.span`
 `;
 
 const Header = styled.h3`
-    font-size: 1rem;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: var(--color-primary);
     display: flex;

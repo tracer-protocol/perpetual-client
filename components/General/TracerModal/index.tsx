@@ -16,7 +16,7 @@ interface TProps {
 
 export const Title = styled.h3`
     text-align: left;
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     line-height: 40px;
     letter-spacing: -0.4px;
     color: #ffffff;
@@ -24,7 +24,7 @@ export const Title = styled.h3`
 
 export const SubTitle = styled.p`
     text-align: left;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: var(--color-primary);
     margin: 1rem 0;

@@ -50,7 +50,7 @@ export default styled(({ className, isAdjust, setAdjust }: ISProps) => {
         </div>
     );
 })`
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     letter-spacing: -0.4px;
     color: var(--color-text);
     display: ${(props) => (props.account === '' ? 'none' : 'flex')};

@@ -8,7 +8,7 @@ const Max = styled.a`
     transition: 0.3s;
     margin: auto 0 auto 20px;
     letter-spacing: -0.32px;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     color: var(--color-primary);
     text-decoration: underline;
 
@@ -35,7 +35,7 @@ const InputContainer = styled.div`
         color: var(--color-text);
         text-align: right;
         padding-left: 10px;
-        font-size: 1.25rem;
+        font-size: var(--font-size-medium);
         &:focus {
             outline: none;
         }
@@ -44,7 +44,7 @@ const InputContainer = styled.div`
     > .unit {
         letter-spacing: -0.4px;
         color: #005ea4;
-        font-size: 1.25rem;
+        font-size: var(--font-size-medium);
         margin: auto 0 auto auto;
         padding-left: 4px;
     }
@@ -89,7 +89,7 @@ const SmallInput: React.FC<SIProps> = styled(
 
     > .label {
         letter-spacing: -0.32px;
-        font-size: 16px;
+        font-size: var(--font-size-small);
         color: var(--color-primary);
         margin: auto 0;
         text-transform: capitalize;

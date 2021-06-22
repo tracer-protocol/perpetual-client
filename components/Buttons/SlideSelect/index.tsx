@@ -55,7 +55,7 @@ const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, clas
 export const SlideOption = styled.div`
     display: flex;
     border-radius: 18px;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     text-align: center;
     width: 100%;
     z-index: 1;

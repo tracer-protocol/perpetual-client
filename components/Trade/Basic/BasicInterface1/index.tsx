@@ -14,7 +14,7 @@ import { defaults } from '@libs/Tracer';
 
 const SLabel = styled.h3`
     display: flex;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: var(--color-primary);
     margin-right: auto;
@@ -42,7 +42,7 @@ export const MaxButton: any = styled(Button)`
 `;
 
 const Balance = styled.p`
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: var(--color-primary);
     text-transform: capitalize;
@@ -76,7 +76,7 @@ const SDownCaret = styled(CaretDownFilled)`
 
 const DropDownText = styled.div`
     margin: auto 0 auto auto;
-    font-size: 16px;
+    font-size: var(--font-size-small);
 `;
 
 const RightContainer = styled.div`
@@ -92,7 +92,7 @@ interface WSProps {
 }
 
 const SSlideSelect = styled(SlideSelect)`
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: #ffffff;
     width: 200px;

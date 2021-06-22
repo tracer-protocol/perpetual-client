@@ -12,7 +12,7 @@ export const DateAndTime = styled(({ className, date, time }) => {
         </div>
     );
 })`
-    font-size: 1rem;
+    font-size: var(--font-size-small);
 
     .secondary {
         color: #005ea4;
@@ -27,7 +27,7 @@ export const Box = styled.div`
 export const Button = styled.button`
     transition: 0.3s;
     color: var(--color-primary);
-    font-size: 1rem;
+    font-size: var(--font-size-small);
     line-height: 1rem;
     letter-spacing: -0.32px;
     border: 1px solid var(--color-primary);
@@ -91,7 +91,7 @@ export const Card = styled.div`
     transition: 0.3s;
 
     h1 {
-        font-size: 1.25rem;
+        font-size: var(--font-size-medium);
         letter-spacing: -0.4px;
         color: #ffffff;
     }
@@ -117,7 +117,7 @@ export const Section: React.FC<SProps> = styled(({ className, children, label, t
     width: 100%;
     display: flex;
     margin: 10px 0;
-    font-size: 16px;
+    font-size: var(--font-size-small);
 
     > .label {
         text-align: left;
@@ -237,7 +237,7 @@ export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IPr
 
     > .label {
         letter-spacing: -0.32px;
-        font-size: 16px;
+        font-size: var(--font-size-small);
         position: absolute;
         height: fit-content;
         width: fit-content;

@@ -37,7 +37,7 @@ export const Order: React.FC<BProps> = styled(
     position: relative;
     border-bottom: 2px solid var(--color-background);
     text-align: left;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
 
     .fill-bid {

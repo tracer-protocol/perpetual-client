@@ -30,7 +30,7 @@ export const RightPanel = styled.div`
 export const Button = styled.div`
     transition: 0.5s;
     color: var(--color-primary);
-    font-size: 1rem;
+    font-size: var(--font-size-small);
     line-height: 1rem;
     letter-spacing: -0.32px;
     border: 1px solid var(--color-primary);
@@ -120,7 +120,7 @@ TableRow.defaultProps = {
 
 export const TableCell = styled.td`
     color: ${(props: any) => props.color as string};
-    font-size: 1rem;
+    font-size: var(--font-size-small);
     padding: 0 1rem;
     height: ${(props: any) => props.theme.height as string};
     border-right: ${(props: any) => props.theme.borderRight as string};
@@ -137,6 +137,7 @@ TableCell.defaultProps = {
 
 export const SecondaryCell = styled.div`
     color: #005ea4;
+    font-size: var(--font-size-small);
 `;
 
 export const StatusIndicator = styled.div`

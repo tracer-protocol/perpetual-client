@@ -52,7 +52,7 @@ const DefaultHandle = (e: any) => {
         justify-content: center;
         align-items: center;
         color: white;
-        font-size: 1rem;
+        font-size: var(--font-size-small);
     `;
     const { value } = e;
     return (

@@ -54,7 +54,7 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     left: 0;
     width: 100%;
     background: #011772;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
     height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 80}px` : '0')};
@@ -76,7 +76,7 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
         margin-left: auto;
         display: flex;
         justify-content: space-between;
-        font-size: 16px;
+        font-size: var(--font-size-small);
         line-height: 30px;
     }
 `;
@@ -97,7 +97,7 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     },
 )`
     color: var(--color-primary);
-    font-size: 1rem;
+    font-size: var(--font-size-small);
     border: 1px solid var(--color-primary);
     border-radius: 20px;
     height: 28px;
@@ -117,7 +117,7 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
 `;
 
 const MarketContainer = styled.div`
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     letter-spacing: -0.4px;
     display: flex;
     max-height: 30px;

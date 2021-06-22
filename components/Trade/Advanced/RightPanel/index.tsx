@@ -30,7 +30,7 @@ const TitledBox = styled(({ className, title, children }) => {
     width: 100%;
     color: var(--color-text);
     letter-spacing: -0.32px;
-    font-size: 1rem;
+    font-size: var(--font-size-small);
 
     > p {
         color: #005ea4;
@@ -93,7 +93,7 @@ const OrderBookContainer = styled.div`
         letter-spacing: -0.4px;
         color: #ffffff;
         text-transform: capitalize;
-        font-size: 1.25rem;
+        font-size: var(--font-size-medium);
         margin-bottom: 5px;
     }
 `;

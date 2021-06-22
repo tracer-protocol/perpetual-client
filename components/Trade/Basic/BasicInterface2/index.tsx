@@ -13,7 +13,7 @@ import { MaxButton } from '../BasicInterface1';
 
 const SLabel = styled.h3`
     display: flex;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: var(--color-primary);
     margin-right: auto;
@@ -68,7 +68,7 @@ const SDownCaret = styled(CaretDownFilled)`
 
 const DropDownText = styled.div`
     margin: auto;
-    font-size: 16px;
+    font-size: var(--font-size-small);
 `;
 
 const RightContainer = styled.div`

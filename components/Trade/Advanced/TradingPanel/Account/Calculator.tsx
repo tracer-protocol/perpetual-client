@@ -62,7 +62,7 @@ const Leverage: React.FC<LProps> = styled(({ className, value, handleChange }: L
     margin-bottom: 4rem;
 
     > h3 {
-        font-size: 1rem;
+        font-size: var(--font-size-small);
         color: var(--color-primary);
         margin-bottom: 1rem;
     }

@@ -46,7 +46,7 @@ const Position: React.FC<PProps> = styled(({ className, dispatch, position }: PP
 const SSection = styled(Section)`
     border-bottom: 1px solid #011772;
     letter-spacing: -0.32px;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     padding: 5px 10px;
     margin: 0;
 `;
@@ -56,7 +56,7 @@ const LiquidationPrice = styled(Section)`
     background-size: 100%;
     border-bottom: 1px solid #011772;
     letter-spacing: -0.32px;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     padding: 5px 0;
     margin: 0;
 
@@ -121,7 +121,7 @@ const OrderSummary: React.FC<SProps> = styled(({ balances, fairPrice, order, max
         padding: 0;
     }
     h3 {
-        font-size: 16px;
+        font-size: var(--font-size-small);
         letter-spacing: -0.32px;
         color: #ffffff;
         padding: 10px;
@@ -129,7 +129,7 @@ const OrderSummary: React.FC<SProps> = styled(({ balances, fairPrice, order, max
 `;
 
 const Title = styled.h1`
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     letter-spacing: -0.4px;
     color: #ffffff;
     font-weight: normal;

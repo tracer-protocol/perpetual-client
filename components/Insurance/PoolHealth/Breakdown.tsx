@@ -105,7 +105,7 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
         </div>
     );
 })`
-    font-size: 1rem;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: var(--color-text);
     transition: 0.3s;
@@ -139,10 +139,10 @@ const Label: React.FC<LProps> = styled(({ title, value, className }: LProps) => 
 })`
     > .title {
         color: var(--color-primary);
-        font-size: 1rem;
+        font-size: var(--font-size-small);
     }
     > .value {
-        font-size: 1.25rem;
+        font-size: var(--font-size-medium);
         letter-spacing: -0.4px;
         color: var(--color-text);
     }

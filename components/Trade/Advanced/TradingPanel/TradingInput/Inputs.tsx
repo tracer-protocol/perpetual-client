@@ -143,7 +143,7 @@ export const Leverage: React.FC<LProps> = styled(
 
     > .label {
         margin: 5px auto 35px 0;
-        font-size: 16px;
+        font-size: var(--font-size-small);
         letter-spacing: -0.32px;
         color: var(--color-primary);
     }

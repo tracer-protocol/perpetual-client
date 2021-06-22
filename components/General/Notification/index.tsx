@@ -80,7 +80,7 @@ const appearances: Record<
 const IconWrap = styled.span`
     width: 30px;
     height: 30px;
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     line-height: 20px;
 `;
 const Header: React.FC<any> = ({ appearance: appearance_, onDismiss, title }) => {

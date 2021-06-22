@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';
 
 const SSlideSelect = styled(SlideSelect)`
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: #ffffff;
     width: 300px;
@@ -20,7 +20,7 @@ const SSlideSelect = styled(SlideSelect)`
 `;
 
 const SDown = styled(CaretDownFilled)`
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     & svg {
         transition: 0.3s ease-in-out;
     }

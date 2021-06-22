@@ -12,7 +12,7 @@ const SHiddenExpand = styled(HiddenExpand)`
     border-radius: 10px;
 
     h3 {
-        font-size: 16px;
+        font-size: var(--font-size-small);
         letter-spacing: -0.32px;
         color: #ffffff;
         margin-bottom: 20px;

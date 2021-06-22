@@ -28,7 +28,7 @@ const SBox = styled(Box)`
     z-index: 4;
 
     > p {
-        font-size: 1.25rem;
+        font-size: var(--font-size-medium);
         letter-spacing: 0;
         color: var(--color-text);
     }
@@ -61,13 +61,13 @@ const NoBalance = styled.span`
 
 const Item = styled.div`
     width: 100%;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     margin-bottom: 10px;
 
     > span {
         width: 100%;
         display: flex;
-        font-size: 16px;
+        font-size: var(--font-size-small);
         letter-spacing: -0.32px;
     }
 
@@ -97,7 +97,7 @@ const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
 `;
 
 const Title = styled.h2`
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     letter-spacing: -0.4px;
     color: var(--color-text);
     margin-bottom: 0.5rem;
@@ -113,7 +113,7 @@ const SButton = styled(Button)`
 const SubText = styled.span`
     letter-spacing: -0.32px;
     color: #005ea4;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     display: inline !important;
 `;
 

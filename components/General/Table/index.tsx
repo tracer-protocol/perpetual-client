@@ -26,7 +26,7 @@ export const Table: React.FC<TProps> = styled(({ headings, children, className }
 
 export const THead = styled.thead`
     color: var(--color-primary);
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     text-align: left;
     > th {
