@@ -73,13 +73,7 @@ export const useMostRecentMatched: (tracer: string) => {
                 graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
             }
             if (networkError) {
-                console.error(
-                    ['Failed to fetch', `Failed to fetch account trades due to network error: ${networkError}`],
-                    {
-                        appearance: 'error',
-                        autoDismiss: true,
-                    },
-                );
+               
             }
         },
     });
