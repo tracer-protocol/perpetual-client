@@ -106,15 +106,20 @@ const ALL_CANDLES = gql`
     }
 `;
 
-const parseCandles: (data: any) => CandleData = (data) => {
+const parseCandles: (data: any) => CandleData | undefined = (data) => {
     const foundTimes: Record<number, boolean> = {};
+    if (!data) {
+        return;
+    }
     const parsedData = [];
     for (let i = 0; i < data?.length ?? 0; i++) {
         const candle = data[i];
         if (foundTimes[candle.time]) {
             continue;
         }
-        if (i === 0) continue;
+        if (i === 0) {
+            continue;
+        }
         foundTimes[candle.time] = true;
         parsedData.push({
             time: candle.time,

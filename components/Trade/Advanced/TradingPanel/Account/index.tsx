@@ -121,7 +121,7 @@ type InfoProps = {
     order: OrderState | undefined;
     balances: UserBalance;
     maxLeverage: BigNumber;
-    fairPrice: BigNumber
+    fairPrice: BigNumber;
 };
 const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }) => {
     if (balances.quote.eq(0)) {
@@ -137,10 +137,10 @@ const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPr
                 {toApproxCurrency(
                     calcBuyingPower(
                         order?.nextPosition.quote ?? balances.quote,
-                        order?.nextPosition.base ?? balances.base, 
-                        new BigNumber(order.price), 
-                        maxLeverage
-                    )
+                        order?.nextPosition.base ?? balances.base,
+                        new BigNumber(order.price),
+                        maxLeverage,
+                    ),
                 )}
             </span>
         );
@@ -151,7 +151,9 @@ const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fa
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
         return (
-            <span>${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(3)}%</span>
+            <span>
+                ${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(3)}%
+            </span>
         );
     } else {
         return (

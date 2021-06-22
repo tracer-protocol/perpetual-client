@@ -157,8 +157,6 @@ export default styled(
             return 'NO_ERROR';
         }, [state.amount]);
 
-        console.log(state.amount)
-
         const handleClose = () => {
             dispatch({ type: 'setAmount', amount: NaN });
             dispatch({ type: 'setLoading', loading: false });
@@ -239,7 +237,7 @@ export default styled(
                         </ApproveButton>
                     ) : null}
                     <ModalButton
-                        disabled={!selectedTracer?.getTracerApproved() || checkErrors() !== 'NO_ERROR' || (!state.amount)}
+                        disabled={!selectedTracer?.getTracerApproved() || checkErrors() !== 'NO_ERROR' || !state.amount}
                         onClick={() => {
                             dispatch({ type: 'setLoading', loading: true });
                             dispatch({
