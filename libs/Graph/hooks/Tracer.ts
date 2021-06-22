@@ -72,7 +72,7 @@ export const useMostRecentMatched: (tracer: string) => {
             if (graphQLErrors) {
                 graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
             }
-            if (networkError) {
+          
                
             
         },
