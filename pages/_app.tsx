@@ -12,9 +12,26 @@ import GraphProvider from '@libs/Graph';
 import { Notification } from '@components/General/Notification';
 import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 const USERSNAP_GLOBAL_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_GLOBAL_API_KEY;
 const USERSNAP_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_API_KEY;
+
+const theme = {
+    primary: "mediumseagreen",
+    secondary: "mediumseagreen"
+};
+
+const GlobalStyles = createGlobalStyle`
+  html {
+      --font-size-small: 1rem;
+      --font-size-medium: 1.25rem;
+      --color-background: #000240;
+      --color-text: #fff;
+      --color-primary: #3da8f5;
+      --color-accent: #002886;
+  }
+`;
 
 const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
     useEffect(() => {
@@ -51,15 +68,18 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                 />
             </Head>
             <ToastProvider components={{ Toast: Notification }}>
-                <Web3Store>
-                    <GraphProvider>
-                        <FactoryStore>
-                            <TransactionStore>
-                                <Component {...pageProps} />
-                            </TransactionStore>
-                        </FactoryStore>
-                    </GraphProvider>
-                </Web3Store>
+                <ThemeProvider theme={theme}>
+                    <Web3Store>
+                        <GraphProvider>
+                            <FactoryStore>
+                                <TransactionStore>
+                                    <GlobalStyles />
+                                    <Component {...pageProps} />
+                                </TransactionStore>
+                            </FactoryStore>
+                        </GraphProvider>
+                    </Web3Store>
+                </ThemeProvider>
             </ToastProvider>
         </div>
     );
