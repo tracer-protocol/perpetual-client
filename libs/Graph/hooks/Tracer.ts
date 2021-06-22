@@ -68,7 +68,7 @@ export const useMostRecentMatched: (tracer: string) => {
     const { data, error, loading, refetch } = useQuery(TRACER_TRADES, {
         variables: { tracer: tracer.toLowerCase() },
         errorPolicy: 'all',
-        onError: ({ graphQLErrors, networkError }) => {
+        onError: ({ graphQLErrors }) => {
             if (graphQLErrors) {
                 graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
             }
