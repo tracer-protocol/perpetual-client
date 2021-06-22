@@ -135,6 +135,20 @@ const DropdownLogo = styled(({ className }) => {
                     <li className="nav-item highlight">
                         <img alt="Tracer Logo" src="/img/logos/tracer/tracer_blog.svg" />
                     </li>
+                    <li className="nav-item flex">
+                        <Link href="https://discourse.tracer.finance/">
+                            <img src="/img/socials/discourse.svg" alt="Discourse icon" />
+                        </Link>
+                        <Link href="https://github.com/tracer-protocol">
+                            <img src="/img/socials/github.svg" alt="Github icon" />
+                        </Link>
+                        <Link href="https://discord.gg/kvJEwfvyrW">
+                            <img src="/img/socials/discord.svg" alt="Discord icon" />
+                        </Link>
+                        <Link href="https://twitter.com/tracer_finance">
+                            <img src="/img/socials/twitter.svg" alt="Twitter icon" />
+                        </Link>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -235,15 +249,24 @@ const DropdownLogo = styled(({ className }) => {
 
     &.show > .dropdown-menu ul .nav-item:nth-child(4) {
         transition: all 0.3s ease-in-out 0.4s, background 0.5s ease;
-        border-bottom-left-radius: 10px;
-        border-bottom-right-radius: 10px;
+    }
+
+    &.show > .dropdown-menu ul .nav-item:nth-child(5) {
+        transition: all 0.3s ease-in-out 0.4s, background 0.5s ease;
+    }
+
+    &.show > .dropdown-menu ul .nav-item {
+        opacity: 1;
+        border-top: 1px solid #3da8f5;
+        transform: translateX(0);
+        cursor: auto;
+
+        > img {
+            cursor: pointer;
+        }
     }
 
     &.show > .dropdown-menu ul .nav-item.highlight {
-        border-top: 1px solid #3da8f5;
-        transform: translateX(0);
-        opacity: 1;
-
         &:hover {
             cursor: pointer;
             background-color: #3da8f5;
