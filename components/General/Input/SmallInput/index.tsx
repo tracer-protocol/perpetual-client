@@ -32,7 +32,7 @@ const InputContainer = styled.div`
 
     > input {
         width: 100%;
-        color: #fff;
+        color: var(--color-text);
         text-align: right;
         padding-left: 10px;
         font-size: 1.25rem;

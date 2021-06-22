@@ -23,16 +23,16 @@ const Header = styled.h3`
 `;
 
 const Balance = styled.span`
-    color: #fff;
+    color: var(--color-text);
     margin-left: auto;
     &.invalid {
         background: #f15025;
         border-radius: 20px;
-        color: #fff !important;
+        color: var(--color-text) !important;
         padding: 0 10px;
     }
     &.invalid > .after {
-        color: #fff !important;
+        color: var(--color-text) !important;
     }
 `;
 

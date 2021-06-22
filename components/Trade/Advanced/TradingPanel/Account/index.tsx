@@ -30,7 +30,7 @@ const SBox = styled(Box)`
     > p {
         font-size: 1.25rem;
         letter-spacing: 0;
-        color: #fff;
+        color: var(--color-text);
     }
 `;
 
@@ -99,7 +99,7 @@ const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
 const Title = styled.h2`
     font-size: 1.25rem;
     letter-spacing: -0.4px;
-    color: #fff;
+    color: var(--color-text);
     margin-bottom: 0.5rem;
 `;
 

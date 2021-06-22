@@ -41,7 +41,7 @@ export const NumberInput: React.FC<any> = styled((props: any) => {
     );
 })`
     position: relative;
-    color: #fff;
+    color: var(--color-text);
 
     /* Chrome, Safari, Edge, Opera */
     & input::-webkit-outer-spin-button,

@@ -12,7 +12,7 @@ const SButton = styled(Button)`
     padding: 0;
     margin-right: 0;
     border: none;
-    color: #fff;
+    color: var(--color-text);
     &:focus,
     &:active {
         border: none;
@@ -52,7 +52,7 @@ export default styled(({ className, isAdjust, setAdjust }: ISProps) => {
 })`
     font-size: 1.25rem;
     letter-spacing: -0.4px;
-    color: #fff;
+    color: var(--color-text);
     display: ${(props) => (props.account === '' ? 'none' : 'flex')};
     justify-content: space-between;
     background-color: #00125d;

@@ -47,7 +47,7 @@ export const Button = styled.div`
 
     &.primary {
         background: var(--color-primary);
-        color: #fff;
+        color: var(--color-text);
     }
 
     &.primary:hover {

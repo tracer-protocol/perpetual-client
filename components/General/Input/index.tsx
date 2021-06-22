@@ -6,7 +6,7 @@ export const Input = styled.input`
     height: 40px;
     line-height: 40px;
     letter-spacing: 0;
-    color: #ffffff;
+    color: #fff;
     width: 100%;
 
     &::placeholder {

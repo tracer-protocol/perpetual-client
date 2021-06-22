@@ -23,7 +23,7 @@ const SideNavItem = styled.div`
 
     &.selected {
         background: #005ea4;
-        color: #fff;
+        color: var(--color-text);
     }
 
     &:hover {

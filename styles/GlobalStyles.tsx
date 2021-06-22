@@ -17,7 +17,7 @@ export default createGlobalStyle`
 	/* ANTD overides */
 	.ant-tooltip-inner {
 		background: var(--color-accent);
-		color: #fff;
+		color: var(--color-text);
 	}
 	.ant-tooltip-inner strong {
 		color: var(--color-primary);

@@ -76,7 +76,7 @@ const SOption = styled(Option)`
 
 const Content = styled.div`
     font-size: 18px;
-    color: #fff;
+    color: var(--color-text);
     text-align: left;
 `;
 

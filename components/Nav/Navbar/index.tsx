@@ -35,7 +35,7 @@ const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
     );
 })`
     background: #f15025;
-    color: #fff;
+    color: var(--color-text);
     letter-spacing: -0.36px;
     height: 40px;
     line-height: 40px;
@@ -380,7 +380,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
     );
 })`
     display: flex;
-    color: #fff;
+    color: var(--color-text);
     height: 10vh;
 
     > ul {

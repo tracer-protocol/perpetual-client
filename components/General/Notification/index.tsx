@@ -170,7 +170,7 @@ const Close = styled(CloseOutlined)`
         cursor: pointer;
         opacity: 0.8;
         border: 1px solid #fff;
-        color: #fff;
+        color: var(--color-text);
     }
 `;
 const Hashie: React.FC<HProps | any> = ({

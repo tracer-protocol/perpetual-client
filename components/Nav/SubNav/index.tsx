@@ -17,7 +17,7 @@ export const SubNavContainer = styled.div`
 `;
 
 export const SubNavItem = styled.div`
-    color: #fff;
+    color: var(--color-text);
     transition: 0.3s;
     border-right: 1px solid #0c3586;
     text-align: center;
@@ -26,7 +26,7 @@ export const SubNavItem = styled.div`
 
     &.selected {
         background: var(--color-accent);
-        color: #fff;
+        color: var(--color-text);
     }
 
     &:hover {

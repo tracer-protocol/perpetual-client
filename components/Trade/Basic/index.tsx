@@ -61,7 +61,7 @@ const LiquidationPrice = styled(Section)`
     margin: 0;
 
     .label {
-        color: #fff;
+        color: var(--color-text);
         padding: 0 10px;
     }
     .content {
@@ -152,7 +152,7 @@ const SCard = styled(Card)`
 
 const SButton = styled(Button)`
     border: 1px solid #ffffff;
-    color: #fff;
+    color: var(--color-text);
 
     .button-disabled &:hover {
         cursor: not-allowed;

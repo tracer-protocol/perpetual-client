@@ -43,7 +43,7 @@ const DepositTerms = styled.p`
     min-width: 550px;
     width: 100%;
     padding: 0 40px 0 10px;
-    color: #fff;
+    color: var(--color-text);
 
     > .highlight {
         color: #f15025;
@@ -66,12 +66,12 @@ const WithdrawalFee = styled(Section)`
     margin: 0;
 
     .label {
-        color: #fff;
+        color: var(--color-text);
         padding: 0 10px;
     }
     .content {
         padding-right: 10px;
-        color: #fff;
+        color: var(--color-text);
     }
 `;
 

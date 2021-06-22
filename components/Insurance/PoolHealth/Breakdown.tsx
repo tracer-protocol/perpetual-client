@@ -41,7 +41,7 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
     );
 })`
     height: 32px;
-    border: 1px solid #fff;
+    border: 1px solid var(--color-text);
     border-radius: 20px;
     display: flex;
     margin: 20px 0;
@@ -107,7 +107,7 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
 })`
     font-size: 1rem;
     letter-spacing: -0.32px;
-    color: #fff;
+    color: var(--color-text);
     transition: 0.3s;
     min-width: 100px;
     justify-content: space-between;
@@ -144,7 +144,7 @@ const Label: React.FC<LProps> = styled(({ title, value, className }: LProps) => 
     > .value {
         font-size: 1.25rem;
         letter-spacing: -0.4px;
-        color: #fff;
+        color: var(--color-text);
     }
 `;
 const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, buffer, className }: BProps) => {

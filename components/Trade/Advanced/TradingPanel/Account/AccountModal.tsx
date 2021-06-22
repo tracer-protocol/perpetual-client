@@ -40,7 +40,7 @@ const ModalButton = styled(Button)`
     margin: auto;
     height: 40px;
     border: 1px solid #ffffff;
-    color: #fff;
+    color: var(--color-text);
 
     &:disabled {
         &:hover {
@@ -61,7 +61,7 @@ const ApproveButton = styled(Button)`
     margin: 1rem auto;
     height: 40px;
     border: 1px solid #ffffff;
-    color: #fff;
+    color: var(--color-text);
 `;
 
 type AMProps = {

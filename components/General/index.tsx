@@ -39,7 +39,7 @@ export const Button = styled.button`
 
     &:focus,
     &:active {
-        border: 1px solid #fff;
+        border: 1px solid var(--color-text);
         outline: 0;
         box-shadow: none;
     }
@@ -47,12 +47,12 @@ export const Button = styled.button`
     &:hover {
         cursor: pointer;
         background: var(--color-primary);
-        color: #fff;
+        color: var(--color-text);
     }
 
     &.primary {
         background: var(--color-primary);
-        color: #fff;
+        color: var(--color-text);
     }
 
     &.primary:hover {
@@ -198,7 +198,7 @@ export const Close = styled(CloseOutlined)`
         margin: auto;
         height: 20px;
         width: 20px;
-        color: #fff;
+        color: var(--color-text);
     }
     &:hover {
         cursor: pointer;
