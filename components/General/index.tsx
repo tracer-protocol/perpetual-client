@@ -26,11 +26,11 @@ export const Box = styled.div`
 
 export const Button = styled.button`
     transition: 0.3s;
-    color: #3da8f5;
+    color: var(--color-primary);
     font-size: 1rem;
     line-height: 1rem;
     letter-spacing: -0.32px;
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     border-radius: 20px;
     text-align: center;
     padding: 10px 0;
@@ -46,23 +46,23 @@ export const Button = styled.button`
 
     &:hover {
         cursor: pointer;
-        background: #3da8f5;
+        background: var(--color-primary);
         color: #fff;
     }
 
     &.primary {
-        background: #3da8f5;
+        background: var(--color-primary);
         color: #fff;
     }
 
     &.primary:hover {
         background: var(--color-background);
-        color: #3da8f5;
+        color: var(--color-primary);
     }
 
     &.disabled {
         &:hover {
-            color: #3da8f5;
+            color: var(--color-primary);
             background: none;
         }
     }
@@ -122,7 +122,7 @@ export const Section: React.FC<SProps> = styled(({ className, children, label, t
     > .label {
         text-align: left;
         white-space: nowrap;
-        color: #3da8f5;
+        color: var(--color-primary);
         text-transform: capitalize;
     }
 
@@ -202,7 +202,7 @@ export const Close = styled(CloseOutlined)`
     }
     &:hover {
         cursor: pointer;
-        background: #3da8f5;
+        background: var(--color-primary);
     }
     &:hover svg {
     }
@@ -228,7 +228,7 @@ export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IPr
 
     > .progress {
         transition: 0.3s;
-        background: #3da8f5;
+        background: var(--color-primary);
         height: 100%;
         width: ${(props) => `${props.percent}%`};
         border-radius: 20px;

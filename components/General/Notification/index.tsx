@@ -161,9 +161,9 @@ const Close = styled(CloseOutlined)`
     margin-left: auto;
     margin-bottom: auto;
     line-height: 14px;
-    color: #3da8f5;
+    color: var(--color-primary);
     transition: 0.3s;
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     padding: 2px 13px;
     border-radius: 10px;
     &: hover {

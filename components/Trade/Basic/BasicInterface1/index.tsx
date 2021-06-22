@@ -16,7 +16,7 @@ const SLabel = styled.h3`
     display: flex;
     font-size: 16px;
     letter-spacing: -0.32px;
-    color: #3da8f5;
+    color: var(--color-primary);
     margin-right: auto;
 
     span {
@@ -44,13 +44,13 @@ export const MaxButton: any = styled(Button)`
 const Balance = styled.p`
     font-size: 16px;
     letter-spacing: -0.32px;
-    color: #3da8f5;
+    color: var(--color-primary);
     text-transform: capitalize;
     margin: 0 10px auto 10px;
 `;
 
 const SDropdown = styled(Dropdown)`
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     border-radius: 20px;
     min-height: 30px;
     max-height: 50px;
@@ -117,8 +117,8 @@ const Lock: React.FC<{
     lockAmountToPay: boolean;
 }> = ({ isAmountToPay, lockAmountToPay }) => {
     // removed the onClick unlock functions for now
-    const lock_ = <LockOutlined className="mx-2" color="#3da8f5" />;
-    const unlock_ = <UnlockOutlined className="mx-2" color="#3da8f5" />;
+    const lock_ = <LockOutlined className="mx-2" color="var(--color-primary)" />;
+    const unlock_ = <UnlockOutlined className="mx-2" color="var(--color-primary)" />;
     if (isAmountToPay) {
         // ie lock for margin input / amount to pay
         if (lockAmountToPay) {
@@ -160,7 +160,7 @@ const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wall
 })`
     display: flex;
     > p {
-        color: #3da8f5;
+        color: var(--color-primary);
         margin: auto 5px;
     }
 `;

@@ -26,7 +26,7 @@ export const SubTitle = styled.p`
     text-align: left;
     font-size: 16px;
     letter-spacing: -0.32px;
-    color: #3da8f5;
+    color: var(--color-primary);
     margin: 1rem 0;
     padding-bottom: 1rem;
     border-bottom: 1px solid #002886;

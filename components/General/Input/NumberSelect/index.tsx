@@ -9,7 +9,7 @@ import { After } from '@components/General';
 const Unit = styled.span`
     font-size: 18px;
     letter-spacing: 0;
-    color: #3da8f5;
+    color: var(--color-primary);
     margin-top: auto;
     margin-bottom: 0.2rem;
 `;
@@ -17,7 +17,7 @@ const Unit = styled.span`
 const Header = styled.h3`
     font-size: 1rem;
     letter-spacing: -0.32px;
-    color: #3da8f5;
+    color: var(--color-primary);
     display: flex;
     justify-content: space-between;
 `;
@@ -37,7 +37,7 @@ const Balance = styled.span`
 `;
 
 const Max = styled.span`
-    color: #3da8f5;
+    color: var(--color-primary);
     text-decoration: underline;
     transition: 0.3s;
     margin-left: 5px;

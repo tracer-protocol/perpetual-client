@@ -16,7 +16,7 @@ const SideNavContainer = styled.div`
 `;
 
 const SideNavItem = styled.div`
-    color: #3da8f5;
+    color: var(--color-primary);
     transition: 0.3s;
     padding: 15px;
     min-width: 125px;

@@ -56,7 +56,7 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         margin-left: 0;
     }
     > .liquidity {
-        background: #3da8f5;
+        background: var(--color-primary);
         width: calc(
             ${(props) => ((props.liquidity - props.userBalance) / denom(props.target, props.liquidity)) * 100}% - 4px
         );
@@ -120,7 +120,7 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
     }
 
     > span .value {
-        color: #3da8f5;
+        color: var(--color-primary);
     }
 `;
 
@@ -138,7 +138,7 @@ const Label: React.FC<LProps> = styled(({ title, value, className }: LProps) => 
     );
 })`
     > .title {
-        color: #3da8f5;
+        color: var(--color-primary);
         font-size: 1rem;
     }
     > .value {
@@ -173,7 +173,7 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
                     title="Public"
                     percentage={parseFloat((((liquidity - userBalance - buffer) / liquidity) * 100).toFixed(3))}
                     value={liquidity}
-                    color="#3DA8F5"
+                    color="var(--color-primary)"
                     target="liquidityTarget"
                 />
                 <Section

@@ -96,9 +96,9 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
         );
     },
 )`
-    color: #3da8f5;
+    color: var(--color-primary);
     font-size: 1rem;
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     border-radius: 20px;
     height: 28px;
     width: 160px;

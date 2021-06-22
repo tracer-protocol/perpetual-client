@@ -240,13 +240,13 @@ const DropdownLogo = styled(({ className }) => {
     }
 
     &.show > .dropdown-menu ul .nav-item.highlight {
-        border-top: 1px solid #3da8f5;
+        border-top: 1px solid var(--color-primary);
         transform: translateX(0);
         opacity: 1;
 
         &:hover {
             cursor: pointer;
-            background-color: #3da8f5;
+            background-color: var(--color-primary);
         }
     }
 
@@ -281,7 +281,7 @@ const ConnectButton: React.FC<any> = styled.button`
     }
 
     &:hover {
-        background: #3da8f5;
+        background: var(--color-primary);
     }
 `;
 
@@ -412,7 +412,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
     > ul li.selected .trade-toggle {
         display: flex;
         margin: auto 20px;
-        border: 1px solid #3da8f5;
+        border: 1px solid var(--color-primary);
         border-radius: 20px;
     }
 
@@ -428,7 +428,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
 
     > ul li.selected .trade-toggle div.selected {
         color: var(--color-background);
-        background-color: #3da8f5;
+        background-color: var(--color-primary);
         border-radius: 20px;
     }
 `;

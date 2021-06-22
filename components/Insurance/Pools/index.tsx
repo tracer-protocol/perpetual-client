@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { StyledTooltip } from '@components/Tooltips';
 
 const Hidden = styled.div`
-    color: #3da8f5;
+    color: var(--color-primary);
     opacity: 0;
     transition: 0.3s;
     transition-delay: 0s;
@@ -28,7 +28,7 @@ const Hidden = styled.div`
 `;
 
 const SProgressBar = styled(ProgressBar)`
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     min-width: 250px;
     width: 100%;
 `;

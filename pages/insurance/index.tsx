@@ -40,7 +40,7 @@ const Insurance: React.FC = styled(({ className }) => {
     const ButtonTheme = {
         width: '150px',
         hoverFG: '#fff',
-        hoverBG: '#3da8f5',
+        hoverBG: 'var(--color-primary)',
         hoverCursor: 'pointer',
     };
 

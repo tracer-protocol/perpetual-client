@@ -29,11 +29,11 @@ export const RightPanel = styled.div`
 
 export const Button = styled.div`
     transition: 0.5s;
-    color: #3da8f5;
+    color: var(--color-primary);
     font-size: 1rem;
     line-height: 1rem;
     letter-spacing: -0.32px;
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     border-radius: 20px;
     text-align: center;
     padding: 10px 0;
@@ -46,13 +46,13 @@ export const Button = styled.div`
     }
 
     &.primary {
-        background: #3da8f5;
+        background: var(--color-primary);
         color: #fff;
     }
 
     &.primary:hover {
         background: var(--color-background);
-        color: #3da8f5;
+        color: var(--color-primary);
     }
 
     &.disabled {
@@ -68,7 +68,7 @@ Button.defaultProps = {
     theme: {
         width: '100px',
         hoverFG: '#fff',
-        hoverBG: '#3da8f5',
+        hoverBG: 'var(--color-primary)',
         hoverCursor: 'pointer',
     },
 };
@@ -79,7 +79,7 @@ export const TableHead = styled.th`
     width: ${(props: any) => props.theme.width};
     height: 57px;
     text-align: left;
-    color: #3da8f5;
+    color: var(--color-primary);
     padding: 0 1rem;
     font-weight: normal;
     border-right: ${(props: any) => props.theme.borderRight as string};

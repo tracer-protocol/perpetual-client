@@ -11,7 +11,7 @@ const Timer: React.FC = styled(({ className }) => {
     height: 0.25rem;
     width: 100%;
     position relative;
-    background: #3DA8F5;
+    background: var(--color-primary);
 
     @keyframes countdown-width {
         from { width: 100%; } to { width: 0% }

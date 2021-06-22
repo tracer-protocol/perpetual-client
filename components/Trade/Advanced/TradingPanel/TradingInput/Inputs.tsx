@@ -145,6 +145,6 @@ export const Leverage: React.FC<LProps> = styled(
         margin: 5px auto 35px 0;
         font-size: 16px;
         letter-spacing: -0.32px;
-        color: #3da8f5;
+        color: var(--color-primary);
     }
 `;

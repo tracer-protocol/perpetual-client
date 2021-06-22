@@ -40,7 +40,7 @@ const defaultTrackStyle = { backgroundColor: '#002886', height: 10 };
 const defaultHandleStyle = {
     width: '50px',
     height: '30px',
-    background: '#3DA8F5',
+    background: 'var(--color-primary)',
     borderRadius: '20px',
     marginTop: '-11px',
 };

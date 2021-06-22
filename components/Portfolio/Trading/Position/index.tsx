@@ -40,7 +40,7 @@ const Position: React.FC<{
     const activeButton = {
         width: '100px',
         hoverFG: '#fff',
-        hoverBG: '#3da8f5',
+        hoverBG: 'var(--color-primary)',
         hoverCursor: 'pointer',
     };
 
@@ -51,7 +51,7 @@ const Position: React.FC<{
     const largeButton = {
         width: '250px',
         hoverFG: '#fff',
-        hoverBG: '#3da8f5',
+        hoverBG: 'var(--color-primary)',
         hoverCursor: 'pointer',
     };
 

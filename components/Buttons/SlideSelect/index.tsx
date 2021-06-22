@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const BGSlider = styled.div<{ position: number; width: number }>`
     transition: 0.5s;
-    background-color: #3da8f5;
+    background-color: var(--color-primary);
     height: 100%;
     width: ${(props) => props.width}%;
     border-radius: 18px;
@@ -46,7 +46,7 @@ const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, clas
 })`
     display: flex;
     margin: auto;
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     border-radius: 20px;
     height: 40px;
     position: relative;

@@ -56,7 +56,7 @@ const WalletConnect: React.FC = () => {
 };
 
 const NoBalance = styled.span`
-    color: #3da8f5;
+    color: var(--color-primary);
 `;
 
 const Item = styled.div`
@@ -78,7 +78,7 @@ const Item = styled.div`
 
     > h3 {
         letter-spacing: -0.32px;
-        color: #3da8f5;
+        color: var(--color-primary);
         text-transform: capitalize;
         margin-bottom: 5px;
     }

@@ -35,7 +35,7 @@ const CalcButtons = styled.div`
 const AccountNumberSelect = styled(NumberSelect)`
     margin-top: 1rem;
     > * .balance {
-        color: #3da8f5;
+        color: var(--color-primary);
         margin-left: 2rem;
     }
     > * .balance > .max {
@@ -63,7 +63,7 @@ const Leverage: React.FC<LProps> = styled(({ className, value, handleChange }: L
 
     > h3 {
         font-size: 1rem;
-        color: #3da8f5;
+        color: var(--color-primary);
         margin-bottom: 1rem;
     }
 `;

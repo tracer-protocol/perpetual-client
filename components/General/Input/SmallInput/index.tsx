@@ -9,7 +9,7 @@ const Max = styled.a`
     margin: auto 0 auto 20px;
     letter-spacing: -0.32px;
     font-size: 16px;
-    color: #3da8f5;
+    color: var(--color-primary);
     text-decoration: underline;
 
     &:hover {
@@ -90,7 +90,7 @@ const SmallInput: React.FC<SIProps> = styled(
     > .label {
         letter-spacing: -0.32px;
         font-size: 16px;
-        color: #3da8f5;
+        color: var(--color-primary);
         margin: auto 0;
         text-transform: capitalize;
     }

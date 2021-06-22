@@ -52,7 +52,7 @@ export const Checkbox: React.FC<CProps> = styled(({ className, checked, onClick 
         </span>
     );
 })`
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     width: 1.7rem;
     height: 1.1rem;
     display: block;
@@ -91,7 +91,7 @@ export const Checkbox: React.FC<CProps> = styled(({ className, checked, onClick 
 
     /* When the checkbox is checked, add a blue background */
     & > input:checked ~ .checkmark {
-        background-color: #3da8f5;
+        background-color: var(--color-primary);
     }
 
     /* Create the checkmark/indicator (hidden when not checked) */
