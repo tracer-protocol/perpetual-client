@@ -4,9 +4,8 @@ import { Button } from '@components/General';
 import { CaretRightOutlined } from '@ant-design/icons';
 
 const SButton = styled(Button)`
-    height: var(--height-small-button);
+    height: var(--height-extra-small-button);
     background: var(--color-accent);
-    line-height: var(--height-small-button);
     font-size: var(--font-size-extra-small);
     letter-spacing: -0.24px;
     padding: 0;
@@ -35,7 +34,7 @@ type ISProps = {
 export default styled(({ className, isAdjust, setAdjust }: ISProps) => {
     return (
         <div className={className}>
-            <p>{isAdjust ? 'Adjust Position' : 'Place Order'}</p>
+            <p className="flex items-center">{isAdjust ? 'Adjust Position' : 'Place Order'}</p>
             {isAdjust ? (
                 <SButton onClick={() => setAdjust(false)}>
                     Switch to Place
@@ -58,6 +57,6 @@ export default styled(({ className, isAdjust, setAdjust }: ISProps) => {
     background-color: #00125d;
     height: var(--height-small-container);
     border-bottom: 1px solid #0c3586;
-    padding: 15px;
+    padding: 0 12px;
     z-index: 1;
 ` as React.FC<ISProps>;

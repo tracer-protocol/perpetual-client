@@ -19,18 +19,19 @@ const USERSNAP_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_API_KEY;
 
 const Desktop = styled.div`
     display: block;
-    @media (max-width: 1024px) { 
+    @media (max-width: 1024px) {
         display: none;
     }
-`
+`;
 
 const Mobile = styled.div`
     display: none;
     padding-top: 10vh;
     padding-left: 10vh;
+    height: 100%;
     background: var(--color-background);
     color: var(--color-text);
-    @media (max-width: 1024px) { 
+    @media (max-width: 1024px) {
         display: block;
     }
     > h1 {
@@ -38,8 +39,7 @@ const Mobile = styled.div`
         letter-spacing: -1.1px;
         font-weight: lighter;
     }
-
-`
+`;
 const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
     useEffect(() => {
         // @ts-ignore
@@ -91,9 +91,7 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                 </ToastProvider>
             </Desktop>
             <Mobile>
-                <h1>
-                    Mobile coming soon.
-                </h1>
+                <h1>Mobile coming soon.</h1>
                 <p>
                     Alpha testing is available on desktop only. <br />
                     Switch to desktop to conduct testing.

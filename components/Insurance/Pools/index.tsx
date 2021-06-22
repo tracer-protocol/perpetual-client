@@ -71,7 +71,7 @@ const SDownCaret = styled(CaretDownFilled)`
 
 const SLinkOutlined = styled(LinkOutlined)`
     vertical-align: 0.125rem;
-`
+`;
 
 const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
     const [show, setShow] = useState(false);
@@ -102,7 +102,7 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
             </Hidden>
         </div>
     );
-}
+};
 
 const Collapsible = styled.div`
     transition: 0.3s;

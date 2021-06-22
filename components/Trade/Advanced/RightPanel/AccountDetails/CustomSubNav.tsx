@@ -33,9 +33,7 @@ const CustomSubNav: React.FC<CSNProps> = ({ setTab, selected, fills, orders }: C
                 setTab(0);
             }}
         >
-            <div className="m-auto">
-                {'Position'}
-            </div>
+            <div className="m-auto">{'Position'}</div>
         </SubNavItem>
         <SubNavItem
             className={`${1 === selected ? 'selected' : ''} flex`}
@@ -44,7 +42,7 @@ const CustomSubNav: React.FC<CSNProps> = ({ setTab, selected, fills, orders }: C
                 e.preventDefault();
                 setTab(1);
             }}
-        >   
+        >
             <div className="m-auto">
                 {'Orders'}
                 <TableEntries amount={orders} />

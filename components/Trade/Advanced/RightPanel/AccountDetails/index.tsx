@@ -66,7 +66,7 @@ const SSlideSelect = styled(SlideSelect)`
     height: var(--height-extra-small-button);
     width: 100px;
     margin-left: 0;
-    margin-top: 0.2rem; 
+    margin-top: 0.2rem;
 `;
 
 const SOption = styled(Option)`

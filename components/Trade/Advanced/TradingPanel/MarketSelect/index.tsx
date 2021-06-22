@@ -11,6 +11,10 @@ const SLogo = styled(Logo)`
     margin-top: 0;
     margin-bottom: 0;
     margin-right: 0.7rem;
+    @media (max-width: 1279px) {
+        margin-right: 0.5rem;
+        width: 20px;
+    }
 `;
 
 type MarketSelectDropdownProps = {
@@ -64,7 +68,7 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
         // this can be done with jQuery and a useEffect when tracers is updated and setting nth-child attr
         transition-delay: 0.5s;
         transition: 0.3s;
-        padding: 10px 20px;
+        padding: 10px 15px;
         opacity: ${(props) => (props.display ? '1' : '0')};
     }
 
@@ -107,10 +111,10 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     text-align: center;
     margin: 15px 0;
 
-    @media (max-width: 1535px) { 
+    @media (max-width: 1535px) {
         height: 22px;
         & > .down-arrow {
-            margin-top: -2px!important;
+            margin-top: -2px !important;
             width: 15px;
             height: 15px;
         }
@@ -141,7 +145,7 @@ const SBox = styled<any>(Box)`
     z-index: ${(props) => (props.display ? 4 : 1)};
     height: var(--height-small-container);
     border-bottom: 1px solid var(--color-accent);
-    padding: 0 20px;
+    padding: 0 12px;
 `;
 
 type MSProps = {
