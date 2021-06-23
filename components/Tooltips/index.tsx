@@ -319,6 +319,7 @@ export const BufferTip: React.FC<TProps> = ({ className, children }: TProps) => 
                     window.open(
                         'https://docs.tracer.finance/products/perpetual-swaps/insurance/direct-deposits#insurance-buffer-account',
                         '_blank',
+                        'noopener'
                     )
                 }
             >
