@@ -12,7 +12,7 @@ export const DateAndTime = styled(({ className, date, time }) => {
         </div>
     );
 })`
-    font-size: 1rem;
+    font-size: var(--font-size-small);
 
     .secondary {
         color: #005ea4;
@@ -26,11 +26,11 @@ export const Box = styled.div`
 
 export const Button = styled.button`
     transition: 0.3s;
-    color: #3da8f5;
-    font-size: 1rem;
+    color: var(--color-primary);
+    font-size: var(--font-size-small);
     line-height: 1rem;
     letter-spacing: -0.32px;
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     border-radius: 20px;
     text-align: center;
     padding: 10px 0;
@@ -39,30 +39,30 @@ export const Button = styled.button`
 
     &:focus,
     &:active {
-        border: 1px solid #fff;
+        border: 1px solid var(--color-text);
         outline: 0;
         box-shadow: none;
     }
 
     &:hover {
         cursor: pointer;
-        background: #3da8f5;
-        color: #fff;
+        background: var(--color-primary);
+        color: var(--color-text);
     }
 
     &.primary {
-        background: #3da8f5;
-        color: #fff;
+        background: var(--color-primary);
+        color: var(--color-text);
     }
 
     &.primary:hover {
-        background: #000240;
-        color: #3da8f5;
+        background: var(--color-background);
+        color: var(--color-primary);
     }
 
     &.disabled {
         &:hover {
-            color: #3da8f5;
+            color: var(--color-primary);
             background: none;
         }
     }
@@ -91,7 +91,7 @@ export const Card = styled.div`
     transition: 0.3s;
 
     h1 {
-        font-size: 1.25rem;
+        font-size: var(--font-size-medium);
         letter-spacing: -0.4px;
         color: #ffffff;
     }
@@ -117,12 +117,12 @@ export const Section: React.FC<SProps> = styled(({ className, children, label, t
     width: 100%;
     display: flex;
     margin: 10px 0;
-    font-size: 16px;
+    font-size: var(--font-size-small);
 
     > .label {
         text-align: left;
         white-space: nowrap;
-        color: #3da8f5;
+        color: var(--color-primary);
         text-transform: capitalize;
     }
 
@@ -185,7 +185,7 @@ export const After = styled.span`
 `;
 
 export const Close = styled(CloseOutlined)`
-    background: #002886;
+    background: var(--color-accent);
     border-radius: 20px;
     width: 58px;
     height: 40px;
@@ -198,11 +198,11 @@ export const Close = styled(CloseOutlined)`
         margin: auto;
         height: 20px;
         width: 20px;
-        color: #fff;
+        color: var(--color-text);
     }
     &:hover {
         cursor: pointer;
-        background: #3da8f5;
+        background: var(--color-primary);
     }
     &:hover svg {
     }
@@ -221,14 +221,14 @@ export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IPr
         </div>
     );
 })`
-    background: #002886;
+    background: var(--color-accent);
     position: relative;
     height: 32px;
     border-radius: 20px;
 
     > .progress {
         transition: 0.3s;
-        background: #3da8f5;
+        background: var(--color-primary);
         height: 100%;
         width: ${(props) => `${props.percent}%`};
         border-radius: 20px;
@@ -237,7 +237,7 @@ export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IPr
 
     > .label {
         letter-spacing: -0.32px;
-        font-size: 16px;
+        font-size: var(--font-size-small);
         position: absolute;
         height: fit-content;
         width: fit-content;

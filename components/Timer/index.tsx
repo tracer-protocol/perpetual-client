@@ -11,7 +11,7 @@ const Timer: React.FC = styled(({ className }) => {
     height: 0.25rem;
     width: 100%;
     position relative;
-    background: #3DA8F5;
+    background: var(--color-primary);
 
     @keyframes countdown-width {
         from { width: 100%; } to { width: 0% }
@@ -19,7 +19,7 @@ const Timer: React.FC = styled(({ className }) => {
 
     #refetchLoader {
         animation: countdown-width 5s linear infinite;
-        background: #002886;
+        background: var(--color-accent);
         position: absolute; 
         height: 0.25rem;
         right: 0;

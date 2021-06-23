@@ -8,8 +8,8 @@ import { Button } from '@components/Portfolio';
 
 const InsurancePoolsContent = styled.div`
     width: 100%;
-    border-top: 1px solid #002886;
-    border-left: 1px solid #002886;
+    border-top: 1px solid var(--color-accent);
+    border-left: 1px solid var(--color-accent);
 `;
 
 const InsurancePoolsHeader = styled.div`
@@ -17,9 +17,9 @@ const InsurancePoolsHeader = styled.div`
     margin: 0 auto;
     color: white;
     padding: 1rem;
-    font-size: 1rem;
-    border-left: 1px solid #002886;
-    border-right: 1px solid #002886;
+    font-size: var(--font-size-small);
+    border-left: 1px solid var(--color-accent);
+    border-right: 1px solid var(--color-accent);
 `;
 
 const InsurancePoolsFooter = styled.div`
@@ -29,7 +29,7 @@ const InsurancePoolsFooter = styled.div`
     margin: 0 auto;
     color: white;
     padding: 2rem 1rem;
-    font-size: 1rem;
+    font-size: var(--font-size-small);
 
     > .learn-more {
         margin-left: 1rem;
@@ -40,7 +40,7 @@ const Insurance: React.FC = styled(({ className }) => {
     const ButtonTheme = {
         width: '150px',
         hoverFG: '#fff',
-        hoverBG: '#3da8f5',
+        hoverBG: 'var(--color-primary)',
         hoverCursor: 'pointer',
     };
 
@@ -57,7 +57,13 @@ const Insurance: React.FC = styled(({ className }) => {
                         <InsurancePoolsFooter>
                             New to insurance pools?{' '}
                             <Button className="learn-more" theme={ButtonTheme}>
-                                Learn More
+                                <a
+                                    href="https://docs.tracer.finance/products/perpetual-swaps/insurance"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    Learn More
+                                </a>
                             </Button>
                         </InsurancePoolsFooter>
                     </InsuranceStore>
@@ -67,7 +73,7 @@ const Insurance: React.FC = styled(({ className }) => {
     );
 })`
     position: relative;
-    background: #000240;
+    background: var(--color-background);
 `;
 
 export default Insurance;

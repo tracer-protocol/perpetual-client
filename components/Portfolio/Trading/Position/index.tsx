@@ -40,7 +40,7 @@ const Position: React.FC<{
     const activeButton = {
         width: '100px',
         hoverFG: '#fff',
-        hoverBG: '#3da8f5',
+        hoverBG: 'var(--color-primary)',
         hoverCursor: 'pointer',
     };
 
@@ -51,7 +51,7 @@ const Position: React.FC<{
     const largeButton = {
         width: '250px',
         hoverFG: '#fff',
-        hoverBG: '#3da8f5',
+        hoverBG: 'var(--color-primary)',
         hoverCursor: 'pointer',
     };
 
@@ -59,7 +59,7 @@ const Position: React.FC<{
         display: 'normal',
         color: '#fff',
         opacity: 1,
-        hoverBG: '#002886',
+        hoverBG: 'var(--color-accent)',
         hoverCursor: 'pointer',
     };
 
@@ -75,7 +75,7 @@ const Position: React.FC<{
 
     const TableHeadEndTheme = {
         minWidth: '230px',
-        borderBottom: '1px solid #002886',
+        borderBottom: '1px solid var(--color-accent)',
     };
 
     const getRowStatus = (status: string, show: boolean) => {

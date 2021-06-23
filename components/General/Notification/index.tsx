@@ -80,7 +80,7 @@ const appearances: Record<
 const IconWrap = styled.span`
     width: 30px;
     height: 30px;
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     line-height: 20px;
 `;
 const Header: React.FC<any> = ({ appearance: appearance_, onDismiss, title }) => {
@@ -106,7 +106,7 @@ const Header: React.FC<any> = ({ appearance: appearance_, onDismiss, title }) =>
 const STimer = styled<any>(Timer)`
     #refetchLoader {
         animation: countdown-width ${(props) => props.autoDismissTimeout}s linear;
-        background: #002886;
+        background: var(--color-accent);
         position: absolute;
         height: 0.25rem;
         right: 0;
@@ -132,7 +132,7 @@ const Content = styled((props: any) => (
     </div>
 ))`
     flex-grow: 1;
-    font-size: 18px;
+    font-size: var(--font-size-medium);
     line-height: 1.4;
     color: #005ea4;
     min-height: 40;
@@ -161,16 +161,16 @@ const Close = styled(CloseOutlined)`
     margin-left: auto;
     margin-bottom: auto;
     line-height: 14px;
-    color: #3da8f5;
+    color: var(--color-primary);
     transition: 0.3s;
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     padding: 2px 13px;
     border-radius: 10px;
     &: hover {
         cursor: pointer;
         opacity: 0.8;
         border: 1px solid #fff;
-        color: #fff;
+        color: var(--color-text);
     }
 `;
 const Hashie: React.FC<HProps | any> = ({

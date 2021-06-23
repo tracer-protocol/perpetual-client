@@ -11,19 +11,19 @@ interface SNBProps {
 
 const SideNavContainer = styled.div`
     letter-spacing: -0.36px;
-    font-size: 18px;
+    font-size: var(--font-size-medium);
     border-bottom: 1px solid #0c3586;
 `;
 
 const SideNavItem = styled.div`
-    color: #3da8f5;
+    color: var(--color-primary);
     transition: 0.3s;
     padding: 15px;
     min-width: 125px;
 
     &.selected {
         background: #005ea4;
-        color: #fff;
+        color: var(--color-text);
     }
 
     &:hover {

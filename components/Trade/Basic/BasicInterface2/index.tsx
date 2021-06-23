@@ -13,9 +13,9 @@ import { MaxButton } from '../BasicInterface1';
 
 const SLabel = styled.h3`
     display: flex;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
-    color: #3da8f5;
+    color: var(--color-primary);
     margin-right: auto;
 
     span {
@@ -31,7 +31,7 @@ const SSection = styled.div`
 `;
 
 const SDropdown = styled(Dropdown)`
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     border-radius: 20px;
     max-height: 50px;
     min-width: 120px;
@@ -42,7 +42,7 @@ const SDropdown = styled(Dropdown)`
 `;
 
 const LDropdown = styled(Dropdown)`
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     border-radius: 20px;
     min-height: 40px;
     min-width: 130px;
@@ -68,13 +68,13 @@ const SDownCaret = styled(CaretDownFilled)`
 
 const DropDownText = styled.div`
     margin: auto;
-    font-size: 16px;
+    font-size: var(--font-size-small);
 `;
 
 const RightContainer = styled.div`
     white-space: nowrap;
     margin-top: 5px;
-    color: #3da8f5;
+    color: var(--color-primary);
     display: flex;
 `;
 

@@ -29,11 +29,11 @@ export const RightPanel = styled.div`
 
 export const Button = styled.div`
     transition: 0.5s;
-    color: #3da8f5;
-    font-size: 1rem;
+    color: var(--color-primary);
+    font-size: var(--font-size-small);
     line-height: 1rem;
     letter-spacing: -0.32px;
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     border-radius: 20px;
     text-align: center;
     padding: 10px 0;
@@ -46,13 +46,13 @@ export const Button = styled.div`
     }
 
     &.primary {
-        background: #3da8f5;
-        color: #fff;
+        background: var(--color-primary);
+        color: var(--color-text);
     }
 
     &.primary:hover {
-        background: #000240;
-        color: #3da8f5;
+        background: var(--color-background);
+        color: var(--color-primary);
     }
 
     &.disabled {
@@ -68,7 +68,7 @@ Button.defaultProps = {
     theme: {
         width: '100px',
         hoverFG: '#fff',
-        hoverBG: '#3da8f5',
+        hoverBG: 'var(--color-primary)',
         hoverCursor: 'pointer',
     },
 };
@@ -79,7 +79,7 @@ export const TableHead = styled.th`
     width: ${(props: any) => props.theme.width};
     height: 57px;
     text-align: left;
-    color: #3da8f5;
+    color: var(--color-primary);
     padding: 0 1rem;
     font-weight: normal;
     border-right: ${(props: any) => props.theme.borderRight as string};
@@ -91,8 +91,8 @@ TableHead.defaultProps = {
         maxWidth: '300px',
         minWidth: '140px',
         width: 'auto',
-        borderRight: '1px solid #002886',
-        borderBottom: '1px solid #002886',
+        borderRight: '1px solid var(--color-accent)',
+        borderBottom: '1px solid var(--color-accent)',
     },
 };
 
@@ -113,14 +113,14 @@ TableRow.defaultProps = {
         display: 'normal',
         color: '#fff',
         opacity: 1,
-        hoverBG: '#002886',
+        hoverBG: 'var(--color-accent)',
         hoverCursor: 'pointer',
     },
 };
 
 export const TableCell = styled.td`
     color: ${(props: any) => props.color as string};
-    font-size: 1rem;
+    font-size: var(--font-size-small);
     padding: 0 1rem;
     height: ${(props: any) => props.theme.height as string};
     border-right: ${(props: any) => props.theme.borderRight as string};
@@ -130,13 +130,14 @@ export const TableCell = styled.td`
 TableCell.defaultProps = {
     theme: {
         height: '70px',
-        borderRight: '1px solid #002886',
-        borderBottom: '1px solid #002886',
+        borderRight: '1px solid var(--color-accent)',
+        borderBottom: '1px solid var(--color-accent)',
     },
 };
 
 export const SecondaryCell = styled.div`
     color: #005ea4;
+    font-size: var(--font-size-small);
 `;
 
 export const StatusIndicator = styled.div`

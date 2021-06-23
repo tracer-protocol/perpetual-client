@@ -7,37 +7,37 @@ import { toApproxCurrency } from '@libs/utils';
 import { After } from '@components/General';
 
 const Unit = styled.span`
-    font-size: 18px;
+    font-size: var(--font-size-medium);
     letter-spacing: 0;
-    color: #3da8f5;
+    color: var(--color-primary);
     margin-top: auto;
     margin-bottom: 0.2rem;
 `;
 
 const Header = styled.h3`
-    font-size: 1rem;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
-    color: #3da8f5;
+    color: var(--color-primary);
     display: flex;
     justify-content: space-between;
 `;
 
 const Balance = styled.span`
-    color: #fff;
+    color: var(--color-text);
     margin-left: auto;
     &.invalid {
         background: #f15025;
         border-radius: 20px;
-        color: #fff !important;
+        color: var(--color-text) !important;
         padding: 0 10px;
     }
     &.invalid > .after {
-        color: #fff !important;
+        color: var(--color-text) !important;
     }
 `;
 
 const Max = styled.span`
-    color: #3da8f5;
+    color: var(--color-primary);
     text-decoration: underline;
     transition: 0.3s;
     margin-left: 5px;

@@ -34,16 +34,16 @@ const AccountDetailsSection = styled(Section)`
     padding: 5px 10px;
     margin: 0;
     color: #005ea4;
-    min-height: 60px;
-    border-bottom: 1px solid #002886;
+    min-height: var(--height-small-container);
+    border-bottom: 1px solid var(--color-accent);
 
     &.border-right {
-        border-right: 1px solid #002886;
+        border-right: 1px solid var(--color-accent);
     }
 
     > .label {
         display: block;
-        font-size: 12px;
+        font-size: var(--font-size-extra-small);
     }
     > .content {
         padding-left: 0;
@@ -51,32 +51,31 @@ const AccountDetailsSection = styled(Section)`
 `;
 
 const SectionContainer = styled.div`
-    border-right: 1px solid #002886;
+    border-right: 1px solid var(--color-accent);
     width: 100%;
     display: block;
 
     &.exposure {
-        border-top: 1px solid #002886;
-        border-bottom: 1px solid #002886;
+        border-top: 1px solid var(--color-accent);
+        border-bottom: 1px solid var(--color-accent);
         padding-bottom: 0.25rem;
     }
 `;
 
 const SSlideSelect = styled(SlideSelect)`
-    height: 25px;
+    height: var(--height-extra-small-button);
     width: 100px;
-    font-size: 8px;
-    margin-right: 0;
-    margin-top: 0;
+    margin-left: 0;
+    margin-top: 0.2rem;
 `;
 
 const SOption = styled(Option)`
-    font-size: 13px;
+    font-size: var(--font-size-extra-small);
 `;
 
 const Content = styled.div`
-    font-size: 18px;
-    color: #fff;
+    font-size: var(--font-size-small);
+    color: var(--color-text);
     text-align: left;
 `;
 
@@ -154,7 +153,7 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                     tooltip={{ key: 'exposure', props: { baseTicker: baseTicker } }}
                 >
                     {!balances.quote.eq(0) ? (
-                        <Content className="flex">
+                        <Content>
                             {currency === 0
                                 ? `${base.abs().toNumber()} ${baseTicker}`
                                 : `${toApproxCurrency(base.abs().times(fairPrice))} ${quoteTicker}`}

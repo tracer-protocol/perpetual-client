@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { StyledTooltip } from '@components/Tooltips';
 
 const Hidden = styled.div`
-    color: #3da8f5;
+    color: var(--color-primary);
     opacity: 0;
     transition: 0.3s;
     transition-delay: 0s;
@@ -28,7 +28,7 @@ const Hidden = styled.div`
 `;
 
 const SProgressBar = styled(ProgressBar)`
-    border: 1px solid #3da8f5;
+    border: 1px solid var(--color-primary);
     min-width: 250px;
     width: 100%;
 `;
@@ -61,7 +61,7 @@ const SDownCaret = styled(CaretDownFilled)`
     transition: 0.3s;
     margin: auto 0;
     transform: rotate(-90deg);
-    color: #002886;
+    color: var(--color-accent);
 
     .selected & {
         transform: rotate(0);
@@ -69,7 +69,11 @@ const SDownCaret = styled(CaretDownFilled)`
     }
 `;
 
-const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
+const SLinkOutlined = styled(LinkOutlined)`
+    vertical-align: 0.125rem;
+`;
+
+const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
     const [show, setShow] = useState(false);
     const [type, setType] = useState('Deposit');
     const openModal: (type: 'Deposit' | 'Withdraw') => void = (type: 'Deposit' | 'Withdraw') => {
@@ -83,7 +87,7 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
             </span>
             <Link href={pool.iPoolTokenURL}>
                 <StyledTooltip title="View on Etherscan">
-                    <LinkOutlined style={{ margin: '5px', marginBottom: '2px' }} />
+                    <SLinkOutlined className="ml-1" />
                 </StyledTooltip>
             </Link>
             <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
@@ -98,12 +102,15 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
             </Hidden>
         </div>
     );
-})``;
+};
 
 const Collapsible = styled.div`
     transition: 0.3s;
-    height: 3rem;
+    height: 3.6rem;
     overflow: hidden;
+    padding-top: 0.6rem;
+
+    font-size: var(--font-size-medium);
 
     .selected &,
     &.show {
@@ -151,8 +158,8 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
 
     const TableHeadEndTheme = {
         minWidth: '700px',
-        borderRight: '1px solid #002886',
-        borderBottom: '1px solid #002886',
+        borderRight: '1px solid var(--color-accent)',
+        borderBottom: '1px solid var(--color-accent)',
     };
 
     return (
@@ -179,7 +186,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                             onClick={(e) => onClick(e, i)}
                         >
                             <TableCell>
-                                <Collapsible>
+                                <Collapsible className="pt-1">
                                     <MarketNameContainer>
                                         <SDownCaret />
                                         <Logo className="ml-2" ticker="ETH" />
@@ -188,15 +195,15 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                                 </Collapsible>
                             </TableCell>
                             <TableCell>
-                                <Collapsible className="pt-2">{toPercent(pool.apy.toNumber())}</Collapsible>
+                                <Collapsible>{toPercent(pool.apy.toNumber())}</Collapsible>
                             </TableCell>
                             <TableCell>
-                                <Collapsible className="pt-2">
+                                <Collapsible>
                                     <HealthCell pool={pool} />
                                 </Collapsible>
                             </TableCell>
                             <TableCell>
-                                <Collapsible className="pt-1">
+                                <Collapsible>
                                     <OwnershipCell pool={pool} />
                                 </Collapsible>
                             </TableCell>
@@ -207,7 +214,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
         </table>
     );
 })`
-    color: #fff;
+    color: var(--color-text);
 `;
 
 /**
