@@ -10,7 +10,6 @@ import Breakdown from '../PoolHealth/Breakdown';
 import { InsuranceModal } from '../InsuranceModal';
 import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
 import { toPercent } from '@libs/utils';
-import Link from 'next/link';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 
 const Hidden = styled.div`
@@ -69,8 +68,9 @@ const SDownCaret = styled(CaretDownFilled)`
     }
 `;
 
-const SLinkOutlined = styled(LinkOutlined)`
+const StyledLinkOutlined = styled(LinkOutlined)`
     vertical-align: 0.125rem;
+    margin-left: 0.5rem;
 `;
 
 const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
@@ -85,11 +85,10 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
             <span>
                 {pool.userBalance.toNumber()} {pool.iPoolTokenName}
             </span>
-            <Link href={pool.iPoolTokenURL}>
-                <TooltipSelector tooltip={{ key: 'etherscan-link' }}>
-                    <SLinkOutlined className="ml-1" />
-                </TooltipSelector>
-            </Link>
+            {/*href={pool.iPoolTokenURL}*/}
+            <TooltipSelector tooltip={{ key: 'etherscan-link' }}>
+                <StyledLinkOutlined onClick={() => window.open(pool.iPoolTokenURL, '_blank')} />
+            </TooltipSelector>
             <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
             <Hidden>
                 <ButtonContainer>
@@ -136,10 +135,11 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
         document.addEventListener('click', (e) => {
             const table = document.getElementById('pools-table');
             const modal = document.getElementById('insurance-modal');
+            const button = document.getElementById('insurance-submit');
             let target = e.target;
             do {
                 // @ts-ignore
-                if (target === table || target === modal || target?.id === 'insurance-submit') {
+                if (target === table || target === modal || target === button) {
                     // dont exit if its a modal click
                     return;
                 }

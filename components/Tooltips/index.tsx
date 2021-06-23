@@ -310,7 +310,17 @@ export const BufferTip: React.FC<TProps> = ({ className, children }: TProps) => 
     const tooltip = (
         <p>
             <strong>Buffer</strong> The holdings in the insurance buffer account. The insurance buffer account has
-            priority for insurance expenses and provides a layer of protection for depositors. <a>Learn more.</a>
+            priority for insurance expenses and provides a layer of protection for depositors.{' '}
+            <a
+                onClick={() =>
+                    window.open(
+                        'https://docs.tracer.finance/products/perpetual-swaps/insurance/direct-deposits#insurance-buffer-account',
+                        '_blank',
+                    )
+                }
+            >
+                Learn more.
+            </a>
         </p>
     );
     return (
@@ -323,7 +333,17 @@ export const BufferTip: React.FC<TProps> = ({ className, children }: TProps) => 
 export const PublicTip: React.FC<TProps> = ({ className, children }: TProps) => {
     const tooltip = (
         <p>
-            <strong>Public</strong> The holdings in the insurance public account.
+            <strong>Public</strong> The holdings in the insurance public account.{' '}
+            <a
+                onClick={() =>
+                    window.open(
+                        'https://docs.tracer.finance/products/perpetual-swaps/insurance/direct-deposits#public-insurance-account',
+                        '_blank',
+                    )
+                }
+            >
+                Learn more.
+            </a>
         </p>
     );
     return (
