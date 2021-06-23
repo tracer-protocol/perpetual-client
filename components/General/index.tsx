@@ -254,5 +254,4 @@ export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IPr
 export * from './Dropdown';
 export * from './Input';
 export * from './Notification';
-export * from './Menu';
 export * from './';

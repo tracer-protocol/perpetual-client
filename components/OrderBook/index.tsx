@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { OMEOrder } from 'types/OrderTypes';
 import styled from 'styled-components';
 import { toApproxCurrency } from '@libs/utils';
 import BigNumber from 'bignumber.js';
 import Dropdown from 'antd/lib/dropdown';
-import { Button, Menu, MenuItem } from '@components/General';
+import { Button } from '@components/General';
+import { Menu, MenuItem } from '@components/General/Menu';
 
 interface OProps {
     askOrders: OMEOrder[]; //TODO change these
@@ -14,9 +15,15 @@ interface OProps {
     className?: string;
 }
 
+const decimalKeyMap: Record<number, number> = {
+    1: 0.01,
+    2: 1,
+    3: 10
+}
+
 export default styled(
     ({ askOrders, bidOrders, lastTradePrice, marketUp, className }: OProps) => {
-        const [decimals, setDecimals] = useState(2);
+        const [decimals, setDecimals] = useState(1);
 
         const sumQuantities = (orders: OMEOrder[]) => {
             return orders.reduce((total, order) => total + order.quantity, 0);
@@ -37,8 +44,7 @@ export default styled(
             (a, b) => b.price - a.price,
         ); // descending order
 
-        const renderOrders = (bid: boolean, orders: OMEOrder[]) => {
-            let cumulative = 0;
+        const renderOrders = useCallback((bid: boolean, orders: OMEOrder[]) => {
             if (!orders.length) {
                 return (
                     <BookRow>
@@ -46,19 +52,36 @@ export default styled(
                     </BookRow>
                 );
             } // return an empty row
-            return orders.map((order: OMEOrder, index: number) => {
-                order.cumulative = cumulative += order.quantity;
-                order.maxCumulative = maxCumulative;
-                return (
+            const rows = [];
+            let cumulative = 0;
+            for (let i = 0; i < orders.length; i++) {
+                if (rows.length >= 8) break;
+                let order = orders[i];
+                // round to the nearest bracket below current price
+                let bracket = Math.floor((order.price)/decimalKeyMap[decimals])*decimalKeyMap[decimals]; 
+                let innerCumulative = 0;
+                for (let p = i; p < orders.length; p++) {
+                    if (orders[p].price <= bracket) {
+                        i = p;
+                        break;
+                    }
+                    innerCumulative += orders[i].quantity;
+                    p++;
+                }
+                cumulative += innerCumulative;
+                rows.push(
                     <Order
                         decimals={decimals}
                         bid={bid}
-                        key={index}
-                        {...order}
+                        price={bracket}
+                        cumulative={cumulative}
+                        quantity={innerCumulative}
+                        maxCumulative={maxCumulative}
                     />
-                );
-            });
-        };
+                )
+            }
+            return rows;
+        }, [decimals]);
 
         return (
             <div className={className}>
@@ -71,7 +94,7 @@ export default styled(
                     <Item>Quantity</Item>
                     <Item>Cumulative</Item>
                 </BookRow>
-                {renderOrders(false, askOrdersCopy.slice(0, 6).reverse())}
+                {renderOrders(false, askOrdersCopy.reverse())}
                 <MarketRow>
                     <Item>
                         {`Best `}
@@ -90,7 +113,7 @@ export default styled(
                         </span>
                     </Item>
                 </MarketRow>
-                {renderOrders(true, bidOrdersCopy.slice(0, 6))}
+                {renderOrders(true, bidOrdersCopy)}
             </div>
         );
     },
@@ -211,16 +234,19 @@ const PrecisionDropdown: React.FC<PDProps> = styled(
         const [rotated, setRotated] = useState(false);
         const menu = (
             <Menu
-                onClick={({ key }) => {
+                onClick={({ key }: any) => {
                     setDecimals(parseInt(key));
                     setRotated(false);
                 }}
             >
-                <MenuItem key={2}>
+                <MenuItem key={1}>
                     <span>0.01</span>
                 </MenuItem>
-                <MenuItem key={4}>
-                    <span>0.0001</span>
+                <MenuItem key={2}>
+                    <span>1</span>
+                </MenuItem>
+                <MenuItem key={3}>
+                    <span>10</span>
                 </MenuItem>
             </Menu>
         );
@@ -235,7 +261,7 @@ const PrecisionDropdown: React.FC<PDProps> = styled(
                 onVisibleChange={handleVisibleChange}
             >
                 <PrecisionDropdownButton>
-                    {`${Number(0).toPrecision(decimals)}1`}
+                    {decimalKeyMap[decimals]}
                     <StyledTriangleDown
                         className={rotated ? 'rotate' : ''}
                         src="/img/general/triangle_down_cropped.svg"
