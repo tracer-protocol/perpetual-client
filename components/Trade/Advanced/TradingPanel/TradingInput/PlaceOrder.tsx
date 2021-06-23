@@ -62,7 +62,11 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     {order?.leverage !== 1 && exposure && price ? (
                         <span>{`Leveraged at ${order?.leverage}x`}</span>
                     ) : null}
-                    {exposure && price ? <Approx>{toApproxCurrency(exposure * price * leverage)}</Approx> : null}
+                    {exposure && price ? (
+                        <Approx>
+                            {toApproxCurrency(exposure * price * leverage)}
+                        </Approx>
+                    ) : null}
                 </Details>
 
                 {/*Dont display price select if it is a market order*/}
@@ -75,12 +79,27 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                             price={order?.price ?? defaults.price}
                         />
                         <LimitTradeDetails
-                            fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
-                            balances={selectedTracer?.getBalance() ?? defaults.balances}
-                            exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
-                            nextPosition={order?.nextPosition ?? defaults.balances}
+                            fairPrice={
+                                selectedTracer?.oraclePrice ??
+                                defaults.oraclePrice
+                            }
+                            balances={
+                                selectedTracer?.getBalance() ??
+                                defaults.balances
+                            }
+                            exposure={
+                                order?.exposure
+                                    ? new BigNumber(order.exposure)
+                                    : defaults.exposure
+                            }
+                            nextPosition={
+                                order?.nextPosition ?? defaults.balances
+                            }
                             orderPrice={order?.price ?? 0}
-                            maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                            maxLeverage={
+                                selectedTracer?.maxLeverage ??
+                                defaults.maxLeverage
+                            }
                         />
                     </>
                 ) : (
@@ -93,13 +112,31 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                             orderDispatch={orderDispatch}
                         />
                         <MarketTradeDetails
-                            fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
-                            balances={selectedTracer?.getBalance() ?? defaults.balances}
-                            exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
-                            nextPosition={order?.nextPosition ?? defaults.balances}
-                            tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
+                            fairPrice={
+                                selectedTracer?.oraclePrice ??
+                                defaults.oraclePrice
+                            }
+                            balances={
+                                selectedTracer?.getBalance() ??
+                                defaults.balances
+                            }
+                            exposure={
+                                order?.exposure
+                                    ? new BigNumber(order.exposure)
+                                    : defaults.exposure
+                            }
+                            nextPosition={
+                                order?.nextPosition ?? defaults.balances
+                            }
+                            tradePrice={
+                                order?.marketTradePrice ??
+                                orderDefaults.order.marketTradePrice
+                            }
                             slippage={order?.slippage ?? 0}
-                            maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                            maxLeverage={
+                                selectedTracer?.maxLeverage ??
+                                defaults.maxLeverage
+                            }
                         />
                     </>
                 )}
@@ -109,7 +146,11 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     <AdvancedOrderButton>Place Order</AdvancedOrderButton>
                 </div>
             </Box>
-            <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
+            <SError
+                error={order?.error ?? 'NO_ERROR'}
+                account={account}
+                context={'orders'}
+            />
         </>
     );
 })`

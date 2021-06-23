@@ -64,12 +64,21 @@ export const web3Machine = Machine<MachineContext, Web3StateSchema, Web3Event>({
                 onDone: [
                     {
                         target: '#waiting',
-                        actions: [assign({ web3Modal: (_context, event) => event.data }), send('CONNECT')],
+                        actions: [
+                            assign({
+                                web3Modal: (_context, event) => event.data,
+                            }),
+                            send('CONNECT'),
+                        ],
                         cond: (_context, event) => event.data.cachedProvider, // connect straight away if there is a cache
                     },
                     {
                         target: '#waiting',
-                        actions: [assign({ web3Modal: (_context, event) => event.data })],
+                        actions: [
+                            assign({
+                                web3Modal: (_context, event) => event.data,
+                            }),
+                        ],
                     },
                 ],
                 onError: {
@@ -82,7 +91,9 @@ export const web3Machine = Machine<MachineContext, Web3StateSchema, Web3Event>({
             on: {
                 INIT_CONTRACTS: {
                     target: 'waiting',
-                    actions: assign({ initiatedContracts: (_context, _event) => true }),
+                    actions: assign({
+                        initiatedContracts: (_context, _event) => true,
+                    }),
                     cond: (context, _event) => !context.initiatedContracts,
                 },
 
@@ -105,7 +116,9 @@ export const web3Machine = Machine<MachineContext, Web3StateSchema, Web3Event>({
                 },
                 onError: {
                     target: 'waiting',
-                    actions: assign({ errorMessage: (_context, event) => event.data }),
+                    actions: assign({
+                        errorMessage: (_context, event) => event.data,
+                    }),
                 },
             },
         },
@@ -121,13 +134,17 @@ export const web3Machine = Machine<MachineContext, Web3StateSchema, Web3Event>({
                         DISCONNECT: 'disconnecting',
                         UPDATE_ACCOUNT: {
                             target: 'idle',
-                            actions: assign({ account: (_context, event) => event.account }),
+                            actions: assign({
+                                account: (_context, event) => event.account,
+                            }),
                         },
                         UPDATE_NETWORK: {
                             target: 'idle',
                             actions: assign({
                                 networkId: (_context, event) => {
-                                    console.info(`Setting network ${event.networkId}`);
+                                    console.info(
+                                        `Setting network ${event.networkId}`,
+                                    );
                                     return parseInt(event.networkId);
                                 },
                             }),
@@ -144,11 +161,16 @@ export const web3Machine = Machine<MachineContext, Web3StateSchema, Web3Event>({
                         },
                         onDone: {
                             target: '#waiting',
-                            actions: [assign({ account: '' }), assign({ networkId: 0 })],
+                            actions: [
+                                assign({ account: '' }),
+                                assign({ networkId: 0 }),
+                            ],
                         },
                         onError: {
                             target: 'disconnectingFailed',
-                            actions: assign({ account: (_context, _event) => '' }),
+                            actions: assign({
+                                account: (_context, _event) => '',
+                            }),
                         },
                     },
                 },
@@ -157,15 +179,28 @@ export const web3Machine = Machine<MachineContext, Web3StateSchema, Web3Event>({
                     invoke: {
                         id: 'fetchingDetails',
                         src: (context, _event) => async () => {
-                            const accounts = await context.web3?.eth.getAccounts();
-                            const networkId = await context.web3?.eth.getChainId();
-                            return { account: Web3.utils.toChecksumAddress(accounts?.[0] ?? ''), networkId };
+                            const accounts =
+                                await context.web3?.eth.getAccounts();
+                            const networkId =
+                                await context.web3?.eth.getChainId();
+                            return {
+                                account: Web3.utils.toChecksumAddress(
+                                    accounts?.[0] ?? '',
+                                ),
+                                networkId,
+                            };
                         },
                         onDone: {
                             target: 'idle',
                             actions: [
-                                assign({ account: (_context, event) => event.data.account }),
-                                assign({ networkId: (_context, event) => event.data.networkId }),
+                                assign({
+                                    account: (_context, event) =>
+                                        event.data.account,
+                                }),
+                                assign({
+                                    networkId: (_context, event) =>
+                                        event.data.networkId,
+                                }),
                             ],
                         },
                         onError: 'idle',

@@ -69,7 +69,10 @@ export const MarginErrors: Record<string, ErrorBox> = {
     },
 };
 
-export type ErrorKey = 'NO_ERROR' | keyof typeof MarginErrors | keyof typeof OrderErrors;
+export type ErrorKey =
+    | 'NO_ERROR'
+    | keyof typeof MarginErrors
+    | keyof typeof OrderErrors;
 const Errors: {
     orders: Record<string, ErrorBox>;
     margin: Record<string, ErrorBox>;
@@ -90,29 +93,35 @@ type EProps = {
     message?: string; // this will override the rror message
 };
 
-const Error: React.FC<EProps> = styled(({ className, error, message, context }: EProps) => {
-    const error_ =
-        error !== 'NO_ERROR'
-            ? Errors[context][error]
-            : {
-                  message: '',
-                  moreInfo: '',
-              };
-    return (
-        <div className={`${className} ${error !== 'NO_ERROR' || !!message ? 'show' : ''}`}>
-            <div className="message">
-                {error_?.message ?? message ?? ''}
-                {error_?.moreInfo ? (
-                    <>
-                        <StyledTooltip title={error_?.moreInfo}>
-                            <SInfoCircleOutlined />
-                        </StyledTooltip>
-                    </>
-                ) : null}
+const Error: React.FC<EProps> = styled(
+    ({ className, error, message, context }: EProps) => {
+        const error_ =
+            error !== 'NO_ERROR'
+                ? Errors[context][error]
+                : {
+                      message: '',
+                      moreInfo: '',
+                  };
+        return (
+            <div
+                className={`${className} ${
+                    error !== 'NO_ERROR' || !!message ? 'show' : ''
+                }`}
+            >
+                <div className="message">
+                    {error_?.message ?? message ?? ''}
+                    {error_?.moreInfo ? (
+                        <>
+                            <StyledTooltip title={error_?.moreInfo}>
+                                <SInfoCircleOutlined />
+                            </StyledTooltip>
+                        </>
+                    ) : null}
+                </div>
             </div>
-        </div>
-    );
-})`
+        );
+    },
+)`
     background: #f15025;
     border-radius: 0px 0px 5px 5px;
     font-size: var(--font-size-small);

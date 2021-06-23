@@ -53,11 +53,18 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     const pendingRef = useRef('');
 
     /** Specifically handles transactions */
-    const handleTransaction: HandleTransactionType = async (callMethod, params, options) => {
+    const handleTransaction: HandleTransactionType = async (
+        callMethod,
+        params,
+        options,
+    ) => {
         const { statusMessages, callback, afterConfirmation } = options ?? {};
         // actually returns a string error in the library
         let toastId = addToast(
-            ['Pending Transaction', statusMessages?.waiting ?? 'Approve transaction with provider'],
+            [
+                'Pending Transaction',
+                statusMessages?.waiting ?? 'Approve transaction with provider',
+            ],
             {
                 appearance: 'loading' as AppearanceTypes,
                 autoDismiss: false,
@@ -67,20 +74,31 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         res.on('transactionHash', (hash) => {
             afterConfirmation ? afterConfirmation(hash) : null;
             updateToast(toastId as unknown as string, {
-                content: ['Transaction submitted', statusMessages?.userConfirmed ?? `Transaction submitted ${hash}`],
+                content: [
+                    'Transaction submitted',
+                    statusMessages?.userConfirmed ??
+                        `Transaction submitted ${hash}`,
+                ],
                 appearance: 'success' as AppearanceTypes,
                 autoDismiss: true,
             });
-            toastId = addToast(['Pending Transaction', statusMessages?.pending ?? 'Transaction pending'], {
-                appearance: 'loading' as AppearanceTypes,
-                autoDismiss: false,
-            });
+            toastId = addToast(
+                [
+                    'Pending Transaction',
+                    statusMessages?.pending ?? 'Transaction pending',
+                ],
+                {
+                    appearance: 'loading' as AppearanceTypes,
+                    autoDismiss: false,
+                },
+            );
         })
             .on('receipt', (receipt) => {
                 updateToast(toastId as unknown as string, {
                     content: [
                         'Transaction Successful',
-                        statusMessages?.success ?? `Transaction successful: ${receipt.transactionHash}`,
+                        statusMessages?.success ??
+                            `Transaction successful: ${receipt.transactionHash}`,
                     ],
                     appearance: 'success',
                     autoDismiss: true,
@@ -91,7 +109,8 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
                     // confirmed this is a string
                     content: [
                         'Transaction Cancelled',
-                        statusMessages?.error ?? `Transaction cancelled: ${error.message}`,
+                        statusMessages?.error ??
+                            `Transaction cancelled: ${error.message}`,
                     ],
                     appearance: 'error',
                     autoDismiss: true,
@@ -101,11 +120,18 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     };
 
     /** Very similiar function to above but handles regular async functions, mainly signing */
-    const handleAsync: HandleAsyncType = async (callMethod, params, options) => {
+    const handleAsync: HandleAsyncType = async (
+        callMethod,
+        params,
+        options,
+    ) => {
         const { statusMessages, callback } = options ?? {};
         // actually returns a string error in the library
         const toastId = addToast(
-            ['Pending Transaction', statusMessages?.waiting ?? 'Approve transaction with provider'],
+            [
+                'Pending Transaction',
+                statusMessages?.waiting ?? 'Approve transaction with provider',
+            ],
             {
                 appearance: 'loading' as AppearanceTypes,
                 autoDismiss: false,
@@ -117,7 +143,9 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
             if (res.status === 'error') {
                 updateToast(toastId as unknown as string, {
                     // confirmed this is a string
-                    content: statusMessages?.error ?? `Transaction cancelled. ${res.message}`,
+                    content:
+                        statusMessages?.error ??
+                        `Transaction cancelled. ${res.message}`,
                     appearance: 'error',
                     autoDismiss: true,
                 });
@@ -135,7 +163,9 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     const setPending = (status: 'PartialMatch' | 'FullMatch') => {
         const toastId = addToast(
             [
-                status === 'PartialMatch' ? 'Partially matched order' : 'Fully matched order',
+                status === 'PartialMatch'
+                    ? 'Partially matched order'
+                    : 'Fully matched order',
                 'Order is being matched on chain',
             ],
             {

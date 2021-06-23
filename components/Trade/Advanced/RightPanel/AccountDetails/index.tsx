@@ -2,7 +2,12 @@ import React, { useState, useContext } from 'react';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import { Table, TRow, TData } from '@components/General/Table';
-import { calcStatus, timeAgo, toApproxCurrency, getPositionText } from '@libs/utils';
+import {
+    calcStatus,
+    timeAgo,
+    toApproxCurrency,
+    getPositionText,
+} from '@libs/utils';
 import Web3 from 'web3';
 import { calcLiquidationPrice, OMEOrder } from '@tracer-protocol/tracer-utils';
 import { FilledOrder } from 'types/OrderTypes';
@@ -91,7 +96,12 @@ type ContentProps = {
     balances: UserBalance;
 };
 
-const Position: React.FC<ContentProps> = ({ nextPosition, exposure, tradePrice, balances }) => {
+const Position: React.FC<ContentProps> = ({
+    nextPosition,
+    exposure,
+    tradePrice,
+    balances,
+}) => {
     if (balances.quote.eq(0)) {
         return <Content>-</Content>;
     } else if (exposure && tradePrice) {
@@ -119,7 +129,11 @@ const Leverage: React.FC<ContentProps & { fairPrice: BigNumber }> = ({
         return (
             <Content>
                 <SPrevious>{`${l.toFixed(2)}x`}</SPrevious>
-                {`${calcLeverage(nextPosition.quote, nextPosition.base, new BigNumber(tradePrice)).toFixed(2)}x`}
+                {`${calcLeverage(
+                    nextPosition.quote,
+                    nextPosition.base,
+                    new BigNumber(tradePrice),
+                ).toFixed(2)}x`}
             </Content>
         );
     } // else
@@ -134,7 +148,13 @@ interface IProps {
     quoteTicker: string;
 }
 
-const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, quoteTicker, maxLeverage }: IProps) => {
+const PositionDetails: React.FC<IProps> = ({
+    balances,
+    fairPrice,
+    baseTicker,
+    quoteTicker,
+    maxLeverage,
+}: IProps) => {
     const { order } = useContext(OrderContext);
     const [currency, setCurrency] = useState(0); // 0 quoted in base
     const { base } = balances;
@@ -144,7 +164,12 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                 <SSection label={'Side'}>
                     <Position
                         balances={balances}
-                        nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
+                        nextPosition={
+                            order?.nextPosition ?? {
+                                base: new BigNumber(0),
+                                quote: new BigNumber(0),
+                            }
+                        }
                         tradePrice={order?.price ?? 0}
                         exposure={order?.exposure ?? 0}
                     />
@@ -154,7 +179,9 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                         <Content className="pt-1">
                             {currency === 0
                                 ? `${base.abs().toNumber()} ${baseTicker}`
-                                : `${toApproxCurrency(base.abs().times(fairPrice))} ${quoteTicker}`}
+                                : `${toApproxCurrency(
+                                      base.abs().times(fairPrice),
+                                  )} ${quoteTicker}`}
                             <SSlideSelect
                                 onClick={(index, _e) => {
                                     setCurrency(index);
@@ -172,7 +199,12 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                 <SSection label={'Leverage'}>
                     <Leverage
                         balances={balances}
-                        nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
+                        nextPosition={
+                            order?.nextPosition ?? {
+                                base: new BigNumber(0),
+                                quote: new BigNumber(0),
+                            }
+                        }
                         tradePrice={order?.price ?? 0}
                         fairPrice={fairPrice}
                         exposure={order?.exposure ?? 0}
@@ -180,11 +212,19 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                 </SSection>
             </SectionContainer>
             <SectionContainer className="w-4/6 inline-block">
-                <SSection label={'Liquidation Price'} className="w-1/2 border-right">
+                <SSection
+                    label={'Liquidation Price'}
+                    className="w-1/2 border-right"
+                >
                     {!balances.quote.eq(0) ? (
                         <Content>
                             {toApproxCurrency(
-                                calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage),
+                                calcLiquidationPrice(
+                                    balances.quote,
+                                    balances.base,
+                                    fairPrice,
+                                    maxLeverage,
+                                ),
                             )}
                         </Content>
                     ) : (
@@ -194,19 +234,37 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                 <SSection
                     label={'Unrealised PnL'}
                     className="w-1/2"
-                    tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
+                    tooltip={{
+                        key: `unrealised-pnl`,
+                        props: { baseTicker: baseTicker },
+                    }}
                 >
-                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
+                    {!balances.quote.eq(0) ? (
+                        <Content>{toApproxCurrency(0)}</Content>
+                    ) : (
+                        `-`
+                    )}
                 </SSection>
                 <SSection label={'Mark Price'} className="w-1/2 border-right">
-                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
+                    {!balances.quote.eq(0) ? (
+                        <Content>{toApproxCurrency(fairPrice)}</Content>
+                    ) : (
+                        `-`
+                    )}
                 </SSection>
                 <SSection
                     label={'Realised PnL'}
                     className="w-1/2"
-                    tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
+                    tooltip={{
+                        key: `realised-pnl`,
+                        props: { baseTicker: baseTicker },
+                    }}
                 >
-                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
+                    {!balances.quote.eq(0) ? (
+                        <Content>{toApproxCurrency(0)}</Content>
+                    ) : (
+                        `-`
+                    )}
                 </SSection>
             </SectionContainer>
         </AccountDetails>
@@ -253,7 +311,9 @@ const OpenOrders: React.FC<{
 }> = React.memo(({ userOrders, baseTicker, refetch }) => {
     const { handleAsync } = useContext(TransactionContext);
     const _cancelOrder = (market: string, orderId: string) => {
-        console.info(`Attempting to cancel order: ${orderId} on market: ${market}`);
+        console.info(
+            `Attempting to cancel order: ${orderId} on market: ${market}`,
+        );
         handleAsync
             ? handleAsync(cancelOrder, [market, orderId], {
                   statusMessages: {
@@ -261,22 +321,54 @@ const OpenOrders: React.FC<{
                   },
                   callback: () => refetch(),
               })
-            : console.error('Failed to cancel order: Handle transaction not defined');
+            : console.error(
+                  'Failed to cancel order: Handle transaction not defined',
+              );
     };
     return (
-        <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
+        <STable
+            headings={[
+                'Status',
+                'Side',
+                'Price',
+                'Amount',
+                'Filled',
+                'Remaining',
+                '',
+            ]}
+        >
             <tbody>
                 {userOrders?.map((order, index) => {
-                    const amount = parseFloat(Web3.utils.fromWei(order?.amount?.toString() ?? '0')),
-                        amountLeft = parseFloat(Web3.utils.fromWei(order?.amount_left?.toString() ?? '0')),
+                    const amount = parseFloat(
+                            Web3.utils.fromWei(
+                                order?.amount?.toString() ?? '0',
+                            ),
+                        ),
+                        amountLeft = parseFloat(
+                            Web3.utils.fromWei(
+                                order?.amount_left?.toString() ?? '0',
+                            ),
+                        ),
                         filled = amount - amountLeft;
                     return (
                         <TRow key={`open-order-${index}`}>
                             <TData>{calcStatus(filled)}</TData>
-                            <TData className={order.side.toLowerCase() /** This will be the global .bid or .ask */}>
+                            <TData
+                                className={
+                                    order.side.toLowerCase() /** This will be the global .bid or .ask */
+                                }
+                            >
                                 {order.side}
                             </TData>
-                            <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
+                            <TData>
+                                {toApproxCurrency(
+                                    parseFloat(
+                                        Web3.utils.fromWei(
+                                            order.price.toString(),
+                                        ),
+                                    ),
+                                )}
+                            </TData>
                             <TData>
                                 {amount} {baseTicker}
                             </TData>
@@ -287,7 +379,16 @@ const OpenOrders: React.FC<{
                                 {amountLeft} {baseTicker}
                             </TData>
                             <TData>
-                                <Cancel onClick={(_e) => _cancelOrder(order.target_tracer, order.id)}>Cancel</Cancel>
+                                <Cancel
+                                    onClick={(_e) =>
+                                        _cancelOrder(
+                                            order.target_tracer,
+                                            order.id,
+                                        )
+                                    }
+                                >
+                                    Cancel
+                                </Cancel>
                             </TData>
                         </TRow>
                     );
@@ -309,7 +410,9 @@ const Fills: React.FC<{
                     const price = order.price;
                     return (
                         <TRow key={`filled-order-${index}`}>
-                            <TData>{timeAgo(now, parseInt(order.timestamp) * 1000)}</TData>
+                            <TData>
+                                {timeAgo(now, parseInt(order.timestamp) * 1000)}
+                            </TData>
                             <TData className={!!order.position ? 'ask' : 'bid'}>
                                 {!!order.position ? 'Short' : 'Long'}
                             </TData>
@@ -352,17 +455,27 @@ export default styled(({ selectedTracer, className }: TSProps) => {
                     <PositionDetails
                         balances={balances}
                         fairPrice={fairPrice}
-                        maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                        baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                        quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
+                        maxLeverage={
+                            selectedTracer?.maxLeverage ?? defaults.maxLeverage
+                        }
+                        baseTicker={
+                            selectedTracer?.baseTicker ?? defaults.baseTicker
+                        }
+                        quoteTicker={
+                            selectedTracer?.quoteTicker ?? defaults.quoteTicker
+                        }
                     />
                 );
             case 1:
                 return (
                     <OpenOrders
                         userOrders={omeState?.userOrders ?? []}
-                        baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                        refetch={() => omeDispatch({ type: 'refetchUserOrders' })}
+                        baseTicker={
+                            selectedTracer?.baseTicker ?? defaults.baseTicker
+                        }
+                        refetch={() =>
+                            omeDispatch({ type: 'refetchUserOrders' })
+                        }
                     />
                 );
             case 2:

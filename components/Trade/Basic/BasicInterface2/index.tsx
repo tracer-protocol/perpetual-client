@@ -83,7 +83,10 @@ const BasicInterface2: React.FC = styled(({ className }) => {
     const { selectedTracer } = useContext(TracerContext);
     const { amountToPay, market, collateral, exposure } = order as OrderState;
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const balance = order?.wallet === 0 ? balances?.tokenBalance?.toNumber() : balances?.quote?.toNumber();
+    const balance =
+        order?.wallet === 0
+            ? balances?.tokenBalance?.toNumber()
+            : balances?.quote?.toNumber();
     const marketPairs = useMarketPairs();
     const wallets = ['Wallet', 'Margin'];
 
@@ -95,7 +98,13 @@ const BasicInterface2: React.FC = styled(({ className }) => {
             <SSection>
                 <SLabel className="mb-2">Select Market</SLabel>
                 <BasicInputContainer className="pb-2">
-                    <SDropdown overlay={markets(orderDispatch, marketPairs[collateral] ?? [])} trigger={['click']}>
+                    <SDropdown
+                        overlay={markets(
+                            orderDispatch,
+                            marketPairs[collateral] ?? [],
+                        )}
+                        trigger={['click']}
+                    >
                         <DropDownContent>
                             <Logo ticker="ETH" clear={true} />
                             <DropDownText>{market}</DropDownText>
@@ -104,7 +113,12 @@ const BasicInterface2: React.FC = styled(({ className }) => {
                     </SDropdown>
                     <div className="ml-3">
                         <SLabel>Current Price</SLabel>
-                        <div>{toApproxCurrency(selectedTracer?.getOraclePrice() ?? defaults.oraclePrice)}</div>
+                        <div>
+                            {toApproxCurrency(
+                                selectedTracer?.getOraclePrice() ??
+                                    defaults.oraclePrice,
+                            )}
+                        </div>
                     </div>
                 </BasicInputContainer>
             </SSection>
@@ -129,7 +143,10 @@ const BasicInterface2: React.FC = styled(({ className }) => {
                         onChange={(e) => {
                             e.preventDefault();
                             if (orderDispatch) {
-                                orderDispatch({ type: 'setAmountToPay', value: parseFloat(e.target.value) ?? 0 });
+                                orderDispatch({
+                                    type: 'setAmountToPay',
+                                    value: parseFloat(e.target.value) ?? 0,
+                                });
                             } else {
                                 console.error('Order dispatch not set');
                             }
@@ -142,8 +159,14 @@ const BasicInterface2: React.FC = styled(({ className }) => {
                             onClick={(e: any) => {
                                 e.preventDefault();
                                 if (orderDispatch) {
-                                    orderDispatch({ type: 'setLock', value: false });
-                                    orderDispatch({ type: 'setAmountToPay', value: balance ?? 0 });
+                                    orderDispatch({
+                                        type: 'setLock',
+                                        value: false,
+                                    });
+                                    orderDispatch({
+                                        type: 'setAmountToPay',
+                                        value: balance ?? 0,
+                                    });
                                 } else {
                                     console.error('Order dispatch not set');
                                 }
@@ -152,10 +175,17 @@ const BasicInterface2: React.FC = styled(({ className }) => {
                             <span>Max</span>
                         </MaxButton>
                         <span className="inline-block">
-                            <div className="text-right mr-2 mb-2">Paying From</div>
-                            <LDropdown overlay={walletMenu(orderDispatch, wallets)} trigger={['click']}>
+                            <div className="text-right mr-2 mb-2">
+                                Paying From
+                            </div>
+                            <LDropdown
+                                overlay={walletMenu(orderDispatch, wallets)}
+                                trigger={['click']}
+                            >
                                 <DropDownContent>
-                                    <DropDownText>{wallets[order?.wallet ?? 0]}</DropDownText>
+                                    <DropDownText>
+                                        {wallets[order?.wallet ?? 0]}
+                                    </DropDownText>
                                     <SDownCaret />
                                 </DropDownContent>
                             </LDropdown>
@@ -166,7 +196,13 @@ const BasicInterface2: React.FC = styled(({ className }) => {
             <SSection>
                 <SLabel className="mb-2">Your Exposure</SLabel>
                 <BasicInputContainer className="pb-2">
-                    <SDropdown overlay={markets(orderDispatch, marketPairs[collateral] ?? [])} trigger={['click']}>
+                    <SDropdown
+                        overlay={markets(
+                            orderDispatch,
+                            marketPairs[collateral] ?? [],
+                        )}
+                        trigger={['click']}
+                    >
                         <DropDownContent>
                             <Logo ticker="ETH" clear={true} />
                             <DropDownText>{market}</DropDownText>

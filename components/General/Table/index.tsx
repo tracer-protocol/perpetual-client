@@ -7,18 +7,20 @@ type TProps = {
     className?: string;
 } & Children;
 
-export const Table: React.FC<TProps> = styled(({ headings, children, className }: TProps) => {
-    return (
-        <table className={className}>
-            <THead>
-                {headings.map((heading: string) => (
-                    <th key={`${heading}-heading`}>{heading}</th>
-                ))}
-            </THead>
-            {children}
-        </table>
-    );
-})`
+export const Table: React.FC<TProps> = styled(
+    ({ headings, children, className }: TProps) => {
+        return (
+            <table className={className}>
+                <THead>
+                    {headings.map((heading: string) => (
+                        <th key={`${heading}-heading`}>{heading}</th>
+                    ))}
+                </THead>
+                {children}
+            </table>
+        );
+    },
+)`
     width: 100%;
     max-height: 100%;
     overflow: scroll;

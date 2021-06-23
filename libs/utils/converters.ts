@@ -34,7 +34,10 @@ export const round: (value: number) => number = (value) => {
  * Custom to locale which replaces - with ~
  */
 
-export const toApproxCurrency: (num_: BigNumber | number, precision?: number) => string = (num_, precision) => {
+export const toApproxCurrency: (
+    num_: BigNumber | number,
+    precision?: number,
+) => string = (num_, precision) => {
     let num = num_;
     if (!num_) {
         // reject if num is false
@@ -50,7 +53,9 @@ export const toApproxCurrency: (num_: BigNumber | number, precision?: number) =>
     });
 };
 
-export const getPositionText: (balance: BigNumber) => 'NONE' | 'SHORT' | 'LONG' = (balance) => {
+export const getPositionText: (
+    balance: BigNumber,
+) => 'NONE' | 'SHORT' | 'LONG' = (balance) => {
     if (balance.eq(0)) {
         return 'NONE';
     } else if (balance.lt(0)) {
@@ -67,7 +72,10 @@ export const fromCents: (val: number) => number = (val) => {
     return val / (100 * 10000);
 };
 
-export const timeAgo: (current: number, previous: number) => string = (current, previous) => {
+export const timeAgo: (current: number, previous: number) => string = (
+    current,
+    previous,
+) => {
     const msPerMinute = 60 * 1000;
     const msPerHour = msPerMinute * 60;
     const msPerDay = msPerHour * 24;
@@ -93,7 +101,10 @@ export const timeAgo: (current: number, previous: number) => string = (current, 
 export const formatDate: (date: Date) => string = (date) =>
     `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
 
-export const isVerySmall: (num: BigNumber, currency: boolean) => string = (num, currency) => {
+export const isVerySmall: (num: BigNumber, currency: boolean) => string = (
+    num,
+    currency,
+) => {
     const isSmall = num.lt(0.000001); // some arbitrarily small number
     if (currency) {
         if (isSmall && num.eq(0)) {

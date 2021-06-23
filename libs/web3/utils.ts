@@ -19,7 +19,9 @@ export const checkAllowance: (
         return -1;
     }
     try {
-        const currentAllowed = await token.methods.allowance(from, contractAddress).call();
+        const currentAllowed = await token.methods
+            .allowance(from, contractAddress)
+            .call();
         if (parseInt(Web3.utils.fromWei(currentAllowed)) < ARBITRARY_AMOUNT) {
             return 0;
         } // else

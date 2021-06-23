@@ -35,8 +35,16 @@ export const NumberInput: React.FC<any> = styled((props: any) => {
     return (
         <>
             <input {...props} />
-            <Inc onClick={() => props.onChange({ target: { value: props.value + 1 } })} />
-            <Dec onClick={() => props.onChange({ target: { value: props.value - 1 } })} />
+            <Inc
+                onClick={() =>
+                    props.onChange({ target: { value: props.value + 1 } })
+                }
+            />
+            <Dec
+                onClick={() =>
+                    props.onChange({ target: { value: props.value - 1 } })
+                }
+            />
         </>
     );
 })`

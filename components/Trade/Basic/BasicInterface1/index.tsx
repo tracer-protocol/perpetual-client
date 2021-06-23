@@ -1,6 +1,10 @@
 import React, { useContext } from 'react';
 import Dropdown from 'antd/lib/dropdown';
-import { CaretDownFilled, LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import {
+    CaretDownFilled,
+    LockOutlined,
+    UnlockOutlined,
+} from '@ant-design/icons';
 import { OrderContext, TracerContext } from '@context/index';
 import { OrderAction, OrderState } from '@context/OrderContext';
 import styled from 'styled-components';
@@ -101,14 +105,16 @@ const SSlideSelect = styled(SlideSelect)`
 
 const walletTip = (
     <p>
-        <strong>Wallet</strong> This trade will use funds from your connected Web3 wallet.
+        <strong>Wallet</strong> This trade will use funds from your connected
+        Web3 wallet.
     </p>
 );
 
 const marginTip = (
     <p>
-        <strong>Margin</strong> This trade will use funds from your margin account. To deposit funds to your margin
-        account, switch to Advanced Trading.
+        <strong>Margin</strong> This trade will use funds from your margin
+        account. To deposit funds to your margin account, switch to Advanced
+        Trading.
     </p>
 );
 
@@ -117,8 +123,12 @@ const Lock: React.FC<{
     lockAmountToPay: boolean;
 }> = ({ isAmountToPay, lockAmountToPay }) => {
     // removed the onClick unlock functions for now
-    const lock_ = <LockOutlined className="mx-2" color="var(--color-primary)" />;
-    const unlock_ = <UnlockOutlined className="mx-2" color="var(--color-primary)" />;
+    const lock_ = (
+        <LockOutlined className="mx-2" color="var(--color-primary)" />
+    );
+    const unlock_ = (
+        <UnlockOutlined className="mx-2" color="var(--color-primary)" />
+    );
     if (isAmountToPay) {
         // ie lock for margin input / amount to pay
         if (lockAmountToPay) {
@@ -136,28 +146,30 @@ const Lock: React.FC<{
     }
 };
 
-const WalletSelect: React.FC<WSProps> = styled(({ className, orderDispatch, wallet }: WSProps) => {
-    return (
-        <div className={className}>
-            <p>Paying from</p>
-            <SSlideSelect
-                onClick={(index: number, _e: any) =>
-                    orderDispatch
-                        ? orderDispatch({ type: 'setWallet', value: index })
-                        : console.error('Order dispatch function not set')
-                }
-                value={wallet}
-            >
-                <Option>
-                    <Tooltip title={walletTip}>Wallet</Tooltip>
-                </Option>
-                <Option>
-                    <Tooltip title={marginTip}>Margin</Tooltip>
-                </Option>
-            </SSlideSelect>
-        </div>
-    );
-})`
+const WalletSelect: React.FC<WSProps> = styled(
+    ({ className, orderDispatch, wallet }: WSProps) => {
+        return (
+            <div className={className}>
+                <p>Paying from</p>
+                <SSlideSelect
+                    onClick={(index: number, _e: any) =>
+                        orderDispatch
+                            ? orderDispatch({ type: 'setWallet', value: index })
+                            : console.error('Order dispatch function not set')
+                    }
+                    value={wallet}
+                >
+                    <Option>
+                        <Tooltip title={walletTip}>Wallet</Tooltip>
+                    </Option>
+                    <Option>
+                        <Tooltip title={marginTip}>Margin</Tooltip>
+                    </Option>
+                </SSlideSelect>
+            </div>
+        );
+    },
+)`
     display: flex;
     > p {
         color: var(--color-primary);
@@ -171,7 +183,10 @@ const BasicInterface1: React.FC = styled(({ className }) => {
     const { amountToPay, market, collateral, exposure } = order as OrderState;
     const marketPairs = useMarketPairs();
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const balance = order?.wallet === 0 ? balances?.tokenBalance?.toNumber() : balances?.quote?.toNumber();
+    const balance =
+        order?.wallet === 0
+            ? balances?.tokenBalance?.toNumber()
+            : balances?.quote?.toNumber();
 
     //get market address -> using tracer factory helper function
     //pass in address and initialise Tracer -> get all open orders of the address
@@ -182,9 +197,15 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                 <div className="flex">
                     <SLabel>
                         <span>Amount to pay</span>
-                        <Lock isAmountToPay={true} lockAmountToPay={order?.lockAmountToPay ?? true} />
+                        <Lock
+                            isAmountToPay={true}
+                            lockAmountToPay={order?.lockAmountToPay ?? true}
+                        />
                     </SLabel>
-                    <WalletSelect orderDispatch={orderDispatch} wallet={order?.wallet ?? 0} />
+                    <WalletSelect
+                        orderDispatch={orderDispatch}
+                        wallet={order?.wallet ?? 0}
+                    />
                 </div>
                 <BasicInputContainer>
                     <Input
@@ -196,8 +217,14 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                         onChange={(e) => {
                             e.preventDefault();
                             if (orderDispatch) {
-                                orderDispatch({ type: 'setLock', value: false });
-                                orderDispatch({ type: 'setAmountToPay', value: parseFloat(e.target.value) ?? 0 });
+                                orderDispatch({
+                                    type: 'setLock',
+                                    value: false,
+                                });
+                                orderDispatch({
+                                    type: 'setAmountToPay',
+                                    value: parseFloat(e.target.value) ?? 0,
+                                });
                             } else {
                                 console.error('Order dispatch not set');
                             }
@@ -211,8 +238,14 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                             onClick={(e: any) => {
                                 e.preventDefault();
                                 if (orderDispatch) {
-                                    orderDispatch({ type: 'setLock', value: false });
-                                    orderDispatch({ type: 'setAmountToPay', value: balance ?? 0 });
+                                    orderDispatch({
+                                        type: 'setLock',
+                                        value: false,
+                                    });
+                                    orderDispatch({
+                                        type: 'setAmountToPay',
+                                        value: balance ?? 0,
+                                    });
                                 } else {
                                     console.error('Order dispatch not set');
                                 }
@@ -222,7 +255,10 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                         </MaxButton>
                         <SDropdown
                             className="pr-4"
-                            overlay={markets(orderDispatch, marketPairs[collateral] ?? [])}
+                            overlay={markets(
+                                orderDispatch,
+                                marketPairs[collateral] ?? [],
+                            )}
                             trigger={['click']}
                         >
                             <DropDownContent>
@@ -240,13 +276,19 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                 <div className="flex">
                     <SLabel>
                         <span>Amount to buy</span>
-                        <Lock isAmountToPay={false} lockAmountToPay={order?.lockAmountToPay ?? false} />
+                        <Lock
+                            isAmountToPay={false}
+                            lockAmountToPay={order?.lockAmountToPay ?? false}
+                        />
                     </SLabel>
                     <MaxButton
                         onClick={(e: any) => {
                             e.preventDefault();
                             if (orderDispatch) {
-                                orderDispatch({ type: 'setAmountToPay', value: (order?.price ?? 0) * (balance ?? 0) });
+                                orderDispatch({
+                                    type: 'setAmountToPay',
+                                    value: (order?.price ?? 0) * (balance ?? 0),
+                                });
                             } else {
                                 console.error('Order dispatch not set');
                             }
@@ -266,7 +308,10 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                             e.preventDefault();
                             if (orderDispatch) {
                                 if (order?.lockAmountToPay) {
-                                    orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) });
+                                    orderDispatch({
+                                        type: 'setExposure',
+                                        value: parseFloat(e.target.value),
+                                    });
                                 }
                             } else {
                                 console.error('Order dispatch not set');
@@ -276,7 +321,13 @@ const BasicInterface1: React.FC = styled(({ className }) => {
                     />
 
                     <RightContainer>
-                        <SDropdown overlay={collaterals(orderDispatch, Object.keys(marketPairs))} trigger={['click']}>
+                        <SDropdown
+                            overlay={collaterals(
+                                orderDispatch,
+                                Object.keys(marketPairs),
+                            )}
+                            trigger={['click']}
+                        >
                             <DropDownContent>
                                 <DropDownText>{collateral}</DropDownText>
                                 <SDownCaret />

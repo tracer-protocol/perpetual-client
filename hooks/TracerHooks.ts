@@ -8,8 +8,11 @@ import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
  *  will be all relative tracer markets.
  */
 export const useMarketPairs: () => Record<string, string[]> = () => {
-    const [marketPairs, setMarketPairs] = useState<Record<string, string[]>>({});
-    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
+    const [marketPairs, setMarketPairs] = useState<Record<string, string[]>>(
+        {},
+    );
+    const { factoryState: { tracers } = initialFactoryState } =
+        useContext(FactoryContext);
     useEffect(() => {
         if (tracers) {
             const pairs: Record<string, string[]> = {};

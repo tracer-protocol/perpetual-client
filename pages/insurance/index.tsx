@@ -50,7 +50,9 @@ const Insurance: React.FC = styled(({ className }) => {
             <div className="container">
                 <SelectedTracerStore>
                     <InsuranceStore>
-                        <InsurancePoolsHeader>Insurance Pools</InsurancePoolsHeader>
+                        <InsurancePoolsHeader>
+                            Insurance Pools
+                        </InsurancePoolsHeader>
                         <InsurancePoolsContent>
                             <Pools />
                         </InsurancePoolsContent>

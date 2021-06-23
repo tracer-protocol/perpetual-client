@@ -13,7 +13,11 @@ const GraphWrap = styled.div`
     position: relative;
 `;
 
-export default (({ selectedTracerAddress }: { selectedTracerAddress: string }) => {
+export default (({
+    selectedTracerAddress,
+}: {
+    selectedTracerAddress: string;
+}) => {
     const { candles } = useCandles(selectedTracerAddress);
     return (
         <GraphWrap>

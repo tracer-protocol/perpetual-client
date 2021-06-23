@@ -73,7 +73,9 @@ const SLoadingOutlined = styled(LoadingOutlined)`
     height: 16px;
 `;
 
-const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) => {
+const LightWeightChart: React.FC<{ candleData: CandleData }> = ({
+    candleData,
+}) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
     const hasReset = useRef<boolean>(false);
     useMemo(() => {

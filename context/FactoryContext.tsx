@@ -60,7 +60,10 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
         }
     };
 
-    const [factoryState, factoryDispatch] = useReducer(reducer, initialFactoryState);
+    const [factoryState, factoryDispatch] = useReducer(
+        reducer,
+        initialFactoryState,
+    );
     const { allFilledOrders } = useAllUsersMatched(account ?? '');
 
     useEffect(() => {
@@ -97,10 +100,16 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
             tracer
                 ?.updateUserBalance(account)
                 .then((_res) => {
-                    factoryDispatch({ type: 'setLoaded', marketId: tracer.marketId });
+                    factoryDispatch({
+                        type: 'setLoaded',
+                        marketId: tracer.marketId,
+                    });
                 })
                 .catch((err) => {
-                    console.error(`Failed to fetch balances for ${tracer.marketId}`, err);
+                    console.error(
+                        `Failed to fetch balances for ${tracer.marketId}`,
+                        err,
+                    );
                 });
         });
     };

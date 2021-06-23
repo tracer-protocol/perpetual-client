@@ -9,7 +9,9 @@ const useGlobalLoadingState: () => boolean = () => {
     return status.numPendingQueries + status.numPendingMutations > 0;
 };
 
-const ApolloWrapper: (uri: string) => ApolloClient<any> | Error = (uri: string) => {
+const ApolloWrapper: (uri: string) => ApolloClient<any> | Error = (
+    uri: string,
+) => {
     const client = useMemo(() => {
         try {
             return new ApolloClient({

@@ -5,7 +5,13 @@ import { TableHead, TableRow, TableCell } from '@components/Portfolio';
 import { DateAndTime } from '@components/General';
 
 const DepositHistory: React.FC = () => {
-    const headings = ['Date', 'Market', 'Amount', 'iTokens Minted', 'Transaction Details'];
+    const headings = [
+        'Date',
+        'Market',
+        'Amount',
+        'iTokens Minted',
+        'Transaction Details',
+    ];
 
     const tracers = [
         {
@@ -49,7 +55,9 @@ const DepositHistory: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 4 ? (
-                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
+                                <TableHead theme={TableHeadEndTheme}>
+                                    {heading}
+                                </TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),
@@ -60,18 +68,27 @@ const DepositHistory: React.FC = () => {
                     {tracers.map((tracer, i) => (
                         <TableRow key={`table-row-${i}`}>
                             <TableCell>
-                                <DateAndTime date={tracer.date} time={tracer.time} />
+                                <DateAndTime
+                                    date={tracer.date}
+                                    time={tracer.time}
+                                />
                             </TableCell>
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
                                         <Logo ticker={tracer.name} />
                                     </div>
-                                    <div className="my-auto ml-2">{tracer.market}</div>
-                                    <div className="my-auto ml-1">Insurance Pool</div>
+                                    <div className="my-auto ml-2">
+                                        {tracer.market}
+                                    </div>
+                                    <div className="my-auto ml-1">
+                                        Insurance Pool
+                                    </div>
                                 </div>
                             </TableCell>
-                            <TableCell>{toApproxCurrency(tracer.amount)} USDC</TableCell>
+                            <TableCell>
+                                {toApproxCurrency(tracer.amount)} USDC
+                            </TableCell>
                             <TableCell>{tracer.tokens} iTLA-USDC</TableCell>
                             <TableCell>{tracer.details}</TableCell>
                         </TableRow>

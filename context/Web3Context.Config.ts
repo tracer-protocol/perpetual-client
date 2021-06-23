@@ -64,7 +64,8 @@ export const networkConfig: Record<string, Network> = {
                 abi: traderJSON as AbiItem[],
             },
         },
-        graphUri: 'https://api.thegraph.com/subgraphs/name/tracer-protocol/tracer-kovan',
+        graphUri:
+            'https://api.thegraph.com/subgraphs/name/tracer-protocol/tracer-kovan',
     },
     '1337': {
         // local

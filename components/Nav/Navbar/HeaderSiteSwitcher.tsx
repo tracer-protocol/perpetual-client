@@ -5,30 +5,61 @@ import styled from 'styled-components';
 export default (() => (
     <StyledHeaderSiteSwitcher>
         <MainLink href="/">
-            <StyledTracerLogo alt="tracer-logo" src="/img/logos/tracer/tracer_perps.svg" />
+            <StyledTracerLogo
+                alt="tracer-logo"
+                src="/img/logos/tracer/tracer_perps.svg"
+            />
         </MainLink>
 
         <StyledTriangleDown src="/img/general/triangle_down_cropped.svg" />
 
         <Menu>
             <MenuItem>
-                <a href="https://tracer.finance" target="_blank" rel="noreferrer noopener">
-                    <StyledTracerLogo alt="tracer-logo" src="/img/logos/tracer/tracer_logo.svg" />
+                <a
+                    href="https://tracer.finance"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                >
+                    <StyledTracerLogo
+                        alt="tracer-logo"
+                        src="/img/logos/tracer/tracer_logo.svg"
+                    />
                 </a>
             </MenuItem>
             <MenuItem>
-                <a href="https://tracer.finance" target="_blank" rel="noreferrer noopener">
-                    <StyledTracerLogo alt="tracer-logo" src="/img/logos/tracer/tracer_logo.svg" />
+                <a
+                    href="https://tracer.finance"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                >
+                    <StyledTracerLogo
+                        alt="tracer-logo"
+                        src="/img/logos/tracer/tracer_logo.svg"
+                    />
                 </a>
             </MenuItem>
             <MenuItem>
-                <a href="https://gov.tracer.finance" target="_blank" rel="noreferrer noopener">
-                    <StyledTracerLogo alt="tracer-logo" src="/img/logos/tracer/tracer_govern.svg" />
+                <a
+                    href="https://gov.tracer.finance"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                >
+                    <StyledTracerLogo
+                        alt="tracer-logo"
+                        src="/img/logos/tracer/tracer_govern.svg"
+                    />
                 </a>
             </MenuItem>
             <MenuItem>
-                <a href="https://tracer.finance/radar" target="_blank" rel="noreferrer noopener">
-                    <StyledTracerLogo alt="tracer-logo" src="/img/logos/tracer/tracer_blog.svg" />
+                <a
+                    href="https://tracer.finance/radar"
+                    target="_blank"
+                    rel="noreferrer noopener"
+                >
+                    <StyledTracerLogo
+                        alt="tracer-logo"
+                        src="/img/logos/tracer/tracer_blog.svg"
+                    />
                 </a>
             </MenuItem>
             <MenuItem>

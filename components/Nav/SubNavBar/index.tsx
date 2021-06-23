@@ -9,8 +9,12 @@ interface SNBProps {
 }
 
 const SubNavBar: React.FC<SNBProps> = (props: SNBProps) => {
-    const background = `${props.background ? `bg-${props.background}` : 'bg-blue-200'} `;
-    const position = `${props.position ? `justify-${props.position} ` : 'justify-center '}`;
+    const background = `${
+        props.background ? `bg-${props.background}` : 'bg-blue-200'
+    } `;
+    const position = `${
+        props.position ? `justify-${props.position} ` : 'justify-center '
+    }`;
     const button = 'text-blue-100 cursor-pointer flex mx-4 ';
     const selected = 'border-b-4 border-blue-100 font-bold';
     return (
@@ -21,7 +25,10 @@ const SubNavBar: React.FC<SNBProps> = (props: SNBProps) => {
                         <div
                             onClick={() => props.setTab(index)}
                             key={`sub-nav-${index}`}
-                            className={button + (props.selected === index ? selected : '')}
+                            className={
+                                button +
+                                (props.selected === index ? selected : '')
+                            }
                         >
                             <a className="m-auto">{tab}</a>
                         </div>

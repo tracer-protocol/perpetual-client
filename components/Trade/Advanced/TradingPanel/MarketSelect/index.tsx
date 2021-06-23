@@ -44,7 +44,9 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
                                 before={false}
                                 amount={240}
                             /> */}
-                            <div>{toApproxCurrency(tracer.getOraclePrice())}</div>
+                            <div>
+                                {toApproxCurrency(tracer.getOraclePrice())}
+                            </div>
                         </div>
                     </Box>
                 ))}
@@ -61,7 +63,8 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     font-size: var(--font-size-small);
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
-    height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 75}px` : '0')};
+    height: ${(props) =>
+        props.display ? `${Object.keys(props.tracers).length * 75}px` : '0'};
 
     > .market {
         // eventually this will have to change to be dynamic as more markets get added
@@ -97,7 +100,11 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
         return (
             <div className={className}>
                 <span>{arrowUp ? 'Hide Markets' : 'View Markets'}</span>
-                <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
+                <img
+                    className="down-arrow w-4 ml-1"
+                    src="/img/general/triangle_down.svg"
+                    alt="Down Arrow"
+                />
             </div>
         );
     },
@@ -128,7 +135,10 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
         margin-top: -5px;
         display: inline-block;
         transition: 0.3s;
-        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
+        transform: ${(props) =>
+            props.arrowUp
+                ? 'rotate(180deg) translateY(-4px)'
+                : 'translateY(-2px)'};
     }
 `;
 
@@ -154,20 +164,27 @@ type MSProps = {
 };
 
 export default styled(({ className }: MSProps) => {
-    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
+    const { factoryState: { tracers } = initialFactoryState } =
+        useContext(FactoryContext);
     const { selectedTracer, setTracerId } = useContext(TracerContext);
     const [popup, setPopup] = useState(false);
 
     useEffect(() => {
         const overlay = document.getElementById('trading-overlay');
         if (overlay) {
-            popup ? overlay.classList.add('display') : overlay.classList.remove('display');
+            popup
+                ? overlay.classList.add('display')
+                : overlay.classList.remove('display');
         }
     }, [popup]);
 
     return (
         <div className={`${className}`}>
-            <SBox color={popup ? '#011772' : '#000240'} display={popup} onMouseLeave={() => setPopup(false)}>
+            <SBox
+                color={popup ? '#011772' : '#000240'}
+                display={popup}
+                onMouseLeave={() => setPopup(false)}
+            >
                 <MarketContainer>
                     <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
                     <div className="my-auto">{selectedTracer?.marketId}</div>
@@ -183,7 +200,9 @@ export default styled(({ className }: MSProps) => {
                             setTracerId(tracerId);
                             setPopup(false);
                         } else {
-                            console.error('Failed to set tracer, setTracerId undefined');
+                            console.error(
+                                'Failed to set tracer, setTracerId undefined',
+                            );
                         }
                     }}
                 />

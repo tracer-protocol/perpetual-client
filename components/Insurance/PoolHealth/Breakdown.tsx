@@ -2,7 +2,12 @@ import { toApproxCurrency } from '@libs/utils';
 import React from 'react';
 import styled from 'styled-components';
 
-const calcRemainder = (target: number, liquidity: number, userBalance: number, buffer: number) => {
+const calcRemainder = (
+    target: number,
+    liquidity: number,
+    userBalance: number,
+    buffer: number,
+) => {
     const total = liquidity - userBalance - buffer;
     if (liquidity > target) {
         return 0;
@@ -11,9 +16,11 @@ const calcRemainder = (target: number, liquidity: number, userBalance: number, b
     }
 };
 
-const hasFullOwnership = (liquidity: number, userBalance: number) => liquidity === userBalance;
+const hasFullOwnership = (liquidity: number, userBalance: number) =>
+    liquidity === userBalance;
 
-const denom = (target: number, liquidity: number) => (target < liquidity ? target : liquidity);
+const denom = (target: number, liquidity: number) =>
+    target < liquidity ? target : liquidity;
 
 interface BProps {
     target: number;
@@ -50,7 +57,8 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
     }
     > .buffer {
         background: #011772;
-        width: ${(props) => (props.buffer / denom(props.target, props.liquidity)) * 100}%;
+        width: ${(props) =>
+            (props.buffer / denom(props.target, props.liquidity)) * 100}%;
         border-top-left-radius: 20px;
         border-bottom-left-radius: 20px;
         margin-left: 0;
@@ -58,22 +66,48 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
     > .liquidity {
         background: var(--color-primary);
         width: calc(
-            ${(props) => ((props.liquidity - props.userBalance) / denom(props.target, props.liquidity)) * 100}% - 4px
+            ${(props) =>
+                    ((props.liquidity - props.userBalance) /
+                        denom(props.target, props.liquidity)) *
+                    100}% - 4px
         );
     }
     > .userBalance {
         background: #005ea4;
-        width: ${(props) => (props.userBalance / denom(props.target, props.liquidity)) * 100}%;
+        width: ${(props) =>
+            (props.userBalance / denom(props.target, props.liquidity)) * 100}%;
         border-top-right-radius: ${(props) =>
-            calcRemainder(props.target, props.liquidity, props.userBalance, props.buffer) === 0 ? '20px' : ''};
+            calcRemainder(
+                props.target,
+                props.liquidity,
+                props.userBalance,
+                props.buffer,
+            ) === 0
+                ? '20px'
+                : ''};
         border-bottom-right-radius: ${(props) =>
-            calcRemainder(props.target, props.liquidity, props.userBalance, props.buffer) === 0 ? '20px' : ''};
-        border-top-left-radius: ${(props) => (hasFullOwnership(props.liquidity, props.userBalance) ? '20px' : '')};
-        border-bottom-left-radius: ${(props) => (hasFullOwnership(props.liquidity, props.userBalance) ? '20px' : '')};
+            calcRemainder(
+                props.target,
+                props.liquidity,
+                props.userBalance,
+                props.buffer,
+            ) === 0
+                ? '20px'
+                : ''};
+        border-top-left-radius: ${(props) =>
+            hasFullOwnership(props.liquidity, props.userBalance) ? '20px' : ''};
+        border-bottom-left-radius: ${(props) =>
+            hasFullOwnership(props.liquidity, props.userBalance) ? '20px' : ''};
     }
     > .remainder {
         background: transparent;
-        width: ${(props) => calcRemainder(props.target, props.liquidity, props.userBalance, props.buffer) * 100}%;
+        width: ${(props) =>
+            calcRemainder(
+                props.target,
+                props.liquidity,
+                props.userBalance,
+                props.buffer,
+            ) * 100}%;
     }
 `;
 
@@ -85,26 +119,30 @@ type SProps = {
     target: 'userBalanceTarget' | 'bufferTarget' | 'liquidityTarget';
     className?: string;
 };
-const Section: React.FC<SProps> = styled(({ title, percentage, value, target, className }: SProps) => {
-    return (
-        <div
-            className={className}
-            onMouseEnter={() => {
-                document.getElementById(target)?.classList.add('visible');
-            }}
-            onMouseLeave={() => {
-                document.getElementById(target)?.classList.remove('visible');
-            }}
-        >
-            <div className="bar" />
-            <p>{title}</p>
-            <span>
-                <span>{Number.isNaN(percentage) ? 0 : percentage}%</span>
-                <span className="value"> | {toApproxCurrency(value)}</span>
-            </span>
-        </div>
-    );
-})`
+const Section: React.FC<SProps> = styled(
+    ({ title, percentage, value, target, className }: SProps) => {
+        return (
+            <div
+                className={className}
+                onMouseEnter={() => {
+                    document.getElementById(target)?.classList.add('visible');
+                }}
+                onMouseLeave={() => {
+                    document
+                        .getElementById(target)
+                        ?.classList.remove('visible');
+                }}
+            >
+                <div className="bar" />
+                <p>{title}</p>
+                <span>
+                    <span>{Number.isNaN(percentage) ? 0 : percentage}%</span>
+                    <span className="value"> | {toApproxCurrency(value)}</span>
+                </span>
+            </div>
+        );
+    },
+)`
     font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: var(--color-text);
@@ -129,14 +167,16 @@ type LProps = {
     value: number;
     className?: string;
 };
-const Label: React.FC<LProps> = styled(({ title, value, className }: LProps) => {
-    return (
-        <div className={className}>
-            <div className="title">{title}</div>
-            <div className="value">{toApproxCurrency(value)}</div>
-        </div>
-    );
-})`
+const Label: React.FC<LProps> = styled(
+    ({ title, value, className }: LProps) => {
+        return (
+            <div className={className}>
+                <div className="title">{title}</div>
+                <div className="value">{toApproxCurrency(value)}</div>
+            </div>
+        );
+    },
+)`
     > .title {
         color: var(--color-primary);
         font-size: var(--font-size-small);
@@ -147,46 +187,58 @@ const Label: React.FC<LProps> = styled(({ title, value, className }: LProps) => 
         color: var(--color-text);
     }
 `;
-const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, buffer, className }: BProps) => {
-    return (
-        <div className={className}>
-            <div className="sections">
-                <Label title="Holdings" value={liquidity} />
-                <Label title="Target" value={target} />
+const Breakdown: React.FC<BProps> = styled(
+    ({ target, liquidity, userBalance, buffer, className }: BProps) => {
+        return (
+            <div className={className}>
+                <div className="sections">
+                    <Label title="Holdings" value={liquidity} />
+                    <Label title="Target" value={target} />
+                </div>
+                <BreakdownBar
+                    target={target}
+                    liquidity={liquidity}
+                    userBalance={userBalance}
+                    buffer={buffer}
+                    className="bar"
+                />
+                <div className="sections hoverHide">
+                    <Section
+                        title="Buffer"
+                        percentage={parseFloat(
+                            ((buffer / liquidity) * 100).toFixed(3),
+                        )}
+                        value={buffer}
+                        color="#011772"
+                        target="bufferTarget"
+                    />
+                    <Section
+                        title="Public"
+                        percentage={parseFloat(
+                            (
+                                ((liquidity - userBalance - buffer) /
+                                    liquidity) *
+                                100
+                            ).toFixed(3),
+                        )}
+                        value={liquidity}
+                        color="var(--color-primary)"
+                        target="liquidityTarget"
+                    />
+                    <Section
+                        title="My Shares"
+                        percentage={parseFloat(
+                            ((userBalance / liquidity) * 100).toFixed(3),
+                        )}
+                        value={userBalance}
+                        color="#005EA4"
+                        target="userBalanceTarget"
+                    />
+                </div>
             </div>
-            <BreakdownBar
-                target={target}
-                liquidity={liquidity}
-                userBalance={userBalance}
-                buffer={buffer}
-                className="bar"
-            />
-            <div className="sections hoverHide">
-                <Section
-                    title="Buffer"
-                    percentage={parseFloat(((buffer / liquidity) * 100).toFixed(3))}
-                    value={buffer}
-                    color="#011772"
-                    target="bufferTarget"
-                />
-                <Section
-                    title="Public"
-                    percentage={parseFloat((((liquidity - userBalance - buffer) / liquidity) * 100).toFixed(3))}
-                    value={liquidity}
-                    color="var(--color-primary)"
-                    target="liquidityTarget"
-                />
-                <Section
-                    title="My Shares"
-                    percentage={parseFloat(((userBalance / liquidity) * 100).toFixed(3))}
-                    value={userBalance}
-                    color="#005EA4"
-                    target="userBalanceTarget"
-                />
-            </div>
-        </div>
-    );
-})`
+        );
+    },
+)`
     margin-top: 1rem;
 
     > .sections {

@@ -121,7 +121,17 @@ const reducer = (state: ModalState, action: ModalAction) => {
 };
 
 export default styled(
-    ({ className, close, isDeposit, unit, balances, price, maxLeverage, display, setDeposit }: AMProps) => {
+    ({
+        className,
+        close,
+        isDeposit,
+        unit,
+        balances,
+        price,
+        maxLeverage,
+        display,
+        setDeposit,
+    }: AMProps) => {
         const {
             deposit = () => console.error('Deposit is not defined'),
             withdraw = () => console.error('Withdraw is not defined'),
@@ -133,23 +143,47 @@ export default styled(
         const available = isDeposit
             ? balances.tokenBalance
             : calcTotalMargin(balances.quote, balances.base, price).minus(
-                  calcMinimumMargin(balances.quote, balances.base, price, maxLeverage),
+                  calcMinimumMargin(
+                      balances.quote,
+                      balances.base,
+                      price,
+                      maxLeverage,
+                  ),
               );
-        const newBalance = isDeposit ? balances.quote.plus(state.amount) : balances.quote.minus(state.amount);
+        const newBalance = isDeposit
+            ? balances.quote.plus(state.amount)
+            : balances.quote.minus(state.amount);
 
         const checkErrors = useCallback(() => {
             if (state.amount > available.toNumber()) {
                 return 'INSUFFICIENT_FUNDS';
             } else if (
-                (state.amount < calcMinimumMargin(balances.quote, balances.base, price, maxLeverage).toNumber() ||
+                (state.amount <
+                    calcMinimumMargin(
+                        balances.quote,
+                        balances.base,
+                        price,
+                        maxLeverage,
+                    ).toNumber() ||
                     // TODO remove 160 for dynamic calculation of liquidation gas cost
-                    state.amount < 150 - calcTotalMargin(balances.quote, balances.base, price).toNumber()) &&
+                    state.amount <
+                        150 -
+                            calcTotalMargin(
+                                balances.quote,
+                                balances.base,
+                                price,
+                            ).toNumber()) &&
                 isDeposit
             ) {
                 return 'DEPOSIT_MORE';
             } else if (
                 calcTotalMargin(newBalance, balances.base, price).lt(
-                    calcMinimumMargin(newBalance, balances.base, price, maxLeverage ?? defaults.maxLeverage),
+                    calcMinimumMargin(
+                        newBalance,
+                        balances.base,
+                        price,
+                        maxLeverage ?? defaults.maxLeverage,
+                    ),
                 )
             ) {
                 return 'WITHDRAW_INVALID';
@@ -165,9 +199,17 @@ export default styled(
 
         useMemo(() => {
             if (isDeposit) {
-                dispatch({ type: 'setTitles', title: 'Deposit Margin', subTitle: '' });
+                dispatch({
+                    type: 'setTitles',
+                    title: 'Deposit Margin',
+                    subTitle: '',
+                });
             } else {
-                dispatch({ type: 'setTitles', title: 'Withdraw Margin', subTitle: '' });
+                dispatch({
+                    type: 'setTitles',
+                    title: 'Withdraw Margin',
+                    subTitle: '',
+                });
             }
         }, [isDeposit]);
         return (
@@ -179,7 +221,10 @@ export default styled(
                 subTitle={state.subTitle}
                 onClose={() => handleClose()}
             >
-                <SSlideSelect value={isDeposit ? 0 : 1} onClick={(val) => setDeposit(val === 0)}>
+                <SSlideSelect
+                    value={isDeposit ? 0 : 1}
+                    onClick={(val) => setDeposit(val === 0)}
+                >
                     <Option>Deposit</Option>
                     <Option>Withdraw</Option>
                 </SSlideSelect>
@@ -188,21 +233,43 @@ export default styled(
                     title={'Amount'}
                     amount={state.amount}
                     balance={available.toNumber()}
-                    setAmount={(amount: number) => dispatch({ type: 'setAmount', amount: amount })}
+                    setAmount={(amount: number) =>
+                        dispatch({ type: 'setAmount', amount: amount })
+                    }
                 />
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>
-                    <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
+                    <p className="mb-3">
+                        {isDeposit ? 'Deposit' : 'Withdraw'} Summary
+                    </p>
                     <Section label={`Total Margin`}>
                         <Previous>{`${toApproxCurrency(
-                            calcTotalMargin(balances.quote, balances.base, price),
+                            calcTotalMargin(
+                                balances.quote,
+                                balances.base,
+                                price,
+                            ),
                         )}`}</Previous>
-                        {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, price))}`}
+                        {`${toApproxCurrency(
+                            calcTotalMargin(newBalance, balances.base, price),
+                        )}`}
                     </Section>
                     <Section label={`Buying Power`}>
                         <Previous>{`${toApproxCurrency(
-                            calcBuyingPower(balances.quote, balances.base, price, maxLeverage),
+                            calcBuyingPower(
+                                balances.quote,
+                                balances.base,
+                                price,
+                                maxLeverage,
+                            ),
                         )}`}</Previous>
-                        {`${toApproxCurrency(calcBuyingPower(newBalance, balances.base, price, maxLeverage))}`}
+                        {`${toApproxCurrency(
+                            calcBuyingPower(
+                                newBalance,
+                                balances.base,
+                                price,
+                                maxLeverage,
+                            ),
+                        )}`}
                     </Section>
                     <Section label={`Available Margin`}>
                         <Previous>{`${calcAvailableMarginPercent(
@@ -211,7 +278,12 @@ export default styled(
                             price,
                             maxLeverage,
                         ).toPrecision(3)}%`}</Previous>
-                        {`${calcAvailableMarginPercent(newBalance, balances.base, price, maxLeverage).toPrecision(3)}%`}
+                        {`${calcAvailableMarginPercent(
+                            newBalance,
+                            balances.base,
+                            price,
+                            maxLeverage,
+                        ).toPrecision(3)}%`}
                     </Section>
                 </SHiddenExpand>
                 <div className="text-center">
@@ -224,11 +296,15 @@ export default styled(
                                 dispatch({
                                     type: 'setTitles',
                                     title: 'Waiting for Confirmation',
-                                    subTitle: 'Confirm the transaction in your wallet to unlock USD',
+                                    subTitle:
+                                        'Confirm the transaction in your wallet to unlock USD',
                                 });
                                 approve(selectedTracer?.address ?? '', {
                                     afterConfirmation: () => {
-                                        dispatch({ type: 'setLoading', loading: false });
+                                        dispatch({
+                                            type: 'setLoading',
+                                            loading: false,
+                                        });
                                     },
                                 });
                             }}
@@ -237,7 +313,11 @@ export default styled(
                         </ApproveButton>
                     ) : null}
                     <ModalButton
-                        disabled={!selectedTracer?.getTracerApproved() || checkErrors() !== 'NO_ERROR' || !state.amount}
+                        disabled={
+                            !selectedTracer?.getTracerApproved() ||
+                            checkErrors() !== 'NO_ERROR' ||
+                            !state.amount
+                        }
                         onClick={() => {
                             dispatch({ type: 'setLoading', loading: true });
                             dispatch({
@@ -247,7 +327,9 @@ export default styled(
                                     isDeposit ? 'deposit' : 'withdraw'
                                 } USD`,
                             });
-                            isDeposit ? deposit(state.amount, handleClose) : withdraw(state.amount, handleClose);
+                            isDeposit
+                                ? deposit(state.amount, handleClose)
+                                : withdraw(state.amount, handleClose);
                         }}
                     >
                         {isDeposit ? 'Deposit' : 'Withdraw'}

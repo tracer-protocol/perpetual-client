@@ -34,28 +34,30 @@ export const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
     );
 };
 
-export const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }: SProps) => {
-    const { orderDispatch } = useContext(OrderContext);
-    return (
-        <SlideSelect
-            className={className}
-            onClick={(index, _e) => {
-                if (orderDispatch) {
-                    orderDispatch({ type: 'setOrderType', value: index });
-                    if (index === 0) {
-                        orderDispatch({ type: 'setLock', value: true });
+export const OrderTypeSelect: React.FC<SProps> = styled(
+    ({ selected, className }: SProps) => {
+        const { orderDispatch } = useContext(OrderContext);
+        return (
+            <SlideSelect
+                className={className}
+                onClick={(index, _e) => {
+                    if (orderDispatch) {
+                        orderDispatch({ type: 'setOrderType', value: index });
+                        if (index === 0) {
+                            orderDispatch({ type: 'setLock', value: true });
+                        }
+                    } else {
+                        console.error('Order dispatch function not set');
                     }
-                } else {
-                    console.error('Order dispatch function not set');
-                }
-            }}
-            value={selected}
-        >
-            <Option>Limit</Option>
-            <Option>Market</Option>
-        </SlideSelect>
-    );
-})`
+                }}
+                value={selected}
+            >
+                <Option>Limit</Option>
+                <Option>Market</Option>
+            </SlideSelect>
+        );
+    },
+)`
     border-radius: 0;
     border-bottom: 1px solid var(--color-accent);
     border-top: 0;

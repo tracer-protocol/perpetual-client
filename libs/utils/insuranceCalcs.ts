@@ -4,10 +4,10 @@
  * @param liquidity Current insurance pool funds
  * @returns a percentile health representation of the pool
  */
-export const calcInsurancePoolHealth: (target: number | undefined, liquidity: number | undefined) => number = (
-    target,
-    liquidity,
-) => {
+export const calcInsurancePoolHealth: (
+    target: number | undefined,
+    liquidity: number | undefined,
+) => number = (target, liquidity) => {
     if (!target || !liquidity) {
         return 0;
     }

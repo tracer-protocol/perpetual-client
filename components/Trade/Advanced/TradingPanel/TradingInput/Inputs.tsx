@@ -28,13 +28,20 @@ export const Exposure: React.FC<{
                 className={className ?? ''}
                 onChange={(e) => {
                     orderDispatch
-                        ? orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) })
+                        ? orderDispatch({
+                              type: 'setExposure',
+                              value: parseFloat(e.target.value),
+                          })
                         : console.error('No dispatch function set');
                 }}
                 setMax={(e) => {
                     e.preventDefault();
                     orderDispatch
-                        ? orderDispatch({ type: closeInput ? 'setMaxClosure' : 'setMaxExposure' })
+                        ? orderDispatch({
+                              type: closeInput
+                                  ? 'setMaxClosure'
+                                  : 'setMaxExposure',
+                          })
                         : console.error('No dispatch function set');
                 }}
                 unit={selectedTracer?.baseTicker ?? ''}
@@ -63,12 +70,17 @@ export const Price: React.FC<{
                 className={className ?? ''}
                 setMax={(e) => {
                     e.preventDefault();
-                    orderDispatch ? orderDispatch({ type: 'setBestPrice' }) : console.error('No dispatch function set');
+                    orderDispatch
+                        ? orderDispatch({ type: 'setBestPrice' })
+                        : console.error('No dispatch function set');
                 }}
                 maxText={'Best'}
                 onChange={(e) => {
                     if (orderDispatch) {
-                        orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
+                        orderDispatch({
+                            type: 'setPrice',
+                            value: parseFloat(e.target.value),
+                        });
                         orderDispatch({ type: 'setOrderType', value: LIMIT });
                     } else {
                         console.error('No dispatch function set');
@@ -93,12 +105,17 @@ export const Closure: React.FC<{
             className={className ?? ''}
             onChange={(e) => {
                 orderDispatch
-                    ? orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) })
+                    ? orderDispatch({
+                          type: 'setExposure',
+                          value: parseFloat(e.target.value),
+                      })
                     : console.error('No dispatch function set');
             }}
             setMax={(e) => {
                 e.preventDefault();
-                orderDispatch ? orderDispatch({ type: 'setMaxClosure' }) : console.error('No dispatch function set');
+                orderDispatch
+                    ? orderDispatch({ type: 'setMaxClosure' })
+                    : console.error('No dispatch function set');
             }}
             unit={selectedTracer?.baseTicker ?? ''}
             amount={exposure}
@@ -116,10 +133,19 @@ type LProps = {
 };
 
 export const Leverage: React.FC<LProps> = styled(
-    ({ leverage, orderDispatch, adjustLeverage, className, min, max }: LProps) => {
+    ({
+        leverage,
+        orderDispatch,
+        adjustLeverage,
+        className,
+        min,
+        max,
+    }: LProps) => {
         return (
             <div className={`${className} m-3`}>
-                <TooltipSelector tooltip={{ key: 'leverage' }}>Leverage</TooltipSelector>
+                <TooltipSelector tooltip={{ key: 'leverage' }}>
+                    Leverage
+                </TooltipSelector>
                 <div className="w-3/4 pl-4 pr-6 pb-4 mt-2">
                     <DefaultSlider
                         min={Math.ceil(min?.toNumber() ?? 1)}
@@ -128,7 +154,9 @@ export const Leverage: React.FC<LProps> = styled(
                         handleChange={(num) => {
                             orderDispatch
                                 ? orderDispatch({
-                                      type: adjustLeverage ? 'setAdjustLeverage' : 'setLeverage',
+                                      type: adjustLeverage
+                                          ? 'setAdjustLeverage'
+                                          : 'setLeverage',
                                       value: num,
                                   })
                                 : console.error('Order dispatch not set');

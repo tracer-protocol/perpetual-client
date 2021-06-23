@@ -4,7 +4,10 @@ import { OrderAction } from '@context/OrderContext';
 
 /** TODO these could be merged into 1 component this is hacky sorry */
 
-export const markets: any = (orderDispatch: React.Dispatch<OrderAction> | undefined, options: string[]) => (
+export const markets: any = (
+    orderDispatch: React.Dispatch<OrderAction> | undefined,
+    options: string[],
+) => (
     <Menu
         onClick={({ key }) =>
             orderDispatch
@@ -18,11 +21,17 @@ export const markets: any = (orderDispatch: React.Dispatch<OrderAction> | undefi
     </Menu>
 );
 
-export const collaterals: any = (orderDispatch: React.Dispatch<OrderAction> | undefined, options: string[]) => (
+export const collaterals: any = (
+    orderDispatch: React.Dispatch<OrderAction> | undefined,
+    options: string[],
+) => (
     <Menu
         onClick={({ key }) =>
             orderDispatch
-                ? orderDispatch({ type: 'setCollateral', value: key.toString() })
+                ? orderDispatch({
+                      type: 'setCollateral',
+                      value: key.toString(),
+                  })
                 : console.error('Order dispatch undefined')
         }
     >
@@ -32,7 +41,10 @@ export const collaterals: any = (orderDispatch: React.Dispatch<OrderAction> | un
     </Menu>
 );
 
-export const walletMenu: any = (orderDispatch: React.Dispatch<OrderAction> | undefined, options: string[]) => (
+export const walletMenu: any = (
+    orderDispatch: React.Dispatch<OrderAction> | undefined,
+    options: string[],
+) => (
     <Menu
         onClick={({ key }) =>
             orderDispatch

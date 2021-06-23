@@ -49,7 +49,9 @@ const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
     opacity: ${(props) => (props.display ? '1' : '0')};
     z-index: ${(props) => (props.display ? '2' : '-1')};
     transition: ${(props) =>
-        props.display ? 'bottom 0.3s, opacity 0.3s 0.1s' : 'bottom 0.3s 0.15s, opacity 0.3s, z-index 0.3s 0.3s'};
+        props.display
+            ? 'bottom 0.3s, opacity 0.3s 0.1s'
+            : 'bottom 0.3s 0.15s, opacity 0.3s, z-index 0.3s 0.3s'};
 `;
 
 const useEnsName = (account: string) => {
@@ -131,7 +133,10 @@ const NavBarContent: React.FC = styled(({ className }) => {
         if (ensName) {
             const len = ensName.length;
             if (len > 14) {
-                return `${ensName.slice(0, 7)}...${ensName.slice(len - 4, len)}`;
+                return `${ensName.slice(0, 7)}...${ensName.slice(
+                    len - 4,
+                    len,
+                )}`;
             } else {
                 return ensName;
             }
@@ -148,7 +153,11 @@ const NavBarContent: React.FC = styled(({ className }) => {
         <nav className={`${className} container`}>
             <HeaderSiteSwitcher />
             <ul>
-                <li className={linkStyles + (route === 'trade' ? ' selected' : '')}>
+                <li
+                    className={
+                        linkStyles + (route === 'trade' ? ' selected' : '')
+                    }
+                >
                     {/*TODO: Add back basic/advanced trading toggle (change the file name and path config too)*/}
                     {/*<span className="trade-toggle">*/}
                     {/*    <Link href="/trade/basic">*/}
@@ -170,7 +179,11 @@ const NavBarContent: React.FC = styled(({ className }) => {
                 {/*        <a className="m-auto ">Insurance</a>*/}
                 {/*    </Link>*/}
                 {/*</li>*/}
-                <li className={linkStyles + (route === 'insurance' ? ' selected' : '')}>
+                <li
+                    className={
+                        linkStyles + (route === 'insurance' ? ' selected' : '')
+                    }
+                >
                     <Link href="/insurance">
                         <a className="m-auto ">Insurance</a>
                     </Link>
@@ -183,7 +196,11 @@ const NavBarContent: React.FC = styled(({ className }) => {
                 {/*</li>*/}
             </ul>
             <ConnectButton
-                onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
+                onClick={() =>
+                    handleConnect
+                        ? handleConnect()
+                        : console.error('Connect button is undefined')
+                }
             >
                 <div className="m-auto flex text-sm font-bold">
                     <Identicon account={account ?? ''} />

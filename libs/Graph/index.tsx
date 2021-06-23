@@ -1,7 +1,12 @@
 import React, { useContext } from 'react';
 import Client from './client';
 export * from './queries';
-import { ApolloProvider, useQuery as _useQuery, gql as _gql, ApolloClient } from '@apollo/client';
+import {
+    ApolloProvider,
+    useQuery as _useQuery,
+    gql as _gql,
+    ApolloClient,
+} from '@apollo/client';
 import { Children } from 'types';
 import { Web3Context } from '@context/Web3Context';
 import BigNumber from 'bignumber.js';
@@ -13,7 +18,11 @@ type GProps = Children;
 const GraphProvider: ({ children }: GProps) => any = ({ children }: GProps) => {
     const { config } = useContext(Web3Context);
     const client = Client.ApolloWrapper(config?.graphUri ?? '');
-    return <ApolloProvider client={client as ApolloClient<any>}>{children}</ApolloProvider>;
+    return (
+        <ApolloProvider client={client as ApolloClient<any>}>
+            {children}
+        </ApolloProvider>
+    );
 };
 
 export default GraphProvider;

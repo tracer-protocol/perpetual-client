@@ -36,7 +36,10 @@ const createMarks = (min: number, max: number) => ({
 });
 
 const defaultRailStyle = { backgroundColor: 'var(--color-accent)', height: 10 };
-const defaultTrackStyle = { backgroundColor: 'var(--color-accent)', height: 10 };
+const defaultTrackStyle = {
+    backgroundColor: 'var(--color-accent)',
+    height: 10,
+};
 const defaultHandleStyle = {
     width: '50px',
     height: '30px',
@@ -95,7 +98,9 @@ const DefaultSlider: React.FC<DSProps> = styled(
             <div className={className}>
                 {value ? (
                     <Slider
-                        defaultValue={defaultValue ? defaultValue : DEFAULT_VALUE}
+                        defaultValue={
+                            defaultValue ? defaultValue : DEFAULT_VALUE
+                        }
                         value={value}
                         min={min_}
                         max={max_}
@@ -103,20 +108,26 @@ const DefaultSlider: React.FC<DSProps> = styled(
                         marks={marks ?? createMarks(min_, max_)}
                         railStyle={railStyle ? railStyle : defaultRailStyle}
                         trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
-                        handleStyle={handleStyle ? handleStyle : defaultHandleStyle}
+                        handleStyle={
+                            handleStyle ? handleStyle : defaultHandleStyle
+                        }
                         handle={DefaultHandle}
                         onChange={handleChange}
                     />
                 ) : (
                     <Slider
-                        defaultValue={defaultValue ? defaultValue : DEFAULT_VALUE}
+                        defaultValue={
+                            defaultValue ? defaultValue : DEFAULT_VALUE
+                        }
                         min={min_}
                         max={max_}
                         step={step ?? DEFAULT_STEP}
                         marks={marks ?? createMarks(min_, max_)}
                         railStyle={railStyle ? railStyle : defaultRailStyle}
                         trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
-                        handleStyle={handleStyle ? handleStyle : defaultHandleStyle}
+                        handleStyle={
+                            handleStyle ? handleStyle : defaultHandleStyle
+                        }
                         handle={DefaultHandle}
                         onChange={handleChange}
                     />

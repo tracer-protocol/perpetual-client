@@ -45,7 +45,11 @@ const checkErrors: (
     } else if (orders?.length === 0 && order.orderType === MARKET) {
         // there are no orders
         return 'NO_ORDERS';
-    } else if (!balances?.base.eq(0) && order.orderType === MARKET && !order.advanced) {
+    } else if (
+        !balances?.base.eq(0) &&
+        order.orderType === MARKET &&
+        !order.advanced
+    ) {
         // user has a position already
         return 'NO_POSITION';
     } else if (balances?.tokenBalance.eq(0) && !order.advanced) {
@@ -57,7 +61,12 @@ const checkErrors: (
         return 'NO_MARGIN_BALANCE';
     } else if (
         calcTotalMargin(newQuote, newBase, priceBN).lt(
-            calcMinimumMargin(newQuote, newBase, priceBN, maxLeverage ?? tracerDefaults.maxLeverage),
+            calcMinimumMargin(
+                newQuote,
+                newBase,
+                priceBN,
+                maxLeverage ?? tracerDefaults.maxLeverage,
+            ),
         )
     ) {
         return 'INVALID_ORDER';
@@ -219,7 +228,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     orderType: action.value,
                 };
             case 'setAdjustType':
-                const base = selectedTracer?.getBalance().base ?? defaults.balances.base;
+                const base =
+                    selectedTracer?.getBalance().base ?? defaults.balances.base;
                 const short = base.lt(0);
                 const long = base.gt(0);
                 if (action.value === CLOSE) {
@@ -257,7 +267,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 const fullClosure = selectedTracer?.getBalance().base.abs();
                 return { ...state, exposure: fullClosure };
             case 'setBestPrice':
-                const price = state.position === LONG ? omeState?.maxAndMins?.minAsk : omeState?.maxAndMins?.maxBid;
+                const price =
+                    state.position === LONG
+                        ? omeState?.maxAndMins?.minAsk
+                        : omeState?.maxAndMins?.maxBid;
                 if (!price) {
                     // if there is no price set error to no open orders
                     return { ...state, error: 'NO_ORDERS' };
@@ -289,25 +302,34 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     };
 
     // calculates the newQuote and newBase based on a given exposre
-    const calcNewBalance: (totalExposure: number, price: number) => { base: BigNumber; quote: BigNumber } = (
-        totalExposure,
-        price,
-    ) => {
+    const calcNewBalance: (
+        totalExposure: number,
+        price: number,
+    ) => { base: BigNumber; quote: BigNumber } = (totalExposure, price) => {
         const balances = selectedTracer?.getBalance();
         if (order.position === SHORT) {
             return {
-                base: balances?.base.minus(totalExposure) ?? tracerDefaults.balances.base, // subtract how much exposure you get
-                quote: balances?.quote.plus(totalExposure * price) ?? tracerDefaults.balances.quote, // add how much it costs
+                base:
+                    balances?.base.minus(totalExposure) ??
+                    tracerDefaults.balances.base, // subtract how much exposure you get
+                quote:
+                    balances?.quote.plus(totalExposure * price) ??
+                    tracerDefaults.balances.quote, // add how much it costs
             };
         }
         return {
-            base: balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base, // add how much exposure you get
-            quote: balances?.quote.minus(totalExposure * price) ?? tracerDefaults.balances.quote, // subtract how much it costs
+            base:
+                balances?.base.plus(totalExposure) ??
+                tracerDefaults.balances.base, // add how much exposure you get
+            quote:
+                balances?.quote.minus(totalExposure * price) ??
+                tracerDefaults.balances.quote, // subtract how much it costs
         };
     };
 
     useMemo(() => {
-        const { quote, base } = selectedTracer?.getBalance() ?? defaults.balances;
+        const { quote, base } =
+            selectedTracer?.getBalance() ?? defaults.balances;
         const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
         const margin = calcTotalMargin(quote, base, fairPrice);
         const position = base.gt(0);
@@ -331,18 +353,25 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     useMemo(() => {
         if (omeState?.orders) {
             const oppositeOrders = (
-                order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders
+                order.position === LONG
+                    ? omeState.orders.askOrders
+                    : omeState.orders.bidOrders
             ).map((order) => ({
                 price: new BigNumber(order.price),
                 amount: new BigNumber(order.quantity),
             }));
-            orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
+            orderDispatch({
+                type: 'setOppositeOrders',
+                orders: oppositeOrders,
+            });
             if (order.orderType === MARKET) {
                 // market order set the price to the bottom of the book
                 orderDispatch({
                     type: 'setPrice',
                     value:
-                        (order.position === LONG ? omeState?.maxAndMins?.maxAsk : omeState?.maxAndMins?.minBid) ?? NaN,
+                        (order.position === LONG
+                            ? omeState?.maxAndMins?.maxAsk
+                            : omeState?.maxAndMins?.minBid) ?? NaN,
                 });
             }
         }
@@ -352,7 +381,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         if (order.orderType === MARKET) {
             orderDispatch({
                 type: 'setPrice',
-                value: (order.position === LONG ? omeState?.maxAndMins?.maxAsk : omeState?.maxAndMins?.minBid) ?? NaN,
+                value:
+                    (order.position === LONG
+                        ? omeState?.maxAndMins?.maxAsk
+                        : omeState?.maxAndMins?.minBid) ?? NaN,
             });
         } else {
             orderDispatch({ type: 'setPrice', value: NaN });
@@ -363,7 +395,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         // when user swaps to close order, set opposite side
         // set the amount to the users position
         if (order.adjustType === CLOSE) {
-            const balances = selectedTracer?.getBalance() ?? tracerDefaults.balances;
+            const balances =
+                selectedTracer?.getBalance() ?? tracerDefaults.balances;
             if (balances?.base.toNumber() < 0) {
                 orderDispatch({ type: 'setPosition', value: LONG });
             } else if (balances?.base > 0) {
@@ -383,19 +416,27 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 order.oppositeOrders,
             );
             if (!slippage.eq(0)) {
-                orderDispatch({ type: 'setSlippage', value: slippage.toNumber() });
+                orderDispatch({
+                    type: 'setSlippage',
+                    value: slippage.toNumber(),
+                });
             } else {
                 orderDispatch({ type: 'setSlippage', value: 0 });
             }
             if (!tradePrice.eq(0)) {
-                orderDispatch({ type: 'setMarketTradePrice', value: tradePrice });
+                orderDispatch({
+                    type: 'setMarketTradePrice',
+                    value: tradePrice,
+                });
             }
         }
     }, [order.exposure, order.leverage, order.oppositeOrders]);
 
     // Handles setting the selected tracer Id on a market or collateral change
     useEffect(() => {
-        setTracerId ? setTracerId(`${order.market}/${order.collateral}`) : console.error('Error setting tracerId');
+        setTracerId
+            ? setTracerId(`${order.market}/${order.collateral}`)
+            : console.error('Error setting tracerId');
     }, [order.market, order.collateral]);
 
     useEffect(() => {
@@ -410,7 +451,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     // Check errors
     useMemo(() => {
         if (omeState?.orders) {
-            const oppositeOrders = order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders;
+            const oppositeOrders =
+                order.position === LONG
+                    ? omeState.orders.askOrders
+                    : omeState.orders.bidOrders;
             const error = checkErrors(
                 selectedTracer?.getBalance(),
                 oppositeOrders,

@@ -101,11 +101,22 @@ export const NumberSelect: React.FC<NSProps> = ({
                 {title}
                 {balance || balance === 0 ? ( // if there is a balance then display it
                     <>
-                        <Balance className={`balance ${amount > balance ? 'invalid' : ''}`}>
+                        <Balance
+                            className={`balance ${
+                                amount > balance ? 'invalid' : ''
+                            }`}
+                        >
                             {`Available: ${balance}`}
-                            {amount ? <After className="ml-2 after">{toApproxCurrency(balance - amount)}</After> : null}
+                            {amount ? (
+                                <After className="ml-2 after">
+                                    {toApproxCurrency(balance - amount)}
+                                </After>
+                            ) : null}
                         </Balance>
-                        <Max className="max" onClick={(_e) => setAmount(balance)}>
+                        <Max
+                            className="max"
+                            onClick={(_e) => setAmount(balance)}
+                        >
                             Max
                         </Max>
                     </>
@@ -120,7 +131,9 @@ export const NumberSelect: React.FC<NSProps> = ({
                     autoComplete="off"
                     min={0}
                     placeholder="0.0"
-                    onChange={(e) => setAmount(Math.abs(parseFloat(e.target.value)))}
+                    onChange={(e) =>
+                        setAmount(Math.abs(parseFloat(e.target.value)))
+                    }
                     value={!Number.isNaN(amount) ? amount : ''}
                     disabled={isLocked}
                 />

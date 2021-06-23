@@ -1,14 +1,22 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TracerContext, InsuranceContext } from 'context';
 import { useRouter } from 'next/router';
-import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 'types';
+import {
+    InsurancePoolInfo,
+    InsurancePoolInfo as InsurancePoolInfoType,
+} from 'types';
 import styled from 'styled-components';
 import { ProgressBar } from '@components/General';
 import { Button, Logo } from '@components/General';
 import { CaretDownFilled, LinkOutlined } from '@ant-design/icons';
 import Breakdown from '../PoolHealth/Breakdown';
 import { InsuranceModal } from '../InsuranceModal';
-import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
+import {
+    TableHead,
+    TableRow,
+    TableCell,
+    SecondaryCell,
+} from '@components/Portfolio';
 import { toPercent } from '@libs/utils';
 import Link from 'next/link';
 import { StyledTooltip } from '@components/Tooltips';
@@ -76,7 +84,9 @@ const SLinkOutlined = styled(LinkOutlined)`
 const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
     const [show, setShow] = useState(false);
     const [type, setType] = useState('Deposit');
-    const openModal: (type: 'Deposit' | 'Withdraw') => void = (type: 'Deposit' | 'Withdraw') => {
+    const openModal: (type: 'Deposit' | 'Withdraw') => void = (
+        type: 'Deposit' | 'Withdraw',
+    ) => {
         setType(type);
         setShow(true);
     };
@@ -90,14 +100,27 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
                     <SLinkOutlined className="ml-1" />
                 </StyledTooltip>
             </Link>
-            <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
+            <SecondaryCell>
+                {pool.userBalance.div(pool.liquidity).precision(5).toNumber() *
+                    100}
+                %
+            </SecondaryCell>
             <Hidden>
                 <ButtonContainer>
-                    <Button className="primary mr-3" onClick={(_e: any) => openModal('Deposit')}>
+                    <Button
+                        className="primary mr-3"
+                        onClick={(_e: any) => openModal('Deposit')}
+                    >
                         Deposit
                     </Button>
-                    <Button onClick={(_e: any) => openModal('Withdraw')}>Withdraw</Button>
-                    <InsuranceModal show={show} setShow={setShow} type={type as 'Deposit' | 'Withdraw'} />
+                    <Button onClick={(_e: any) => openModal('Withdraw')}>
+                        Withdraw
+                    </Button>
+                    <InsuranceModal
+                        show={show}
+                        setShow={setShow}
+                        type={type as 'Deposit' | 'Withdraw'}
+                    />
                 </ButtonContainer>
             </Hidden>
         </div>
@@ -129,91 +152,106 @@ interface IPTProps {
     className?: string;
 }
 
-const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IPTProps) => {
-    const headings = ['Market', 'Current APY', 'Health', 'Pool Ownership'];
-    const [expanded, setExpanded] = useState(-1);
+const InsurancePoolsTable: React.FC<IPTProps> = styled(
+    ({ pools, className }: IPTProps) => {
+        const headings = ['Market', 'Current APY', 'Health', 'Pool Ownership'];
+        const [expanded, setExpanded] = useState(-1);
 
-    useEffect(() => {
-        document.addEventListener('click', (e) => {
-            const table = document.getElementById('pools-table');
-            const modal = document.getElementById('insurance-modal');
-            let target = e.target;
-            do {
-                // @ts-ignore
-                if (target === table || target === modal || target?.id === 'insurance-submit') {
-                    // dont exit if its a modal click
-                    return;
-                }
-                // @ts-ignore
-                target = target?.parentNode;
-            } while (target);
-            setExpanded(-1);
-        });
-    }, []);
+        useEffect(() => {
+            document.addEventListener('click', (e) => {
+                const table = document.getElementById('pools-table');
+                const modal = document.getElementById('insurance-modal');
+                let target = e.target;
+                do {
+                    // @ts-ignore
+                    if (
+                        target === table ||
+                        target === modal ||
+                        target?.id === 'insurance-submit'
+                    ) {
+                        // dont exit if its a modal click
+                        return;
+                    }
+                    // @ts-ignore
+                    target = target?.parentNode;
+                } while (target);
+                setExpanded(-1);
+            });
+        }, []);
 
-    const onClick = (e: any, index: number) => {
-        e.preventDefault();
-        setExpanded(index);
-    };
+        const onClick = (e: any, index: number) => {
+            e.preventDefault();
+            setExpanded(index);
+        };
 
-    const TableHeadEndTheme = {
-        minWidth: '700px',
-        borderRight: '1px solid var(--color-accent)',
-        borderBottom: '1px solid var(--color-accent)',
-    };
+        const TableHeadEndTheme = {
+            minWidth: '700px',
+            borderRight: '1px solid var(--color-accent)',
+            borderBottom: '1px solid var(--color-accent)',
+        };
 
-    return (
-        <table id="pools-table" className={className}>
-            <thead>
-                <tr>
-                    {headings.map((heading, i) =>
-                        i === 3 ? (
-                            <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
-                        ) : (
-                            <TableHead>{heading}</TableHead>
-                        ),
-                    )}
-                </tr>
-            </thead>
-            <tbody>
-                {Object.values(pools).map((pool, i) => {
-                    // replace with check against selectedTracer
-                    const show = expanded === i;
-                    return (
-                        <TableRow
-                            key={`insurance-row-${i}`}
-                            className={show ? 'selected' : ''}
-                            onClick={(e) => onClick(e, i)}
-                        >
-                            <TableCell>
-                                <Collapsible className="pt-1">
-                                    <MarketNameContainer>
-                                        <SDownCaret />
-                                        <Logo className="ml-2" ticker="ETH" />
-                                        <span className="ml-2">{pool.market}</span>
-                                    </MarketNameContainer>
-                                </Collapsible>
-                            </TableCell>
-                            <TableCell>
-                                <Collapsible>{toPercent(pool.apy.toNumber())}</Collapsible>
-                            </TableCell>
-                            <TableCell>
-                                <Collapsible>
-                                    <HealthCell pool={pool} />
-                                </Collapsible>
-                            </TableCell>
-                            <TableCell>
-                                <Collapsible>
-                                    <OwnershipCell pool={pool} />
-                                </Collapsible>
-                            </TableCell>
-                        </TableRow>
-                    );
-                })}
-            </tbody>
-        </table>
-    );
-})`
+        return (
+            <table id="pools-table" className={className}>
+                <thead>
+                    <tr>
+                        {headings.map((heading, i) =>
+                            i === 3 ? (
+                                <TableHead theme={TableHeadEndTheme}>
+                                    {heading}
+                                </TableHead>
+                            ) : (
+                                <TableHead>{heading}</TableHead>
+                            ),
+                        )}
+                    </tr>
+                </thead>
+                <tbody>
+                    {Object.values(pools).map((pool, i) => {
+                        // replace with check against selectedTracer
+                        const show = expanded === i;
+                        return (
+                            <TableRow
+                                key={`insurance-row-${i}`}
+                                className={show ? 'selected' : ''}
+                                onClick={(e) => onClick(e, i)}
+                            >
+                                <TableCell>
+                                    <Collapsible className="pt-1">
+                                        <MarketNameContainer>
+                                            <SDownCaret />
+                                            <Logo
+                                                className="ml-2"
+                                                ticker="ETH"
+                                            />
+                                            <span className="ml-2">
+                                                {pool.market}
+                                            </span>
+                                        </MarketNameContainer>
+                                    </Collapsible>
+                                </TableCell>
+                                <TableCell>
+                                    <Collapsible>
+                                        {toPercent(pool.apy.toNumber())}
+                                    </Collapsible>
+                                </TableCell>
+                                <TableCell>
+                                    <Collapsible>
+                                        <HealthCell pool={pool} />
+                                    </Collapsible>
+                                </TableCell>
+                                <TableCell>
+                                    <Collapsible>
+                                        <OwnershipCell pool={pool} />
+                                    </Collapsible>
+                                </TableCell>
+                            </TableRow>
+                        );
+                    })}
+                </tbody>
+            </table>
+        );
+    },
+)`
     color: var(--color-text);
 `;
 
@@ -242,13 +280,18 @@ const Insurance: React.FC = () => {
                 ? setTracerId(query.tracer.toString().split('-').join('/'))
                 : console.error('setTracerId not set');
         } else {
-            setTracerId ? setTracerId('') : console.error('setTracerId not set');
+            setTracerId
+                ? setTracerId('')
+                : console.error('setTracerId not set');
         }
     }, [query]);
 
     return (
         <div className="h-full w-full flex flex-col">
-            <InsurancePoolsTable pools={pools ?? {}} handleClick={handleClick} />
+            <InsurancePoolsTable
+                pools={pools ?? {}}
+                handleClick={handleClick}
+            />
         </div>
     );
 };

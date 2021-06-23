@@ -69,13 +69,27 @@ const Advanced: React.FC = styled(({ className }) => {
         <div className={`container ${className}`}>
             <TradingPanel>
                 <MarketSelect account={account ?? ''} />
-                <InterfaceSelect account={account ?? ''} isAdjust={isAdjust} setAdjust={setAdjust} />
+                <InterfaceSelect
+                    account={account ?? ''}
+                    isAdjust={isAdjust}
+                    setAdjust={setAdjust}
+                />
                 {isAdjust ? (
-                    <ModifyOrder selectedTracer={selectedTracer} account={account ?? ''} />
+                    <ModifyOrder
+                        selectedTracer={selectedTracer}
+                        account={account ?? ''}
+                    />
                 ) : (
-                    <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
+                    <PlaceOrder
+                        selectedTracer={selectedTracer}
+                        account={account ?? ''}
+                    />
                 )}
-                <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} order={order} />
+                <AccountPanel
+                    selectedTracer={selectedTracer}
+                    account={account ?? ''}
+                    order={order}
+                />
             </TradingPanel>
             <RightPanel>
                 <TradingView selectedTracer={selectedTracer} />

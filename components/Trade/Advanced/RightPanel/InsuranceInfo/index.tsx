@@ -11,9 +11,15 @@ export default styled(({ className }) => {
     return (
         <div className={className}>
             <h3>
-                <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Insurance Pool Health</TooltipSelector>
+                <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>
+                    Insurance Pool Health
+                </TooltipSelector>
             </h3>
-            <PoolHealth health={poolInfo?.health?.toNumber() ?? defaults.health.toNumber()} />
+            <PoolHealth
+                health={
+                    poolInfo?.health?.toNumber() ?? defaults.health.toNumber()
+                }
+            />
             <Section
                 label="Pool Holdings"
                 tooltip={{

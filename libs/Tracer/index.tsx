@@ -87,7 +87,10 @@ export default class Tracer {
     public hasSubscribed: boolean;
 
     constructor(web3: Web3, address: string, marketId: string) {
-        this._instance = new web3.eth.Contract(tracerAbi as unknown as AbiItem, address) as unknown as TracerType;
+        this._instance = new web3.eth.Contract(
+            tracerAbi as unknown as AbiItem,
+            address,
+        ) as unknown as TracerType;
         this._web3 = web3;
         this.address = address;
         this.marketId = marketId;
@@ -117,12 +120,20 @@ export default class Tracer {
     init: (web3: Web3) => Promise<boolean> = (web3) => {
         const oracleAddress = this._instance.methods.gasPriceOracle().call();
         const tokenAddr = this._instance.methods.tracerQuoteToken().call();
-        const quoteTokenDecimals = this._instance.methods.quoteTokenDecimals().call();
-        const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
+        const quoteTokenDecimals = this._instance.methods
+            .quoteTokenDecimals()
+            .call();
+        const liquidationGasCost = this._instance.methods
+            .LIQUIDATION_GAS_COST()
+            .call();
         const maxLeverage = this._instance.methods.trueMaxLeverage().call();
-        const fundingRateSensitivity = this._instance.methods.fundingRateSensitivity().call();
+        const fundingRateSensitivity = this._instance.methods
+            .fundingRateSensitivity()
+            .call();
         const feeRate = this._instance.methods.feeRate().call();
-        const insuranceContract = this._instance.methods.insuranceContract().call();
+        const insuranceContract = this._instance.methods
+            .insuranceContract()
+            .call();
         const pricingContract = this._instance.methods.pricingContract().call();
         return Promise.all([
             quoteTokenDecimals,
@@ -140,17 +151,30 @@ export default class Tracer {
                 this.quoteTokenDecimals = priceMultiplier_;
                 this.liquidationGasCost = parseInt(res[1]);
                 this.token = res[2]
-                    ? (new web3.eth.Contract(ERC20Abi as AbiItem[], res[2]) as unknown as Erc20Type)
+                    ? (new web3.eth.Contract(
+                          ERC20Abi as AbiItem[],
+                          res[2],
+                      ) as unknown as Erc20Type)
                     : undefined;
                 this._gasOracle = res[3]
-                    ? (new web3.eth.Contract(oracleAbi as AbiItem[], res[3]) as unknown as Oracle)
+                    ? (new web3.eth.Contract(
+                          oracleAbi as AbiItem[],
+                          res[3],
+                      ) as unknown as Oracle)
                     : undefined;
-                this.maxLeverage = new BigNumber(parseFloat(Web3.utils.fromWei(res[4])));
-                this.fundingRateSensitivity = new BigNumber(res[5]).div(priceMultiplier_);
+                this.maxLeverage = new BigNumber(
+                    parseFloat(Web3.utils.fromWei(res[4])),
+                );
+                this.fundingRateSensitivity = new BigNumber(res[5]).div(
+                    priceMultiplier_,
+                );
                 this.feeRate = new BigNumber(res[6]).div(priceMultiplier_);
                 this.insuranceContract = res[7];
                 this._pricing = res[8]
-                    ? (new web3.eth.Contract(pricingAbi as AbiItem[], res[8]) as unknown as Pricing)
+                    ? (new web3.eth.Contract(
+                          pricingAbi as AbiItem[],
+                          res[8],
+                      ) as unknown as Pricing)
                     : undefined;
 
                 this._pricing?.methods
@@ -158,7 +182,10 @@ export default class Tracer {
                     .call()
                     .then((oracleAddress) => {
                         this._oracle = oracleAddress
-                            ? (new web3.eth.Contract(oracleAbi as AbiItem[], oracleAddress) as unknown as Oracle)
+                            ? (new web3.eth.Contract(
+                                  oracleAbi as AbiItem[],
+                                  oracleAddress,
+                              ) as unknown as Oracle)
                             : undefined;
                         this.updateOraclePrice();
                     });
@@ -172,7 +199,9 @@ export default class Tracer {
             });
     };
 
-    subscribeToMatchedOrders: (callback: Callback<MatchedOrders>) => void = (callback) => {
+    subscribeToMatchedOrders: (callback: Callback<MatchedOrders>) => void = (
+        callback,
+    ) => {
         this.hasSubscribed = true;
         this._instance.events.MatchedOrders(callback);
     };
@@ -188,38 +217,57 @@ export default class Tracer {
      *   int256 lastUpdatedGasPrice,
      *   uint256 lastUpdatedIndex
      */
-    updateUserBalance: (account: string | undefined) => Promise<UserBalance> = async (account) => {
-        try {
-            if (!account) {
+    updateUserBalance: (account: string | undefined) => Promise<UserBalance> =
+        async (account) => {
+            try {
+                if (!account) {
+                    this.balances = defaults.balances;
+                    return defaults.balances;
+                }
+                await this.initialised;
+                // if accounts is undefined the catch should get it
+                const balance = await this._instance.methods
+                    .getBalance(account)
+                    .call();
+                const walletBalance = await this.token?.methods
+                    .balanceOf(account)
+                    .call();
+                const parsedBalances = {
+                    quote: new BigNumber(Web3.utils.fromWei(balance[0][0])),
+                    base: new BigNumber(Web3.utils.fromWei(balance[0][1])),
+                    totalLeveragedValue: new BigNumber(
+                        Web3.utils.fromWei(balance[1]),
+                    ),
+                    lastUpdatedGasPrice: new BigNumber(
+                        Web3.utils.fromWei(balance[3]),
+                    ),
+                    tokenBalance: walletBalance
+                        ? new BigNumber(walletBalance).div(
+                              new BigNumber(10).pow(this.quoteTokenDecimals),
+                          )
+                        : new BigNumber(0),
+                };
+                const leverage = calcLeverage(
+                    parsedBalances.quote,
+                    parsedBalances.base,
+                    this.oraclePrice,
+                );
+                console.info(
+                    `Fetched user balances: ${JSON.stringify(parsedBalances)}`,
+                );
+                this.balances = {
+                    ...parsedBalances,
+                    leverage: leverage.gt(1)
+                        ? leverage
+                        : defaults.balances.leverage,
+                };
+                return parsedBalances;
+            } catch (error) {
+                console.error(`Failed to fetch user balance: ${error}`);
                 this.balances = defaults.balances;
                 return defaults.balances;
             }
-            await this.initialised;
-            // if accounts is undefined the catch should get it
-            const balance = await this._instance.methods.getBalance(account).call();
-            const walletBalance = await this.token?.methods.balanceOf(account).call();
-            const parsedBalances = {
-                quote: new BigNumber(Web3.utils.fromWei(balance[0][0])),
-                base: new BigNumber(Web3.utils.fromWei(balance[0][1])),
-                totalLeveragedValue: new BigNumber(Web3.utils.fromWei(balance[1])),
-                lastUpdatedGasPrice: new BigNumber(Web3.utils.fromWei(balance[3])),
-                tokenBalance: walletBalance
-                    ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
-                    : new BigNumber(0),
-            };
-            const leverage = calcLeverage(parsedBalances.quote, parsedBalances.base, this.oraclePrice);
-            console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
-            this.balances = {
-                ...parsedBalances,
-                leverage: leverage.gt(1) ? leverage : defaults.balances.leverage,
-            };
-            return parsedBalances;
-        } catch (error) {
-            console.error(`Failed to fetch user balance: ${error}`);
-            this.balances = defaults.balances;
-            return defaults.balances;
-        }
-    };
+        };
 
     getBalance: () => UserBalance = () => this.balances;
 
@@ -237,7 +285,9 @@ export default class Tracer {
         try {
             await this.initialised;
             const fairPrice = await this._pricing?.methods.fairPrice().call();
-            this.fairPrice = new BigNumber(Web3.utils.fromWei(fairPrice ?? '0'));
+            this.fairPrice = new BigNumber(
+                Web3.utils.fromWei(fairPrice ?? '0'),
+            );
         } catch (err) {
             console.error('Failed to fetch fair price', err);
             this.fairPrice = new BigNumber(0);
@@ -261,13 +311,25 @@ export default class Tracer {
             // fair price is needed. This avoids it being not set when this method is called.
             // this could probably be optimised
             const fairPrice = await this._pricing?.methods.fairPrice().call();
-            this.fairPrice = new BigNumber(Web3.utils.fromWei(fairPrice ?? '0'));
-            const currentFundingIndex = await this._pricing?.methods.currentFundingIndex().call();
+            this.fairPrice = new BigNumber(
+                Web3.utils.fromWei(fairPrice ?? '0'),
+            );
+            const currentFundingIndex = await this._pricing?.methods
+                .currentFundingIndex()
+                .call();
             // @ts-ignore
-            const fundingRate = await this._pricing?.methods.fundingRates(currentFundingIndex - 1).call();
-            const numerator = new BigNumber(Web3.utils.fromWei(fundingRate?.fundingRate.toString() ?? '0'));
-            const denominator = new BigNumber(Web3.utils.fromWei(fairPrice ?? '1'));
-            const set = numerator.div(denominator).multipliedBy(new BigNumber('100'));
+            const fundingRate = await this._pricing?.methods
+                .fundingRates(currentFundingIndex - 1)
+                .call();
+            const numerator = new BigNumber(
+                Web3.utils.fromWei(fundingRate?.fundingRate.toString() ?? '0'),
+            );
+            const denominator = new BigNumber(
+                Web3.utils.fromWei(fairPrice ?? '1'),
+            );
+            const set = numerator
+                .div(denominator)
+                .multipliedBy(new BigNumber('100'));
             this.fundingRate = set;
         } catch (err) {
             console.error('Failed to fetch funding rate', err);
@@ -282,7 +344,10 @@ export default class Tracer {
      * @returns web3 PromiEvent type
      */
     // @ts-ignore
-    deposit: (amount: number, account: string) => PromiEvent<TransactionReceipt> = (amount, account) => {
+    deposit: (
+        amount: number,
+        account: string,
+    ) => PromiEvent<TransactionReceipt> = (amount, account) => {
         // convert amount to appropriate amount in quote token
         const amount_ = Web3.utils.toWei(amount.toString());
         return this._instance.methods.deposit(amount_).send({ from: account });
@@ -295,8 +360,13 @@ export default class Tracer {
      * @returns web3 PromiEvent type
      */
     // @ts-ignore
-    withdraw: (amount: number, account: string) => PromiEvent<TransactionReceipt> = (amount, account) => {
-        return this._instance.methods.withdraw(Web3.utils.toWei(amount.toString())).send({ from: account });
+    withdraw: (
+        amount: number,
+        account: string,
+    ) => PromiEvent<TransactionReceipt> = (amount, account) => {
+        return this._instance.methods
+            .withdraw(Web3.utils.toWei(amount.toString()))
+            .send({ from: account });
     };
 
     /**
@@ -305,18 +375,24 @@ export default class Tracer {
      * @param account account to check
      * @returns 0 if not approved 1 if approved and -1 if something went wrong
      */
-    checkAllowance: (account: string, contract: string) => Promise<0 | 1 | -1> = async (account, contract) => {
-        return checkAllowance(this.token, account, contract);
-    };
+    checkAllowance: (account: string, contract: string) => Promise<0 | 1 | -1> =
+        async (account, contract) => {
+            return checkAllowance(this.token, account, contract);
+        };
 
     /**
      * Approve the tracer token for a given contract address
      * @returns TransactionType event
      */
     // @ts-ignore
-    approve: (account: string, contract: string) => PromiEvent<TransactionReceipt> = (account, contract) => {
+    approve: (
+        account: string,
+        contract: string,
+    ) => PromiEvent<TransactionReceipt> = (account, contract) => {
         const max = Number.MAX_SAFE_INTEGER;
-        return this.token?.methods.approve(contract, Web3.utils.toWei(max.toString())).send({ from: account });
+        return this.token?.methods
+            .approve(contract, Web3.utils.toWei(max.toString()))
+            .send({ from: account });
     };
 
     checkApproved: (account: string) => void = async (account) => {

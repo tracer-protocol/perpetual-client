@@ -10,7 +10,11 @@ import {
     StatusIndicator,
     getStatusColour,
 } from '@components/Portfolio';
-import { calcLiquidationPrice, calcTotalMargin, calcUnrealised } from '@tracer-protocol/tracer-utils';
+import {
+    calcLiquidationPrice,
+    calcTotalMargin,
+    calcUnrealised,
+} from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'types/OrderTypes';
 import { LabelledTracers } from 'types/TracerTypes';
 
@@ -30,7 +34,12 @@ const Position: React.FC<{
         'Status',
     ];
 
-    const _status = ['Open', 'Eligible for Liquidation', 'Approaching Liquidation', 'Closed'];
+    const _status = [
+        'Open',
+        'Eligible for Liquidation',
+        'Approaching Liquidation',
+        'Closed',
+    ];
 
     const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
@@ -97,7 +106,9 @@ const Position: React.FC<{
                     <tr>
                         {headings.map((heading, i) =>
                             i === 7 ? (
-                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
+                                <TableHead theme={TableHeadEndTheme}>
+                                    {heading}
+                                </TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),
@@ -119,42 +130,87 @@ const Position: React.FC<{
                             allFilledOrders[tracer.address] ?? [],
                         );
                         return (
-                            <TableRow key={`table-row-${i}`} theme={getRowStatus(status[i], show)}>
+                            <TableRow
+                                key={`table-row-${i}`}
+                                theme={getRowStatus(status[i], show)}
+                            >
                                 <TableCell>
                                     <div className="flex flex-row">
                                         <div className="my-auto">
                                             <Logo ticker={name} />
                                         </div>
-                                        <div className="my-auto ml-2">{tracer.marketId}</div>
+                                        <div className="my-auto ml-2">
+                                            {tracer.marketId}
+                                        </div>
                                     </div>
                                 </TableCell>
-                                <TableCell>{base.eq(0) ? 'NO POSITION' : base.lt(0) ? 'SHORT' : 'LONG'}</TableCell>
-                                <TableCell color={unrealisedPNL.toNumber() < 0 ? '#F15025' : '#21DD53'}>
+                                <TableCell>
+                                    {base.eq(0)
+                                        ? 'NO POSITION'
+                                        : base.lt(0)
+                                        ? 'SHORT'
+                                        : 'LONG'}
+                                </TableCell>
+                                <TableCell
+                                    color={
+                                        unrealisedPNL.toNumber() < 0
+                                            ? '#F15025'
+                                            : '#21DD53'
+                                    }
+                                >
                                     {toApproxCurrency(unrealisedPNL)}
                                 </TableCell>
-                                <TableCell color={realisedPNL < 0 ? '#F15025' : '#21DD53'}>
+                                <TableCell
+                                    color={
+                                        realisedPNL < 0 ? '#F15025' : '#21DD53'
+                                    }
+                                >
                                     {toApproxCurrency(realisedPNL)}
                                 </TableCell>
                                 <TableCell>
-                                    {toApproxCurrency(calcTotalMargin(quote, base, tracer.oraclePrice))}
+                                    {toApproxCurrency(
+                                        calcTotalMargin(
+                                            quote,
+                                            base,
+                                            tracer.oraclePrice,
+                                        ),
+                                    )}
                                 </TableCell>
                                 <TableCell>
                                     {base.abs().toNumber()} {name}
                                 </TableCell>
                                 <TableCell>
                                     {toApproxCurrency(
-                                        calcLiquidationPrice(quote, base, tracer.oraclePrice, tracer.maxLeverage),
+                                        calcLiquidationPrice(
+                                            quote,
+                                            base,
+                                            tracer.oraclePrice,
+                                            tracer.maxLeverage,
+                                        ),
                                     )}
-                                    <SecondaryCell>{toApproxCurrency(tracer.oraclePrice)}</SecondaryCell>
+                                    <SecondaryCell>
+                                        {toApproxCurrency(tracer.oraclePrice)}
+                                    </SecondaryCell>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex flex-row">
-                                        <StatusIndicator color={getStatusColour(status)} className="text-2xl my-auto">
+                                        <StatusIndicator
+                                            color={getStatusColour(status)}
+                                            className="text-2xl my-auto"
+                                        >
                                             &bull;
                                         </StatusIndicator>
-                                        <div className="mx-2 my-auto">{status}</div>
+                                        <div className="mx-2 my-auto">
+                                            {status}
+                                        </div>
                                         <div className="my-auto ml-auto">
-                                            <Button theme={status !== 'Closed' ? activeButton : inactiveButton}>
+                                            <Button
+                                                theme={
+                                                    status !== 'Closed'
+                                                        ? activeButton
+                                                        : inactiveButton
+                                                }
+                                            >
                                                 Close
                                             </Button>
                                         </div>

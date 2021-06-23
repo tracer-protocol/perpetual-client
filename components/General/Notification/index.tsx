@@ -10,7 +10,13 @@ import {
 import styled from 'styled-components';
 import Timer from '@components/Timer';
 
-type PlacementType = 'bottom-left' | 'bottom-center' | 'bottom-right' | 'top-left' | 'top-center' | 'top-right';
+type PlacementType =
+    | 'bottom-left'
+    | 'bottom-center'
+    | 'bottom-right'
+    | 'top-left'
+    | 'top-center'
+    | 'top-right';
 type AppearanceTypes = 'success' | 'error' | 'warning' | 'info' | 'loading';
 type TransitionState = 'entering' | 'entered' | 'exiting' | 'exited';
 

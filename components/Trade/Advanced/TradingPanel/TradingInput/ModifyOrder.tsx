@@ -18,20 +18,22 @@ type SProps = {
     className?: string;
 };
 
-const AdjustTypeSelect: React.FC<SProps> = styled(({ selected, className, setAdjustType }: SProps) => {
-    return (
-        <SlideSelect
-            className={className}
-            onClick={(index, _e) => {
-                setAdjustType(index);
-            }}
-            value={selected}
-        >
-            <Option>Adjust</Option>
-            <Option>Close</Option>
-        </SlideSelect>
-    );
-})`
+const AdjustTypeSelect: React.FC<SProps> = styled(
+    ({ selected, className, setAdjustType }: SProps) => {
+        return (
+            <SlideSelect
+                className={className}
+                onClick={(index, _e) => {
+                    setAdjustType(index);
+                }}
+                value={selected}
+            >
+                <Option>Adjust</Option>
+                <Option>Close</Option>
+            </SlideSelect>
+        );
+    },
+)`
     border-radius: 0;
     border-bottom: 1px solid var(--color-accent);
     border-top: 0;
@@ -74,11 +76,20 @@ const Close: React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
             <MarketTradeDetails
                 fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                 balances={selectedTracer?.getBalance() ?? defaults.balances}
-                exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                exposure={
+                    order?.exposure
+                        ? new BigNumber(order.exposure)
+                        : defaults.exposure
+                }
                 nextPosition={order?.nextPosition ?? defaults.balances}
                 slippage={order?.slippage ?? 0}
-                tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
-                maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                tradePrice={
+                    order?.marketTradePrice ??
+                    orderDefaults.order.marketTradePrice
+                }
+                maxLeverage={
+                    selectedTracer?.maxLeverage ?? defaults.maxLeverage
+                }
             />
         </>
     );
@@ -106,12 +117,20 @@ const Adjust: React.FC<AProps> = ({ order, orderDispatch, selectedTracer }) => {
                 orderDispatch={orderDispatch}
             />
             <AdjustSummary
-                fairPrice={selectedTracer?.getFairPrice() ?? defaults.oraclePrice}
+                fairPrice={
+                    selectedTracer?.getFairPrice() ?? defaults.oraclePrice
+                }
                 balances={selectedTracer?.getBalance() ?? defaults.balances}
-                exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                exposure={
+                    order?.exposure
+                        ? new BigNumber(order.exposure)
+                        : defaults.exposure
+                }
                 nextPosition={order?.nextPosition ?? defaults.balances}
                 baseTicker={selectedTracer?.baseTicker ?? ''}
-                maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                maxLeverage={
+                    selectedTracer?.maxLeverage ?? defaults.maxLeverage
+                }
             />
         </>
     );
@@ -134,21 +153,40 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     selected={order?.adjustType ?? 0}
                     setAdjustType={(index) => {
                         orderDispatch
-                            ? orderDispatch({ type: 'setAdjustType', value: index })
+                            ? orderDispatch({
+                                  type: 'setAdjustType',
+                                  value: index,
+                              })
                             : console.error('No dispatch function set');
                     }}
                 />
 
                 <div className="pt-3 pb-3">
                     {order?.adjustType !== 0 ? (
-                        <Close orderDispatch={orderDispatch} selectedTracer={selectedTracer} order={order} />
+                        <Close
+                            orderDispatch={orderDispatch}
+                            selectedTracer={selectedTracer}
+                            order={order}
+                        />
                     ) : (
-                        <Adjust orderDispatch={orderDispatch} order={order} selectedTracer={selectedTracer} />
+                        <Adjust
+                            orderDispatch={orderDispatch}
+                            order={order}
+                            selectedTracer={selectedTracer}
+                        />
                     )}
                 </div>
-                <AdvancedOrderButton>{order?.adjustType === 0 ? 'Adjust Order' : 'Close Position'}</AdvancedOrderButton>
+                <AdvancedOrderButton>
+                    {order?.adjustType === 0
+                        ? 'Adjust Order'
+                        : 'Close Position'}
+                </AdvancedOrderButton>
             </Box>
-            <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
+            <SError
+                error={order?.error ?? 'NO_ERROR'}
+                account={account}
+                context={'orders'}
+            />
         </>
     );
 })`

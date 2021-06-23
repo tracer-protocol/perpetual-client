@@ -5,7 +5,11 @@ import { createOrder } from '@libs/Ome';
 import { Web3Context } from './Web3Context';
 import { OrderState } from './OrderContext';
 import Web3 from 'web3';
-import { orderToOMEOrder, OrderData, signOrdersV4 } from '@tracer-protocol/tracer-utils';
+import {
+    orderToOMEOrder,
+    OrderData,
+    signOrdersV4,
+} from '@tracer-protocol/tracer-utils';
 import Tracer from '@libs/Tracer';
 import { TransactionContext, Options } from './TransactionContext';
 import { defaults } from '@libs/Tracer';
@@ -23,7 +27,9 @@ interface ContextProps {
     placeOrder: (order: OrderState) => Promise<Result>;
 }
 
-export const TracerContext = React.createContext<Partial<ContextProps>>({} as ContextProps);
+export const TracerContext = React.createContext<Partial<ContextProps>>(
+    {} as ContextProps,
+);
 
 type TracerState = {
     selectedTracer: Tracer | undefined;
@@ -35,10 +41,14 @@ type StoreProps = {
     tracer?: string;
 } & Children;
 
-export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
+export const SelectedTracerStore: React.FC<StoreProps> = ({
+    tracer,
+    children,
+}: StoreProps) => {
     const { account, web3, config, networkId } = useContext(Web3Context);
     const { factoryState } = useContext(FactoryContext);
-    const { handleTransaction, setPending, closePending } = useContext(TransactionContext);
+    const { handleTransaction, setPending, closePending } =
+        useContext(TransactionContext);
 
     const initialState: TracerState = {
         selectedTracer: undefined,
@@ -78,7 +88,10 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         if (factoryState?.hasSetTracers) {
             const defaultTracer = Object.values(factoryState?.tracers)[0];
             if (defaultTracer) {
-                tracerDispatch({ type: 'setSelectedTracer', value: defaultTracer });
+                tracerDispatch({
+                    type: 'setSelectedTracer',
+                    value: defaultTracer,
+                });
                 fetchUserData();
             } else {
                 console.error(`Failed to set tracer with address ${tracer}`);
@@ -98,19 +111,28 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     };
 
-    const matchedOrders: Callback<MatchedOrders> = (err: Error, res: MatchedOrders) => {
+    const matchedOrders: Callback<MatchedOrders> = (
+        err: Error,
+        res: MatchedOrders,
+    ) => {
         if (err) {
             console.error('Failed to listen on matched orders', err.message);
         } else if (
-            account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
-            account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
+            account?.toLocaleLowerCase() ===
+                res.returnValues.long.toLowerCase() ||
+            account?.toLocaleLowerCase() ===
+                res.returnValues.short.toLowerCase()
         ) {
             fetchUserData();
-            closePending ? closePending() : console.error('Close pending is undefined');
+            closePending
+                ? closePending()
+                : console.error('Close pending is undefined');
         }
     };
 
-    const placeOrder: (order: OrderState) => Promise<Result> = async (order) => {
+    const placeOrder: (order: OrderState) => Promise<Result> = async (
+        order,
+    ) => {
         const { exposure, price, position, leverage } = order;
         const amount = Web3.utils.toWei((exposure * leverage).toString()) ?? 0;
         const now = Math.floor(Date.now() / 1000); // timestamp in seconds
@@ -123,20 +145,32 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 side: position ? 1 : 0, // position === SHORT === 1 then 1 else 0
                 maker: account ?? '',
                 expires: now + fourDays,
-                market: selectedTracer?.address ? Web3.utils.toChecksumAddress(selectedTracer.address) : '',
+                market: selectedTracer?.address
+                    ? Web3.utils.toChecksumAddress(selectedTracer.address)
+                    : '',
                 created: now - fiveMins, // avoid out of sync clocks breaking orders
             },
         ];
         try {
-            const signedMakes = await signOrdersV4(web3, makes, config?.contracts.trader.address as string, networkId);
+            const signedMakes = await signOrdersV4(
+                web3,
+                makes,
+                config?.contracts.trader.address as string,
+                networkId,
+            );
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             console.info('Placing OME order', omeOrder);
-            const res = await createOrder(selectedTracer?.address as string, omeOrder);
+            const res = await createOrder(
+                selectedTracer?.address as string,
+                omeOrder,
+            );
             if (res.message === 'PartialMatch' || res.message === 'FullMatch') {
                 // if there is a partial or full match add a toaster
                 setPending
                     ? setPending(res.message)
-                    : console.error('Partial or full match but setPending function is not defined');
+                    : console.error(
+                          'Partial or full match but setPending function is not defined',
+                      );
             } else if (res.message === 'Add') {
                 return {
                     status: res.status,
@@ -148,7 +182,10 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 message: res.message,
             };
         } catch (err) {
-            return { status: 'error', message: `Failed to place order ${err}` } as Result;
+            return {
+                status: 'error',
+                message: `Failed to place order ${err}`,
+            } as Result;
         }
     };
 
@@ -180,14 +217,22 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
     const deposit = async (amount: number, _callback?: () => any) => {
         if (handleTransaction) {
-            const approved = await selectedTracer?.checkAllowance(account, selectedTracer.address);
+            const approved = await selectedTracer?.checkAllowance(
+                account,
+                selectedTracer.address,
+            );
             if (approved === 0) {
                 // not approved
-                handleTransaction(selectedTracer.approve, [account, selectedTracer.address]);
+                handleTransaction(selectedTracer.approve, [
+                    account,
+                    selectedTracer.address,
+                ]);
             }
             const callback = async (res: Result) => {
                 if (res.status !== 'error') {
-                    const balance = await selectedTracer?.updateUserBalance(account);
+                    const balance = await selectedTracer?.updateUserBalance(
+                        account,
+                    );
                     tracerDispatch({ type: 'setUserBalance', value: balance });
                     _callback ? _callback() : null;
                 }
@@ -206,7 +251,9 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         if (handleTransaction) {
             const callback = async (res: Result) => {
                 if (res.status !== 'error') {
-                    const balance = await selectedTracer?.updateUserBalance(account);
+                    const balance = await selectedTracer?.updateUserBalance(
+                        account,
+                    );
                     tracerDispatch({ type: 'setUserBalance', value: balance });
                     _callback ? _callback() : null;
                 }
@@ -218,7 +265,9 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 },
             });
         } else {
-            console.error(`Failed to widthdraw handleTransaction is undefined `);
+            console.error(
+                `Failed to widthdraw handleTransaction is undefined `,
+            );
         }
     };
 
@@ -249,7 +298,10 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 withdraw: (amount, _callback) => withdraw(amount, _callback),
                 approve: (contract, options) => approve(contract, options),
                 setTracerId: (tracerId: string) =>
-                    tracerDispatch({ type: 'setSelectedTracer', value: factoryState?.tracers?.[tracerId] }),
+                    tracerDispatch({
+                        type: 'setSelectedTracer',
+                        value: factoryState?.tracers?.[tracerId],
+                    }),
                 selectedTracer,
                 balances,
                 placeOrder,

@@ -44,14 +44,16 @@ type CProps = {
     checked?: boolean;
     onClick?: any;
 };
-export const Checkbox: React.FC<CProps> = styled(({ className, checked, onClick }: CProps) => {
-    return (
-        <span className={className} onClick={onClick}>
-            <input type="checkbox" checked={checked} readOnly />
-            <span className="checkmark" />
-        </span>
-    );
-})`
+export const Checkbox: React.FC<CProps> = styled(
+    ({ className, checked, onClick }: CProps) => {
+        return (
+            <span className={className} onClick={onClick}>
+                <input type="checkbox" checked={checked} readOnly />
+                <span className="checkmark" />
+            </span>
+        );
+    },
+)`
     border: 1px solid var(--color-primary);
     width: 1.7rem;
     height: 1.1rem;

@@ -1,13 +1,26 @@
 import React from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHead, TableRow, TableCell, Button, StatusIndicator, getStatusColour } from '@components/Portfolio';
+import {
+    TableHead,
+    TableRow,
+    TableCell,
+    Button,
+    StatusIndicator,
+    getStatusColour,
+} from '@components/Portfolio';
 import Tooltip from 'antd/lib/tooltip';
 
 const NoLeverageTip = <p>You have no leveraged trades open in this market.</p>;
 
 const MarginAccounts: React.FC = () => {
-    const headings = ['Market', 'Total Margin', 'Maintenance Margin', 'Available Margin', 'Status of Position'];
+    const headings = [
+        'Market',
+        'Total Margin',
+        'Maintenance Margin',
+        'Available Margin',
+        'Status of Position',
+    ];
 
     const tracers = [
         {
@@ -47,7 +60,9 @@ const MarginAccounts: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 4 ? (
-                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
+                                <TableHead theme={TableHeadEndTheme}>
+                                    {heading}
+                                </TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),
@@ -63,13 +78,21 @@ const MarginAccounts: React.FC = () => {
                                         <div className="my-auto">
                                             <Logo ticker={tracer.name} />
                                         </div>
-                                        <div className="my-auto ml-2">{tracer.market}</div>
+                                        <div className="my-auto ml-2">
+                                            {tracer.market}
+                                        </div>
                                     </div>
                                 </Tooltip>
                             </TableCell>
-                            <TableCell>{toApproxCurrency(tracer.tMargin)}</TableCell>
-                            <TableCell>{toApproxCurrency(tracer.mMargin)}</TableCell>
-                            <TableCell>{toApproxCurrency(tracer.aMargin)}</TableCell>
+                            <TableCell>
+                                {toApproxCurrency(tracer.tMargin)}
+                            </TableCell>
+                            <TableCell>
+                                {toApproxCurrency(tracer.mMargin)}
+                            </TableCell>
+                            <TableCell>
+                                {toApproxCurrency(tracer.aMargin)}
+                            </TableCell>
                             <TableCell>
                                 <div className="flex flex-row">
                                     <StatusIndicator
@@ -78,9 +101,13 @@ const MarginAccounts: React.FC = () => {
                                     >
                                         &bull;
                                     </StatusIndicator>
-                                    <div className="mx-2 my-auto">{tracer.status}</div>
+                                    <div className="mx-2 my-auto">
+                                        {tracer.status}
+                                    </div>
                                     <div className="flex flex-row my-auto ml-auto mr-4">
-                                        <Button className="mr-2">Deposit</Button>
+                                        <Button className="mr-2">
+                                            Deposit
+                                        </Button>
                                         <Button>Withdraw</Button>
                                     </div>
                                 </div>

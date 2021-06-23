@@ -68,9 +68,15 @@ const MarketInfo: React.FC<MIProps> = styled(
     }: MIProps) => {
         return (
             <div className={className}>
-                <TitledBox title={'Last Price'}>{toApproxCurrency(lastPrice)}</TitledBox>
-                <TitledBox title={'Mark Price'}>{toApproxCurrency(fairPrice)}</TitledBox>
-                <TitledBox title={'Oracle Price'}>{toApproxCurrency(oraclePrice)}</TitledBox>
+                <TitledBox title={'Last Price'}>
+                    {toApproxCurrency(lastPrice)}
+                </TitledBox>
+                <TitledBox title={'Mark Price'}>
+                    {toApproxCurrency(fairPrice)}
+                </TitledBox>
+                <TitledBox title={'Oracle Price'}>
+                    {toApproxCurrency(oraclePrice)}
+                </TitledBox>
                 <TitledBox title={'Funding Rate'}>
                     <FundingRateGraphic rate={fundingRate} />
                 </TitledBox>
@@ -122,18 +128,29 @@ const TradingView: React.FC<{
     selectedTracer: Tracer | undefined;
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
-    const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
+    const { mostRecentTrades } = useMostRecentMatched(
+        selectedTracer?.address ?? '',
+    );
     return (
         <>
             <SBox className="middlePanel">
                 <MarketInfo
                     lastPrice={omeState?.maxAndMins?.maxAsk ?? 0}
-                    fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
-                    oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
-                    fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.fundingRate.toNumber()}
+                    fairPrice={
+                        selectedTracer?.getFairPrice() ?? defaults.fairPrice
+                    }
+                    oraclePrice={
+                        selectedTracer?.getOraclePrice() ?? defaults.oraclePrice
+                    }
+                    fundingRate={
+                        selectedTracer?.getFundingRate()?.toNumber() ??
+                        defaults.fundingRate.toNumber()
+                    }
                     // nextFunding={new Date()}
                     // tradingVolume={243512}
-                    maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
+                    maxLeverage={
+                        selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage
+                    }
                 />
                 <Graphs selectedTracerAddress={selectedTracer?.address ?? ''} />
                 <AccountSummary selectedTracer={selectedTracer} />
@@ -142,9 +159,13 @@ const TradingView: React.FC<{
                 <InsuranceInfo />
                 <OrderBookContainer>
                     <h3>Order Book</h3>
-                    {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
+                    {omeState?.orders?.askOrders?.length ||
+                    omeState?.orders?.bidOrders?.length ? (
                         <>
-                            <OrderBook askOrders={omeState.orders.askOrders} bidOrders={omeState.orders.bidOrders} />
+                            <OrderBook
+                                askOrders={omeState.orders.askOrders}
+                                bidOrders={omeState.orders.bidOrders}
+                            />
                         </>
                     ) : (
                         <p>No open orders</p>

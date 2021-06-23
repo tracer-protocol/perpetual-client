@@ -23,17 +23,29 @@ export const SearchableTable: React.FC<STProps> = ({
 
     return (
         <>
-            <div className={`${compact ? 'my-2' : 'my-8'} ${cClasses ? cClasses : ''}`}>
+            <div
+                className={`${compact ? 'my-2' : 'my-8'} ${
+                    cClasses ? cClasses : ''
+                }`}
+            >
                 <Table compact={compact} squared headings={headings}>
                     {rows.map((row, _index) => {
                         if (filter) {
-                            if (row[0].toUpperCase().indexOf(filter.toUpperCase()) > -1) {
+                            if (
+                                row[0]
+                                    .toUpperCase()
+                                    .indexOf(filter.toUpperCase()) > -1
+                            ) {
                                 return (
                                     <TableRow
                                         compact={compact}
                                         squared
                                         rowSelected={tracerId === row[0]}
-                                        onClick={() => (handleRowClick ? handleRowClick(row[0]) : false)}
+                                        onClick={() =>
+                                            handleRowClick
+                                                ? handleRowClick(row[0])
+                                                : false
+                                        }
                                         rowData={row}
                                     />
                                 );
@@ -44,7 +56,11 @@ export const SearchableTable: React.FC<STProps> = ({
                                     compact={compact}
                                     squared
                                     rowSelected={tracerId === row[0]}
-                                    onClick={() => (handleRowClick ? handleRowClick(row[0]) : false)}
+                                    onClick={() =>
+                                        handleRowClick
+                                            ? handleRowClick(row[0])
+                                            : false
+                                    }
                                     rowData={row}
                                 />
                             );

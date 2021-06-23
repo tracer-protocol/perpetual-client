@@ -21,11 +21,16 @@ type BTProps = {
     baseTicker: string;
 } & TProps;
 
-export const AmountTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
+export const AmountTip: React.FC<BTProps> = ({
+    baseTicker,
+    className,
+    children,
+}: BTProps) => {
     const tooltip = (
         <p>
-            <strong>Amount</strong> Amount of {baseTicker} you would like to go long or short on for this order. If you
-            have have an open position, your exposure will be updated by this specified amount.
+            <strong>Amount</strong> Amount of {baseTicker} you would like to go
+            long or short on for this order. If you have have an open position,
+            your exposure will be updated by this specified amount.
         </p>
     );
     return (
@@ -35,11 +40,16 @@ export const AmountTip: React.FC<BTProps> = ({ baseTicker, className, children }
     );
 };
 
-export const PriceTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
+export const PriceTip: React.FC<BTProps> = ({
+    baseTicker,
+    className,
+    children,
+}: BTProps) => {
     const tooltip = (
         <p>
-            <strong>Price</strong> The price of {baseTicker} you would like to go long or short on. The order will
-            execute at the specified price or better.
+            <strong>Price</strong> The price of {baseTicker} you would like to
+            go long or short on. The order will execute at the specified price
+            or better.
         </p>
     );
     return (
@@ -49,11 +59,15 @@ export const PriceTip: React.FC<BTProps> = ({ baseTicker, className, children }:
     );
 };
 
-export const LeverageTip: React.FC<TProps> = ({ className, children }: TProps) => {
+export const LeverageTip: React.FC<TProps> = ({
+    className,
+    children,
+}: TProps) => {
     const tooltip = (
         <p>
-            <strong>Leverage</strong> A multiplier that allows you to increase your buying power and open positions
-            larger than your account margin. Leverage will magnify any profits (or losses).
+            <strong>Leverage</strong> A multiplier that allows you to increase
+            your buying power and open positions larger than your account
+            margin. Leverage will magnify any profits (or losses).
         </p>
     );
     return (
@@ -63,11 +77,16 @@ export const LeverageTip: React.FC<TProps> = ({ className, children }: TProps) =
     );
 };
 
-export const TotalMarginTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
+export const TotalMarginTip: React.FC<BTProps> = ({
+    baseTicker,
+    className,
+    children,
+}: BTProps) => {
     const tooltip = (
         <p>
-            <strong>Total Margin</strong> The total value of your account. Total margin is equal to your net transfers
-            from your wallet plus your profit and losses from your {baseTicker} position.
+            <strong>Total Margin</strong> The total value of your account. Total
+            margin is equal to your net transfers from your wallet plus your
+            profit and losses from your {baseTicker} position.
         </p>
     );
     return (
@@ -91,9 +110,10 @@ export const BuyingPowerTip: React.FC<BPTProps> = ({
 }: BPTProps) => {
     const tooltip = (
         <p>
-            <strong>Buying Power</strong> Your maximum potential exposure to {baseTicker} given your available margin.
-            It is equal to your available margin of {availableMargin} multiplied by the maximum leverage of{' '}
-            {maxLeverage}.
+            <strong>Buying Power</strong> Your maximum potential exposure to{' '}
+            {baseTicker} given your available margin. It is equal to your
+            available margin of {availableMargin} multiplied by the maximum
+            leverage of {maxLeverage}.
         </p>
     );
     return (
@@ -103,11 +123,14 @@ export const BuyingPowerTip: React.FC<BPTProps> = ({
     );
 };
 
-export const AvailableMarginTip: React.FC<TProps> = ({ className, children }: TProps) => {
+export const AvailableMarginTip: React.FC<TProps> = ({
+    className,
+    children,
+}: TProps) => {
     const tooltip = (
         <p>
-            <strong>Available Margin</strong> The percentage of margin that can be used or withdrawn without liquidating
-            your current position.
+            <strong>Available Margin</strong> The percentage of margin that can
+            be used or withdrawn without liquidating your current position.
         </p>
     );
     return (
@@ -117,11 +140,15 @@ export const AvailableMarginTip: React.FC<TProps> = ({ className, children }: TP
     );
 };
 
-export const InsurancePoolHealthTip: React.FC<TProps> = ({ className, children }: TProps) => {
+export const InsurancePoolHealthTip: React.FC<TProps> = ({
+    className,
+    children,
+}: TProps) => {
     const tooltip = (
         <p>
-            <strong>Insurance Pool Health</strong> The percentage of the pool target that is met by the pool holdings. A
-            higher insurance health indicates the pool holdings are approaching the pool target.{' '}
+            <strong>Insurance Pool Health</strong> The percentage of the pool
+            target that is met by the pool holdings. A higher insurance health
+            indicates the pool holdings are approaching the pool target.{' '}
             <a
                 href="https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate"
                 target="_blank"
@@ -138,11 +165,16 @@ export const InsurancePoolHealthTip: React.FC<TProps> = ({ className, children }
     );
 };
 
-export const PoolHoldingsTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
+export const PoolHoldingsTip: React.FC<BTProps> = ({
+    baseTicker,
+    className,
+    children,
+}: BTProps) => {
     const tooltip = (
         <p>
-            <strong>Pool Holdings</strong> The current holdings in the the {baseTicker} insurance pool that have been
-            accumulated through a combination of deposits and insurance funding rate payments.
+            <strong>Pool Holdings</strong> The current holdings in the the{' '}
+            {baseTicker} insurance pool that have been accumulated through a
+            combination of deposits and insurance funding rate payments.
         </p>
     );
     return (
@@ -152,11 +184,15 @@ export const PoolHoldingsTip: React.FC<BTProps> = ({ baseTicker, className, chil
     );
 };
 
-export const PoolTargetTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
+export const PoolTargetTip: React.FC<BTProps> = ({
+    baseTicker,
+    className,
+    children,
+}: BTProps) => {
     const tooltip = (
         <p>
-            <strong>Pool Target</strong> The target value for the insurance pool borrowed by leveraged traders in the{' '}
-            {baseTicker} market.{' '}
+            <strong>Pool Target</strong> The target value for the insurance pool
+            borrowed by leveraged traders in the {baseTicker} market.{' '}
             <a
                 href="https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate#target"
                 target="_blank"
@@ -173,12 +209,17 @@ export const PoolTargetTip: React.FC<BTProps> = ({ baseTicker, className, childr
     );
 };
 
-export const InsuranceFundingRateTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
+export const InsuranceFundingRateTip: React.FC<BTProps> = ({
+    baseTicker,
+    className,
+    children,
+}: BTProps) => {
     const tooltip = (
         <p>
-            <strong>Insurance Funding Rate</strong> A fee that is applied to the borrowings of leveraged traders in the{' '}
-            {baseTicker} market to capitalise the {baseTicker} insurance pool. The fee is applied is continuously paid
-            and updated every 8 hours.{' '}
+            <strong>Insurance Funding Rate</strong> A fee that is applied to the
+            borrowings of leveraged traders in the {baseTicker} market to
+            capitalise the {baseTicker} insurance pool. The fee is applied is
+            continuously paid and updated every 8 hours.{' '}
             <a
                 href="https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate#insurance-funding-rate"
                 target="_blank"
@@ -195,12 +236,17 @@ export const InsuranceFundingRateTip: React.FC<BTProps> = ({ baseTicker, classNa
     );
 };
 
-export const RealisedPnLTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
+export const RealisedPnLTip: React.FC<BTProps> = ({
+    baseTicker,
+    className,
+    children,
+}: BTProps) => {
     const tooltip = (
         <p>
-            <strong>Realised PnL</strong> The amount of profit or loss you have realised through partially closing your{' '}
-            {baseTicker} position, and/or paying trading fees, funding rate payments, insurance funding rate payments
-            and gas costs.
+            <strong>Realised PnL</strong> The amount of profit or loss you have
+            realised through partially closing your {baseTicker} position,
+            and/or paying trading fees, funding rate payments, insurance funding
+            rate payments and gas costs.
         </p>
     );
     return (
@@ -210,11 +256,16 @@ export const RealisedPnLTip: React.FC<BTProps> = ({ baseTicker, className, child
     );
 };
 
-export const UnrealisedPnLTip: React.FC<BTProps> = ({ className, baseTicker, children }: BTProps) => {
+export const UnrealisedPnLTip: React.FC<BTProps> = ({
+    className,
+    baseTicker,
+    children,
+}: BTProps) => {
     const tooltip = (
         <p>
-            <strong>Unrealised PnL</strong> The amount of profit or loss you would realise if you closed your{' '}
-            {baseTicker} position at the current mark price.
+            <strong>Unrealised PnL</strong> The amount of profit or loss you
+            would realise if you closed your {baseTicker} position at the
+            current mark price.
         </p>
     );
     return (

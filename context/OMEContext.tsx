@@ -1,6 +1,12 @@
 import { getOrders, getUsersOrders } from '@libs/Ome';
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
-import React, { useContext, useEffect, useMemo, useReducer, useRef } from 'react';
+import React, {
+    useContext,
+    useEffect,
+    useMemo,
+    useReducer,
+    useRef,
+} from 'react';
 import { Children } from 'types';
 import { TracerContext } from './TracerContext';
 import { Web3Context } from './Web3Context';
@@ -16,8 +22,9 @@ type Orders = {
     bidOrders: FlattenedOMEOrder[];
 };
 
-const sortDesc: (orders: FlattenedOMEOrder[]) => FlattenedOMEOrder[] = (orders: FlattenedOMEOrder[]) =>
-    orders.sort((a, b) => b.price - a.price);
+const sortDesc: (orders: FlattenedOMEOrder[]) => FlattenedOMEOrder[] = (
+    orders: FlattenedOMEOrder[],
+) => orders.sort((a, b) => b.price - a.price);
 
 export const parseOrders: (res: any) => Orders = (res) => {
     const parseOrders = (orders: OMEOrder) => {
@@ -25,8 +32,14 @@ export const parseOrders: (res: any) => Orders = (res) => {
         const flattenedOrders = sections.map((orders: any) =>
             orders.reduce(
                 (prev: any, order: { amount_left: number; price: number }) => ({
-                    price: parseFloat(Web3.utils.fromWei(order.price.toString())), // price remains the same,
-                    quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.amount_left.toString())),
+                    price: parseFloat(
+                        Web3.utils.fromWei(order.price.toString()),
+                    ), // price remains the same,
+                    quantity:
+                        prev.quantity +
+                        parseFloat(
+                            Web3.utils.fromWei(order.amount_left.toString()),
+                        ),
                 }),
                 {
                     quantity: 0,
@@ -81,7 +94,10 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
 
-    const { filledOrders, refetchFilledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');
+    const { filledOrders, refetchFilledOrders } = useUsersMatched(
+        selectedTracer?.address ?? '',
+        account ?? '',
+    );
 
     const initialState: OMEState = {
         userOrders: [],
@@ -104,19 +120,27 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             }
         }
         if (selectedTracer?.address && account) {
-            const res = await getUsersOrders(selectedTracer?.address as string, account);
+            const res = await getUsersOrders(
+                selectedTracer?.address as string,
+                account,
+            );
             if (isMounted.current) {
                 omeDispatch({ type: 'setUserOrders', orders: res });
             }
         }
     };
 
-    const matchedOrders: Callback<MatchedOrders> = (err: Error, res: MatchedOrders) => {
+    const matchedOrders: Callback<MatchedOrders> = (
+        err: Error,
+        res: MatchedOrders,
+    ) => {
         if (err) {
             console.error('Failed to listen on matched orders', err.message);
         } else if (
-            account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
-            account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
+            account?.toLocaleLowerCase() ===
+                res.returnValues.long.toLowerCase() ||
+            account?.toLocaleLowerCase() ===
+                res.returnValues.short.toLowerCase()
         ) {
             refetchFilledOrders();
         }

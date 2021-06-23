@@ -47,7 +47,11 @@ const WalletConnect: React.FC = () => {
             <p>Connect your wallet to get started with Tracer</p>
             <Connect
                 className="primary"
-                onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
+                onClick={() =>
+                    handleConnect
+                        ? handleConnect()
+                        : console.error('Connect button is undefined')
+                }
             >
                 Connect Wallet
             </Connect>
@@ -123,16 +127,39 @@ type InfoProps = {
     maxLeverage: BigNumber;
     fairPrice: BigNumber;
 };
-const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }) => {
+const BuyingPower: React.FC<InfoProps> = ({
+    order,
+    balances,
+    maxLeverage,
+    fairPrice,
+}) => {
     if (balances.quote.eq(0)) {
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
-        return <span>{toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))}</span>;
+        return (
+            <span>
+                {toApproxCurrency(
+                    calcBuyingPower(
+                        balances.quote,
+                        balances.base,
+                        fairPrice,
+                        maxLeverage,
+                    ),
+                )}
+            </span>
+        );
     } else {
         return (
             <span>
                 <Previous>
-                    {toApproxCurrency(calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage))}
+                    {toApproxCurrency(
+                        calcBuyingPower(
+                            balances.quote,
+                            balances.base,
+                            fairPrice,
+                            maxLeverage,
+                        ),
+                    )}
                 </Previous>
                 {toApproxCurrency(
                     calcBuyingPower(
@@ -146,20 +173,37 @@ const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPr
         );
     }
 };
-const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }) => {
+const AvailableMargin: React.FC<InfoProps> = ({
+    order,
+    balances,
+    maxLeverage,
+    fairPrice,
+}) => {
     if (balances.quote.eq(0)) {
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
         return (
             <span>
-                ${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(3)}%
+                $
+                {calcAvailableMarginPercent(
+                    balances.quote,
+                    balances.base,
+                    fairPrice,
+                    maxLeverage,
+                ).toFixed(3)}
+                %
             </span>
         );
     } else {
         return (
             <span>
                 <Previous>
-                    {`${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(3)}%`}
+                    {`${calcAvailableMarginPercent(
+                        balances.quote,
+                        balances.base,
+                        fairPrice,
+                        maxLeverage,
+                    ).toFixed(3)}%`}
                 </Previous>
                 {`${calcAvailableMarginPercent(
                     order?.nextPosition.quote ?? balances.quote,
@@ -202,7 +246,12 @@ const AccountPanel: React.FC<{
             <Item>
                 <h3>
                     <TooltipSelector
-                        tooltip={{ key: 'total-margin', props: { baseTicker: selectedTracer?.baseTicker ?? '' } }}
+                        tooltip={{
+                            key: 'total-margin',
+                            props: {
+                                baseTicker: selectedTracer?.baseTicker ?? '',
+                            },
+                        }}
                     >
                         Total Margin
                     </TooltipSelector>
@@ -210,7 +259,15 @@ const AccountPanel: React.FC<{
                 {balances.quote.eq(0) ? (
                     <NoBalance>-</NoBalance>
                 ) : (
-                    <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</span>
+                    <span>
+                        {toApproxCurrency(
+                            calcTotalMargin(
+                                balances.quote,
+                                balances.base,
+                                fairPrice,
+                            ),
+                        )}
+                    </span>
                 )}
             </Item>
             <Item>
@@ -221,7 +278,11 @@ const AccountPanel: React.FC<{
                             props: {
                                 baseTicker: selectedTracer?.baseTicker ?? '',
                                 availableMargin:
-                                    calcTotalMargin(balances.quote, balances.base, fairPrice).toNumber() -
+                                    calcTotalMargin(
+                                        balances.quote,
+                                        balances.base,
+                                        fairPrice,
+                                    ).toNumber() -
                                         calcMinimumMargin(
                                             balances.quote,
                                             balances.base,
@@ -236,13 +297,25 @@ const AccountPanel: React.FC<{
                     </TooltipSelector>
                     <SubText>{` @${maxLeverage.toNumber()}X Maximum Leverage`}</SubText>
                 </h3>
-                <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
+                <BuyingPower
+                    order={order}
+                    balances={balances}
+                    maxLeverage={maxLeverage}
+                    fairPrice={fairPrice}
+                />
             </Item>
             <Item>
                 <h3>
-                    <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
+                    <TooltipSelector tooltip={{ key: 'available-margin' }}>
+                        Available Margin
+                    </TooltipSelector>
                 </h3>
-                <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
+                <AvailableMargin
+                    order={order}
+                    balances={balances}
+                    maxLeverage={maxLeverage}
+                    fairPrice={fairPrice}
+                />
             </Item>
             <DepositButtons>
                 <SButton
@@ -251,7 +324,9 @@ const AccountPanel: React.FC<{
                 >
                     Deposit
                 </SButton>
-                <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
+                <SButton onClick={(_e: any) => handleClick(true, false)}>
+                    Withdraw
+                </SButton>
             </DepositButtons>
             <AccountModal
                 display={popup}

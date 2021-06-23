@@ -137,9 +137,12 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
             });
 
             // Subscribe to provider disconnection
-            provider.on('disconnect', (error: { code: number; message: string }) => {
-                console.info(error);
-            });
+            provider.on(
+                'disconnect',
+                (error: { code: number; message: string }) => {
+                    console.info(error);
+                },
+            );
         }
     }, [state.context.provider]);
 

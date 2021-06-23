@@ -45,7 +45,10 @@ export const insuranceInfo: (tracerId: string) => string = (tracerId) => {
         }`;
 };
 
-export const userInsuranceInfo: (tracerId: string, user: string) => string = (tracerId, user) => {
+export const userInsuranceInfo: (tracerId: string, user: string) => string = (
+    tracerId,
+    user,
+) => {
     return `{
             trader(id: "${user}") {
                 historics(where: {targetPoolType: INSURANCE, tracer: "${tracerId}"}) {

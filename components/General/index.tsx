@@ -2,7 +2,9 @@ import { CloseOutlined } from '@ant-design/icons';
 import { Children } from 'types';
 import React from 'react';
 import styled from 'styled-components';
-import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/TooltipSelector';
+import TooltipSelector, {
+    TooltipSelectorProps,
+} from '@components/Tooltips/TooltipSelector';
 
 export const DateAndTime = styled(({ className, date, time }) => {
     return (
@@ -102,18 +104,20 @@ type SProps = {
     label: string;
     tooltip?: TooltipSelectorProps;
 } & Children;
-export const Section: React.FC<SProps> = styled(({ className, children, label, tooltip }: SProps) => {
-    return (
-        <div className={`${className}`}>
-            {tooltip ? (
-                <TooltipSelector tooltip={tooltip}>{label}</TooltipSelector>
-            ) : (
-                <div className={`label`}>{label}</div>
-            )}
-            <span className={`content`}>{children}</span>
-        </div>
-    );
-})`
+export const Section: React.FC<SProps> = styled(
+    ({ className, children, label, tooltip }: SProps) => {
+        return (
+            <div className={`${className}`}>
+                {tooltip ? (
+                    <TooltipSelector tooltip={tooltip}>{label}</TooltipSelector>
+                ) : (
+                    <div className={`label`}>{label}</div>
+                )}
+                <span className={`content`}>{children}</span>
+            </div>
+        );
+    },
+)`
     width: 100%;
     display: flex;
     margin: 10px 0;
@@ -152,9 +156,19 @@ interface LProps {
     clear?: boolean; // true then display outlined image
 }
 
-export const Logo: React.FC<LProps> = styled(({ className, ticker, clear }: LProps) => {
-    return <img className={className} src={clear ? clearLogos[ticker] : logos[ticker] ?? logos['TSLA']} alt="logo" />;
-})`
+export const Logo: React.FC<LProps> = styled(
+    ({ className, ticker, clear }: LProps) => {
+        return (
+            <img
+                className={className}
+                src={
+                    clear ? clearLogos[ticker] : logos[ticker] ?? logos['TSLA']
+                }
+                alt="logo"
+            />
+        );
+    },
+)`
     width: 30px;
     margin: 5px 0;
 `;
@@ -213,14 +227,16 @@ type IProps = {
     className?: string;
 };
 
-export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IProps) => {
-    return (
-        <div className={className}>
-            <div className="progress" />
-            <p className="label">{percent}%</p>
-        </div>
-    );
-})`
+export const ProgressBar: React.FC<IProps> = styled(
+    ({ percent, className }: IProps) => {
+        return (
+            <div className={className}>
+                <div className="progress" />
+                <p className="label">{percent}%</p>
+            </div>
+        );
+    },
+)`
     background: var(--color-accent);
     position: relative;
     height: 32px;
@@ -243,10 +259,16 @@ export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IPr
         width: fit-content;
         top: 0;
         bottom: 0;
-        left: ${(props) => (props.percent !== 0 && props.percent < 100 ? 'auto' : '0')};
-        right: ${(props) => (props.percent !== 0 && props.percent < 100 ? 'auto' : '0')};
         left: ${(props) =>
-            `${props.percent !== 0 && props.percent < 100 ? `calc(${props.percent / 2}% - 16px)` : '0'}`};
+            props.percent !== 0 && props.percent < 100 ? 'auto' : '0'};
+        right: ${(props) =>
+            props.percent !== 0 && props.percent < 100 ? 'auto' : '0'};
+        left: ${(props) =>
+            `${
+                props.percent !== 0 && props.percent < 100
+                    ? `calc(${props.percent / 2}% - 16px)`
+                    : '0'
+            }`};
         margin: auto;
     }
 `;

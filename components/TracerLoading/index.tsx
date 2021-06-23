@@ -16,7 +16,13 @@ const TracerLoading: React.FC<LProps> = ({ size }: LProps) => {
                 return 'h-5';
         }
     };
-    return <img alt="Tracer Loading..." className={getHeight() + ' m-auto'} src="/img/tracer-loading.svg" />;
+    return (
+        <img
+            alt="Tracer Loading..."
+            className={getHeight() + ' m-auto'}
+            src="/img/tracer-loading.svg"
+        />
+    );
 };
 
 export default TracerLoading;

@@ -8,21 +8,31 @@ interface MCProps {
     before?: boolean; // boolean to determin which side the arrow goes on
 }
 
-const MarketChange: React.FC<MCProps> = styled(({ className, amount, size, before }: MCProps) => (
-    <div className={className}>
-        {before ? (
-            <>
-                <div className={`${amount >= 0 ? 'arrow-up' : 'arrow-down'} ${size} ${before ? 'before' : ''}`} />
-                <p className={amount >= 0 ? 'up' : 'down'}>0%</p>
-            </>
-        ) : (
-            <>
-                <p className={amount >= 0 ? 'up' : 'down'}>0%</p>
-                <div className={`${amount >= 0 ? 'arrow-up' : 'arrow-down'} ${size}`} />
-            </>
-        )}
-    </div>
-))`
+const MarketChange: React.FC<MCProps> = styled(
+    ({ className, amount, size, before }: MCProps) => (
+        <div className={className}>
+            {before ? (
+                <>
+                    <div
+                        className={`${
+                            amount >= 0 ? 'arrow-up' : 'arrow-down'
+                        } ${size} ${before ? 'before' : ''}`}
+                    />
+                    <p className={amount >= 0 ? 'up' : 'down'}>0%</p>
+                </>
+            ) : (
+                <>
+                    <p className={amount >= 0 ? 'up' : 'down'}>0%</p>
+                    <div
+                        className={`${
+                            amount >= 0 ? 'arrow-up' : 'arrow-down'
+                        } ${size}`}
+                    />
+                </>
+            )}
+        </div>
+    ),
+)`
     display: flex;
     .up {
         color: #21dd53;

@@ -36,18 +36,27 @@ export type TooltipSelectorProps = {
     };
 };
 
-const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip, children }) => {
+const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({
+    tooltip,
+    children,
+}) => {
     switch (tooltip.key) {
         // Market select section
         case 'amount':
             return (
-                <AmountTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                <AmountTip
+                    baseTicker={tooltip?.props?.baseTicker ?? ''}
+                    className="label"
+                >
                     {children}
                 </AmountTip>
             );
         case 'price':
             return (
-                <PriceTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                <PriceTip
+                    baseTicker={tooltip?.props?.baseTicker ?? ''}
+                    className="label"
+                >
                     {children}
                 </PriceTip>
             );
@@ -57,7 +66,10 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
         // Margin account section
         case 'total-margin':
             return (
-                <TotalMarginTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                <TotalMarginTip
+                    baseTicker={tooltip?.props?.baseTicker ?? ''}
+                    className="label"
+                >
                     {children}
                 </TotalMarginTip>
             );
@@ -76,22 +88,35 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
 
         // Insurance pool health section
         case 'insurance-pool-health':
-            return <InsurancePoolHealthTip className="label">{children}</InsurancePoolHealthTip>;
+            return (
+                <InsurancePoolHealthTip className="label">
+                    {children}
+                </InsurancePoolHealthTip>
+            );
         case 'pool-holdings':
             return (
-                <PoolHoldingsTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                <PoolHoldingsTip
+                    baseTicker={tooltip?.props?.baseTicker ?? ''}
+                    className="label"
+                >
                     {children}
                 </PoolHoldingsTip>
             );
         case 'pool-target':
             return (
-                <PoolTargetTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                <PoolTargetTip
+                    baseTicker={tooltip?.props?.baseTicker ?? ''}
+                    className="label"
+                >
                     {children}
                 </PoolTargetTip>
             );
         case 'insurance-funding-rate':
             return (
-                <InsuranceFundingRateTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                <InsuranceFundingRateTip
+                    baseTicker={tooltip?.props?.baseTicker ?? ''}
+                    className="label"
+                >
                     {children}
                 </InsuranceFundingRateTip>
             );
@@ -99,13 +124,19 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
         // Position account section
         case 'realised-pnl':
             return (
-                <RealisedPnLTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                <RealisedPnLTip
+                    baseTicker={tooltip?.props?.baseTicker ?? ''}
+                    className="label"
+                >
                     {children}
                 </RealisedPnLTip>
             );
         case 'unrealised-pnl':
             return (
-                <UnrealisedPnLTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                <UnrealisedPnLTip
+                    baseTicker={tooltip?.props?.baseTicker ?? ''}
+                    className="label"
+                >
                     {children}
                 </UnrealisedPnLTip>
             );

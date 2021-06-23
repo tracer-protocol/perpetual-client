@@ -6,9 +6,11 @@ type TEProps = {
     amount: number;
     className?: string;
 };
-const TableEntries: React.FC<TEProps> = styled(({ amount, className }: TEProps) => (
-    <span className={className}>{amount}</span>
-))`
+const TableEntries: React.FC<TEProps> = styled(
+    ({ amount, className }: TEProps) => (
+        <span className={className}>{amount}</span>
+    ),
+)`
     background: #005ea4;
     color: var(--color-background);
     border-radius: 20px;
@@ -23,7 +25,12 @@ type CSNProps = {
     fills: number;
     orders: number;
 };
-const CustomSubNav: React.FC<CSNProps> = ({ setTab, selected, fills, orders }: CSNProps) => (
+const CustomSubNav: React.FC<CSNProps> = ({
+    setTab,
+    selected,
+    fills,
+    orders,
+}: CSNProps) => (
     <SubNavContainer>
         <SubNavItem
             className={`${0 === selected ? 'selected' : ''} flex`}

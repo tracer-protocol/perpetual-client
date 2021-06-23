@@ -22,13 +22,17 @@ const ParentDisable = styled(Button)`
         }
     }
 `;
-export const AdvancedOrderButton: React.FC = styled(({ className, children }) => (
-    <div className={className}>
-        <PlaceOrderButton>
-            <ParentDisable className="m-auto primary">{children}</ParentDisable>
-        </PlaceOrderButton>
-    </div>
-))`
+export const AdvancedOrderButton: React.FC = styled(
+    ({ className, children }) => (
+        <div className={className}>
+            <PlaceOrderButton>
+                <ParentDisable className="m-auto primary">
+                    {children}
+                </ParentDisable>
+            </PlaceOrderButton>
+        </div>
+    ),
+)`
     width: 100%;
     display: flex;
     justify-content: center;
@@ -39,9 +43,13 @@ type POBProps = {
     className?: string;
 } & Children;
 
-export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: POBProps) => {
+export const PlaceOrderButton: React.FC<POBProps> = ({
+    className,
+    children,
+}: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
-    const { omeDispatch = () => console.error('OME dispatch is undefined') } = useContext(OMEContext);
+    const { omeDispatch = () => console.error('OME dispatch is undefined') } =
+        useContext(OMEContext);
     const { order } = useContext(OrderContext);
     const { handleAsync } = useContext(TransactionContext);
     const { addToast } = useToasts();
@@ -52,7 +60,8 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
                 if (handleAsync) {
                     handleAsync(placeOrder, [order as OrderState], {
                         statusMessages: {
-                            waiting: 'Please sign the transaction through your web3 provider',
+                            waiting:
+                                'Please sign the transaction through your web3 provider',
                         },
                         callback: () => {
                             omeDispatch({ type: 'refetchOrders' });
@@ -60,22 +69,38 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
                         },
                     });
                 } else {
-                    console.error('Error placing order: Handle transaction function is not defined');
+                    console.error(
+                        'Error placing order: Handle transaction function is not defined',
+                    );
                 }
             } else {
-                console.error('Error placing order: Place order function is not defined');
+                console.error(
+                    'Error placing order: Place order function is not defined',
+                );
             }
         } else {
             if (order?.error) {
-                addToast(['Transaction Failed', `Invalid order: ${OrderErrors[order.error]?.message}`], {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
+                addToast(
+                    [
+                        'Transaction Failed',
+                        `Invalid order: ${OrderErrors[order.error]?.message}`,
+                    ],
+                    {
+                        appearance: 'error',
+                        autoDismiss: true,
+                    },
+                );
             } else {
-                addToast(['Transaction Failed', `Invalid order: An unhandled error occured`], {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
+                addToast(
+                    [
+                        'Transaction Failed',
+                        `Invalid order: An unhandled error occured`,
+                    ],
+                    {
+                        appearance: 'error',
+                        autoDismiss: true,
+                    },
+                );
             }
         }
     };
@@ -97,7 +122,9 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
     } else {
         return (
             <Tooltip title={OrderErrors[order?.error ?? -1]?.message}>
-                <div className={`button-disabled ${className ?? ''}`}>{children}</div>
+                <div className={`button-disabled ${className ?? ''}`}>
+                    {children}
+                </div>
             </Tooltip>
         );
     }

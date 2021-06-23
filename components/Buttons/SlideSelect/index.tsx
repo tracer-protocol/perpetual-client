@@ -19,31 +19,38 @@ type TSSProps = {
     value: number;
     className?: string;
 } & Children;
-const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, className }: TSSProps) => {
-    const [numChildren, setNumChildren] = useState(0);
-    const calcPosition = (numChildren: number) => value * (1 / numChildren) * 100;
-    useEffect(() => {
-        // on init
-        const numChildren = React.Children.toArray(children).length;
-        setNumChildren(numChildren);
-    }, []);
-    return (
-        <div className={className}>
-            {React.Children.toArray(children).map((child, index) => {
-                return (
-                    <SlideOption
-                        onClick={(e) => onClick(index, e)}
-                        key={`slide-option-${index}`}
-                        className={`${index === value ? 'selected' : ''}`}
-                    >
-                        {child}
-                    </SlideOption>
-                );
-            })}
-            <BGSlider className="bg-slider" position={calcPosition(numChildren)} width={(1 / numChildren) * 100} />
-        </div>
-    );
-})`
+const SlideSelect: React.FC<TSSProps> = styled(
+    ({ onClick, value, children, className }: TSSProps) => {
+        const [numChildren, setNumChildren] = useState(0);
+        const calcPosition = (numChildren: number) =>
+            value * (1 / numChildren) * 100;
+        useEffect(() => {
+            // on init
+            const numChildren = React.Children.toArray(children).length;
+            setNumChildren(numChildren);
+        }, []);
+        return (
+            <div className={className}>
+                {React.Children.toArray(children).map((child, index) => {
+                    return (
+                        <SlideOption
+                            onClick={(e) => onClick(index, e)}
+                            key={`slide-option-${index}`}
+                            className={`${index === value ? 'selected' : ''}`}
+                        >
+                            {child}
+                        </SlideOption>
+                    );
+                })}
+                <BGSlider
+                    className="bg-slider"
+                    position={calcPosition(numChildren)}
+                    width={(1 / numChildren) * 100}
+                />
+            </div>
+        );
+    },
+)`
     display: flex;
     margin: auto;
     border: 1px solid var(--color-primary);

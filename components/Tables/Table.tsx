@@ -15,9 +15,19 @@ type RProps = {
     compact?: boolean;
 } & Children;
 
-export const TableRow: React.FC<RProps> = ({ rowData, compact, onClick, children, rowSelected, squared }: RProps) => {
+export const TableRow: React.FC<RProps> = ({
+    rowData,
+    compact,
+    onClick,
+    children,
+    rowSelected,
+    squared,
+}: RProps) => {
     return (
-        <tr onClick={onClick} className={`cRow ${rowSelected ? 'bg-blue-300' : 'bg-white'}`}>
+        <tr
+            onClick={onClick}
+            className={`cRow ${rowSelected ? 'bg-blue-300' : 'bg-white'}`}
+        >
             {rowData.map((cell, index) => {
                 const alignment = squared
                     ? index === 0
@@ -27,7 +37,12 @@ export const TableRow: React.FC<RProps> = ({ rowData, compact, onClick, children
                         : 'center'
                     : 'center';
                 return (
-                    <td key={`cell-${index}`} className={`${compact ? 'p-1' : 'p-3'} text-${alignment}`}>
+                    <td
+                        key={`cell-${index}`}
+                        className={`${
+                            compact ? 'p-1' : 'p-3'
+                        } text-${alignment}`}
+                    >
                         {cell}
                     </td>
                 );
@@ -37,7 +52,12 @@ export const TableRow: React.FC<RProps> = ({ rowData, compact, onClick, children
     );
 };
 
-const Table: React.FC<TProps> = ({ headings, squared, compact, children }: TProps) => {
+const Table: React.FC<TProps> = ({
+    headings,
+    squared,
+    compact,
+    children,
+}: TProps) => {
     return (
         <table className={`table-auto w-full text-center`}>
             <thead className="border-b-2 border-blue-300">
@@ -53,7 +73,9 @@ const Table: React.FC<TProps> = ({ headings, squared, compact, children }: TProp
                         return (
                             <td
                                 key={`hCell-${index}`}
-                                className={`${compact ? 'pb-2 px-2 ' : 'pb-5 px-3 '} text-${alignment}`}
+                                className={`${
+                                    compact ? 'pb-2 px-2 ' : 'pb-5 px-3 '
+                                } text-${alignment}`}
                             >
                                 {heading}
                             </td>

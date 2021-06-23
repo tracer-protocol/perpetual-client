@@ -2,7 +2,10 @@ import { toApproxCurrency } from 'libs/utils';
 import React from 'react';
 import styled from 'styled-components';
 
-const getPercentage: (cumulative: number, maxCumulative?: number) => number = (cumulative, maxCumulative) => {
+const getPercentage: (cumulative: number, maxCumulative?: number) => number = (
+    cumulative,
+    maxCumulative,
+) => {
     let fillPercentage = (maxCumulative ? cumulative / maxCumulative : 0) * 100;
     fillPercentage = Math.min(fillPercentage, 100); // Percentage can't be greater than 100%
     fillPercentage = Math.max(fillPercentage, 0); // Percentage can't be smaller than 0%
@@ -19,14 +22,26 @@ interface BProps {
 }
 
 export const Order: React.FC<BProps> = styled(
-    ({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
+    ({
+        className,
+        cumulative,
+        quantity,
+        price,
+        maxCumulative,
+        bid,
+    }: BProps) => {
         return (
             <tr className={className}>
-                <td className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price, 3)}</td>
+                <td className={`${bid ? 'bid' : 'ask'}`}>
+                    {toApproxCurrency(price, 3)}
+                </td>
                 <td>{quantity.toFixed(3)}</td>
                 <td
                     className={`fill-${bid ? 'bid' : 'ask'}`}
-                    style={{ backgroundSize: getPercentage(cumulative, maxCumulative) + '% 100%' }}
+                    style={{
+                        backgroundSize:
+                            getPercentage(cumulative, maxCumulative) + '% 100%',
+                    }}
                 >
                     {cumulative.toFixed(3)}
                 </td>

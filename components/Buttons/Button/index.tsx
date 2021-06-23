@@ -6,9 +6,17 @@ type TBProps = {
     onClick?: MouseEventHandler<Element>;
 } & Children;
 
-export const Button: React.FC<TBProps> = ({ disabled, onClick, children }: TBProps) => {
+export const Button: React.FC<TBProps> = ({
+    disabled,
+    onClick,
+    children,
+}: TBProps) => {
     return !disabled ? (
-        <button className=" button transition-transform" type="button" onClick={onClick}>
+        <button
+            className=" button transition-transform"
+            type="button"
+            onClick={onClick}
+        >
             {children}
         </button>
     ) : (

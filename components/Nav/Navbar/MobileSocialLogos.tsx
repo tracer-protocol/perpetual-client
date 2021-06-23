@@ -8,16 +8,32 @@ import DiscourseLogo from 'public/img/logos/socials/discourse-logo-white.svg';
 
 export default styled((props) => (
     <div {...props}>
-        <a href="https://discourse.tracer.finance/" target="_blank" rel="noreferrer noopener">
+        <a
+            href="https://discourse.tracer.finance/"
+            target="_blank"
+            rel="noreferrer noopener"
+        >
             <Icon className="hover" component={DiscourseLogo} />
         </a>
-        <a href="https://github.com/tracer-protocol/" target="_blank" rel="noreferrer noopener">
+        <a
+            href="https://github.com/tracer-protocol/"
+            target="_blank"
+            rel="noreferrer noopener"
+        >
             <GithubOutlined />
         </a>
-        <a href="https://discord.gg/sS7QFWWyYa" target="_blank" rel="noreferrer noopener">
+        <a
+            href="https://discord.gg/sS7QFWWyYa"
+            target="_blank"
+            rel="noreferrer noopener"
+        >
             <Icon className="hover" component={DiscordLogo} />
         </a>
-        <a href="https://twitter.com/tracer_finance" target="_blank" rel="noreferrer noopener">
+        <a
+            href="https://twitter.com/tracer_finance"
+            target="_blank"
+            rel="noreferrer noopener"
+        >
             <TwitterOutlined />
         </a>
     </div>

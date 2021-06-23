@@ -34,7 +34,9 @@ export const useAccountData: (user: string | undefined) => any = (user) => {
         errorPolicy: 'all',
         onError: ({ graphQLErrors }) => {
             if (graphQLErrors.length) {
-                graphQLErrors.map((err) => console.error(`Failed to fetch account data: ${err}`));
+                graphQLErrors.map((err) =>
+                    console.error(`Failed to fetch account data: ${err}`),
+                );
             }
         },
     });
@@ -72,11 +74,16 @@ export const useUsersMatched: (
 } = (tracer, account) => {
     const ref = useRef<FilledOrder[]>([]);
     const { data, error, loading, refetch } = useQuery(USER_TRACER_TRADES, {
-        variables: { account: account?.toLowerCase(), tracer: tracer.toLowerCase() },
+        variables: {
+            account: account?.toLowerCase(),
+            tracer: tracer.toLowerCase(),
+        },
         errorPolicy: 'all',
         onError: ({ graphQLErrors }) => {
             if (graphQLErrors.length) {
-                graphQLErrors.map((err) => console.error(`Failed to fetch account trades: ${err}`));
+                graphQLErrors.map((err) =>
+                    console.error(`Failed to fetch account trades: ${err}`),
+                );
             }
         },
     });
@@ -91,7 +98,11 @@ export const useUsersMatched: (
 
 const USER_TRADES = gql`
     query Tracer_Trades($account: String!) {
-        trades(where: { trader: $account }, orderBy: timestamp, orderDirection: desc) {
+        trades(
+            where: { trader: $account }
+            orderBy: timestamp
+            orderDirection: desc
+        ) {
             position
             amount
             price
@@ -126,7 +137,9 @@ export const useAllUsersMatched: (account: string) => {
         errorPolicy: 'all',
         onError: ({ graphQLErrors }) => {
             if (graphQLErrors.length) {
-                graphQLErrors.map((err) => console.error(`Failed to fetch account trades: ${err}`));
+                graphQLErrors.map((err) =>
+                    console.error(`Failed to fetch account trades: ${err}`),
+                );
             }
         },
     });

@@ -2,7 +2,9 @@ import React, { ChangeEvent } from 'react';
 import { Children } from 'types';
 import styled from 'styled-components';
 import { NumberInput } from '@components/General';
-import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/TooltipSelector';
+import TooltipSelector, {
+    TooltipSelectorProps,
+} from '@components/Tooltips/TooltipSelector';
 
 const Max = styled.a`
     transition: 0.3s;
@@ -62,9 +64,22 @@ type SIProps = {
 } & Children;
 
 const SmallInput: React.FC<SIProps> = styled(
-    ({ title, amount, onChange, unit, setMax, maxText, tooltip, className }: SIProps) => (
+    ({
+        title,
+        amount,
+        onChange,
+        unit,
+        setMax,
+        maxText,
+        tooltip,
+        className,
+    }: SIProps) => (
         <div className={className}>
-            {tooltip ? <TooltipSelector tooltip={tooltip}>{title}</TooltipSelector> : `${title}`}
+            {tooltip ? (
+                <TooltipSelector tooltip={tooltip}>{title}</TooltipSelector>
+            ) : (
+                `${title}`
+            )}
             <InputContainer>
                 <Max className={`${!setMax ? 'hide' : ''}`} onClick={setMax}>
                     {maxText}

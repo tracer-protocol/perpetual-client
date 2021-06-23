@@ -5,7 +5,15 @@ import { Children } from 'types';
 import { toApproxCurrency } from '@libs/utils';
 import SlideSelect from '@components/Buttons/SlideSelect';
 import { Option } from '@components/Buttons/SlideSelect/Options';
-import { Button, Checkbox, Dropdown, HiddenExpand, Previous, NumberSelect, Section } from '@components/General';
+import {
+    Button,
+    Checkbox,
+    Dropdown,
+    HiddenExpand,
+    Previous,
+    NumberSelect,
+    Section,
+} from '@components/General';
 import TracerModal, { SubTitle } from '@components/General/TracerModal';
 import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';
@@ -90,12 +98,18 @@ type BProps = {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
 } & Children;
-export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps) => {
+export const InsuranceModal: React.FC<BProps> = ({
+    type,
+    show,
+    setShow,
+}: BProps) => {
     const { tracerId, selectedTracer } = useContext(TracerContext);
     const { poolInfo, deposit, withdraw } = useContext(InsuranceContext);
     const [isDeposit, setIsDeposit] = useState(true);
     const poolBalance = poolInfo?.userBalance ?? defaults.userBalance;
-    const balance = isDeposit ? selectedTracer?.getBalance().tokenBalance : poolBalance;
+    const balance = isDeposit
+        ? selectedTracer?.getBalance().tokenBalance
+        : poolBalance;
     const [valid, setValid] = useState(false);
     const [amount, setAmount] = useState(NaN); // The amount within the input
     const [acceptedTerms, acceptTerms] = useState(false);
@@ -103,7 +117,9 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
         setIsDeposit(type === 'Deposit');
     }, [type]);
     const amount_ = !Number.isNaN(amount) ? amount : 0;
-    const newBalance = isDeposit ? poolBalance.plus(amount_) : poolBalance.minus(amount_);
+    const newBalance = isDeposit
+        ? poolBalance.plus(amount_)
+        : poolBalance.minus(amount_);
 
     useEffect(() => {
         const amountValid = amount > 0 && amount <= (balance?.toNumber() ?? 0);
@@ -120,7 +136,9 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 setShow(false);
             };
             if (!!deposit && !!withdraw) {
-                isDeposit ? deposit(amount, callback) : withdraw(amount, callback);
+                isDeposit
+                    ? deposit(amount, callback)
+                    : withdraw(amount, callback);
             }
         } catch (err) {
             console.error(`Failed to deposit into insurance pool: ${err}`);
@@ -144,7 +162,12 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
             }
         >
             <div className="px-6 flex-auto">
-                <SSlideSelect onClick={(index: number, _e: any) => setIsDeposit(index === 0)} value={isDeposit ? 0 : 1}>
+                <SSlideSelect
+                    onClick={(index: number, _e: any) =>
+                        setIsDeposit(index === 0)
+                    }
+                    value={isDeposit ? 0 : 1}
+                >
                     <Option>Deposit</Option>
                     <Option>Withdraw</Option>
                 </SSlideSelect>
@@ -165,12 +188,15 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                         }
                         body={
                             <DepositTerms>
-                                When you deposit insurance, you will receive insurance tokens proportionate to your
-                                deposit, which will earn fees. You can withdraw your funds by burning your tokens at any
-                                time. At the time of withdrawal,{' '}
+                                When you deposit insurance, you will receive
+                                insurance tokens proportionate to your deposit,
+                                which will earn fees. You can withdraw your
+                                funds by burning your tokens at any time. At the
+                                time of withdrawal,{' '}
                                 <span className="highlight">
-                                    you will be required to pay a withdrawal fee if the current value of the insurance
-                                    fund is less than the target.
+                                    you will be required to pay a withdrawal fee
+                                    if the current value of the insurance fund
+                                    is less than the target.
                                 </span>
                             </DepositTerms>
                         }
@@ -185,15 +211,23 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 />
                 <SHiddenExpand defaultHeight={0} open={!!amount}>
                     <SSection label={`Pool Ownership`}>
-                        <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
+                        <Previous>{`${toApproxCurrency(
+                            poolBalance,
+                        )}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>
                     <SSection label={`Pool Balance`}>
-                        <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
+                        <Previous>{`${toApproxCurrency(
+                            poolBalance,
+                        )}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>
-                    <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(0)}`}</WithdrawalFee>
-                    <SSection label="Total Return">{`${toApproxCurrency(0)}`}</SSection>
+                    <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(
+                        0,
+                    )}`}</WithdrawalFee>
+                    <SSection label="Total Return">{`${toApproxCurrency(
+                        0,
+                    )}`}</SSection>
                     <SSection label="Predicted Date for Profitable Withdrawal">
                         {new Date().toLocaleDateString('en-US', {
                             year: 'numeric',
@@ -211,14 +245,23 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                         }}
                     >
                         <Checkbox checked={acceptedTerms} />
-                        <AcceptTerms>I have read and accept Terms of Withdrawal</AcceptTerms>
+                        <AcceptTerms>
+                            I have read and accept Terms of Withdrawal
+                        </AcceptTerms>
                     </div>
                 ) : null}
-                <div className="flex items-center justify-center px-6 pt-6 rounded-b" id="insurance-submit">
+                <div
+                    className="flex items-center justify-center px-6 pt-6 rounded-b"
+                    id="insurance-submit"
+                >
                     {valid ? (
-                        <Button onClick={() => submit(amount)}>{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
+                        <Button onClick={() => submit(amount)}>
+                            {isDeposit ? 'Deposit' : 'Withdraw'}
+                        </Button>
                     ) : (
-                        <Button className="disabled">{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
+                        <Button className="disabled">
+                            {isDeposit ? 'Deposit' : 'Withdraw'}
+                        </Button>
                     )}
                 </div>
             </div>

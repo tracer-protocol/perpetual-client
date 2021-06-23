@@ -29,7 +29,9 @@ export const useAllTracers: () => Tracers = () => {
     const { data, error, loading, refetch } = useQuery(ALL_TRACERS, {
         onError: ({ graphQLErrors }) => {
             if (graphQLErrors?.length) {
-                graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
+                graphQLErrors.map((err) =>
+                    console.error(`Failed to fetch tracer data: ${err}`),
+                );
             }
         },
     });
@@ -44,7 +46,12 @@ export const useAllTracers: () => Tracers = () => {
 
 const TRACER_TRADES = gql`
     query Tracer_Trades($tracer: String!) {
-        trades(first: 15, where: { tracer: $tracer }, orderBy: timestamp, orderDirection: desc) {
+        trades(
+            first: 15
+            where: { tracer: $tracer }
+            orderBy: timestamp
+            orderDirection: desc
+        ) {
             position
             amount
             price
@@ -70,16 +77,17 @@ export const useMostRecentMatched: (tracer: string) => {
         errorPolicy: 'all',
         onError: ({ graphQLErrors }) => {
             if (graphQLErrors) {
-                graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
+                graphQLErrors.map((err) =>
+                    console.error(`Failed to fetch tracer data: ${err}`),
+                );
             }
-          
-               
-            
         },
     });
 
     return {
-        mostRecentTrades: data?.trades ? toBigNumbers(data?.trades) : ref.current,
+        mostRecentTrades: data?.trades
+            ? toBigNumbers(data?.trades)
+            : ref.current,
         error,
         loading,
         refetch,
@@ -140,7 +148,9 @@ export const useCandles: (tracer: string) => {
         errorPolicy: 'all',
         onError: ({ graphQLErrors }) => {
             if (graphQLErrors) {
-                graphQLErrors.map((err) => console.error(`Failed to fetch candle trades: ${err}`));
+                graphQLErrors.map((err) =>
+                    console.error(`Failed to fetch candle trades: ${err}`),
+                );
             }
         },
     });

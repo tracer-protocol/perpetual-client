@@ -45,7 +45,9 @@ const WithdrawalHistory: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 3 ? (
-                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
+                                <TableHead theme={TableHeadEndTheme}>
+                                    {heading}
+                                </TableHead>
                             ) : (
                                 <TableHead>{heading}</TableHead>
                             ),
@@ -56,15 +58,22 @@ const WithdrawalHistory: React.FC = () => {
                     {tracers.map((tracer, i) => (
                         <TableRow key={`table-row-${i}`}>
                             <TableCell>
-                                <DateAndTime date={tracer.date} time={tracer.time} />
+                                <DateAndTime
+                                    date={tracer.date}
+                                    time={tracer.time}
+                                />
                             </TableCell>
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
                                         <Logo ticker={tracer.name} />
                                     </div>
-                                    <div className="my-auto ml-2">{tracer.market}</div>
-                                    <div className="my-auto ml-1">Insurance Pool</div>
+                                    <div className="my-auto ml-2">
+                                        {tracer.market}
+                                    </div>
+                                    <div className="my-auto ml-1">
+                                        Insurance Pool
+                                    </div>
                                 </div>
                             </TableCell>
                             <TableCell>{tracer.amount} iTLA-USDC</TableCell>

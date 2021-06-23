@@ -60,7 +60,8 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
     const ref = useRef(null);
 
     useEffect(() => {
-        const content: HTMLDivElement = ref.current as unknown as HTMLDivElement;
+        const content: HTMLDivElement =
+            ref.current as unknown as HTMLDivElement;
         if (props.show) {
             if (content !== null) {
                 content.classList.add('show');
@@ -85,7 +86,12 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
 
     return (
         <>
-            <div className={`${props.className} ${props.show ? 'show' : ''} model`} id={props.id}>
+            <div
+                className={`${props.className} ${
+                    props.show ? 'show' : ''
+                } model`}
+                id={props.id}
+            >
                 {/*content*/}
                 <div className={`content`} ref={ref}>
                     {/*header*/}
@@ -93,7 +99,9 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
                         <Title>{props.title}</Title>
                         <Close onClick={props.onClose} />
                     </Header>
-                    {props.subTitle ? <SubTitle>{props.subTitle}</SubTitle> : null}
+                    {props.subTitle ? (
+                        <SubTitle>{props.subTitle}</SubTitle>
+                    ) : null}
                     {!props.loading ? (
                         <>
                             {/* body */}

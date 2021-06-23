@@ -10,26 +10,32 @@ type HEProps = {
     open: boolean;
     className?: string;
 } & Children;
-export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, defaultHeight, open }: HEProps) => {
-    const main = useRef(null);
-    const body = useRef(null);
-    useEffect(() => {
-        const b = body.current as unknown as HTMLDivElement;
-        if (open) {
-            // all heights plus 10px for padding
-            (main.current as unknown as HTMLDivElement).style.height = `${b.clientHeight + 10}px`;
-        } else {
-            (main.current as unknown as HTMLDivElement).style.height = `${defaultHeight}px`;
-        }
-    }, [open]);
-    return (
-        <div className={`${className} ${open ? 'open' : ''}`} ref={main}>
-            <div className="body" ref={body}>
-                {children}
+export const HiddenExpand: React.FC<HEProps> = styled(
+    ({ className, children, defaultHeight, open }: HEProps) => {
+        const main = useRef(null);
+        const body = useRef(null);
+        useEffect(() => {
+            const b = body.current as unknown as HTMLDivElement;
+            if (open) {
+                // all heights plus 10px for padding
+                (main.current as unknown as HTMLDivElement).style.height = `${
+                    b.clientHeight + 10
+                }px`;
+            } else {
+                (
+                    main.current as unknown as HTMLDivElement
+                ).style.height = `${defaultHeight}px`;
+            }
+        }, [open]);
+        return (
+            <div className={`${className} ${open ? 'open' : ''}`} ref={main}>
+                <div className="body" ref={body}>
+                    {children}
+                </div>
             </div>
-        </div>
-    );
-})`
+        );
+    },
+)`
     overflow: hidden;
     transition: 0.3s ease-in-out;
     margin-left: -10px;
@@ -63,34 +69,42 @@ type DProps = {
     header: React.ReactNode;
     body: React.ReactNode;
 };
-export const Dropdown: React.FC<DProps> = styled(({ className, defaultOpen, header, body, defaultHeight }: DProps) => {
-    const [open, setOpen] = useState(!!defaultOpen);
-    const main = useRef(null);
-    const _header = useRef(null);
-    const _body = useRef(null);
-    useEffect(() => {
-        const h = _header.current as unknown as HTMLDivElement;
-        const b = _body.current as unknown as HTMLDivElement;
-        if (open) {
-            // all heights plus 10px for padding
-            (main.current as unknown as HTMLDivElement).style.height = `${
-                h.clientHeight ? h.clientHeight + b.clientHeight + 10 : defaultHeight
-            }px`;
-        } else {
-            (main.current as unknown as HTMLDivElement).style.height = `${
-                h.clientHeight ? h.clientHeight : defaultHeight
-            }px`;
-        }
-    }, [open]);
-    return (
-        <div className={className} onClick={(_e) => setOpen(!open)} ref={main}>
-            <div ref={_header}>{header}</div>
-            <div className="body" ref={_body}>
-                {body}
+export const Dropdown: React.FC<DProps> = styled(
+    ({ className, defaultOpen, header, body, defaultHeight }: DProps) => {
+        const [open, setOpen] = useState(!!defaultOpen);
+        const main = useRef(null);
+        const _header = useRef(null);
+        const _body = useRef(null);
+        useEffect(() => {
+            const h = _header.current as unknown as HTMLDivElement;
+            const b = _body.current as unknown as HTMLDivElement;
+            if (open) {
+                // all heights plus 10px for padding
+                (main.current as unknown as HTMLDivElement).style.height = `${
+                    h.clientHeight
+                        ? h.clientHeight + b.clientHeight + 10
+                        : defaultHeight
+                }px`;
+            } else {
+                (main.current as unknown as HTMLDivElement).style.height = `${
+                    h.clientHeight ? h.clientHeight : defaultHeight
+                }px`;
+            }
+        }, [open]);
+        return (
+            <div
+                className={className}
+                onClick={(_e) => setOpen(!open)}
+                ref={main}
+            >
+                <div ref={_header}>{header}</div>
+                <div className="body" ref={_body}>
+                    {body}
+                </div>
             </div>
-        </div>
-    );
-})`
+        );
+    },
+)`
     background: var(--color-background);
     overflow: hidden;
     transition: 0.3s ease-in-out;
