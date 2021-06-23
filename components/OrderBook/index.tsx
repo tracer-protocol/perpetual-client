@@ -48,6 +48,7 @@ export default styled(
         ); // descending order
 
         const renderOrders = useCallback((bid: boolean, orders: OMEOrder[]) => {
+            console.log(orders)
             if (!orders.length) {
                 return (
                     <BookRow>
@@ -57,7 +58,7 @@ export default styled(
             } // return an empty row
             const rows = [];
             let cumulative = 0;
-            let exit = false;
+            let missedBracket = 0;
             for (let i = 0; i < orders.length; i++) {
                 if (rows.length >= 8) break;
                 let order = orders[i];
@@ -68,15 +69,25 @@ export default styled(
                 let innerCumulative = 0;
                 for (let p = i; p < orders.length; p++) {
                     if (
-                        (bid && orders[p].price <= bracket) ||
-                        (!bid && orders[p].price >= bracket)
+                        (bid && orders[p].price < bracket) ||
+                        (!bid && orders[p].price > bracket)
                     ) {
-                        i = p;
+                        // if we just exit because price we want to recheck this next loop so set it to p -1
+                        i = p - 1; 
+                        if (p >= orders.length - 1) {
+                            missedBracket = bid 
+                                ? Math.floor((orders[p].price)/decimalKeyMap[decimals])*decimalKeyMap[decimals] 
+                                : Math.ceil((orders[p].price)/decimalKeyMap[decimals])*decimalKeyMap[decimals]; 
+                            // if its the end of the line then we want to set missed order
+                            i = p;
+                        }
                         break;
                     }
-                    innerCumulative += orders[i].quantity;
-                    if (p === orders.length - 1) {
-                        exit = true;
+                    innerCumulative += orders[p].quantity;
+                    if (p >= orders.length - 1) { 
+                        // weve reached the last order
+                        i = p;
+                        break;
                     }
                 }
                 cumulative += innerCumulative;
@@ -89,7 +100,18 @@ export default styled(
                         maxCumulative={maxCumulative}
                     />
                 )
-                if (exit) break;
+                if (missedBracket) {
+                    // this will be the very last order
+                    rows.push(
+                        <Order
+                            bid={bid}
+                            price={missedBracket}
+                            cumulative={cumulative + orders[i].quantity}
+                            quantity={orders[i].quantity}
+                            maxCumulative={maxCumulative}
+                        />
+                    )
+                }
             }
             return !bid ? rows.reverse() : rows;
         }, [decimals]);
@@ -152,14 +174,14 @@ const BookRow = styled.div`
     ${Item}.fill-bid {
         background-repeat: no-repeat;
         background-position: 100% 100%;
-        background-image: linear-gradient(to left, #00ff0866 100%, white 0%);
+        background-image: linear-gradient(to left, #F1502566 100%, white 0%);
         background-size: 0%;
     }
 
     ${Item}.fill-ask {
         background-repeat: no-repeat;
         background-position: 100% 100%;
-        background-image: linear-gradient(to left, #f1502566 100%, white 0%);
+        background-image: linear-gradient(to left, #05CB3A66 100%, white 0%);
         background-size: 0%;
     }
 `;

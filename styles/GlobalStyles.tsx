@@ -42,6 +42,15 @@ export default createGlobalStyle`
 		background-color: var(--color-accent);
 	}
 
+    /** GLOBAL TABLE STYLES */
+    .bid, .green {
+        color: #05CB3A;
+    }
+
+    .ask, .red {
+        color: #F15025;
+    }
+
     /* Scroll bar stuff */
     ::-webkit-scrollbar {
         width: 5px;
