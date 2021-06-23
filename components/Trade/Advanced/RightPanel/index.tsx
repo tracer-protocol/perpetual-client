@@ -93,6 +93,7 @@ const OrderBookContainer = styled.div`
     border-top: 1px solid var(--color-accent);
     display: flex;
     flex-direction: column;
+    position: relative;
     padding: 0.6rem 0;
     h3 {
         letter-spacing: -0.4px;
@@ -100,6 +101,7 @@ const OrderBookContainer = styled.div`
         text-transform: capitalize;
         font-size: var(--font-size-medium);
         margin: 0 0.8rem;
+        margin-bottom: 0.5rem;
     }
 `;
 

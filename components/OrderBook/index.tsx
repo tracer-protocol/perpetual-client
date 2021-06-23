@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { OMEOrder } from 'types/OrderTypes';
 import styled from 'styled-components';
 import { toApproxCurrency } from '@libs/utils';
 import BigNumber from 'bignumber.js';
+import Dropdown from 'antd/lib/dropdown';
+import { Button, Menu, MenuItem } from '@components/General';
 
 interface OProps {
     askOrders: OMEOrder[]; //TODO change these
@@ -13,6 +15,8 @@ interface OProps {
 }
 
 export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, className }: OProps) => {
+	const [decimals, setDecimals] = useState(2);
+
     const sumQuantities = (orders: OMEOrder[]) => {
         return orders.reduce((total, order) => total + order.quantity, 0);
     };
@@ -39,12 +43,16 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
         return orders.map((order: OMEOrder, index: number) => {
             order.cumulative = cumulative += order.quantity;
             order.maxCumulative = maxCumulative;
-            return <Order bid={bid} key={index} {...order} />;
+            return <Order decimals={decimals} bid={bid} key={index} {...order} />;
         });
     };
 
     return (
         <div className={className}>
+            <PrecisionDropdown 
+                setDecimals={setDecimals}
+                decimals={decimals}
+            />
             <BookRow>
                 <Item>Price</Item>
                 <Item>Quantity</Item>
@@ -119,21 +127,86 @@ interface BProps {
     quantity: number;
     price: number;
     maxCumulative?: number;
+    decimals: number;
     bid: boolean;
     className?: string;
 }
 
-const Order: React.FC<BProps> = ({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
+const Order: React.FC<BProps> = ({ 
+    className, cumulative, quantity, price, maxCumulative, bid, decimals
+}: BProps) => {
     return (
         <BookRow className={className}>
             <Item className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price, 3)}</Item>
-            <Item>{quantity.toFixed(3)}</Item>
+            <Item>{quantity.toFixed(decimals)}</Item>
             <Item
                 className={`fill-${bid ? 'bid' : 'ask'}`}
                 style={{ backgroundSize: getPercentage(cumulative, maxCumulative) + '% 100%' }}
             >
-                {cumulative.toFixed(3)}
+                {cumulative.toFixed(decimals)}
             </Item>
         </BookRow>
     );
 };
+
+const StyledTriangleDown = styled.img`
+    height: 0.5rem;
+    transition: all 400ms ease-in-out;
+    display: inline;
+    margin-left: 0.2rem;
+    &.rotate {
+        transform: rotate(180deg);
+        margin-top: -2px;
+    }
+`
+
+const PrecisionDropdownButton = styled(Button)`
+    height: var(--height-small-button);
+    padding: 0;
+    max-width: 5rem;
+`
+
+type PDProps = {
+    setDecimals: (val: number) => void;
+    decimals: number;
+    className?: string;
+}
+
+const PrecisionDropdown:React.FC<PDProps> = styled((({ className, decimals, setDecimals }: PDProps) => {
+    const [rotated, setRotated] = useState(false);
+	const menu = (
+		<Menu onClick={({ key }) => { setDecimals(parseInt(key)); setRotated(false) }}>
+			<MenuItem key={2}>
+				<span>
+					0.01
+				</span>
+			</MenuItem>
+			<MenuItem key={4}>
+				<span>
+					0.0001
+				</span>
+			</MenuItem>
+		</Menu>
+	);
+    const handleVisibleChange = (visible: boolean) => {
+        setRotated(visible);
+    }
+	return (
+		<Dropdown
+            className={className} 
+			overlay={menu} 
+			placement="bottomCenter"
+            onVisibleChange={handleVisibleChange}
+		>
+       		<PrecisionDropdownButton>
+                {`${Number(0).toPrecision(decimals)}1`}
+                <StyledTriangleDown className={rotated ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
+            </PrecisionDropdownButton>
+      	</Dropdown>
+	)
+}))`
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0.5rem;
+`
