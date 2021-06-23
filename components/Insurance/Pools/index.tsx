@@ -83,7 +83,7 @@ const OwnershipCell: React.FC<CProps> = styled(({ pool, className }: CProps) => 
             </span>
             <Link href={pool.iPoolTokenURL}>
                 <StyledTooltip title="View on Etherscan">
-                    <LinkOutlined style={{ margin: '5px', marginBottom: '2px' }} />
+                    <LinkOutlined style={{ marginLeft: '0.5rem' }} />
                 </StyledTooltip>
             </Link>
             <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>

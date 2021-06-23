@@ -57,7 +57,13 @@ const Insurance: React.FC = styled(({ className }) => {
                         <InsurancePoolsFooter>
                             New to insurance pools?{' '}
                             <Button className="learn-more" theme={ButtonTheme}>
-                                Learn More
+                                <a
+                                    href="https://docs.tracer.finance/products/perpetual-swaps/insurance"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                >
+                                    Learn More
+                                </a>
                             </Button>
                         </InsurancePoolsFooter>
                     </InsuranceStore>
