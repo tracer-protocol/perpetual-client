@@ -292,3 +292,16 @@ export const CurrentAPYTip: React.FC<TProps> = ({ className, children }: TProps)
         </StyledTooltip>
     );
 };
+
+export const PoolOwnershipTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = (
+        <p>
+            <strong>Pool Ownership</strong> The amount of insurance pool tokens you hold.
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};

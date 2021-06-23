@@ -166,17 +166,14 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
         <table id="pools-table" className={className}>
             <thead>
                 <tr>
-                    {['Market', 'Current APY', 'Health', 'Pool Ownership'].map((heading, i) =>
-                        i === 3 ? (
-                            <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
-                        ) : i === 1 ? (
-                            <TooltipSelector tooltip={{ key: 'current-apy' }}>
-                                <TableHead>{heading}</TableHead>
-                            </TooltipSelector>
-                        ) : (
-                            <TableHead>{heading}</TableHead>
-                        ),
-                    )}
+                    <TableHead>Market</TableHead>
+                    <TableHead>
+                        <TooltipSelector tooltip={{ key: 'current-apy' }}>Current APY</TooltipSelector>
+                    </TableHead>
+                    <TableHead>Health</TableHead>
+                    <TableHead theme={TableHeadEndTheme}>
+                        <TooltipSelector tooltip={{ key: 'pool-ownership' }}>Pool Ownership</TooltipSelector>
+                    </TableHead>
                 </tr>
             </thead>
             <tbody>
