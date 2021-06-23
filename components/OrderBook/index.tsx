@@ -17,8 +17,11 @@ interface OProps {
 
 const decimalKeyMap: Record<number, number> = {
     1: 0.01,
-    2: 1,
-    3: 10
+    2: 0.1,
+    3: 1,
+    4: 10,
+    5: 50,
+    6: 100
 }
 
 export default styled(
@@ -54,19 +57,27 @@ export default styled(
             } // return an empty row
             const rows = [];
             let cumulative = 0;
+            let exit = false;
             for (let i = 0; i < orders.length; i++) {
                 if (rows.length >= 8) break;
                 let order = orders[i];
-                // round to the nearest bracket below current price
-                let bracket = Math.floor((order.price)/decimalKeyMap[decimals])*decimalKeyMap[decimals]; 
+                // round to the nearest bracket below current price for bid and above for ask
+                let bracket = bid 
+                    ? Math.floor((order.price)/decimalKeyMap[decimals])*decimalKeyMap[decimals] 
+                    : Math.ceil((order.price)/decimalKeyMap[decimals])*decimalKeyMap[decimals]; 
                 let innerCumulative = 0;
                 for (let p = i; p < orders.length; p++) {
-                    if (orders[p].price <= bracket) {
+                    if (
+                        (bid && orders[p].price <= bracket) ||
+                        (!bid && orders[p].price >= bracket)
+                    ) {
                         i = p;
                         break;
                     }
                     innerCumulative += orders[i].quantity;
-                    p++;
+                    if (p === orders.length - 1) {
+                        exit = true;
+                    }
                 }
                 cumulative += innerCumulative;
                 rows.push(
@@ -79,8 +90,9 @@ export default styled(
                         maxCumulative={maxCumulative}
                     />
                 )
+                if (exit) break;
             }
-            return rows;
+            return !bid ? rows.reverse() : rows;
         }, [decimals]);
 
         return (
@@ -94,7 +106,7 @@ export default styled(
                     <Item>Quantity</Item>
                     <Item>Cumulative</Item>
                 </BookRow>
-                {renderOrders(false, askOrdersCopy.reverse())}
+                {renderOrders(false, askOrdersCopy)}
                 <MarketRow>
                     <Item>
                         {`Best `}
@@ -239,15 +251,13 @@ const PrecisionDropdown: React.FC<PDProps> = styled(
                     setRotated(false);
                 }}
             >
-                <MenuItem key={1}>
-                    <span>0.01</span>
-                </MenuItem>
-                <MenuItem key={2}>
-                    <span>1</span>
-                </MenuItem>
-                <MenuItem key={3}>
-                    <span>10</span>
-                </MenuItem>
+                {Object.keys(decimalKeyMap).map((key) => {
+                    return (
+                        <MenuItem key={key}>
+                            <span>{decimalKeyMap[parseInt(key)]}</span>
+                        </MenuItem>
+                    )
+                })}
             </Menu>
         );
         const handleVisibleChange = (visible: boolean) => {
