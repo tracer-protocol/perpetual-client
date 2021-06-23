@@ -2,8 +2,6 @@ import { createGlobalStyle } from 'styled-components';
 
 export default createGlobalStyle`
   	html {
-        --font-size-small: 1rem;
-        --font-size-medium: 1.25rem;
         --color-background: #000240;
         --color-text: #fff;
         --color-primary: #3da8f5;
