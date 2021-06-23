@@ -87,15 +87,6 @@ input {
     background: transparent;
 }
 
-/** GLOBAL TABLE STYLES */
-.bid, .green {
-    color: #00ff08;
-}
-
-.ask, .red {
-    color: #f15025;
-}
-
 @keyframes countdown {
     from {
         height: 100%;

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import OrderBook from '@components/OrderBook/OrderBook';
+import OrderBook from '@components/OrderBook';
 import Tracer, { defaults } from '@libs/Tracer';
 import { Box } from '@components/General';
 import RecentTrades from './RecentTrades';
@@ -16,6 +16,7 @@ import BigNumber from 'bignumber.js';
 import AccountSummary from './AccountDetails';
 import InsuranceInfo from './InsuranceInfo';
 import Graphs from './Graphs';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const TitledBox = styled(({ className, title, children }) => {
     return (
@@ -90,17 +91,17 @@ const MarketInfo: React.FC<MIProps> = styled(
 
 const OrderBookContainer = styled.div`
     border-top: 1px solid var(--color-accent);
-    padding: 10px;
-    padding-right: 0;
-    height: 35vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    padding: 0.6rem 0;
     h3 {
         letter-spacing: -0.4px;
         color: #ffffff;
         text-transform: capitalize;
         font-size: var(--font-size-medium);
-        margin-bottom: 5px;
+        margin: 0 0.8rem;
+        margin-bottom: 0.5rem;
     }
 `;
 
@@ -123,6 +124,7 @@ const TradingView: React.FC<{
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
+
     return (
         <>
             <SBox className="middlePanel">
@@ -143,11 +145,14 @@ const TradingView: React.FC<{
                 <OrderBookContainer>
                     <h3>Order Book</h3>
                     {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
-                        <>
-                            <OrderBook askOrders={omeState.orders.askOrders} bidOrders={omeState.orders.bidOrders} />
-                        </>
+                        <OrderBook
+                            askOrders={omeState.orders.askOrders}
+                            bidOrders={omeState.orders.bidOrders}
+                            marketUp={omeState?.marketUp ?? false}
+                            lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
+                        />
                     ) : (
-                        <p>No open orders</p>
+                        <LoadingOutlined className="mb-3" />
                     )}
                 </OrderBookContainer>
                 <RecentTrades trades={mostRecentTrades} />
