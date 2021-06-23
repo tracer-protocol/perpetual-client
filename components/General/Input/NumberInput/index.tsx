@@ -9,7 +9,7 @@ const Inc = styled.div`
     height: 0;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-bottom: 10px solid #3da8f5;
+    border-bottom: 10px solid var(--color-primary);
     transition: 0.3s;
     &:hover {
         cursor: pointer;
@@ -23,7 +23,7 @@ const Dec = styled.div`
     bottom: 5px;
     border-left: 10px solid transparent;
     border-right: 10px solid transparent;
-    border-top: 10px solid #3da8f5;
+    border-top: 10px solid var(--color-primary);
     transition: 0.3s;
     &:hover {
         cursor: pointer;
@@ -41,7 +41,7 @@ export const NumberInput: React.FC<any> = styled((props: any) => {
     );
 })`
     position: relative;
-    color: #fff;
+    color: var(--color-text);
 
     /* Chrome, Safari, Edge, Opera */
     & input::-webkit-outer-spin-button,

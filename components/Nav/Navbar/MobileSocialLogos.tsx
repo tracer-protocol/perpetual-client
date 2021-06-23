@@ -9,13 +9,13 @@ import DiscourseLogo from 'public/img/logos/socials/discourse-logo-white.svg';
 export default styled((props) => (
     <div {...props}>
         <a href="https://discourse.tracer.finance/" target="_blank" rel="noreferrer noopener">
-            <Icon component={DiscourseLogo} />
+            <Icon className="hover" component={DiscourseLogo} />
         </a>
         <a href="https://github.com/tracer-protocol/" target="_blank" rel="noreferrer noopener">
             <GithubOutlined />
         </a>
         <a href="https://discord.gg/sS7QFWWyYa" target="_blank" rel="noreferrer noopener">
-            <Icon component={DiscordLogo} />
+            <Icon className="hover" component={DiscordLogo} />
         </a>
         <a href="https://twitter.com/tracer_finance" target="_blank" rel="noreferrer noopener">
             <TwitterOutlined />
@@ -29,9 +29,14 @@ export default styled((props) => (
     font-size: 2rem;
     justify-content: space-between;
     align-items: center;
+    > a > .hover {
+        transition: 0.3s;
+    }
+    > a > .hover:hover,
     & > *:hover,
     & > *:focus,
     & > *:active {
-        color: #3da8f5;
+        color: var(--color-primary);
+        fill: var(--color-primary);
     }
 `;

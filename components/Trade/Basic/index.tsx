@@ -46,7 +46,7 @@ const Position: React.FC<PProps> = styled(({ className, dispatch, position }: PP
 const SSection = styled(Section)`
     border-bottom: 1px solid #011772;
     letter-spacing: -0.32px;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     padding: 5px 10px;
     margin: 0;
 `;
@@ -56,12 +56,12 @@ const LiquidationPrice = styled(Section)`
     background-size: 100%;
     border-bottom: 1px solid #011772;
     letter-spacing: -0.32px;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     padding: 5px 0;
     margin: 0;
 
     .label {
-        color: #fff;
+        color: var(--color-text);
         padding: 0 10px;
     }
     .content {
@@ -115,13 +115,13 @@ const OrderSummary: React.FC<SProps> = styled(({ balances, fairPrice, order, max
     );
 })`
     overflow: scroll;
-    background: #002886;
+    background: var(--color-accent);
     margin: 10px 0;
     > .body {
         padding: 0;
     }
     h3 {
-        font-size: 16px;
+        font-size: var(--font-size-small);
         letter-spacing: -0.32px;
         color: #ffffff;
         padding: 10px;
@@ -129,7 +129,7 @@ const OrderSummary: React.FC<SProps> = styled(({ balances, fairPrice, order, max
 `;
 
 const Title = styled.h1`
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     letter-spacing: -0.4px;
     color: #ffffff;
     font-weight: normal;
@@ -152,7 +152,7 @@ const SCard = styled(Card)`
 
 const SButton = styled(Button)`
     border: 1px solid #ffffff;
-    color: #fff;
+    color: var(--color-text);
 
     .button-disabled &:hover {
         cursor: not-allowed;
@@ -167,7 +167,7 @@ const SButton = styled(Button)`
 
 const Header = styled.div`
     display: flex;
-    border-bottom: 1px solid #002886;
+    border-bottom: 1px solid var(--color-accent);
     padding-bottom: 0.5rem;
     letter-spacing: -0.32px;
 `;

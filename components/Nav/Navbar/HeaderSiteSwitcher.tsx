@@ -61,7 +61,7 @@ const Menu = styled.div`
     right: -3.5rem;
     padding: 2rem 0;
     opacity: 0;
-    background: #002886;
+    background: var(--color-accent);
     border-radius: 1rem;
     transform-origin: top center;
     transform: scale(0.7, 0);
@@ -69,7 +69,7 @@ const Menu = styled.div`
     z-index: 10;
 `;
 const MenuItem = styled.div`
-    border-bottom: 1px solid #3da8f5;
+    border-bottom: 1px solid var(--color-primary);
     transition: all 400ms ease;
     padding-left: 3rem;
 
@@ -94,7 +94,7 @@ const MenuItem = styled.div`
         opacity: 0;
     }
     &:not(:first-child) > a:hover {
-        background: #3da8f5;
+        background: var(--color-primary);
     }
     &:last-child {
         padding: 1rem 3.5rem 0 3.5rem;

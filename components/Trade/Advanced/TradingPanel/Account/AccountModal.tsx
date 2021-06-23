@@ -30,7 +30,7 @@ const SNumberSelect = styled(NumberSelect)`
 
 const SHiddenExpand = styled(HiddenExpand)`
     margin-left: 0;
-    background: #002886;
+    background: var(--color-accent);
     margin-top: 1rem;
     margin-bottom: 1rem;
 `;
@@ -40,7 +40,7 @@ const ModalButton = styled(Button)`
     margin: auto;
     height: 40px;
     border: 1px solid #ffffff;
-    color: #fff;
+    color: var(--color-text);
 
     &:disabled {
         &:hover {
@@ -61,7 +61,7 @@ const ApproveButton = styled(Button)`
     margin: 1rem auto;
     height: 40px;
     border: 1px solid #ffffff;
-    color: #fff;
+    color: var(--color-text);
 `;
 
 type AMProps = {

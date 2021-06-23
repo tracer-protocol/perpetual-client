@@ -57,14 +57,14 @@ export const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }
     );
 })`
     border-radius: 0;
-    border-bottom: 1px solid #002886;
+    border-bottom: 1px solid var(--color-accent);
     border-top: 0;
     border-right: 0;
     border-left: 0;
-    height: 50px;
+    height: var(--height-small-container);
 
     > .bg-slider {
-        background: #002886;
+        background: var(--color-accent);
         border-radius: 0;
     }
 `;

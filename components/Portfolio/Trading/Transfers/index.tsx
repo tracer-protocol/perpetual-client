@@ -38,7 +38,7 @@ const Transfers: React.FC = () => {
 
     const TableHeadEndTheme = {
         minWidth: '700px',
-        borderBottom: '1px solid #002886',
+        borderBottom: '1px solid var(--color-accent)',
     };
 
     return (

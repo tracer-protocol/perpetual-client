@@ -23,7 +23,7 @@ const SError = styled(Error)<{ account: string }>`
 `;
 
 const Details = styled.span`
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: #005ea4;
     text-align: right;

@@ -8,11 +8,11 @@ import styled from 'styled-components';
 
 const SHiddenExpand = styled(HiddenExpand)`
     margin: 10px;
-    background: #002886;
+    background: var(--color-accent);
     border-radius: 10px;
 
     h3 {
-        font-size: 16px;
+        font-size: var(--font-size-small);
         letter-spacing: -0.32px;
         color: #ffffff;
         margin-bottom: 20px;

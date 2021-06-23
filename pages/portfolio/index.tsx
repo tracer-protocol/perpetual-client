@@ -33,6 +33,6 @@ export default styled(({ className }) => {
 })`
     min-height: 100vh;
     flex-direction: column;
-    background-color: #000240;
-    color: #fff;
+    background-color: var(--color-background);
+    color: var(--color-text);
 `;

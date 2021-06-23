@@ -6,10 +6,10 @@ export const TradingTable = styled.table`
     height: 100%;
     width: 100%;
     overflow: hidden;
-    font-size: 1rem;
+    font-size: var(--font-size-small);
 
     thead tr th {
-        font-size: 16px;
+        font-size: var(--font-size-small);
         letter-spacing: -0.32px;
         color: #ffffff;
         text-transform: capitalize;
