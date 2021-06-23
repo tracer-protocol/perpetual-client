@@ -31,6 +31,7 @@ const TitledBox = styled(({ className, title, children }) => {
     flex-direction: column;
     margin: auto;
     width: 100%;
+    height: 100%;
     color: var(--color-text);
     letter-spacing: -0.32px;
     font-size: var(--font-size-small);
