@@ -26,8 +26,7 @@ interface BProps {
 /**
  * Displays the insurance pool breakdown
  *
- * @requires
- *  liquidity > userBalance
+ * @requires liquidity > userBalance
  *
  */
 const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
@@ -60,6 +59,7 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         width: calc(
             ${(props) => ((props.liquidity - props.userBalance) / denom(props.target, props.liquidity)) * 100}% - 4px
         );
+        border-radius: 20px;
     }
     > .userBalance {
         background: #005ea4;
