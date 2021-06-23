@@ -87,7 +87,7 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
                 {pool.userBalance.toNumber()} {pool.iPoolTokenName}
             </span>
             <TooltipSelector tooltip={{ key: 'etherscan-link' }}>
-                <StyledLinkOutlined onClick={() => window.open(pool.iPoolTokenURL, '_blank')} />
+                <StyledLinkOutlined onClick={() => window.open(pool.iPoolTokenURL, '_blank', 'noopener')} />
             </TooltipSelector>
             <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
             <Hidden>
