@@ -15,6 +15,7 @@ import {
     UnrealisedPnLTip,
     ExposureTip,
     LiquidationPriceTip,
+    CurrentAPYTip,
 } from '@components/Tooltips';
 import { BigNumber } from 'bignumber.js';
 
@@ -33,7 +34,8 @@ export type TooltipSelectorProps = {
         | 'realised-pnl'
         | 'unrealised-pnl'
         | 'exposure'
-        | 'liquidation-price';
+        | 'liquidation-price'
+        | 'current-apy';
     props?: {
         baseTicker?: string;
         availableMargin?: number;
@@ -103,7 +105,7 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
                 </InsuranceFundingRateTip>
             );
 
-        // Position account section
+        // Account details section
         case 'realised-pnl':
             return (
                 <RealisedPnLTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
@@ -132,6 +134,10 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
                     {children}
                 </LiquidationPriceTip>
             );
+
+        // Insurance pools section
+        case 'current-apy':
+            return <CurrentAPYTip className="label">{children}</CurrentAPYTip>;
 
         default:
             return <StyledTooltip className="label">{children}</StyledTooltip>;

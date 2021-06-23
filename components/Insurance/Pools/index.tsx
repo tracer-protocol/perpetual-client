@@ -12,6 +12,7 @@ import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portf
 import { toPercent } from '@libs/utils';
 import Link from 'next/link';
 import { StyledTooltip } from '@components/Tooltips';
+import TooltipSelector from '@components/Tooltips/TooltipSelector';
 
 const Hidden = styled.div`
     color: var(--color-primary);
@@ -130,7 +131,6 @@ interface IPTProps {
 }
 
 const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IPTProps) => {
-    const headings = ['Market', 'Current APY', 'Health', 'Pool Ownership'];
     const [expanded, setExpanded] = useState(-1);
 
     useEffect(() => {
@@ -166,9 +166,13 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
         <table id="pools-table" className={className}>
             <thead>
                 <tr>
-                    {headings.map((heading, i) =>
+                    {['Market', 'Current APY', 'Health', 'Pool Ownership'].map((heading, i) =>
                         i === 3 ? (
                             <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
+                        ) : i === 1 ? (
+                            <TooltipSelector tooltip={{ key: 'current-apy' }}>
+                                <TableHead>{heading}</TableHead>
+                            </TooltipSelector>
                         ) : (
                             <TableHead>{heading}</TableHead>
                         ),
@@ -184,6 +188,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                             key={`insurance-row-${i}`}
                             className={show ? 'selected' : ''}
                             onClick={(e) => onClick(e, i)}
+                            theme={expanded ? '' : {}}
                         >
                             <TableCell>
                                 <Collapsible className="pt-1">

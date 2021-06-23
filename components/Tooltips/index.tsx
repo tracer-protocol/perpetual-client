@@ -199,7 +199,7 @@ export const InsuranceFundingRateTip: React.FC<BTProps> = ({ baseTicker, classNa
     );
 };
 
-// Position account section
+// Account details section
 export const RealisedPnLTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
     const tooltip = (
         <p>
@@ -272,6 +272,20 @@ export const LiquidationPriceTip: React.FC<LPTProps> = ({ className, quote, posi
             </p>
         );
     }
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+// Insurance pools section
+export const CurrentAPYTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = (
+        <p>
+            <strong>Current APY</strong> The current rewards earned by insurance providers.
+        </p>
+    );
     return (
         <StyledTooltip className={className} title={tooltip}>
             {children}
