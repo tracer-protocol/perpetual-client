@@ -66,8 +66,8 @@ type OMEAction =
     | { type: 'setUserOrders'; orders: OMEOrder[] }
     | { type: 'setOrders'; orders: Orders }
     | { type: 'refetchUserOrders' }
-    | { type: 'setLastTradePrice', ltp: BigNumber }
-    | { type: 'setMarketUp', value: boolean }
+    | { type: 'setLastTradePrice'; ltp: BigNumber }
+    | { type: 'setMarketUp'; value: boolean }
     | {
           type: 'setBestPrices';
           maxAndMins: {
@@ -101,7 +101,7 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             maxAsk: 0,
         },
         lastTradePrice: new BigNumber(0),
-        marketUp: false
+        marketUp: false,
     };
 
     const fetchUserData = async () => {
@@ -159,15 +159,15 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
                         maxAsk: maxAsk,
                     },
                 });
-                const ltp = new BigNumber(Web3.utils.fromWei((res as any)?.ltp ?? 0))
+                const ltp = new BigNumber(Web3.utils.fromWei((res as any)?.ltp ?? 0));
                 omeDispatch({
                     type: 'setMarketUp',
-                    value: ltp.gt(omeState.lastTradePrice)
-                })
+                    value: ltp.gt(omeState.lastTradePrice),
+                });
                 omeDispatch({
                     type: 'setLastTradePrice',
-                    ltp: ltp
-                })
+                    ltp: ltp,
+                });
             }
         }
     };
@@ -194,14 +194,14 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             case 'setMarketUp': {
                 return {
                     ...state,
-                    marketUp: action.value
-                }
+                    marketUp: action.value,
+                };
             }
             case 'setLastTradePrice': {
                 return {
                     ...state,
-                    lastTradePrice: action.ltp
-                }
+                    lastTradePrice: action.ltp,
+                };
             }
             case 'refetchUserOrders': {
                 fetchUserData();

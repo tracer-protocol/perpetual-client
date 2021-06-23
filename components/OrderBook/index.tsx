@@ -10,11 +10,9 @@ interface OProps {
     lastTradePrice: number | BigNumber;
     marketUp: boolean; // true if the last tradePrice is previous than the tradePrice before that
     className?: string;
-
 }
 
 export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, className }: OProps) => {
-
     const sumQuantities = (orders: OMEOrder[]) => {
         return orders.reduce((total, order) => total + order.quantity, 0);
     };
@@ -31,7 +29,13 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
 
     const renderOrders = (bid: boolean, orders: OMEOrder[]) => {
         let cumulative = 0;
-        if (!orders.length) return <BookRow><Item className="py-1"></Item></BookRow>// return an empty row
+        if (!orders.length) {
+            return (
+                <BookRow>
+                    <Item className="py-1"></Item>
+                </BookRow>
+            );
+        } // return an empty row
         return orders.map((order: OMEOrder, index: number) => {
             order.cumulative = cumulative += order.quantity;
             order.maxCumulative = maxCumulative;
@@ -49,20 +53,14 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
             {renderOrders(false, askOrdersCopy.slice(0, 6).reverse())}
             <MarketRow>
                 <Item>
-                    {`Best `} 
-                    <span className="ask px-1">
-                        {toApproxCurrency(askOrdersCopy[0]?.price)}
-                    </span>
+                    {`Best `}
+                    <span className="ask px-1">{toApproxCurrency(askOrdersCopy[0]?.price)}</span>
                     {` / `}
-                    <span className="bid px-1">
-                        {toApproxCurrency(bidOrdersCopy[0]?.price)}
-                    </span>
+                    <span className="bid px-1">{toApproxCurrency(bidOrdersCopy[0]?.price)}</span>
                 </Item>
                 <Item className="text-right">
                     {`Last`}
-                    <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>
-                    {toApproxCurrency(lastTradePrice)}
-                    </span>
+                    <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>{toApproxCurrency(lastTradePrice)}</span>
                 </Item>
             </MarketRow>
             {renderOrders(true, bidOrdersCopy.slice(0, 6))}
@@ -76,7 +74,7 @@ const Item = styled.div`
     width: 100%;
     white-space: nowrap;
     margin: 0 0.8rem;
-`
+`;
 
 const BookRow = styled.div`
     position: relative;
@@ -86,7 +84,7 @@ const BookRow = styled.div`
     text-align: left;
     font-size: var(--font-size-small);
     line-height: var(--font-size-small);
-    padding: 1px 0; 
+    padding: 1px 0;
     letter-spacing: -0.32px;
 
     ${Item}.fill-bid {
@@ -102,12 +100,12 @@ const BookRow = styled.div`
         background-image: linear-gradient(to left, #f1502566 100%, white 0%);
         background-size: 0%;
     }
-`
+`;
 
 const MarketRow = styled(BookRow)`
     background: var(--color-background-secondary);
     padding: 0.5rem 0;
-`
+`;
 
 const getPercentage: (cumulative: number, maxCumulative?: number) => number = (cumulative, maxCumulative) => {
     let fillPercentage = (maxCumulative ? cumulative / maxCumulative : 0) * 100;
@@ -125,7 +123,7 @@ interface BProps {
     className?: string;
 }
 
-const Order: React.FC<BProps> = (({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
+const Order: React.FC<BProps> = ({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
     return (
         <BookRow className={className}>
             <Item className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price, 3)}</Item>
@@ -138,5 +136,4 @@ const Order: React.FC<BProps> = (({ className, cumulative, quantity, price, maxC
             </Item>
         </BookRow>
     );
-});
-
+};

@@ -77,9 +77,9 @@ export const useMostRecentMatched: (tracer: string) => {
 
     useEffect(() => {
         if (data?.trades) {
-            ref.current = toBigNumbers(data?.trades)
+            ref.current = toBigNumbers(data?.trades);
         }
-    }, [data?.trades])
+    }, [data?.trades]);
 
     return {
         mostRecentTrades: ref.current,

@@ -16,9 +16,7 @@ import BigNumber from 'bignumber.js';
 import AccountSummary from './AccountDetails';
 import InsuranceInfo from './InsuranceInfo';
 import Graphs from './Graphs';
-import { 
-    LoadingOutlined,
-} from '@ant-design/icons';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const TitledBox = styled(({ className, title, children }) => {
     return (
@@ -145,9 +143,9 @@ const TradingView: React.FC<{
                 <OrderBookContainer>
                     <h3>Order Book</h3>
                     {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
-                        <OrderBook 
-                            askOrders={omeState.orders.askOrders} 
-                            bidOrders={omeState.orders.bidOrders} 
+                        <OrderBook
+                            askOrders={omeState.orders.askOrders}
+                            bidOrders={omeState.orders.bidOrders}
                             marketUp={omeState?.marketUp ?? false}
                             lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
                         />
