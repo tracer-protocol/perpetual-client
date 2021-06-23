@@ -29,7 +29,7 @@ export default createGlobalStyle`
   	}
 
 
-	/* ANTD overides */
+	/* ANTD overrides */
 	.ant-tooltip-inner {
 		background: var(--color-accent);
 		color: var(--color-text);
@@ -37,6 +37,13 @@ export default createGlobalStyle`
 	.ant-tooltip-inner strong {
 		color: var(--color-primary);
 	}
+    .ant-tooltip-inner a {
+        text-decoration: underline;
+      
+        &:hover {
+            color: var(--color-primary);
+        }
+    }
 	.ant-tooltip-arrow-content {
 		background-color: var(--color-accent);
 	}
