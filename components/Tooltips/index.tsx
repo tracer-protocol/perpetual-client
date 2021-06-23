@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
 import { Children } from 'types/General';
+import { BigNumber } from 'bignumber.js';
 
 export const StyledTooltip = styled(Tooltip)`
     color: inherit;
@@ -213,6 +214,43 @@ export const ExposureTip: React.FC<BTProps> = ({ className, baseTicker, children
             <strong>Exposure</strong> The size of your {baseTicker} position.
         </p>
     );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+// LiquidationPriceTipProps
+type LPTProps = {
+    className?: string;
+    quote: BigNumber;
+    position: number;
+} & TProps;
+export const LiquidationPriceTip: React.FC<LPTProps> = ({ className, quote, position, children }: LPTProps) => {
+    let tooltip;
+    if (quote.eq(0)) {
+        tooltip = (
+            <p>
+                <strong>Liquidation Price</strong> If the mark price falls below this price (for longs) and rises above
+                this price (for shorts), your position will be liquidated.
+            </p>
+        );
+    } else if (position === 1) {
+        tooltip = (
+            <p>
+                <strong>Liquidation Price</strong> If the mark price falls below this price, your position will be
+                liquidated.
+            </p>
+        );
+    } else if (position === 0) {
+        tooltip = (
+            <p>
+                <strong>Liquidation Price</strong> If the mark price rises above this price, your position will be
+                liquidated.
+            </p>
+        );
+    }
     return (
         <StyledTooltip className={className} title={tooltip}>
             {children}

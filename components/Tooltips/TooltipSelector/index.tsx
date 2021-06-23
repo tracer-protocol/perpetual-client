@@ -14,7 +14,9 @@ import {
     RealisedPnLTip,
     UnrealisedPnLTip,
     ExposureTip,
+    LiquidationPriceTip,
 } from '@components/Tooltips';
+import { BigNumber } from 'bignumber.js';
 
 export type TooltipSelectorProps = {
     key:
@@ -30,11 +32,14 @@ export type TooltipSelectorProps = {
         | 'insurance-funding-rate'
         | 'realised-pnl'
         | 'unrealised-pnl'
-        | 'exposure';
+        | 'exposure'
+        | 'liquidation-price';
     props?: {
         baseTicker?: string;
         availableMargin?: number;
         maxLeverage?: number;
+        quote?: BigNumber;
+        position?: number;
     };
 };
 
@@ -116,6 +121,16 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
                 <ExposureTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
                     {children}
                 </ExposureTip>
+            );
+        case 'liquidation-price':
+            return (
+                <LiquidationPriceTip
+                    quote={tooltip?.props?.quote ?? new BigNumber(NaN)}
+                    position={tooltip?.props?.position ?? NaN}
+                    className="label"
+                >
+                    {children}
+                </LiquidationPriceTip>
             );
 
         default:
