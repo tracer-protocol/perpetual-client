@@ -111,6 +111,7 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
     transition: 0.3s;
     min-width: 100px;
     justify-content: space-between;
+
     > .bar {
         height: 7px;
         width: 100%;
