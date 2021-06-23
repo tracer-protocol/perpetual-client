@@ -31,6 +31,7 @@ const SPrevious = styled(Previous)`
 
 const SSection = styled(Section)`
     display: inline-block;
+    position: relative;
     padding: 5px 10px;
     margin: 0;
     color: #005ea4;
@@ -63,10 +64,11 @@ const SectionContainer = styled.div`
 `;
 
 const SSlideSelect = styled(SlideSelect)`
+    position: absolute;
+    right: 6px;
+    top: 6px;
     height: var(--height-extra-small-button);
     width: 100px;
-    margin-left: 0;
-    margin-top: 0.2rem;
 `;
 
 const SOption = styled(Option)`
@@ -138,7 +140,7 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
     const { base } = balances;
     return (
         <AccountDetails>
-            <SectionContainer className="w-1/4 inline-block">
+            <SectionContainer className="w-2/6 inline-block">
                 <SSection label={'Side'}>
                     <Position
                         balances={balances}
@@ -149,7 +151,7 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                 </SSection>
                 <SSection label={'Exposure'} className="w-full">
                     {!balances.quote.eq(0) ? (
-                        <Content>
+                        <Content className="pt-1">
                             {currency === 0
                                 ? `${base.abs().toNumber()} ${baseTicker}`
                                 : `${toApproxCurrency(base.abs().times(fairPrice))} ${quoteTicker}`}
@@ -177,7 +179,7 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                     />
                 </SSection>
             </SectionContainer>
-            <SectionContainer className="w-3/4 inline-block">
+            <SectionContainer className="w-4/6 inline-block">
                 <SSection label={'Liquidation Price'} className="w-1/2 border-right">
                     {!balances.quote.eq(0) ? (
                         <Content>
