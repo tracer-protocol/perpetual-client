@@ -82,7 +82,6 @@ export default styled(
                 cumulative += innerCumulative;
                 rows.push(
                     <Order
-                        decimals={decimals}
                         bid={bid}
                         price={bracket}
                         cumulative={cumulative}
@@ -197,14 +196,13 @@ const Order: React.FC<BProps> = ({
     price,
     maxCumulative,
     bid,
-    decimals,
 }: BProps) => {
     return (
         <BookRow className={className}>
             <Item className={`${bid ? 'bid' : 'ask'}`}>
-                {toApproxCurrency(price, 3)}
+                {toApproxCurrency(price)}
             </Item>
-            <Item>{quantity.toFixed(decimals)}</Item>
+            <Item>{quantity.toFixed(3)}</Item>
             <Item
                 className={`fill-${bid ? 'bid' : 'ask'}`}
                 style={{
@@ -212,7 +210,7 @@ const Order: React.FC<BProps> = ({
                         getPercentage(cumulative, maxCumulative) + '% 100%',
                 }}
             >
-                {cumulative.toFixed(decimals)}
+                {cumulative.toFixed(3)}
             </Item>
         </BookRow>
     );
