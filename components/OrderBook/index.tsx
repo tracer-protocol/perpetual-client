@@ -184,7 +184,6 @@ interface BProps {
     quantity: number;
     price: number;
     maxCumulative?: number;
-    decimals: number;
     bid: boolean;
     className?: string;
 }
