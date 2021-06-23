@@ -162,9 +162,12 @@ export const PoolTargetTip: React.FC<BTProps> = ({ baseTicker, className, childr
             <strong>Pool Target</strong> The target value for the insurance pool borrowed by leveraged traders in the{' '}
             {baseTicker} market.{' '}
             <a
-                href="https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate#target"
-                target="_blank"
-                rel="noreferrer"
+                onClick={() =>
+                    window.open(
+                        'https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate#target',
+                        '_blank',
+                    )
+                }
             >
                 Learn more.
             </a>

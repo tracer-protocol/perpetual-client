@@ -42,6 +42,7 @@ const HealthCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
             <SProgressBar percent={pool?.health.toNumber()} />
             <Hidden>
                 <Breakdown
+                    baseTicker={pool.market.split('/')[0]}
                     target={pool.target.toNumber()}
                     userBalance={pool.userBalance.toNumber()}
                     liquidity={pool.liquidity.toNumber()}
@@ -85,7 +86,6 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
             <span>
                 {pool.userBalance.toNumber()} {pool.iPoolTokenName}
             </span>
-            {/*href={pool.iPoolTokenURL}*/}
             <TooltipSelector tooltip={{ key: 'etherscan-link' }}>
                 <StyledLinkOutlined onClick={() => window.open(pool.iPoolTokenURL, '_blank')} />
             </TooltipSelector>
@@ -169,7 +169,9 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                     <TableHead>
                         <TooltipSelector tooltip={{ key: 'current-apy' }}>Current APY</TooltipSelector>
                     </TableHead>
-                    <TableHead>Health</TableHead>
+                    <TableHead>
+                        <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Health</TooltipSelector>
+                    </TableHead>
                     <TableHead theme={TableHeadEndTheme}>
                         <TooltipSelector tooltip={{ key: 'pool-ownership' }}>Pool Ownership</TooltipSelector>
                     </TableHead>
