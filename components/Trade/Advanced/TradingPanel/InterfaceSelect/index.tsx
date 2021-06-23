@@ -4,15 +4,14 @@ import { Button } from '@components/General';
 import { CaretRightOutlined } from '@ant-design/icons';
 
 const SButton = styled(Button)`
-    height: 24px;
-    background: #002886;
-    line-height: 24px;
-    font-size: 12px;
+    height: var(--height-extra-small-button);
+    background: var(--color-accent);
+    font-size: var(--font-size-extra-small);
     letter-spacing: -0.24px;
     padding: 0;
     margin-right: 0;
     border: none;
-    color: #fff;
+    color: var(--color-text);
     &:focus,
     &:active {
         border: none;
@@ -35,7 +34,7 @@ type ISProps = {
 export default styled(({ className, isAdjust, setAdjust }: ISProps) => {
     return (
         <div className={className}>
-            <p>{isAdjust ? 'Adjust Position' : 'Place Order'}</p>
+            <p className="flex items-center whitespace-nowrap mr-2">{isAdjust ? 'Adjust Position' : 'Place Order'}</p>
             {isAdjust ? (
                 <SButton onClick={() => setAdjust(false)}>
                     Switch to Place
@@ -50,13 +49,14 @@ export default styled(({ className, isAdjust, setAdjust }: ISProps) => {
         </div>
     );
 })`
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     letter-spacing: -0.4px;
-    color: #fff;
+    color: var(--color-text);
     display: ${(props) => (props.account === '' ? 'none' : 'flex')};
     justify-content: space-between;
     background-color: #00125d;
+    height: var(--height-small-container);
     border-bottom: 1px solid #0c3586;
-    padding: 20px;
+    padding: 0 12px;
     z-index: 1;
 ` as React.FC<ISProps>;

@@ -28,9 +28,9 @@ const SBox = styled(Box)`
     z-index: 4;
 
     > p {
-        font-size: 1.25rem;
+        font-size: var(--font-size-medium);
         letter-spacing: 0;
-        color: #fff;
+        color: var(--color-text);
     }
 `;
 
@@ -56,18 +56,18 @@ const WalletConnect: React.FC = () => {
 };
 
 const NoBalance = styled.span`
-    color: #3da8f5;
+    color: var(--color-primary);
 `;
 
 const Item = styled.div`
     width: 100%;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     margin-bottom: 10px;
 
     > span {
         width: 100%;
         display: flex;
-        font-size: 16px;
+        font-size: var(--font-size-small);
         letter-spacing: -0.32px;
     }
 
@@ -78,7 +78,7 @@ const Item = styled.div`
 
     > h3 {
         letter-spacing: -0.32px;
-        color: #3da8f5;
+        color: var(--color-primary);
         text-transform: capitalize;
         margin-bottom: 5px;
     }
@@ -97,9 +97,9 @@ const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
 `;
 
 const Title = styled.h2`
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     letter-spacing: -0.4px;
-    color: #fff;
+    color: var(--color-text);
     margin-bottom: 0.5rem;
 `;
 
@@ -113,7 +113,7 @@ const SButton = styled(Button)`
 const SubText = styled.span`
     letter-spacing: -0.32px;
     color: #005ea4;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     display: inline !important;
 `;
 

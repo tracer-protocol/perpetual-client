@@ -14,8 +14,6 @@
 body,
 html {
     font-family: 'Akkurat', ui-sans-serif, system-ui, -apple-system, serif !important;
-    background-color: #000240;
-    color: black;
 }
 
 html,
@@ -55,33 +53,6 @@ button:focus {
 
 input:focus::placeholder {
     color: transparent;
-}
-
-/* Scroll bar stuff */
-::-webkit-scrollbar {
-    width: 5px;
-    height: 8px;
-}
-
-/* Track */
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-/* Corner piece */
-::-webkit-scrollbar-corner {
-    display: none;
-}
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background: #3da8f5;
-    cursor: pointer;
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: #0000bd;
 }
 
 a {
@@ -132,20 +103,6 @@ input {
     to {
         height: 0;
     }
-}
-
-.ant-tooltip-inner {
-    background: #002886;
-    color: #3DA8F5;
-}
-.ant-tooltip-inner strong {
-    color: #FFFFFF;
-}
-.ant-tooltip-inner a {
-    text-decoration: underline;
-}
-.ant-tooltip-arrow-content {
-    background-color: #002886;
 }
 
 @tailwind base;

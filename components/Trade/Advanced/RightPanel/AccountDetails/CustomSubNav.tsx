@@ -10,12 +10,12 @@ const TableEntries: React.FC<TEProps> = styled(({ amount, className }: TEProps) 
     <span className={className}>{amount}</span>
 ))`
     background: #005ea4;
-    color: #000240;
+    color: var(--color-background);
     border-radius: 20px;
     text-align: center;
     padding: 5px 15px;
     margin: 5px;
-    font-size: 16px;
+    font-size: var(--font-size-small);
 `;
 type CSNProps = {
     selected: number;
@@ -26,36 +26,40 @@ type CSNProps = {
 const CustomSubNav: React.FC<CSNProps> = ({ setTab, selected, fills, orders }: CSNProps) => (
     <SubNavContainer>
         <SubNavItem
-            className={0 === selected ? 'selected' : ''}
+            className={`${0 === selected ? 'selected' : ''} flex`}
             key={`sub-nav-positions`}
             onClick={(e) => {
                 e.preventDefault();
                 setTab(0);
             }}
         >
-            {'Position'}
+            <div className="m-auto">{'Position'}</div>
         </SubNavItem>
         <SubNavItem
-            className={1 === selected ? 'selected' : ''}
+            className={`${1 === selected ? 'selected' : ''} flex`}
             key={`sub-nav-orders`}
             onClick={(e) => {
                 e.preventDefault();
                 setTab(1);
             }}
         >
-            {'Orders'}
-            <TableEntries amount={orders} />
+            <div className="m-auto">
+                {'Orders'}
+                <TableEntries amount={orders} />
+            </div>
         </SubNavItem>
         <SubNavItem
-            className={2 === selected ? 'selected' : ''}
+            className={`${2 === selected ? 'selected' : ''} flex`}
             key={`sub-nav-fills`}
             onClick={(e) => {
                 e.preventDefault();
                 setTab(2);
             }}
         >
-            {'Fills'}
-            <TableEntries amount={fills} />
+            <div className="m-auto">
+                {'Fills'}
+                <TableEntries amount={fills} />
+            </div>
         </SubNavItem>
     </SubNavContainer>
 );

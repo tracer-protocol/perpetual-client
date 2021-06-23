@@ -48,7 +48,7 @@ const TradeHistory: React.FC = () => {
 
     const TableHeadEndTheme = {
         minWidth: '200px',
-        borderBottom: '1px solid #002886',
+        borderBottom: '1px solid var(--color-accent)',
     };
 
     return (

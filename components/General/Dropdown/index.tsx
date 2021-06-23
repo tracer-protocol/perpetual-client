@@ -37,9 +37,9 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
     margin-bottom: 2rem;
     border-radius: 5px;
     text-align: left;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
-    background: #000240;
+    background: var(--color-background);
 
     & > .body {
         transition: 0.3s ease-in;
@@ -91,13 +91,13 @@ export const Dropdown: React.FC<DProps> = styled(({ className, defaultOpen, head
         </div>
     );
 })`
-    background: #000240;
+    background: var(--color-background);
     overflow: hidden;
     transition: 0.3s ease-in-out;
     margin-left: -10px;
     margin-bottom: 2rem;
     border-radius: 5px;
     text-align: left;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
 `;

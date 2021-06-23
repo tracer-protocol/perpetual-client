@@ -11,7 +11,7 @@ import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';
 
 const SSlideSelect = styled(SlideSelect)`
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: #ffffff;
     width: 300px;
@@ -20,7 +20,7 @@ const SSlideSelect = styled(SlideSelect)`
 `;
 
 const SDown = styled(CaretDownFilled)`
-    font-size: 1.25rem;
+    font-size: var(--font-size-medium);
     & svg {
         transition: 0.3s ease-in-out;
     }
@@ -43,7 +43,7 @@ const DepositTerms = styled.p`
     min-width: 550px;
     width: 100%;
     padding: 0 40px 0 10px;
-    color: #fff;
+    color: var(--color-text);
 
     > .highlight {
         color: #f15025;
@@ -66,12 +66,12 @@ const WithdrawalFee = styled(Section)`
     margin: 0;
 
     .label {
-        color: #fff;
+        color: var(--color-text);
         padding: 0 10px;
     }
     .content {
         padding-right: 10px;
-        color: #fff;
+        color: var(--color-text);
     }
 `;
 

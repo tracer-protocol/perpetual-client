@@ -14,10 +14,10 @@ const ParentDisable = styled(Button)`
         cursor: not-allowed;
         opacity: 0.5;
         background: none;
-        color: #3da8f5;
+        color: var(--color-primary);
 
         &:hover {
-            color: #3da8f5;
+            color: var(--color-primary);
             background: none;
         }
     }

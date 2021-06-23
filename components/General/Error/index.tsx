@@ -115,7 +115,7 @@ const Error: React.FC<EProps> = styled(({ className, error, message, context }: 
 })`
     background: #f15025;
     border-radius: 0px 0px 5px 5px;
-    font-size: 16px;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: #ffffff;
     text-align: center;

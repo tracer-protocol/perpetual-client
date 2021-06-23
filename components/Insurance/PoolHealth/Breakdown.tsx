@@ -41,7 +41,7 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
     );
 })`
     height: 32px;
-    border: 1px solid #fff;
+    border: 1px solid var(--color-text);
     border-radius: 20px;
     display: flex;
     margin: 20px 0;
@@ -56,7 +56,7 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         margin-left: 0;
     }
     > .liquidity {
-        background: #3da8f5;
+        background: var(--color-primary);
         width: calc(
             ${(props) => ((props.liquidity - props.userBalance) / denom(props.target, props.liquidity)) * 100}% - 4px
         );
@@ -105,9 +105,9 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
         </div>
     );
 })`
-    font-size: 1rem;
+    font-size: var(--font-size-small);
     letter-spacing: -0.32px;
-    color: #fff;
+    color: var(--color-text);
     transition: 0.3s;
     min-width: 100px;
     justify-content: space-between;
@@ -120,7 +120,7 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
     }
 
     > span .value {
-        color: #3da8f5;
+        color: var(--color-primary);
     }
 `;
 
@@ -138,13 +138,13 @@ const Label: React.FC<LProps> = styled(({ title, value, className }: LProps) => 
     );
 })`
     > .title {
-        color: #3da8f5;
-        font-size: 1rem;
+        color: var(--color-primary);
+        font-size: var(--font-size-small);
     }
     > .value {
-        font-size: 1.25rem;
+        font-size: var(--font-size-medium);
         letter-spacing: -0.4px;
-        color: #fff;
+        color: var(--color-text);
     }
 `;
 const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, buffer, className }: BProps) => {
@@ -173,7 +173,7 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
                     title="Public"
                     percentage={parseFloat((((liquidity - userBalance - buffer) / liquidity) * 100).toFixed(3))}
                     value={liquidity}
-                    color="#3DA8F5"
+                    color="var(--color-primary)"
                     target="liquidityTarget"
                 />
                 <Section

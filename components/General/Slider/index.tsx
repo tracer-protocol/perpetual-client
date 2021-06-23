@@ -35,12 +35,12 @@ const createMarks = (min: number, max: number) => ({
     },
 });
 
-const defaultRailStyle = { backgroundColor: '#002886', height: 10 };
-const defaultTrackStyle = { backgroundColor: '#002886', height: 10 };
+const defaultRailStyle = { backgroundColor: 'var(--color-accent)', height: 10 };
+const defaultTrackStyle = { backgroundColor: 'var(--color-accent)', height: 10 };
 const defaultHandleStyle = {
     width: '50px',
     height: '30px',
-    background: '#3DA8F5',
+    background: 'var(--color-primary)',
     borderRadius: '20px',
     marginTop: '-11px',
 };
@@ -52,7 +52,7 @@ const DefaultHandle = (e: any) => {
         justify-content: center;
         align-items: center;
         color: white;
-        font-size: 1rem;
+        font-size: var(--font-size-small);
     `;
     const { value } = e;
     return (

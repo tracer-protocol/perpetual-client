@@ -25,17 +25,21 @@ const TitledBox = styled(({ className, title, children }) => {
         </span>
     );
 })`
-    border-right: 1px solid #002886;
-    padding: 0.5rem;
+    border-right: 1px solid var(--color-accent);
+    padding: 0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    margin: auto;
     width: 100%;
-    color: #fff;
+    color: var(--color-text);
     letter-spacing: -0.32px;
-    font-size: 1rem;
+    font-size: var(--font-size-small);
 
     > p {
         color: #005ea4;
-        font-size: 12px;
+        font-size: var(--font-size-extra-small);
         letter-spacing: -0.24px;
+        margin-bottom: 0.2rem;
     }
 `;
 
@@ -78,12 +82,13 @@ const MarketInfo: React.FC<MIProps> = styled(
         );
     },
 )`
-    border-bottom: 1px solid #002886;
+    border-bottom: 1px solid var(--color-accent);
+    height: var(--height-small-container);
     display: flex;
 `;
 
 const OrderBookContainer = styled.div`
-    border-top: 1px solid #002886;
+    border-top: 1px solid var(--color-accent);
     padding: 10px;
     padding-right: 0;
     height: 35vh;
@@ -93,7 +98,7 @@ const OrderBookContainer = styled.div`
         letter-spacing: -0.4px;
         color: #ffffff;
         text-transform: capitalize;
-        font-size: 1.25rem;
+        font-size: var(--font-size-medium);
         margin-bottom: 5px;
     }
 `;
