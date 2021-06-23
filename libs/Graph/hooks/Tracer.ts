@@ -1,7 +1,6 @@
 import { gql, useQuery } from '@apollo/client';
 import { FilledOrder } from 'types/OrderTypes';
 import { useRef } from 'react';
-import { useToasts } from 'react-toast-notifications';
 import Web3 from 'web3';
 import { CandleData } from 'types/TracerTypes';
 import { toBigNumbers } from '..';
@@ -66,20 +65,16 @@ export const useMostRecentMatched: (tracer: string) => {
     refetch: any;
 } = (tracer) => {
     const ref = useRef<FilledOrder[]>([]);
-    const { addToast } = useToasts();
     const { data, error, loading, refetch } = useQuery(TRACER_TRADES, {
         variables: { tracer: tracer.toLowerCase() },
         errorPolicy: 'all',
-        onError: ({ graphQLErrors, networkError }) => {
+        onError: ({ graphQLErrors }) => {
             if (graphQLErrors) {
                 graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
             }
-            if (networkError) {
-                addToast(['Failed to fetch', `Failed to fetch account trades due to network error: ${networkError}`], {
-                    appearance: 'error',
-                    autoDismiss: true,
-                });
-            }
+          
+               
+            
         },
     });
 

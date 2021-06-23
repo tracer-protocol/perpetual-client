@@ -121,7 +121,14 @@ export const InsurancePoolHealthTip: React.FC<TProps> = ({ className, children }
     const tooltip = (
         <p>
             <strong>Insurance Pool Health</strong> The percentage of the pool target that is met by the pool holdings. A
-            higher insurance health indicates the pool holdings are approaching the pool target.
+            higher insurance health indicates the pool holdings are approaching the pool target.{' '}
+            <a
+                href="https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate"
+                target="_blank"
+                rel="noreferrer"
+            >
+                Learn more.
+            </a>
         </p>
     );
     return (
@@ -149,7 +156,14 @@ export const PoolTargetTip: React.FC<BTProps> = ({ baseTicker, className, childr
     const tooltip = (
         <p>
             <strong>Pool Target</strong> The target value for the insurance pool borrowed by leveraged traders in the{' '}
-            {baseTicker} market. <a>Learn more.</a>
+            {baseTicker} market.{' '}
+            <a
+                href="https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate#target"
+                target="_blank"
+                rel="noreferrer"
+            >
+                Learn more.
+            </a>
         </p>
     );
     return (
@@ -164,7 +178,14 @@ export const InsuranceFundingRateTip: React.FC<BTProps> = ({ baseTicker, classNa
         <p>
             <strong>Insurance Funding Rate</strong> A fee that is applied to the borrowings of leveraged traders in the{' '}
             {baseTicker} market to capitalise the {baseTicker} insurance pool. The fee is applied is continuously paid
-            and updated every 8 hours. <a>Learn more.</a>
+            and updated every 8 hours.{' '}
+            <a
+                href="https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate#insurance-funding-rate"
+                target="_blank"
+                rel="noreferrer"
+            >
+                Learn more.
+            </a>
         </p>
     );
     return (
