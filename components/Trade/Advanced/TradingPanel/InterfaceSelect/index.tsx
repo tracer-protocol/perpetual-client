@@ -34,7 +34,7 @@ type ISProps = {
 export default styled(({ className, isAdjust, setAdjust }: ISProps) => {
     return (
         <div className={className}>
-            <p className="flex items-center">{isAdjust ? 'Adjust Position' : 'Place Order'}</p>
+            <p className="flex items-center whitespace-nowrap mr-2">{isAdjust ? 'Adjust Position' : 'Place Order'}</p>
             {isAdjust ? (
                 <SButton onClick={() => setAdjust(false)}>
                     Switch to Place
