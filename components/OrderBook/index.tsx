@@ -129,7 +129,7 @@ export default styled(
                 </BookRow>
                 {renderOrders(false, askOrdersCopy)}
                 <MarketRow>
-                    <Item>
+                    <Item className="mr-auto">
                         {`Best `}
                         <span className="ask px-1">
                             {toApproxCurrency(askOrdersCopy[0]?.price)}
@@ -139,7 +139,7 @@ export default styled(
                             {toApproxCurrency(bidOrdersCopy[0]?.price)}
                         </span>
                     </Item>
-                    <Item className="text-right">
+                    <Item className="no-width">
                         {`Last`}
                         <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>
                             {toApproxCurrency(lastTradePrice)}
@@ -158,6 +158,10 @@ const Item = styled.div`
     width: 100%;
     white-space: nowrap;
     margin: 0 0.8rem;
+
+    &.no-width {
+        width: auto;
+    }
 `;
 
 const BookRow = styled.div`
@@ -189,6 +193,12 @@ const BookRow = styled.div`
 const MarketRow = styled(BookRow)`
     background: var(--color-background-secondary);
     padding: 0.5rem 0;
+    @media (max-width: 1279px) {
+        display: inline-block;
+        ${Item}:first-child {
+            margin-bottom: 0.2rem;
+        }
+    }
 `;
 
 const getPercentage: (cumulative: number, maxCumulative?: number) => number = (
