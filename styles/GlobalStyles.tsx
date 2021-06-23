@@ -17,13 +17,12 @@ export default createGlobalStyle`
         --height-small-button: 28px;
         --height-extra-small-button: 22px;
 
-        @media (max-width: 1535px) { 
+        @media (max-width: 1600px) { 
             --font-size-extra-small: 12px;
             --font-size-small: 13px;
             --font-size-medium: 16px;
             --height-small-container: 45px;
         }
-
       
         background-color: var(--color-background);
         color: var(--color-text);

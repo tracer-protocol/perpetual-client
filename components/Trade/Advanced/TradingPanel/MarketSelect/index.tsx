@@ -111,7 +111,7 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     text-align: center;
     margin: 15px 0;
 
-    @media (max-width: 1535px) {
+    @media (max-width: 1600px) {
         height: 22px;
         & > .down-arrow {
             margin-top: -2px !important;
