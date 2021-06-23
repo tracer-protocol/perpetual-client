@@ -1,6 +1,7 @@
 import { toApproxCurrency } from '@libs/utils';
 import React from 'react';
 import styled from 'styled-components';
+import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/TooltipSelector';
 
 const calcRemainder = (target: number, liquidity: number, userBalance: number, buffer: number) => {
     const total = liquidity - userBalance - buffer;
@@ -84,8 +85,9 @@ type SProps = {
     color: string;
     target: 'userBalanceTarget' | 'bufferTarget' | 'liquidityTarget';
     className?: string;
+    tooltip?: TooltipSelectorProps;
 };
-const Section: React.FC<SProps> = styled(({ title, percentage, value, target, className }: SProps) => {
+const Section: React.FC<SProps> = styled(({ className, title, percentage, value, target, tooltip }: SProps) => {
     return (
         <div
             className={className}
@@ -97,7 +99,13 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
             }}
         >
             <div className="bar" />
-            <p>{title}</p>
+            {tooltip ? (
+                <TooltipSelector tooltip={tooltip}>
+                    <p>{title}</p>
+                </TooltipSelector>
+            ) : (
+                <p>{title}</p>
+            )}
             <span>
                 <span>{Number.isNaN(percentage) ? 0 : percentage}%</span>
                 <span className="value"> | {toApproxCurrency(value)}</span>
@@ -111,6 +119,7 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
     transition: 0.3s;
     min-width: 100px;
     justify-content: space-between;
+    cursor: pointer;
 
     > .bar {
         height: 7px;
@@ -169,6 +178,7 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
                     value={buffer}
                     color="#011772"
                     target="bufferTarget"
+                    tooltip={{ key: 'buffer' }}
                 />
                 <Section
                     title="Public"
@@ -176,6 +186,7 @@ const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, bu
                     value={liquidity}
                     color="var(--color-primary)"
                     target="liquidityTarget"
+                    tooltip={{ key: 'public' }}
                 />
                 <Section
                     title="My Shares"

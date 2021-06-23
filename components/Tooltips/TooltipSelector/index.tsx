@@ -15,7 +15,10 @@ import {
     UnrealisedPnLTip,
     ExposureTip,
     LiquidationPriceTip,
-    CurrentAPYTip, PoolOwnershipTip,
+    CurrentAPYTip,
+    PoolOwnershipTip,
+    BufferTip,
+    PublicTip, EtherscanLinkTip,
 } from '@components/Tooltips';
 import { BigNumber } from 'bignumber.js';
 
@@ -36,7 +39,10 @@ export type TooltipSelectorProps = {
         | 'exposure'
         | 'liquidation-price'
         | 'current-apy'
-        | 'pool-ownership';
+        | 'pool-ownership'
+        | 'buffer'
+        | 'public'
+        | 'etherscan-link';
     props?: {
         baseTicker?: string;
         availableMargin?: number;
@@ -141,6 +147,13 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
             return <CurrentAPYTip className="label">{children}</CurrentAPYTip>;
         case 'pool-ownership':
             return <PoolOwnershipTip className="label">{children}</PoolOwnershipTip>;
+        case 'buffer':
+            return <BufferTip className="label">{children}</BufferTip>;
+        case 'public':
+            return <PublicTip className="label">{children}</PublicTip>;
+
+        case 'etherscan-link':
+            return <EtherscanLinkTip className="label">{children}</EtherscanLinkTip>;
 
         default:
             return <StyledTooltip className="label">{children}</StyledTooltip>;

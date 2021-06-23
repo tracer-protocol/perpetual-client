@@ -305,3 +305,39 @@ export const PoolOwnershipTip: React.FC<TProps> = ({ className, children }: TPro
         </StyledTooltip>
     );
 };
+
+export const BufferTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = (
+        <p>
+            <strong>Buffer</strong> The holdings in the insurance buffer account. The insurance buffer account has
+            priority for insurance expenses and provides a layer of protection for depositors. <a>Learn more.</a>
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+export const PublicTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = (
+        <p>
+            <strong>Public</strong> The holdings in the insurance public account.
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+export const EtherscanLinkTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = <p>View on Etherscan</p>;
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};

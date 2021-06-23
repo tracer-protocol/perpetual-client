@@ -11,7 +11,6 @@ import { InsuranceModal } from '../InsuranceModal';
 import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
 import { toPercent } from '@libs/utils';
 import Link from 'next/link';
-import { StyledTooltip } from '@components/Tooltips';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 
 const Hidden = styled.div`
@@ -87,9 +86,9 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
                 {pool.userBalance.toNumber()} {pool.iPoolTokenName}
             </span>
             <Link href={pool.iPoolTokenURL}>
-                <StyledTooltip title="View on Etherscan">
+                <TooltipSelector tooltip={{ key: 'etherscan-link' }}>
                     <SLinkOutlined className="ml-1" />
-                </StyledTooltip>
+                </TooltipSelector>
             </Link>
             <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
             <Hidden>
