@@ -14,67 +14,87 @@ interface OProps {
     className?: string;
 }
 
-export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, className }: OProps) => {
-	const [decimals, setDecimals] = useState(2);
+export default styled(
+    ({ askOrders, bidOrders, lastTradePrice, marketUp, className }: OProps) => {
+        const [decimals, setDecimals] = useState(2);
 
-    const sumQuantities = (orders: OMEOrder[]) => {
-        return orders.reduce((total, order) => total + order.quantity, 0);
-    };
+        const sumQuantities = (orders: OMEOrder[]) => {
+            return orders.reduce((total, order) => total + order.quantity, 0);
+        };
 
-    const totalAsks = sumQuantities(askOrders);
-    const totalBids = sumQuantities(bidOrders);
-    const maxCumulative = Math.max(totalAsks, totalBids);
+        const totalAsks = sumQuantities(askOrders);
+        const totalBids = sumQuantities(bidOrders);
+        const maxCumulative = Math.max(totalAsks, totalBids);
 
-    const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
+        const deepCopyArrayOfObj = (arr: OMEOrder[]) =>
+            arr.map((order) => Object.assign({}, order));
 
-    // Deep copy and sort orders
-    const askOrdersCopy = deepCopyArrayOfObj(askOrders).sort((a, b) => a.price - b.price); // ascending order
-    const bidOrdersCopy = deepCopyArrayOfObj(bidOrders).sort((a, b) => b.price - a.price); // descending order
+        // Deep copy and sort orders
+        const askOrdersCopy = deepCopyArrayOfObj(askOrders).sort(
+            (a, b) => a.price - b.price,
+        ); // ascending order
+        const bidOrdersCopy = deepCopyArrayOfObj(bidOrders).sort(
+            (a, b) => b.price - a.price,
+        ); // descending order
 
-    const renderOrders = (bid: boolean, orders: OMEOrder[]) => {
-        let cumulative = 0;
-        if (!orders.length) {
-            return (
+        const renderOrders = (bid: boolean, orders: OMEOrder[]) => {
+            let cumulative = 0;
+            if (!orders.length) {
+                return (
+                    <BookRow>
+                        <Item className="py-1"></Item>
+                    </BookRow>
+                );
+            } // return an empty row
+            return orders.map((order: OMEOrder, index: number) => {
+                order.cumulative = cumulative += order.quantity;
+                order.maxCumulative = maxCumulative;
+                return (
+                    <Order
+                        decimals={decimals}
+                        bid={bid}
+                        key={index}
+                        {...order}
+                    />
+                );
+            });
+        };
+
+        return (
+            <div className={className}>
+                <PrecisionDropdown
+                    setDecimals={setDecimals}
+                    decimals={decimals}
+                />
                 <BookRow>
-                    <Item className="py-1"></Item>
+                    <Item>Price</Item>
+                    <Item>Quantity</Item>
+                    <Item>Cumulative</Item>
                 </BookRow>
-            );
-        } // return an empty row
-        return orders.map((order: OMEOrder, index: number) => {
-            order.cumulative = cumulative += order.quantity;
-            order.maxCumulative = maxCumulative;
-            return <Order decimals={decimals} bid={bid} key={index} {...order} />;
-        });
-    };
-
-    return (
-        <div className={className}>
-            <PrecisionDropdown 
-                setDecimals={setDecimals}
-                decimals={decimals}
-            />
-            <BookRow>
-                <Item>Price</Item>
-                <Item>Quantity</Item>
-                <Item>Cumulative</Item>
-            </BookRow>
-            {renderOrders(false, askOrdersCopy.slice(0, 6).reverse())}
-            <MarketRow>
-                <Item>
-                    {`Best `}
-                    <span className="ask px-1">{toApproxCurrency(askOrdersCopy[0]?.price)}</span>
-                    {` / `}
-                    <span className="bid px-1">{toApproxCurrency(bidOrdersCopy[0]?.price)}</span>
-                </Item>
-                <Item className="text-right">
-                    {`Last`}
-                    <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>{toApproxCurrency(lastTradePrice)}</span>
-                </Item>
-            </MarketRow>
-            {renderOrders(true, bidOrdersCopy.slice(0, 6))}
-        </div>
-    );
-})`
+                {renderOrders(false, askOrdersCopy.slice(0, 6).reverse())}
+                <MarketRow>
+                    <Item>
+                        {`Best `}
+                        <span className="ask px-1">
+                            {toApproxCurrency(askOrdersCopy[0]?.price)}
+                        </span>
+                        {` / `}
+                        <span className="bid px-1">
+                            {toApproxCurrency(bidOrdersCopy[0]?.price)}
+                        </span>
+                    </Item>
+                    <Item className="text-right">
+                        {`Last`}
+                        <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>
+                            {toApproxCurrency(lastTradePrice)}
+                        </span>
+                    </Item>
+                </MarketRow>
+                {renderOrders(true, bidOrdersCopy.slice(0, 6))}
+            </div>
+        );
+    },
+)`
     height: 100%;
 ` as React.FC<OProps>;
 
@@ -115,7 +135,10 @@ const MarketRow = styled(BookRow)`
     padding: 0.5rem 0;
 `;
 
-const getPercentage: (cumulative: number, maxCumulative?: number) => number = (cumulative, maxCumulative) => {
+const getPercentage: (cumulative: number, maxCumulative?: number) => number = (
+    cumulative,
+    maxCumulative,
+) => {
     let fillPercentage = (maxCumulative ? cumulative / maxCumulative : 0) * 100;
     fillPercentage = Math.min(fillPercentage, 100); // Percentage can't be greater than 100%
     fillPercentage = Math.max(fillPercentage, 0); // Percentage can't be smaller than 0%
@@ -132,16 +155,27 @@ interface BProps {
     className?: string;
 }
 
-const Order: React.FC<BProps> = ({ 
-    className, cumulative, quantity, price, maxCumulative, bid, decimals
+const Order: React.FC<BProps> = ({
+    className,
+    cumulative,
+    quantity,
+    price,
+    maxCumulative,
+    bid,
+    decimals,
 }: BProps) => {
     return (
         <BookRow className={className}>
-            <Item className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price, 3)}</Item>
+            <Item className={`${bid ? 'bid' : 'ask'}`}>
+                {toApproxCurrency(price, 3)}
+            </Item>
             <Item>{quantity.toFixed(decimals)}</Item>
             <Item
                 className={`fill-${bid ? 'bid' : 'ask'}`}
-                style={{ backgroundSize: getPercentage(cumulative, maxCumulative) + '% 100%' }}
+                style={{
+                    backgroundSize:
+                        getPercentage(cumulative, maxCumulative) + '% 100%',
+                }}
             >
                 {cumulative.toFixed(decimals)}
             </Item>
@@ -158,55 +192,61 @@ const StyledTriangleDown = styled.img`
         transform: rotate(180deg);
         margin-top: -2px;
     }
-`
+`;
 
 const PrecisionDropdownButton = styled(Button)`
     height: var(--height-small-button);
     padding: 0;
     max-width: 5rem;
-`
+`;
 
 type PDProps = {
     setDecimals: (val: number) => void;
     decimals: number;
     className?: string;
-}
+};
 
-const PrecisionDropdown:React.FC<PDProps> = styled((({ className, decimals, setDecimals }: PDProps) => {
-    const [rotated, setRotated] = useState(false);
-	const menu = (
-		<Menu onClick={({ key }) => { setDecimals(parseInt(key)); setRotated(false) }}>
-			<MenuItem key={2}>
-				<span>
-					0.01
-				</span>
-			</MenuItem>
-			<MenuItem key={4}>
-				<span>
-					0.0001
-				</span>
-			</MenuItem>
-		</Menu>
-	);
-    const handleVisibleChange = (visible: boolean) => {
-        setRotated(visible);
-    }
-	return (
-		<Dropdown
-            className={className} 
-			overlay={menu} 
-			placement="bottomCenter"
-            onVisibleChange={handleVisibleChange}
-		>
-       		<PrecisionDropdownButton>
-                {`${Number(0).toPrecision(decimals)}1`}
-                <StyledTriangleDown className={rotated ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
-            </PrecisionDropdownButton>
-      	</Dropdown>
-	)
-}))`
+const PrecisionDropdown: React.FC<PDProps> = styled(
+    ({ className, decimals, setDecimals }: PDProps) => {
+        const [rotated, setRotated] = useState(false);
+        const menu = (
+            <Menu
+                onClick={({ key }) => {
+                    setDecimals(parseInt(key));
+                    setRotated(false);
+                }}
+            >
+                <MenuItem key={2}>
+                    <span>0.01</span>
+                </MenuItem>
+                <MenuItem key={4}>
+                    <span>0.0001</span>
+                </MenuItem>
+            </Menu>
+        );
+        const handleVisibleChange = (visible: boolean) => {
+            setRotated(visible);
+        };
+        return (
+            <Dropdown
+                className={className}
+                overlay={menu}
+                placement="bottomCenter"
+                onVisibleChange={handleVisibleChange}
+            >
+                <PrecisionDropdownButton>
+                    {`${Number(0).toPrecision(decimals)}1`}
+                    <StyledTriangleDown
+                        className={rotated ? 'rotate' : ''}
+                        src="/img/general/triangle_down_cropped.svg"
+                    />
+                </PrecisionDropdownButton>
+            </Dropdown>
+        );
+    },
+)`
     position: absolute;
     right: 0;
     top: 0;
     margin: 0.5rem;
-`
+`;
