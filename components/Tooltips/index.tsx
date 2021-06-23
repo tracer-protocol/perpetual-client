@@ -166,6 +166,7 @@ export const PoolTargetTip: React.FC<BTProps> = ({ baseTicker, className, childr
                     window.open(
                         'https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate#target',
                         '_blank',
+                        'noopener'
                     )
                 }
             >
