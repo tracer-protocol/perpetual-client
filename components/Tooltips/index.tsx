@@ -342,6 +342,7 @@ export const PublicTip: React.FC<TProps> = ({ className, children }: TProps) => 
                     window.open(
                         'https://docs.tracer.finance/products/perpetual-swaps/insurance/direct-deposits#public-insurance-account',
                         '_blank',
+                        'noopener'
                     )
                 }
             >
