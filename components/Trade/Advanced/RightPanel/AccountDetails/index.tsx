@@ -288,7 +288,7 @@ const OpenOrders: React.FC<{
                         <TRow key={`open-order-${index}`}>
                             <TData>{calcStatus(filled)}</TData>
                             <TData className={order.side.toLowerCase() /** This will be the global .bid or .ask */}>
-                                {order.side}
+                                {order.side === 'Bid' ? 'Long' : 'Short'}
                             </TData>
                             <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
                             <TData>
