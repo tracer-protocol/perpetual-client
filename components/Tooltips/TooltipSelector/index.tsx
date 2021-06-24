@@ -15,10 +15,12 @@ import {
     UnrealisedPnLTip,
     ExposureTip,
     LiquidationPriceTip,
+    BestTip,
     CurrentAPYTip,
     PoolOwnershipTip,
     BufferTip,
-    PublicTip, EtherscanLinkTip,
+    PublicTip,
+    EtherscanLinkTip,
 } from '@components/Tooltips';
 import { BigNumber } from 'bignumber.js';
 
@@ -38,6 +40,7 @@ export type TooltipSelectorProps = {
         | 'unrealised-pnl'
         | 'exposure'
         | 'liquidation-price'
+        | 'best'
         | 'current-apy'
         | 'pool-ownership'
         | 'buffer'
@@ -141,6 +144,10 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
                     {children}
                 </LiquidationPriceTip>
             );
+
+        // Order book section
+        case 'best':
+            return <BestTip className="label">{children}</BestTip>;
 
         // Insurance pools section
         case 'current-apy':

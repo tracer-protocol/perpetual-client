@@ -253,10 +253,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     useEffect(() => {
         if (tracers && contract) {
-            fetchPoolData().then(() => {
-                // @ts-ignore
-                document.getElementById('loading').style.display = 'none';
-            });
+            fetchPoolData();
         }
     }, [tracers, contract]);
 
@@ -289,7 +286,6 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             }}
         >
             {children}
-            <img id="loading" alt="tracer-loading" src="/img/TracerLoading.svg" />
         </InsuranceContext.Provider>
     );
 };

@@ -21,8 +21,8 @@ export const SHORT = 1;
 export const ADJUST = 0;
 export const CLOSE = 1;
 // Order types
-export const LIMIT = 0;
-export const MARKET = 1;
+export const MARKET = 0;
+export const LIMIT = 1;
 
 /**
  * Returns the Error ID relating to the mapping above
@@ -42,7 +42,7 @@ const checkErrors: (
     const { quote: newQuote, base: newBase } = order.nextPosition;
     if (!account) {
         return 'ACCOUNT_DISCONNECTED';
-    } else if (orders?.length === 0 && order.orderType === MARKET) {
+    } else if (orders?.length === 0 && order.orderType === MARKET && order.exposure) {
         // there are no orders
         return 'NO_ORDERS';
     } else if (!balances?.base.eq(0) && order.orderType === MARKET && !order.advanced) {
@@ -82,7 +82,7 @@ export const orderDefaults = {
         adjustLeverage: 0, // default to 1x leverage
         position: LONG, // long or short, 1 long, 0 is short
         price: NaN, // price of the market asset in relation to the collateral asset
-        orderType: LIMIT, // orderType
+        orderType: MARKET, // orderType
         adjustType: ADJUST,
         adjustSummary: {
             exposure: 0,

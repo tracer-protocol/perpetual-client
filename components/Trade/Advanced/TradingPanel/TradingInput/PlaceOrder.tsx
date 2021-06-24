@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { OrderContext } from 'context';
-import { orderDefaults } from '@context/OrderContext';
+import { LIMIT, orderDefaults } from '@context/OrderContext';
 import Tracer, { defaults } from '@libs/Tracer';
 import BigNumber from 'bignumber.js';
 import styled from 'styled-components';
@@ -66,7 +66,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 </Details>
 
                 {/*Dont display price select if it is a market order*/}
-                {order?.orderType !== 1 ? (
+                {order?.orderType === LIMIT ? (
                     <>
                         {/* LIMIT ORDER */}
                         <Price

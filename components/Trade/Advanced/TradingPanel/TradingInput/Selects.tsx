@@ -51,8 +51,8 @@ export const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }
             }}
             value={selected}
         >
-            <Option>Limit</Option>
             <Option>Market</Option>
+            <Option>Limit</Option>
         </SlideSelect>
     );
 })`

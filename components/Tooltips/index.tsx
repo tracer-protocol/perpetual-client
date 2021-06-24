@@ -166,7 +166,7 @@ export const PoolTargetTip: React.FC<BTProps> = ({ baseTicker, className, childr
                     window.open(
                         'https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate#target',
                         '_blank',
-                        'noopener'
+                        'noopener',
                     )
                 }
             >
@@ -283,6 +283,21 @@ export const LiquidationPriceTip: React.FC<LPTProps> = ({ className, quote, posi
     );
 };
 
+// Order book section
+export const BestTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = (
+        <p>
+            <strong>Best</strong> The best price offered by the order book. This is the highest bid (for longs), and the
+            lowest ask (for shorts).
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
 // Insurance pools section
 export const CurrentAPYTip: React.FC<TProps> = ({ className, children }: TProps) => {
     const tooltip = (
@@ -320,7 +335,7 @@ export const BufferTip: React.FC<TProps> = ({ className, children }: TProps) => 
                     window.open(
                         'https://docs.tracer.finance/products/perpetual-swaps/insurance/direct-deposits#insurance-buffer-account',
                         '_blank',
-                        'noopener'
+                        'noopener',
                     )
                 }
             >
@@ -344,7 +359,7 @@ export const PublicTip: React.FC<TProps> = ({ className, children }: TProps) => 
                     window.open(
                         'https://docs.tracer.finance/products/perpetual-swaps/insurance/direct-deposits#public-insurance-account',
                         '_blank',
-                        'noopener'
+                        'noopener',
                     )
                 }
             >
