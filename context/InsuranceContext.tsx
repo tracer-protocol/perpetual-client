@@ -231,7 +231,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         }
         const userBalance_ = contract?.methods.getPoolUserBalance(account as string).call();
         const target_ = contract?.methods.getPoolTarget().call();
-        const liquidity_ = contract?.methods.collateralAmount().call();
+        const liquidity_ = contract?.methods.publicCollateralAmount().call();
         Promise.all([userBalance_, target_, liquidity_])
             .then((res) => {
                 const target = res[1] ? new BigNumber(Web3.utils.fromWei(res[1])) : defaults.target;
