@@ -22,12 +22,10 @@ export const toPercent: (value: number) => string = (value) => {
     return `${value * 100} %`;
 };
 
-/**
- * rounds the number based on its epsilon, eg 10e2
- * @param value value to be rounded
- */
-export const round: (value: number) => number = (value) => {
-    return Math.round((value + Number.EPSILON) * 100) / 100;
+export const round: (num: number, decimalPlaces: number) => number = (num, decimalPlaces) => {
+    const p = Math.pow(10, decimalPlaces);
+    const n = num * p * (1 + Number.EPSILON);
+    return Math.round(n) / p;
 };
 
 /**

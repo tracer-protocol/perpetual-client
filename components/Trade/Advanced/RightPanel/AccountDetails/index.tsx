@@ -320,7 +320,7 @@ const Fills: React.FC<{
                                 {!!order.position ? 'Short' : 'Long'}
                             </TData>
                             <TData>{toApproxCurrency(order.price)}</TData>
-                            <TData>{round(order.amount.toNumber())}</TData>
+                            <TData>{round(order.amount.toNumber(), 2)}</TData>
                             {/*TODO: Fee value*/}
                             {/*<TData>{toApproxCurrency(order.amount.times(price))}/$0</TData>*/}
                         </TRow>
