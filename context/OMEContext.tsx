@@ -159,7 +159,7 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
                         maxAsk: maxAsk,
                     },
                 });
-                const ltp = new BigNumber(Web3.utils.fromWei((res as any)?.ltp ?? 0));
+                const ltp = new BigNumber(Web3.utils.fromWei((res as any)?.ltp ?? '0'));
                 omeDispatch({
                     type: 'setMarketUp',
                     value: ltp.gt(omeState.lastTradePrice),
