@@ -6,6 +6,7 @@ import BigNumber from 'bignumber.js';
 import Dropdown from 'antd/lib/dropdown';
 import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
+import TooltipSelector from "@components/Tooltips/TooltipSelector";
 
 interface OProps {
     askOrders: OMEOrder[]; //TODO change these
@@ -123,7 +124,7 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
             {renderOrders(false, askOrdersCopy)}
             <MarketRow>
                 <Item className="mr-auto">
-                    {`Best `}
+                    <TooltipSelector tooltip={{ key: 'best' }}>Best</TooltipSelector>
                     <span className="ask px-1">{toApproxCurrency(askOrdersCopy[0]?.price)}</span>
                     {` / `}
                     <span className="bid px-1">{toApproxCurrency(bidOrdersCopy[0]?.price)}</span>
