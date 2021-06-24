@@ -10,6 +10,7 @@ import Web3 from 'web3';
 import { Callback } from 'web3/types';
 import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 import { useUsersMatched } from '@libs/Graph/hooks/Account';
+import BigNumber from 'bignumber.js';
 
 type Orders = {
     askOrders: FlattenedOMEOrder[];
@@ -58,11 +59,15 @@ type OMEState = {
         minAsk: number;
         maxAsk: number;
     };
+    lastTradePrice: BigNumber;
+    marketUp: boolean;
 };
 type OMEAction =
     | { type: 'setUserOrders'; orders: OMEOrder[] }
     | { type: 'setOrders'; orders: Orders }
     | { type: 'refetchUserOrders' }
+    | { type: 'setLastTradePrice'; ltp: BigNumber }
+    | { type: 'setMarketUp'; value: boolean }
     | {
           type: 'setBestPrices';
           maxAndMins: {
@@ -95,6 +100,8 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
             minAsk: 0,
             maxAsk: 0,
         },
+        lastTradePrice: new BigNumber(0),
+        marketUp: false,
     };
 
     const fetchUserData = async () => {
@@ -152,6 +159,15 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
                         maxAsk: maxAsk,
                     },
                 });
+                const ltp = new BigNumber(Web3.utils.fromWei((res as any)?.ltp ?? 0));
+                omeDispatch({
+                    type: 'setMarketUp',
+                    value: ltp.gt(omeState.lastTradePrice),
+                });
+                omeDispatch({
+                    type: 'setLastTradePrice',
+                    ltp: ltp,
+                });
             }
         }
     };
@@ -173,6 +189,18 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
                 return {
                     ...state,
                     maxAndMins: action.maxAndMins,
+                };
+            }
+            case 'setMarketUp': {
+                return {
+                    ...state,
+                    marketUp: action.value,
+                };
+            }
+            case 'setLastTradePrice': {
+                return {
+                    ...state,
+                    lastTradePrice: action.ltp,
                 };
             }
             case 'refetchUserOrders': {

@@ -1,6 +1,6 @@
 import { gql, useQuery } from '@apollo/client';
 import { FilledOrder } from 'types/OrderTypes';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Web3 from 'web3';
 import { CandleData } from 'types/TracerTypes';
 import { toBigNumbers } from '..';
@@ -72,14 +72,17 @@ export const useMostRecentMatched: (tracer: string) => {
             if (graphQLErrors) {
                 graphQLErrors.map((err) => console.error(`Failed to fetch tracer data: ${err}`));
             }
-          
-               
-            
         },
     });
 
+    useEffect(() => {
+        if (data?.trades) {
+            ref.current = toBigNumbers(data?.trades);
+        }
+    }, [data?.trades]);
+
     return {
-        mostRecentTrades: data?.trades ? toBigNumbers(data?.trades) : ref.current,
+        mostRecentTrades: ref.current,
         error,
         loading,
         refetch,
