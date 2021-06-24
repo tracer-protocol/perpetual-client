@@ -157,8 +157,10 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                     {!balances.quote.eq(0) ? (
                         <Content className="pt-1">
                             {currency === 0
-                                ? `${base.abs().toNumber()} ${baseTicker}`
-                                : `${toApproxCurrency(base.abs().times(fairPrice))} ${quoteTicker}`}
+                                ? `${parseFloat(base.abs().toFixed(3))} ${baseTicker}`
+                                : `${toApproxCurrency(
+                                      parseFloat(base.abs().times(fairPrice).toFixed(3)),
+                                  )} ${quoteTicker}`}
                             <SSlideSelect
                                 onClick={(index, _e) => {
                                     setCurrency(index);
@@ -192,7 +194,11 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                     {!balances.quote.eq(0) ? (
                         <Content>
                             {toApproxCurrency(
-                                calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage),
+                                parseFloat(
+                                    calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(
+                                        3,
+                                    ),
+                                ),
                             )}
                         </Content>
                     ) : (
@@ -286,13 +292,13 @@ const OpenOrders: React.FC<{
                             </TData>
                             <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
                             <TData>
-                                {amount} {baseTicker}
+                                {parseFloat(amount.toFixed(3))} {baseTicker}
                             </TData>
                             <TData>
                                 {filled} {baseTicker}
                             </TData>
                             <TData>
-                                {amountLeft} {baseTicker}
+                                {parseFloat(amountLeft.toFixed(3))} {baseTicker}
                             </TData>
                             <TData>
                                 <Cancel onClick={(_e) => _cancelOrder(order.target_tracer, order.id)}>Cancel</Cancel>
@@ -313,16 +319,14 @@ const Fills: React.FC<{
         <STable headings={['Time', 'Side', 'Price', 'Amount']}>
             <tbody>
                 {filledOrders.map((order, index) => {
-                    const now = Date.now();
-                    const price = order.price;
                     return (
                         <TRow key={`filled-order-${index}`}>
-                            <TData>{timeAgo(now, parseInt(order.timestamp) * 1000)}</TData>
+                            <TData>{timeAgo(Date.now(), parseInt(order.timestamp) * 1000)}</TData>
                             <TData className={!!order.position ? 'ask' : 'bid'}>
                                 {!!order.position ? 'Short' : 'Long'}
                             </TData>
-                            <TData>{toApproxCurrency(price)}</TData>
-                            <TData>{order.amount.toNumber()}</TData>
+                            <TData>{toApproxCurrency(order.price)}</TData>
+                            <TData>{parseFloat(order.amount.toFixed(3))}</TData>
                             {/*TODO: Fee value*/}
                             {/*<TData>{toApproxCurrency(order.amount.times(price))}/$0</TData>*/}
                         </TRow>
