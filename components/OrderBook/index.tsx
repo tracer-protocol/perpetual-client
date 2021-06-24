@@ -44,7 +44,6 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
 
     const renderOrders = useCallback(
         (bid: boolean, orders: OMEOrder[]) => {
-            console.log(orders);
             if (!orders.length) {
                 return (
                     <BookRow>
