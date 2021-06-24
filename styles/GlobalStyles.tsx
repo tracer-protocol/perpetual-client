@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 export default createGlobalStyle`
   	html {
         --color-background: #000240;
+        --color-background-secondary: #00125D;
         --color-text: #fff;
         --color-primary: #3da8f5;
         --color-accent: #002886;
@@ -45,6 +46,15 @@ export default createGlobalStyle`
 	.ant-tooltip-arrow-content {
 		background-color: var(--color-accent);
 	}
+
+    /** GLOBAL TABLE STYLES */
+    .bid, .green {
+        color: #05CB3A;
+    }
+
+    .ask, .red {
+        color: #F15025;
+    }
 
     /* Scroll bar stuff */
     ::-webkit-scrollbar {
