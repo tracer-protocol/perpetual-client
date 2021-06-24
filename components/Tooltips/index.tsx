@@ -382,3 +382,19 @@ export const EtherscanLinkTip: React.FC<TProps> = ({ className, children }: TPro
         </StyledTooltip>
     );
 };
+
+// Insurance modal section
+export const TotalReturnTip: React.FC<BTProps> = ({ className, baseTicker, children }: BTProps) => {
+    const tooltip = (
+        <p>
+            <strong>Total Return</strong> The profits from withdrawing your {baseTicker} which will be deposited to your
+            connected wallet. Total return takes into consideration the current withdrawal fee, however does not account
+            for gas fees.
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};

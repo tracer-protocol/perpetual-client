@@ -211,7 +211,10 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 {isDeposit ? null : (
                     <>
                         <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(0)}`}</WithdrawalFee>
-                        <SSection label="Total Return">{`${toApproxCurrency(0)}`}</SSection>
+                        <SSection
+                            label="Total Return"
+                            tooltip={{ key: 'total-return', props: { baseTicker: selectedTracer?.baseTicker } }}
+                        >{`${toApproxCurrency(0)}`}</SSection>
                     </>
                 )}
                 {/*<SSection label="Predicted Date for Profitable Withdrawal">*/}

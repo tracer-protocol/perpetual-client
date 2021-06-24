@@ -21,6 +21,7 @@ import {
     BufferTip,
     PublicTip,
     EtherscanLinkTip,
+    TotalReturnTip,
 } from '@components/Tooltips';
 import { BigNumber } from 'bignumber.js';
 
@@ -45,7 +46,8 @@ export type TooltipSelectorProps = {
         | 'pool-ownership'
         | 'buffer'
         | 'public'
-        | 'etherscan-link';
+        | 'etherscan-link'
+        | 'total-return';
     props?: {
         baseTicker?: string;
         availableMargin?: number;
@@ -161,6 +163,14 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
 
         case 'etherscan-link':
             return <EtherscanLinkTip className="label">{children}</EtherscanLinkTip>;
+
+        // Insurance modal section
+        case 'total-return':
+            return (
+                <TotalReturnTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                    {children}
+                </TotalReturnTip>
+            );
 
         default:
             return <StyledTooltip className="label">{children}</StyledTooltip>;
