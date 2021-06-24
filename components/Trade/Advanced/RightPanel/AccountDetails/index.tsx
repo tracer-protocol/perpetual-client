@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import { Table, TRow, TData } from '@components/General/Table';
-import { calcStatus, timeAgo, toApproxCurrency, getPositionText } from '@libs/utils';
+import { calcStatus, timeAgo, toApproxCurrency, getPositionText, round } from '@libs/utils';
 import Web3 from 'web3';
 import { calcLiquidationPrice, OMEOrder } from '@tracer-protocol/tracer-utils';
 import { FilledOrder } from 'types/OrderTypes';
@@ -313,16 +313,14 @@ const Fills: React.FC<{
         <STable headings={['Time', 'Side', 'Price', 'Amount']}>
             <tbody>
                 {filledOrders.map((order, index) => {
-                    const now = Date.now();
-                    const price = order.price;
                     return (
                         <TRow key={`filled-order-${index}`}>
-                            <TData>{timeAgo(now, parseInt(order.timestamp) * 1000)}</TData>
+                            <TData>{timeAgo(Date.now(), parseInt(order.timestamp) * 1000)}</TData>
                             <TData className={!!order.position ? 'ask' : 'bid'}>
                                 {!!order.position ? 'Short' : 'Long'}
                             </TData>
-                            <TData>{toApproxCurrency(price)}</TData>
-                            <TData>{order.amount.toNumber()}</TData>
+                            <TData>{toApproxCurrency(order.price)}</TData>
+                            <TData>{round(order.amount.toNumber())}</TData>
                             {/*TODO: Fee value*/}
                             {/*<TData>{toApproxCurrency(order.amount.times(price))}/$0</TData>*/}
                         </TRow>
