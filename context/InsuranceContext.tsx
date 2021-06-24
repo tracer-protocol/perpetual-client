@@ -188,9 +188,9 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 ? contract?.methods.getPoolUserBalance(account as string).call()
                 : Promise.resolve('0'); // we dont want it all to fail if account isnt connected
             const rewards_ = '0';
-            const buffer_ = '0';
+            const buffer_ = contract?.methods.bufferCollateralAmount().call();
             const target_ = contract?.methods.getPoolTarget().call();
-            const liquidity_ = contract?.methods.collateralAmount().call();
+            const liquidity_ = contract?.methods.publicCollateralAmount().call();
             const res = await Promise.all([userBalance_, rewards_, target_, liquidity_, buffer_]);
             const liquidity = res[3] ? new BigNumber(Web3.utils.fromWei(res[3])) : defaults.liquidity;
             const target = res[2] ? new BigNumber(Web3.utils.fromWei(res[2])) : defaults.target;
