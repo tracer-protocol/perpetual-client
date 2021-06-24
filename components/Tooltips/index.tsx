@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
 import { Children } from 'types/General';
+import { BigNumber } from 'bignumber.js';
 
 export const StyledTooltip = styled(Tooltip)`
     color: inherit;
@@ -21,6 +22,7 @@ type BTProps = {
     baseTicker: string;
 } & TProps;
 
+// Market select section
 export const AmountTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
     const tooltip = (
         <p>
@@ -63,6 +65,7 @@ export const LeverageTip: React.FC<TProps> = ({ className, children }: TProps) =
     );
 };
 
+// Margin account section
 export const TotalMarginTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
     const tooltip = (
         <p>
@@ -117,6 +120,7 @@ export const AvailableMarginTip: React.FC<TProps> = ({ className, children }: TP
     );
 };
 
+// Insurance pool health section
 export const InsurancePoolHealthTip: React.FC<TProps> = ({ className, children }: TProps) => {
     const tooltip = (
         <p>
@@ -158,9 +162,13 @@ export const PoolTargetTip: React.FC<BTProps> = ({ baseTicker, className, childr
             <strong>Pool Target</strong> The target value for the insurance pool borrowed by leveraged traders in the{' '}
             {baseTicker} market.{' '}
             <a
-                href="https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate#target"
-                target="_blank"
-                rel="noreferrer"
+                onClick={() =>
+                    window.open(
+                        'https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate#target',
+                        '_blank',
+                        'noopener'
+                    )
+                }
             >
                 Learn more.
             </a>
@@ -195,6 +203,7 @@ export const InsuranceFundingRateTip: React.FC<BTProps> = ({ baseTicker, classNa
     );
 };
 
+// Account details section
 export const RealisedPnLTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
     const tooltip = (
         <p>
@@ -217,6 +226,141 @@ export const UnrealisedPnLTip: React.FC<BTProps> = ({ className, baseTicker, chi
             {baseTicker} position at the current mark price.
         </p>
     );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+export const ExposureTip: React.FC<BTProps> = ({ className, baseTicker, children }: BTProps) => {
+    const tooltip = (
+        <p>
+            <strong>Exposure</strong> The size of your {baseTicker} position.
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+// LiquidationPriceTipProps
+type LPTProps = {
+    className?: string;
+    quote: BigNumber;
+    position: number;
+} & TProps;
+export const LiquidationPriceTip: React.FC<LPTProps> = ({ className, quote, position, children }: LPTProps) => {
+    let tooltip;
+    if (quote.eq(0)) {
+        tooltip = (
+            <p>
+                <strong>Liquidation Price</strong> If the mark price falls below this price (for longs) and rises above
+                this price (for shorts), your position will be liquidated.
+            </p>
+        );
+    } else if (position === 1) {
+        tooltip = (
+            <p>
+                <strong>Liquidation Price</strong> If the mark price falls below this price, your position will be
+                liquidated.
+            </p>
+        );
+    } else if (position === 0) {
+        tooltip = (
+            <p>
+                <strong>Liquidation Price</strong> If the mark price rises above this price, your position will be
+                liquidated.
+            </p>
+        );
+    }
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+// Insurance pools section
+export const CurrentAPYTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = (
+        <p>
+            <strong>Current APY</strong> The current rewards earned by insurance providers.
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+export const PoolOwnershipTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = (
+        <p>
+            <strong>Pool Ownership</strong> The amount of insurance pool tokens you hold.
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+export const BufferTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = (
+        <p>
+            <strong>Buffer</strong> The holdings in the insurance buffer account. The insurance buffer account has
+            priority for insurance expenses and provides a layer of protection for depositors.{' '}
+            <a
+                onClick={() =>
+                    window.open(
+                        'https://docs.tracer.finance/products/perpetual-swaps/insurance/direct-deposits#insurance-buffer-account',
+                        '_blank',
+                        'noopener'
+                    )
+                }
+            >
+                Learn more.
+            </a>
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+export const PublicTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = (
+        <p>
+            <strong>Public</strong> The holdings in the insurance public account.{' '}
+            <a
+                onClick={() =>
+                    window.open(
+                        'https://docs.tracer.finance/products/perpetual-swaps/insurance/direct-deposits#public-insurance-account',
+                        '_blank',
+                        'noopener'
+                    )
+                }
+            >
+                Learn more.
+            </a>
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip}>
+            {children}
+        </StyledTooltip>
+    );
+};
+
+export const EtherscanLinkTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = <p>View on Etherscan</p>;
     return (
         <StyledTooltip className={className} title={tooltip}>
             {children}

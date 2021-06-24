@@ -110,7 +110,9 @@ const StyledHeaderSiteSwitcher = styled.div`
     position: relative;
     display: flex;
     align-items: center;
+
     &:hover {
+        cursor: pointer;
         ${StyledTriangleDown} {
             transform: rotate(180deg);
         }

@@ -29,7 +29,7 @@ const SPrevious = styled(Previous)`
     }
 `;
 
-const SSection = styled(Section)`
+const AccountDetailsSection = styled(Section)`
     display: inline-block;
     position: relative;
     padding: 5px 10px;
@@ -93,7 +93,7 @@ type ContentProps = {
 
 const Position: React.FC<ContentProps> = ({ nextPosition, exposure, tradePrice, balances }) => {
     if (balances.quote.eq(0)) {
-        return <Content>-</Content>;
+        return <>-</>;
     } else if (exposure && tradePrice) {
         return (
             <Content>
@@ -114,7 +114,7 @@ const Leverage: React.FC<ContentProps & { fairPrice: BigNumber }> = ({
 }) => {
     const l = calcLeverage(balances.quote, balances.base, fairPrice);
     if (balances.quote.eq(0)) {
-        return <Content>-</Content>;
+        return <>-</>;
     } else if (exposure && tradePrice) {
         return (
             <Content>
@@ -141,15 +141,19 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
     return (
         <AccountDetails>
             <SectionContainer className="w-2/6 inline-block">
-                <SSection label={'Side'}>
+                <AccountDetailsSection label={'Side'}>
                     <Position
                         balances={balances}
                         nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
                         tradePrice={order?.price ?? 0}
                         exposure={order?.exposure ?? 0}
                     />
-                </SSection>
-                <SSection label={'Exposure'} className="w-full">
+                </AccountDetailsSection>
+                <AccountDetailsSection
+                    label={'Exposure'}
+                    className="w-full"
+                    tooltip={{ key: 'exposure', props: { baseTicker: baseTicker } }}
+                >
                     {!balances.quote.eq(0) ? (
                         <Content className="pt-1">
                             {currency === 0
@@ -168,8 +172,8 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                     ) : (
                         `-`
                     )}
-                </SSection>
-                <SSection label={'Leverage'}>
+                </AccountDetailsSection>
+                <AccountDetailsSection label={'Leverage'}>
                     <Leverage
                         balances={balances}
                         nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
@@ -177,10 +181,14 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                         fairPrice={fairPrice}
                         exposure={order?.exposure ?? 0}
                     />
-                </SSection>
+                </AccountDetailsSection>
             </SectionContainer>
             <SectionContainer className="w-4/6 inline-block">
-                <SSection label={'Liquidation Price'} className="w-1/2 border-right">
+                <AccountDetailsSection
+                    label={'Liquidation Price'}
+                    className="w-1/2 border-right"
+                    tooltip={{ key: 'liquidation-price', props: { quote: balances.quote, position: order?.position } }}
+                >
                     {!balances.quote.eq(0) ? (
                         <Content>
                             {toApproxCurrency(
@@ -190,24 +198,24 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                     ) : (
                         `-`
                     )}
-                </SSection>
-                <SSection
+                </AccountDetailsSection>
+                <AccountDetailsSection
                     label={'Unrealised PnL'}
                     className="w-1/2"
                     tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
                 >
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
-                </SSection>
-                <SSection label={'Mark Price'} className="w-1/2 border-right">
+                </AccountDetailsSection>
+                <AccountDetailsSection label={'Mark Price'} className="w-1/2 border-right">
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
-                </SSection>
-                <SSection
+                </AccountDetailsSection>
+                <AccountDetailsSection
                     label={'Realised PnL'}
                     className="w-1/2"
                     tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
                 >
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
-                </SSection>
+                </AccountDetailsSection>
             </SectionContainer>
         </AccountDetails>
     );

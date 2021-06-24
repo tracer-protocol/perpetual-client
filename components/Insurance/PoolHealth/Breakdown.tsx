@@ -1,6 +1,7 @@
 import { toApproxCurrency } from '@libs/utils';
 import React from 'react';
 import styled from 'styled-components';
+import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/TooltipSelector';
 
 const calcRemainder = (target: number, liquidity: number, userBalance: number, buffer: number) => {
     const total = liquidity - userBalance - buffer;
@@ -16,6 +17,7 @@ const hasFullOwnership = (liquidity: number, userBalance: number) => liquidity =
 const denom = (target: number, liquidity: number) => (target < liquidity ? target : liquidity);
 
 interface BProps {
+    baseTicker?: string;
     target: number;
     liquidity: number;
     userBalance: number;
@@ -26,8 +28,7 @@ interface BProps {
 /**
  * Displays the insurance pool breakdown
  *
- * @requires
- *  liquidity > userBalance
+ * @requires liquidity > userBalance
  *
  */
 const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
@@ -60,6 +61,7 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         width: calc(
             ${(props) => ((props.liquidity - props.userBalance) / denom(props.target, props.liquidity)) * 100}% - 4px
         );
+        border-radius: 20px;
     }
     > .userBalance {
         background: #005ea4;
@@ -84,8 +86,9 @@ type SProps = {
     color: string;
     target: 'userBalanceTarget' | 'bufferTarget' | 'liquidityTarget';
     className?: string;
+    tooltip?: TooltipSelectorProps;
 };
-const Section: React.FC<SProps> = styled(({ title, percentage, value, target, className }: SProps) => {
+const Section: React.FC<SProps> = styled(({ className, title, percentage, value, target, tooltip }: SProps) => {
     return (
         <div
             className={className}
@@ -97,7 +100,13 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
             }}
         >
             <div className="bar" />
-            <p>{title}</p>
+            {tooltip ? (
+                <TooltipSelector tooltip={tooltip}>
+                    <p>{title}</p>
+                </TooltipSelector>
+            ) : (
+                <p>{title}</p>
+            )}
             <span>
                 <span>{Number.isNaN(percentage) ? 0 : percentage}%</span>
                 <span className="value"> | {toApproxCurrency(value)}</span>
@@ -111,6 +120,8 @@ const Section: React.FC<SProps> = styled(({ title, percentage, value, target, cl
     transition: 0.3s;
     min-width: 100px;
     justify-content: space-between;
+    cursor: pointer;
+
     > .bar {
         height: 7px;
         width: 100%;
@@ -128,11 +139,18 @@ type LProps = {
     title: string;
     value: number;
     className?: string;
+    tooltip?: TooltipSelectorProps;
 };
-const Label: React.FC<LProps> = styled(({ title, value, className }: LProps) => {
+const Label: React.FC<LProps> = styled(({ title, value, tooltip, className }: LProps) => {
     return (
         <div className={className}>
-            <div className="title">{title}</div>
+            {tooltip ? (
+                <TooltipSelector tooltip={tooltip}>
+                    <div className="title">{title}</div>
+                </TooltipSelector>
+            ) : (
+                <div className="title">{title}</div>
+            )}
             <div className="value">{toApproxCurrency(value)}</div>
         </div>
     );
@@ -147,46 +165,58 @@ const Label: React.FC<LProps> = styled(({ title, value, className }: LProps) => 
         color: var(--color-text);
     }
 `;
-const Breakdown: React.FC<BProps> = styled(({ target, liquidity, userBalance, buffer, className }: BProps) => {
-    return (
-        <div className={className}>
-            <div className="sections">
-                <Label title="Holdings" value={liquidity} />
-                <Label title="Target" value={target} />
+const Breakdown: React.FC<BProps> = styled(
+    ({ baseTicker, target, liquidity, userBalance, buffer, className }: BProps) => {
+        return (
+            <div className={className}>
+                <div className="sections">
+                    <Label
+                        title="Holdings"
+                        value={liquidity}
+                        tooltip={{ key: `pool-holdings`, props: { baseTicker: baseTicker } }}
+                    />
+                    <Label
+                        title="Target"
+                        value={target}
+                        tooltip={{ key: `pool-target`, props: { baseTicker: baseTicker } }}
+                    />
+                </div>
+                <BreakdownBar
+                    target={target}
+                    liquidity={liquidity}
+                    userBalance={userBalance}
+                    buffer={buffer}
+                    className="bar"
+                />
+                <div className="sections hoverHide">
+                    <Section
+                        title="Buffer"
+                        percentage={parseFloat(((buffer / liquidity) * 100).toFixed(3))}
+                        value={buffer}
+                        color="#011772"
+                        target="bufferTarget"
+                        tooltip={{ key: 'buffer' }}
+                    />
+                    <Section
+                        title="Public"
+                        percentage={parseFloat((((liquidity - userBalance - buffer) / liquidity) * 100).toFixed(3))}
+                        value={liquidity}
+                        color="var(--color-primary)"
+                        target="liquidityTarget"
+                        tooltip={{ key: 'public' }}
+                    />
+                    <Section
+                        title="My Shares"
+                        percentage={parseFloat(((userBalance / liquidity) * 100).toFixed(3))}
+                        value={userBalance}
+                        color="#005EA4"
+                        target="userBalanceTarget"
+                    />
+                </div>
             </div>
-            <BreakdownBar
-                target={target}
-                liquidity={liquidity}
-                userBalance={userBalance}
-                buffer={buffer}
-                className="bar"
-            />
-            <div className="sections hoverHide">
-                <Section
-                    title="Buffer"
-                    percentage={parseFloat(((buffer / liquidity) * 100).toFixed(3))}
-                    value={buffer}
-                    color="#011772"
-                    target="bufferTarget"
-                />
-                <Section
-                    title="Public"
-                    percentage={parseFloat((((liquidity - userBalance - buffer) / liquidity) * 100).toFixed(3))}
-                    value={liquidity}
-                    color="var(--color-primary)"
-                    target="liquidityTarget"
-                />
-                <Section
-                    title="My Shares"
-                    percentage={parseFloat(((userBalance / liquidity) * 100).toFixed(3))}
-                    value={userBalance}
-                    color="#005EA4"
-                    target="userBalanceTarget"
-                />
-            </div>
-        </div>
-    );
-})`
+        );
+    },
+)`
     margin-top: 1rem;
 
     > .sections {

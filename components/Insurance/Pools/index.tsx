@@ -10,8 +10,7 @@ import Breakdown from '../PoolHealth/Breakdown';
 import { InsuranceModal } from '../InsuranceModal';
 import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
 import { toPercent } from '@libs/utils';
-import Link from 'next/link';
-import { StyledTooltip } from '@components/Tooltips';
+import TooltipSelector from '@components/Tooltips/TooltipSelector';
 
 const Hidden = styled.div`
     color: var(--color-primary);
@@ -43,6 +42,7 @@ const HealthCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
             <SProgressBar percent={pool?.health.toNumber()} />
             <Hidden>
                 <Breakdown
+                    baseTicker={pool.market.split('/')[0]}
                     target={pool.target.toNumber()}
                     userBalance={pool.userBalance.toNumber()}
                     liquidity={pool.liquidity.toNumber()}
@@ -69,8 +69,9 @@ const SDownCaret = styled(CaretDownFilled)`
     }
 `;
 
-const SLinkOutlined = styled(LinkOutlined)`
+const StyledLinkOutlined = styled(LinkOutlined)`
     vertical-align: 0.125rem;
+    margin-left: 0.5rem;
 `;
 
 const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
@@ -85,11 +86,9 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
             <span>
                 {pool.userBalance.toNumber()} {pool.iPoolTokenName}
             </span>
-            <Link href={pool.iPoolTokenURL}>
-                <StyledTooltip title="View on Etherscan">
-                    <SLinkOutlined className="ml-1" />
-                </StyledTooltip>
-            </Link>
+            <TooltipSelector tooltip={{ key: 'etherscan-link' }}>
+                <StyledLinkOutlined onClick={() => window.open(pool.iPoolTokenURL, '_blank', 'noopener')} />
+            </TooltipSelector>
             <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
             <Hidden>
                 <ButtonContainer>
@@ -130,17 +129,17 @@ interface IPTProps {
 }
 
 const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IPTProps) => {
-    const headings = ['Market', 'Current APY', 'Health', 'Pool Ownership'];
     const [expanded, setExpanded] = useState(-1);
 
     useEffect(() => {
         document.addEventListener('click', (e) => {
             const table = document.getElementById('pools-table');
             const modal = document.getElementById('insurance-modal');
+            const button = document.getElementById('insurance-submit');
             let target = e.target;
             do {
                 // @ts-ignore
-                if (target === table || target === modal || target?.id === 'insurance-submit') {
+                if (target === table || target === modal || target === button) {
                     // dont exit if its a modal click
                     return;
                 }
@@ -166,13 +165,16 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
         <table id="pools-table" className={className}>
             <thead>
                 <tr>
-                    {headings.map((heading, i) =>
-                        i === 3 ? (
-                            <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
-                        ) : (
-                            <TableHead>{heading}</TableHead>
-                        ),
-                    )}
+                    <TableHead>Market</TableHead>
+                    <TableHead>
+                        <TooltipSelector tooltip={{ key: 'current-apy' }}>Current APY</TooltipSelector>
+                    </TableHead>
+                    <TableHead>
+                        <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Health</TooltipSelector>
+                    </TableHead>
+                    <TableHead theme={TableHeadEndTheme}>
+                        <TooltipSelector tooltip={{ key: 'pool-ownership' }}>Pool Ownership</TooltipSelector>
+                    </TableHead>
                 </tr>
             </thead>
             <tbody>
@@ -184,6 +186,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                             key={`insurance-row-${i}`}
                             className={show ? 'selected' : ''}
                             onClick={(e) => onClick(e, i)}
+                            theme={expanded ? '' : {}}
                         >
                             <TableCell>
                                 <Collapsible className="pt-1">

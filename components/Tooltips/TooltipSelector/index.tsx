@@ -13,7 +13,14 @@ import {
     InsuranceFundingRateTip,
     RealisedPnLTip,
     UnrealisedPnLTip,
+    ExposureTip,
+    LiquidationPriceTip,
+    CurrentAPYTip,
+    PoolOwnershipTip,
+    BufferTip,
+    PublicTip, EtherscanLinkTip,
 } from '@components/Tooltips';
+import { BigNumber } from 'bignumber.js';
 
 export type TooltipSelectorProps = {
     key:
@@ -28,11 +35,20 @@ export type TooltipSelectorProps = {
         | 'pool-target'
         | 'insurance-funding-rate'
         | 'realised-pnl'
-        | 'unrealised-pnl';
+        | 'unrealised-pnl'
+        | 'exposure'
+        | 'liquidation-price'
+        | 'current-apy'
+        | 'pool-ownership'
+        | 'buffer'
+        | 'public'
+        | 'etherscan-link';
     props?: {
         baseTicker?: string;
         availableMargin?: number;
         maxLeverage?: number;
+        quote?: BigNumber;
+        position?: number;
     };
 };
 
@@ -96,7 +112,7 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
                 </InsuranceFundingRateTip>
             );
 
-        // Position account section
+        // Account details section
         case 'realised-pnl':
             return (
                 <RealisedPnLTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
@@ -109,6 +125,35 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
                     {children}
                 </UnrealisedPnLTip>
             );
+        case 'exposure':
+            return (
+                <ExposureTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                    {children}
+                </ExposureTip>
+            );
+        case 'liquidation-price':
+            return (
+                <LiquidationPriceTip
+                    quote={tooltip?.props?.quote ?? new BigNumber(NaN)}
+                    position={tooltip?.props?.position ?? NaN}
+                    className="label"
+                >
+                    {children}
+                </LiquidationPriceTip>
+            );
+
+        // Insurance pools section
+        case 'current-apy':
+            return <CurrentAPYTip className="label">{children}</CurrentAPYTip>;
+        case 'pool-ownership':
+            return <PoolOwnershipTip className="label">{children}</PoolOwnershipTip>;
+        case 'buffer':
+            return <BufferTip className="label">{children}</BufferTip>;
+        case 'public':
+            return <PublicTip className="label">{children}</PublicTip>;
+
+        case 'etherscan-link':
+            return <EtherscanLinkTip className="label">{children}</EtherscanLinkTip>;
 
         default:
             return <StyledTooltip className="label">{children}</StyledTooltip>;
