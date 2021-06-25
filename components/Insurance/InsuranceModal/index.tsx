@@ -80,6 +80,10 @@ const WithdrawalFee = styled(Section)`
 const SSection = styled(Section)`
     padding: 5px 10px;
     margin: 0;
+
+    &.title > .label {
+        color: white;
+    }
 `;
 
 const CheckboxContainer = styled.div`
@@ -193,13 +197,12 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 balance={balance?.toNumber() ?? 0}
                 setAmount={setAmount}
             />
-            {isDeposit ? null : (
-                <WithdrawalNote className="mt-6">
-                    <span className="title">Note:</span> The value of the insurance fund is less than the target and you
-                    are required to pay a withdrawal fee. Do you wish to proceed with the withdrawal?
-                </WithdrawalNote>
-            )}
             <SHiddenExpand defaultHeight={0} open={!!amount}>
+                {isDeposit ? (
+                    <SSection className={`title`} label={`Deposit Summary`} />
+                ) : (
+                    <SSection className={`title`} label={`Withdrawal Summary`} />
+                )}
                 <SSection label={`Pool Ownership`}>
                     <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                     {`${toApproxCurrency(newBalance)}`}
@@ -225,6 +228,12 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 {/*    })}*/}
                 {/*</SSection>*/}
             </SHiddenExpand>
+            {isDeposit ? null : (
+                <WithdrawalNote className="mb-8">
+                    <span className="title">Note:</span> The value of the insurance fund is less than the target and you
+                    are required to pay a withdrawal fee. Do you wish to proceed with the withdrawal?
+                </WithdrawalNote>
+            )}
             {isDeposit ? (
                 <CheckboxContainer
                     onClick={(e: any) => {
