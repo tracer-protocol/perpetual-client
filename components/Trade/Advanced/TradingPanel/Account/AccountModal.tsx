@@ -72,7 +72,7 @@ type AMProps = {
     display: boolean;
     unit: string;
     balances: UserBalance;
-    price: BigNumber;
+    fairPrice: BigNumber;
     maxLeverage: BigNumber;
 };
 
@@ -121,7 +121,7 @@ const reducer = (state: ModalState, action: ModalAction) => {
 };
 
 export default styled(
-    ({ className, close, isDeposit, unit, balances, price, maxLeverage, display, setDeposit }: AMProps) => {
+    ({ className, close, isDeposit, unit, balances, fairPrice, maxLeverage, display, setDeposit }: AMProps) => {
         const {
             deposit = () => console.error('Deposit is not defined'),
             withdraw = () => console.error('Withdraw is not defined'),
@@ -132,24 +132,22 @@ export default styled(
 
         const available = isDeposit
             ? balances.tokenBalance
-            : calcTotalMargin(balances.quote, balances.base, price).minus(
-                  calcMinimumMargin(balances.quote, balances.base, price, maxLeverage),
-              );
+            : balances.totalMargin.minus(calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage));
         const newBalance = isDeposit ? balances.quote.plus(state.amount) : balances.quote.minus(state.amount);
 
         const checkErrors = useCallback(() => {
             if (state.amount > available.toNumber()) {
                 return 'INSUFFICIENT_FUNDS';
             } else if (
-                (state.amount < calcMinimumMargin(balances.quote, balances.base, price, maxLeverage).toNumber() ||
+                (state.amount < calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage).toNumber() ||
                     // TODO remove 160 for dynamic calculation of liquidation gas cost
-                    state.amount < 150 - calcTotalMargin(balances.quote, balances.base, price).toNumber()) &&
+                    state.amount < 150 - balances.totalMargin.toNumber()) &&
                 isDeposit
             ) {
                 return 'DEPOSIT_MORE';
             } else if (
-                calcTotalMargin(newBalance, balances.base, price).lt(
-                    calcMinimumMargin(newBalance, balances.base, price, maxLeverage ?? defaults.maxLeverage),
+                balances.totalMargin.lt(
+                    calcMinimumMargin(newBalance, balances.base, fairPrice, maxLeverage ?? defaults.maxLeverage),
                 )
             ) {
                 return 'WITHDRAW_INVALID';
@@ -193,25 +191,25 @@ export default styled(
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>
                     <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
                     <Section label={`Total Margin`}>
-                        <Previous>{`${toApproxCurrency(
-                            calcTotalMargin(balances.quote, balances.base, price),
-                        )}`}</Previous>
-                        {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, price))}`}
+                        <Previous>{`${toApproxCurrency(balances.totalMargin)}`}</Previous>
+                        {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, fairPrice))}`}
                     </Section>
                     <Section label={`Buying Power`}>
                         <Previous>{`${toApproxCurrency(
-                            calcBuyingPower(balances.quote, balances.base, price, maxLeverage),
+                            calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
                         )}`}</Previous>
-                        {`${toApproxCurrency(calcBuyingPower(newBalance, balances.base, price, maxLeverage))}`}
+                        {`${toApproxCurrency(calcBuyingPower(newBalance, balances.base, fairPrice, maxLeverage))}`}
                     </Section>
                     <Section label={`Available Margin`}>
                         <Previous>{`${calcAvailableMarginPercent(
                             balances.quote,
                             balances.base,
-                            price,
+                            fairPrice,
                             maxLeverage,
                         ).toPrecision(3)}%`}</Previous>
-                        {`${calcAvailableMarginPercent(newBalance, balances.base, price, maxLeverage).toPrecision(3)}%`}
+                        {`${calcAvailableMarginPercent(newBalance, balances.base, fairPrice, maxLeverage).toPrecision(
+                            3,
+                        )}%`}
                     </Section>
                 </SHiddenExpand>
                 <div className="text-center">

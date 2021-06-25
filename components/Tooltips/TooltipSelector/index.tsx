@@ -22,7 +22,9 @@ import {
     PublicTip,
     EtherscanLinkTip,
     TotalReturnTip,
-} from '@components/Tooltips';
+    AdjustPositionTip,
+    NewOrderTip,
+} from '../';
 import { BigNumber } from 'bignumber.js';
 
 export type TooltipSelectorProps = {
@@ -47,7 +49,9 @@ export type TooltipSelectorProps = {
         | 'buffer'
         | 'public'
         | 'etherscan-link'
-        | 'total-return';
+        | 'total-return'
+        | 'adjust-position'
+        | 'new-order';
     props?: {
         baseTicker?: string;
         availableMargin?: number;
@@ -172,6 +176,18 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
                 </TotalReturnTip>
             );
 
+        case 'adjust-position':
+            return (
+                <AdjustPositionTip className="label" baseTicker={tooltip.props?.baseTicker ?? ''}>
+                    {children}
+                </AdjustPositionTip>
+            );
+        case 'new-order':
+            return (
+                <NewOrderTip className="label" baseTicker={tooltip.props?.baseTicker ?? ''}>
+                    {children}
+                </NewOrderTip>
+            );
         default:
             return <StyledTooltip className="label">{children}</StyledTooltip>;
     }

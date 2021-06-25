@@ -22,7 +22,7 @@ import { checkAllowance } from '../web3/utils';
 import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
 import { TransactionReceipt } from 'web3/types';
-import { calcLeverage } from '@tracer-protocol/tracer-utils';
+import { calcLeverage, calcTotalMargin } from '@tracer-protocol/tracer-utils';
 // @ts-ignore
 import { Callback } from 'web3/types';
 
@@ -33,7 +33,8 @@ export const defaults: Record<string, any> = {
         tokenBalance: new BigNumber(0),
         totalLeveragedValue: 0,
         lastUpdatedGasPrice: 0,
-        leverage: new BigNumber(1),
+        leverage: new BigNumber(0),
+        totalMargin: new BigNumber(0),
     },
     maxLeverage: new BigNumber(25),
     oraclePrice: new BigNumber(0),
@@ -207,11 +208,14 @@ export default class Tracer {
                     ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
                     : new BigNumber(0),
             };
-            const leverage = calcLeverage(parsedBalances.quote, parsedBalances.base, this.oraclePrice);
+            const { quote, base } = parsedBalances;
+            const leverage = calcLeverage(quote, base, this.fairPrice);
+            const totalMargin = calcTotalMargin(quote, base, this.fairPrice);
             console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
             this.balances = {
                 ...parsedBalances,
-                leverage: leverage.gt(1) ? leverage : defaults.balances.leverage,
+                leverage: !leverage.eq(0) && leverage ? leverage : defaults.balances.leverage,
+                totalMargin: !totalMargin.eq(0) && totalMargin ? totalMargin : defaults.balances.totalMargin,
             };
             return parsedBalances;
         } catch (error) {

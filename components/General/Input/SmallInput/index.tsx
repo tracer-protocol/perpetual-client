@@ -22,7 +22,7 @@ const Max = styled.a`
     }
 `;
 
-const InputContainer = styled.div`
+export const InputContainer = styled.div`
     background: var(--color-accent);
     border-radius: 20px;
     display: flex;
@@ -54,7 +54,7 @@ type SIProps = {
     amount: number | undefined;
     onChange: (e: ChangeEvent<HTMLInputElement>) => void;
     setMax?: (e: any) => void;
-    unit: string;
+    unit?: string;
     title: string;
     maxText?: string; // used if you dont want it to be max
     className?: string;
@@ -64,7 +64,11 @@ type SIProps = {
 const SmallInput: React.FC<SIProps> = styled(
     ({ title, amount, onChange, unit, setMax, maxText, tooltip, className }: SIProps) => (
         <div className={className}>
-            {tooltip ? <TooltipSelector tooltip={tooltip}>{title}</TooltipSelector> : `${title}`}
+            {tooltip ? (
+                <TooltipSelector tooltip={tooltip}>{title}</TooltipSelector>
+            ) : (
+                <span className="label">{title}</span>
+            )}
             <InputContainer>
                 <Max className={`${!setMax ? 'hide' : ''}`} onClick={setMax}>
                     {maxText}
@@ -73,11 +77,11 @@ const SmallInput: React.FC<SIProps> = styled(
                     id="margin"
                     type="number"
                     placeholder="0.0"
-                    min="0"
+                    min={0}
                     onChange={onChange}
                     value={!Number.isNaN(amount) ? amount : ''}
                 />
-                <a className="unit">{unit}</a>
+                {unit ? <a className="unit">{unit}</a> : null}
             </InputContainer>
         </div>
     ),
