@@ -109,7 +109,7 @@ const Collapsible = styled.div`
     overflow: hidden;
     padding-top: 0.6rem;
 
-    font-size: var(--font-size-medium);
+    font-size: var(--font-size-small);
 
     .selected &,
     &.show {
@@ -157,6 +157,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
 
     const TableHeadEndTheme = {
         minWidth: '700px',
+        padding: '0 1rem',
         borderRight: '1px solid var(--color-accent)',
         borderBottom: '1px solid var(--color-accent)',
     };
@@ -189,7 +190,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                             theme={expanded ? '' : {}}
                         >
                             <TableCell>
-                                <Collapsible className="pt-1">
+                                <Collapsible>
                                     <MarketNameContainer>
                                         <SDownCaret />
                                         <Logo className="ml-2" ticker="ETH" />
@@ -197,10 +198,10 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                                     </MarketNameContainer>
                                 </Collapsible>
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="pt-4">
                                 <Collapsible>{toPercent(pool.apy.toNumber())}</Collapsible>
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="pt-2">
                                 <Collapsible>
                                     <HealthCell pool={pool} />
                                 </Collapsible>

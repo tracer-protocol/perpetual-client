@@ -74,13 +74,13 @@ Button.defaultProps = {
 };
 
 export const TableHead = styled.th`
+    text-align: left;
+    color: var(--color-primary);
     max-width: ${(props: any) => props.theme.maxWidth as string};
     min-width: ${(props: any) => props.theme.minWidth as string};
     width: ${(props: any) => props.theme.width};
-    height: 57px;
-    text-align: left;
-    color: var(--color-primary);
-    padding: 0 1rem;
+    height: ${(props: any) => props.theme.height as string};
+    padding: ${(props: any) => props.theme.padding as string};
     font-weight: normal;
     border-right: ${(props: any) => props.theme.borderRight as string};
     border-bottom: ${(props: any) => props.theme.borderBottom as string};
@@ -91,6 +91,8 @@ TableHead.defaultProps = {
         maxWidth: '300px',
         minWidth: '140px',
         width: 'auto',
+        height: '50px',
+        padding: '0 1rem',
         borderRight: '1px solid var(--color-accent)',
         borderBottom: '1px solid var(--color-accent)',
     },
@@ -98,6 +100,7 @@ TableHead.defaultProps = {
 
 export const TableRow = styled.tr`
     transition: 0.5s;
+    height: ${(props: any) => props.theme.height as string};
     display: ${(props: any) => props.theme.display as string};
     color: ${(props: any) => props.theme.color as string};
     opacity: ${(props: any) => props.theme.opacity as string};
@@ -120,8 +123,7 @@ TableRow.defaultProps = {
 
 export const TableCell = styled.td`
     color: ${(props: any) => props.color as string};
-    font-size: var(--font-size-small);
-    padding: 0 1rem;
+    padding: ${(props: any) => props.theme.padding as string};
     height: ${(props: any) => props.theme.height as string};
     border-right: ${(props: any) => props.theme.borderRight as string};
     border-bottom: ${(props: any) => props.theme.borderBottom as string};
@@ -129,7 +131,7 @@ export const TableCell = styled.td`
 
 TableCell.defaultProps = {
     theme: {
-        height: '70px',
+        padding: '0 1rem',
         borderRight: '1px solid var(--color-accent)',
         borderBottom: '1px solid var(--color-accent)',
     },
