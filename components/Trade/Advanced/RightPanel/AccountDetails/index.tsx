@@ -129,12 +129,20 @@ const Leverage: React.FC<ContentProps & { fairPrice: BigNumber }> = ({
 interface IProps {
     balances: UserBalance;
     fairPrice: BigNumber;
+    lastPrice: number;
     maxLeverage: BigNumber;
     baseTicker: string;
     quoteTicker: string;
 }
 
-const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, quoteTicker, maxLeverage }: IProps) => {
+const PositionDetails: React.FC<IProps> = ({
+    balances,
+    fairPrice,
+    lastPrice,
+    baseTicker,
+    quoteTicker,
+    maxLeverage,
+}: IProps) => {
     const { order } = useContext(OrderContext);
     const [currency, setCurrency] = useState(0); // 0 quoted in base
     const { base } = balances;
@@ -212,8 +220,8 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                 >
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                 </AccountDetailsSection>
-                <AccountDetailsSection label={'Mark Price'} className="w-1/2 border-right">
-                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
+                <AccountDetailsSection label={'Last Price'} className="w-1/2 border-right">
+                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(lastPrice)}</Content> : `-`}
                 </AccountDetailsSection>
                 <AccountDetailsSection
                     label={'Realised PnL'}
@@ -364,6 +372,7 @@ export default styled(({ selectedTracer, className }: TSProps) => {
                     <PositionDetails
                         balances={balances}
                         fairPrice={fairPrice}
+                        lastPrice={omeState?.maxAndMins?.maxAsk ?? 0}
                         maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                         baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
                         quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
