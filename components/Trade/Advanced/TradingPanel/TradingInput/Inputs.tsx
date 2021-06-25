@@ -14,7 +14,7 @@ export const Exposure: React.FC<{
     order: OrderState;
     closeInput?: boolean; // optional boolean if it is for closing defaults to false
     className?: string;
-}> = ({ selectedTracer, orderDispatch, order, closeInput, className }) => {
+}> = ({ selectedTracer, orderDispatch, order, className }) => {
     return (
         <SmallInput
             title={'Amount'}
@@ -26,19 +26,16 @@ export const Exposure: React.FC<{
             }}
             className={className ?? ''}
             onChange={(e) => {
-                if (orderDispatch) {
-                    orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) });
-                    orderDispatch({ type: 'setLeverageFromExposure', amount: parseFloat(e.target.value) });
-                } else {
-                    console.error('No dispatch function set');
-                }
-            }}
-            setMax={(e) => {
-                e.preventDefault();
                 orderDispatch
-                    ? orderDispatch({ type: closeInput ? 'setMaxClosure' : 'setMaxExposure' })
+                    ? orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) })
                     : console.error('No dispatch function set');
             }}
+            // setMax={(e) => {
+            //     e.preventDefault();
+            //     orderDispatch
+            //         ? orderDispatch({ type: closeInput ? 'setMaxClosure' : 'setMaxExposure' })
+            //         : console.error('No dispatch function set');
+            // }}
             unit={selectedTracer?.baseTicker ?? ''}
             amount={order.exposure}
         />
