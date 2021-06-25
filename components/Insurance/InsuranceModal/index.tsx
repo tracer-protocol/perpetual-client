@@ -9,6 +9,7 @@ import { Button, Checkbox, Dropdown, HiddenExpand, Previous, NumberSelect, Secti
 import TracerModal from '@components/General/TracerModal';
 import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';
+import ErrorComponent from '@components/General/Error';
 
 const SSlideSelect = styled(SlideSelect)`
     font-size: var(--font-size-small);
@@ -62,7 +63,7 @@ const SHiddenExpand = styled(HiddenExpand)`
 `;
 
 const WithdrawalFee = styled(Section)`
-    background: #f15025;
+    background: #f4ab57;
     background-size: 100%;
     border-bottom: 1px solid #011772;
     padding: 5px 0;
@@ -263,6 +264,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     <Button className="disabled">{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
                 )}
             </div>
+            <ErrorComponent context="margin" error={amount > balance ? 'INSUFFICIENT_FUNDS' : 'NO_ERROR'} />
         </TracerModal>
     );
 };
