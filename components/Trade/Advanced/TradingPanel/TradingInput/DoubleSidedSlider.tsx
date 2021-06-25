@@ -72,7 +72,6 @@ export default styled(
         );
     },
 )`
-    padding: 0 12px;
     margin-bottom: 5rem;
     position: relative;
     .rc-slider-dot {

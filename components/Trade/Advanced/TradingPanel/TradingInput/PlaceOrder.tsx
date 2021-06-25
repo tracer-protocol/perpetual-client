@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import { Box } from '@components/General';
 import { AdvancedOrderButton } from '@components/Buttons';
 import Error from '@components/General/Error';
-import { Exposure, Price } from './Inputs';
+import { Exposure, LeverageInput, Price } from './Inputs';
 import { MarketTradeDetails, LimitTradeDetails } from './PostTradeDetails';
 import { OrderTypeSelect, PositionSelect } from './Selects';
 import DoubleSidedSlider from './DoubleSidedSlider';
@@ -45,7 +45,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 {/* Quantity and Price Inputs */}
                 <Exposure
                     orderDispatch={orderDispatch}
-                    className="pb-0"
+                    className="pb-0 px-8"
                     selectedTracer={selectedTracer}
                     order={order ?? orderDefaults.order}
                 />
@@ -61,6 +61,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     <>
                         {/* LIMIT ORDER */}
                         <Price
+                            className="px-8"
                             orderDispatch={orderDispatch}
                             selectedTracer={selectedTracer}
                             price={order?.price ?? defaults.price}
@@ -78,7 +79,14 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     <>
                         {/* MARKET ORDER */}
                         <Divider text={'Adust Position'} tooltip={'adjust-position'} />
+                        <LeverageInput 
+                            className="px-8"
+                            orderDispatch={orderDispatch}
+                            selectedTracer={selectedTracer}
+                            leverage={order?.adjustLeverage ?? 0}
+                        />
                         <DoubleSidedSlider
+                            className="px-8"
                             min={selectedTracer?.getMaxLeverage().negated().toNumber()}
                             max={selectedTracer?.getMaxLeverage().toNumber()}
                             value={order?.adjustLeverage}

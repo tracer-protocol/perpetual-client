@@ -1,5 +1,5 @@
 import React from 'react';
-import SmallInput from '@components/General/Input/SmallInput';
+import SmallInput, { InputContainer } from '@components/General/Input/SmallInput';
 import { Tracer } from 'libs';
 import { LIMIT, OrderAction, OrderState } from '@context/OrderContext';
 import DefaultSlider from '@components/General/Slider';
@@ -16,34 +16,32 @@ export const Exposure: React.FC<{
     className?: string;
 }> = ({ selectedTracer, orderDispatch, order, closeInput, className }) => {
     return (
-        <>
-            <SmallInput
-                title={'Amount'}
-                tooltip={{
-                    key: 'amount',
-                    props: {
-                        baseTicker: selectedTracer?.baseTicker ?? '',
-                    },
-                }}
-                className={className ?? ''}
-                onChange={(e) => {
-                    if (orderDispatch) {
-                        orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) });
-                        orderDispatch({ type: 'setLeverageFromExposure', amount: parseFloat(e.target.value) });
-                    } else {
-                        console.error('No dispatch function set');
-                    }
-                }}
-                setMax={(e) => {
-                    e.preventDefault();
-                    orderDispatch
-                        ? orderDispatch({ type: closeInput ? 'setMaxClosure' : 'setMaxExposure' })
-                        : console.error('No dispatch function set');
-                }}
-                unit={selectedTracer?.baseTicker ?? ''}
-                amount={order.exposure}
-            />
-        </>
+        <SmallInput
+            title={'Amount'}
+            tooltip={{
+                key: 'amount',
+                props: {
+                    baseTicker: selectedTracer?.baseTicker ?? '',
+                },
+            }}
+            className={className ?? ''}
+            onChange={(e) => {
+                if (orderDispatch) {
+                    orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) });
+                    orderDispatch({ type: 'setLeverageFromExposure', amount: parseFloat(e.target.value) });
+                } else {
+                    console.error('No dispatch function set');
+                }
+            }}
+            setMax={(e) => {
+                e.preventDefault();
+                orderDispatch
+                    ? orderDispatch({ type: closeInput ? 'setMaxClosure' : 'setMaxExposure' })
+                    : console.error('No dispatch function set');
+            }}
+            unit={selectedTracer?.baseTicker ?? ''}
+            amount={order.exposure}
+        />
     );
 };
 
@@ -54,35 +52,73 @@ export const Price: React.FC<{
     className?: string;
 }> = ({ selectedTracer, orderDispatch, price, className }) => {
     return (
-        <>
-            <SmallInput
-                title={'Price'}
-                tooltip={{
-                    key: 'price',
-                    props: {
-                        baseTicker: selectedTracer?.baseTicker ?? '',
-                    },
-                }}
-                className={className ?? ''}
-                setMax={(e) => {
-                    e.preventDefault();
-                    orderDispatch ? orderDispatch({ type: 'setBestPrice' }) : console.error('No dispatch function set');
-                }}
-                maxText={'Best'}
-                onChange={(e) => {
-                    if (orderDispatch) {
-                        orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
-                        orderDispatch({ type: 'setOrderType', value: LIMIT });
-                    } else {
-                        console.error('No dispatch function set');
-                    }
-                }}
-                unit={selectedTracer?.quoteTicker ?? ''}
-                amount={price}
-            />
-        </>
+        <SmallInput
+            title={'Price'}
+            tooltip={{
+                key: 'price',
+                props: {
+                    baseTicker: selectedTracer?.baseTicker ?? '',
+                },
+            }}
+            className={className ?? ''}
+            setMax={(e) => {
+                e.preventDefault();
+                orderDispatch ? orderDispatch({ type: 'setBestPrice' }) : console.error('No dispatch function set');
+            }}
+            maxText={'Best'}
+            onChange={(e) => {
+                if (orderDispatch) {
+                    orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
+                    orderDispatch({ type: 'setOrderType', value: LIMIT });
+                } else {
+                    console.error('No dispatch function set');
+                }
+            }}
+            unit={selectedTracer?.quoteTicker ?? ''}
+            amount={price}
+        />
     );
 };
+
+const StyledSmallInput = styled(SmallInput)`
+    justify-content: flex-start;
+    ${InputContainer} {
+        margin-left: 1rem;
+        width: 70px;
+    }
+`
+export const LeverageInput: React.FC<{
+    orderDispatch: React.Dispatch<OrderAction> | undefined;
+    selectedTracer: Tracer | undefined;
+    leverage: number;
+    className?: string;
+}> = ({ selectedTracer, orderDispatch, leverage, className }) => {
+    return (
+        <StyledSmallInput
+            title={'Leverage'}
+            className={className ?? ''}
+            onChange={(e) => {
+                if (orderDispatch) {
+                    let leverage = parseFloat(e.target.value);
+                    if (Number.isNaN(leverage)) {
+                        orderDispatch({ type: 'setAdjustLeverage', value: leverage });
+                    } else if (leverage <= (selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage).toNumber()) {
+                        orderDispatch({
+                            type: 'setExposureFromLeverage',
+                            leverage: parseFloat(e.target.value),
+                        });
+                        orderDispatch({ type: 'setAdjustLeverage', value: Math.abs(leverage) });
+                    }
+                } else {
+                    console.error('No dispatch function set');
+                }
+            }}
+            amount={Math.abs(leverage)}
+        />
+    );
+};
+
+
 
 export const Closure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;

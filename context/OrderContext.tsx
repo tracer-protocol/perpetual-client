@@ -148,7 +148,6 @@ export type OrderAction =
     | {
           type: 'setLeverageFromExposure';
           amount: number;
-          forcePosition?: number;
       }
     | { type: 'setSlippage'; value: number }
     | { type: 'setMarketTradePrice'; value: BigNumber }
@@ -277,6 +276,11 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     } else {
                         position = LONG;
                     }
+                } else { // base is 0
+                    return {
+                        ...state,
+                        position: action.leverage < 0 ? SHORT : action.leverage > 0 ? LONG : state.position
+                    };
                 }
                 const notional = totalMargin.times(action.leverage);
                 let targetExposure = notional.div(fairPrice);
@@ -309,11 +313,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     } else {
                         position = LONG;
                     }
-                }
-                console.log(action.forcePosition);
-                if (typeof action.forcePosition === 'undefined') {
-                    console.log('forcing position');
-                    position = action.forcePosition;
                 }
                 return {
                     ...state,

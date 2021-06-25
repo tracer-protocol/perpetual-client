@@ -15,22 +15,13 @@ const SSlideSelect = styled(SlideSelect)`
 `;
 
 export const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
-    const { orderDispatch, order } = useContext(OrderContext);
+    const { orderDispatch } = useContext(OrderContext);
     return (
         <SSlideSelect
             onClick={(index, _e) => {
                 // when we go back to market order we need to ensure the price is locked
                 if (orderDispatch) {
                     orderDispatch({ type: 'setPosition', value: index });
-                    console.log(order?.exposure);
-                    if (order?.exposure) {
-                        console.log('forcing position');
-                        orderDispatch({
-                            type: 'setLeverageFromExposure',
-                            amount: order?.exposure,
-                            forcePosition: index,
-                        });
-                    }
                 } else {
                     console.error('Order dispatch function not set');
                 }
