@@ -18,7 +18,7 @@ const TradingPanel = styled.div`
 
 const RightPanel = styled.div`
     width: 75%;
-    display: flex:
+    display: flex;
     height: 90vh;
     // border: 1px solid #0c3586;
 `;
