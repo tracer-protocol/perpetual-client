@@ -5,7 +5,6 @@ import {
     calcMinimumMargin,
     calcTotalMargin,
     calcSlippage,
-    calcFromMarginAndLeverage,
 } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
@@ -64,12 +63,6 @@ const checkErrors: (
     } else {
         return 'NO_ERROR';
     }
-};
-
-export const OrderTypeMapping: Record<number, string> = {
-    0: 'market',
-    1: 'limit',
-    2: 'spot',
 };
 
 export const orderDefaults = {
@@ -155,6 +148,8 @@ export type OrderAction =
     | { type: 'setMaxExposure' }
     | { type: 'setBestPrice' }
     | { type: 'setMaxClosure' }
+    | { type: 'setExposureFromLeverage'; leverage: number }
+    | { type: 'setLeverageFromExposure'; amount: number }
     | { type: 'setSlippage'; value: number }
     | { type: 'setMarketTradePrice'; value: BigNumber }
     | { type: 'setLeverage'; value: number }
@@ -197,9 +192,37 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [tracerId]);
 
+    // Resets the trading screen
+    const reset = () => {
+        console.error('Reset is not implemented ');
+    };
+
+    // calculates the newQuote and newBase based on a given exposre
+    const calcNewBalance: (
+        totalExposure: number, price: number, position: number
+    ) => { base: BigNumber; quote: BigNumber } = (
+        totalExposure,
+        price,
+        position
+    ) => {
+        const balances = selectedTracer?.getBalance();
+        if (position === SHORT) {
+            return {
+                base: balances?.base.minus(totalExposure) ?? tracerDefaults.balances.base, // subtract how much exposure you get
+                quote: balances?.quote.plus(totalExposure * price) ?? tracerDefaults.balances.quote, // add how much it costs
+            };
+        }
+        return {
+            base: balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base, // add how much exposure you get
+            quote: balances?.quote.minus(totalExposure * price) ?? tracerDefaults.balances.quote, // subtract how much it costs
+        };
+    };
+
     const initialState: OrderState = orderDefaults.order;
 
     const reducer = (state: any, action: OrderAction) => {
+        const { base, totalMargin, leverage } = selectedTracer?.getBalance() ?? defaults.balances;
+        let fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
         switch (action.type) {
             case 'setMarket':
                 return { ...state, market: action.value };
@@ -219,7 +242,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     orderType: action.value,
                 };
             case 'setAdjustType':
-                const base = selectedTracer?.getBalance().base ?? defaults.balances.base;
                 const short = base.lt(0);
                 const long = base.gt(0);
                 if (action.value === CLOSE) {
@@ -239,6 +261,41 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     }
                 }
                 return { ...state, adjustType: action.value };
+            case 'setExposureFromLeverage': {
+                let position;
+                // issue here is action.leverage is negative for short values
+                // but leverage is always positive no matter if short or long
+                if (base.lt(0)) {
+                    if (action.leverage > leverage.negated().toNumber()) { // deleverage
+                        position = LONG
+                    } else {
+                        position = SHORT
+                    }
+                } else if (base.gt(0)) {
+                    if (action.leverage < leverage.toNumber()) { // deleverage
+                        position = SHORT
+                    } else {
+                        position = LONG
+                    }
+                }
+                const notional = totalMargin.times(action.leverage);
+                let targetExposure = notional.div(fairPrice);
+                if (position === SHORT) {
+                    targetExposure = notional.negated().div(fairPrice);
+                }
+                const difference = base.abs().minus(targetExposure).abs(); 
+                return {
+                    ...state,
+                    nextPosition: calcNewBalance(targetExposure.toNumber(), fairPrice, state.position),
+                    exposure: difference.toNumber(),
+                    position: position
+                }
+            }
+            case 'setLeverageFromExposure': {
+                return {
+                    ...state
+                }
+            }
             case 'setAdjustSummary': {
                 return { ...state, adjustSummary: action.adjustSummary };
             }
@@ -282,51 +339,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     };
 
     const [order, orderDispatch] = useReducer(reducer, initialState);
-
-    // Resets the trading screen
-    const reset = () => {
-        console.error('Reset is not implemented ');
-    };
-
-    // calculates the newQuote and newBase based on a given exposre
-    const calcNewBalance: (totalExposure: number, price: number) => { base: BigNumber; quote: BigNumber } = (
-        totalExposure,
-        price,
-    ) => {
-        const balances = selectedTracer?.getBalance();
-        if (order.position === SHORT) {
-            return {
-                base: balances?.base.minus(totalExposure) ?? tracerDefaults.balances.base, // subtract how much exposure you get
-                quote: balances?.quote.plus(totalExposure * price) ?? tracerDefaults.balances.quote, // add how much it costs
-            };
-        }
-        return {
-            base: balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base, // add how much exposure you get
-            quote: balances?.quote.minus(totalExposure * price) ?? tracerDefaults.balances.quote, // subtract how much it costs
-        };
-    };
-
-    useMemo(() => {
-        const { quote, base } = selectedTracer?.getBalance() ?? defaults.balances;
-        const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
-        const margin = calcTotalMargin(quote, base, fairPrice);
-        const position = base.gt(0);
-        // it doesnt matter that it will default to short when base === 0 since
-        const { exposure } = calcFromMarginAndLeverage(
-            margin,
-            new BigNumber(order.adjustLeverage),
-            fairPrice,
-            selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
-            !!position,
-        );
-        orderDispatch({ type: 'setExposure', value: exposure.toNumber() });
-        orderDispatch({
-            type: 'setNextPosition',
-            nextPosition: {
-                ...calcNewBalance(exposure.toNumber(), fairPrice),
-            },
-        });
-    }, [order.adjustLeverage]);
 
     useMemo(() => {
         if (omeState?.orders) {
@@ -402,7 +414,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         orderDispatch({
             type: 'setNextPosition',
             nextPosition: {
-                ...calcNewBalance(order.exposure * order.leverage, order.price),
+                ...calcNewBalance(order.exposure * order.leverage, order.price, order.position),
             },
         });
     }, [order.exposure, order.price]);

@@ -8,6 +8,7 @@ export type UserBalance = {
     lastUpdatedGasPrice: BigNumber;
     tokenBalance: BigNumber;
     leverage: BigNumber; // the users current leverage
+    totalMargin: BigNumber; // the users current totalMargin
 };
 
 export type FundingRate = {
