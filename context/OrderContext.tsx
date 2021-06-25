@@ -374,6 +374,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 amount: new BigNumber(order.quantity),
             }));
             orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
+            console.log(omeState, "Maxes")
+            console.log(omeState.orders)
             if (order.orderType === MARKET) {
                 // market order set the price to the bottom of the book
                 orderDispatch({
