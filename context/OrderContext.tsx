@@ -218,7 +218,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const initialState: OrderState = orderDefaults.order;
 
     const reducer = (state: any, action: OrderAction) => {
-        const { base, totalMargin, leverage } = selectedTracer?.getBalance() ?? defaults.balances;
+        const { quote, base, totalMargin, leverage } = selectedTracer?.getBalance() ?? defaults.balances;
         const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
         switch (action.type) {
             case 'setMarket':
@@ -276,8 +276,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     } else {
                         position = LONG;
                     }
-                } else {
-                    // base is 0
+                } else if (quote.eq(0)) {
+                    // if quote is 0 then dont change anything
                     return {
                         ...state,
                         position: action.leverage < 0 ? SHORT : action.leverage > 0 ? LONG : state.position,
@@ -416,7 +416,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             // convert orders
             const { slippage, tradePrice } = calcSlippage(
                 new BigNumber(order.exposure),
-                order.leverage,
+                // TODO remove this, its because we used to factor in leverage per trade ie 2x would double exposure
+                new BigNumber(1), 
                 order.oppositeOrders,
             );
             if (!slippage.eq(0)) {
@@ -428,7 +429,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 orderDispatch({ type: 'setMarketTradePrice', value: tradePrice });
             }
         }
-    }, [order.exposure, order.leverage, order.oppositeOrders]);
+    }, [order.exposure, order.oppositeOrders]);
 
     // Handles setting the selected tracer Id on a market or collateral change
     useEffect(() => {
