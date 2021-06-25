@@ -384,13 +384,12 @@ export const EtherscanLinkTip: React.FC<TProps> = ({ className, children }: TPro
 };
 
 export const AdjustPositionTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
-    const tooltip = 
+    const tooltip = (
         <p>
-            Adjust your position directly by moving the leverage slider.
-            Amount (above) will update to reflect the amount of {baseTicker} you
-            need to order to adjust your leverage to the specified value
-
-        </p>;
+            Adjust your position directly by moving the leverage slider. Amount (above) will update to reflect the
+            amount of {baseTicker} you need to order to adjust your leverage to the specified value
+        </p>
+    );
     return (
         <StyledTooltip className={className} title={tooltip}>
             {children}
@@ -399,11 +398,12 @@ export const AdjustPositionTip: React.FC<BTProps> = ({ baseTicker, className, ch
 };
 
 export const NewOrderTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
-    const tooltip = 
+    const tooltip = (
         <p>
-            Enter the side and amount of {baseTicker} you would like to order.
-            Your existing leverage (below) will be updated by this specified amount.
-        </p>;
+            Enter the side and amount of {baseTicker} you would like to order. Your existing leverage (below) will be
+            updated by this specified amount.
+        </p>
+    );
     return (
         <StyledTooltip className={className} title={tooltip}>
             {children}

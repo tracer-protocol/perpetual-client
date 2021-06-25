@@ -36,10 +36,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 {/* Order type select */}
                 <OrderTypeSelect selected={order?.orderType ?? 0} />
 
-                {order?.orderType === MARKET ? (
-                    <Divider text={'New Order'} tooltip={'new-order'} />
-                ) : null
-                }
+                {order?.orderType === MARKET ? <Divider text={'New Order'} tooltip={'new-order'} /> : null}
                 {/* Position select */}
                 <div className="m-5">
                     <PositionSelect selected={order?.position ?? 0} />

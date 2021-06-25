@@ -28,10 +28,10 @@ export const Exposure: React.FC<{
                 className={className ?? ''}
                 onChange={(e) => {
                     if (orderDispatch) {
-                        orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) })
-                        orderDispatch({ type: 'setLeverageFromExposure', amount: parseFloat(e.target.value) })
+                        orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) });
+                        orderDispatch({ type: 'setLeverageFromExposure', amount: parseFloat(e.target.value) });
                     } else {
-                        console.error('No dispatch function set')
+                        console.error('No dispatch function set');
                     }
                 }}
                 setMax={(e) => {

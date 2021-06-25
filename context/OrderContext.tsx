@@ -1,11 +1,7 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
 import { TracerContext, Web3Context } from './';
 import { Children, OpenOrder, UserBalance } from 'types';
-import {
-    calcMinimumMargin,
-    calcTotalMargin,
-    calcSlippage,
-} from '@tracer-protocol/tracer-utils';
+import { calcMinimumMargin, calcTotalMargin, calcSlippage } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
 import { OMEOrder } from 'types/OrderTypes';
@@ -199,12 +195,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     // calculates the newQuote and newBase based on a given exposre
     const calcNewBalance: (
-        totalExposure: number, price: number, position: number
-    ) => { base: BigNumber; quote: BigNumber } = (
-        totalExposure,
-        price,
-        position
-    ) => {
+        totalExposure: number,
+        price: number,
+        position: number,
+    ) => { base: BigNumber; quote: BigNumber } = (totalExposure, price, position) => {
         const balances = selectedTracer?.getBalance();
         if (position === SHORT) {
             return {
@@ -222,7 +216,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     const reducer = (state: any, action: OrderAction) => {
         const { base, totalMargin, leverage } = selectedTracer?.getBalance() ?? defaults.balances;
-        let fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
+        const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
         switch (action.type) {
             case 'setMarket':
                 return { ...state, market: action.value };
@@ -266,16 +260,18 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 // issue here is action.leverage is negative for short values
                 // but leverage is always positive no matter if short or long
                 if (base.lt(0)) {
-                    if (action.leverage > leverage.negated().toNumber()) { // deleverage
-                        position = LONG
+                    if (action.leverage > leverage.negated().toNumber()) {
+                        // deleverage
+                        position = LONG;
                     } else {
-                        position = SHORT
+                        position = SHORT;
                     }
                 } else if (base.gt(0)) {
-                    if (action.leverage < leverage.toNumber()) { // deleverage
-                        position = SHORT
+                    if (action.leverage < leverage.toNumber()) {
+                        // deleverage
+                        position = SHORT;
                     } else {
-                        position = LONG
+                        position = LONG;
                     }
                 }
                 const notional = totalMargin.times(action.leverage);
@@ -283,18 +279,18 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 if (position === SHORT) {
                     targetExposure = notional.negated().div(fairPrice);
                 }
-                const difference = base.abs().minus(targetExposure).abs(); 
+                const difference = base.abs().minus(targetExposure).abs();
                 return {
                     ...state,
                     nextPosition: calcNewBalance(targetExposure.toNumber(), fairPrice, state.position),
                     exposure: difference.toNumber(),
-                    position: position
-                }
+                    position: position,
+                };
             }
             case 'setLeverageFromExposure': {
                 return {
-                    ...state
-                }
+                    ...state,
+                };
             }
             case 'setAdjustSummary': {
                 return { ...state, adjustSummary: action.adjustSummary };

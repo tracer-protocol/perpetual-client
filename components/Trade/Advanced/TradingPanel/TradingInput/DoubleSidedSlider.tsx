@@ -17,7 +17,7 @@ type DSProps = {
     max?: number;
     orderDispatch: React.Dispatch<OrderAction> | undefined;
     fairPrice: BigNumber;
-    balances: UserBalance
+    balances: UserBalance;
 };
 export default styled(
     ({
@@ -25,83 +25,80 @@ export default styled(
         value,
         min,
         max,
-        orderDispatch = () => console.error("Order dispatch not set"),
+        orderDispatch = () => console.error('Order dispatch not set'),
         fairPrice,
-        balances
+        balances,
     }: DSProps) => {
-
         const handleChange = (num: number) => {
             orderDispatch({
                 type: 'setExposureFromLeverage',
-                leverage: num
-            })
+                leverage: num,
+            });
             orderDispatch({
                 type: 'setAdjustLeverage',
                 value: num,
-            })
-        }
-        
+            });
+        };
+
         useMemo(() => {
             if (!balances?.base.eq(0)) {
                 const leverage = calcLeverage(balances.quote, balances.base, fairPrice);
-                console.info("Setting leverage", leverage.toNumber());
+                console.info('Setting leverage', leverage.toNumber());
                 orderDispatch({
-                    type: 'setAdjustLeverage', 
-                    value: parseFloat(leverage.toNumber().toFixed(2))
-                })
+                    type: 'setAdjustLeverage',
+                    value: parseFloat(leverage.toNumber().toFixed(2)),
+                });
             }
-        }, [balances])
+        }, [balances]);
 
         const min_ = min ?? DEFAULT_MIN;
         const max_ = max ?? DEFAULT_MAX;
         return (
             <div className={className}>
-				<Slider
-					defaultValue={0}
-					value={value}
-					min={min_}
-					max={max_}
-					step={0.1}
-					marks={createMarks(min_, max_)}
-					railStyle={railStyle}
-					trackStyle={trackStyle}
-					handleStyle={handleStyle}
-					handle={CustomHandle}
-					onChange={handleChange}
-				/>
+                <Slider
+                    defaultValue={0}
+                    value={value}
+                    min={min_}
+                    max={max_}
+                    step={0.1}
+                    marks={createMarks(min_, max_)}
+                    railStyle={railStyle}
+                    trackStyle={trackStyle}
+                    handleStyle={handleStyle}
+                    handle={CustomHandle}
+                    onChange={handleChange}
+                />
             </div>
         );
     },
 )`
-	padding: 0 12px;
-	margin-bottom: 5rem;
-	position: relative;
+    padding: 0 12px;
+    margin-bottom: 5rem;
+    position: relative;
     .rc-slider-dot {
         display: none;
     }
 ` as React.FC<DSProps>;
 
-const Label = styled(({ className, val, long }: { className?: string, val: number, long: boolean}) => (
-	<p className={className}>
-		<span className={long ? 'green' : 'red'}>{long ? 'LONG' : 'SHORT'}</span> <br />
-		{`${Math.abs(val)}x`}
-	</p>
+const Label = styled(({ className, val, long }: { className?: string; val: number; long: boolean }) => (
+    <p className={className}>
+        <span className={long ? 'green' : 'red'}>{long ? 'LONG' : 'SHORT'}</span> <br />
+        {`${Math.abs(val)}x`}
+    </p>
 ))`
-	margin-left: ${props => props.long ? '-3rem' : '3rem'};
-	text-align: ${props => props.long ? 'right' : 'left'};
-
-`
+    margin-left: ${(props) => (props.long ? '-3rem' : '3rem')};
+    text-align: ${(props) => (props.long ? 'right' : 'left')};
+`;
 
 const markStyle = {
-	marginTop: '0.5rem',
-	color: '#005EA4',
-	fontSize: '1rem',
-}
+    marginTop: '0.5rem',
+    color: '#005EA4',
+    fontSize: '1rem',
+};
 const createMarks = (min: number, max: number) => ({
     [min]: {
         style: markStyle,
-        label: <Label val={min} long={false} />
-
+        label: <Label val={min} long={false} />,
     },
     [0]: {
         style: markStyle,
@@ -109,17 +106,17 @@ const createMarks = (min: number, max: number) => ({
     },
     [max]: {
         style: markStyle,
-        label: <Label val={max} long={true} />
+        label: <Label val={max} long={true} />,
     },
 });
 
-const railStyle = { 
-	backgroundImage: 'linear-gradient(to right, #F15025 , #05CB3A)',
-	height: 10 
+const railStyle = {
+    backgroundImage: 'linear-gradient(to right, #F15025 , #05CB3A)',
+    height: 10,
 };
-const trackStyle = { 
-	background: 'transparent',
-	height: 10 
+const trackStyle = {
+    background: 'transparent',
+    height: 10,
 };
 
 const handleStyle = {
@@ -138,7 +135,7 @@ const CustomHandle = (e: any) => {
         align-items: center;
         color: white;
         font-size: var(--font-size-small);
-		z-index: 2;
+        z-index: 2;
     `;
     const { value } = e;
     return (
@@ -147,5 +144,3 @@ const CustomHandle = (e: any) => {
         </Handle>
     );
 };
-
-

@@ -34,7 +34,7 @@ export const defaults: Record<string, any> = {
         totalLeveragedValue: 0,
         lastUpdatedGasPrice: 0,
         leverage: new BigNumber(0),
-        totalMargin: new BigNumber(0)
+        totalMargin: new BigNumber(0),
     },
     maxLeverage: new BigNumber(25),
     oraclePrice: new BigNumber(0),
@@ -210,12 +210,12 @@ export default class Tracer {
             };
             const { quote, base } = parsedBalances;
             const leverage = calcLeverage(quote, base, this.fairPrice);
-            const totalMargin = calcTotalMargin(quote, base, this.fairPrice)
+            const totalMargin = calcTotalMargin(quote, base, this.fairPrice);
             console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
             this.balances = {
                 ...parsedBalances,
                 leverage: !leverage.eq(0) && leverage ? leverage : defaults.balances.leverage,
-                totalMargin: !totalMargin.eq(0) && totalMargin ? totalMargin: defaults.balances.totalMargin
+                totalMargin: !totalMargin.eq(0) && totalMargin ? totalMargin : defaults.balances.totalMargin,
             };
             return parsedBalances;
         } catch (error) {

@@ -22,7 +22,7 @@ import {
     PublicTip,
     EtherscanLinkTip,
     AdjustPositionTip,
-    NewOrderTip
+    NewOrderTip,
 } from '../';
 import { BigNumber } from 'bignumber.js';
 
@@ -170,13 +170,13 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
                 <AdjustPositionTip className="label" baseTicker={tooltip.props?.baseTicker ?? ''}>
                     {children}
                 </AdjustPositionTip>
-            )
+            );
         case 'new-order':
             return (
                 <NewOrderTip className="label" baseTicker={tooltip.props?.baseTicker ?? ''}>
                     {children}
-                </NewOrderTip >
-            )
+                </NewOrderTip>
+            );
         default:
             return <StyledTooltip className="label">{children}</StyledTooltip>;
     }
