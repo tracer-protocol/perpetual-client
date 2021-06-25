@@ -61,7 +61,6 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     font-size: var(--font-size-small);
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
-    height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 75}px` : '0')};
 
     > .market {
         // eventually this will have to change to be dynamic as more markets get added
