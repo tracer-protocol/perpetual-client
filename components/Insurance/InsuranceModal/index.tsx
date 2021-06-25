@@ -242,7 +242,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     }}
                 >
                     <Checkbox checked={acceptedTerms} />
-                    <CheckboxTitle>I have read and accept Terms of Withdrawal</CheckboxTitle>
+                    <CheckboxTitle>I have read and accept Terms of Deposit</CheckboxTitle>
                 </CheckboxContainer>
             ) : (
                 <CheckboxContainer
