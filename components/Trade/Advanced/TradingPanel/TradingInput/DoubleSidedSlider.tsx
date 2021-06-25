@@ -87,6 +87,7 @@ const Label = styled(({ className, val, long }: { className?: string; val: numbe
 ))`
     margin-left: ${(props) => (props.long ? '-3rem' : '3rem')};
     text-align: ${(props) => (props.long ? 'right' : 'left')};
+    font-size: var(--font-size-small);
 `;
 
 const markStyle = {

@@ -86,7 +86,7 @@ const StyledSmallInput = styled(SmallInput)`
         margin-left: 1rem;
         width: 70px;
     }
-`
+`;
 export const LeverageInput: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
     selectedTracer: Tracer | undefined;
@@ -99,7 +99,7 @@ export const LeverageInput: React.FC<{
             className={className ?? ''}
             onChange={(e) => {
                 if (orderDispatch) {
-                    let leverage = parseFloat(e.target.value);
+                    const leverage = parseFloat(e.target.value);
                     if (Number.isNaN(leverage)) {
                         orderDispatch({ type: 'setAdjustLeverage', value: leverage });
                     } else if (leverage <= (selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage).toNumber()) {
@@ -117,8 +117,6 @@ export const LeverageInput: React.FC<{
         />
     );
 };
-
-
 
 export const Closure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;

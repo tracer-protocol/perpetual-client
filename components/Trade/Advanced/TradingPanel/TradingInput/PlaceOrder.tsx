@@ -79,7 +79,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                     <>
                         {/* MARKET ORDER */}
                         <Divider text={'Adust Position'} tooltip={'adjust-position'} />
-                        <LeverageInput 
+                        <LeverageInput
                             className="px-8"
                             orderDispatch={orderDispatch}
                             selectedTracer={selectedTracer}

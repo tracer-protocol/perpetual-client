@@ -64,7 +64,11 @@ type SIProps = {
 const SmallInput: React.FC<SIProps> = styled(
     ({ title, amount, onChange, unit, setMax, maxText, tooltip, className }: SIProps) => (
         <div className={className}>
-            {tooltip ? <TooltipSelector tooltip={tooltip}>{title}</TooltipSelector> : <span className="label">{title}</span>}
+            {tooltip ? (
+                <TooltipSelector tooltip={tooltip}>{title}</TooltipSelector>
+            ) : (
+                <span className="label">{title}</span>
+            )}
             <InputContainer>
                 <Max className={`${!setMax ? 'hide' : ''}`} onClick={setMax}>
                     {maxText}

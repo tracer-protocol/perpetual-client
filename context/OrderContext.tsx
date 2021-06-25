@@ -276,10 +276,11 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     } else {
                         position = LONG;
                     }
-                } else { // base is 0
+                } else {
+                    // base is 0
                     return {
                         ...state,
-                        position: action.leverage < 0 ? SHORT : action.leverage > 0 ? LONG : state.position
+                        position: action.leverage < 0 ? SHORT : action.leverage > 0 ? LONG : state.position,
                     };
                 }
                 const notional = totalMargin.times(action.leverage);
