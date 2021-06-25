@@ -16,7 +16,7 @@ import { OMEContext } from '@context/OMEContext';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import CustomSubNav from './CustomSubNav';
-import { OrderContext } from '@context/OrderContext';
+import { OrderContext, SHORT } from '@context/OrderContext';
 
 const AccountDetails = styled.div`
     width: 100%;
@@ -322,8 +322,8 @@ const Fills: React.FC<{
                     return (
                         <TRow key={`filled-order-${index}`}>
                             <TData>{timeAgo(Date.now(), parseInt(order.timestamp) * 1000)}</TData>
-                            <TData className={!!order.position ? 'ask' : 'bid'}>
-                                {!!order.position ? 'Short' : 'Long'}
+                            <TData className={order.position === SHORT ? 'ask' : 'bid'}>
+                                {order.position === SHORT ? 'Short' : 'Long'}
                             </TData>
                             <TData>{toApproxCurrency(order.price)}</TData>
                             <TData>{parseFloat(order.amount.toFixed(3))}</TData>

@@ -145,7 +145,11 @@ export type OrderAction =
     | { type: 'setBestPrice' }
     | { type: 'setMaxClosure' }
     | { type: 'setExposureFromLeverage'; leverage: number }
-    | { type: 'setLeverageFromExposure'; amount: number }
+    | {
+          type: 'setLeverageFromExposure';
+          amount: number;
+          forcePosition?: number;
+      }
     | { type: 'setSlippage'; value: number }
     | { type: 'setMarketTradePrice'; value: BigNumber }
     | { type: 'setLeverage'; value: number }
@@ -195,20 +199,20 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     // calculates the newQuote and newBase based on a given exposre
     const calcNewBalance: (
-        totalExposure: number,
+        addedExposure: number,
         price: number,
         position: number,
-    ) => { base: BigNumber; quote: BigNumber } = (totalExposure, price, position) => {
+    ) => { base: BigNumber; quote: BigNumber } = (addedExposure, price, position) => {
         const balances = selectedTracer?.getBalance();
         if (position === SHORT) {
             return {
-                base: balances?.base.minus(totalExposure) ?? tracerDefaults.balances.base, // subtract how much exposure you get
-                quote: balances?.quote.plus(totalExposure * price) ?? tracerDefaults.balances.quote, // add how much it costs
+                base: balances?.base.minus(addedExposure) ?? tracerDefaults.balances.base, // subtract how much exposure you get
+                quote: balances?.quote.plus(addedExposure * price) ?? tracerDefaults.balances.quote, // add how much it costs
             };
         }
         return {
-            base: balances?.base.plus(totalExposure) ?? tracerDefaults.balances.base, // add how much exposure you get
-            quote: balances?.quote.minus(totalExposure * price) ?? tracerDefaults.balances.quote, // subtract how much it costs
+            base: balances?.base.plus(addedExposure) ?? tracerDefaults.balances.base, // add how much exposure you get
+            quote: balances?.quote.minus(addedExposure * price) ?? tracerDefaults.balances.quote, // subtract how much it costs
         };
     };
 
@@ -282,14 +286,39 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 const difference = base.abs().minus(targetExposure).abs();
                 return {
                     ...state,
-                    nextPosition: calcNewBalance(targetExposure.toNumber(), fairPrice, state.position),
                     exposure: difference.toNumber(),
                     position: position,
                 };
             }
             case 'setLeverageFromExposure': {
+                const notional = new BigNumber(action.amount).times(fairPrice);
+                const targetLeverage = notional.div(totalMargin);
+                // here targetLeverage and leverage are both positive
+                let position;
+                if (base.lt(0)) {
+                    if (targetLeverage.gt(leverage)) {
+                        // deleverage
+                        position = LONG;
+                    } else {
+                        position = SHORT;
+                    }
+                } else if (base.gt(0)) {
+                    if (targetLeverage.lt(leverage)) {
+                        // deleverage
+                        position = SHORT;
+                    } else {
+                        position = LONG;
+                    }
+                }
+                console.log(action.forcePosition);
+                if (typeof action.forcePosition === 'undefined') {
+                    console.log('forcing position');
+                    position = action.forcePosition;
+                }
                 return {
                     ...state,
+                    adjustLeverage: targetLeverage.toNumber(),
+                    position: position,
                 };
             }
             case 'setAdjustSummary': {
@@ -372,9 +401,9 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         // set the amount to the users position
         if (order.adjustType === CLOSE) {
             const balances = selectedTracer?.getBalance() ?? tracerDefaults.balances;
-            if (balances?.base.toNumber() < 0) {
+            if (balances?.base.lt(0)) {
                 orderDispatch({ type: 'setPosition', value: LONG });
-            } else if (balances?.base > 0) {
+            } else if (balances?.base.gt(0)) {
                 orderDispatch({ type: 'setPosition', value: SHORT });
             }
             orderDispatch({ type: 'setExposure', value: balances.base.abs() });
@@ -410,7 +439,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         orderDispatch({
             type: 'setNextPosition',
             nextPosition: {
-                ...calcNewBalance(order.exposure * order.leverage, order.price, order.position),
+                ...calcNewBalance(order.exposure, order.price, order.position),
             },
         });
     }, [order.exposure, order.price]);
