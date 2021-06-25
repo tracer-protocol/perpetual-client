@@ -221,7 +221,7 @@ const AccountPanel: React.FC<{
                             props: {
                                 baseTicker: selectedTracer?.baseTicker ?? '',
                                 availableMargin:
-                                    calcTotalMargin(balances.quote, balances.base, fairPrice).toNumber() -
+                                    balances.totalMargin.toNumber() -
                                         calcMinimumMargin(
                                             balances.quote,
                                             balances.base,
@@ -261,7 +261,7 @@ const AccountPanel: React.FC<{
                 unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}
                 maxLeverage={maxLeverage}
-                price={fairPrice}
+                fairPrice={fairPrice}
             />
             {/*TODO: Add calculator*/}
             {/*<CalculatorModal*/}

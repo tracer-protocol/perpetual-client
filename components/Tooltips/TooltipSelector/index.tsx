@@ -21,7 +21,9 @@ import {
     BufferTip,
     PublicTip,
     EtherscanLinkTip,
-} from '@components/Tooltips';
+    AdjustPositionTip,
+    NewOrderTip,
+} from '../';
 import { BigNumber } from 'bignumber.js';
 
 export type TooltipSelectorProps = {
@@ -45,6 +47,8 @@ export type TooltipSelectorProps = {
         | 'pool-ownership'
         | 'buffer'
         | 'public'
+        | 'adjust-position'
+        | 'new-order'
         | 'etherscan-link';
     props?: {
         baseTicker?: string;
@@ -161,7 +165,18 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
 
         case 'etherscan-link':
             return <EtherscanLinkTip className="label">{children}</EtherscanLinkTip>;
-
+        case 'adjust-position':
+            return (
+                <AdjustPositionTip className="label" baseTicker={tooltip.props?.baseTicker ?? ''}>
+                    {children}
+                </AdjustPositionTip>
+            );
+        case 'new-order':
+            return (
+                <NewOrderTip className="label" baseTicker={tooltip.props?.baseTicker ?? ''}>
+                    {children}
+                </NewOrderTip>
+            );
         default:
             return <StyledTooltip className="label">{children}</StyledTooltip>;
     }

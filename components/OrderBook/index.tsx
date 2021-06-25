@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import Dropdown from 'antd/lib/dropdown';
 import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
-import TooltipSelector from "@components/Tooltips/TooltipSelector";
+import TooltipSelector from '@components/Tooltips/TooltipSelector';
 
 interface OProps {
     askOrders: OMEOrder[]; //TODO change these
