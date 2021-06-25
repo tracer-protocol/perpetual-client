@@ -44,14 +44,14 @@ export const MarketTradeDetails: React.FC<MTDProps> = ({
     return (
         <SHiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
             <h3>Order Summary</h3>
-            <Section label={'Liquidation Price'}>
+            <Section label={'Liquidation price'}>
                 <Previous>
                     {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
                 </Previous>
                 {toApproxCurrency(calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage))}
             </Section>
-            <Section label={'Trade Price'}>{toApproxCurrency(tradePrice)}</Section>
-            <Section label={'Slippage'}>{slippage.toFixed(3)}%</Section>
+            <Section label={'Slippage and fees'}>{slippage.toFixed(3)}%</Section>
+            <Section label={'Expected price'}>{toApproxCurrency(tradePrice)}</Section>
         </SHiddenExpand>
     );
 };
@@ -80,13 +80,13 @@ export const LimitTradeDetails: React.FC<LTDProps> = ({
     return (
         <SHiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
             <h3>Order Summary</h3>
-            <Section label={'Liquidation Price'}>
+            <Section label={'Liquidation price'}>
                 <Previous>
                     {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
                 </Previous>
                 {toApproxCurrency(calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage))}
             </Section>
-            <Section label={'Trade Price'}>{toApproxCurrency(orderPrice)}</Section>
+            <Section label={'Expected price'}>{toApproxCurrency(orderPrice)}</Section>
         </SHiddenExpand>
     );
 };
@@ -116,13 +116,13 @@ export const AdjustSummary: React.FC<ASProps> = ({
         <SHiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
             <h3>Order Adjust Summary</h3>
             <Section label={'Exposure'}>{`${exposure.toFixed(3)} ${baseTicker}`}</Section>
-            <Section label={'Liquidation Price'}>
+            <Section label={'Liquidation price'}>
                 <Previous>
                     {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
                 </Previous>
                 {toApproxCurrency(calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage))}
             </Section>
-            <Section label={'Trade Price'}>{toApproxCurrency(fairPrice)}</Section>
+            <Section label={'Expected price'}>{toApproxCurrency(fairPrice)}</Section>
         </SHiddenExpand>
     );
 };
