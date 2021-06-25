@@ -58,6 +58,7 @@ const SHiddenExpand = styled(HiddenExpand)`
     & > .body {
         padding: 10px 0;
     }
+    background: var(--color-accent);
 `;
 
 const WithdrawalFee = styled(Section)`
