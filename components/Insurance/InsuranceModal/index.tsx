@@ -62,6 +62,23 @@ const SHiddenExpand = styled(HiddenExpand)`
     background: var(--color-accent);
 `;
 
+const PoolOwnershipInsufficient = styled(Section)`
+    background: #f15025;
+    background-size: 100%;
+    border-bottom: 1px solid #011772;
+    padding: 5px 0;
+    margin: 0;
+
+    .label {
+        color: var(--color-text);
+        padding: 0 10px;
+    }
+    .content {
+        padding-right: 10px;
+        color: var(--color-text);
+    }
+`;
+
 const WithdrawalFee = styled(Section)`
     background: #f4ab57;
     background-size: 100%;
@@ -205,15 +222,22 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 ) : (
                     <SSection className={`title`} label={`Withdrawal Summary`} />
                 )}
-                <SSection label={`Pool Ownership`}>
-                    <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
-                    {`${toApproxCurrency(newBalance)}`}
-                </SSection>
+                {!isDeposit && amount > balance ? (
+                    <PoolOwnershipInsufficient label={`Pool Ownership`}>
+                        <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
+                        {`${toApproxCurrency(newBalance)}`}
+                    </PoolOwnershipInsufficient>
+                ) : (
+                    <SSection label={`Pool Ownership`}>
+                        <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
+                        {`${toApproxCurrency(newBalance)}`}
+                    </SSection>
+                )}
                 {/*<SSection label={`Pool Balance`}>*/}
                 {/*    <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>*/}
                 {/*    {`${toApproxCurrency(newBalance)}`}*/}
                 {/*</SSection>*/}
-                {isDeposit ? null : (
+                {isDeposit || amount > balance ? null : (
                     <>
                         <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(0)}`}</WithdrawalFee>
                         <SSection
