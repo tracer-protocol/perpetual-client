@@ -67,8 +67,7 @@ export const orderDefaults = {
         collateral: 'USD', // collateral asset
         amountToPay: NaN, // required margin / amount of margin being used
         exposure: NaN,
-        leverage: 1, // default to 1x leverage
-        adjustLeverage: 0, // default to 1x leverage
+        leverage: NaN, // defaults 0 leverage
         position: LONG, // long or short, 1 long, 0 is short
         price: NaN, // price of the market asset in relation to the collateral asset
         orderType: MARKET, // orderType
@@ -96,8 +95,7 @@ export type OrderState = {
     collateral: string; // collateral asset
     amountToPay: number; // required margin / amount of margin being used
     exposure: number;
-    leverage: number;
-    adjustLeverage: number; // value used for when adjusting leverage
+    leverage: number; // value used for when adjusting leverage
     position: number; // long or short, 0 is short, 1 is long
     price: number; // price of the market asset in relation to the collateral asset
     orderType: number; // for basic this will always be 0 (market order), 1 is limit and 2 is spot
@@ -152,7 +150,7 @@ export type OrderAction =
     | { type: 'setSlippage'; value: number }
     | { type: 'setMarketTradePrice'; value: BigNumber }
     | { type: 'setLeverage'; value: number }
-    | { type: 'setAdjustLeverage'; value: number }
+    | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
     | {
           type: 'setNextPosition';
@@ -276,6 +274,9 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     } else {
                         position = LONG;
                     }
+                } else if (base.eq(0)) {
+                    // if base is 0 let leverage determing position
+                    position = action.leverage < 0 ? SHORT : action.leverage > 0 ? LONG : state.position;
                 } else if (quote.eq(0)) {
                     // if quote is 0 then dont change anything
                     return {
@@ -296,6 +297,13 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 };
             }
             case 'setLeverageFromExposure': {
+                if (!action.amount) {
+                    return {
+                        ...state,
+                        leverage: leverage,
+                        exposure: NaN,
+                    };
+                }
                 const notional = new BigNumber(action.amount).times(fairPrice);
                 const targetLeverage = notional.div(totalMargin);
                 // here targetLeverage and leverage are both positive
@@ -314,18 +322,21 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     } else {
                         position = LONG;
                     }
+                } else {
+                    position = state.position;
                 }
+
                 return {
                     ...state,
-                    adjustLeverage: targetLeverage.toNumber(),
+                    leverage: (state.position === SHORT ? targetLeverage.negated() : targetLeverage).toNumber(),
                     position: position,
                 };
             }
             case 'setAdjustSummary': {
                 return { ...state, adjustSummary: action.adjustSummary };
             }
-            case 'setAdjustLeverage':
-                return { ...state, adjustLeverage: action.value };
+            case 'setLeverage':
+                return { ...state, leverage: action.value };
             case 'setOppositeOrders':
                 return { ...state, oppositeOrders: action.orders };
             case 'setExposure':
@@ -374,8 +385,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 amount: new BigNumber(order.quantity),
             }));
             orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
-            console.log(omeState, "Maxes")
-            console.log(omeState.orders)
             if (order.orderType === MARKET) {
                 // market order set the price to the bottom of the book
                 orderDispatch({
@@ -419,7 +428,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             const { slippage, tradePrice } = calcSlippage(
                 new BigNumber(order.exposure),
                 // TODO remove this, its because we used to factor in leverage per trade ie 2x would double exposure
-                new BigNumber(1), 
+                new BigNumber(1),
                 order.oppositeOrders,
             );
             if (!slippage.eq(0)) {
