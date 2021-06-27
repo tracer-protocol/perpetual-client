@@ -23,7 +23,7 @@ export type OMEOrder = {
 };
 
 export type FilledOrder = {
-    position: boolean;
+    position: boolean; // true is short, false is long
     amount: BigNumber;
     price: BigNumber;
     timestamp: string;

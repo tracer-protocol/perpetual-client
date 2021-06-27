@@ -36,7 +36,7 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                                         <td className={!!trade.position ? 'bid' : 'ask'}>
                                             {toApproxCurrency(trade.price)}
                                         </td>
-                                        <td>{trade.amount.toPrecision(3)}</td>
+                                        <td>{parseFloat(trade.amount.toFixed(3))}</td>
                                         <td>
                                             {d.getHours()}:{d.getMinutes()}
                                         </td>

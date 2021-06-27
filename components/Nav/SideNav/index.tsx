@@ -22,7 +22,7 @@ const SideNavItem = styled.div`
     min-width: 125px;
 
     &.selected {
-        background: #005ea4;
+        background: var(--color-secondary);
         color: var(--color-text);
     }
 

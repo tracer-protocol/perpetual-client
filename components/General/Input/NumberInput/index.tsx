@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const Inc = styled.div`
+export const Inc = styled.div`
     position: absolute;
     left: 5px;
     top: 5px;
@@ -17,7 +17,7 @@ const Inc = styled.div`
     }
 `;
 
-const Dec = styled.div`
+export const Dec = styled.div`
     position: absolute;
     left: 5px;
     bottom: 5px;

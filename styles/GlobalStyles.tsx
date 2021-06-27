@@ -6,6 +6,7 @@ export default createGlobalStyle`
         --color-background-secondary: #00125D;
         --color-text: #fff;
         --color-primary: #3da8f5;
+        --color-secondary: #005ea4;
         --color-accent: #002886;
 
         --font-size-extra-small: 13px;

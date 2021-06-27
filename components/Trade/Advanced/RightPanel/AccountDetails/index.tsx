@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { Table, TRow, TData } from '@components/General/Table';
 import { calcStatus, timeAgo, toApproxCurrency, getPositionText } from '@libs/utils';
 import Web3 from 'web3';
-import { calcLiquidationPrice, OMEOrder } from '@tracer-protocol/tracer-utils';
+import { calcLiquidationPrice, calcUnrealised, OMEOrder } from '@tracer-protocol/tracer-utils';
 import { FilledOrder } from 'types/OrderTypes';
 import { calcLeverage } from '@tracer-protocol/tracer-utils';
 import { Button, Previous, Section } from '@components/General';
@@ -34,7 +34,7 @@ const AccountDetailsSection = styled(Section)`
     position: relative;
     padding: 5px 10px;
     margin: 0;
-    color: #005ea4;
+    color: var(--color-secondary);
     min-height: var(--height-small-container);
     border-bottom: 1px solid var(--color-accent);
 
@@ -132,9 +132,17 @@ interface IProps {
     maxLeverage: BigNumber;
     baseTicker: string;
     quoteTicker: string;
+    filledOrders: FilledOrder[];
 }
 
-const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, quoteTicker, maxLeverage }: IProps) => {
+const PositionDetails: React.FC<IProps> = ({
+    balances,
+    fairPrice,
+    baseTicker,
+    quoteTicker,
+    maxLeverage,
+    filledOrders,
+}: IProps) => {
     const { order } = useContext(OrderContext);
     const [currency, setCurrency] = useState(0); // 0 quoted in base
     const { base } = balances;
@@ -210,18 +218,22 @@ const PositionDetails: React.FC<IProps> = ({ balances, fairPrice, baseTicker, qu
                     className="w-1/2"
                     tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
                 >
-                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
+                    {!balances.quote.eq(0) ? (
+                        <Content>{toApproxCurrency(calcUnrealised(base, fairPrice, filledOrders), 3)}</Content>
+                    ) : (
+                        `-`
+                    )}
                 </AccountDetailsSection>
                 <AccountDetailsSection label={'Mark Price'} className="w-1/2 border-right">
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
                 </AccountDetailsSection>
-                <AccountDetailsSection
+                {/* <AccountDetailsSection
                     label={'Realised PnL'}
                     className="w-1/2"
                     tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
                 >
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
-                </AccountDetailsSection>
+                </AccountDetailsSection> */}
             </SectionContainer>
         </AccountDetails>
     );
@@ -367,6 +379,7 @@ export default styled(({ selectedTracer, className }: TSProps) => {
                         maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                         baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
                         quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
+                        filledOrders={filledOrders ?? []}
                     />
                 );
             case 1:

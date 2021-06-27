@@ -9,7 +9,7 @@ type TEProps = {
 const TableEntries: React.FC<TEProps> = styled(({ amount, className }: TEProps) => (
     <span className={className}>{amount}</span>
 ))`
-    background: #005ea4;
+    background: var(--color-secondary);
     color: var(--color-background);
     border-radius: 20px;
     text-align: center;

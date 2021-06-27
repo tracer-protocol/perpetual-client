@@ -10,7 +10,7 @@ import {
     StatusIndicator,
     getStatusColour,
 } from '@components/Portfolio';
-import { calcLiquidationPrice, calcTotalMargin, calcUnrealised } from '@tracer-protocol/tracer-utils';
+import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'types/OrderTypes';
 import { LabelledTracers } from 'types/TracerTypes';
 
@@ -111,7 +111,7 @@ const Position: React.FC<{
                         }
                         const name = tracer.marketId.split('/')[0];
                         const status = _status[i];
-                        const { quote, base } = tracer.balances;
+                        const { quote, base, totalMargin } = tracer.balances;
                         const realisedPNL = 0; // TODO calculte realisedPNL
                         const unrealisedPNL = calcUnrealised(
                             base,
@@ -135,9 +135,7 @@ const Position: React.FC<{
                                 <TableCell color={realisedPNL < 0 ? '#F15025' : '#21DD53'}>
                                     {toApproxCurrency(realisedPNL)}
                                 </TableCell>
-                                <TableCell>
-                                    {toApproxCurrency(calcTotalMargin(quote, base, tracer.oraclePrice))}
-                                </TableCell>
+                                <TableCell>{toApproxCurrency(totalMargin)}</TableCell>
                                 <TableCell>
                                     {base.abs().toNumber()} {name}
                                 </TableCell>

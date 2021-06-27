@@ -138,7 +138,7 @@ TableCell.defaultProps = {
 };
 
 export const SecondaryCell = styled.div`
-    color: #005ea4;
+    color: var(--color-secondary);
     font-size: var(--font-size-small);
 `;
 
