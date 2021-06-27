@@ -216,7 +216,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const initialState: OrderState = orderDefaults.order;
 
     const reducer = (state: any, action: OrderAction) => {
-        const { quote,  base, totalMargin, leverage } = selectedTracer?.getBalance() ?? defaults.balances;
+        const { quote, base, totalMargin, leverage } = selectedTracer?.getBalance() ?? defaults.balances;
         const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
         switch (action.type) {
             case 'setMarket':
@@ -257,14 +257,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 }
                 return { ...state, adjustType: action.value };
             case 'setExposureFromLeverage': {
-                if (!action.leverage) {
-                    console.log("in here")
-                    return {
-                        ...state,
-                        leverage: NaN,
-                        exposure: NaN
-                    }
-                }
                 let position;
                 // issue here is action.leverage is negative for short values
                 // but leverage is always positive no matter if short or long
@@ -291,7 +283,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                         ...state,
                         position: action.leverage < 0 ? SHORT : action.leverage > 0 ? LONG : state.position,
                     };
-
                 }
                 const notional = totalMargin.times(action.leverage);
                 let targetExposure = notional.div(fairPrice);
@@ -309,9 +300,9 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 if (!action.amount) {
                     return {
                         ...state,
-                        leverage: NaN,
-                        exposure: NaN
-                    }
+                        leverage: leverage,
+                        exposure: NaN,
+                    };
                 }
                 const notional = new BigNumber(action.amount).times(fairPrice);
                 const targetLeverage = notional.div(totalMargin);
@@ -334,9 +325,10 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 } else {
                     position = state.position;
                 }
+
                 return {
                     ...state,
-                    leverage: targetLeverage.toNumber(),
+                    leverage: (state.position === SHORT ? targetLeverage.negated() : targetLeverage).toNumber(),
                     position: position,
                 };
             }
@@ -436,7 +428,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             const { slippage, tradePrice } = calcSlippage(
                 new BigNumber(order.exposure),
                 // TODO remove this, its because we used to factor in leverage per trade ie 2x would double exposure
-                new BigNumber(1), 
+                new BigNumber(1),
                 order.oppositeOrders,
             );
             if (!slippage.eq(0)) {

@@ -106,7 +106,7 @@ export const LeverageInput: React.FC<{
                     const leverage = parseFloat(e.target.value);
                     if (Number.isNaN(leverage)) {
                         orderDispatch({ type: 'setLeverage', value: leverage });
-                        orderDispatch({ type: 'setExposure', value: NaN })
+                        orderDispatch({ type: 'setExposure', value: NaN });
                     } else if (leverage <= (selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage).toNumber()) {
                         orderDispatch({
                             type: 'setExposureFromLeverage',
@@ -156,30 +156,28 @@ type LProps = {
     orderDispatch: React.Dispatch<OrderAction> | undefined;
 };
 
-export const Leverage: React.FC<LProps> = styled(
-    ({ orderDispatch, leverage, className, min, max }: LProps) => {
-        return (
-            <div className={`${className} m-3`}>
-                <TooltipSelector tooltip={{ key: 'leverage' }}>Leverage</TooltipSelector>
-                <div className="w-3/4 pl-4 pr-6 pb-4 mt-2">
-                    <DefaultSlider
-                        min={Math.ceil(min?.toNumber() ?? 1)}
-                        max={max?.toNumber() ?? defaults.maxLeverage.toNumber()}
-                        value={leverage}
-                        handleChange={(num) => {
-                            orderDispatch
-                                ? orderDispatch({
-                                      type: 'setLeverage',
-                                      value: num,
-                                  })
-                                : console.error('Order dispatch not set');
-                        }}
-                    />
-                </div>
+export const Leverage: React.FC<LProps> = styled(({ orderDispatch, leverage, className, min, max }: LProps) => {
+    return (
+        <div className={`${className} m-3`}>
+            <TooltipSelector tooltip={{ key: 'leverage' }}>Leverage</TooltipSelector>
+            <div className="w-3/4 pl-4 pr-6 pb-4 mt-2">
+                <DefaultSlider
+                    min={Math.ceil(min?.toNumber() ?? 1)}
+                    max={max?.toNumber() ?? defaults.maxLeverage.toNumber()}
+                    value={leverage}
+                    handleChange={(num) => {
+                        orderDispatch
+                            ? orderDispatch({
+                                  type: 'setLeverage',
+                                  value: num,
+                              })
+                            : console.error('Order dispatch not set');
+                    }}
+                />
             </div>
-        );
-    },
-)`
+        </div>
+    );
+})`
     display: flex;
 
     > .label {
