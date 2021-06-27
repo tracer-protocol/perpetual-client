@@ -28,7 +28,7 @@ const Unit = styled.div`
     font-size: var(--font-size-medium);
     margin: auto 0 auto auto;
     padding-left: 4px;
-`
+`;
 
 export const InputContainer = styled.div`
     background: var(--color-accent);
