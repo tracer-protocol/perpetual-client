@@ -34,8 +34,8 @@ export const round: (num: number, decimalPlaces: number) => number = (num, decim
 
 export const toApproxCurrency: (num_: BigNumber | number, precision?: number) => string = (num_, precision) => {
     let num = num_;
-    if (typeof num !== 'number') {
-        num = (num_ as BigNumber).toNumber();
+    if (typeof num !== 'number' && num) {
+        num = (num_ as BigNumber)?.toNumber();
     }
     if (!num) {
         // reject if num is falsey
