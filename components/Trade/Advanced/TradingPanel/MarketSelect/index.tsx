@@ -61,23 +61,24 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     font-size: var(--font-size-small);
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
-    height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 75}px` : '0')};
+    height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 80}px` : '0')};
+    @media (max-width: 1600px) {
+        height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 65}px` : '0')};
+    }
 
-    > .market {
-        // eventually this will have to change to be dynamic as more markets get added
-        // this can be done with jQuery and a useEffect when tracers is updated and setting nth-child attr
+    > ${Box} {
         transition-delay: 0.5s;
         transition: 0.3s;
-        padding: 10px 15px;
+        padding: 10px 12px;
         opacity: ${(props) => (props.display ? '1' : '0')};
     }
 
-    > .market:hover {
+    > ${Box}:hover {
         background: var(--color-accent);
         cursor: pointer;
     }
 
-    > .market .info {
+    > ${Box} .info {
         margin: auto;
         margin-right: 0;
         display: flex;

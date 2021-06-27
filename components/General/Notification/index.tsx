@@ -134,7 +134,7 @@ const Content = styled((props: any) => (
     flex-grow: 1;
     font-size: var(--font-size-medium);
     line-height: 1.4;
-    color: #005ea4;
+    color: var(--color-secondary);
     min-height: 40;
     width: 100%;
     padding: 5px;

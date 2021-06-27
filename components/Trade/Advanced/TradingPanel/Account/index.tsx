@@ -112,7 +112,7 @@ const SButton = styled(Button)`
 
 const SubText = styled.span`
     letter-spacing: -0.32px;
-    color: #005ea4;
+    color: var(--color-secondary);
     font-size: var(--font-size-small);
     display: inline !important;
 `;

@@ -15,7 +15,7 @@ export const DateAndTime = styled(({ className, date, time }) => {
     font-size: var(--font-size-small);
 
     .secondary {
-        color: #005ea4;
+        color: var(--color-secondary);
     }
 `;
 
@@ -160,7 +160,7 @@ export const Logo: React.FC<LProps> = styled(({ className, ticker, clear }: LPro
 `;
 
 export const Previous = styled.span`
-    color: #005ea4;
+    color: var(--color-secondary);
     margin-right: 5px;
     &:after {
         padding-left: 2px;
@@ -168,7 +168,7 @@ export const Previous = styled.span`
     }
 `;
 export const Approx = styled.span`
-    color: #005ea4;
+    color: var(--color-secondary);
     margin-right: 5px;
     &:before {
         padding-left: 2px;
@@ -177,7 +177,7 @@ export const Approx = styled.span`
 `;
 
 export const After = styled.span`
-    color: #005ea4;
+    color: var(--color-secondary);
     &:before {
         padding-right: 0.5rem;
         content: '>>>';
