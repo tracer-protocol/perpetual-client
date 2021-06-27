@@ -34,12 +34,12 @@ export const round: (num: number, decimalPlaces: number) => number = (num, decim
 
 export const toApproxCurrency: (num_: BigNumber | number, precision?: number) => string = (num_, precision) => {
     let num = num_;
-    if (!num_) {
-        // reject if num is false
-        return '$0.000';
-    }
     if (typeof num !== 'number') {
         num = (num_ as BigNumber).toNumber();
+    }
+    if (!num) {
+        // reject if num is falsey
+        return '$0.000';
     }
     return num.toLocaleString('en-us', {
         style: 'currency',
