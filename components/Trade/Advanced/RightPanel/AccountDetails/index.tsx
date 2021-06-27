@@ -227,13 +227,13 @@ const PositionDetails: React.FC<IProps> = ({
                 <AccountDetailsSection label={'Mark Price'} className="w-1/2 border-right">
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
                 </AccountDetailsSection>
-                <AccountDetailsSection
+                {/* <AccountDetailsSection
                     label={'Realised PnL'}
                     className="w-1/2"
                     tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
                 >
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
-                </AccountDetailsSection>
+                </AccountDetailsSection> */}
             </SectionContainer>
         </AccountDetails>
     );
