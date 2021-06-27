@@ -374,8 +374,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 amount: new BigNumber(order.quantity),
             }));
             orderDispatch({ type: 'setOppositeOrders', orders: oppositeOrders });
-            console.log(omeState, "Maxes")
-            console.log(omeState.orders)
+            console.log(omeState, 'Maxes');
+            console.log(omeState.orders);
             if (order.orderType === MARKET) {
                 // market order set the price to the bottom of the book
                 orderDispatch({
@@ -419,7 +419,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             const { slippage, tradePrice } = calcSlippage(
                 new BigNumber(order.exposure),
                 // TODO remove this, its because we used to factor in leverage per trade ie 2x would double exposure
-                new BigNumber(1), 
+                new BigNumber(1),
                 order.oppositeOrders,
             );
             if (!slippage.eq(0)) {
