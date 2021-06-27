@@ -122,7 +122,7 @@ export const getOrder: (market: string, orderId: string) => Promise<Response> = 
  * @param orderId of the order being updated
  */
 export const cancelOrder: (market: string, orderId: string) => Promise<Result> = async (market, orderId) => {
-    return fetch(`${BASE_URL}/book/${omefy(market)}/order/${orderId}`, {
+    return fetch(`${BASE_URL}/book/${omefy(market)}/order/${omefy(orderId)}`, {
         method: 'DELETE',
     })
         .then((res) => {
