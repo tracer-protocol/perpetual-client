@@ -64,7 +64,7 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         border-radius: 20px;
     }
     > .userBalance {
-        background: #005ea4;
+        background: var(--color-secondary);
         width: ${(props) => (props.userBalance / denom(props.target, props.liquidity)) * 100}%;
         border-top-right-radius: ${(props) =>
             calcRemainder(props.target, props.liquidity, props.userBalance, props.buffer) === 0 ? '20px' : ''};

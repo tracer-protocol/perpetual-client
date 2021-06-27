@@ -24,7 +24,7 @@ const Max = styled.a`
 
 const Unit = styled.div`
     letter-spacing: -0.4px;
-    color: #005ea4;
+    color: var(--color-secondary);
     font-size: var(--font-size-medium);
     margin: auto 0 auto auto;
     padding-left: 4px;
