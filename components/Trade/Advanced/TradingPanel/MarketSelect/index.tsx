@@ -62,6 +62,9 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     z-index: ${(props) => (props.display ? '10' : '-1')};
     opacity: ${(props) => (props.display ? '1' : '0')};
     height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 80}px` : '0')};
+    @media (max-width: 1600px) {
+        height: ${(props) => (props.display ? `${Object.keys(props.tracers).length * 65}px` : '0')};
+    }
 
     > ${Box} {
         transition-delay: 0.5s;
