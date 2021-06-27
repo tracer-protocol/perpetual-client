@@ -38,7 +38,7 @@ const TitledBox = styled(({ className, title, children }) => {
     font-size: var(--font-size-small);
 
     > p {
-        color: #005ea4;
+        color: var(--color-secondary);
         font-size: var(--font-size-extra-small);
         letter-spacing: -0.24px;
         margin-bottom: 0.2rem;

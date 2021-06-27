@@ -34,7 +34,7 @@ const AccountDetailsSection = styled(Section)`
     position: relative;
     padding: 5px 10px;
     margin: 0;
-    color: #005ea4;
+    color: var(--color-secondary);
     min-height: var(--height-small-container);
     border-bottom: 1px solid var(--color-accent);
 

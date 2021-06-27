@@ -21,7 +21,7 @@ import { defaults } from '@libs/Tracer';
 const SNumberSelect = styled(NumberSelect)`
     margin-top: 1rem;
     .balance {
-        color: #005ea4;
+        color: var(--color-secondary);
     }
     > .balance > .max {
         margin-left: 1rem;

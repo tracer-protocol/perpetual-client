@@ -86,6 +86,9 @@ const StyledSmallInput = styled(SmallInput)`
     ${InputContainer} {
         margin-left: 1rem;
         width: 70px;
+        > input {
+            padding-left: 0.8rem;
+        }
     }
     * ${Inc}, * ${Dec} {
         display: none;
