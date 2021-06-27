@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
+import { Inc, Dec } from '@components/General/Input/NumberInput';
 
 export const Exposure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
@@ -86,6 +87,9 @@ const StyledSmallInput = styled(SmallInput)`
         margin-left: 1rem;
         width: 70px;
     }
+    * ${Inc}, * ${Dec} {
+        display: none;
+    }
 `;
 export const LeverageInput: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
@@ -101,13 +105,14 @@ export const LeverageInput: React.FC<{
                 if (orderDispatch) {
                     const leverage = parseFloat(e.target.value);
                     if (Number.isNaN(leverage)) {
-                        orderDispatch({ type: 'setAdjustLeverage', value: leverage });
+                        orderDispatch({ type: 'setLeverage', value: leverage });
+                        orderDispatch({ type: 'setExposure', value: NaN })
                     } else if (leverage <= (selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage).toNumber()) {
                         orderDispatch({
                             type: 'setExposureFromLeverage',
-                            leverage: parseFloat(e.target.value),
+                            leverage: leverage,
                         });
-                        orderDispatch({ type: 'setAdjustLeverage', value: Math.abs(leverage) });
+                        orderDispatch({ type: 'setLeverage', value: Math.abs(leverage) });
                     }
                 } else {
                     console.error('No dispatch function set');
@@ -146,14 +151,13 @@ export const Closure: React.FC<{
 type LProps = {
     leverage: number;
     className?: string;
-    adjustLeverage?: boolean; // boolean to tell if it is the adjust order leverage slider
     min?: BigNumber;
     max?: BigNumber;
     orderDispatch: React.Dispatch<OrderAction> | undefined;
 };
 
 export const Leverage: React.FC<LProps> = styled(
-    ({ leverage, orderDispatch, adjustLeverage, className, min, max }: LProps) => {
+    ({ orderDispatch, leverage, className, min, max }: LProps) => {
         return (
             <div className={`${className} m-3`}>
                 <TooltipSelector tooltip={{ key: 'leverage' }}>Leverage</TooltipSelector>
@@ -165,7 +169,7 @@ export const Leverage: React.FC<LProps> = styled(
                         handleChange={(num) => {
                             orderDispatch
                                 ? orderDispatch({
-                                      type: adjustLeverage ? 'setAdjustLeverage' : 'setLeverage',
+                                      type: 'setLeverage',
                                       value: num,
                                   })
                                 : console.error('Order dispatch not set');

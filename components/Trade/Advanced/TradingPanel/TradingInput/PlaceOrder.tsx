@@ -83,13 +83,13 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                             className="px-8"
                             orderDispatch={orderDispatch}
                             selectedTracer={selectedTracer}
-                            leverage={order?.adjustLeverage ?? 0}
+                            leverage={order?.leverage ?? 0}
                         />
                         <DoubleSidedSlider
                             className="px-8"
                             min={selectedTracer?.getMaxLeverage().negated().toNumber()}
                             max={selectedTracer?.getMaxLeverage().toNumber()}
-                            value={order?.adjustLeverage}
+                            value={order?.leverage}
                             balances={selectedTracer?.getBalance() ?? defaults.balances}
                             orderDispatch={orderDispatch}
                             fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}

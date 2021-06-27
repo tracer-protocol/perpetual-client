@@ -35,7 +35,7 @@ export default styled(
                 leverage: num,
             });
             orderDispatch({
-                type: 'setAdjustLeverage',
+                type: 'setLeverage',
                 value: num,
             });
         };
@@ -45,7 +45,7 @@ export default styled(
                 const leverage = calcLeverage(balances.quote, balances.base, fairPrice);
                 console.info('Setting leverage', leverage.toNumber());
                 orderDispatch({
-                    type: 'setAdjustLeverage',
+                    type: 'setLeverage',
                     value: parseFloat(leverage.toNumber().toFixed(2)),
                 });
             }

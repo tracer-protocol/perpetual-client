@@ -101,8 +101,8 @@ const Adjust: React.FC<AProps> = ({ order, orderDispatch, selectedTracer }) => {
             <Leverage
                 min={new BigNumber(0)}
                 max={selectedTracer?.getMaxLeverage()}
-                leverage={order?.adjustLeverage ?? 0}
-                adjustLeverage={true}
+                leverage={order?.leverage ?? 0}
+                leverage={true}
                 orderDispatch={orderDispatch}
             />
             <AdjustSummary
