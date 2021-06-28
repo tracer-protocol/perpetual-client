@@ -82,7 +82,9 @@ export const Dropdown: React.FC<DProps> = styled(({ className, defaultOpen, head
     }, [open]);
     return (
         <div className={className} onClick={(_e) => setOpen(!open)} ref={main}>
-            <div ref={_header}>{header}</div>
+            <div ref={_header} className={open ? 'open' : ''}>
+                {header}
+            </div>
             <div ref={_body}>{body}</div>
         </div>
     );

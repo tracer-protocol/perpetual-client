@@ -24,11 +24,11 @@ const SSlideSelect = styled(SlideSelect)`
 
 const SDown = styled(CaretDownFilled)`
     font-size: var(--font-size-medium);
-    & svg {
-        transition: 0.3s ease-in-out;
-    }
-    .open .preview & svg {
-        transform: rotate(-180deg);
+    transition: 0.3s ease-in-out;
+    transform: translateY(6px);
+
+    .open & {
+        transform: rotate(-180deg) translateY(6px);
     }
 `;
 
@@ -193,7 +193,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     header={
                         <DepositTermsHeader>
                             <span>Terms of deposit</span>
-                            <SDown />
+                            <SDown className="down-arrow" />
                         </DepositTermsHeader>
                     }
                     body={
