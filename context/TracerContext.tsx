@@ -12,6 +12,8 @@ import { defaults } from '@libs/Tracer';
 // @ts-ignore
 import { Callback } from 'web3/types';
 import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
+import BigNumber from 'bignumber.js';
+import { bigNumberToWei } from '@libs/utils';
 interface ContextProps {
     tracerId: string | undefined;
     deposit: (amount: number, _callback?: () => void) => void;
@@ -111,8 +113,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     };
 
     const placeOrder: (order: OrderState) => Promise<Result> = async (order) => {
-        const { exposure, price, position } = order;
-        const amount = Web3.utils.toWei(exposure.toString()) ?? 0;
+        const { exposureBN, price, position } = order;
+        const amount = bigNumberToWei(exposureBN) ?? 0;
         const now = Math.floor(Date.now() / 1000); // timestamp in seconds
         const fourDays = 345600; // four days in seconds
         const fiveMins = 5 * 60; // five minutes in seconds
