@@ -86,12 +86,14 @@ const StyledSmallInput = styled(SmallInput)`
     ${InputContainer} {
         margin-left: 1rem;
         width: 70px;
-        > input {
-            padding-left: 0.8rem;
-        }
     }
     * ${Inc}, * ${Dec} {
         display: none;
+    }
+
+    > * input {
+        text-align: center;
+        padding-left: 0;
     }
 `;
 export const LeverageInput: React.FC<{
