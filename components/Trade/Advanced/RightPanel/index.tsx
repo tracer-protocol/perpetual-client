@@ -16,7 +16,9 @@ import BigNumber from 'bignumber.js';
 import AccountSummary from './AccountDetails';
 import InsuranceInfo from './InsuranceInfo';
 import Graphs from './Graphs';
-import { LoadingOutlined } from '@ant-design/icons';
+import Icon from '@ant-design/icons';
+// @ts-ignore
+import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 
 const TitledBox = styled(({ className, title, children }) => {
     return (
@@ -152,7 +154,7 @@ const TradingView: React.FC<{
                             lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
                         />
                     ) : (
-                        <LoadingOutlined className="mb-3" />
+                        <Icon component={TracerLoading} className="mb-3 tracer-loading" />
                     )}
                 </OrderBookContainer>
                 <RecentTrades trades={mostRecentTrades} />

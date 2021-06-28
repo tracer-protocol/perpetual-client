@@ -2,7 +2,9 @@ import React, { useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { CandleData } from 'types/TracerTypes';
 import styled from 'styled-components';
-import { LoadingOutlined } from '@ant-design/icons';
+import Icon from '@ant-design/icons';
+// @ts-ignore
+import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 
 const ChartWrapper = dynamic(import('./LightWeightWrapper'), { ssr: false });
 // @ts-ignore
@@ -62,15 +64,15 @@ const setGraphOptions: () => Record<string, unknown> = () => {
     return data;
 };
 
-const SLoadingOutlined = styled(LoadingOutlined)`
+const StyledIcon = styled(Icon)`
     position: absolute;
     margin: auto;
     left: 0;
     right: 0;
     top: 0;
     bottom: 0;
-    width: 16px;
-    height: 16px;
+    width: 32px;
+    height: 32px;
 `;
 
 const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) => {
@@ -101,7 +103,7 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
     const twoHour = 2 * 60 * 60; // two hours in seconds
 
     if (!graphData || !(graphData?.candlestickSeries as any[])?.length) {
-        return <SLoadingOutlined />;
+        return <StyledIcon component={TracerLoading} className="tracer-loading" />;
     } else {
         return (
             <ChartWrapper

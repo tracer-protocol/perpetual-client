@@ -11,6 +11,9 @@ import { InsuranceModal } from '../InsuranceModal';
 import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
 import { toPercent } from '@libs/utils';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
+import Icon from '@ant-design/icons';
+// @ts-ignore
+import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 
 const Hidden = styled.div`
     color: var(--color-primary);
@@ -123,6 +126,15 @@ const MarketNameContainer = styled.div`
     align-items: center;
 `;
 
+const StyledIcon = styled(Icon)`
+    position: absolute;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-bottom: 1px solid var(--color-accent);
+    border-left: 1px solid var(--color-accent);
+    border-right: 1px solid var(--color-accent);
+`;
 interface IPTProps {
     handleClick: (tracerId: string) => void;
     pools: Record<string, InsurancePoolInfoType>;
@@ -215,11 +227,16 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                         </TableRow>
                     );
                 })}
+                {!Object.values(pools).length ? (
+                    <StyledIcon component={TracerLoading} className="tracer-loading" />
+                ) : null}
             </tbody>
         </table>
     );
 })`
     color: var(--color-text);
+    position: relative;
+    margin-bottom: 1rem;
 `;
 
 /**
