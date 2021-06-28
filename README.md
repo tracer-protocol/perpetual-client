@@ -57,6 +57,8 @@ This may not be that helpful but for now I am just going to list everything I do
 	`ganache-cli --mnemonic \"mnemonic\" --port 8545 --gasLimit=0x1fffffffffffff --host 0.0.0.0"`
 - deploy contracts
 - copy trader address into executioner .env file
+- start the [executioner](https://github.com/tracer-protocol/executioner)
+- start the [tracer-ome](https://github.com/tracer-protocol/tracer-ome)
 - copy factory address into the [tracer-graphs](https://github.com/lions-mane/tracer-graphs) /config/tracer-local.json (do not worry about the other addresses)
 - run a few scripts [tracer-graphs](https://github.com/lions-mane/tracer-graphs) 
 	- `npm run prepare:tracer:local || yarn prepare:tracer:local`
