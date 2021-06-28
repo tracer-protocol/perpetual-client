@@ -17,6 +17,10 @@ const SHiddenExpand = styled(HiddenExpand)`
         color: #ffffff;
         margin-bottom: 20px;
     }
+
+    &.open {
+        padding: 5px 10px;
+    }
 `;
 interface MTDProps {
     balances: UserBalance;
