@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext, Web3Context } from 'context';
-import { MarketSelect, AccountPanel, InterfaceSelect } from './TradingPanel';
+import { MarketSelect, AccountPanel } from './TradingPanel';
 import { ModifyOrder, PlaceOrder } from './TradingPanel/TradingInput';
 import styled from 'styled-components';
 import TradingView from './RightPanel';
@@ -20,7 +20,6 @@ const RightPanel = styled.div`
     width: 75%;
     display: flex;
     height: 90vh;
-    // border: 1px solid #0c3586;
 `;
 
 const Overlay = styled.div`
@@ -44,7 +43,7 @@ const Advanced: React.FC = styled(({ className }) => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     const { order, orderDispatch } = useContext(OrderContext);
-    const [isAdjust, setAdjust] = useState(false);
+    const [isAdjust] = useState(false);
 
     useEffect(() => {
         if (orderDispatch) {
@@ -69,7 +68,6 @@ const Advanced: React.FC = styled(({ className }) => {
         <div className={`container ${className}`}>
             <TradingPanel>
                 <MarketSelect account={account ?? ''} />
-                <InterfaceSelect account={account ?? ''} isAdjust={isAdjust} setAdjust={setAdjust} />
                 {isAdjust ? (
                     <ModifyOrder selectedTracer={selectedTracer} account={account ?? ''} />
                 ) : (
