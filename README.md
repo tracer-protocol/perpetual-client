@@ -16,8 +16,8 @@ This client is still in development. It serves as an interface to the tracer-pro
 
 - Remove most of tailwind css, as the dapp grew I began to like it less and less, I wouldnt be opposed to moving away from this in place of styled components or another inline css. Reasoning being longer term, I dont see tailwind flopping, its more of a matter of inter-compatibility.
 - Build starter script to make it easier to get started
-- Remove old story book stuff
-- setup testing
+- Remove old story book stuff or create story books for more components (the development of these slowed down as we had some drastic changes)
+- Setup testing (doesnt have to be all ui testing there is a fair bit of logic)
 
 ## Setup
 
