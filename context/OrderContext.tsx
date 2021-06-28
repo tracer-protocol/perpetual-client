@@ -202,15 +202,9 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         position: number,
     ) => { base: BigNumber; quote: BigNumber } = (addedExposure, price, position) => {
         const balances = selectedTracer?.getBalance();
-        console.log(`
-            exposure: ${addedExposure} \n
-            price: ${price} \n
-            position short: ${position === SHORT}
-        `);
         if (position === SHORT) {
             const newBalance = balances?.base.minus(addedExposure) ?? tracerDefaults.balances.base; // subtract how much exposure you get
             const newQuote = balances?.quote.plus(addedExposure * price) ?? tracerDefaults.balances.quote; // add how much it costs
-            console.log(newBalance.toNumber(), newQuote.toNumber());
             return {
                 base: newBalance,
                 quote: newQuote,
@@ -270,7 +264,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 // issue here is action.leverage is negative for short values
                 // but leverage is always positive no matter if short or long
                 if (base.lt(0)) {
-                    if (Math.abs(action.leverage) < leverage.toNumber()) {
+                    if (action.leverage > leverage.negated().toNumber()) {
                         // deleverage short bosition
                         position = LONG;
                         deleverage = true;

@@ -42,7 +42,7 @@ type POBProps = {
 export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: POBProps) => {
     const { placeOrder } = useContext(TracerContext);
     const { omeDispatch = () => console.error('OME dispatch is undefined') } = useContext(OMEContext);
-    const { order } = useContext(OrderContext);
+    const { order, orderDispatch = () => console.error('Order dispatch is undefined') } = useContext(OrderContext);
     const { handleAsync } = useContext(TransactionContext);
     const { addToast } = useToasts();
 
@@ -57,6 +57,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
                         callback: () => {
                             omeDispatch({ type: 'refetchOrders' });
                             omeDispatch({ type: 'refetchUserOrders' });
+                            orderDispatch({ type: 'setExposure', value: NaN });
                         },
                     });
                 } else {
