@@ -81,6 +81,7 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
         setType(type);
         setShow(true);
     };
+
     return (
         <div className={className}>
             <span>
@@ -89,7 +90,7 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
             <TooltipSelector tooltip={{ key: 'etherscan-link' }}>
                 <StyledLinkOutlined onClick={() => window.open(pool.iPoolTokenURL, '_blank', 'noopener')} />
             </TooltipSelector>
-            <SecondaryCell>{pool.userBalance.div(pool.liquidity).precision(5).toNumber() * 100}%</SecondaryCell>
+            <SecondaryCell>{toPercent(pool.userBalance.div(pool.liquidity).toNumber())}</SecondaryCell>
             <Hidden>
                 <ButtonContainer>
                     <Button className="primary mr-3" onClick={(_e: any) => openModal('Deposit')}>

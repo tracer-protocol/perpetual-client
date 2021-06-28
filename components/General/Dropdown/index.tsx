@@ -32,9 +32,8 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
 })`
     overflow: hidden;
     transition: 0.3s ease-in-out;
-    margin-left: -10px;
     height: ${(props) => props.defaultHeight}px;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     border-radius: 5px;
     text-align: left;
     font-size: var(--font-size-small);
@@ -44,7 +43,6 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
     & > .body {
         transition: 0.3s ease-in;
         opacity: 0;
-        padding: 10px;
     }
 
     &.open .body {
@@ -84,20 +82,20 @@ export const Dropdown: React.FC<DProps> = styled(({ className, defaultOpen, head
     }, [open]);
     return (
         <div className={className} onClick={(_e) => setOpen(!open)} ref={main}>
-            <div ref={_header}>{header}</div>
-            <div className="body" ref={_body}>
-                {body}
+            <div ref={_header} className={open ? 'open' : ''}>
+                {header}
             </div>
+            <div ref={_body}>{body}</div>
         </div>
     );
 })`
     background: var(--color-background);
     overflow: hidden;
     transition: 0.3s ease-in-out;
-    margin-left: -10px;
     margin-bottom: 2rem;
     border-radius: 5px;
     text-align: left;
     font-size: var(--font-size-small);
     letter-spacing: -0.32px;
+    cursor: pointer;
 `;

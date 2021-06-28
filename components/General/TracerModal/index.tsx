@@ -34,8 +34,7 @@ export const SubTitle = styled.p`
 
 const Logo = styled.img`
     height: 55px;
-    margin: auto;
-    margin-top: 3rem;
+    margin: 3rem auto auto auto;
 `;
 
 const Header = styled.div`

@@ -21,6 +21,7 @@ import {
     BufferTip,
     PublicTip,
     EtherscanLinkTip,
+    TotalReturnTip,
     AdjustPositionTip,
     NewOrderTip,
 } from '../';
@@ -47,9 +48,10 @@ export type TooltipSelectorProps = {
         | 'pool-ownership'
         | 'buffer'
         | 'public'
+        | 'etherscan-link'
+        | 'total-return'
         | 'adjust-position'
-        | 'new-order'
-        | 'etherscan-link';
+        | 'new-order';
     props?: {
         baseTicker?: string;
         availableMargin?: number;
@@ -165,6 +167,15 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
 
         case 'etherscan-link':
             return <EtherscanLinkTip className="label">{children}</EtherscanLinkTip>;
+
+        // Insurance modal section
+        case 'total-return':
+            return (
+                <TotalReturnTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                    {children}
+                </TotalReturnTip>
+            );
+
         case 'adjust-position':
             return (
                 <AdjustPositionTip className="label" baseTicker={tooltip.props?.baseTicker ?? ''}>

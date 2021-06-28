@@ -6,9 +6,10 @@ import { toApproxCurrency } from '@libs/utils';
 import SlideSelect from '@components/Buttons/SlideSelect';
 import { Option } from '@components/Buttons/SlideSelect/Options';
 import { Button, Checkbox, Dropdown, HiddenExpand, Previous, NumberSelect, Section } from '@components/General';
-import TracerModal, { SubTitle } from '@components/General/TracerModal';
+import TracerModal from '@components/General/TracerModal';
 import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';
+import ErrorComponent from '@components/General/Error';
 
 const SSlideSelect = styled(SlideSelect)`
     font-size: var(--font-size-small);
@@ -16,16 +17,18 @@ const SSlideSelect = styled(SlideSelect)`
     color: #ffffff;
     width: 300px;
     height: 40px;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
     margin-left: 0;
 `;
 
 const SDown = styled(CaretDownFilled)`
     font-size: var(--font-size-medium);
-    & svg {
-        transition: 0.3s ease-in-out;
-    }
-    .open .preview & svg {
-        transform: rotate(-180deg);
+    transition: 0.3s ease-in-out;
+    transform: translateY(6px);
+
+    .open & {
+        transform: rotate(-180deg) translateY(6px);
     }
 `;
 
@@ -56,10 +59,28 @@ const SHiddenExpand = styled(HiddenExpand)`
     & > .body {
         padding: 10px 0;
     }
+    background: var(--color-accent);
+`;
+
+const PoolOwnershipInsufficient = styled(Section)`
+    background: #f15025;
+    background-size: 100%;
+    border-bottom: 1px solid #011772;
+    padding: 5px 0;
+    margin: 0;
+
+    .label {
+        color: var(--color-text);
+        padding: 0 10px;
+    }
+    .content {
+        padding-right: 10px;
+        color: var(--color-text);
+    }
 `;
 
 const WithdrawalFee = styled(Section)`
-    background: #f15025;
+    background: #f4ab57;
     background-size: 100%;
     border-bottom: 1px solid #011772;
     padding: 5px 0;
@@ -78,11 +99,34 @@ const WithdrawalFee = styled(Section)`
 const SSection = styled(Section)`
     padding: 5px 10px;
     margin: 0;
+
+    &.title > .label {
+        color: white;
+    }
 `;
 
-const AcceptTerms = styled.span`
-    line-height: 1.3rem;
-    margin-left: 1rem;
+const CheckboxContainer = styled.div`
+    display: flex;
+    cursor: pointer;
+    width: fit-content;
+`;
+
+const CheckboxTitle = styled.span`
+    margin-left: 0.5rem;
+    margin-top: -0.2rem;
+    font-size: var(--font-size-small);
+`;
+
+const WithdrawalNote = styled.div`
+    background: var(--color-background);
+    color: var(--color-text);
+    font-size: var(--font-size-small);
+    border-radius: 5px;
+    padding: 10px;
+
+    > .title {
+        color: #3da8f5;
+    }
 `;
 
 type BProps = {
@@ -99,6 +143,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
     const [valid, setValid] = useState(false);
     const [amount, setAmount] = useState(NaN); // The amount within the input
     const [acceptedTerms, acceptTerms] = useState(false);
+    const fee = 0; // TODO update this to not be 0
     useEffect(() => {
         setIsDeposit(type === 'Deposit');
     }, [type]);
@@ -137,91 +182,120 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 setShow(false);
             }}
             title={`${tracerId} Insurance Pool`}
-            subTitle={
-                isDeposit
-                    ? `Add insurance to the ${tracerId} insurance pool for a specified period of time.`
-                    : `Withdraw from the ${tracerId} insurance pool`
-            }
         >
-            <div className="px-6 flex-auto">
-                <SSlideSelect onClick={(index: number, _e: any) => setIsDeposit(index === 0)} value={isDeposit ? 0 : 1}>
-                    <Option>Deposit</Option>
-                    <Option>Withdraw</Option>
-                </SSlideSelect>
-                <SubTitle>
-                    {isDeposit
-                        ? `Deposit funds to the ${tracerId} insurance pool`
-                        : `Withdraw funds from the ${tracerId} insurance pool`}
-                </SubTitle>
-                {isDeposit ? (
-                    <Dropdown
-                        defaultOpen={true}
-                        defaultHeight={200}
-                        header={
-                            <DepositTermsHeader>
-                                <span>Terms of deposit</span>
-                                <SDown />
-                            </DepositTermsHeader>
-                        }
-                        body={
-                            <DepositTerms>
-                                When you deposit insurance, you will receive insurance tokens proportionate to your
-                                deposit, which will earn fees. You can withdraw your funds by burning your tokens at any
-                                time. At the time of withdrawal,{' '}
-                                <span className="highlight">
-                                    you will be required to pay a withdrawal fee if the current value of the insurance
-                                    fund is less than the target.
-                                </span>
-                            </DepositTerms>
-                        }
-                    />
-                ) : null}
-                <NumberSelect
-                    unit={tracerId?.split('/')[1] ?? 'NO_ID'}
-                    title={'Amount'}
-                    amount={amount}
-                    balance={balance?.toNumber() ?? 0}
-                    setAmount={setAmount}
+            <SSlideSelect
+                onClick={(index: number, _e: any) => {
+                    setAmount(NaN); // reset amount
+                    setIsDeposit(index === 0);
+                }}
+                value={isDeposit ? 0 : 1}
+            >
+                <Option>Deposit</Option>
+                <Option>Withdraw</Option>
+            </SSlideSelect>
+            {isDeposit ? (
+                <Dropdown
+                    defaultOpen={true}
+                    defaultHeight={180}
+                    header={
+                        <DepositTermsHeader>
+                            <span>Terms of deposit</span>
+                            <SDown className="down-arrow" />
+                        </DepositTermsHeader>
+                    }
+                    body={
+                        <DepositTerms>
+                            When you deposit insurance, you will receive insurance tokens proportionate to your deposit,
+                            which will earn fees. You can withdraw your funds by burning your tokens at any time. At the
+                            time of withdrawal,{' '}
+                            <span className="highlight">
+                                you will be required to pay a withdrawal fee if the current value of the insurance fund
+                                is less than the target.
+                            </span>
+                        </DepositTerms>
+                    }
                 />
-                <SHiddenExpand defaultHeight={0} open={!!amount}>
+            ) : null}
+            <NumberSelect
+                unit={`i${tracerId?.replace('/', '-')}` ?? 'NO_ID'}
+                title={'Amount'}
+                amount={amount}
+                balance={balance?.toNumber() ?? 0}
+                setAmount={setAmount}
+            />
+            <SHiddenExpand defaultHeight={0} open={!!amount}>
+                {isDeposit ? (
+                    <SSection className={`title`} label={`Deposit Summary`} />
+                ) : (
+                    <SSection className={`title`} label={`Withdrawal Summary`} />
+                )}
+                {!isDeposit && amount > balance ? (
+                    <PoolOwnershipInsufficient label={`Pool Ownership`}>
+                        <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
+                        {`${toApproxCurrency(newBalance)}`}
+                    </PoolOwnershipInsufficient>
+                ) : (
                     <SSection label={`Pool Ownership`}>
                         <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>
-                    <SSection label={`Pool Balance`}>
-                        <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
-                        {`${toApproxCurrency(newBalance)}`}
-                    </SSection>
-                    <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(0)}`}</WithdrawalFee>
-                    <SSection label="Total Return">{`${toApproxCurrency(0)}`}</SSection>
-                    <SSection label="Predicted Date for Profitable Withdrawal">
-                        {new Date().toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                        })}
-                    </SSection>
-                </SHiddenExpand>
-                {isDeposit ? (
-                    <div
-                        className="flex"
-                        onClick={(e: any) => {
-                            e.preventDefault();
-                            acceptTerms(!acceptedTerms);
-                        }}
-                    >
-                        <Checkbox checked={acceptedTerms} />
-                        <AcceptTerms>I have read and accept Terms of Withdrawal</AcceptTerms>
-                    </div>
-                ) : null}
-                <div className="flex items-center justify-center px-6 pt-6 rounded-b" id="insurance-submit">
-                    {valid ? (
-                        <Button onClick={() => submit(amount)}>{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
-                    ) : (
-                        <Button className="disabled">{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
-                    )}
-                </div>
+                )}
+                {/*<SSection label={`Pool Balance`}>*/}
+                {/*    <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>*/}
+                {/*    {`${toApproxCurrency(newBalance)}`}*/}
+                {/*</SSection>*/}
+                {isDeposit || amount > balance ? null : (
+                    <>
+                        <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(fee)}`}</WithdrawalFee>
+                        <SSection
+                            label="Total Return"
+                            tooltip={{ key: 'total-return', props: { baseTicker: selectedTracer?.baseTicker } }}
+                        >{`${toApproxCurrency(amount - fee)}`}</SSection>
+                    </>
+                )}
+                {/*<SSection label="Predicted Date for Profitable Withdrawal">*/}
+                {/*    {new Date().toLocaleDateString('en-US', {*/}
+                {/*        year: 'numeric',*/}
+                {/*        month: 'long',*/}
+                {/*        day: 'numeric',*/}
+                {/*    })}*/}
+                {/*</SSection>*/}
+            </SHiddenExpand>
+            {isDeposit ? null : (
+                <WithdrawalNote className="mb-8">
+                    <span className="title">Note:</span> The value of the insurance fund is less than the target and you
+                    are required to pay a withdrawal fee. Do you wish to proceed with the withdrawal?
+                </WithdrawalNote>
+            )}
+            {isDeposit ? (
+                <CheckboxContainer
+                    onClick={(e: any) => {
+                        e.preventDefault();
+                        acceptTerms(!acceptedTerms);
+                    }}
+                >
+                    <Checkbox checked={acceptedTerms} />
+                    <CheckboxTitle>I have read and accept Terms of Deposit</CheckboxTitle>
+                </CheckboxContainer>
+            ) : (
+                <CheckboxContainer
+                    onClick={(e: any) => {
+                        e.preventDefault();
+                        acceptTerms(!acceptedTerms);
+                    }}
+                >
+                    <Checkbox checked={acceptedTerms} />
+                    <CheckboxTitle>I wish to proceed</CheckboxTitle>
+                </CheckboxContainer>
+            )}
+            <div className="flex items-center justify-center px-6 pt-6 rounded-b" id="insurance-submit">
+                {valid ? (
+                    <Button onClick={() => submit(amount)}>{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
+                ) : (
+                    <Button className="disabled">{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
+                )}
             </div>
+            <ErrorComponent context="margin" error={amount > balance ? 'INSUFFICIENT_FUNDS' : 'NO_ERROR'} />
         </TracerModal>
     );
 };
