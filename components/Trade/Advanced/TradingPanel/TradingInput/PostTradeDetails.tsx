@@ -84,7 +84,9 @@ export const LimitTradeDetails: React.FC<LTDProps> = ({
                 <Previous>
                     {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
                 </Previous>
-                {toApproxCurrency(calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage))}
+                {toApproxCurrency(
+                    calcLiquidationPrice(nextPosition.quote, nextPosition.base, new BigNumber(orderPrice), maxLeverage),
+                )}
             </Section>
             <Section label={'Expected price'}>{toApproxCurrency(orderPrice)}</Section>
         </SHiddenExpand>

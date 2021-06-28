@@ -42,7 +42,10 @@ export default styled(
 
         useMemo(() => {
             if (!balances?.base.eq(0)) {
-                const leverage = calcLeverage(balances.quote, balances.base, fairPrice);
+                let leverage = calcLeverage(balances.quote, balances.base, fairPrice);
+                if (balances?.base.lt(0)) {
+                    leverage = leverage.negated();
+                }
                 console.info('Setting leverage', leverage.toNumber());
                 orderDispatch({
                     type: 'setLeverage',

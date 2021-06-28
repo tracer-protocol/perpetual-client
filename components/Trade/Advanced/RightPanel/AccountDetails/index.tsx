@@ -16,7 +16,7 @@ import { OMEContext } from '@context/OMEContext';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import CustomSubNav from './CustomSubNav';
-import { OrderContext } from '@context/OrderContext';
+import { LIMIT, OrderContext } from '@context/OrderContext';
 
 const AccountDetails = styled.div`
     width: 100%;
@@ -105,10 +105,11 @@ const Position: React.FC<ContentProps> = ({ nextPosition, exposure, tradePrice, 
     return <Content>{getPositionText(balances.base)}</Content>;
 };
 
-const Leverage: React.FC<ContentProps & { fairPrice: BigNumber }> = ({
+const Leverage: React.FC<ContentProps & { orderType: number; fairPrice: BigNumber }> = ({
     nextPosition,
     exposure,
     tradePrice,
+    orderType,
     fairPrice,
     balances,
 }) => {
@@ -119,7 +120,11 @@ const Leverage: React.FC<ContentProps & { fairPrice: BigNumber }> = ({
         return (
             <Content>
                 <SPrevious>{`${l.toFixed(2)}x`}</SPrevious>
-                {`${calcLeverage(nextPosition.quote, nextPosition.base, new BigNumber(tradePrice)).toFixed(2)}x`}
+                {`${calcLeverage(
+                    nextPosition.quote,
+                    nextPosition.base,
+                    orderType === LIMIT ? new BigNumber(tradePrice) : fairPrice,
+                ).toFixed(2)}x`}
             </Content>
         );
     } // else
@@ -189,6 +194,7 @@ const PositionDetails: React.FC<IProps> = ({
                         nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
                         tradePrice={order?.price ?? 0}
                         fairPrice={fairPrice}
+                        orderType={order?.orderType ?? 0}
                         exposure={order?.exposure ?? 0}
                     />
                 </AccountDetailsSection>

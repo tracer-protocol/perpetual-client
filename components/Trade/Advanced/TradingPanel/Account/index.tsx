@@ -13,7 +13,7 @@ import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
-import { OrderState } from '@context/OrderContext';
+import { LIMIT, OrderState } from '@context/OrderContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import { UserBalance } from 'types';
 // import CalculatorModal from './Calculator';
@@ -138,7 +138,7 @@ const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPr
                     calcBuyingPower(
                         order?.nextPosition.quote ?? balances.quote,
                         order?.nextPosition.base ?? balances.base,
-                        new BigNumber(order.price),
+                        new BigNumber(order.orderType === LIMIT ? order.price : fairPrice),
                         maxLeverage,
                     ),
                 )}
@@ -164,7 +164,7 @@ const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fa
                 {`${calcAvailableMarginPercent(
                     order?.nextPosition.quote ?? balances.quote,
                     order?.nextPosition.base ?? balances.base,
-                    new BigNumber(order.price),
+                    new BigNumber(order.orderType === LIMIT ? order.price : fairPrice),
                     maxLeverage,
                 ).toFixed(3)}
                 %`}

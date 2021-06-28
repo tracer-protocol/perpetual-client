@@ -31,9 +31,10 @@ const checkErrors: (
     orders: OMEOrder[],
     account: string | undefined,
     order: OrderState,
+    fairPrice: BigNumber | undefined,
     maxLeverage: BigNumber | undefined,
-) => ErrorKey = (balances, orders, account, order, maxLeverage) => {
-    const priceBN = new BigNumber(order.price);
+) => ErrorKey = (balances, orders, account, order, fairPrice, maxLeverage) => {
+    const priceBN = order.orderType === LIMIT ? new BigNumber(order.orderType) : fairPrice ?? tracerDefaults.fairPrice;
     const { quote: newQuote, base: newBase } = order.nextPosition;
     if (!account) {
         return 'ACCOUNT_DISCONNECTED';
@@ -202,9 +203,11 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     ) => { base: BigNumber; quote: BigNumber } = (addedExposure, price, position) => {
         const balances = selectedTracer?.getBalance();
         if (position === SHORT) {
+            const newBalance = balances?.base.minus(addedExposure) ?? tracerDefaults.balances.base; // subtract how much exposure you get
+            const newQuote = balances?.quote.plus(addedExposure * price) ?? tracerDefaults.balances.quote; // add how much it costs
             return {
-                base: balances?.base.minus(addedExposure) ?? tracerDefaults.balances.base, // subtract how much exposure you get
-                quote: balances?.quote.plus(addedExposure * price) ?? tracerDefaults.balances.quote, // add how much it costs
+                base: newBalance,
+                quote: newQuote,
             };
         }
         return {
@@ -261,7 +264,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 // issue here is action.leverage is negative for short values
                 // but leverage is always positive no matter if short or long
                 if (base.lt(0)) {
-                    if (Math.abs(action.leverage) < leverage.toNumber()) {
+                    if (action.leverage > leverage.negated().toNumber()) {
                         // deleverage short bosition
                         position = LONG;
                         deleverage = true;
@@ -292,8 +295,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 let difference = targetExposure.minus(base.abs()).abs();
                 if (deleverage) {
                     if (
-                        base.gt(0) && action.leverage < 0 || // long and shorting
-                        base.lt(0) && action.leverage > 0
+                        (base.gt(0) && action.leverage < 0) || // long and shorting
+                        (base.lt(0) && action.leverage > 0) // short and longing
                     ) {
                         targetExposure = notional.div(fairPrice);
                         difference = targetExposure.abs().plus(base.abs());
@@ -309,12 +312,12 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 if (!action.amount) {
                     return {
                         ...state,
-                        leverage: leverage,
+                        leverage: base.lt(0) ? leverage * -1 : leverage,
                         exposure: NaN,
                     };
                 }
                 const notional = new BigNumber(action.amount).times(fairPrice);
-                const targetLeverage = notional.div(totalMargin);
+                let targetLeverage = notional.div(totalMargin);
                 // here targetLeverage and leverage are both positive
                 let position;
                 if (base.lt(0)) {
@@ -334,10 +337,17 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 } else {
                     position = state.position;
                 }
-
+                if (base.gt(0)) {
+                    targetLeverage = leverage.minus(targetLeverage);
+                } else if (base.lt(0)) {
+                    targetLeverage = targetLeverage.minus(leverage);
+                } else {
+                    // base is 0
+                    targetLeverage = state.position === SHORT ? targetLeverage.negated() : targetLeverage;
+                }
                 return {
                     ...state,
-                    leverage: (state.position === SHORT ? targetLeverage.negated() : targetLeverage).toNumber(),
+                    leverage: targetLeverage.toNumber(),
                     position: position,
                 };
             }
@@ -457,12 +467,23 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     }, [order.market, order.collateral]);
 
     useEffect(() => {
-        orderDispatch({
-            type: 'setNextPosition',
-            nextPosition: {
-                ...calcNewBalance(order.exposure, order.price, order.position),
-            },
-        });
+        if (order.orderType === LIMIT) {
+            orderDispatch({
+                type: 'setNextPosition',
+                nextPosition: {
+                    ...calcNewBalance(order.exposure, order.price, order.position),
+                },
+            });
+        } else {
+            orderDispatch({
+                type: 'setNextPosition',
+                nextPosition: calcNewBalance(
+                    order.exposure,
+                    selectedTracer?.getFairPrice() ?? defaults.fairPrice,
+                    order.position,
+                ),
+            });
+        }
     }, [order.exposure, order.price]);
 
     // Check errors
@@ -474,6 +495,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 oppositeOrders,
                 account,
                 order,
+                selectedTracer?.getFairPrice(),
                 selectedTracer?.getMaxLeverage(),
             );
             if (error !== order.error) {
