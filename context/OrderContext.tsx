@@ -68,9 +68,9 @@ export const orderDefaults = {
         collateral: 'USD', // collateral asset
         amountToPay: NaN, // required margin / amount of margin being used
         exposure: NaN,
-        // Bignumber representation of exposure. 
+        // Bignumber representation of exposure.
         // Implemented this way to avoid complications with the exposure input and bignumbers
-        exposureBN: new BigNumber(0), 
+        exposureBN: new BigNumber(0),
         leverage: NaN, // defaults 0 leverage
         position: LONG, // long or short, 1 long, 0 is short
         price: NaN, // price of the market asset in relation to the collateral asset
@@ -303,7 +303,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                         ...state,
                         leverage: base.lt(0) ? leverage * -1 : leverage,
                         exposure: NaN,
-                        exposureBN: orderDefaults.order.exposureBN
+                        exposureBN: orderDefaults.order.exposureBN,
                     };
                 }
                 const notional = new BigNumber(action.amount).times(fairPrice);

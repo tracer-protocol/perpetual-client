@@ -12,7 +12,6 @@ import { defaults } from '@libs/Tracer';
 // @ts-ignore
 import { Callback } from 'web3/types';
 import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
-import BigNumber from 'bignumber.js';
 import { bigNumberToWei } from '@libs/utils';
 interface ContextProps {
     tracerId: string | undefined;
