@@ -183,10 +183,11 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
             }}
             title={`${tracerId} Insurance Pool`}
         >
-            <SSlideSelect onClick={(index: number, _e: any) => {
+            <SSlideSelect
+                onClick={(index: number, _e: any) => {
                     setAmount(NaN); // reset amount
                     setIsDeposit(index === 0);
-                }} 
+                }}
                 value={isDeposit ? 0 : 1}
             >
                 <Option>Deposit</Option>
