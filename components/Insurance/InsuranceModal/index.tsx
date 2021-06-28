@@ -56,9 +56,6 @@ const DepositTerms = styled.p`
 const SHiddenExpand = styled(HiddenExpand)`
     margin-top: 1rem;
     margin-bottom: 1rem;
-    & > .body {
-        padding: 10px 0;
-    }
     background: var(--color-accent);
 `;
 
