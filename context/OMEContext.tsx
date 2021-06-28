@@ -34,7 +34,7 @@ export const parseOrders: (res: any) => Orders = (res) => {
                 },
             ),
         );
-        return flattenedOrders;
+        return flattenedOrders.filter((row) => row.quantity); // remove 0 entries
     };
 
     return {
