@@ -31,9 +31,10 @@ const checkErrors: (
     orders: OMEOrder[],
     account: string | undefined,
     order: OrderState,
+    fairPrice: BigNumber | undefined,
     maxLeverage: BigNumber | undefined,
-) => ErrorKey = (balances, orders, account, order, maxLeverage) => {
-    const priceBN = new BigNumber(order.price);
+) => ErrorKey = (balances, orders, account, order, fairPrice, maxLeverage) => {
+    const priceBN = order.orderType === LIMIT ? new BigNumber(order.orderType) : fairPrice ?? tracerDefaults.fairPrice;
     const { quote: newQuote, base: newBase } = order.nextPosition;
     if (!account) {
         return 'ACCOUNT_DISCONNECTED';
@@ -201,10 +202,18 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         position: number,
     ) => { base: BigNumber; quote: BigNumber } = (addedExposure, price, position) => {
         const balances = selectedTracer?.getBalance();
+        console.log(`
+            exposure: ${addedExposure} \n
+            price: ${price} \n
+            position short: ${position === SHORT}
+        `);
         if (position === SHORT) {
+            const newBalance = balances?.base.minus(addedExposure) ?? tracerDefaults.balances.base; // subtract how much exposure you get
+            const newQuote = balances?.quote.plus(addedExposure * price) ?? tracerDefaults.balances.quote; // add how much it costs
+            console.log(newBalance.toNumber(), newQuote.toNumber());
             return {
-                base: balances?.base.minus(addedExposure) ?? tracerDefaults.balances.base, // subtract how much exposure you get
-                quote: balances?.quote.plus(addedExposure * price) ?? tracerDefaults.balances.quote, // add how much it costs
+                base: newBalance,
+                quote: newQuote,
             };
         }
         return {
@@ -292,8 +301,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 let difference = targetExposure.minus(base.abs()).abs();
                 if (deleverage) {
                     if (
-                        base.gt(0) && action.leverage < 0 || // long and shorting
-                        base.lt(0) && action.leverage > 0
+                        (base.gt(0) && action.leverage < 0) || // long and shorting
+                        (base.lt(0) && action.leverage > 0) // short and longing
                     ) {
                         targetExposure = notional.div(fairPrice);
                         difference = targetExposure.abs().plus(base.abs());
@@ -457,12 +466,23 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     }, [order.market, order.collateral]);
 
     useEffect(() => {
-        orderDispatch({
-            type: 'setNextPosition',
-            nextPosition: {
-                ...calcNewBalance(order.exposure, order.price, order.position),
-            },
-        });
+        if (order.orderType === LIMIT) {
+            orderDispatch({
+                type: 'setNextPosition',
+                nextPosition: {
+                    ...calcNewBalance(order.exposure, order.price, order.position),
+                },
+            });
+        } else {
+            orderDispatch({
+                type: 'setNextPosition',
+                nextPosition: calcNewBalance(
+                    order.exposure,
+                    selectedTracer?.getFairPrice() ?? defaults.fairPrice,
+                    order.position,
+                ),
+            });
+        }
     }, [order.exposure, order.price]);
 
     // Check errors
@@ -474,6 +494,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 oppositeOrders,
                 account,
                 order,
+                selectedTracer?.getFairPrice(),
                 selectedTracer?.getMaxLeverage(),
             );
             if (error !== order.error) {
