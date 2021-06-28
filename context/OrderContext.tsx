@@ -257,20 +257,23 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 }
                 return { ...state, adjustType: action.value };
             case 'setExposureFromLeverage': {
-                let position;
+                let position, deleverage;
                 // issue here is action.leverage is negative for short values
                 // but leverage is always positive no matter if short or long
                 if (base.lt(0)) {
-                    if (action.leverage > leverage.negated().toNumber()) {
-                        // deleverage
+                    if (Math.abs(action.leverage) < leverage.toNumber()) {
+                        // deleverage short bosition
                         position = LONG;
+                        deleverage = true;
                     } else {
                         position = SHORT;
                     }
+                    // } else if (base.gt(0)) {
                 } else if (base.gt(0)) {
                     if (action.leverage < leverage.toNumber()) {
                         // deleverage
                         position = SHORT;
+                        deleverage = true;
                     } else {
                         position = LONG;
                     }
@@ -284,12 +287,18 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                         position: action.leverage < 0 ? SHORT : action.leverage > 0 ? LONG : state.position,
                     };
                 }
-                const notional = totalMargin.times(action.leverage);
+                const notional = totalMargin.times(Math.abs(action.leverage));
                 let targetExposure = notional.div(fairPrice);
-                if (position === SHORT) {
-                    targetExposure = notional.negated().div(fairPrice);
+                let difference = targetExposure.minus(base.abs()).abs();
+                if (deleverage) {
+                    if (
+                        base.gt(0) && action.leverage < 0 || // long and shorting
+                        base.lt(0) && action.leverage > 0
+                    ) {
+                        targetExposure = notional.div(fairPrice);
+                        difference = targetExposure.abs().plus(base.abs());
+                    }
                 }
-                const difference = base.abs().minus(targetExposure).abs();
                 return {
                     ...state,
                     exposure: difference.toNumber(),
