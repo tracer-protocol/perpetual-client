@@ -318,12 +318,12 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 if (!action.amount) {
                     return {
                         ...state,
-                        leverage: leverage,
+                        leverage: base.lt(0) ? leverage * -1 : leverage,
                         exposure: NaN,
                     };
                 }
                 const notional = new BigNumber(action.amount).times(fairPrice);
-                const targetLeverage = notional.div(totalMargin);
+                let targetLeverage = notional.div(totalMargin);
                 // here targetLeverage and leverage are both positive
                 let position;
                 if (base.lt(0)) {
@@ -343,10 +343,17 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 } else {
                     position = state.position;
                 }
-
+                if (base.gt(0)) {
+                    targetLeverage = leverage.minus(targetLeverage);
+                } else if (base.lt(0)) {
+                    targetLeverage = targetLeverage.minus(leverage);
+                } else {
+                    // base is 0
+                    targetLeverage = state.position === SHORT ? targetLeverage.negated() : targetLeverage;
+                }
                 return {
                     ...state,
-                    leverage: (state.position === SHORT ? targetLeverage.negated() : targetLeverage).toNumber(),
+                    leverage: targetLeverage.toNumber(),
                     position: position,
                 };
             }
