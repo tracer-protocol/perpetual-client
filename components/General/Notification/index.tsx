@@ -1,14 +1,15 @@
 import React from 'react';
-import {
+import Icon, {
     CloseOutlined,
     InfoCircleFilled,
     WarningOutlined,
-    LoadingOutlined,
     CloseCircleTwoTone,
     CheckCircleTwoTone,
 } from '@ant-design/icons';
 import styled from 'styled-components';
 import Timer from '@components/Timer';
+// @ts-ignore
+import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 
 type PlacementType = 'bottom-left' | 'bottom-center' | 'bottom-right' | 'top-left' | 'top-center' | 'top-right';
 type AppearanceTypes = 'success' | 'error' | 'warning' | 'info' | 'loading';
@@ -70,7 +71,7 @@ const appearances: Record<
         bg: '#00156C',
     },
     loading: {
-        icon: <LoadingOutlined />,
+        icon: <Icon component={TracerLoading} />,
         text: '#fff',
         fg: '#2684FF',
         bg: '#00156C',

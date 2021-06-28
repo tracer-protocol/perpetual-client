@@ -28,6 +28,11 @@ export default createGlobalStyle`
         color: var(--color-text);
   	}
 
+    .tracer-loading {
+        font-size: 32px;
+        color: var(--color-secondary);
+    }
+
 
 	/* ANTD overrides */
 	.ant-tooltip-inner {

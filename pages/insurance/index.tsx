@@ -26,7 +26,7 @@ const InsurancePoolsFooter = styled.div`
     width: 100%;
     display: flex;
     align-items: center;
-    margin: 0 auto;
+    margin: 1rem auto;
     color: white;
     padding: 2rem 1rem;
     font-size: var(--font-size-small);

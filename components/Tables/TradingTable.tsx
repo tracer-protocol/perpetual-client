@@ -22,6 +22,7 @@ export const TradingTable = styled.table`
     tbody tr {
         display: table;
         width: 100%;
+        line-height: 15px;
         table-layout: fixed; /* even columns width , fix width of table too*/
     }
 
