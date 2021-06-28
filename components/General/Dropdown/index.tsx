@@ -43,10 +43,12 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
     & > .body {
         transition: 0.3s ease-in;
         opacity: 0;
+        padding: 0 0.5rem;
     }
 
     &.open .body {
-        opacity: 1;
+        opacity: 1;        
+        padding: 0.5rem;
     }
 `;
 
