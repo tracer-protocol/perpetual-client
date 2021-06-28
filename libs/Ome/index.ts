@@ -122,18 +122,30 @@ export const getOrder: (market: string, orderId: string) => Promise<Response> = 
  * @param orderId of the order being updated
  */
 export const cancelOrder: (market: string, orderId: string) => Promise<Result> = async (market, orderId) => {
-    return fetch(`${BASE_URL}/book/${omefy(market)}/order/${orderId}`, {
+    return fetch(`${BASE_URL}/book/${omefy(market)}/order/${omefy(orderId)}`, {
         method: 'DELETE',
     })
         .then((res) => {
-            return res.text();
+            return res.json();
         })
         .then((res) => {
             console.info('Successfully cancelled order', res);
-            return {
-                status: 'success',
-                message: `Successfully cancelled order: ${orderId}`,
-            } as Result;
+            if (res?.status === 404) {
+                return {
+                    status: 'error',
+                    message: `Failed to delete order 404 not found`,
+                } as Result;
+            } else if (res?.status === 400) {
+                return {
+                    status: 'error',
+                    message: `Failed to delete order 400 bad request`,
+                } as Result;
+            } else {
+                return {
+                    status: 'success',
+                    message: `${res?.message}: ${orderId}`,
+                } as Result;
+            }
         })
         .catch((err) => {
             console.error(err);
