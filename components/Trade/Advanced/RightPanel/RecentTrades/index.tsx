@@ -31,13 +31,13 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                         <tbody>
                             {trades.map((trade, index) => {
                                 // remove duplicate as for every long there is a short;
-                                if (trade.position) return; 
+                                if (trade.position) {
+                                    return;
+                                }
                                 const d = new Date(parseInt(trade.timestamp) * 1000);
                                 return (
                                     <tr key={`row-${index}`}>
-                                        <td>
-                                            {toApproxCurrency(trade.price)}
-                                        </td>
+                                        <td>{toApproxCurrency(trade.price)}</td>
                                         <td>{parseFloat(trade.amount.toFixed(3))}</td>
                                         <td>
                                             {d.getHours()}:{d.getMinutes()}
