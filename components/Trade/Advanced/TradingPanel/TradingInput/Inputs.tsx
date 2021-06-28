@@ -110,7 +110,9 @@ export const LeverageInput: React.FC<{
                     if (Number.isNaN(leverage)) {
                         orderDispatch({ type: 'setLeverage', value: leverage });
                         orderDispatch({ type: 'setExposure', value: NaN });
-                    } else if (Math.abs(leverage) <= (selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage).toNumber()) {
+                    } else if (
+                        Math.abs(leverage) <= (selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage).toNumber()
+                    ) {
                         orderDispatch({
                             type: 'setExposureFromLeverage',
                             leverage: leverage,
