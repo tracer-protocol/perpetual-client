@@ -58,6 +58,10 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
     }
     > .liquidity {
         background: var(--color-primary);
+        border-top-left-radius: ${(props) => !props.buffer ? '20px' : '0px'};
+        border-bottom-left-radius: ${(props) => !props.buffer ? '20px' : '0px'};
+        border-top-right-radius: ${(props) => !props.userBalance ? '20px' : '0px'};
+        border-bottom-right-radius: ${(props) => !props.userBalance ? '20px' : '0px'};
         width: calc(
             ${(props) => ((props.liquidity - props.userBalance) / denom(props.target, props.liquidity)) * 100}% - 4px
         );

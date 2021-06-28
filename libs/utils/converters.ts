@@ -19,7 +19,10 @@ const getPrecision: (a: number) => number = (a) => {
  * @param value
  */
 export const toPercent: (value: number) => string = (value) => {
-    return `${value * 100} %`;
+    if (Number.isNaN(value)) {
+        return `0 %`;
+    }
+    return `${parseFloat((value * 100).toFixed(3))} %`;
 };
 
 export const round: (num: number, decimalPlaces: number) => number = (num, decimalPlaces) => {

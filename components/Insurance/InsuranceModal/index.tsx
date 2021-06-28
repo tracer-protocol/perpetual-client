@@ -143,6 +143,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
     const [valid, setValid] = useState(false);
     const [amount, setAmount] = useState(NaN); // The amount within the input
     const [acceptedTerms, acceptTerms] = useState(false);
+    const fee = 0; // TODO update this to not be 0
     useEffect(() => {
         setIsDeposit(type === 'Deposit');
     }, [type]);
@@ -182,7 +183,12 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
             }}
             title={`${tracerId} Insurance Pool`}
         >
-            <SSlideSelect onClick={(index: number, _e: any) => setIsDeposit(index === 0)} value={isDeposit ? 0 : 1}>
+            <SSlideSelect onClick={(index: number, _e: any) => {
+                    setAmount(NaN); // reset amount
+                    setIsDeposit(index === 0);
+                }} 
+                value={isDeposit ? 0 : 1}
+            >
                 <Option>Deposit</Option>
                 <Option>Withdraw</Option>
             </SSlideSelect>
@@ -210,7 +216,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 />
             ) : null}
             <NumberSelect
-                unit={tracerId?.split('/')[1] ?? 'NO_ID'}
+                unit={`i${tracerId?.replace('/', '-')}` ?? 'NO_ID'}
                 title={'Amount'}
                 amount={amount}
                 balance={balance?.toNumber() ?? 0}
@@ -239,11 +245,11 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 {/*</SSection>*/}
                 {isDeposit || amount > balance ? null : (
                     <>
-                        <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(0)}`}</WithdrawalFee>
+                        <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(fee)}`}</WithdrawalFee>
                         <SSection
                             label="Total Return"
                             tooltip={{ key: 'total-return', props: { baseTicker: selectedTracer?.baseTicker } }}
-                        >{`${toApproxCurrency(0)}`}</SSection>
+                        >{`${toApproxCurrency(amount - fee)}`}</SSection>
                     </>
                 )}
                 {/*<SSection label="Predicted Date for Profitable Withdrawal">*/}

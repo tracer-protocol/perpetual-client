@@ -12,6 +12,7 @@ const Unit = styled.span`
     color: var(--color-primary);
     margin-top: auto;
     margin-bottom: 0.2rem;
+    white-space: nowrap;
 `;
 
 const Header = styled.h3`
