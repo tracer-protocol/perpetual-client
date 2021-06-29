@@ -298,11 +298,11 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 };
             }
             case 'setLeverageFromExposure': {
-                if (!action.amount) {
+                if (Number.isNaN(action.amount)) {
                     return {
                         ...state,
                         leverage: base.lt(0) ? leverage * -1 : leverage,
-                        exposure: NaN,
+                        exposure: action.amount, // is nan
                         exposureBN: orderDefaults.order.exposureBN,
                     };
                 }

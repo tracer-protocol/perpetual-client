@@ -1,7 +1,7 @@
 import React from 'react';
 import SmallInput, { InputContainer } from '@components/General/Input/SmallInput';
 import { Tracer } from 'libs';
-import { LIMIT, OrderAction, OrderState } from '@context/OrderContext';
+import { LIMIT, MARKET, OrderAction, OrderState } from '@context/OrderContext';
 import DefaultSlider from '@components/General/Slider';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
@@ -28,8 +28,11 @@ export const Exposure: React.FC<{
             className={className ?? ''}
             onChange={(e) => {
                 if (orderDispatch) {
+                    console.log('setting', e.target.value);
                     orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) });
-                    orderDispatch({ type: 'setLeverageFromExposure', amount: parseFloat(e.target.value) });
+                    if (order.orderType === MARKET) {
+                        orderDispatch({ type: 'setLeverageFromExposure', amount: parseFloat(e.target.value) });
+                    }
                 } else {
                     console.error('No dispatch function set');
                 }
