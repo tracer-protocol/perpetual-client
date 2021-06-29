@@ -3,18 +3,15 @@ import React from 'react';
 import styled from 'styled-components';
 import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/TooltipSelector';
 
-const calcRemainder = (target: number, liquidity: number, userBalance: number, buffer: number) => {
-    const total = liquidity - userBalance - buffer;
+const calcRemainder = (target: number, liquidity: number, buffer: number) => {
+    const total = liquidity - buffer - target;
     if (liquidity > target) {
+        console.log('no remainder');
         return 0;
     } else {
         return total / target;
     }
 };
-
-const hasFullOwnership = (liquidity: number, userBalance: number) => liquidity === userBalance;
-
-const denom = (target: number, liquidity: number) => (target < liquidity ? target : liquidity);
 
 interface BProps {
     baseTicker?: string;
@@ -36,7 +33,6 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         <div className={className}>
             <div className="buffer" id="bufferTarget" />
             <div className="liquidity" id="liquidityTarget" />
-            <div className="userBalance" id="userBalanceTarget" />
             <div className="remainder" />
         </div>
     );
@@ -51,7 +47,9 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
     }
     > .buffer {
         background: #011772;
-        width: ${(props) => (props.buffer / denom(props.target, props.liquidity)) * 100}%;
+        width: ${(props) => (props.buffer / props.target) * 100}%;
+        min-width: ${(props) => (props.buffer ? '20px' : '0')};
+        min-width: 
         border-top-left-radius: 20px;
         border-bottom-left-radius: 20px;
         margin-left: 0;
@@ -60,26 +58,18 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         background: var(--color-primary);
         border-top-left-radius: ${(props) => (!props.buffer ? '20px' : '0px')};
         border-bottom-left-radius: ${(props) => (!props.buffer ? '20px' : '0px')};
-        border-top-right-radius: ${(props) => (!props.userBalance ? '20px' : '0px')};
-        border-bottom-right-radius: ${(props) => (!props.userBalance ? '20px' : '0px')};
-        width: calc(
-            ${(props) => ((props.liquidity - props.userBalance) / denom(props.target, props.liquidity)) * 100}% - 4px
-        );
-        border-radius: 20px;
-    }
-    > .userBalance {
-        background: var(--color-secondary);
-        width: ${(props) => (props.userBalance / denom(props.target, props.liquidity)) * 100}%;
-        border-top-right-radius: ${(props) =>
-            calcRemainder(props.target, props.liquidity, props.userBalance, props.buffer) === 0 ? '20px' : ''};
+        min-width: ${(props) => (props.liquidity ? '20px' : '0')};
+        border-top-right-radius: ${(props) => (props.liquidity >= props.target && props.target !== 0 ? '20px' : '0px')};
         border-bottom-right-radius: ${(props) =>
-            calcRemainder(props.target, props.liquidity, props.userBalance, props.buffer) === 0 ? '20px' : ''};
-        border-top-left-radius: ${(props) => (hasFullOwnership(props.liquidity, props.userBalance) ? '20px' : '')};
-        border-bottom-left-radius: ${(props) => (hasFullOwnership(props.liquidity, props.userBalance) ? '20px' : '')};
+            props.liquidity >= props.target && props.target !== 0 ? '20px' : '0px'};
+        width: calc(
+            ${(props) => ((Math.min(props.liquidity, props.target) - props.buffer) / props.target) * 100}%
+        );
     }
     > .remainder {
         background: transparent;
-        width: ${(props) => calcRemainder(props.target, props.liquidity, props.userBalance, props.buffer) * 100}%;
+        width: ${(props) => calcRemainder(props.target, props.liquidity, props.buffer) * 100}%;
+        min-width: ${(props) => (!calcRemainder(props.target, props.liquidity, props.buffer) ? '0px' : '20px')};
     }
 `;
 
@@ -88,11 +78,11 @@ type SProps = {
     percentage: number;
     value: number;
     color: string;
-    target: 'userBalanceTarget' | 'bufferTarget' | 'liquidityTarget';
+    target: 'excessTarget' | 'bufferTarget' | 'liquidityTarget';
     className?: string;
     tooltip?: TooltipSelectorProps;
 };
-const Section: React.FC<SProps> = styled(({ className, title, percentage, value, target, tooltip }: SProps) => {
+const Section = styled(({ className, title, percentage, value, target, tooltip }: SProps) => {
     return (
         <div
             className={className}
@@ -112,12 +102,12 @@ const Section: React.FC<SProps> = styled(({ className, title, percentage, value,
                 <p>{title}</p>
             )}
             <span>
-                <span>{Number.isNaN(percentage) ? 0 : percentage}%</span>
+                <span>{Number.isNaN(percentage) ? 0 : !Number.isFinite(percentage) ? 100 : percentage}%</span>
                 <span className="value"> | {toApproxCurrency(value)}</span>
             </span>
         </div>
     );
-})`
+})<SProps>`
     font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: var(--color-text);
@@ -195,7 +185,7 @@ const Breakdown: React.FC<BProps> = styled(
                 <div className="sections hoverHide">
                     <Section
                         title="Buffer"
-                        percentage={parseFloat(((buffer / liquidity) * 100).toFixed(3))}
+                        percentage={parseFloat(((buffer / target) * 100).toFixed(3))}
                         value={buffer}
                         color="#011772"
                         target="bufferTarget"
@@ -203,19 +193,21 @@ const Breakdown: React.FC<BProps> = styled(
                     />
                     <Section
                         title="Public"
-                        percentage={parseFloat((((liquidity - userBalance - buffer) / liquidity) * 100).toFixed(3))}
-                        value={liquidity}
+                        percentage={parseFloat((((Math.min(liquidity, target) - buffer) / target) * 100).toFixed(3))}
+                        value={parseFloat(liquidity.toFixed(3))}
                         color="var(--color-primary)"
                         target="liquidityTarget"
                         tooltip={{ key: 'public' }}
                     />
-                    <Section
-                        title="My Shares"
-                        percentage={parseFloat(((userBalance / liquidity) * 100).toFixed(3))}
-                        value={userBalance}
-                        color="#005EA4"
-                        target="userBalanceTarget"
-                    />
+                    {liquidity - target > 0 ? (
+                        <Section
+                            title="Excess"
+                            percentage={parseFloat((((liquidity - target) / target) * 100).toFixed(3))}
+                            value={parseFloat((liquidity - target).toFixed(3))}
+                            color="#21DD53"
+                            target="excessTarget"
+                        />
+                    ) : null}
                 </div>
             </div>
         );
@@ -226,6 +218,12 @@ const Breakdown: React.FC<BProps> = styled(
     > .sections {
         display: flex;
         justify-content: space-between;
+    }
+
+    > .sections ${Section}:nth-child(2) {
+        // middle child
+        margin-right: auto;
+        margin-left: ${(props) => (props.liquidity - props.target > 0 ? 'auto' : '1rem')};
     }
 
     &:hover > .hoverHide > *,
