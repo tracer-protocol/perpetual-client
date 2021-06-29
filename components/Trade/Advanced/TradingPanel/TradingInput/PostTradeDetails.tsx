@@ -5,6 +5,7 @@ import { HiddenExpand, Previous, Section } from '@components/General';
 import { UserBalance } from 'types';
 import { BigNumber } from 'bignumber.js';
 import styled from 'styled-components';
+import { OrderState } from '@context/OrderContext';
 
 const SHiddenExpand = styled(HiddenExpand)`
     margin: 10px;
@@ -20,29 +21,21 @@ const SHiddenExpand = styled(HiddenExpand)`
 `;
 interface MTDProps {
     balances: UserBalance;
-    nextPosition: {
-        quote: BigNumber;
-        base: BigNumber;
-    };
-    exposure: BigNumber;
+    order: OrderState;
     fairPrice: BigNumber;
-    slippage: number;
     maxLeverage: BigNumber;
-    tradePrice: BigNumber;
     className?: string;
 }
 export const MarketTradeDetails: React.FC<MTDProps> = ({
     balances,
-    nextPosition,
-    exposure,
+    order,
     fairPrice,
     maxLeverage,
-    slippage,
-    tradePrice,
     className,
 }: MTDProps) => {
+    const { nextPosition, exposureBN, slippage, marketTradePrice } = order;
     return (
-        <SHiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
+        <SHiddenExpand open={!!exposureBN.toNumber()} defaultHeight={0} className={className}>
             <h3>Order Summary</h3>
             <Section label={'Liquidation price'}>
                 <Previous>
@@ -51,7 +44,7 @@ export const MarketTradeDetails: React.FC<MTDProps> = ({
                 {toApproxCurrency(calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage))}
             </Section>
             <Section label={'Slippage and fees'}>{slippage.toFixed(2)}%</Section>
-            <Section label={'Expected price'}>{toApproxCurrency(tradePrice)}</Section>
+            <Section label={'Expected price'}>{toApproxCurrency(marketTradePrice)}</Section>
         </SHiddenExpand>
     );
 };

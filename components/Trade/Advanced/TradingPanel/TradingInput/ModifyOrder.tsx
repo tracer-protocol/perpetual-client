@@ -74,10 +74,7 @@ const Close: React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
             <MarketTradeDetails
                 fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                 balances={selectedTracer?.getBalance() ?? defaults.balances}
-                exposure={order?.exposureBN ?? defaults.exposure}
-                nextPosition={order?.nextPosition ?? defaults.balances}
-                slippage={order?.slippage ?? 0}
-                tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
+                order={order ?? orderDefaults.order}
                 maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
             />
         </>
