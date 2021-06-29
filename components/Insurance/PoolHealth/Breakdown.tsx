@@ -48,7 +48,6 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         background: #011772;
         width: ${(props) => (props.buffer / props.target) * 100}%;
         min-width: ${(props) => (props.buffer ? '20px' : '0')};
-        min-width: 
         border-top-left-radius: 20px;
         border-bottom-left-radius: 20px;
         margin-left: 0;
@@ -61,9 +60,7 @@ const BreakdownBar: React.FC<BProps> = styled(({ className }: BProps) => {
         border-top-right-radius: ${(props) => (props.liquidity >= props.target && props.target !== 0 ? '20px' : '0px')};
         border-bottom-right-radius: ${(props) =>
             props.liquidity >= props.target && props.target !== 0 ? '20px' : '0px'};
-        width: calc(
-            ${(props) => ((Math.min(props.liquidity, props.target) - props.buffer) / props.target) * 100}%
-        );
+        width: calc(${(props) => ((Math.min(props.liquidity, props.target) - props.buffer) / props.target) * 100}%);
     }
     > .remainder {
         background: transparent;
@@ -165,12 +162,12 @@ const Breakdown: React.FC<BProps> = styled(
                 <div className="sections">
                     <Label
                         title="Holdings"
-                        value={liquidity}
+                        value={parseFloat(liquidity.toFixed(2))}
                         tooltip={{ key: `pool-holdings`, props: { baseTicker: baseTicker } }}
                     />
                     <Label
                         title="Target"
-                        value={target}
+                        value={parseFloat(target.toFixed(2))}
                         tooltip={{ key: `pool-target`, props: { baseTicker: baseTicker } }}
                     />
                 </div>
@@ -185,7 +182,7 @@ const Breakdown: React.FC<BProps> = styled(
                     <Section
                         title="Buffer"
                         percentage={parseFloat(((buffer / target) * 100).toFixed(2))}
-                        value={buffer}
+                        value={parseFloat(buffer.toFixed(2))}
                         color="#011772"
                         target="bufferTarget"
                         tooltip={{ key: 'buffer' }}

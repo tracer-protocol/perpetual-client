@@ -42,12 +42,12 @@ export const toApproxCurrency: (num_: BigNumber | number, precision?: number) =>
     }
     if (!num) {
         // reject if num is falsey
-        return '$0.000';
+        return '$0.00';
     }
     return num.toLocaleString('en-us', {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: Math.min(getPrecision(num), precision ?? 3),
+        minimumFractionDigits: Math.min(getPrecision(num), precision ?? 2),
     });
 };
 
