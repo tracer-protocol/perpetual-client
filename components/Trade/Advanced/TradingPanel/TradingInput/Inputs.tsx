@@ -85,7 +85,7 @@ const StyledSmallInput = styled(SmallInput)`
     justify-content: flex-start;
     ${InputContainer} {
         margin-left: 1rem;
-        width: 70px;
+        width: 80px;
     }
     * ${Inc}, * ${Dec} {
         display: none;
