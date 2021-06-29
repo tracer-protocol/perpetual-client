@@ -177,6 +177,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
             onClose={() => {
                 setIsDeposit(type === 'Deposit');
                 setShow(false);
+                setAmount(NaN);
             }}
             title={`${tracerId} Insurance Pool`}
         >

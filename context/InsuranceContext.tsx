@@ -141,7 +141,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             const approved = await selectedTracer?.checkAllowance(account, selectedTracer.getInsuranceContract());
             if (approved === 0) {
                 // not approved
-                handleTransaction(selectedTracer?.approve, [account, selectedTracer.getInsuranceContract()]);
+                await handleTransaction(selectedTracer?.approve, [account, selectedTracer.getInsuranceContract()]);
             }
             const callFunc: (amount: number) => PromiEvent<TransactionReceipt> = (amount: number) =>
                 contract?.methods
@@ -194,7 +194,10 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             const res = await Promise.all([userBalance_, rewards_, target_, liquidity_, buffer_]);
             const liquidity = res[3] ? new BigNumber(Web3.utils.fromWei(res[3])) : defaults.liquidity;
             const target = res[2] ? new BigNumber(Web3.utils.fromWei(res[2])) : defaults.target;
-            const health = liquidity.div(target);
+            let health = liquidity.div(target).times(100);
+            if (!Number.isFinite(health.toNumber()) || Number.isNaN(health.toNumber())) {
+                health = defaults.health;
+            }
             const splitId = marketId.split('/');
             const iPoolTokenName = `i${splitId[0]}-${splitId[1]}`;
             const iTokenAddress = await contract?.methods.token().call();
@@ -209,7 +212,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     target: target,
                     liquidity: liquidity,
                     rewards: res[1] ? new BigNumber(Web3.utils.fromWei(res[1])) : defaults.rewards,
-                    health: health.lt(1) ? health.times(100) : defaults.health,
+                    health: BigNumber.min(health, new BigNumber(100)),
                     apy: defaults.apy,
                     buffer: res[4] ? new BigNumber(Web3.utils.fromWei(res[4])) : defaults.buffer,
                     iPoolTokenURL: iTokenURL,
@@ -236,14 +239,17 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             .then((res) => {
                 const target = res[1] ? new BigNumber(Web3.utils.fromWei(res[1])) : defaults.target;
                 const liquidity = res[2] ? new BigNumber(Web3.utils.fromWei(res[2])) : defaults.liquidity;
-                const health = !target.eq(0) ? liquidity.div(target) : defaults.health;
+                let health = liquidity.div(target).times(100);
+                if (!Number.isFinite(health.toNumber()) || Number.isNaN(health.toNumber())) {
+                    health = defaults.health;
+                }
                 dispatch({
                     type: 'setBalances',
                     marketId: selectedTracer?.marketId,
                     balance: res[0] ? new BigNumber(Web3.utils.fromWei(res[0])) : defaults.userBalance,
                     target: target,
                     liquidity: liquidity,
-                    health: health,
+                    health: BigNumber.min(health, new BigNumber(100)),
                 });
             })
             .catch((err) => {
