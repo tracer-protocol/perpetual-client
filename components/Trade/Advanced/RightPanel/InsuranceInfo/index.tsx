@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { toApproxCurrency } from 'libs/utils';
+import { toApproxCurrency, toPercent } from 'libs/utils';
 import styled from 'styled-components';
 import { ProgressBar, Section } from '@components/General';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
+import BigNumber from 'bignumber.js';
 
-export default styled(({ className }) => {
+export default styled(({ fundingRate, className }) => {
     const { poolInfo } = useContext(InsuranceContext);
     const poolHealth = poolInfo?.health ?? defaults.health;
     const poolLiquidity = poolInfo?.liquidity ?? defaults.liquidity;
@@ -47,12 +48,13 @@ export default styled(({ className }) => {
                     },
                 }}
             >
-                {/*TODO: Add insurance funding rate*/}
-                0.00%
+                {toPercent(fundingRate.toNumber())}
             </Section>
         </div>
     );
-})`
+})<{
+    fundingRate: BigNumber
+}>`
     padding: 10px;
     h3 {
         font-size: var(--font-size-medium);

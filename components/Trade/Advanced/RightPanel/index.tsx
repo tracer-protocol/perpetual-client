@@ -134,7 +134,7 @@ const TradingView: React.FC<{
                     lastPrice={omeState?.maxAndMins?.maxAsk ?? 0}
                     fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
                     oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
-                    fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.fundingRate.toNumber()}
+                    fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.defaultFundingRate.toNumber()}
                     // nextFunding={new Date()}
                     // tradingVolume={243512}
                     maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
@@ -143,7 +143,9 @@ const TradingView: React.FC<{
                 <AccountSummary selectedTracer={selectedTracer} />
             </SBox>
             <SBox className="sidePanel">
-                <InsuranceInfo />
+                <InsuranceInfo
+                    fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate}
+                />
                 <OrderBookContainer>
                     <h3>Order Book</h3>
                     {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (

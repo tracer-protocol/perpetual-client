@@ -28,7 +28,6 @@ export const Exposure: React.FC<{
             className={className ?? ''}
             onChange={(e) => {
                 if (orderDispatch) {
-                    console.log('setting', e.target.value);
                     orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) });
                     if (order.orderType === MARKET) {
                         orderDispatch({ type: 'setLeverageFromExposure', amount: parseFloat(e.target.value) });
