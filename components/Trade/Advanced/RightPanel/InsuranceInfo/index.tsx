@@ -25,7 +25,7 @@ export default styled(({ className }) => {
                     },
                 }}
             >
-                {toApproxCurrency(poolLiquidity.toFixed(2) ?? defaults.liquidity)}
+                {toApproxCurrency(poolLiquidity ?? defaults.liquidity)}
             </Section>
             <Section
                 label="Pool Target"
