@@ -16,7 +16,7 @@ import { OMEContext } from '@context/OMEContext';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import CustomSubNav from './CustomSubNav';
-import { LIMIT, OrderContext } from '@context/OrderContext';
+import { LIMIT, OrderContext, orderDefaults, OrderState } from '@context/OrderContext';
 
 const AccountDetails = styled.div`
     width: 100%;
@@ -67,6 +67,7 @@ const SSlideSelect = styled(SlideSelect)`
     position: absolute;
     right: 6px;
     top: 6px;
+    color: var(--color-text);
     height: var(--height-extra-small-button);
     width: 100px;
 `;
@@ -131,6 +132,43 @@ const Leverage: React.FC<ContentProps & { orderType: number; fairPrice: BigNumbe
     return <Content>{`${l.toPrecision(3)}x`}</Content>;
 };
 
+const Exposure: React.FC<{
+    baseTicker: string;
+    quoteTicker: string;
+    order: OrderState;
+    balances: UserBalance;
+    fairPrice: BigNumber;
+    currency: number;
+}> = ({ order, baseTicker, quoteTicker, fairPrice, balances, currency }) => {
+    const { nextPosition, exposure, orderType, price } = order;
+    if (balances.quote.eq(0)) {
+        return <>-</>;
+    } else if (exposure && price) {
+        return (
+            <Content className="pt-1">
+                <SPrevious>
+                    {currency === 0
+                        ? `${parseFloat(balances.base.abs().toFixed(2))} ${baseTicker}`
+                        : `${toApproxCurrency(
+                              balances.base.abs().times(orderType === LIMIT ? price : fairPrice),
+                          )} ${quoteTicker}`}
+                </SPrevious>
+                {currency === 0
+                    ? `${parseFloat(nextPosition.base.abs().toFixed(2))} ${baseTicker}`
+                    : `${toApproxCurrency(
+                          nextPosition.base.abs().times(orderType === LIMIT ? price : fairPrice),
+                      )} ${quoteTicker}`}
+            </Content>
+        );
+    } // else
+    return (
+        <Content className="pt-1">
+            {currency === 0
+                ? `${parseFloat(balances.base.abs().toFixed(2))} ${baseTicker}`
+                : `${toApproxCurrency(parseFloat(balances.base.abs().times(fairPrice).toFixed(2)))} ${quoteTicker}`}
+        </Content>
+    );
+};
 interface IProps {
     balances: UserBalance;
     fairPrice: BigNumber;
@@ -148,8 +186,8 @@ const PositionDetails: React.FC<IProps> = ({
     maxLeverage,
     filledOrders,
 }: IProps) => {
-    const { order } = useContext(OrderContext);
     const [currency, setCurrency] = useState(0); // 0 quoted in base
+    const { order } = useContext(OrderContext);
     const { base } = balances;
     return (
         <AccountDetails>
@@ -167,26 +205,23 @@ const PositionDetails: React.FC<IProps> = ({
                     className="w-full"
                     tooltip={{ key: 'exposure', props: { baseTicker: baseTicker } }}
                 >
-                    {!balances.quote.eq(0) ? (
-                        <Content className="pt-1">
-                            {currency === 0
-                                ? `${parseFloat(base.abs().toFixed(2))} ${baseTicker}`
-                                : `${toApproxCurrency(
-                                      parseFloat(base.abs().times(fairPrice).toFixed(2)),
-                                  )} ${quoteTicker}`}
-                            <SSlideSelect
-                                onClick={(index, _e) => {
-                                    setCurrency(index);
-                                }}
-                                value={currency}
-                            >
-                                <SOption>{baseTicker}</SOption>
-                                <SOption>{quoteTicker}</SOption>
-                            </SSlideSelect>
-                        </Content>
-                    ) : (
-                        `-`
-                    )}
+                    <Exposure
+                        balances={balances}
+                        fairPrice={fairPrice}
+                        currency={currency}
+                        order={order ?? orderDefaults.order}
+                        quoteTicker={quoteTicker}
+                        baseTicker={baseTicker}
+                    />
+                    <SSlideSelect
+                        onClick={(index, _e) => {
+                            setCurrency(index);
+                        }}
+                        value={currency}
+                    >
+                        <SOption>{baseTicker}</SOption>
+                        <SOption>{quoteTicker}</SOption>
+                    </SSlideSelect>
                 </AccountDetailsSection>
                 <AccountDetailsSection label={'Leverage'}>
                     <Leverage
