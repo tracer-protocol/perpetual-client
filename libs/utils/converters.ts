@@ -22,7 +22,7 @@ export const toPercent: (value: number) => string = (value) => {
     if (Number.isNaN(value)) {
         return `0 %`;
     }
-    return `${parseFloat((value * 100).toFixed(3))} %`;
+    return `${parseFloat((value * 100).toFixed(2))} %`;
 };
 
 export const round: (num: number, decimalPlaces: number) => number = (num, decimalPlaces) => {
