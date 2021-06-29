@@ -41,7 +41,7 @@ export const Exposure: React.FC<{
             //         : console.error('No dispatch function set');
             // }}
             unit={selectedTracer?.baseTicker ?? ''}
-            amount={order.exposure}
+            amount={parseFloat(order.exposure.toFixed(8))}
         />
     );
 };
