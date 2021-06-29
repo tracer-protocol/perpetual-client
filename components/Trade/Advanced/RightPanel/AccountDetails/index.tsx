@@ -169,6 +169,48 @@ const Exposure: React.FC<{
         </Content>
     );
 };
+
+const LiquidationPrice: React.FC<
+    ContentProps & {
+        orderType: number;
+        fairPrice: BigNumber;
+        maxLeverage: BigNumber;
+    }
+> = ({ exposure, balances, nextPosition, maxLeverage, tradePrice, orderType, fairPrice }) => {
+    if (balances.quote.eq(0)) {
+        return <>-</>;
+    } else if (exposure && tradePrice) {
+        return (
+            <Content>
+                <SPrevious>
+                    {toApproxCurrency(
+                        parseFloat(
+                            calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2),
+                        ),
+                    )}
+                </SPrevious>
+                {toApproxCurrency(
+                    parseFloat(
+                        calcLiquidationPrice(
+                            nextPosition.quote,
+                            nextPosition.base,
+                            orderType === LIMIT ? new BigNumber(tradePrice) : fairPrice,
+                            maxLeverage,
+                        ).toFixed(2),
+                    ),
+                )}
+            </Content>
+        );
+    } // else
+    return (
+        <Content>
+            {toApproxCurrency(
+                parseFloat(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2)),
+            )}
+        </Content>
+    );
+};
+
 interface IProps {
     balances: UserBalance;
     fairPrice: BigNumber;
@@ -240,19 +282,15 @@ const PositionDetails: React.FC<IProps> = ({
                     className="w-1/2 border-right"
                     tooltip={{ key: 'liquidation-price', props: { quote: balances.quote, position: order?.position } }}
                 >
-                    {!balances.quote.eq(0) ? (
-                        <Content>
-                            {toApproxCurrency(
-                                parseFloat(
-                                    calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(
-                                        2,
-                                    ),
-                                ),
-                            )}
-                        </Content>
-                    ) : (
-                        `-`
-                    )}
+                    <LiquidationPrice
+                        balances={balances}
+                        tradePrice={order?.price ?? 0}
+                        fairPrice={fairPrice}
+                        nextPosition={order?.nextPosition ?? defaults.balances}
+                        orderType={order?.orderType ?? 0}
+                        exposure={order?.exposure ?? 0}
+                        maxLeverage={maxLeverage}
+                    />
                 </AccountDetailsSection>
                 <AccountDetailsSection
                     label={'Unrealised PnL'}

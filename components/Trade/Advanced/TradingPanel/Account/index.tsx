@@ -138,7 +138,7 @@ const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPr
                     calcBuyingPower(
                         order?.nextPosition.quote ?? balances.quote,
                         order?.nextPosition.base ?? balances.base,
-                        new BigNumber(order.orderType === LIMIT ? order.price : fairPrice),
+                        order.orderType === LIMIT ? new BigNumber(order.price) : fairPrice,
                         maxLeverage,
                     ),
                 )}
@@ -164,7 +164,7 @@ const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fa
                 {`${calcAvailableMarginPercent(
                     order?.nextPosition.quote ?? balances.quote,
                     order?.nextPosition.base ?? balances.base,
-                    new BigNumber(order.orderType === LIMIT ? order.price : fairPrice),
+                    order.orderType === LIMIT ? new BigNumber(order.price) : fairPrice,
                     maxLeverage,
                 ).toFixed(2)}
                 %`}

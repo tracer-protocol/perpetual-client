@@ -96,10 +96,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                         <MarketTradeDetails
                             fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                             balances={selectedTracer?.getBalance() ?? defaults.balances}
-                            exposure={order?.exposureBN ?? defaults.exposure}
-                            nextPosition={order?.nextPosition ?? defaults.balances}
-                            tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
-                            slippage={order?.slippage ?? 0}
+                            order={order ?? orderDefaults.order}
                             maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                         />
                     </>
