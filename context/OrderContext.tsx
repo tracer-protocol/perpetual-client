@@ -34,7 +34,7 @@ const checkErrors: (
     fairPrice: BigNumber | undefined,
     maxLeverage: BigNumber | undefined,
 ) => ErrorKey = (balances, orders, account, order, fairPrice, maxLeverage) => {
-    const priceBN = order.orderType === LIMIT ? new BigNumber(order.orderType) : fairPrice ?? tracerDefaults.fairPrice;
+    const priceBN = order.orderType === LIMIT ? new BigNumber(order.price) : fairPrice ?? tracerDefaults.fairPrice;
     const { quote: newQuote, base: newBase } = order.nextPosition;
     if (!account) {
         return 'ACCOUNT_DISCONNECTED';
@@ -432,7 +432,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         if (order.orderType === MARKET && order.oppositeOrders.length) {
             // convert orders
             const { slippage, tradePrice } = calcSlippage(
-                new BigNumber(order.exposure),
+                order.exposureBN,
                 // TODO remove this, its because we used to factor in leverage per trade ie 2x would double exposure
                 new BigNumber(1),
                 order.oppositeOrders,
