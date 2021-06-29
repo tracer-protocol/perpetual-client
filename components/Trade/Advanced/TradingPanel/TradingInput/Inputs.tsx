@@ -44,7 +44,7 @@ export const Exposure: React.FC<{
             //         : console.error('No dispatch function set');
             // }}
             unit={selectedTracer?.baseTicker ?? ''}
-            amount={order.exposure}
+            amount={parseFloat(order.exposure.toFixed(8))}
         />
     );
 };
@@ -88,7 +88,7 @@ const StyledSmallInput = styled(SmallInput)`
     justify-content: flex-start;
     ${InputContainer} {
         margin-left: 1rem;
-        width: 70px;
+        width: 80px;
     }
     * ${Inc}, * ${Dec} {
         display: none;
