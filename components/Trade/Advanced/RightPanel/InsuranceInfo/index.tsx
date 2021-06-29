@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import { toApproxCurrency } from 'libs/utils';
 import styled from 'styled-components';
-import { Section } from '@components/General';
-import PoolHealth from '@components/Insurance/PoolHealth';
+import { ProgressBar, Section } from '@components/General';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 
@@ -16,7 +15,7 @@ export default styled(({ className }) => {
             <h3>
                 <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Insurance Pool Health</TooltipSelector>
             </h3>
-            <PoolHealth health={parseFloat(poolHealth.toFixed(2)) ?? defaults.health} />
+            <ProgressBar percent={parseFloat(poolHealth.toFixed(2)) ?? defaults.health} />
             <Section
                 label="Pool Holdings"
                 tooltip={{
@@ -26,7 +25,7 @@ export default styled(({ className }) => {
                     },
                 }}
             >
-                {toApproxCurrency(parseFloat(poolLiquidity.toFixed(2)) ?? defaults.liquidity)}
+                {toApproxCurrency(poolLiquidity.toFixed(2) ?? defaults.liquidity)}
             </Section>
             <Section
                 label="Pool Target"
@@ -37,7 +36,7 @@ export default styled(({ className }) => {
                     },
                 }}
             >
-                {toApproxCurrency(parseFloat(poolTarget.toFixed(2)) ?? defaults.target)}
+                {toApproxCurrency(poolTarget ?? defaults.target)}
             </Section>
             <Section
                 label="Insurance Funding Rate"
