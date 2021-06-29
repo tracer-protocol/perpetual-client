@@ -313,7 +313,7 @@ const OpenOrders: React.FC<{
                                 {parseFloat(amount.toFixed(3))} {baseTicker}
                             </TData>
                             <TData>
-                                {filled} {baseTicker}
+                                {parseFloat(filled.toFixed(3))} {baseTicker}
                             </TData>
                             <TData>
                                 {parseFloat(amountLeft.toFixed(3))} {baseTicker}
