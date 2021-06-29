@@ -1,57 +1,70 @@
 ## Status
 
-This client is still in development. We have recently begun implementing a forked version of web3-redux to make cross chain integration easier in the future.
+  
+This client is still in development. It serves as an interface to the tracer-protocol contracts, allowing users to long/short assets view their positions and provide insurance to the protocol to earn yield.
 
 ## Stable Branches
 
--   master
--   develop
+- master
+
+- develop
+
+  
 
 ## Todos
 
--   Development of storybook stories for each of the components
--   More detailed components for the advanced trading interface
--   Continued integration of web3-redux
--   Originally implemented tailwind css, as the dapp grew I began to like it less and less, I wouldnt be opposed to moving away from this in place of styled components or another inline css. Reasoning being longer term, I dont see tailwind flopping, its more of a matter of inter-compatibility.
+
+- Remove most of tailwind css, as the dapp grew I began to like it less and less, I wouldnt be opposed to moving away from this in place of styled components or another inline css. Reasoning being longer term, I dont see tailwind flopping, its more of a matter of inter-compatibility.
+- Build starter script to make it easier to get started
+- Remove old story book stuff or create story books for more components (the development of these slowed down as we had some drastic changes)
+- Setup testing (doesnt have to be all ui testing there is a fair bit of logic)
 
 ## Setup
 
-In order to get the full Dapp running you will need to have a local deployed instance of the tracer contracts, the graph, the executioner and the OME.
-You can get most of the functionality without the executioner and the OME, however you wont be able to create offchain orders.
+ 
+In order to get the full Dapp running locally you will need to run a number of things. If you want to get started straight away, you should be able to start the app and switch to kovan. Kovan will have a running instance of everything you need. The only thing to note is that the OME_BASE_URL does not change between networks so that will need to be updated in the .env  file if you wish to view the orderbook.
 
-## Storybook Development
+A complete list of the required tooling is as follows
 
-To make it easier to onboard and develop components and view components in isolation run
+- a local running instance of [the graph](https://thegraph.com/) with the deployed [subgraph](https://github.com/lions-mane/tracer-graphs).
+- the [executioner](https://github.com/tracer-protocol/executioner)
+- the [tracer-ome](https://github.com/tracer-protocol/tracer-ome)
+- a development rpc such as [ganache-cli](https://github.com/trufflesuite/ganache-cli)
+- deployed [tracer-contracts](https://github.com/tracer-protocol/tracer-protocol) to the above network
 
-```
-  npm run storybook || yarn storybook
-```
+### Testnet Details
+- [Subgraph](https://thegraph.com/explorer/subgraph/tracer-protocol/tracer-kovan)
+- [OME](https://order.tracer.finance)
 
-## Contracts
 
-Although you can run them in isolation using node package links, we have a [tracer-workspace](https://github.com/lions-mane/tracer-workspace) repositiory designed to make this easier using leara. Lerna handles building and compiling the contracts. You will still have to run a local chain and run yarn migrate from within the
-[tracer-protocol](https://github.com/tracer-protocol/tracer-protocol) repository.
+### Environment Variables 
 
-### Contract Addresses
-
-To make development easier, all contract addresses come from ENV vars. The web3-redux store will create instances of those contracts automatically.
-
-Create a .env.local in your root directory and set the contract addresses
+Create a .env.local in your root directory and set the following variables
 
 ```
-  NEXT_PUBLIC_FACTORY_ADDRESS="address from truffle migrate"
-  NEXT_PUBLIC_INSURANCE_ADDRESS="address from truffle migrate"
-  NEXT_PUBLIC_ACCOUNT_ADDRESS="address from truffle migrate"
-  NEXT_PUBLIC_PRICING_ADDRESS="address from truffle migrate"
-  NEXT_PUBLIC_ORACLE_ADDRESS="address from truffle migrate"
-  NEXT_PUBLIC_TRADER_ADDRESS="address from truffle migrate"
-  NEXT_PUBLIC_GRAPH_URI=http://localhost:8000/subgraphs/name/dospore/tracer-graph // or whatever your deployed subgraph is
-  NEXT_PUBLIC_LOCAL_RPC=ws://localhost:8545 // This is key since web3-redux detects this variable and adds a network with id 1337
+NEXT_PUBLIC_TRADER_ADDRESS="address from truffle migrate"
+NEXT_PUBLIC_GRAPH_URI=http://localhost:8000/subgraphs/name/{your-local-name}/{your-deployed-graph-name}
+NEXT_PUBLIC_OME_BASE_URL=http://localhost:8989 || https://order.tracer.finance
+NEXT_PUBLIC_DEPLOYMENT=DEVELOPMENT
+
 ```
 
-## Subgraph
+## Quickstart Guide
+This may not be that helpful but for now I am just going to list everything I do to get started. This could all be wrapped in a nice script. Previous scripts I ran can be found [here](https://github.com/lions-mane/tracer-workspace/blob/master/get-contract-addresses.js) and [here](https://github.com/lions-mane/tracer-workspace/blob/master/deploy-contracts.sh). They are pretty basic but they helped a little.
 
-Checkout [tracer-graphs](https://github.com/lions-mane/tracer-graphs) to deploy the respective tracer-subgraphs.
+- start local graph-node with docker-compose up. The graph to get started can be found [here](https://thegraph.com/docs/).
+- start local rpc with ganache-cli with 
+	`ganache-cli --mnemonic \"mnemonic\" --port 8545 --gasLimit=0x1fffffffffffff --host 0.0.0.0"`
+- deploy contracts
+- copy trader address into executioner .env file
+- start the [executioner](https://github.com/tracer-protocol/executioner)
+- start the [tracer-ome](https://github.com/tracer-protocol/tracer-ome)
+- copy factory address into the [tracer-graphs](https://github.com/lions-mane/tracer-graphs) /config/tracer-local.json (do not worry about the other addresses)
+- run a few scripts [tracer-graphs](https://github.com/lions-mane/tracer-graphs) 
+	- `npm run prepare:tracer:local || yarn prepare:tracer:local`
+	- `npm run create:tracer:local || yarn create:tracer:local`
+	- `npm run deploy:tracer:local || yarn deploy:tracer:local`
+
 
 ## Running
 
