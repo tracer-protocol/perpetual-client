@@ -68,15 +68,14 @@ export const orderDefaults = {
         collateral: 'USD', // collateral asset
         amountToPay: NaN, // required margin / amount of margin being used
         exposure: NaN,
+        // Bignumber representation of exposure.
+        // Implemented this way to avoid complications with the exposure input and bignumbers
+        exposureBN: new BigNumber(0),
         leverage: NaN, // defaults 0 leverage
         position: LONG, // long or short, 1 long, 0 is short
         price: NaN, // price of the market asset in relation to the collateral asset
         orderType: MARKET, // orderType
         adjustType: ADJUST,
-        adjustSummary: {
-            exposure: 0,
-            leverage: 1,
-        },
         nextPosition: {
             quote: new BigNumber(0),
             base: new BigNumber(0),
@@ -96,16 +95,12 @@ export type OrderState = {
     collateral: string; // collateral asset
     amountToPay: number; // required margin / amount of margin being used
     exposure: number;
+    exposureBN: BigNumber;
     leverage: number; // value used for when adjusting leverage
     position: number; // long or short, 0 is short, 1 is long
     price: number; // price of the market asset in relation to the collateral asset
     orderType: number; // for basic this will always be 0 (market order), 1 is limit and 2 is spot
     adjustType: number; // selection for adjust order 0 (adjust), 1 (close)
-    adjustSummary: {
-        // summary for when adjusting position
-        exposure: number;
-        leverage: number;
-    };
     nextPosition: {
         base: BigNumber;
         quote: BigNumber;
@@ -163,13 +158,6 @@ export type OrderAction =
     | { type: 'setPrice'; value: number }
     | { type: 'setOrderType'; value: number }
     | { type: 'setAdjustType'; value: number }
-    | {
-          type: 'setAdjustSummary';
-          adjustSummary: {
-              exposure: number;
-              leverage: number;
-          };
-      }
     | { type: 'setError'; value: ErrorKey }
     | { type: 'setWallet'; value: number }
     | { type: 'setLock'; value: boolean }
@@ -305,6 +293,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return {
                     ...state,
                     exposure: difference.toNumber(),
+                    exposureBN: difference,
                     position: position,
                 };
             }
@@ -314,6 +303,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                         ...state,
                         leverage: base.lt(0) ? leverage * -1 : leverage,
                         exposure: NaN,
+                        exposureBN: orderDefaults.order.exposureBN,
                     };
                 }
                 const notional = new BigNumber(action.amount).times(fairPrice);
@@ -351,15 +341,12 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     position: position,
                 };
             }
-            case 'setAdjustSummary': {
-                return { ...state, adjustSummary: action.adjustSummary };
-            }
             case 'setLeverage':
                 return { ...state, leverage: action.value };
             case 'setOppositeOrders':
                 return { ...state, oppositeOrders: action.orders };
             case 'setExposure':
-                return { ...state, exposure: action.value };
+                return { ...state, exposure: action.value, exposureBN: new BigNumber(action.value ?? 0) };
             case 'setNextPosition':
                 return { ...state, nextPosition: action.nextPosition };
             case 'setMaxExposure':

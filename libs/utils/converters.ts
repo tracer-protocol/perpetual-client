@@ -110,3 +110,14 @@ export const isVerySmall: (num: BigNumber, currency: boolean) => string = (num, 
         }
     }
 };
+
+const ten = new BigNumber(10);
+export const bigNumberToWei: (num: BigNumber) => string = (num) => {
+    // remove anything after a decimal if there is any
+    try {
+        return num.times(ten.pow(18)).toFixed().split('.')[0];
+    } catch (err) {
+        console.error('Failed to convert number to wei', err);
+        return '0';
+    }
+};
