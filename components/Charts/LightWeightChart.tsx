@@ -9,59 +9,56 @@ import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 const ChartWrapper = dynamic(import('./LightWeightWrapper'), { ssr: false });
 // @ts-ignore
 // @ts-nocheck
-const setGraphOptions: () => Record<string, unknown> = () => {
-    const data: Record<string, unknown> = {
-        options: {
-            alignLabels: true,
-            timeScale: {
-                rightOffset: 1,
-                barSpacing: 3,
-                fixLeftEdge: true,
-                lockVisibleTimeRangeOnResize: true,
-                rightBarStaysOnScroll: true,
-                borderVisible: false,
-                borderColor: '#0C3586',
+
+const graphOptions: Record<string, unknown> = {
+    options: {
+        alignLabels: true,
+        timeScale: {
+            rightOffset: 3,
+            barSpacing: 3,
+            fixLeftEdge: true,
+            lockVisibleTimeRangeOnResize: false,
+            rightBarStaysOnScroll: true,
+            borderVisible: false,
+            visible: true,
+            timeVisible: true,
+            secondsVisible: false,
+            borderColor: '#0C3586',
+        },
+        grid: {
+            vertLines: {
+                color: 'rgba(12, 53, 134, 1)',
+                style: 1,
                 visible: true,
-                timeVisible: true,
-                secondsVisible: false,
-                autoScale: true,
             },
-            grid: {
-                vertLines: {
-                    color: 'rgba(12, 53, 134, 1)',
-                    style: 1,
-                    visible: true,
-                },
-                horzLines: {
-                    color: 'rgba(12, 53, 134, 1)',
-                    style: 1,
-                    visible: true,
-                },
-            },
-            crosshair: {
-                vertLine: {
-                    color: '#37B1F6',
-                },
-                horzLine: {
-                    color: '#37B1F6',
-                },
-            },
-            priceScale: {
-                borderColor: '#37B1F6',
-                position: 'left',
-            },
-            // @ts-ignore
-            timeScale: {
-                borderColor: '#37B1F6',
-            },
-            layout: {
-                textColor: '#696969',
-                fontFamily: 'Akkurat',
-                backgroundColor: '#000240',
+            horzLines: {
+                color: 'rgba(12, 53, 134, 1)',
+                style: 1,
+                visible: true,
             },
         },
-    };
-    return data;
+        crosshair: {
+            vertLine: {
+                color: '#37B1F6',
+            },
+            horzLine: {
+                color: '#37B1F6',
+            },
+        },
+        priceScale: {
+            borderColor: '#37B1F6',
+            position: 'left',
+        },
+        // @ts-ignore
+        timeScale: {
+            borderColor: '#37B1F6',
+        },
+        layout: {
+            textColor: '#696969',
+            fontFamily: 'Akkurat',
+            backgroundColor: '#000240',
+        },
+    },
 };
 
 const StyledIcon = styled(Icon)`
@@ -81,7 +78,7 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
     useMemo(() => {
         if (candleData.length) {
             setGraphData({
-                ...setGraphOptions(),
+                ...graphOptions,
                 candlestickSeries: [
                     {
                         data: candleData,
@@ -92,7 +89,7 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
         } else {
             if (!hasReset.current) {
                 setGraphData({
-                    ...setGraphOptions(),
+                    ...graphOptions,
                 });
                 hasReset.current = true;
             }
