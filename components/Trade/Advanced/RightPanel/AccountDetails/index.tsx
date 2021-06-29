@@ -170,9 +170,9 @@ const PositionDetails: React.FC<IProps> = ({
                     {!balances.quote.eq(0) ? (
                         <Content className="pt-1">
                             {currency === 0
-                                ? `${parseFloat(base.abs().toFixed(3))} ${baseTicker}`
+                                ? `${parseFloat(base.abs().toFixed(2))} ${baseTicker}`
                                 : `${toApproxCurrency(
-                                      parseFloat(base.abs().times(fairPrice).toFixed(3)),
+                                      parseFloat(base.abs().times(fairPrice).toFixed(2)),
                                   )} ${quoteTicker}`}
                             <SSlideSelect
                                 onClick={(index, _e) => {
@@ -210,7 +210,7 @@ const PositionDetails: React.FC<IProps> = ({
                             {toApproxCurrency(
                                 parseFloat(
                                     calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(
-                                        3,
+                                        2,
                                     ),
                                 ),
                             )}
@@ -310,13 +310,13 @@ const OpenOrders: React.FC<{
                             </TData>
                             <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
                             <TData>
-                                {parseFloat(amount.toFixed(3))} {baseTicker}
+                                {parseFloat(amount.toFixed(2))} {baseTicker}
                             </TData>
                             <TData>
-                                {filled} {baseTicker}
+                                {parseFloat(filled.toFixed(2))} {baseTicker}
                             </TData>
                             <TData>
-                                {parseFloat(amountLeft.toFixed(3))} {baseTicker}
+                                {parseFloat(amountLeft.toFixed(2))} {baseTicker}
                             </TData>
                             <TData>
                                 <Cancel onClick={(_e) => _cancelOrder(order.target_tracer, order.id)}>Cancel</Cancel>
@@ -344,7 +344,7 @@ const Fills: React.FC<{
                                 {!!order.position ? 'Short' : 'Long'}
                             </TData>
                             <TData>{toApproxCurrency(order.price)}</TData>
-                            <TData>{parseFloat(order.amount.toFixed(3))}</TData>
+                            <TData>{parseFloat(order.amount.toFixed(2))}</TData>
                             {/*TODO: Fee value*/}
                             {/*<TData>{toApproxCurrency(order.amount.times(price))}/$0</TData>*/}
                         </TRow>

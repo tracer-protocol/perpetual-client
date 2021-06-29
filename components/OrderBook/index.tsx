@@ -207,14 +207,14 @@ const Order: React.FC<BProps> = ({ className, cumulative, quantity, price, maxCu
     return (
         <BookRow className={className}>
             <Item className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price)}</Item>
-            <Item>{quantity.toFixed(3)}</Item>
+            <Item>{quantity.toFixed(2)}</Item>
             <Item
                 className={`fill-${bid ? 'bid' : 'ask'}`}
                 style={{
                     backgroundSize: getPercentage(cumulative, maxCumulative) + '% 100%',
                 }}
             >
-                {cumulative.toFixed(3)}
+                {cumulative.toFixed(2)}
             </Item>
         </BookRow>
     );

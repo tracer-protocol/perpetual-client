@@ -8,12 +8,13 @@ import TooltipSelector from '@components/Tooltips/TooltipSelector';
 
 export default styled(({ className }) => {
     const { poolInfo } = useContext(InsuranceContext);
+    const poolHealth = poolInfo?.health ?? 0;
     return (
         <div className={className}>
             <h3>
                 <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Insurance Pool Health</TooltipSelector>
             </h3>
-            <PoolHealth health={poolInfo?.health?.toNumber() ?? defaults.health.toNumber()} />
+            <PoolHealth health={parseFloat(poolHealth.toFixed(2)) ?? defaults.health.toNumber()} />
             <Section
                 label="Pool Holdings"
                 tooltip={{

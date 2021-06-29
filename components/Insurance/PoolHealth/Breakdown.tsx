@@ -185,7 +185,7 @@ const Breakdown: React.FC<BProps> = styled(
                 <div className="sections hoverHide">
                     <Section
                         title="Buffer"
-                        percentage={parseFloat(((buffer / target) * 100).toFixed(3))}
+                        percentage={parseFloat(((buffer / target) * 100).toFixed(2))}
                         value={buffer}
                         color="#011772"
                         target="bufferTarget"
@@ -193,8 +193,8 @@ const Breakdown: React.FC<BProps> = styled(
                     />
                     <Section
                         title="Public"
-                        percentage={parseFloat((((Math.min(liquidity, target) - buffer) / target) * 100).toFixed(3))}
-                        value={parseFloat(liquidity.toFixed(3))}
+                        percentage={parseFloat((((Math.min(liquidity, target) - buffer) / target) * 100).toFixed(2))}
+                        value={parseFloat(liquidity.toFixed(2))}
                         color="var(--color-primary)"
                         target="liquidityTarget"
                         tooltip={{ key: 'public' }}
@@ -202,8 +202,8 @@ const Breakdown: React.FC<BProps> = styled(
                     {liquidity - target > 0 ? (
                         <Section
                             title="Excess"
-                            percentage={parseFloat((((liquidity - target) / target) * 100).toFixed(3))}
-                            value={parseFloat((liquidity - target).toFixed(3))}
+                            percentage={parseFloat((((liquidity - target) / target) * 100).toFixed(2))}
+                            value={parseFloat((liquidity - target).toFixed(2))}
                             color="#21DD53"
                             target="excessTarget"
                         />

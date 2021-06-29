@@ -152,21 +152,21 @@ const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fa
     } else if (!order?.exposure || !order.price) {
         return (
             <span>
-                ${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(3)}%
+                ${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2)}%
             </span>
         );
     } else {
         return (
             <span>
                 <Previous>
-                    {`${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(3)}%`}
+                    {`${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2)}%`}
                 </Previous>
                 {`${calcAvailableMarginPercent(
                     order?.nextPosition.quote ?? balances.quote,
                     order?.nextPosition.base ?? balances.base,
                     new BigNumber(order.orderType === LIMIT ? order.price : fairPrice),
                     maxLeverage,
-                ).toFixed(3)}
+                ).toFixed(2)}
                 %`}
             </span>
         );

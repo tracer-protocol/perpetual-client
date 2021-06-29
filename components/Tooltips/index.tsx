@@ -185,8 +185,8 @@ export const InsuranceFundingRateTip: React.FC<BTProps> = ({ baseTicker, classNa
     const tooltip = (
         <p>
             <strong>Insurance Funding Rate</strong> A fee that is applied to the borrowings of leveraged traders in the{' '}
-            {baseTicker} market to capitalise the {baseTicker} insurance pool. The fee is applied is continuously paid
-            and updated every 8 hours.{' '}
+            {baseTicker} market to capitalise the {baseTicker} insurance pool. The fee is paid continuously, and is
+            updated every 8 hours.{' '}
             <a
                 href="https://docs.tracer.finance/products/perpetual-swaps/insurance/insurance-funding-rate#insurance-funding-rate"
                 target="_blank"

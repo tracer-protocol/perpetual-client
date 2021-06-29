@@ -50,7 +50,7 @@ export const MarketTradeDetails: React.FC<MTDProps> = ({
                 </Previous>
                 {toApproxCurrency(calcLiquidationPrice(nextPosition.quote, nextPosition.base, fairPrice, maxLeverage))}
             </Section>
-            <Section label={'Slippage and fees'}>{slippage.toFixed(3)}%</Section>
+            <Section label={'Slippage and fees'}>{slippage.toFixed(2)}%</Section>
             <Section label={'Expected price'}>{toApproxCurrency(tradePrice)}</Section>
         </SHiddenExpand>
     );
@@ -117,7 +117,7 @@ export const AdjustSummary: React.FC<ASProps> = ({
     return (
         <SHiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
             <h3>Order Adjust Summary</h3>
-            <Section label={'Exposure'}>{`${exposure.toFixed(3)} ${baseTicker}`}</Section>
+            <Section label={'Exposure'}>{`${exposure.toFixed(2)} ${baseTicker}`}</Section>
             <Section label={'Liquidation price'}>
                 <Previous>
                     {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
