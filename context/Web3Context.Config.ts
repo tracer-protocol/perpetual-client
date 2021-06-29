@@ -28,7 +28,7 @@ export const networkConfig: Record<string, Network> = {
         previewUrl: 'https://kovan.etherscan.io',
         contracts: {
             trader: {
-                address: '0x2001Bf2856a26dA0b76c7D19E23e07e3f41c7cF6',
+                address: '0x98D801b0cB3576c048CB74e095187DF5E7025D61',
                 abi: traderJSON as AbiItem[],
             },
         },
