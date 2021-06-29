@@ -53,7 +53,7 @@ export default styled(({ fundingRate, className }) => {
         </div>
     );
 })<{
-    fundingRate: BigNumber
+    fundingRate: BigNumber;
 }>`
     padding: 10px;
     h3 {
