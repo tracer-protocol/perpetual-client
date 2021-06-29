@@ -34,7 +34,7 @@ const checkErrors: (
     fairPrice: BigNumber | undefined,
     maxLeverage: BigNumber | undefined,
 ) => ErrorKey = (balances, orders, account, order, fairPrice, maxLeverage) => {
-    const priceBN = order.orderType === LIMIT ? new BigNumber(order.orderType) : fairPrice ?? tracerDefaults.fairPrice;
+    const priceBN = order.orderType === LIMIT ? new BigNumber(order.price) : fairPrice ?? tracerDefaults.fairPrice;
     const { quote: newQuote, base: newBase } = order.nextPosition;
     if (!account) {
         return 'ACCOUNT_DISCONNECTED';
@@ -68,7 +68,7 @@ export const orderDefaults = {
         collateral: 'USD', // collateral asset
         amountToPay: NaN, // required margin / amount of margin being used
         exposure: NaN,
-        // Bignumber representation of exposure.
+        // Bignumber representation of exposure. These will not differ as it is set in setExposure
         // Implemented this way to avoid complications with the exposure input and bignumbers
         exposureBN: new BigNumber(0),
         leverage: NaN, // defaults 0 leverage
@@ -185,14 +185,14 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
 
     // calculates the newQuote and newBase based on a given exposre
     const calcNewBalance: (
-        addedExposure: number,
-        price: number,
+        addedExposure: BigNumber,
+        price: BigNumber,
         position: number,
     ) => { base: BigNumber; quote: BigNumber } = (addedExposure, price, position) => {
         const balances = selectedTracer?.getBalance();
         if (position === SHORT) {
             const newBalance = balances?.base.minus(addedExposure) ?? tracerDefaults.balances.base; // subtract how much exposure you get
-            const newQuote = balances?.quote.plus(addedExposure * price) ?? tracerDefaults.balances.quote; // add how much it costs
+            const newQuote = balances?.quote.plus(addedExposure.times(price)) ?? tracerDefaults.balances.quote; // add how much it costs
             return {
                 base: newBalance,
                 quote: newQuote,
@@ -200,7 +200,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
         return {
             base: balances?.base.plus(addedExposure) ?? tracerDefaults.balances.base, // add how much exposure you get
-            quote: balances?.quote.minus(addedExposure * price) ?? tracerDefaults.balances.quote, // subtract how much it costs
+            quote: balances?.quote.minus(addedExposure.times(price)) ?? tracerDefaults.balances.quote, // subtract how much it costs
         };
     };
 
@@ -432,7 +432,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         if (order.orderType === MARKET && order.oppositeOrders.length) {
             // convert orders
             const { slippage, tradePrice } = calcSlippage(
-                new BigNumber(order.exposure),
+                order.exposureBN,
                 // TODO remove this, its because we used to factor in leverage per trade ie 2x would double exposure
                 new BigNumber(1),
                 order.oppositeOrders,
@@ -457,15 +457,13 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         if (order.orderType === LIMIT) {
             orderDispatch({
                 type: 'setNextPosition',
-                nextPosition: {
-                    ...calcNewBalance(order.exposure, order.price, order.position),
-                },
+                nextPosition: calcNewBalance(order.exposureBN, new BigNumber(order.price), order.position),
             });
         } else {
             orderDispatch({
                 type: 'setNextPosition',
                 nextPosition: calcNewBalance(
-                    order.exposure,
+                    order.exposureBN,
                     selectedTracer?.getFairPrice() ?? defaults.fairPrice,
                     order.position,
                 ),
