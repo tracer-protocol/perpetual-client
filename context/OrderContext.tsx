@@ -464,7 +464,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 type: 'setNextPosition',
                 nextPosition: calcNewBalance(
                     order.exposureBN,
-                    selectedTracer?.getFairPrice() ?? defaults.fairPrice,
+                    order.marketTradePrice,
                     order.position,
                 ),
             });
