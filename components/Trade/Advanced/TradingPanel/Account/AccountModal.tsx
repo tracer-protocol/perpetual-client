@@ -186,7 +186,7 @@ export default styled(
                     unit={unit}
                     title={'Amount'}
                     amount={state.amount}
-                    balance={available.toNumber()}
+                    balance={parseFloat(available.toFixed(2))}
                     setAmount={(amount: number) => dispatch({ type: 'setAmount', amount: amount })}
                 />
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>
