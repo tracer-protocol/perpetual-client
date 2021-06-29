@@ -15,10 +15,10 @@ const addSeriesFunctions: Record<string, any> = {
 const colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#F86624', '#A5978B'];
 
 const candleStickOptions = {
-    downColor: '#F15025C4',
-    downBorderColor: '#F15025C4',
-    upColor: '#05CB3AC4',
-    upBorderColor: '#05CB3AC4'
+    downColor: '#F15025',
+    downBorderColor: '#F15025',
+    upColor: '#05cb3a',
+    upBorderColor: '#05cb3a',
 }
 
 const darkTheme = {
@@ -27,7 +27,6 @@ const darkTheme = {
         lineColor: '#2B2B43',
         textColor: '#D9D9D9',
     },
-    downColor: '#F15025',
     grid: {
         vertLines: {
             color: '#363c4e',
@@ -296,7 +295,7 @@ class ChartWrapper extends React.Component<Props> {
                 let price = param.seriesPrices.get(series);
                 if (price !== undefined) {
                     if (typeof price === 'object') {
-                        color = price.open < price.close ? 'rgba(0, 150, 136, 0.8)' : 'rgba(255,82,82, 0.8)';
+                        color = price.open < price.close ? 'rgba(5, 203, 58, 1)' : 'rgba(5, 203, 58, 1)';
                         price = `O: ${price.open}, H: ${price.high}, L: ${price.low}, C: ${price.close}`;
                     }
                     const row = document.createElement('div');
@@ -321,7 +320,6 @@ class ChartWrapper extends React.Component<Props> {
 
     render() {
         const color = this.props.darkTheme ? darkTheme.layout.textColor : lightTheme.layout.textColor;
-
         return (
             <div ref={this.chartDiv} style={{ position: 'relative' }}>
                 <div
