@@ -260,19 +260,22 @@ export default class Tracer {
     /**
      * A function that returns the funding rate for the market
      */
-    updateFundingRate: () => Promise<void> = async () => {
+    updateFundingRates: () => Promise<void> = async () => {
         try {
             // fair price is needed. This avoids it being not set when this method is called.
             // this could probably be optimised
-            const fairPrice = await this._pricing?.methods.fairPrice().call();
-            this.fairPrice = new BigNumber(Web3.utils.fromWei(fairPrice ?? '0'));
+            const fairPrice_ = await this._pricing?.methods.fairPrice().call();
+	        const fairPrice = new BigNumber(Web3.utils.fromWei(fairPrice_ ?? '0'));
+            this.fairPrice = fairPrice;
             const currentFundingIndex = await this._pricing?.methods.currentFundingIndex().call();
             // @ts-ignore
-            const fundingRate = await this._pricing?.methods.fundingRates(currentFundingIndex - 1).call();
-            const numerator = new BigNumber(Web3.utils.fromWei(fundingRate?.fundingRate.toString() ?? '0'));
-            const denominator = new BigNumber(Web3.utils.fromWei(fairPrice ?? '1'));
-            const set = numerator.div(denominator).multipliedBy(new BigNumber('100'));
-            this.fundingRate = set;
+            const fundingRates = await this._pricing?.methods.fundingRates(currentFundingIndex - 1).call();
+            console.log(fundingRates);
+            const fundingRate = new BigNumber(Web3.utils.fromWei(fundingRates?.fundingRate.toString() ?? '0'));
+            const insuranceFundingRate = new BigNumber(Web3.utils.fromWei(fundingRates?.fundingRate.toString() ?? '0'));
+            const oneHundred = new BigNumber(100);
+            this.fundingRate = fundingRate.div(fundingRate).multipliedBy(oneHundred);
+            // this.insuranceFundingRate = inusranceFundingRate.div(insuranceFundingRate).multipliedBy(oneHundred);
         } catch (err) {
             console.error('Failed to fetch funding rate', err);
             this.fundingRate = defaults.fundingRate;
