@@ -37,7 +37,7 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                                 const d = new Date(parseInt(trade.timestamp) * 1000);
                                 return (
                                     <tr key={`row-${index}`}>
-                                        <td>{toApproxCurrency(trade.price)}</td>
+                                        <td>{toApproxCurrency(parseFloat(trade.price.toFixed(2)))}</td>
                                         <td>{parseFloat(trade.amount.toFixed(2))}</td>
                                         <td>
                                             {d.getHours()}:{d.getMinutes()}
