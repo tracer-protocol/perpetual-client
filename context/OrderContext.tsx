@@ -462,11 +462,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         } else {
             orderDispatch({
                 type: 'setNextPosition',
-                nextPosition: calcNewBalance(
-                    order.exposureBN,
-                    selectedTracer?.getFairPrice() ?? defaults.fairPrice,
-                    order.position,
-                ),
+                nextPosition: calcNewBalance(order.exposureBN, order.marketTradePrice, order.position),
             });
         }
     }, [order.exposure, order.price]);

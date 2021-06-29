@@ -6,7 +6,6 @@ import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/Tool
 const calcRemainder = (target: number, liquidity: number, buffer: number) => {
     const total = liquidity - buffer - target;
     if (liquidity > target) {
-        console.log('no remainder');
         return 0;
     } else {
         return total / target;
