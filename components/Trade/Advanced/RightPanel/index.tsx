@@ -29,7 +29,7 @@ const TitledBox = styled(({ className, title, children }) => {
     );
 })`
     border-right: 1px solid var(--color-accent);
-    padding: 0.5rem;
+    padding: 0 0.5rem;
     display: flex;
     flex-direction: column;
     margin: auto;

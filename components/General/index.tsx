@@ -21,7 +21,7 @@ export const DateAndTime = styled(({ className, date, time }) => {
 
 export const Box = styled.div`
     display: flex;
-    padding: 20px;
+    padding: 12px;
 `;
 
 export const Button = styled.button`
@@ -116,8 +116,12 @@ export const Section: React.FC<SProps> = styled(({ className, children, label, t
 })`
     width: 100%;
     display: flex;
-    margin: 10px 0;
+    padding-bottom: 10px;
+    &:last-child {
+        padding-bottom: 0;
+    }
     font-size: var(--font-size-small);
+    box-sizing: border-box;
 
     > .label {
         text-align: left;
