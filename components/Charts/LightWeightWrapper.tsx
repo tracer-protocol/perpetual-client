@@ -14,12 +14,20 @@ const addSeriesFunctions: Record<string, any> = {
 /* eslint-disable */
 const colors = ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0', '#F86624', '#A5978B'];
 
+const candleStickOptions = {
+    downColor: '#F15025C4',
+    downBorderColor: '#F15025C4',
+    upColor: '#05CB3AC4',
+    upBorderColor: '#05CB3AC4'
+}
+
 const darkTheme = {
     layout: {
         backgroundColor: '#131722',
         lineColor: '#2B2B43',
         textColor: '#D9D9D9',
     },
+    downColor: '#F15025',
     grid: {
         vertLines: {
             color: '#363c4e',
@@ -152,6 +160,7 @@ class ChartWrapper extends React.Component<Props> {
         const color = (serie.option && serie.options.color) || colors[this.series.length % colors.length];
         const series = this.chart[func]({
             color,
+            ...candleStickOptions,
             ...serie.options,
         });
         const data = this.handleLinearInterpolation(serie.data, serie.linearInterpolation);
