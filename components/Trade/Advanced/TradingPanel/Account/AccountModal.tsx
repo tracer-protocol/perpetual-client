@@ -158,6 +158,7 @@ export default styled(
         const handleClose = () => {
             dispatch({ type: 'setAmount', amount: NaN });
             dispatch({ type: 'setLoading', loading: false });
+            dispatch({ type: 'setTitles', title: 'Deposit Margin', subTitle: '' });
             close();
         };
 
@@ -227,6 +228,11 @@ export default styled(
                                 approve(selectedTracer?.address ?? '', {
                                     afterConfirmation: () => {
                                         dispatch({ type: 'setLoading', loading: false });
+                                        dispatch({
+                                            type: 'setTitles',
+                                            title: isDeposit ? 'Deposit Margin' : 'Withdraw Margin',
+                                            subTitle: '',
+                                        });
                                     },
                                 });
                             }}
