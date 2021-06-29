@@ -8,13 +8,15 @@ import TooltipSelector from '@components/Tooltips/TooltipSelector';
 
 export default styled(({ className }) => {
     const { poolInfo } = useContext(InsuranceContext);
-    const poolHealth = poolInfo?.health ?? 0;
+    const poolHealth = poolInfo?.health ?? defaults.health;
+    const poolLiquidity = poolInfo?.liquidity ?? defaults.liquidity;
+    const poolTarget = poolInfo?.target ?? defaults.target;
     return (
         <div className={className}>
             <h3>
                 <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Insurance Pool Health</TooltipSelector>
             </h3>
-            <PoolHealth health={parseFloat(poolHealth.toFixed(2)) ?? defaults.health.toNumber()} />
+            <PoolHealth health={parseFloat(poolHealth.toFixed(2)) ?? defaults.health} />
             <Section
                 label="Pool Holdings"
                 tooltip={{
@@ -24,7 +26,7 @@ export default styled(({ className }) => {
                     },
                 }}
             >
-                {toApproxCurrency(poolInfo?.liquidity ?? defaults.liquidity)}
+                {toApproxCurrency(parseFloat(poolLiquidity.toFixed(2)) ?? defaults.liquidity)}
             </Section>
             <Section
                 label="Pool Target"
@@ -35,7 +37,7 @@ export default styled(({ className }) => {
                     },
                 }}
             >
-                {toApproxCurrency(poolInfo?.target ?? defaults.target)}
+                {toApproxCurrency(parseFloat(poolTarget.toFixed(2)) ?? defaults.target)}
             </Section>
             <Section
                 label="Insurance Funding Rate"
@@ -47,7 +49,7 @@ export default styled(({ className }) => {
                 }}
             >
                 {/*TODO: Add insurance funding rate*/}
-                0.001%
+                0.00%
             </Section>
         </div>
     );
