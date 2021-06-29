@@ -74,7 +74,7 @@ const Close: React.FC<CProps> = ({ orderDispatch, selectedTracer, order }) => {
             <MarketTradeDetails
                 fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                 balances={selectedTracer?.getBalance() ?? defaults.balances}
-                exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                exposure={order?.exposureBN ?? defaults.exposure}
                 nextPosition={order?.nextPosition ?? defaults.balances}
                 slippage={order?.slippage ?? 0}
                 tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
@@ -107,7 +107,7 @@ const Adjust: React.FC<AProps> = ({ order, orderDispatch, selectedTracer }) => {
             <AdjustSummary
                 fairPrice={selectedTracer?.getFairPrice() ?? defaults.oraclePrice}
                 balances={selectedTracer?.getBalance() ?? defaults.balances}
-                exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                exposure={order?.exposureBN ?? defaults.exposure}
                 nextPosition={order?.nextPosition ?? defaults.balances}
                 baseTicker={selectedTracer?.baseTicker ?? ''}
                 maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}

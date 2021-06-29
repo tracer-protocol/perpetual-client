@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import { OrderContext } from 'context';
 import { LIMIT, MARKET, orderDefaults } from '@context/OrderContext';
 import Tracer, { defaults } from '@libs/Tracer';
-import BigNumber from 'bignumber.js';
 import styled from 'styled-components';
 import { Box } from '@components/General';
 import { AdvancedOrderButton } from '@components/Buttons';
@@ -69,7 +68,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                         <LimitTradeDetails
                             fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                             balances={selectedTracer?.getBalance() ?? defaults.balances}
-                            exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                            exposure={order?.exposureBN ?? defaults.exposure}
                             nextPosition={order?.nextPosition ?? defaults.balances}
                             orderPrice={order?.price ?? 0}
                             maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
@@ -97,7 +96,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                         <MarketTradeDetails
                             fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                             balances={selectedTracer?.getBalance() ?? defaults.balances}
-                            exposure={order?.exposure ? new BigNumber(order.exposure) : defaults.exposure}
+                            exposure={order?.exposureBN ?? defaults.exposure}
                             nextPosition={order?.nextPosition ?? defaults.balances}
                             tradePrice={order?.marketTradePrice ?? orderDefaults.order.marketTradePrice}
                             slippage={order?.slippage ?? 0}
