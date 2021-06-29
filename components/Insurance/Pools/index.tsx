@@ -42,7 +42,7 @@ type CProps = {
 const HealthCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
     return (
         <div className={className}>
-            <SProgressBar percent={pool?.health.toNumber()} />
+            <SProgressBar percent={parseFloat(pool?.health.toFixed(2))} />
             <Hidden>
                 <Breakdown
                     baseTicker={pool.market.split('/')[0]}
