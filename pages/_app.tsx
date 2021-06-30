@@ -14,6 +14,8 @@ import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
 import GlobalStyles from 'styles/GlobalStyles';
 import styled from 'styled-components';
+import WhitelistBlock from '@components/WhitelistBlock';
+
 const USERSNAP_GLOBAL_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_GLOBAL_API_KEY;
 const USERSNAP_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_API_KEY;
 
@@ -27,7 +29,7 @@ const Desktop = styled.div`
 const Mobile = styled.div`
     display: none;
     padding-top: 10vh;
-    padding-left: 10vh;
+    padding-left: 10vw;
     height: 100%;
     background: var(--color-background);
     color: var(--color-text);
@@ -82,7 +84,9 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                         <GraphProvider>
                             <FactoryStore>
                                 <TransactionStore>
-                                    <Component {...pageProps} />
+                                    <WhitelistBlock>
+                                        <Component {...pageProps} />
+                                    </WhitelistBlock>
                                 </TransactionStore>
                             </FactoryStore>
                         </GraphProvider>
