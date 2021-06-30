@@ -17,6 +17,7 @@ import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
 import CustomSubNav from './CustomSubNav';
 import { LIMIT, OrderContext, orderDefaults, OrderState } from '@context/OrderContext';
+import { CloseOrderButton } from '@components/Buttons/OrderButton';
 
 const AccountDetails = styled.div`
     width: 100%;
@@ -32,16 +33,16 @@ const SPrevious = styled(Previous)`
 const AccountDetailsSection = styled(Section)`
     display: inline-block;
     position: relative;
-    padding: 5px 10px;
+    padding: 4px 12px;
     margin: 0;
     color: var(--color-secondary);
     min-height: var(--height-small-container);
     border-bottom: 1px solid var(--color-accent);
+    border-right: 1px solid var(--color-accent);
 
-    &.border-right {
-        border-right: 1px solid var(--color-accent);
+    &.b-r-none {
+        border-right: none;
     }
-
     > .label {
         display: block;
         font-size: var(--font-size-extra-small);
@@ -51,8 +52,17 @@ const AccountDetailsSection = styled(Section)`
     }
 `;
 
+const CloseOrderSection = styled.div`
+    display: inline-block;
+    position: relative;
+    padding: 0 12px;
+    padding-top: 8px;
+    width: 100%;
+    margin: 0;
+    color: var(--color-secondary);
+`;
+
 const SectionContainer = styled.div`
-    border-right: 1px solid var(--color-accent);
     width: 100%;
     display: block;
 
@@ -275,11 +285,13 @@ const PositionDetails: React.FC<IProps> = ({
                         exposure={order?.exposure ?? 0}
                     />
                 </AccountDetailsSection>
+                <CloseOrderSection>
+                    <CloseOrderButton />
+                </CloseOrderSection>
             </SectionContainer>
-            <SectionContainer className="w-4/6 inline-block">
+            <SectionContainer className="w-2/6 inline-block">
                 <AccountDetailsSection
                     label={'Liquidation Price'}
-                    className="w-1/2 border-right"
                     tooltip={{ key: 'liquidation-price', props: { quote: balances.quote, position: order?.position } }}
                 >
                     <LiquidationPrice
@@ -292,9 +304,14 @@ const PositionDetails: React.FC<IProps> = ({
                         maxLeverage={maxLeverage}
                     />
                 </AccountDetailsSection>
+                <AccountDetailsSection label={'Mark Price'}>
+                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
+                </AccountDetailsSection>
+            </SectionContainer>
+            <SectionContainer className="w-2/6">
                 <AccountDetailsSection
+                    className="b-r-none"
                     label={'Unrealised PnL'}
-                    className="w-1/2"
                     tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
                 >
                     {!balances.quote.eq(0) ? (
@@ -303,15 +320,11 @@ const PositionDetails: React.FC<IProps> = ({
                         `-`
                     )}
                 </AccountDetailsSection>
-                <AccountDetailsSection label={'Mark Price'} className="w-1/2 border-right">
-                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
-                </AccountDetailsSection>
-                {/* <AccountDetailsSection
+                {/* <AccountDetailsSection 
                     label={'Realised PnL'}
                     className="w-1/2"
                     tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
                 >
-                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(0)}</Content> : `-`}
                 </AccountDetailsSection> */}
             </SectionContainer>
         </AccountDetails>
