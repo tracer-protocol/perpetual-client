@@ -75,7 +75,7 @@ export default styled(
         );
     },
 )`
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
     position: relative;
     .rc-slider-dot {
         display: none;
