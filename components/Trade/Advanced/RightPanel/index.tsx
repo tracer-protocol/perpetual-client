@@ -132,7 +132,7 @@ const TradingView: React.FC<{
         <>
             <SBox className="middlePanel">
                 <MarketInfo
-                    lastPrice={omeState?.maxAndMins?.maxAsk ?? 0}
+                    lastPrice={omeState?.lastTradePrice ?? new BigNumber(0)}
                     fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
                     oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
                     fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.defaultFundingRate.toNumber()}
