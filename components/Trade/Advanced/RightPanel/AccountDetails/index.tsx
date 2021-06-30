@@ -304,7 +304,7 @@ const PositionDetails: React.FC<IProps> = ({
                         maxLeverage={maxLeverage}
                     />
                 </AccountDetailsSection>
-                <AccountDetailsSection label={'Mark Price'}>
+                <AccountDetailsSection label={'Fair Price'}>
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
                 </AccountDetailsSection>
             </SectionContainer>
