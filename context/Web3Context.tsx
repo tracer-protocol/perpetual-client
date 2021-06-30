@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
-import Fortmatic from 'fortmatic';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { Children } from 'types';
 import { useMachine } from '@xstate/react';
@@ -23,16 +22,7 @@ export const initModal: () => Promise<Web3Modal> = async () => {
                 },
                 package: WalletConnectProvider,
                 options: {
-                    infuraId: process.env.REACT_APP_INFURA_ID,
-                },
-            },
-            fortmatic: {
-                display: {
-                    name: 'Fortmatic',
-                },
-                package: Fortmatic,
-                options: {
-                    key: process.env.REACT_APP_FORTMATIC_KEY,
+                    infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
                 },
             },
         },
