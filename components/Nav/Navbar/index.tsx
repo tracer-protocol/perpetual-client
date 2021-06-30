@@ -200,7 +200,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
 })`
     display: flex;
     color: var(--color-text);
-    height: 10vh;
+    height: 8vh;
 
     > ul {
         display: flex;

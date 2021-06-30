@@ -92,7 +92,7 @@ export const useMostRecentMatched: (tracer: string) => {
 // fetches 15 minute candles 15*60 === 900
 const ALL_CANDLES = gql`
     query Tracer_Candles($tracer: String) {
-        candles(where: { period: 900, tracer: $tracer }) {
+        candles(where: { period: 900, tracer: $tracer }, orderBy: time, orderDirection: asc) {
             id
             time
             open

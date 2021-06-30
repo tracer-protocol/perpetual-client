@@ -1,5 +1,5 @@
 import React from 'react';
-import { Children } from 'types';
+import styled from 'styled-components';
 
 export const MatchingEngine: React.FC<{ title: string; subTitle: string }> = ({ title, subTitle }) => (
     <div className="m-auto text-center">
@@ -11,8 +11,6 @@ export const MatchingEngine: React.FC<{ title: string; subTitle: string }> = ({ 
     </div>
 );
 
-export const Option: React.FC<
-    {
-        className?: string;
-    } & Children
-> = ({ children, className }) => <a className={`m-auto ${className}`}>{children}</a>;
+export const Option = styled.a`
+    margin: auto;
+`;

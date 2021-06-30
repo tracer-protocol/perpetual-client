@@ -39,5 +39,5 @@ export default styled(({ text, tooltip, className }: DProps) => (
         )}
     </div>
 ))`
-    margin: 1rem 0;
+    margin: 0.5rem 0;
 ` as React.FC<DProps>;
