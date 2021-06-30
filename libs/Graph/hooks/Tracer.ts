@@ -104,10 +104,10 @@ const ALL_CANDLES = gql`
     }
 `;
 
-const parseCandles: (data: any) => CandleData | undefined = (data) => {
+const parseCandles: (data: any) => CandleData = (data) => {
     const foundTimes: Record<number, boolean> = {};
     if (!data) {
-        return;
+        return [];
     }
     const parsedData = [];
     for (let i = 0; i < data?.length ?? 0; i++) {
@@ -137,7 +137,7 @@ export const useCandles: (tracer: string) => {
     loading: any;
     refetch: any;
 } = (tracer) => {
-    const ref = useRef<[]>([]);
+    const ref = useRef<CandleData>([]);
     const { data, error, loading, refetch } = useQuery(ALL_CANDLES, {
         variables: { tracer: tracer.toLowerCase() },
         errorPolicy: 'all',
@@ -148,8 +148,14 @@ export const useCandles: (tracer: string) => {
         },
     });
 
+    useEffect(() => {
+        if (data?.candles?.length > ref.current.length) {
+            ref.current = parseCandles(data?.candles);
+        }
+    }, [data?.candles])
+
     return {
-        candles: parseCandles(data?.candles) || ref.current,
+        candles: ref.current,
         error,
         loading,
         refetch,
