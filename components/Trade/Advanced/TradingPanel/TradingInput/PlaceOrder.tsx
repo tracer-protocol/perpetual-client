@@ -39,8 +39,9 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 {/* Order type select */}
                 <OrderTypeSelect selected={order?.orderType ?? 0} />
 
-                {order?.orderType === MARKET ? <Divider text={'New Order'} tooltip={'new-order'} /> : null}
-
+                {order?.orderType === MARKET ? (
+                    <Divider text={'New Order'} tooltip={{ key: 'new-order', props: { baseTicker: order?.market } }} />
+                ) : null}
                 {/* Position select */}
                 <Section>
                     <PositionSelect selected={order?.position ?? 0} />
@@ -84,7 +85,10 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 ) : (
                     <>
                         {/* MARKET ORDER */}
-                        <Divider text={'Adust Position'} tooltip={'adjust-position'} />
+                        <Divider
+                            text={'Adjust Position'}
+                            tooltip={{ key: 'adjust-position', props: { baseTicker: order?.market } }}
+                        />
                         <LeverageInput
                             className="px-8"
                             orderDispatch={orderDispatch}
