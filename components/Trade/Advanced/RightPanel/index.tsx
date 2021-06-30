@@ -49,7 +49,7 @@ const TitledBox = styled(({ className, title, children }) => {
 `;
 
 type MIProps = {
-    lastPrice: number;
+    lastPrice: BigNumber;
     fairPrice: BigNumber;
     oraclePrice: number;
     fundingRate: number;
