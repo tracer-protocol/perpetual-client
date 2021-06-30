@@ -75,7 +75,6 @@ const Item = styled.div`
         letter-spacing: -0.32px;
         color: var(--color-primary);
         text-transform: capitalize;
-        margin-bottom: 5px;
     }
 `;
 
