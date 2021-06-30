@@ -5,7 +5,7 @@ interface IProps {
 }
 
 const FundingRateGraphic: React.FC<IProps> = ({ rate }: IProps) => {
-    const fundingRate = rate * 100;
+    const fundingRate = rate;
     // const green = Math.abs((-1 - fundingRate) * 5);
     // const red = (1 - fundingRate) * 5;
     // function loop(n: number, char: string) {
