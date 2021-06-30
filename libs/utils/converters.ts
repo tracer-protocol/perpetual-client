@@ -24,7 +24,7 @@ export const toPercent: (value: number) => string = (value) => {
     }
     const percentage = value * 100;
     if (percentage < 0.001) {
-        return `> 0.001%`;
+        return `< 0.001%`;
     }
     return `${percentage.toFixed(2)}%`;
 };
