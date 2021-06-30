@@ -87,15 +87,7 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
                 </EquityTip>
             );
         case 'buying-power':
-            return (
-                <BuyingPowerTip
-                    baseTicker={tooltip?.props?.baseTicker ?? ''}
-                    availableMargin={tooltip?.props?.availableMargin ?? NaN}
-                    maxLeverage={tooltip?.props?.maxLeverage ?? NaN}
-                >
-                    {children}
-                </BuyingPowerTip>
-            );
+            return <BuyingPowerTip baseTicker={tooltip?.props?.baseTicker ?? ''}>{children}</BuyingPowerTip>;
         case 'available-margin':
             return <AvailableMarginTip>{children}</AvailableMarginTip>;
 

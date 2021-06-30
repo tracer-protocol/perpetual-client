@@ -2,12 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
-import {
-    calcTotalMargin,
-    calcBuyingPower,
-    calcMinimumMargin,
-    calcAvailableMarginPercent,
-} from '@tracer-protocol/tracer-utils';
+import { calcTotalMargin, calcBuyingPower, calcAvailableMarginPercent } from '@tracer-protocol/tracer-utils';
 import { Box, Button, Previous } from '@components/General';
 import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
@@ -201,9 +196,7 @@ const AccountPanel: React.FC<{
             {/*</SButton>*/}
             <Item>
                 <h3>
-                    <TooltipSelector
-                        tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker ?? '' } }}
-                    >
+                    <TooltipSelector tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker } }}>
                         Equity
                     </TooltipSelector>
                 </h3>
@@ -216,21 +209,7 @@ const AccountPanel: React.FC<{
             <Item>
                 <h3>
                     <TooltipSelector
-                        tooltip={{
-                            key: 'buying-power',
-                            props: {
-                                baseTicker: selectedTracer?.baseTicker ?? '',
-                                availableMargin:
-                                    balances.totalMargin.toNumber() -
-                                        calcMinimumMargin(
-                                            balances.quote,
-                                            balances.base,
-                                            fairPrice,
-                                            maxLeverage,
-                                        ).toNumber() ?? 0,
-                                maxLeverage: maxLeverage.toNumber() ?? 0,
-                            },
-                        }}
+                        tooltip={{ key: 'buying-power', props: { baseTicker: selectedTracer?.baseTicker } }}
                     >
                         Buying Power
                     </TooltipSelector>

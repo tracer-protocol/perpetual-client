@@ -80,23 +80,10 @@ export const EquityTip: React.FC<BTProps> = ({ baseTicker, className, children }
     );
 };
 
-// BuyingPowerTipProps
-type BPTProps = {
-    availableMargin: number;
-    maxLeverage: number;
-} & BTProps;
-export const BuyingPowerTip: React.FC<BPTProps> = ({
-    baseTicker,
-    availableMargin,
-    maxLeverage,
-    className,
-    children,
-}: BPTProps) => {
+export const BuyingPowerTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
     const tooltip = (
         <p>
             <strong>Buying Power</strong> Your maximum potential exposure to {baseTicker} given your available margin.
-            It is equal to your available margin of {availableMargin} multiplied by the maximum leverage of{' '}
-            {maxLeverage}.
         </p>
     );
     return (
