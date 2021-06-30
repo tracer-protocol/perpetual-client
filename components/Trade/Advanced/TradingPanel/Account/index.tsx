@@ -202,9 +202,9 @@ const AccountPanel: React.FC<{
             <Item>
                 <h3>
                     <TooltipSelector
-                        tooltip={{ key: 'total-margin', props: { baseTicker: selectedTracer?.baseTicker ?? '' } }}
+                        tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker ?? '' } }}
                     >
-                        Total Margin
+                        Equity
                     </TooltipSelector>
                 </h3>
                 {balances.quote.eq(0) ? (

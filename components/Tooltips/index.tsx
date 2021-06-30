@@ -66,11 +66,11 @@ export const LeverageTip: React.FC<TProps> = ({ className, children }: TProps) =
 };
 
 // Margin account section
-export const TotalMarginTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
+export const EquityTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
     const tooltip = (
         <p>
-            <strong>Total Margin</strong> The total value of your account. Total margin is equal to your net transfers
-            from your wallet plus your profit and losses from your {baseTicker} position.
+            <strong>Equity</strong> The total value of your account. Equity is equal to your net transfers from your
+            wallet plus your profit and losses from your {baseTicker} position.
         </p>
     );
     return (

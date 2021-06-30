@@ -4,7 +4,7 @@ import {
     AmountTip,
     PriceTip,
     LeverageTip,
-    TotalMarginTip,
+    EquityTip,
     BuyingPowerTip,
     AvailableMarginTip,
     InsurancePoolHealthTip,
@@ -32,7 +32,7 @@ export type TooltipSelectorProps = {
         | 'amount'
         | 'price'
         | 'leverage'
-        | 'total-margin'
+        | 'equity'
         | 'buying-power'
         | 'available-margin'
         | 'insurance-pool-health'
@@ -80,11 +80,11 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
             return <LeverageTip className="label">{children}</LeverageTip>;
 
         // Margin account section
-        case 'total-margin':
+        case 'equity':
             return (
-                <TotalMarginTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
+                <EquityTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">
                     {children}
-                </TotalMarginTip>
+                </EquityTip>
             );
         case 'buying-power':
             return (
