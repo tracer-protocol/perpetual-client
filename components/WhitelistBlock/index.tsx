@@ -23,8 +23,8 @@ export default styled(({ className, children }) => {
             return (
                 <div className={className}>
                     <p>
-                        Unfortunately the connected address is not on the white list. <br />
-                        Come back soon or swap accounts
+						Unfortunately the interface is not accessible by this address at this time. <br />
+						If you believe this is a mistake please reach out to the Mycelium Team via Discord.
                     </p>
                 </div>
             );
