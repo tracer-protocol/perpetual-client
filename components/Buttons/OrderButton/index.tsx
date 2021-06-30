@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import { LIMIT, MARKET, OrderState } from '@context/OrderContext';
+import { LIMIT, LONG, MARKET, OrderState, SHORT } from '@context/OrderContext';
 import { OrderContext, TracerContext, TransactionContext } from 'context';
 import { Children } from 'types';
 import Tooltip from 'antd/lib/tooltip';
@@ -8,6 +8,7 @@ import { OMEContext } from '@context/OMEContext';
 import { Button } from '@components/General';
 import styled from 'styled-components';
 import { OrderErrors } from '@components/General/Error';
+import { defaults } from '@libs/Tracer';
 
 const ParentDisable = styled(Button)`
     .button-disabled & {
@@ -99,6 +100,68 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
         return (
             <Tooltip title={OrderErrors[order?.error ?? -1]?.message}>
                 <div className={`button-disabled ${className ?? ''}`}>{children}</div>
+            </Tooltip>
+        );
+    }
+};
+
+const CloseOrder = styled(Button)`
+    height: var(--height-small-button);
+    padding: 0;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 12px;
+    bottom: 0;
+`;
+
+export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) => {
+    const { placeOrder, selectedTracer } = useContext(TracerContext);
+    const balances = selectedTracer?.getBalance() ?? defaults.balances;
+    const { omeState, omeDispatch = () => console.error('OME dispatch is undefined') } = useContext(OMEContext);
+    const { order: orderState, orderDispatch = () => console.error('Order dispatch is undefined') } =
+        useContext(OrderContext);
+    const { handleAsync } = useContext(TransactionContext);
+
+    const closeOrder = async (_e: any) => {
+        if (placeOrder) {
+            if (handleAsync) {
+                const position = balances.base.lt(0) ? LONG : SHORT;
+                const order = {
+                    exposureBN: balances.base.abs(),
+                    price: (position === LONG ? omeState?.maxAndMins?.maxAsk : omeState?.maxAndMins?.minBid) ?? 0,
+                    position: position,
+                };
+
+                handleAsync(placeOrder, [order as OrderState], {
+                    statusMessages: {
+                        waiting: 'Please sign the transaction through your web3 provider',
+                    },
+                    callback: () => {
+                        omeDispatch({ type: 'refetchOrders' });
+                        omeDispatch({ type: 'refetchUserOrders' });
+                        orderDispatch({ type: 'setExposure', value: NaN });
+                        orderDispatch({ type: 'setLeverage', value: NaN });
+                    },
+                });
+            } else {
+                console.error('Error closing order: Handle transaction function is not defined');
+            }
+        } else {
+            console.error('Error placing order: Place order function is not defined');
+        }
+    };
+
+    if (!balances.base.eq(0) && orderState?.error !== 'NO_ORDERS') {
+        return (
+            <CloseOrder className={`${className} primary`} onClick={closeOrder}>
+                Close Order
+            </CloseOrder>
+        );
+    } else {
+        return (
+            <Tooltip title={OrderErrors[orderState?.error ?? -1]?.message}>
+                <CloseOrder disabled={true}>Close Order</CloseOrder>
             </Tooltip>
         );
     }
