@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { toApproxCurrency, toPercent } from 'libs/utils';
+import { toApproxCurrency } from 'libs/utils';
 import styled from 'styled-components';
 import { ProgressBar, Section } from '@components/General';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
@@ -49,7 +49,7 @@ export default styled(({ fundingRate, className }) => {
                     },
                 }}
             >
-                {toPercent(fundingRate.toNumber())}
+                {(fundingRate.toNumber() * 100).toFixed(5)}%
             </Section>
         </div>
     );
