@@ -303,7 +303,7 @@ const PositionDetails: React.FC<IProps> = ({
                         `-`
                     )}
                 </AccountDetailsSection>
-                <AccountDetailsSection label={'Mark Price'} className="w-1/2 border-right">
+                <AccountDetailsSection label={'Fair Price'} className="w-1/2 border-right">
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
                 </AccountDetailsSection>
                 {/* <AccountDetailsSection
