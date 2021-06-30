@@ -78,8 +78,8 @@ const MenuItem = styled.div`
         padding-left: 2rem;
     }
     &:first-child {
+        height: 8vh;
         opacity: 0;
-        padding-bottom: 1.5rem;
     }
     &:first-child > ${StyledTracerLogo} {
         opacity: 0;

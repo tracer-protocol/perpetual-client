@@ -304,7 +304,7 @@ const PositionDetails: React.FC<IProps> = ({
                         maxLeverage={maxLeverage}
                     />
                 </AccountDetailsSection>
-                <AccountDetailsSection label={'Mark Price'}>
+                <AccountDetailsSection label={'Fair Price'}>
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
                 </AccountDetailsSection>
             </SectionContainer>
@@ -320,7 +320,7 @@ const PositionDetails: React.FC<IProps> = ({
                         `-`
                     )}
                 </AccountDetailsSection>
-                {/* <AccountDetailsSection 
+                {/* <AccountDetailsSection
                     label={'Realised PnL'}
                     className="w-1/2"
                     tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}

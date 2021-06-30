@@ -190,7 +190,7 @@ export default styled(
                 />
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>
                     <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
-                    <Section label={`Total Margin`}>
+                    <Section label={`Equity`}>
                         <Previous>{`${toApproxCurrency(balances.totalMargin)}`}</Previous>
                         {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, fairPrice))}`}
                     </Section>
