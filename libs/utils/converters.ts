@@ -19,7 +19,7 @@ const getPrecision: (a: number) => number = (a) => {
  * @param value
  */
 export const toPercent: (value: number) => string = (value) => {
-    if (Number.isNaN(value)) {
+    if (Number.isNaN(value) || !value) {
         return `0.00%`;
     }
     const percentage = value * 100;
