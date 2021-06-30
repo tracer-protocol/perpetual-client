@@ -406,6 +406,7 @@ OpenOrders.displayName = 'OpenOrders';
 const Fills: React.FC<{
     filledOrders: FilledOrder[];
 }> = React.memo(({ filledOrders }) => {
+    filledOrders.sort((order1, order2) => (order1.timestamp < order2.timestamp && 1) || -1);
     return (
         <STable headings={['Time', 'Side', 'Price', 'Amount']}>
             <tbody>
