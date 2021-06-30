@@ -55,11 +55,11 @@ const AccountDetailsSection = styled(Section)`
 const CloseOrderSection = styled.div`
     display: inline-block;
     position: relative;
-    padding: 4px 12px;
+    padding: 0 12px;
+    padding-top: 8px;
     width: 100%;
     margin: 0;
     color: var(--color-secondary);
-    min-height: var(--height-small-container);
 `;
 
 const SectionContainer = styled.div`
@@ -285,6 +285,9 @@ const PositionDetails: React.FC<IProps> = ({
                         exposure={order?.exposure ?? 0}
                     />
                 </AccountDetailsSection>
+                <CloseOrderSection>
+                    <CloseOrderButton />
+                </CloseOrderSection>
             </SectionContainer>
             <SectionContainer className="w-2/6 inline-block">
                 <AccountDetailsSection
@@ -304,9 +307,6 @@ const PositionDetails: React.FC<IProps> = ({
                 <AccountDetailsSection label={'Mark Price'}>
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
                 </AccountDetailsSection>
-                <CloseOrderSection>
-                    <CloseOrderButton />
-                </CloseOrderSection>
             </SectionContainer>
             <SectionContainer className="w-2/6">
                 <AccountDetailsSection
