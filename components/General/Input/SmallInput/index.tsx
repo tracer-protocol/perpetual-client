@@ -89,7 +89,7 @@ const SmallInput: React.FC<SIProps> = styled(
     display: flex;
     width: 100%;
     justify-content: space-between;
-    padding: 12px;
+    margin: 12px 0;
 
     > .label {
         letter-spacing: -0.32px;

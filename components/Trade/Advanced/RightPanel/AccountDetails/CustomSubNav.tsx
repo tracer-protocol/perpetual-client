@@ -2,6 +2,10 @@ import React from 'react';
 import { SubNavContainer, SubNavItem } from '@components/Nav/SubNav';
 import styled from 'styled-components';
 
+const StyledSubNavContainer = styled(SubNavContainer)`
+    height: var(--height-extra-small-container);
+`;
+
 type TEProps = {
     amount: number;
     className?: string;
@@ -24,7 +28,7 @@ type CSNProps = {
     orders: number;
 };
 const CustomSubNav: React.FC<CSNProps> = ({ setTab, selected, fills, orders }: CSNProps) => (
-    <SubNavContainer>
+    <StyledSubNavContainer>
         <SubNavItem
             className={`${0 === selected ? 'selected' : ''} flex`}
             key={`sub-nav-positions`}
@@ -61,7 +65,7 @@ const CustomSubNav: React.FC<CSNProps> = ({ setTab, selected, fills, orders }: C
                 <TableEntries amount={fills} />
             </div>
         </SubNavItem>
-    </SubNavContainer>
+    </StyledSubNavContainer>
 );
 
 export default CustomSubNav;

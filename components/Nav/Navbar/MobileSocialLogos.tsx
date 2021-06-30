@@ -26,7 +26,7 @@ export default styled((props) => (
     height: 100%;
     max-width: 38rem;
     display: flex;
-    font-size: 2rem;
+    font-size: 1.5rem;
     justify-content: space-between;
     align-items: center;
     > a > .hover {
