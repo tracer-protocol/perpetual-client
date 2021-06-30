@@ -11,13 +11,6 @@ const SHiddenExpand = styled(HiddenExpand)`
     margin: 10px;
     background: var(--color-accent);
     border-radius: 10px;
-
-    h3 {
-        font-size: var(--font-size-small);
-        letter-spacing: -0.32px;
-        color: #ffffff;
-        margin-bottom: 20px;
-    }
 `;
 interface MTDProps {
     balances: UserBalance;
@@ -36,7 +29,6 @@ export const MarketTradeDetails: React.FC<MTDProps> = ({
     const { nextPosition, exposureBN, slippage, marketTradePrice } = order;
     return (
         <SHiddenExpand open={!!exposureBN.toNumber()} defaultHeight={0} className={className}>
-            <h3>Order Summary</h3>
             <Section label={'Liquidation price'}>
                 <Previous>
                     {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
@@ -72,7 +64,6 @@ export const LimitTradeDetails: React.FC<LTDProps> = ({
 }: LTDProps) => {
     return (
         <SHiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
-            <h3>Order Summary</h3>
             <Section label={'Liquidation price'}>
                 <Previous>
                     {toApproxCurrency(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage))}
@@ -109,7 +100,6 @@ export const AdjustSummary: React.FC<ASProps> = ({
 }: ASProps) => {
     return (
         <SHiddenExpand open={!!exposure.toNumber()} defaultHeight={0} className={className}>
-            <h3>Order Adjust Summary</h3>
             <Section label={'Exposure'}>{`${exposure.toFixed(2)} ${baseTicker}`}</Section>
             <Section label={'Liquidation price'}>
                 <Previous>

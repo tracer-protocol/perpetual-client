@@ -4,7 +4,7 @@ import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/Tool
 
 type DProps = {
     text: string;
-    tooltip: string;
+    tooltip: TooltipSelectorProps;
     className?: string;
 };
 
@@ -31,7 +31,7 @@ const Divider = styled.div`
 export default styled(({ text, tooltip, className }: DProps) => (
     <div className={className}>
         {tooltip ? (
-            <TooltipSelector tooltip={{ key: tooltip } as TooltipSelectorProps}>
+            <TooltipSelector tooltip={tooltip}>
                 <Divider>{text}</Divider>
             </TooltipSelector>
         ) : (
@@ -39,5 +39,5 @@ export default styled(({ text, tooltip, className }: DProps) => (
         )}
     </div>
 ))`
-    margin: 1rem 0;
+    margin: 0.5rem 0;
 ` as React.FC<DProps>;
