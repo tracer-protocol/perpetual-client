@@ -210,7 +210,7 @@ export const UnrealisedPnLTip: React.FC<BTProps> = ({ className, baseTicker, chi
     const tooltip = (
         <p>
             <strong>Unrealised PnL</strong> The amount of profit or loss you would realise if you closed your{' '}
-            {baseTicker} position at the current mark price.
+            {baseTicker} position at the current fair price.
         </p>
     );
     return (
@@ -244,21 +244,21 @@ export const LiquidationPriceTip: React.FC<LPTProps> = ({ className, quote, posi
     if (quote.eq(0)) {
         tooltip = (
             <p>
-                <strong>Liquidation Price</strong> If the mark price falls below this price (for longs) and rises above
+                <strong>Liquidation Price</strong> If the fair price falls below this price (for longs) and rises above
                 this price (for shorts), your position will be liquidated.
             </p>
         );
     } else if (position === 1) {
         tooltip = (
             <p>
-                <strong>Liquidation Price</strong> If the mark price falls below this price, your position will be
+                <strong>Liquidation Price</strong> If the fair price falls below this price, your position will be
                 liquidated.
             </p>
         );
     } else if (position === 0) {
         tooltip = (
             <p>
-                <strong>Liquidation Price</strong> If the mark price rises above this price, your position will be
+                <strong>Liquidation Price</strong> If the fair price rises above this price, your position will be
                 liquidated.
             </p>
         );

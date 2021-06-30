@@ -320,9 +320,6 @@ const PositionDetails: React.FC<IProps> = ({
                         `-`
                     )}
                 </AccountDetailsSection>
-                {/*<AccountDetailsSection label={'Fair Price'} className="w-1/2 border-right">*/}
-                {/*    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}*/}
-                {/*</AccountDetailsSection>*/}
                 {/* <AccountDetailsSection
                     label={'Realised PnL'}
                     className="w-1/2"

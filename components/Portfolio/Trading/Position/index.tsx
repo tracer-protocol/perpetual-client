@@ -26,7 +26,7 @@ const Position: React.FC<{
         'Realised P&L',
         'Margin Used',
         'Exposure',
-        'Liquidation Price/ Mark Price',
+        'Liquidation Price/ Fair Price',
         'Status',
     ];
 
