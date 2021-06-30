@@ -11,6 +11,7 @@ export default styled(({ fundingRate, className }) => {
     const poolHealth = poolInfo?.health ?? defaults.health;
     const poolLiquidity = poolInfo?.liquidity ?? defaults.liquidity;
     const poolTarget = poolInfo?.target ?? defaults.target;
+
     return (
         <div className={className}>
             <h3>

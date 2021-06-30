@@ -280,6 +280,8 @@ export default class Tracer {
                 const insuranceFundingRate = new BigNumber(
                     Web3.utils.fromWei(insuranceFundingRates?.fundingRate.toString() ?? '0'),
                 );
+                console.log(currentFundingIndex, 'funding index');
+                console.log(insuranceFundingRate);
                 const oneHundred = new BigNumber(100);
                 this.fundingRate = fundingRate.div(fairPrice).multipliedBy(oneHundred);
                 this.insuranceFundingRate = insuranceFundingRate;
