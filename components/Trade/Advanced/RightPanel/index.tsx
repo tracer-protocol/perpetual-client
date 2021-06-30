@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import OrderBook from '@components/OrderBook';
 import Tracer, { defaults } from '@libs/Tracer';
-import { Box } from '@components/General';
+import { Box, Button } from '@components/General';
 import RecentTrades from './RecentTrades';
 import { useMostRecentMatched } from '@libs/Graph/hooks/Tracer';
 import { OMEContext } from '@context/OMEContext';
@@ -98,13 +98,13 @@ const OrderBookContainer = styled.div`
     flex-direction: column;
     position: relative;
     padding: 0.6rem 0;
+
     h3 {
         letter-spacing: -0.4px;
         color: #ffffff;
         text-transform: capitalize;
         font-size: var(--font-size-medium);
-        margin: 0 0.8rem;
-        margin-bottom: 0.5rem;
+        margin: 0 0.8rem 0.5rem;
     }
 `;
 
@@ -122,11 +122,34 @@ const SBox = styled(Box)`
     }
 `;
 
+type HEBProps = {
+    className?: string;
+    showOrderBook: boolean;
+    onClick: () => void;
+};
+const HEButton = styled(Button)`
+    height: var(--height-small-button);
+    width: 100px;
+    padding: 0;
+`;
+const HideExpandButton: React.FC<HEBProps> = styled(({ className, showOrderBook, onClick }: HEBProps) => {
+    return (
+        <HEButton className={className} onClick={onClick}>
+            {showOrderBook ? 'Collapse' : 'Expand'}
+        </HEButton>
+    );
+})`
+    position: absolute;
+    right: ${(props: any) => (props.showOrderBook ? '110px' : '10px')};
+    top: 10px;
+`;
+
 const TradingView: React.FC<{
     selectedTracer: Tracer | undefined;
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
+    const [showOrderBook, setShowOrderBook] = useState(true);
 
     return (
         <>
@@ -147,16 +170,19 @@ const TradingView: React.FC<{
                 <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
                 <OrderBookContainer>
                     <h3>Order Book</h3>
-                    {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
-                        <OrderBook
-                            askOrders={omeState.orders.askOrders}
-                            bidOrders={omeState.orders.bidOrders}
-                            marketUp={omeState?.marketUp ?? false}
-                            lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
-                        />
-                    ) : (
-                        <Icon component={TracerLoading} className="mb-3 tracer-loading" />
-                    )}
+                    <HideExpandButton showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
+                    {showOrderBook ? (
+                        omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
+                            <OrderBook
+                                askOrders={omeState.orders.askOrders}
+                                bidOrders={omeState.orders.bidOrders}
+                                marketUp={omeState?.marketUp ?? false}
+                                lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
+                            />
+                        ) : (
+                            <Icon component={TracerLoading} className="mb-3 tracer-loading" />
+                        )
+                    ) : null}
                 </OrderBookContainer>
                 <RecentTrades trades={mostRecentTrades} />
             </SBox>
