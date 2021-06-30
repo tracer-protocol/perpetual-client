@@ -98,6 +98,7 @@ const StyledSmallInput = styled(SmallInput)`
         padding-left: 0;
     }
 `;
+
 export const LeverageInput: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
     selectedTracer: Tracer | undefined;
@@ -107,6 +108,7 @@ export const LeverageInput: React.FC<{
     return (
         <StyledSmallInput
             title={'Leverage'}
+            tooltip={{ key: 'leverage' }}
             className={className ?? ''}
             onChange={(e) => {
                 if (orderDispatch) {

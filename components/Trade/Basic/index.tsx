@@ -154,12 +154,10 @@ const SButton = styled(Button)`
     border: 1px solid #ffffff;
     color: var(--color-text);
 
-    .button-disabled &:hover {
-        cursor: not-allowed;
-    }
     #tooltip {
         display: none;
     }
+
     .button-disabled #tooltip {
         display: block;
     }
@@ -237,12 +235,3 @@ const Basic: React.FC = styled(({ className }) => {
 `;
 
 export default Basic;
-
-// Collateral -> Required deposit
-// For basic required collateral is fixed based on amount and leverage
-
-// Leveral slider should not move automatically
-// changing leverage slider will change the required deposit
-
-// Market -> Amount
-// Current market value displayed under market

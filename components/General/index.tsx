@@ -60,27 +60,16 @@ export const Button = styled.button`
         color: var(--color-primary);
     }
 
-    &.disabled {
-        &:hover {
-            color: var(--color-primary);
-            background: none;
-        }
-    }
-
     &:disabled,
-    &[disabled] {
-        opacity: 0.8;
-        cursor: not-allowed;
-    }
-
-    &.disabled,
+    &[disabled],
     .button-disabled {
-        opacity: 0.8;
-    }
+        opacity: 0.5;
+        cursor: not-allowed;
 
-    &.disabled:hover,
-    .button-disabled:hover {
-        cursor: not-allowed !important;
+        &:hover {
+            background: none;
+            color: var(--color-primary);
+        }
     }
 `;
 
@@ -197,6 +186,7 @@ export const Close = styled(CloseOutlined)`
     display: flex;
     top: 0;
     right: 20px;
+
     > svg {
         transition: 0.3s;
         margin: auto;
@@ -204,11 +194,10 @@ export const Close = styled(CloseOutlined)`
         width: 20px;
         color: var(--color-text);
     }
+
     &:hover {
         cursor: pointer;
         background: var(--color-primary);
-    }
-    &:hover svg {
     }
 `;
 

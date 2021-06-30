@@ -73,7 +73,7 @@ const MarketInfo: React.FC<MIProps> = styled(
         return (
             <div className={className}>
                 <TitledBox title={'Last Price'}>{toApproxCurrency(lastPrice)}</TitledBox>
-                <TitledBox title={'Mark Price'}>{toApproxCurrency(fairPrice)}</TitledBox>
+                <TitledBox title={'Fair Price'}>{toApproxCurrency(fairPrice)}</TitledBox>
                 <TitledBox title={'Oracle Price'}>{toApproxCurrency(oraclePrice)}</TitledBox>
                 <TitledBox title={'Funding Rate'}>
                     <FundingRateGraphic rate={fundingRate} />
