@@ -45,12 +45,8 @@ const DepositTerms = styled.p`
     overflow-y: scroll;
     min-width: 550px;
     width: 100%;
-    padding: 0 40px 0 10px;
+    padding: 0 10px;
     color: var(--color-text);
-
-    > .highlight {
-        color: #f15025;
-    }
 `;
 
 const SHiddenExpand = styled(HiddenExpand)`
@@ -123,6 +119,10 @@ const WithdrawalNote = styled.div`
 
     > .title {
         color: #3da8f5;
+    }
+
+    > .highlight {
+        color: #f15025;
     }
 `;
 
@@ -203,13 +203,10 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     }
                     body={
                         <DepositTerms>
-                            When you deposit insurance, you will receive insurance tokens proportionate to your deposit,
-                            which will earn fees. You can withdraw your funds by burning your tokens at any time. At the
-                            time of withdrawal,{' '}
-                            <span className="highlight">
-                                you will be required to pay a withdrawal fee if the current value of the insurance fund
-                                is less than the target.
-                            </span>
+                            When you deposit funds into this insurance pool, you will receive insurance pool tokens
+                            proportionate to your deposit, which will earn fees. You can withdraw your funds by burning
+                            your tokens at any time. If, at the time of your withdrawal, the value of the insurance pool
+                            is less than the insurance pool target, you will be required to pay a withdrawal fee.
                         </DepositTerms>
                     }
                 />
@@ -261,8 +258,9 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
             </SHiddenExpand>
             {isDeposit ? null : (
                 <WithdrawalNote className="mb-8">
-                    <span className="title">Note:</span> The value of the insurance fund is less than the target and you
-                    are required to pay a withdrawal fee. Do you wish to proceed with the withdrawal?
+                    <span className="title">Note:</span> The value of the insurance pool is currently less than the
+                    insurance pool target. If you choose to withdraw at this time,{' '}
+                    <span className="highlight">you will be required to pay a withdrawal fee.</span>
                 </WithdrawalNote>
             )}
             {isDeposit ? (

@@ -75,7 +75,7 @@ export default styled(
         );
     },
 )`
-    margin-bottom: 5rem;
+    margin-bottom: 3.5rem;
     position: relative;
     .rc-slider-dot {
         display: none;
@@ -91,24 +91,26 @@ const Label = styled(({ className, val, long }: { className?: string; val: numbe
     margin-left: ${(props) => (props.long ? '-3rem' : '3rem')};
     text-align: ${(props) => (props.long ? 'right' : 'left')};
     font-size: var(--font-size-small);
+    line-height: var(--font-size-small);
+    margin-top: 0.5rem;
+    color: var(--color-secondary);
 `;
 
-const markStyle = {
-    marginTop: '0.5rem',
-    color: '#005EA4',
-    fontSize: '1rem',
+const middleMark = {
+    marginTop: 'calc(0.5rem + var(--font-size-small))',
+    color: 'var(--color-secondary)',
+    fontSize: 'var(--font-size-small)',
+    lineHeight: 'var(--font-size-small',
 };
 const createMarks = (min: number, max: number) => ({
     [min]: {
-        style: markStyle,
         label: <Label val={min} long={false} />,
     },
     [0]: {
-        style: markStyle,
+        style: middleMark,
         label: `${0}x`,
     },
     [max]: {
-        style: markStyle,
         label: <Label val={max} long={true} />,
     },
 });
@@ -125,21 +127,22 @@ const trackStyle = {
 const handleStyle = {
     width: '50px',
     height: '30px',
+    lineHeight: '26px',
     background: 'var(--color-primary)',
     borderRadius: '20px',
     marginTop: '-11px',
 };
 
 const { Handle } = Slider;
+const HandleValue = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: var(--font-size-small);
+    z-index: 2;
+`;
 const CustomHandle = (e: any) => {
-    const HandleValue = styled.div`
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        font-size: var(--font-size-small);
-        z-index: 2;
-    `;
     const { value } = e;
     return (
         <Handle {...e}>

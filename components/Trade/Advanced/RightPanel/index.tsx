@@ -29,8 +29,9 @@ const TitledBox = styled(({ className, title, children }) => {
     );
 })`
     border-right: 1px solid var(--color-accent);
-    padding: 0.5rem;
+    padding: 0 0.5rem;
     display: flex;
+    justify-content: center;
     flex-direction: column;
     margin: auto;
     width: 100%;
@@ -48,7 +49,7 @@ const TitledBox = styled(({ className, title, children }) => {
 `;
 
 type MIProps = {
-    lastPrice: number;
+    lastPrice: BigNumber;
     fairPrice: BigNumber;
     oraclePrice: number;
     fundingRate: number;
@@ -72,7 +73,7 @@ const MarketInfo: React.FC<MIProps> = styled(
         return (
             <div className={className}>
                 <TitledBox title={'Last Price'}>{toApproxCurrency(lastPrice)}</TitledBox>
-                <TitledBox title={'Mark Price'}>{toApproxCurrency(fairPrice)}</TitledBox>
+                <TitledBox title={'Fair Price'}>{toApproxCurrency(fairPrice)}</TitledBox>
                 <TitledBox title={'Oracle Price'}>{toApproxCurrency(oraclePrice)}</TitledBox>
                 <TitledBox title={'Funding Rate'}>
                     <FundingRateGraphic rate={fundingRate} />
@@ -131,10 +132,10 @@ const TradingView: React.FC<{
         <>
             <SBox className="middlePanel">
                 <MarketInfo
-                    lastPrice={omeState?.maxAndMins?.maxAsk ?? 0}
+                    lastPrice={omeState?.lastTradePrice ?? new BigNumber(0)}
                     fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
                     oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
-                    fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.fundingRate.toNumber()}
+                    fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.defaultFundingRate.toNumber()}
                     // nextFunding={new Date()}
                     // tradingVolume={243512}
                     maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
@@ -143,7 +144,7 @@ const TradingView: React.FC<{
                 <AccountSummary selectedTracer={selectedTracer} />
             </SBox>
             <SBox className="sidePanel">
-                <InsuranceInfo />
+                <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
                 <OrderBookContainer>
                     <h3>Order Book</h3>
                     {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (

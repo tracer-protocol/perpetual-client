@@ -26,7 +26,7 @@ const Position: React.FC<{
         'Realised P&L',
         'Margin Used',
         'Exposure',
-        'Liquidation Price/ Mark Price',
+        'Liquidation Price/ Fair Price',
         'Status',
     ];
 
@@ -112,7 +112,7 @@ const Position: React.FC<{
                         const name = tracer.marketId.split('/')[0];
                         const status = _status[i];
                         const { quote, base, totalMargin } = tracer.balances;
-                        const realisedPNL = 0; // TODO calculte realisedPNL
+                        const realisedPNL = 0; // TODO calculate realisedPNL
                         const unrealisedPNL = calcUnrealised(
                             base,
                             tracer.oraclePrice,

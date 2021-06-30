@@ -12,6 +12,10 @@ import { OrderTypeSelect, PositionSelect } from './Selects';
 import DoubleSidedSlider from './DoubleSidedSlider';
 import Divider from '@components/General/Divider';
 
+const Section = styled.div`
+    margin: 1rem 0;
+`;
+
 const SError = styled(Error)<{ account: string }>`
     position: relative;
     transform: translateY(-100%);
@@ -35,19 +39,23 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 {/* Order type select */}
                 <OrderTypeSelect selected={order?.orderType ?? 0} />
 
-                {order?.orderType === MARKET ? <Divider text={'New Order'} tooltip={'new-order'} /> : null}
+                {order?.orderType === MARKET ? (
+                    <Divider text={'New Order'} tooltip={{ key: 'new-order', props: { baseTicker: order?.market } }} />
+                ) : null}
                 {/* Position select */}
-                <div className="m-5">
+                <Section>
                     <PositionSelect selected={order?.position ?? 0} />
-                </div>
+                </Section>
 
                 {/* Quantity and Price Inputs */}
-                <Exposure
-                    orderDispatch={orderDispatch}
-                    className="pb-0 px-8"
-                    selectedTracer={selectedTracer}
-                    order={order ?? orderDefaults.order}
-                />
+                <Section>
+                    <Exposure
+                        orderDispatch={orderDispatch}
+                        className="px-8"
+                        selectedTracer={selectedTracer}
+                        order={order ?? orderDefaults.order}
+                    />
+                </Section>
                 {/* <Details>
                     {order?.leverage !== 1 && exposure && price ? (
                         <span>{`Leveraged at ${order?.leverage}x`}</span>
@@ -77,7 +85,10 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 ) : (
                     <>
                         {/* MARKET ORDER */}
-                        <Divider text={'Adust Position'} tooltip={'adjust-position'} />
+                        <Divider
+                            text={'Adjust Position'}
+                            tooltip={{ key: 'adjust-position', props: { baseTicker: order?.market } }}
+                        />
                         <LeverageInput
                             className="px-8"
                             orderDispatch={orderDispatch}
@@ -103,7 +114,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 )}
 
                 {/* Place Order */}
-                <div className="p-2">
+                <div className="m-2">
                     <AdvancedOrderButton>Place Order</AdvancedOrderButton>
                 </div>
             </Box>
@@ -118,7 +129,6 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
     background: #00125D;
     display: block;
     padding: 0;
-    height: 100%;
     z-index: 1;
     &.hide {
         height: 0;

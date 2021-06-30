@@ -191,7 +191,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
                 </div>
             </ConnectButton>
 
-            {/** TODO this will need to change to arbritrum network id */}
+            {/** TODO this will need to change to Arbritrum network id */}
             {process.env.NEXT_PUBLIC_DEPLOYMENT !== 'DEVELOPMENT' ? (
                 <UnknownNetwork display={networkId !== 42 && !!networkId} />
             ) : null}
@@ -200,7 +200,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
 })`
     display: flex;
     color: var(--color-text);
-    height: 10vh;
+    height: 8vh;
 
     > ul {
         display: flex;

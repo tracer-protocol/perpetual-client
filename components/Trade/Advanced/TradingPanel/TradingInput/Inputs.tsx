@@ -28,7 +28,6 @@ export const Exposure: React.FC<{
             className={className ?? ''}
             onChange={(e) => {
                 if (orderDispatch) {
-                    console.log('setting', e.target.value);
                     orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) });
                     if (order.orderType === MARKET) {
                         orderDispatch({ type: 'setLeverageFromExposure', amount: parseFloat(e.target.value) });
@@ -99,6 +98,7 @@ const StyledSmallInput = styled(SmallInput)`
         padding-left: 0;
     }
 `;
+
 export const LeverageInput: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
     selectedTracer: Tracer | undefined;
@@ -108,6 +108,7 @@ export const LeverageInput: React.FC<{
     return (
         <StyledSmallInput
             title={'Leverage'}
+            tooltip={{ key: 'leverage' }}
             className={className ?? ''}
             onChange={(e) => {
                 if (orderDispatch) {

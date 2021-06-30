@@ -7,7 +7,7 @@ import Tooltip from 'antd/lib/tooltip';
 const NoLeverageTip = <p>You have no leveraged trades open in this market.</p>;
 
 const MarginAccounts: React.FC = () => {
-    const headings = ['Market', 'Total Margin', 'Maintenance Margin', 'Available Margin', 'Status of Position'];
+    const headings = ['Market', 'Equity', 'Maintenance Margin', 'Available Margin', 'Status of Position'];
 
     const tracers = [
         {

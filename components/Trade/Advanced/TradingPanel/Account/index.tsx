@@ -2,12 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
-import {
-    calcTotalMargin,
-    calcBuyingPower,
-    calcMinimumMargin,
-    calcAvailableMarginPercent,
-} from '@tracer-protocol/tracer-utils';
+import { calcTotalMargin, calcBuyingPower, calcAvailableMarginPercent } from '@tracer-protocol/tracer-utils';
 import { Box, Button, Previous } from '@components/General';
 import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
@@ -80,7 +75,6 @@ const Item = styled.div`
         letter-spacing: -0.32px;
         color: var(--color-primary);
         text-transform: capitalize;
-        margin-bottom: 5px;
     }
 `;
 
@@ -151,9 +145,7 @@ const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fa
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
         return (
-            <span>
-                ${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2)}%
-            </span>
+            <span>{calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2)}%</span>
         );
     } else {
         return (
@@ -201,10 +193,8 @@ const AccountPanel: React.FC<{
             {/*</SButton>*/}
             <Item>
                 <h3>
-                    <TooltipSelector
-                        tooltip={{ key: 'total-margin', props: { baseTicker: selectedTracer?.baseTicker ?? '' } }}
-                    >
-                        Total Margin
+                    <TooltipSelector tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker } }}>
+                        Equity
                     </TooltipSelector>
                 </h3>
                 {balances.quote.eq(0) ? (
@@ -216,25 +206,11 @@ const AccountPanel: React.FC<{
             <Item>
                 <h3>
                     <TooltipSelector
-                        tooltip={{
-                            key: 'buying-power',
-                            props: {
-                                baseTicker: selectedTracer?.baseTicker ?? '',
-                                availableMargin:
-                                    balances.totalMargin.toNumber() -
-                                        calcMinimumMargin(
-                                            balances.quote,
-                                            balances.base,
-                                            fairPrice,
-                                            maxLeverage,
-                                        ).toNumber() ?? 0,
-                                maxLeverage: maxLeverage.toNumber() ?? 0,
-                            },
-                        }}
+                        tooltip={{ key: 'buying-power', props: { baseTicker: selectedTracer?.baseTicker } }}
                     >
                         Buying Power
                     </TooltipSelector>
-                    <SubText>{` @${maxLeverage.toNumber()}X Maximum Leverage`}</SubText>
+                    <SubText>{` @ ${maxLeverage.toNumber()}x Max Leverage`}</SubText>
                 </h3>
                 <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
             </Item>

@@ -21,7 +21,7 @@ export const DateAndTime = styled(({ className, date, time }) => {
 
 export const Box = styled.div`
     display: flex;
-    padding: 20px;
+    padding: 12px;
 `;
 
 export const Button = styled.button`
@@ -60,27 +60,16 @@ export const Button = styled.button`
         color: var(--color-primary);
     }
 
-    &.disabled {
-        &:hover {
-            color: var(--color-primary);
-            background: none;
-        }
-    }
-
     &:disabled,
-    &[disabled] {
-        opacity: 0.8;
-        cursor: not-allowed;
-    }
-
-    &.disabled,
+    &[disabled],
     .button-disabled {
-        opacity: 0.8;
-    }
+        opacity: 0.5;
+        cursor: not-allowed;
 
-    &.disabled:hover,
-    .button-disabled:hover {
-        cursor: not-allowed !important;
+        &:hover {
+            background: none;
+            color: var(--color-primary);
+        }
     }
 `;
 
@@ -116,8 +105,12 @@ export const Section: React.FC<SProps> = styled(({ className, children, label, t
 })`
     width: 100%;
     display: flex;
-    margin: 10px 0;
+    padding-bottom: 10px;
+    &:last-child {
+        padding-bottom: 0;
+    }
     font-size: var(--font-size-small);
+    box-sizing: border-box;
 
     > .label {
         text-align: left;
@@ -193,6 +186,7 @@ export const Close = styled(CloseOutlined)`
     display: flex;
     top: 0;
     right: 20px;
+
     > svg {
         transition: 0.3s;
         margin: auto;
@@ -200,11 +194,10 @@ export const Close = styled(CloseOutlined)`
         width: 20px;
         color: var(--color-text);
     }
+
     &:hover {
         cursor: pointer;
         background: var(--color-primary);
-    }
-    &:hover svg {
     }
 `;
 

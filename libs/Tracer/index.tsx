@@ -42,7 +42,7 @@ export const defaults: Record<string, any> = {
     quoteTokenDecimals: new BigNumber(1),
     exposure: new BigNumber(0),
     feeRate: new BigNumber(0),
-    fundingRate: new BigNumber(0),
+    defaultFundingRate: new BigNumber(0),
     fundingRateSensitivity: new BigNumber(0),
     twentyFourHourChange: 0,
     baseTicker: '',
@@ -77,6 +77,7 @@ export default class Tracer {
     public fundingRateSensitivity: BigNumber;
     public feeRate: BigNumber;
     public fundingRate: BigNumber;
+    public insuranceFundingRate: BigNumber;
     public initialised: Promise<boolean>;
     public balances: UserBalance;
     public oraclePrice: BigNumber;
@@ -104,7 +105,8 @@ export default class Tracer {
         this.oraclePrice = defaults.oraclePrice;
         this.fairPrice = defaults.fairPrice;
         this.maxLeverage = defaults.maxLeverage;
-        this.fundingRate = defaults.fundingRate;
+        this.fundingRate = defaults.defaultFundingRate;
+        this.insuranceFundingRate = defaults.defaultFundingRate;
         this.insuranceApproved = false;
         this.tracerApproved = false;
         this.initialised = this.init(web3);
@@ -164,7 +166,7 @@ export default class Tracer {
                         this.updateOraclePrice();
                     });
                 this.updateFairPrice();
-                this.updateFundingRate();
+                this.updateFundingRates();
                 return true;
             })
             .catch((err) => {
@@ -260,22 +262,34 @@ export default class Tracer {
     /**
      * A function that returns the funding rate for the market
      */
-    updateFundingRate: () => Promise<void> = async () => {
+    updateFundingRates: () => Promise<void> = async () => {
         try {
             // fair price is needed. This avoids it being not set when this method is called.
             // this could probably be optimised
-            const fairPrice = await this._pricing?.methods.fairPrice().call();
-            this.fairPrice = new BigNumber(Web3.utils.fromWei(fairPrice ?? '0'));
-            const currentFundingIndex = await this._pricing?.methods.currentFundingIndex().call();
-            // @ts-ignore
-            const fundingRate = await this._pricing?.methods.fundingRates(currentFundingIndex - 1).call();
-            const numerator = new BigNumber(Web3.utils.fromWei(fundingRate?.fundingRate.toString() ?? '0'));
-            const denominator = new BigNumber(Web3.utils.fromWei(fairPrice ?? '1'));
-            const set = numerator.div(denominator).multipliedBy(new BigNumber('100'));
-            this.fundingRate = set;
+            const fairPrice_ = await this._pricing?.methods.fairPrice().call();
+            const fairPrice = new BigNumber(Web3.utils.fromWei(fairPrice_ ?? '0'));
+            this.fairPrice = fairPrice;
+            const currentFundingIndex_ = await this._pricing?.methods.currentFundingIndex().call();
+            if (currentFundingIndex_) {
+                const currentFundingIndex = parseFloat(currentFundingIndex_);
+                const fundingRates = await this._pricing?.methods.fundingRates(currentFundingIndex - 1).call();
+                const insuranceFundingRates = await this._pricing?.methods
+                    .insuranceFundingRates(currentFundingIndex - 1)
+                    .call();
+                const fundingRate = new BigNumber(Web3.utils.fromWei(fundingRates?.fundingRate.toString() ?? '0'));
+                const insuranceFundingRate = new BigNumber(
+                    Web3.utils.fromWei(insuranceFundingRates?.fundingRate.toString() ?? '0'),
+                );
+                const oneHundred = new BigNumber(100);
+                this.fundingRate = fundingRate.div(fairPrice).multipliedBy(oneHundred);
+                this.insuranceFundingRate = insuranceFundingRate;
+            } else {
+                console.error('Failed to update funding rate: Current funding index is 0');
+            }
         } catch (err) {
             console.error('Failed to fetch funding rate', err);
-            this.fundingRate = defaults.fundingRate;
+            this.fundingRate = defaults.defaultFundingRate;
+            this.insuranceFundingRate = defaults.defaultFundingRate;
         }
     };
 
@@ -381,5 +395,9 @@ export default class Tracer {
 
     getFundingRate: () => BigNumber = () => {
         return this.fundingRate;
+    };
+
+    getInsuranceFundingRate: () => BigNumber = () => {
+        return this.insuranceFundingRate;
     };
 }
