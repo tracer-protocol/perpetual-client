@@ -151,7 +151,7 @@ const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fa
     } else if (!order?.exposure || !order.price) {
         return (
             <span>
-                ${calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2)}%
+                {calcAvailableMarginPercent(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2)}%
             </span>
         );
     } else {
