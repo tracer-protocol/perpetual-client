@@ -213,7 +213,7 @@ const AccountPanel: React.FC<{
                     >
                         Buying Power
                     </TooltipSelector>
-                    <SubText>{` @${maxLeverage.toNumber()}X Maximum Leverage`}</SubText>
+                    <SubText>{` @ ${maxLeverage.toNumber()}x Max Leverage`}</SubText>
                 </h3>
                 <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
             </Item>
