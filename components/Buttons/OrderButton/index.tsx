@@ -12,14 +12,14 @@ import { defaults } from '@libs/Tracer';
 
 const ParentDisable = styled(Button)`
     .button-disabled & {
-        cursor: not-allowed;
         opacity: 0.5;
+        cursor: not-allowed;
         background: none;
         color: var(--color-primary);
 
         &:hover {
-            color: var(--color-primary);
             background: none;
+            color: var(--color-primary);
         }
     }
 `;
@@ -108,6 +108,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
 const CloseOrder = styled(Button)`
     height: var(--height-small-button);
     padding: 0;
+    margin-top: 1rem;
 `;
 
 export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) => {
