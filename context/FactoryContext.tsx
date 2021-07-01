@@ -77,13 +77,16 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
                     }),
                     {},
                 );
-                factoryDispatch({
-                    type: 'setTracers',
-                    tracers: _labelledTracers,
-                });
-                factoryDispatch({
-                    type: 'HAS_SET_TRACERS',
-                });
+                Promise.all(Object.values(_labelledTracers).map((tracer) => tracer.initialised))
+                .then((_res) => {
+                    factoryDispatch({
+                        type: 'setTracers',
+                        tracers: _labelledTracers,
+                    });
+                    factoryDispatch({
+                        type: 'HAS_SET_TRACERS'
+                    })
+                })
             }
             return () => {
                 // cleanup
