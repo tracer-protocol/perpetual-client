@@ -8,6 +8,15 @@ const STradingTable = styled(TradingTable)`
     tbody {
         max-height: 100%;
     }
+
+    thead {
+        margin-bottom: 10px;
+    }
+
+    td {
+        text-align: right;
+        padding-right: 40px;
+    }
 `;
 interface RTProps {
     trades: FilledOrder[];
@@ -22,11 +31,9 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                 <div className="h-full">
                     <STradingTable>
                         <thead>
-                            <tr>
-                                <th>Price</th>
-                                <th>Amount</th>
-                                <th>Time</th>
-                            </tr>
+                            <th>Price</th>
+                            <th>Amount</th>
+                            <th>Time</th>
                         </thead>
                         <tbody>
                             {trades.map((trade, index) => {
@@ -54,8 +61,7 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
         </div>
     );
 })`
-    padding: 10px;
-    padding-right: 0;
+    padding: 10px 0 10px 10px;
     height: 100%;
     position: relative;
     display: flex;

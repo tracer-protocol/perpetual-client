@@ -144,6 +144,7 @@ const Item = styled.div`
     width: 100%;
     white-space: nowrap;
     margin: 0 0.8rem;
+    text-align: right;
 
     &.no-width {
         width: auto;
