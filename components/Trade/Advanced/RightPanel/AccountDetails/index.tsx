@@ -320,12 +320,13 @@ const PositionDetails: React.FC<IProps> = ({
                         `-`
                     )}
                 </AccountDetailsSection>
-                {/* <AccountDetailsSection
+                <AccountDetailsSection
+                    className="b-r-none"
                     label={'Realised PnL'}
-                    className="w-1/2"
                     tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
                 >
-                </AccountDetailsSection> */}
+                    -
+                </AccountDetailsSection>
             </SectionContainer>
         </AccountDetails>
     );
