@@ -23,8 +23,8 @@ export default styled(({ className, children }) => {
             return (
                 <div className={className}>
                     <p>
-						Unfortunately the interface is not accessible by this address at this time. <br />
-						If you believe this is a mistake please reach out to the Mycelium Team via Discord.
+                        Unfortunately the interface is not accessible by this address at this time. <br />
+                        If you believe this is a mistake please reach out to the Mycelium Team via Discord.
                     </p>
                 </div>
             );
@@ -196,7 +196,9 @@ const whitelist = [
     '0x7656901efcd6e179e7e13ae93cfb8373689f4160',
     '0x62e2301441a117aef332cacb8de280df7eed14b7',
     '0xc1fc80e6a85388da3263ea6ac008db1ed6e4162b',
-	'0xc23c9b17581c9fdfcc786466a74808213b74be12',
-	'0x110af92ba116fd7868216aa794a7e4da3b9d7d11',
+    '0xc23c9b17581c9fdfcc786466a74808213b74be12',
+    '0x110af92ba116fd7868216aa794a7e4da3b9d7d11',
     '0x55ea772a66db39a90004b12628884fd89ec9449b',
+    '0xeccbce358fcc84054b78f2e8f1d1eb27a08c9e84',
+    '0xbfa87a09169330c1a84045c3250b96e9f5a0d2f8',
 ];
