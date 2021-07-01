@@ -67,8 +67,10 @@ export const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }
     border-top: 0;
     border-right: 0;
     border-left: 0;
-    height: var(--height-small-container);
-
+    height: var(--height-extra-small-container);
+    ${Option} {
+        font-size: var(--font-size-medium);
+    }
     > .bg-slider {
         background: var(--color-accent);
         border-radius: 0;

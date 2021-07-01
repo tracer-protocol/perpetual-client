@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { ProgressBar } from '@components/General';
 import { Button, Logo } from '@components/General';
 import { CaretDownFilled, LinkOutlined } from '@ant-design/icons';
-import Breakdown from '../PoolHealth/Breakdown';
+import Breakdown from '../PoolHealth';
 import { InsuranceModal } from '../InsuranceModal';
 import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
 import { toPercent } from '@libs/utils';

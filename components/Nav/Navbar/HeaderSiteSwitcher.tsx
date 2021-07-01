@@ -50,16 +50,16 @@ const StyledTriangleDown = styled.img`
 
 const StyledTracerLogo = styled.img`
     display: block;
-    height: 2rem;
+    height: 1.7rem;
     margin-right: 2rem;
 `;
 
 const Menu = styled.div`
     position: absolute;
-    top: -2rem;
-    left: -3.5rem;
+    top: -1.5rem;
+    left: -2rem;
     right: -3.5rem;
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     opacity: 0;
     background: var(--color-accent);
     border-radius: 1rem;
@@ -71,22 +71,22 @@ const Menu = styled.div`
 const MenuItem = styled.div`
     border-bottom: 1px solid var(--color-primary);
     transition: all 400ms ease;
-    padding-left: 3rem;
+    padding-left: 2rem;
 
     &:not(:first-child) {
         opacity: 0;
-        padding-left: 3rem;
+        padding-left: 2rem;
     }
     &:first-child {
+        height: 8vh;
         opacity: 0;
-        padding-bottom: 2rem;
     }
     &:first-child > ${StyledTracerLogo} {
         opacity: 0;
     }
     > a {
         display: block;
-        padding: 1.5rem 3.5rem;
+        padding: 1.5rem 2rem;
         transition: all 300ms ease;
     }
     &:first-child > a {
@@ -97,7 +97,7 @@ const MenuItem = styled.div`
         background: var(--color-primary);
     }
     &:last-child {
-        padding: 1rem 3.5rem 0 3.5rem;
+        padding: 1rem 2rem 0 2rem;
         border-bottom: none;
     }
 `;
@@ -124,7 +124,7 @@ const StyledHeaderSiteSwitcher = styled.div`
             opacity: 1;
             padding-left: 0;
             &:last-child {
-                padding-left: 3.5rem;
+                padding-left: 2rem;
             }
         }
         ${MenuItem}:nth-child(2) {
