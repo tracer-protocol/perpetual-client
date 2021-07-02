@@ -37,7 +37,7 @@ const PositionDetailsSection = styled(Section)`
     position: relative;
     background-color: #00125d;
     height: 7vh;
-    padding: 0.2rem;
+    padding: 0.2rem 0 0 0.5rem;
     margin: 0;
     color: var(--color-secondary);
     min-height: var(--height-small-container);
@@ -69,8 +69,8 @@ const SectionContainer = styled.div`
 
 const SSlideSelect = styled(SlideSelect)`
     position: absolute;
-    right: 1rem;
-    top: 1rem;
+    right: 0.2rem;
+    top: 0.4rem;
     color: var(--color-text);
     height: var(--height-extra-small-button);
     width: 100px;
