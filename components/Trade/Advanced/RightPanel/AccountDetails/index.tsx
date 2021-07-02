@@ -502,6 +502,6 @@ export default styled(({ selectedTracer, className }: TSProps) => {
     );
 })`
     border-top: 1px solid #0c3586;
-    max-height: 30vh;
+    max-height: 32vh;
     overflow: auto;
 ` as React.FC<TSProps>;

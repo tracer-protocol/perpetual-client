@@ -2,6 +2,9 @@ import React, { useEffect, useRef } from 'react';
 
 import styled from 'styled-components';
 import { Close } from '..';
+import Icon from '@ant-design/icons';
+// @ts-ignore
+import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 
 interface TProps {
     show: boolean;
@@ -32,9 +35,14 @@ export const SubTitle = styled.p`
     border-bottom: 1px solid var(--color-accent);
 `;
 
-const Logo = styled.img`
-    height: 55px;
-    margin: 3rem auto auto auto;
+const Logo = styled.div`
+    font-size: 150px;
+    color: #fff;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 `;
 
 const Header = styled.div`
@@ -99,9 +107,9 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
                             {props.children}
                         </>
                     ) : (
-                        <div className="m-auto">
-                            <Logo src="/img/tracer-logo-no-text.png" />
-                        </div>
+                        <Logo>
+                            <Icon component={TracerLoading} />
+                        </Logo>
                     )}
                 </div>
             </div>

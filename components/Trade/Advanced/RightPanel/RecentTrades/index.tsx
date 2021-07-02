@@ -7,6 +7,23 @@ import styled from 'styled-components';
 const STradingTable = styled(TradingTable)`
     tbody {
         max-height: 100%;
+        margin: 0;
+        padding-right: 0;
+    }
+
+    thead {
+        text-align: left;
+        margin-bottom: 0.5rem;
+    }
+
+    .time-header {
+        text-align: right;
+        padding-right: 0.8rem;
+    }
+
+    .time-cell {
+        text-align: right;
+        padding-right: 0.5rem;
     }
 `;
 interface RTProps {
@@ -22,11 +39,9 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                 <div className="h-full">
                     <STradingTable>
                         <thead>
-                            <tr>
-                                <th>Price</th>
-                                <th>Amount</th>
-                                <th>Time</th>
-                            </tr>
+                            <th>Price</th>
+                            <th>Amount</th>
+                            <th className="time-header">Time</th>
                         </thead>
                         <tbody>
                             {trades.map((trade, index) => {
@@ -39,7 +54,7 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                                     <tr key={`row-${index}`}>
                                         <td>{toApproxCurrency(parseFloat(trade.price.toFixed(2)))}</td>
                                         <td>{parseFloat(trade.amount.toFixed(2))}</td>
-                                        <td>
+                                        <td className="time-cell">
                                             {d.getHours()}:{d.getMinutes()}
                                         </td>
                                     </tr>
@@ -54,14 +69,14 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
         </div>
     );
 })`
-    padding: 10px;
-    padding-right: 0;
+    padding: 10px 0 10px 10px;
     height: 100%;
     position: relative;
     display: flex;
     overflow: auto;
     flex-direction: column;
     border-top: 1px solid var(--color-accent);
+
     h3 {
         font-size: var(--font-size-medium);
         letter-spacing: -0.4px;

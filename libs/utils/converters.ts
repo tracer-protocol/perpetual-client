@@ -1,17 +1,17 @@
 import { BigNumber } from 'bignumber.js';
 
-const getPrecision: (a: number) => number = (a) => {
-    if (!isFinite(a)) {
-        return 0;
-    }
-    let e = 1,
-        p = 0;
-    while (Math.round(a * e) / e !== a) {
-        e *= 10;
-        p++;
-    }
-    return p;
-};
+// const getPrecision: (a: number) => number = (a) => {
+//     if (!isFinite(a)) {
+//         return 0;
+//     }
+//     let e = 1,
+//         p = 0;
+//     while (Math.round(a * e) / e !== a) {
+//         e *= 10;
+//         p++;
+//     }
+//     return p;
+// };
 
 /**
  * Simple func to convert a number to a percentage by multiplying
@@ -19,7 +19,7 @@ const getPrecision: (a: number) => number = (a) => {
  * @param value
  */
 export const toPercent: (value: number) => string = (value) => {
-    if (Number.isNaN(value)) {
+    if (Number.isNaN(value) || !value) {
         return `0.00%`;
     }
     const percentage = value * 100;
@@ -51,7 +51,7 @@ export const toApproxCurrency: (num_: BigNumber | number, precision?: number) =>
     return num.toLocaleString('en-us', {
         style: 'currency',
         currency: 'USD',
-        minimumFractionDigits: Math.min(getPrecision(num), precision ?? 2),
+        minimumFractionDigits: precision ?? 2,
     });
 };
 

@@ -111,6 +111,7 @@ const OrderBookContainer = styled.div`
 const SBox = styled(Box)`
     flex-direction: column;
     padding: 0;
+
     &.sidePanel {
         border-right: 1px solid #0c3586;
         border-left: 1px solid #0c3586;
