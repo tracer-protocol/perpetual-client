@@ -12,7 +12,6 @@ export default createGlobalStyle`
         --font-size-extra-small: 13px;
         --font-size-small: 16px;
         --font-size-medium: 20px;
-        --font-size-large: 24px;
 
         --height-extra-small-container: 48px;
         --height-small-container: 60px;
