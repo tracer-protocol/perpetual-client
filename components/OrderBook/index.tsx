@@ -129,10 +129,10 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
     return (
         <div className={className}>
             <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
-            <BookRow>
+            <BookRow className="header">
                 <Item>Price</Item>
                 <Item>Quantity</Item>
-                <Item>Cumulative</Item>
+                <Item className="cumulative">Cumulative</Item>
             </BookRow>
             {renderOrders(false, askOrdersCopy)}
             <MarketRow>
@@ -159,6 +159,10 @@ const Item = styled.div`
     white-space: nowrap;
     margin: 0 0.8rem;
 
+    &.cumulative {
+        text-align: right;
+    }
+
     &.no-width {
         width: auto;
     }
@@ -174,6 +178,10 @@ const BookRow = styled.div`
     line-height: var(--font-size-small);
     padding: 1px 0;
     letter-spacing: -0.32px;
+
+    &.header {
+        margin-bottom: 0.4rem;
+    }
 
     ${Item}.fill-bid {
         background-repeat: no-repeat;
@@ -220,10 +228,10 @@ interface BProps {
 const Order: React.FC<BProps> = ({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
     return (
         <BookRow className={className}>
-            <Item className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price)}</Item>
-            <Item>{quantity.toFixed(2)}</Item>
+            <Item className={`${bid ? 'bid' : 'ask'} price`}>{toApproxCurrency(price)}</Item>
+            <Item className={`quantity`}>{quantity.toFixed(2)}</Item>
             <Item
-                className={`fill-${bid ? 'bid' : 'ask'}`}
+                className={`fill-${bid ? 'bid' : 'ask'} cumulative`}
                 style={{
                     backgroundSize: getPercentage(cumulative, maxCumulative) + '% 100%',
                 }}
@@ -239,6 +247,7 @@ const StyledTriangleDown = styled.img`
     transition: all 400ms ease-in-out;
     display: inline;
     margin-left: 0.2rem;
+
     &.rotate {
         transform: rotate(180deg);
         margin-top: -2px;
