@@ -103,8 +103,7 @@ const OrderBookContainer = styled.div`
         color: #ffffff;
         text-transform: capitalize;
         font-size: var(--font-size-medium);
-        margin: 0 0.8rem;
-        margin-bottom: 0.5rem;
+        margin: 0 0.8rem 0.5rem;
     }
 `;
 
@@ -128,6 +127,26 @@ const TradingView: React.FC<{
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
 
+    const OMEState = {
+        userOrders: [],
+        orders: {
+            askOrders: [
+                { cumulative: 123.23, quantity: 9, price: 4233.32 },
+                { cumulative: 123.23, quantity: 9, price: 42343.34 },
+                { cumulative: 324.23, quantity: 34.3, price: 225.34 },
+            ],
+            bidOrders: [{ cumulative: 123.23, quantity: 9.8, price: 42343.4 }],
+        },
+        maxAndMins: {
+            minBid: 0,
+            maxBid: 0,
+            minAsk: 0,
+            maxAsk: 0,
+        },
+        lastTradePrice: new BigNumber(0),
+        marketUp: false,
+    };
+
     return (
         <>
             <SBox className="middlePanel">
@@ -147,12 +166,12 @@ const TradingView: React.FC<{
                 <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
                 <OrderBookContainer>
                     <h3>Order Book</h3>
-                    {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
+                    {OMEState?.orders?.askOrders?.length || OMEState?.orders?.bidOrders?.length ? (
                         <OrderBook
-                            askOrders={omeState.orders.askOrders}
-                            bidOrders={omeState.orders.bidOrders}
-                            marketUp={omeState?.marketUp ?? false}
-                            lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
+                            askOrders={OMEState.orders.askOrders}
+                            bidOrders={OMEState.orders.bidOrders}
+                            marketUp={OMEState?.marketUp ?? false}
+                            lastTradePrice={OMEState?.lastTradePrice ?? new BigNumber(0)}
                         />
                     ) : (
                         <Icon component={TracerLoading} className="mb-3 tracer-loading" />

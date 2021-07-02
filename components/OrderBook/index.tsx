@@ -116,9 +116,9 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
         <div className={className}>
             <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
             <BookRow>
-                <Item>Price</Item>
-                <Item>Quantity</Item>
-                <Item>Cumulative</Item>
+                <Item className="title">Price</Item>
+                <Item className="title">Quantity</Item>
+                <Item className="title">Cumulative</Item>
             </BookRow>
             {renderOrders(false, askOrdersCopy)}
             <MarketRow>
@@ -144,7 +144,15 @@ const Item = styled.div`
     width: 100%;
     white-space: nowrap;
     margin: 0 0.8rem;
-    text-align: right;
+
+    &.title {
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    &.content {
+        text-align: right;
+    }
 
     &.no-width {
         width: auto;
@@ -207,10 +215,10 @@ interface BProps {
 const Order: React.FC<BProps> = ({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
     return (
         <BookRow className={className}>
-            <Item className={`${bid ? 'bid' : 'ask'}`}>{toApproxCurrency(price)}</Item>
-            <Item>{quantity.toFixed(2)}</Item>
+            <Item className={`${bid ? 'bid' : 'ask'} content`}>{toApproxCurrency(price)}</Item>
+            <Item className={`content`}>{quantity.toFixed(2)}</Item>
             <Item
-                className={`fill-${bid ? 'bid' : 'ask'}`}
+                className={`fill-${bid ? 'bid' : 'ask'} content`}
                 style={{
                     backgroundSize: getPercentage(cumulative, maxCumulative) + '% 100%',
                 }}
@@ -226,6 +234,7 @@ const StyledTriangleDown = styled.img`
     transition: all 400ms ease-in-out;
     display: inline;
     margin-left: 0.2rem;
+
     &.rotate {
         transform: rotate(180deg);
         margin-top: -2px;

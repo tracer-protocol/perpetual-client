@@ -10,12 +10,12 @@ const STradingTable = styled(TradingTable)`
     }
 
     thead {
-        margin-bottom: 10px;
+        margin-bottom: 0.5rem;
     }
 
     td {
         text-align: right;
-        padding-right: 40px;
+        padding-right: 1rem;
     }
 `;
 interface RTProps {
@@ -68,6 +68,7 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
     overflow: auto;
     flex-direction: column;
     border-top: 1px solid var(--color-accent);
+
     h3 {
         font-size: var(--font-size-medium);
         letter-spacing: -0.4px;
