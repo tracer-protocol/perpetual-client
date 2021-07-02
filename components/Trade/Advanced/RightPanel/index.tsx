@@ -130,8 +130,12 @@ type HEBProps = {
 };
 const HEButton = styled(Button)`
     height: var(--height-small-button);
-    width: 100px;
+    width: 5rem;
     padding: 0;
+
+    @media (max-width: 1200px) {
+        width: 4rem;
+    }
 `;
 const HideExpandButton: React.FC<HEBProps> = styled(({ className, showOrderBook, onClick }: HEBProps) => {
     return (
@@ -141,8 +145,8 @@ const HideExpandButton: React.FC<HEBProps> = styled(({ className, showOrderBook,
     );
 })`
     position: absolute;
-    right: ${(props: any) => (props.showOrderBook ? '110px' : '10px')};
-    top: 10px;
+    right: ${(props: any) => (props.showOrderBook ? '5rem' : '1rem')};
+    top: 0.6rem;
 `;
 
 const TradingView: React.FC<{
