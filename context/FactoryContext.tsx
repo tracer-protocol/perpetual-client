@@ -22,7 +22,8 @@ export const initialFactoryState: FactoryState = {
 export type FactoryAction =
     | { type: 'setLoaded'; marketId: string }
     | { type: 'setTracers'; tracers: LabelledTracers }
-    | { type: 'HAS_SET_TRACERS' }
+    | { type: 'clearTracers' }
+    | { type: 'HAS_SET_TRACERS'; value: boolean }
     | { type: 'setMarket'; value: string };
 
 export const FactoryContext = React.createContext<Partial<ContextProps>>({});
@@ -52,7 +53,14 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
             case 'HAS_SET_TRACERS': {
                 return {
                     ...state,
-                    hasSetTracers: true,
+                    hasSetTracers: action.value,
+                };
+            }
+            case 'clearTracers': {
+                return {
+                    ...state,
+                    tracers: {},
+                    hasSetTracers: false,
                 };
             }
             default:
@@ -67,6 +75,9 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
         let mounted = true;
         if (web3 && tracers.length) {
             if (mounted) {
+                factoryDispatch({
+                    type: 'clearTracers',
+                });
                 const _labelledTracers: LabelledTracers = tracers.reduce(
                     (o: any, t: { marketId: string; id: string }) => ({
                         ...o,
@@ -77,40 +88,27 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
                     }),
                     {},
                 );
-                factoryDispatch({
-                    type: 'setTracers',
-                    tracers: _labelledTracers,
-                });
-                factoryDispatch({
-                    type: 'HAS_SET_TRACERS',
+                Promise.all(Object.values(_labelledTracers).map((tracer) => tracer.initialised)).then((_res) => {
+                    factoryDispatch({
+                        type: 'setTracers',
+                        tracers: _labelledTracers,
+                    });
+                    factoryDispatch({
+                        type: 'HAS_SET_TRACERS',
+                        value: true,
+                    });
                 });
             }
             return () => {
                 // cleanup
                 mounted = false;
             };
+        } else {
+            factoryDispatch({
+                type: 'clearTracers',
+            });
         }
     }, [web3, tracers]);
-
-    const fetchAllBalances = async () => {
-        Object.values(factoryState.tracers).map((tracer) => {
-            tracer
-                ?.updateUserBalance(account)
-                .then((_res) => {
-                    factoryDispatch({ type: 'setLoaded', marketId: tracer.marketId });
-                })
-                .catch((err) => {
-                    console.error(`Failed to fetch balances for ${tracer.marketId}`, err);
-                });
-        });
-    };
-
-    useEffect(() => {
-        // update users balance across all tracers
-        if (account && factoryState.hasSetTracers) {
-            fetchAllBalances();
-        }
-    }, [account, factoryState.hasSetTracers]);
 
     return (
         <FactoryContext.Provider

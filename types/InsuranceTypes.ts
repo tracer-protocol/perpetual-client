@@ -1,3 +1,4 @@
+import Tracer from '@libs/Tracer';
 import { BigNumber } from 'bignumber.js';
 
 export type Holding = {
@@ -25,6 +26,7 @@ export type InsurancePool = {
 };
 
 export type InsurancePoolInfo = {
+    tracer: Tracer;
     market: string;
     liquidity: BigNumber;
     target: BigNumber;

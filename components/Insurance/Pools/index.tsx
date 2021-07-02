@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TracerContext, InsuranceContext } from 'context';
+import { defaults } from 'libs/Tracer/Insurance';
 import { useRouter } from 'next/router';
 import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 'types';
 import styled from 'styled-components';
@@ -14,6 +15,7 @@ import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
+import BigNumber from 'bignumber.js';
 
 const Hidden = styled.div`
     color: var(--color-primary);
@@ -42,14 +44,14 @@ type CProps = {
 const HealthCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
     return (
         <div className={className}>
-            <SProgressBar percent={parseFloat(pool?.health.toFixed(2))} />
+            <SProgressBar percent={pool.health ? parseFloat(pool.health.toFixed(2)) : defaults.health.toFixed(2)} />
             <Hidden>
                 <Breakdown
                     baseTicker={pool.market.split('/')[0]}
-                    target={pool.target.toNumber()}
-                    userBalance={pool.userBalance.toNumber()}
-                    liquidity={pool.liquidity.toNumber()}
-                    buffer={pool.buffer.toNumber()}
+                    target={pool.target?.toNumber() ?? defaults.target.toNumber()}
+                    userBalance={pool.userBalance?.toNumber() ?? defaults.userBalance.toNumber()}
+                    liquidity={pool.liquidity?.toNumber() ?? defaults.liquidity.toNumber()}
+                    buffer={pool.buffer?.toNumber() ?? defaults.buffer.toNumber()}
                 />
             </Hidden>
         </div>
@@ -100,7 +102,13 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
                         Deposit
                     </Button>
                     <Button onClick={(_e: any) => openModal('Withdraw')}>Withdraw</Button>
-                    <InsuranceModal show={show} setShow={setShow} type={type as 'Deposit' | 'Withdraw'} />
+                    <InsuranceModal
+                        tracer={pool.tracer}
+                        poolUserBalance={pool.userBalance}
+                        show={show}
+                        setShow={setShow}
+                        type={type as 'Deposit' | 'Withdraw'}
+                    />
                 </ButtonContainer>
             </Hidden>
         </div>
@@ -195,6 +203,9 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                 {Object.values(pools).map((pool, i) => {
                     // replace with check against selectedTracer
                     const show = expanded === i;
+                    if (!pool.tracer) {
+                        return <StyledIcon component={TracerLoading} className="tracer-loading" />;
+                    }
                     return (
                         <TableRow
                             key={`insurance-row-${i}`}
@@ -212,7 +223,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                                 </Collapsible>
                             </TableCell>
                             <TableCell className="pt-4">
-                                <Collapsible>{toPercent(pool.apy.toNumber())}</Collapsible>
+                                <Collapsible>{toPercent((pool?.apy ?? new BigNumber(0)).toNumber())}</Collapsible>
                             </TableCell>
                             <TableCell className="pt-2">
                                 <Collapsible>

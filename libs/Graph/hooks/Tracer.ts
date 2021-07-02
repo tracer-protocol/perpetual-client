@@ -152,7 +152,7 @@ export const useCandles: (tracer: string) => {
         if (data?.candles?.length > ref.current.length) {
             ref.current = parseCandles(data?.candles);
         }
-    }, [data?.candles])
+    }, [data?.candles]);
 
     return {
         candles: ref.current,
