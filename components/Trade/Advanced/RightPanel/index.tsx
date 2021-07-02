@@ -133,7 +133,7 @@ const HEButton = styled(Button)`
     width: 5rem;
     padding: 0;
 
-    @media (max-width: 1200px) {
+    @media (max-width: 1300px) {
         width: 4rem;
     }
 `;
@@ -145,8 +145,12 @@ const HideExpandButton: React.FC<HEBProps> = styled(({ className, showOrderBook,
     );
 })`
     position: absolute;
-    right: ${(props: any) => (props.showOrderBook ? '5rem' : '1rem')};
+    right: ${(props: any) => (props.showOrderBook ? '7rem' : '1rem')};
     top: 0.6rem;
+
+    @media (max-width: 1300px) {
+        right: ${(props: any) => (props.showOrderBook ? '5rem' : '1rem')};
+    }
 `;
 
 const TradingView: React.FC<{
