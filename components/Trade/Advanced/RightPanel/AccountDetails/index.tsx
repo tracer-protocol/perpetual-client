@@ -37,7 +37,7 @@ const PositionDetailsSection = styled(Section)`
     position: relative;
     background-color: #00125d;
     height: 7vh;
-    padding: 0.4rem;
+    padding: 0.2rem;
     margin: 0;
     color: var(--color-secondary);
     min-height: var(--height-small-container);
@@ -81,7 +81,7 @@ const SOption = styled(Option)`
 `;
 
 const Content = styled.div`
-    font-size: var(--font-size-large);
+    font-size: var(--font-size-medium);
     color: var(--color-text);
     text-align: left;
 `;
