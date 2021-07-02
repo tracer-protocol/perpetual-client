@@ -98,19 +98,20 @@ const OrderBookContainer = styled.div`
     flex-direction: column;
     position: relative;
     padding: 0.6rem 0;
+
     h3 {
         letter-spacing: -0.4px;
         color: #ffffff;
         text-transform: capitalize;
         font-size: var(--font-size-medium);
-        margin: 0 0.8rem;
-        margin-bottom: 0.5rem;
+        margin: 0 0.8rem 0.5rem;
     }
 `;
 
 const SBox = styled(Box)`
     flex-direction: column;
     padding: 0;
+
     &.sidePanel {
         border-right: 1px solid #0c3586;
         border-left: 1px solid #0c3586;

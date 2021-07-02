@@ -8,7 +8,6 @@ export default styled(({ className, children }) => {
     const [validAddress, setValidAddress] = useState(false);
 
     useEffect(() => {
-        console.log('Address', account);
         if (whitelist.includes(account?.toLowerCase() ?? 'not-in-whitelist')) {
             setValidAddress(true);
         } else {
