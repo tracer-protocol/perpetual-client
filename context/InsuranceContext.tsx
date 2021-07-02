@@ -231,7 +231,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             Object.values(tracers).map(async (tracer) => {
                 const insurance = tracer.getInsuranceContract();
                 await insurance?.initialised;
-                updateUserBalance(insurance)
+                updateUserBalance(tracer);
             })
         }
     }, [hasSetTracers, account])
