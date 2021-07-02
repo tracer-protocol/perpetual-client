@@ -46,16 +46,16 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
         (bid: boolean, orders: OMEOrder[]) => {
             if (!orders.length) {
                 return (
-                    <BookRow>
+                    <BookRow key={'empty-book-row'}>
                         <Item className="py-1" />
                     </BookRow>
                 );
             } // return an empty row
             const rows: {
-                bid: boolean,
-                price: number,
-                cumulative: number,
-                quantity: number
+                bid: boolean;
+                price: number;
+                cumulative: number;
+                quantity: number;
             }[] = [];
             let cumulative = 0;
             let missedBracket = 0;
@@ -92,35 +92,32 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
                 }
                 cumulative += innerCumulative;
                 rows.push({
-                        bid: bid,
-                        price: bracket,
-                        cumulative: cumulative,
-                        quantity: innerCumulative,
-                    }
-                );
+                    bid: bid,
+                    price: bracket,
+                    cumulative: cumulative,
+                    quantity: innerCumulative,
+                });
                 if (missedBracket) {
                     // this will be the very last order
-                    rows.push(
-                        {
-                            bid: bid,
-                            price: missedBracket,
-                            cumulative: cumulative + orders[i].quantity,
-                            quantity: orders[i].quantity
-                        }
-                    );
+                    rows.push({
+                        bid: bid,
+                        price: missedBracket,
+                        cumulative: cumulative + orders[i].quantity,
+                        quantity: orders[i].quantity,
+                    });
                 }
             }
             const maxCumulative = sumQuantities(rows);
             const withSetMax = rows.map((row) => (
-                    <Order 
-                        maxCumulative={maxCumulative}
-                        bid={row.bid}
-                        price={row.price}
-                        cumulative={row.cumulative}
-                        quantity={row.quantity}
-                    />
-                )
-            )
+                <Order
+                    key={`book-row-${row.price}`}
+                    maxCumulative={maxCumulative}
+                    bid={row.bid}
+                    price={row.price}
+                    cumulative={row.cumulative}
+                    quantity={row.quantity}
+                />
+            ));
             return !bid ? withSetMax.reverse() : withSetMax;
         },
         [decimals],

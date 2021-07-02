@@ -21,9 +21,11 @@ import { UserBalance } from 'types';
 import { checkAllowance } from '../web3/utils';
 import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
-// @ts-ignore
-import { Callback, TransactionReceipt } from 'web3/types';
+import { TransactionReceipt } from 'web3/types';
 import { calcLeverage, calcTotalMargin } from '@tracer-protocol/tracer-utils';
+// @ts-ignore
+import { Callback } from 'web3/types';
+import Insurance from './Insurance';
 
 export const defaults: Record<string, any> = {
     balances: {
@@ -66,6 +68,7 @@ export default class Tracer {
     _gasOracle: Oracle | undefined;
     _oracle: Oracle | undefined;
     _pricing: Pricing | undefined;
+    public insuranceContract: Insurance | undefined;
     public address: string;
     public marketId: string;
     public baseTicker: string;
@@ -84,7 +87,6 @@ export default class Tracer {
     public oraclePrice: BigNumber;
     public fairPrice: BigNumber;
     public twentyFourHourChange: number;
-    public insuranceContract: string;
     public insuranceApproved: boolean;
     public tracerApproved: boolean;
     public hasSubscribed: boolean;
@@ -101,7 +103,6 @@ export default class Tracer {
         this.quoteTokenDecimals = defaults.priceMultiplier;
         this.fundingRateSensitivity = defaults.fundingRateSensitivity;
         this.twentyFourHourChange = defaults.twentyFourHourChange;
-        this.insuranceContract = '';
         this.balances = defaults.balances;
         this.oraclePrice = defaults.oraclePrice;
         this.fairPrice = defaults.fairPrice;
@@ -156,7 +157,8 @@ export default class Tracer {
                 this.fundingRateSensitivity = new BigNumber(res[5]).div(priceMultiplier_);
                 this.feeRate = new BigNumber(res[6]).div(priceMultiplier_);
                 this.leveragedNotionalValue = new BigNumber(Web3.utils.fromWei(res[9]));
-                this.insuranceContract = res[7];
+                this.insuranceContract = new Insurance(web3, res[7], this.marketId);
+                console.log(this.insuranceContract);
                 this._pricing = res[8]
                     ? (new web3.eth.Contract(pricingAbi as AbiItem[], res[8]) as unknown as Pricing)
                     : undefined;
@@ -172,6 +174,7 @@ export default class Tracer {
                     });
                 this.updateFairPrice();
                 this.updateFundingRates();
+                console.log('before');
                 return true;
             })
             .catch((err) => {
@@ -215,6 +218,8 @@ export default class Tracer {
                     ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
                     : new BigNumber(0),
             };
+
+            console.log(parsedBalances, this.address);
             const { quote, base } = parsedBalances;
             const leverage = calcLeverage(quote, base, this.fairPrice);
             const totalMargin = calcTotalMargin(quote, base, this.fairPrice);
@@ -260,7 +265,8 @@ export default class Tracer {
      */
     updateFeeRate: () => Promise<void> = async () => {
         const feeRate = await this._instance.methods.feeRate().call();
-        this.feeRate = new BigNumber(Web3.utils.fromWei(feeRate));
+        const set = new BigNumber(Web3.utils.fromWei(feeRate));
+        this.feeRate = set;
     };
 
     /**
@@ -343,9 +349,10 @@ export default class Tracer {
 
     checkApproved: (account: string) => void = async (account) => {
         await this.initialised;
+        // insuranceContract should not be falsey after waitig on initialised
         Promise.all([
             checkAllowance(this.token, account, this.address),
-            checkAllowance(this.token, account, this.insuranceContract),
+            checkAllowance(this.token, account, this.insuranceContract?.address),
         ]).then((res) => {
             this.tracerApproved = res[0] !== 0;
             this.insuranceApproved = res[0] !== 0;
@@ -360,8 +367,12 @@ export default class Tracer {
         return this.fairPrice;
     };
 
-    getInsuranceContract: () => string = () => {
-        return this.insuranceContract.slice();
+    getInsuranceContractAddress: () => string = () => {
+        return this.insuranceContract?.address?.slice() ?? '';
+    };
+
+    getInsuranceContract: () => Insurance | undefined = () => {
+        return this.insuranceContract;
     };
 
     getLeveragedNotionalValue: () => BigNumber = () => {
@@ -381,11 +392,11 @@ export default class Tracer {
     };
 
     getTracerApproved: () => boolean = () => {
-        return this.tracerApproved;
+        return !!this.tracerApproved;
     };
 
     getInsuranceApproved: () => boolean = () => {
-        return this.insuranceApproved;
+        return !!this.insuranceApproved;
     };
 
     setApproved: (address: string) => void = (address) => {
@@ -393,7 +404,7 @@ export default class Tracer {
             case this.address:
                 this.tracerApproved = true;
                 return;
-            case this.insuranceContract:
+            case this.insuranceContract?.address:
                 this.insuranceApproved = true;
                 return;
             default:

@@ -82,6 +82,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 tracerDispatch({ type: 'setSelectedTracer', value: defaultTracer });
                 fetchUserData();
             } else {
+                tracerDispatch({ type: 'setSelectedTracer', value: undefined });
                 console.error(`Failed to set tracer with address ${tracer}`);
             }
             // for testing purposes this will not be done each time someone opens the app
