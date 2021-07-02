@@ -19,21 +19,25 @@ import CustomSubNav from './CustomSubNav';
 import { LIMIT, OrderContext, orderDefaults, OrderState } from '@context/OrderContext';
 import { CloseOrderButton } from '@components/Buttons/OrderButton';
 
-const AccountDetails = styled.div`
+const PositionDetailsContainer = styled.div`
     width: 100%;
     display: flex;
     flex-wrap: wrap;
+    position: relative;
 `;
+
 const SPrevious = styled(Previous)`
     &:after {
         content: '>>';
     }
 `;
 
-const AccountDetailsSection = styled(Section)`
+const PositionDetailsSection = styled(Section)`
     display: inline-block;
     position: relative;
-    padding: 4px 12px;
+    background-color: #00125d;
+    height: 7vh;
+    padding: 1rem;
     margin: 0;
     color: var(--color-secondary);
     min-height: var(--height-small-container);
@@ -52,16 +56,6 @@ const AccountDetailsSection = styled(Section)`
     }
 `;
 
-const CloseOrderSection = styled.div`
-    display: inline-block;
-    position: relative;
-    padding: 0 12px;
-    padding-top: 8px;
-    width: 100%;
-    margin: 0;
-    color: var(--color-secondary);
-`;
-
 const SectionContainer = styled.div`
     width: 100%;
     display: block;
@@ -75,8 +69,8 @@ const SectionContainer = styled.div`
 
 const SSlideSelect = styled(SlideSelect)`
     position: absolute;
-    right: 6px;
-    top: 6px;
+    right: 1rem;
+    top: 1rem;
     color: var(--color-text);
     height: var(--height-extra-small-button);
     width: 100px;
@@ -87,7 +81,7 @@ const SOption = styled(Option)`
 `;
 
 const Content = styled.div`
-    font-size: var(--font-size-small);
+    font-size: var(--font-size-large);
     color: var(--color-text);
     text-align: left;
 `;
@@ -221,6 +215,10 @@ const LiquidationPrice: React.FC<
     );
 };
 
+const CloseOrderButtonContainer = styled.div`
+    padding: 1.5rem;
+`;
+
 interface IProps {
     balances: UserBalance;
     fairPrice: BigNumber;
@@ -242,17 +240,17 @@ const PositionDetails: React.FC<IProps> = ({
     const { order } = useContext(OrderContext);
     const { base } = balances;
     return (
-        <AccountDetails>
+        <PositionDetailsContainer>
             <SectionContainer className="w-2/6 inline-block">
-                <AccountDetailsSection label={'Side'}>
+                <PositionDetailsSection label={'Side'}>
                     <Position
                         balances={balances}
                         nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
                         tradePrice={order?.price ?? 0}
                         exposure={order?.exposure ?? 0}
                     />
-                </AccountDetailsSection>
-                <AccountDetailsSection
+                </PositionDetailsSection>
+                <PositionDetailsSection
                     label={'Exposure'}
                     className="w-full"
                     tooltip={{ key: 'exposure', props: { baseTicker: baseTicker } }}
@@ -274,8 +272,8 @@ const PositionDetails: React.FC<IProps> = ({
                         <SOption>{baseTicker}</SOption>
                         <SOption>{quoteTicker}</SOption>
                     </SSlideSelect>
-                </AccountDetailsSection>
-                <AccountDetailsSection label={'Leverage'}>
+                </PositionDetailsSection>
+                <PositionDetailsSection label={'Leverage'}>
                     <Leverage
                         balances={balances}
                         nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
@@ -284,13 +282,10 @@ const PositionDetails: React.FC<IProps> = ({
                         orderType={order?.orderType ?? 0}
                         exposure={order?.exposure ?? 0}
                     />
-                </AccountDetailsSection>
-                <CloseOrderSection>
-                    <CloseOrderButton />
-                </CloseOrderSection>
+                </PositionDetailsSection>
             </SectionContainer>
             <SectionContainer className="w-2/6 inline-block">
-                <AccountDetailsSection
+                <PositionDetailsSection
                     label={'Liquidation Price'}
                     tooltip={{ key: 'liquidation-price', props: { quote: balances.quote, position: order?.position } }}
                 >
@@ -303,13 +298,16 @@ const PositionDetails: React.FC<IProps> = ({
                         exposure={order?.exposure ?? 0}
                         maxLeverage={maxLeverage}
                     />
-                </AccountDetailsSection>
-                <AccountDetailsSection label={'Fair Price'}>
+                </PositionDetailsSection>
+                <PositionDetailsSection label={'Fair Price'}>
                     {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
-                </AccountDetailsSection>
+                </PositionDetailsSection>
+                <CloseOrderButtonContainer>
+                    <CloseOrderButton />
+                </CloseOrderButtonContainer>
             </SectionContainer>
             <SectionContainer className="w-2/6">
-                <AccountDetailsSection
+                <PositionDetailsSection
                     className="b-r-none"
                     label={'Unrealised PnL'}
                     tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
@@ -319,7 +317,7 @@ const PositionDetails: React.FC<IProps> = ({
                     ) : (
                         `-`
                     )}
-                </AccountDetailsSection>
+                </PositionDetailsSection>
                 {/* <AccountDetailsSection
                     label={'Realised PnL'}
                     className="w-1/2"
@@ -327,9 +325,22 @@ const PositionDetails: React.FC<IProps> = ({
                 >
                 </AccountDetailsSection> */}
             </SectionContainer>
-        </AccountDetails>
+            <PositionOverlay show={balances.quote.eq(0)}>No Open Position</PositionOverlay>
+        </PositionDetailsContainer>
     );
 };
+
+const PositionOverlay = styled.div<{ show: boolean }>`
+    display: ${(props) => (props.show ? 'flex' : 'none')};
+    background-color: #00125dd4;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    font-size: var(--font-size-medium);
+    z-index: 2;
+`;
 
 const STable = styled(Table)`
     > tbody {
@@ -502,6 +513,6 @@ export default styled(({ selectedTracer, className }: TSProps) => {
     );
 })`
     border-top: 1px solid #0c3586;
-    max-height: 32vh;
+    max-height: 50vh;
     overflow: auto;
 ` as React.FC<TSProps>;

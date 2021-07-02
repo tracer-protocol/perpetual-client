@@ -10,16 +10,18 @@ const TradingPanel = styled.div`
     width: 25%;
     display: flex;
     flex-direction: column;
-    height: 92vh;
+    height: 82vh;
     position: relative;
     border-left: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
+    border-bottom: 1px solid #0c3586;
 `;
 
 const RightPanel = styled.div`
     width: 75%;
     display: flex;
-    height: 92vh;
+    height: 82vh;
+    border-bottom: 1px solid #0c3586;
 `;
 
 const Overlay = styled.div`
@@ -84,7 +86,7 @@ const Advanced: React.FC = styled(({ className }) => {
 })`
     display: flex;
     height: 100%;
-    max-height: 92vh;
+    max-height: 82vh;
 `;
 
 export default Advanced;

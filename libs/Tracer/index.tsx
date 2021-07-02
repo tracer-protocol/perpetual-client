@@ -21,10 +21,9 @@ import { UserBalance } from 'types';
 import { checkAllowance } from '../web3/utils';
 import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
-import { TransactionReceipt } from 'web3/types';
-import { calcLeverage, calcTotalMargin } from '@tracer-protocol/tracer-utils';
 // @ts-ignore
-import { Callback } from 'web3/types';
+import { Callback, TransactionReceipt } from 'web3/types';
+import { calcLeverage, calcTotalMargin } from '@tracer-protocol/tracer-utils';
 
 export const defaults: Record<string, any> = {
     balances: {
@@ -141,7 +140,7 @@ export default class Tracer {
             feeRate,
             insuranceContract,
             pricingContract,
-            leveragedNotionalValue
+            leveragedNotionalValue,
         ])
             .then((res) => {
                 const priceMultiplier_ = new BigNumber(res[0]);
@@ -156,7 +155,7 @@ export default class Tracer {
                 this.maxLeverage = new BigNumber(parseFloat(Web3.utils.fromWei(res[4])));
                 this.fundingRateSensitivity = new BigNumber(res[5]).div(priceMultiplier_);
                 this.feeRate = new BigNumber(res[6]).div(priceMultiplier_);
-                this.leveragedNotionalValue = new BigNumber(Web3.utils.fromWei(res[9]))
+                this.leveragedNotionalValue = new BigNumber(Web3.utils.fromWei(res[9]));
                 this.insuranceContract = res[7];
                 this._pricing = res[8]
                     ? (new web3.eth.Contract(pricingAbi as AbiItem[], res[8]) as unknown as Pricing)
@@ -261,8 +260,7 @@ export default class Tracer {
      */
     updateFeeRate: () => Promise<void> = async () => {
         const feeRate = await this._instance.methods.feeRate().call();
-        const set = new BigNumber(Web3.utils.fromWei(feeRate));
-        this.feeRate = set;
+        this.feeRate = new BigNumber(Web3.utils.fromWei(feeRate));
     };
 
     /**
@@ -368,7 +366,7 @@ export default class Tracer {
 
     getLeveragedNotionalValue: () => BigNumber = () => {
         return this.leveragedNotionalValue;
-    }
+    };
 
     getMaxLeverage: () => BigNumber = () => {
         return this.maxLeverage;
@@ -383,11 +381,11 @@ export default class Tracer {
     };
 
     getTracerApproved: () => boolean = () => {
-        return !!this.tracerApproved;
+        return this.tracerApproved;
     };
 
     getInsuranceApproved: () => boolean = () => {
-        return !!this.insuranceApproved;
+        return this.insuranceApproved;
     };
 
     setApproved: (address: string) => void = (address) => {
