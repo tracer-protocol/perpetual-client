@@ -1,10 +1,8 @@
-import React, { useEffect, useContext, useState, useReducer } from 'react';
+import React, { useEffect, useContext, useReducer } from 'react';
 import { Children, InsurancePoolInfo } from 'types';
 import { Web3Context } from './Web3Context';
 import Web3 from 'web3';
-import { AbiItem } from 'web3-utils';
 import { Insurance } from '@tracer-protocol/contracts/types/Insurance';
-import insuranceJSON from '@tracer-protocol/contracts/abi/contracts/Insurance.sol/Insurance.json';
 import { TracerContext } from './TracerContext';
 import { FactoryContext } from '.';
 import { BigNumber } from 'bignumber.js';
@@ -32,6 +30,7 @@ export type InsuranceAction =
     | { type: 'setLiquidity'; liquidity: BigNumber; marketId: string }
     | { type: 'setHealth'; health: BigNumber; marketId: string }
     | { type: 'setTarget'; target: BigNumber; marketId: string }
+    | { type: 'CLEAR' }
     | {
           type: 'setBalances';
           liquidity: BigNumber;
@@ -58,11 +57,10 @@ interface State {
 export const InsuranceContext = React.createContext<Partial<ContextProps>>({});
 
 export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
-    const { account, web3, config } = useContext(Web3Context);
+    const { account, config } = useContext(Web3Context);
     const { factoryState: { tracers, hasSetTracers } = initialFactoryState } = useContext(FactoryContext);
     const { selectedTracer } = useContext(TracerContext);
     const { handleTransaction } = useContext(TransactionContext);
-    const [contract, setContract] = useState<Insurance>();
 
     const initialState = {
         pools: {},
@@ -74,6 +72,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 return {
                     ...state,
                     pools: {
+                        ...state.pools,
                         [action.marketId]: {
                             ...state.pools[action.marketId],
                             userBalance: action.balance,
@@ -84,6 +83,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 return {
                     ...state,
                     pools: {
+                        ...state.pools,
                         [action.marketId]: {
                             ...action.state,
                         },
@@ -93,6 +93,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 return {
                     ...state,
                     pools: {
+                        ...state.pools,
                         [action.marketId]: {
                             ...state.pools[action.marketId],
                             liquidity: action.liquidity,
@@ -101,23 +102,16 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                         },
                     },
                 };
+            case 'CLEAR': 
+                return {
+                    pools: {}
+                }
             default:
                 throw new Error('Dispatch function not recognised');
         }
     };
 
     const [state, dispatch] = useReducer(reducer, initialState);
-
-    useEffect(() => {
-        if (web3 && selectedTracer?.getInsuranceContractAddress()) {
-            setContract(
-                new web3.eth.Contract(
-                    insuranceJSON as AbiItem[],
-                    selectedTracer.getInsuranceContractAddress(),
-                ) as unknown as Insurance,
-            );
-        }
-    }, [web3, selectedTracer?.getInsuranceContractAddress()]);
 
     /**
      *
@@ -175,6 +169,12 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
 
     useEffect(() => {
+        dispatch({
+            type: 'CLEAR'
+        })
+    }, [config]);
+
+    useEffect(() => {
         if (hasSetTracers) {
             Object.values(tracers).map(async (tracer) => {
                 const insurance = tracer.getInsuranceContract();
@@ -183,11 +183,11 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     const insuranceFundingRate = tracer.getInsuranceFundingRate();
                     const leveragedNotionalValue = tracer.getLeveragedNotionalValue()
                     await insurance?.initialised;
-                    const { liquidity, target, health, buffer } = insurance.getPoolBalances() 
+                    const { liquidity, target, health, buffer } = insurance.getPoolBalances();
                     const apy = calcInsuranceAPY(insuranceFundingRate, liquidity, leveragedNotionalValue)
                     const splitId = marketId.split('/');
                     const iPoolTokenName = `i${splitId[0]}-${splitId[1]}`;
-                    const iTokenAddress = await contract?.methods.token().call();
+                    const iTokenAddress = await insurance.instance?.methods.token().call();
                     const iTokenURL = `${config?.previewUrl}/address/${iTokenAddress}`;
                     // const etherscanLink = `https://${network}.etherscan.io/address/${iTokenAddress}`
                     dispatch({
@@ -209,8 +209,10 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     });
                 }
             })
+        } else {
+            dispatch({ type: 'CLEAR' })
         }
-    }, [hasSetTracers])
+    }, [hasSetTracers, config])
 
     const updateUserBalance = async (tracer: Tracer) => {
         const insurance = tracer.getInsuranceContract();
@@ -248,7 +250,6 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 },
                 deposit,
                 withdraw,
-                contract,
                 pools: state.pools,
             }}
         >

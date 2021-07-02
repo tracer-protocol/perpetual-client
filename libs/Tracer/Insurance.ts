@@ -72,19 +72,17 @@ export default class Insurance {
 		const buffer_ = this.instance?.methods.bufferCollateralAmount().call();
 		const target_ = this.instance?.methods.getPoolTarget().call();
 		const liquidity_ = this.instance?.methods.publicCollateralAmount().call();
-		Promise.all([buffer_, target_, liquidity_])
-		.then((res) => {
-            const target = res[1] ? new BigNumber(Web3.utils.fromWei(res[1])) : defaults.target;
-            const liquidity = res[2] ? new BigNumber(Web3.utils.fromWei(res[2])) : defaults.liquidity;
-            let health = liquidity.div(target).times(100);
-            if (!Number.isFinite(health.toNumber()) || Number.isNaN(health.toNumber())) {
-                health = defaults.health;
-            }
-			this.buffer = res[0] ? new BigNumber(Web3.utils.fromWei(res[0])) : defaults.buffer,
-			this.target = target;
-			this.liquidity = liquidity;
-			this.health = health;
-		})
+		const res = await Promise.all([buffer_, target_, liquidity_])
+		const target = res[1] ? new BigNumber(Web3.utils.fromWei(res[1])) : defaults.target;
+		const liquidity = res[2] ? new BigNumber(Web3.utils.fromWei(res[2])) : defaults.liquidity;
+		let health = liquidity.div(target).times(100);
+		if (!Number.isFinite(health.toNumber()) || Number.isNaN(health.toNumber())) {
+			health = defaults.health;
+		}
+		this.buffer = res[0] ? new BigNumber(Web3.utils.fromWei(res[0])) : defaults.buffer,
+		this.target = target;
+		this.liquidity = liquidity;
+		this.health = health;
 	}
 
 	getPoolBalances: () => {
@@ -93,6 +91,7 @@ export default class Insurance {
 		health: BigNumber,
 		buffer: BigNumber
 	} = () => {
+		console.log(this.health.toNumber())
 		return ({
 			target: this.target,
 			liquidity: this.liquidity,
