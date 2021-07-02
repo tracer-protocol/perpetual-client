@@ -60,8 +60,8 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
                 return {
                     ...state,
                     tracers: {},
-                    hasSetTracers: false
-                }
+                    hasSetTracers: false,
+                };
             }
             default:
                 throw new Error('Unexpected action');
@@ -88,17 +88,16 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
                     }),
                     {},
                 );
-                Promise.all(Object.values(_labelledTracers).map((tracer) => tracer.initialised))
-                .then((_res) => {
+                Promise.all(Object.values(_labelledTracers).map((tracer) => tracer.initialised)).then((_res) => {
                     factoryDispatch({
                         type: 'setTracers',
                         tracers: _labelledTracers,
                     });
                     factoryDispatch({
                         type: 'HAS_SET_TRACERS',
-                        value: true
-                    })
-                })
+                        value: true,
+                    });
+                });
             }
             return () => {
                 // cleanup

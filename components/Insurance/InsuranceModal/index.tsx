@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { TracerContext } from '@context/TracerContext';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
 import { Children } from 'types';
 import { toApproxCurrency } from '@libs/utils';
@@ -10,6 +9,8 @@ import TracerModal from '@components/General/TracerModal';
 import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';
 import ErrorComponent from '@components/General/Error';
+import Tracer from '@libs/Tracer';
+import BigNumber from 'bignumber.js';
 
 const SSlideSelect = styled(SlideSelect)`
     font-size: var(--font-size-small);
@@ -130,13 +131,14 @@ type BProps = {
     type: 'Deposit' | 'Withdraw';
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
+    tracer: Tracer;
+    poolUserBalance: BigNumber;
 } & Children;
-export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps) => {
-    const { tracerId, selectedTracer } = useContext(TracerContext);
-    const { poolInfo, deposit, withdraw } = useContext(InsuranceContext);
+export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, poolUserBalance }: BProps) => {
+    const { deposit, withdraw } = useContext(InsuranceContext);
     const [isDeposit, setIsDeposit] = useState(true);
-    const poolBalance = poolInfo?.userBalance ?? defaults.userBalance;
-    const balance = isDeposit ? selectedTracer?.getBalance().tokenBalance : poolBalance;
+    const poolBalance = poolUserBalance ?? defaults.userBalance;
+    const balance = isDeposit ? tracer?.getBalance().tokenBalance : poolBalance;
     const [valid, setValid] = useState(false);
     const [amount, setAmount] = useState(NaN); // The amount within the input
     const [acceptedTerms, acceptTerms] = useState(false);
@@ -162,7 +164,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 setShow(false);
             };
             if (!!deposit && !!withdraw) {
-                isDeposit ? deposit(amount, callback) : withdraw(amount, callback);
+                isDeposit ? deposit(tracer, amount, callback) : withdraw(tracer, amount, callback);
             }
         } catch (err) {
             console.error(`Failed to deposit into insurance pool: ${err}`);
@@ -179,7 +181,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 setShow(false);
                 setAmount(NaN);
             }}
-            title={`${tracerId} Insurance Pool`}
+            title={`${tracer.marketId} Insurance Pool`}
         >
             <SSlideSelect
                 onClick={(index: number, _e: any) => {
@@ -212,7 +214,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 />
             ) : null}
             <NumberSelect
-                unit={`i${tracerId?.replace('/', '-')}` ?? 'NO_ID'}
+                unit={`i${tracer.marketId?.replace('/', '-')}` ?? 'NO_ID'}
                 title={'Amount'}
                 amount={amount}
                 balance={balance?.toNumber() ?? 0}
@@ -224,7 +226,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 ) : (
                     <SSection className={`title`} label={`Withdrawal Summary`} />
                 )}
-                {!isDeposit && amount > balance ? (
+                {!isDeposit && amount > balance.toNumber() ? (
                     <PoolOwnershipInsufficient label={`Pool Ownership`}>
                         <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
@@ -239,12 +241,12 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                 {/*    <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>*/}
                 {/*    {`${toApproxCurrency(newBalance)}`}*/}
                 {/*</SSection>*/}
-                {isDeposit || amount > balance ? null : (
+                {isDeposit || amount > balance.toNumber() ? null : (
                     <>
                         <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(fee)}`}</WithdrawalFee>
                         <SSection
                             label="Total Return"
-                            tooltip={{ key: 'total-return', props: { baseTicker: selectedTracer?.baseTicker } }}
+                            tooltip={{ key: 'total-return', props: { baseTicker: tracer?.baseTicker } }}
                         >{`${toApproxCurrency(amount - fee)}`}</SSection>
                     </>
                 )}
@@ -291,7 +293,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow }: BProps
                     <Button className="disabled">{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
                 )}
             </div>
-            <ErrorComponent context="margin" error={amount > balance ? 'INSUFFICIENT_FUNDS' : 'NO_ERROR'} />
+            <ErrorComponent context="margin" error={amount > balance.toNumber() ? 'INSUFFICIENT_FUNDS' : 'NO_ERROR'} />
         </TracerModal>
     );
 };

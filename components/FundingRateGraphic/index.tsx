@@ -24,9 +24,9 @@ const FundingRateGraphic: React.FC<IProps> = ({ rate }: IProps) => {
             {/* {loop(green, '>')} */}
             {/* <span className={fundingRate >= 0.5 ? 'green' : 'red'}>{'|'}</span> */}
             {/* {loop(red, '<')} */}
-            <span
-                className={`${fundingRate < 0 ? 'green' : fundingRate > 0 ? 'red' : ''}`}
-            >{`${fundingRate.toFixed(2)}%`}</span>
+            <span className={`${fundingRate < 0 ? 'green' : fundingRate > 0 ? 'red' : ''}`}>{`${fundingRate.toFixed(
+                2,
+            )}%`}</span>
         </div>
     );
 };

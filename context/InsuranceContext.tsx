@@ -32,10 +32,10 @@ export type InsuranceAction =
     | { type: 'setTarget'; target: BigNumber; marketId: string }
     | { type: 'CLEAR' }
     | {
-          type: 'setBalances';
+          type: 'setPoolBalance';
+          marketId: string;
           liquidity: BigNumber;
           target: BigNumber;
-          marketId: string;
           health: BigNumber;
       };
 
@@ -75,6 +75,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                         ...state.pools,
                         [action.marketId]: {
                             ...state.pools[action.marketId],
+                            market: action.marketId,
                             userBalance: action.balance,
                         },
                     },
@@ -89,23 +90,24 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                         },
                     },
                 };
-            case 'setBalances':
+            case 'setPoolBalance':
                 return {
                     ...state,
                     pools: {
                         ...state.pools,
                         [action.marketId]: {
                             ...state.pools[action.marketId],
+                            market: action.marketId,
                             liquidity: action.liquidity,
                             target: action.target,
                             health: action.health,
                         },
                     },
                 };
-            case 'CLEAR': 
+            case 'CLEAR':
                 return {
-                    pools: {}
-                }
+                    pools: {},
+                };
             default:
                 throw new Error('Dispatch function not recognised');
         }
@@ -136,12 +138,13 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                         .send({ from: account }) as PromiEvent<TransactionReceipt>;
                 handleTransaction(callFunc, [amount], {
                     callback: () => {
-                        // updatePoolBalances();
+                        updatePoolBalance(tracer);
+                        updateUserBalance(tracer);
                         _callback ? _callback() : null;
                     },
                 });
             } else {
-                console.error("Failed to withdraw from insuracnce pool: Inusurance contract undefined")
+                console.error('Failed to withdraw from insuracnce pool: Inusurance contract undefined');
             }
         } else {
             console.error(`Failed to withdraw from insurance pool: No deposit function found`);
@@ -155,10 +158,13 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             const insuranceContract = tracer.getInsuranceContract();
             // @ts-ignore
             const callFunc: (amount: number) => PromiEvent<TransactionReceipt> = (amount: number) =>
-                insuranceContract?.instance?.methods.withdraw(Web3.utils.toWei(amount.toString())).send({ from: account });
+                insuranceContract?.instance?.methods
+                    .withdraw(Web3.utils.toWei(amount.toString()))
+                    .send({ from: account });
             handleTransaction(callFunc, [amount], {
                 callback: () => {
-                    // updatePoolBalances();
+                    updatePoolBalance(tracer);
+                    updateUserBalance(tracer);
                     _callback ? _callback() : null;
                 },
             });
@@ -167,11 +173,10 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         }
     };
 
-
     useEffect(() => {
         dispatch({
-            type: 'CLEAR'
-        })
+            type: 'CLEAR',
+        });
     }, [config]);
 
     useEffect(() => {
@@ -181,10 +186,11 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 if (insurance) {
                     const marketId = tracer.marketId;
                     const insuranceFundingRate = tracer.getInsuranceFundingRate();
-                    const leveragedNotionalValue = tracer.getLeveragedNotionalValue()
+                    const leveragedNotionalValue = tracer.getLeveragedNotionalValue();
                     await insurance?.initialised;
-                    const { liquidity, target, health, buffer } = insurance.getPoolBalances();
-                    const apy = calcInsuranceAPY(insuranceFundingRate, liquidity, leveragedNotionalValue)
+                    const { liquidity, target, health, buffer } = await insurance.getPoolBalances();
+                    const userBalance = await insurance.getUserBalance(account ?? '');
+                    const apy = calcInsuranceAPY(insuranceFundingRate, liquidity, leveragedNotionalValue);
                     const splitId = marketId.split('/');
                     const iPoolTokenName = `i${splitId[0]}-${splitId[1]}`;
                     const iTokenAddress = await insurance.instance?.methods.token().call();
@@ -196,8 +202,8 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                         state: {
                             tracer: tracer,
                             market: marketId,
-                            userBalance: defaults.userBalance,
                             target: target,
+                            userBalance: userBalance,
                             liquidity: liquidity,
                             rewards: defaults.rewards,
                             health: BigNumber.min(health, new BigNumber(100)),
@@ -208,25 +214,39 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                         },
                     });
                 }
-            })
+            });
         } else {
-            dispatch({ type: 'CLEAR' })
+            dispatch({ type: 'CLEAR' });
         }
-    }, [hasSetTracers, config])
+    }, [hasSetTracers, config]);
+
+    const updatePoolBalance = async (tracer: Tracer) => {
+        const insurance = tracer.getInsuranceContract();
+        if (insurance && account) {
+            const poolBalances = await insurance.getPoolBalances();
+            if (poolBalances) {
+                dispatch({
+                    type: 'setPoolBalance',
+                    marketId: tracer.marketId,
+                    ...poolBalances,
+                });
+            }
+        }
+    };
 
     const updateUserBalance = async (tracer: Tracer) => {
         const insurance = tracer.getInsuranceContract();
         if (insurance && account) {
-            const userBalance = await insurance.getUserBalance(account)
+            const userBalance = await insurance.getUserBalance(account);
             if (userBalance) {
                 dispatch({
                     type: 'setUserBalance',
                     marketId: tracer.marketId,
-                    balance: userBalance ?? defaults.userBalance
+                    balance: userBalance ?? defaults.userBalance,
                 });
             }
         }
-    }
+    };
 
     useEffect(() => {
         if (account && hasSetTracers) {
@@ -234,9 +254,9 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 const insurance = tracer.getInsuranceContract();
                 await insurance?.initialised;
                 updateUserBalance(tracer);
-            })
+            });
         }
-    }, [hasSetTracers, account])
+    }, [hasSetTracers, account]);
 
     const selectedPool: InsurancePoolInfo = (state.pools as Record<string, InsurancePoolInfo>)[
         selectedTracer?.marketId as string

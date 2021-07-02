@@ -141,7 +141,7 @@ export default class Tracer {
             feeRate,
             insuranceContract,
             pricingContract,
-            leveragedNotionalValue
+            leveragedNotionalValue,
         ])
             .then((res) => {
                 const priceMultiplier_ = new BigNumber(res[0]);
@@ -156,9 +156,9 @@ export default class Tracer {
                 this.maxLeverage = new BigNumber(parseFloat(Web3.utils.fromWei(res[4])));
                 this.fundingRateSensitivity = new BigNumber(res[5]).div(priceMultiplier_);
                 this.feeRate = new BigNumber(res[6]).div(priceMultiplier_);
-                this.leveragedNotionalValue = new BigNumber(Web3.utils.fromWei(res[9]))
+                this.leveragedNotionalValue = new BigNumber(Web3.utils.fromWei(res[9]));
                 this.insuranceContract = new Insurance(web3, res[7], this.marketId);
-                console.log(this.insuranceContract)
+                console.log(this.insuranceContract);
                 this._pricing = res[8]
                     ? (new web3.eth.Contract(pricingAbi as AbiItem[], res[8]) as unknown as Pricing)
                     : undefined;
@@ -174,7 +174,7 @@ export default class Tracer {
                     });
                 this.updateFairPrice();
                 this.updateFundingRates();
-                console.log("before")
+                console.log('before');
                 return true;
             })
             .catch((err) => {
@@ -218,6 +218,8 @@ export default class Tracer {
                     ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
                     : new BigNumber(0),
             };
+
+            console.log(parsedBalances, this.address);
             const { quote, base } = parsedBalances;
             const leverage = calcLeverage(quote, base, this.fairPrice);
             const totalMargin = calcTotalMargin(quote, base, this.fairPrice);
@@ -371,11 +373,11 @@ export default class Tracer {
 
     getInsuranceContract: () => Insurance | undefined = () => {
         return this.insuranceContract;
-    }
+    };
 
     getLeveragedNotionalValue: () => BigNumber = () => {
         return this.leveragedNotionalValue;
-    }
+    };
 
     getMaxLeverage: () => BigNumber = () => {
         return this.maxLeverage;
