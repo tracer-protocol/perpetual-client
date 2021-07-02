@@ -32,9 +32,9 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
         return orders.reduce((total, order) => total + order.quantity, 0);
     };
 
-    const totalAsks = sumQuantities(askOrders);
-    const totalBids = sumQuantities(bidOrders);
-    const maxCumulative = Math.max(totalAsks, totalBids);
+    // const totalAsks = sumQuantities(askOrders);
+    // const totalBids = sumQuantities(bidOrders);
+    // const maxCumulative = Math.max(totalAsks, totalBids);
 
     const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
 
@@ -51,9 +51,15 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
                     </BookRow>
                 );
             } // return an empty row
-            const rows = [];
+            const rows: {
+                bid: boolean,
+                price: number,
+                cumulative: number,
+                quantity: number
+            }[] = [];
             let cumulative = 0;
             let missedBracket = 0;
+
             for (let i = 0; i < orders.length; i++) {
                 if (rows.length >= 8) {
                     break;
@@ -85,29 +91,37 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
                     }
                 }
                 cumulative += innerCumulative;
-                rows.push(
-                    <Order
-                        bid={bid}
-                        price={bracket}
-                        cumulative={cumulative}
-                        quantity={innerCumulative}
-                        maxCumulative={maxCumulative}
-                    />,
+                rows.push({
+                        bid: bid,
+                        price: bracket,
+                        cumulative: cumulative,
+                        quantity: innerCumulative,
+                    }
                 );
                 if (missedBracket) {
                     // this will be the very last order
                     rows.push(
-                        <Order
-                            bid={bid}
-                            price={missedBracket}
-                            cumulative={cumulative + orders[i].quantity}
-                            quantity={orders[i].quantity}
-                            maxCumulative={maxCumulative}
-                        />,
+                        {
+                            bid: bid,
+                            price: missedBracket,
+                            cumulative: cumulative + orders[i].quantity,
+                            quantity: orders[i].quantity
+                        }
                     );
                 }
             }
-            return !bid ? rows.reverse() : rows;
+            const maxCumulative = sumQuantities(rows);
+            const withSetMax = rows.map((row) => (
+                    <Order 
+                        maxCumulative={maxCumulative}
+                        bid={row.bid}
+                        price={row.price}
+                        cumulative={row.cumulative}
+                        quantity={row.quantity}
+                    />
+                )
+            )
+            return !bid ? withSetMax.reverse() : withSetMax;
         },
         [decimals],
     );
