@@ -14,6 +14,7 @@ import PromiEvent from 'web3/promiEvent';
 import { TransactionContext } from './TransactionContext';
 // @ts-ignore
 import { TransactionReceipt } from 'web3/types';
+import { calcInsuranceAPY } from '@tracer-protocol/tracer-utils';
 
 export const defaults: Record<string, any> = {
     userBalance: new BigNumber(0),
@@ -123,7 +124,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     const fetchPoolData = async () => {
         Promise.all(
             Object.values(tracers as Record<string, Tracer>).map((tracer: Tracer) =>
-                getPoolData(tracer.address, tracer.marketId),
+                getPoolData(tracer),
             ),
         );
     };
@@ -182,8 +183,11 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
      * @param market tracer contract address
      * @param user account address
      */
-    const getPoolData: (tracerAddress: string, marketId: string) => Promise<void> = async (tracerAddress, marketId) => {
-        if (tracerAddress && contract) {
+    const getPoolData: (tracer: Tracer) => Promise<void> = async (tracer) => {
+        if (tracer && tracer.address && contract) {
+            const marketId = tracer.marketId;
+            const insuranceFundingRate = tracer.getInsuranceFundingRate();
+            const leveragedNotionalValue = tracer.getLeveragedNotionalValue()
             const userBalance_ = account
                 ? contract?.methods.getPoolUserBalance(account as string).call()
                 : Promise.resolve('0'); // we dont want it all to fail if account isnt connected
@@ -198,6 +202,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             if (!Number.isFinite(health.toNumber()) || Number.isNaN(health.toNumber())) {
                 health = defaults.health;
             }
+            const apy = calcInsuranceAPY(insuranceFundingRate, liquidity, leveragedNotionalValue)
             const splitId = marketId.split('/');
             const iPoolTokenName = `i${splitId[0]}-${splitId[1]}`;
             const iTokenAddress = await contract?.methods.token().call();
@@ -213,7 +218,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     liquidity: liquidity,
                     rewards: res[1] ? new BigNumber(Web3.utils.fromWei(res[1])) : defaults.rewards,
                     health: BigNumber.min(health, new BigNumber(100)),
-                    apy: defaults.apy,
+                    apy: apy,
                     buffer: res[4] ? new BigNumber(Web3.utils.fromWei(res[4])) : defaults.buffer,
                     iPoolTokenURL: iTokenURL,
                     iPoolTokenName: iPoolTokenName,
@@ -271,7 +276,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     useEffect(() => {
         if (contract && account && selectedTracer?.address) {
-            getPoolData(selectedTracer?.address, selectedTracer?.marketId);
+            getPoolData(selectedTracer);
         }
     }, [contract, account, selectedTracer]); // eslint-disable-line
 

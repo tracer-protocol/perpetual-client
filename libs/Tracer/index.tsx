@@ -36,6 +36,7 @@ export const defaults: Record<string, any> = {
         leverage: new BigNumber(0),
         totalMargin: new BigNumber(0),
     },
+    leveragedNotionalValue: new BigNumber(0),
     maxLeverage: new BigNumber(25),
     oraclePrice: new BigNumber(0),
     fairPrice: new BigNumber(0),
@@ -76,6 +77,7 @@ export default class Tracer {
     public maxLeverage: BigNumber;
     public fundingRateSensitivity: BigNumber;
     public feeRate: BigNumber;
+    public leveragedNotionalValue: BigNumber;
     public fundingRate: BigNumber;
     public insuranceFundingRate: BigNumber;
     public initialised: Promise<boolean>;
@@ -107,6 +109,7 @@ export default class Tracer {
         this.maxLeverage = defaults.maxLeverage;
         this.fundingRate = defaults.defaultFundingRate;
         this.insuranceFundingRate = defaults.defaultFundingRate;
+        this.leveragedNotionalValue = defaults.leveragedNotionalValue;
         this.insuranceApproved = false;
         this.tracerApproved = false;
         this.initialised = this.init(web3);
@@ -124,6 +127,7 @@ export default class Tracer {
         const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
         const maxLeverage = this._instance.methods.trueMaxLeverage().call();
         const fundingRateSensitivity = this._instance.methods.fundingRateSensitivity().call();
+        const leveragedNotionalValue = this._instance.methods.leveragedNotionalValue().call();
         const feeRate = this._instance.methods.feeRate().call();
         const insuranceContract = this._instance.methods.insuranceContract().call();
         const pricingContract = this._instance.methods.pricingContract().call();
@@ -137,6 +141,7 @@ export default class Tracer {
             feeRate,
             insuranceContract,
             pricingContract,
+            leveragedNotionalValue
         ])
             .then((res) => {
                 const priceMultiplier_ = new BigNumber(res[0]);
@@ -151,6 +156,7 @@ export default class Tracer {
                 this.maxLeverage = new BigNumber(parseFloat(Web3.utils.fromWei(res[4])));
                 this.fundingRateSensitivity = new BigNumber(res[5]).div(priceMultiplier_);
                 this.feeRate = new BigNumber(res[6]).div(priceMultiplier_);
+                this.leveragedNotionalValue = new BigNumber(Web3.utils.fromWei(res[9]))
                 this.insuranceContract = res[7];
                 this._pricing = res[8]
                     ? (new web3.eth.Contract(pricingAbi as AbiItem[], res[8]) as unknown as Pricing)
@@ -359,6 +365,10 @@ export default class Tracer {
     getInsuranceContract: () => string = () => {
         return this.insuranceContract.slice();
     };
+
+    getLeveragedNotionalValue: () => BigNumber = () => {
+        return this.leveragedNotionalValue;
+    }
 
     getMaxLeverage: () => BigNumber = () => {
         return this.maxLeverage;
