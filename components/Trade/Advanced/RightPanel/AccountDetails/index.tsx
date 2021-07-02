@@ -37,7 +37,7 @@ const PositionDetailsSection = styled(Section)`
     position: relative;
     background-color: #00125d;
     height: 7vh;
-    padding: 1rem;
+    padding: 0.4rem;
     margin: 0;
     color: var(--color-secondary);
     min-height: var(--height-small-container);
