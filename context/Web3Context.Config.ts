@@ -43,6 +43,6 @@ export const networkConfig: Record<string, Network> = {
                 abi: traderJSON as AbiItem[],
             },
         },
-        graphUri: 'http://localhost:8000/subgraphs/name/dospore/tracer-graph',
+        graphUri: process.env.NEXT_PUBLIC_GRAPH_URI || 'http://localhost:8000/subgraphs/name/dospore/tracer-graph',
     },
 };
