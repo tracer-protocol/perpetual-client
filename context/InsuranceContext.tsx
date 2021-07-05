@@ -8,7 +8,7 @@ import { FactoryContext } from '.';
 import { BigNumber } from 'bignumber.js';
 import { initialFactoryState } from './FactoryContext';
 import PromiEvent from 'web3/promiEvent';
-import { TransactionContext } from './TransactionContext';
+import { Options, TransactionContext } from './TransactionContext';
 // @ts-ignore
 import { TransactionReceipt } from 'web3/types';
 import { calcInsuranceAPY } from '@tracer-protocol/tracer-utils';
@@ -43,6 +43,7 @@ interface ContextProps {
     poolInfo: InsurancePoolInfo;
     deposit: (tracer: Tracer, amount: number, _callback?: () => void) => void;
     withdraw: (tracer: Tracer, amount: number, _callback?: () => void) => void;
+    approve: (tracer: Tracer, options?: Options) => void;
     contract: Insurance;
     pools: Record<string, InsurancePoolInfo>;
 }
@@ -127,21 +128,31 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         } else if (handleTransaction && !!tracer) {
             const insuranceContract = tracer.getInsuranceContract();
             if (!!insuranceContract) {
-                const approved = await tracer?.checkAllowance(account, insuranceContract.address);
+                // const approved = await tracer.checkAllowance(account, insuranceContract.address);
+                // if (approved === 0) {
+                //     // not approved
+                //     handleTransaction(tracer.approve, [account, insuranceContract.address]);
+                // }
+                const approved = await selectedTracer?.checkAllowance(account, insuranceContract.address);
                 if (approved === 0) {
                     // not approved
-                    await handleTransaction(tracer?.approve, [account, insuranceContract.address]);
+                    handleTransaction(tracer.approve, [account, insuranceContract.address]);
                 }
+
                 const callFunc: (amount: number) => PromiEvent<TransactionReceipt> = (amount: number) =>
                     insuranceContract?.instance?.methods
                         .deposit(Web3.utils.toWei(amount.toString()))
                         .send({ from: account }) as PromiEvent<TransactionReceipt>;
+                        
                 handleTransaction(callFunc, [amount], {
-                    callback: () => {
+                    callback: async () => {
                         updatePoolBalance(tracer);
                         updateUserBalance(tracer);
                         _callback ? _callback() : null;
                     },
+                    statusMessages: {
+                        pending: 'Transaction to deposit USDC is pending',
+                    }
                 });
             } else {
                 console.error('Failed to withdraw from insuracnce pool: Inusurance contract undefined');
@@ -170,6 +181,32 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             });
         } else {
             console.error(`Failed to withdraw from insurance pool: No deposit function found`);
+        }
+    };
+    
+    const approve = async (tracer: Tracer, options?: Options) => {
+        const { callback: callback_ } = options ?? {};
+        if (handleTransaction) {
+            const insuranceContract = tracer.getInsuranceContract();
+            if (!insuranceContract || !insuranceContract.address) {
+                console.error('Failed to approve: contract is undefined');
+                return false;
+            }
+            const callback = () => {
+                tracer?.setApproved(insuranceContract.address);
+                callback_ ? callback_() : null;
+            };
+
+            handleTransaction(tracer.approve, [account, insuranceContract.address], {
+                ...options,
+                callback,
+                statusMessages: {
+                    userConfirmed: 'Unlock USDC Submitted',
+                    pending: 'Transaction to unlock USDC is pending',
+                },
+            });
+        } else {
+            console.error(`Failed to approve: handleTransaction is undefined `);
         }
     };
 
@@ -270,6 +307,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 },
                 deposit,
                 withdraw,
+                approve,
                 pools: state.pools,
             }}
         >
