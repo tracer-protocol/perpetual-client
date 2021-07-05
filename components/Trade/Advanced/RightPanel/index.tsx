@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import OrderBook from '@components/OrderBook';
 import Tracer, { defaults } from '@libs/Tracer';
 import { Box, Button } from '@components/General';
@@ -19,6 +19,7 @@ import Graphs from './Graphs';
 import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
+import useWindowDimensions from "@libs/utils/useWindowDimensions";
 
 const TitledBox = styled(({ className, title, children }) => {
     return (
@@ -130,17 +131,13 @@ type HEBProps = {
 };
 const HEButton = styled(Button)`
     height: var(--height-small-button);
-    width: 3rem;
+    width: 5rem;
     padding: 0;
-
-    @media (max-width: 1300px) {
-        width: 2rem;
-    }
 `;
-const HideExpandButton: React.FC<HEBProps> = styled(({ className, showOrderBook, onClick }: HEBProps) => {
+const HideExpandButton: FC<HEBProps> = styled(({ className, showOrderBook, onClick }: HEBProps) => {
     return (
         <HEButton className={className} onClick={onClick}>
-            {showOrderBook ? '-' : '+'}
+            {showOrderBook ? 'Collapse' : 'Expand'}
         </HEButton>
     );
 })`
@@ -149,12 +146,35 @@ const HideExpandButton: React.FC<HEBProps> = styled(({ className, showOrderBook,
     top: 0.6rem;
 `;
 
+type PMProps = {
+    className?: string;
+    showOrderBook: boolean;
+    onClick: () => void;
+};
+const PMButton = styled(Button)`
+    height: var(--height-extra-small-button);
+    width: 2rem;
+    padding: 0;
+`;
+const PlusMinusButton: FC<PMProps> = styled(({ className, showOrderBook, onClick }: PMProps) => {
+    return (
+        <PMButton className={className} onClick={onClick}>
+            {showOrderBook ? '-' : '+'}
+        </PMButton>
+    );
+})`
+    position: absolute;
+    right: ${(props: any) => (props.showOrderBook ? '7rem' : '1rem')};
+    top: 0.8rem;
+`;
+
 const TradingView: React.FC<{
     selectedTracer: Tracer | undefined;
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
     const [showOrderBook, setShowOrderBook] = useState(true);
+    const { width } = useWindowDimensions();
 
     return (
         <>
@@ -175,7 +195,17 @@ const TradingView: React.FC<{
                 <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
                 <OrderBookContainer>
                     <h3>Order Book</h3>
-                    <HideExpandButton showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
+                    {width > 1280 ? (
+                        <HideExpandButton
+                            showOrderBook={showOrderBook}
+                            onClick={() => setShowOrderBook(!showOrderBook)}
+                        />
+                    ) : (
+                        <PlusMinusButton
+                            showOrderBook={showOrderBook}
+                            onClick={() => setShowOrderBook(!showOrderBook)}
+                        />
+                    )}
                     {showOrderBook ? (
                         omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
                             <OrderBook
