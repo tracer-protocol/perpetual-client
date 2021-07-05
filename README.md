@@ -44,9 +44,17 @@ Create a .env.local in your root directory and set the following variables
 ```
 NEXT_PUBLIC_TRADER_ADDRESS="address from truffle migrate"
 NEXT_PUBLIC_GRAPH_URI=http://localhost:8000/subgraphs/name/{your-local-name}/{your-deployed-graph-name}
-NEXT_PUBLIC_OME_BASE_URL=http://localhost:8989 || https://order.tracer.finance
+NEXT_PUBLIC_OME_BASE_URL=http://localhost:8989 
 NEXT_PUBLIC_DEPLOYMENT=DEVELOPMENT
 
+```
+If you are not making changes to the graph or the OME, you can run off the deployed testing versions by setting the following. These variables can also be found in /context/Web3Config and can be accessed without setting the below variables and just switching to Kovan testnet in your browser. If you set the below variables you will be able to access data without switching to Kovan testnet.
+
+```
+NEXT_PUBLIC_TRADER_ADDRESS="address from truffle migrate"
+NEXT_PUBLIC_GRAPH_URI=https://api.thegraph.com/subgraphs/name/tracer-protocol/tracer-kovan
+NEXT_PUBLIC_OME_BASE_URL=https://order.tracer.finance
+NEXT_PUBLIC_DEPLOYMENT=DEVELOPMENT
 ```
 
 ## Quickstart Guide
@@ -67,5 +75,7 @@ This may not be that helpful but for now I am just going to list everything I do
 
 
 ## Running
+Occasionally npm struggles with the depending pinning so try yarn if you cannot seem to get the install working.
 
+`npm install` or `yarn` then 
 `npm run dev` or `yarn dev`
