@@ -183,6 +183,7 @@ export const InsuranceModal: React.FC<BProps> = ({
             id="insurance-modal"
             onClose={() => {
                 setIsDeposit(type === 'Deposit');
+                acceptTerms(false);
                 setShow(false);
                 setAmount(NaN);
             }}
@@ -191,6 +192,7 @@ export const InsuranceModal: React.FC<BProps> = ({
             <SSlideSelect
                 onClick={(index: number, _e: any) => {
                     setAmount(NaN); // reset amount
+                    acceptTerms(false); // reset approval
                     setIsDeposit(index === 0);
                 }}
                 value={isDeposit ? 0 : 1}
