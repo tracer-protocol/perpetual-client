@@ -51,7 +51,7 @@ NEXT_PUBLIC_DEPLOYMENT=DEVELOPMENT
 If you are not making changes to the graph or the OME, you can run off the deployed testing versions by setting the following. These variables can also be found in /context/Web3Config and can be accessed without setting the below variables and just switching to Kovan testnet in your browser. If you set the below variables you will be able to access data without switching to Kovan testnet.
 
 ```
-NEXT_PUBLIC_TRADER_ADDRESS="address from truffle migrate"
+NEXT_PUBLIC_TRADER_ADDRESS="0x98D801b0cB3576c048CB74e095187DF5E7025D61"
 NEXT_PUBLIC_GRAPH_URI=https://api.thegraph.com/subgraphs/name/tracer-protocol/tracer-kovan
 NEXT_PUBLIC_OME_BASE_URL=https://order.tracer.finance
 NEXT_PUBLIC_DEPLOYMENT=DEVELOPMENT
