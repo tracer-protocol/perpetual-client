@@ -124,7 +124,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
     const { order, orderDispatch } = useContext(OrderContext);
     return (
         <>
-            <Box className={`${className} ${account === '' ? 'hide' : ''} `}>
+            <Box className={`${className}`}>
                 {/* Position select */}
                 <AdjustTypeSelect
                     selected={order?.adjustType ?? 0}
@@ -157,10 +157,4 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
     padding: 0;
     height: 100%;
     z-index: 1;
-    &.hide {
-        height: 0;
-        padding: 0;
-        opacity: 0;
-        border: none;
-    }
 ` as React.FC<TIProps>;

@@ -12,7 +12,8 @@ type GProps = Children;
 
 const GraphProvider: ({ children }: GProps) => any = ({ children }: GProps) => {
     const { config } = useContext(Web3Context);
-    const client = Client.ApolloWrapper(config?.graphUri ?? '');
+    const graphUri = config?.graphUri ?? ''
+    const client = Client.ApolloWrapper(graphUri);
     return <ApolloProvider client={client as ApolloClient<any>}>{children}</ApolloProvider>;
 };
 

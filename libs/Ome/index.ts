@@ -1,7 +1,7 @@
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { Result } from 'types/General';
 
-const BASE_URL = process.env.NEXT_PUBLIC_OME_BASE_URL || 'http://localhost:8989';
+const BASE_URL = process.env.NEXT_PUBLIC_OME_BASE_URL ?? 'http://localhost:8989';
 
 /** Book API's */
 

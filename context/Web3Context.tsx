@@ -65,7 +65,7 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
             web3Modal: undefined,
             initiatedContracts: false,
             account: '',
-            networkId: 0, // default to none
+            networkId: 1337, // default to none
             errorMessage: undefined,
             provider: undefined,
         },
