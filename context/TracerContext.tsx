@@ -185,7 +185,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const approved = await selectedTracer?.checkAllowance(account, selectedTracer.address);
             if (approved === 0) {
                 // not approved
-                console.error('Token has not been approved')
+                console.error('Token has not been approved');
                 handleTransaction(selectedTracer.approve, [account, selectedTracer.address]);
             }
             const callback = async (res: Result) => {

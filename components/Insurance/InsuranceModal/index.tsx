@@ -135,7 +135,7 @@ type BProps = {
     poolUserBalance: BigNumber;
 } & Children;
 export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, poolUserBalance }: BProps) => {
-    const { 
+    const {
         deposit = () => console.error('Deposit is not defined'),
         withdraw = () => console.error('Withdraw is not defined'),
         approve = () => console.error('Approve is not defined'),
@@ -289,10 +289,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, 
                         Approve {tracer.quoteTicker}
                     </Button>
                 ) : null}
-                <Button 
-                    disabled={!tracer?.getInsuranceApproved() || !valid}
-                    onClick={() => submit(amount)}
-                >
+                <Button disabled={!tracer?.getInsuranceApproved() || !valid} onClick={() => submit(amount)}>
                     {isDeposit ? 'Deposit' : 'Withdraw'}
                 </Button>
             </div>

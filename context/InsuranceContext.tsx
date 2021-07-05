@@ -143,7 +143,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     insuranceContract?.instance?.methods
                         .deposit(Web3.utils.toWei(amount.toString()))
                         .send({ from: account }) as PromiEvent<TransactionReceipt>;
-                        
+
                 handleTransaction(callFunc, [amount], {
                     callback: async () => {
                         updatePoolBalance(tracer);
@@ -152,7 +152,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     },
                     statusMessages: {
                         pending: 'Transaction to deposit USDC is pending',
-                    }
+                    },
                 });
             } else {
                 console.error('Failed to withdraw from insuracnce pool: Inusurance contract undefined');
@@ -183,7 +183,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             console.error(`Failed to withdraw from insurance pool: No deposit function found`);
         }
     };
-    
+
     const approve = async (tracer: Tracer, options?: Options) => {
         const { callback: callback_ } = options ?? {};
         if (handleTransaction) {
@@ -201,8 +201,8 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 ...options,
                 callback,
                 statusMessages: {
-                    userConfirmed: 'Unlock USDC Submitted',
-                    pending: 'Transaction to unlock USDC is pending',
+                    userConfirmed: `Unlock ${tracer.quoteTicker} Submitted`,
+                    pending: `Transaction to unlock ${tracer.quoteTicker} is pending`,
                 },
             });
         } else {
