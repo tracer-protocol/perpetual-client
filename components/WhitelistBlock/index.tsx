@@ -173,7 +173,6 @@ const whitelist = [
     // '0xf62b5220001c0e491dc7ebd5ca72b161e59eca65',
     // '0x0f9aa60c9194dfb91a34a69b8b3c2d545e8e8645',
     // '0x9b7a417cde9d1e116958e4aaef6c09928e0fe5bd',
-    // '0xa83fde98c89c74b6b92ce24e2fc6b914b88d0d1c',
     // '0x7656901efcd6e179e7e13ae93cfb8373689f4160',
     // '0x759ffc37876fea188660e881baa6333aac024f00',
     // '0x8cdbebeee5b70749be0fad211cada13bd07c9f9f',
@@ -202,4 +201,5 @@ const whitelist = [
     '0xc23c9b17581c9fdfcc786466a74808213b74be12',
     '0x110af92ba116fd7868216aa794a7e4da3b9d7d11',
     '0x55ea772a66db39a90004b12628884fd89ec9449b',
+    '0xa83fde98c89c74b6b92ce24e2fc6b914b88d0d1c',
 ];
