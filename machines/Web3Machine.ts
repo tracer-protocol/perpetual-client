@@ -51,7 +51,7 @@ export const web3Machine = Machine<MachineContext, Web3StateSchema, Web3Event>({
         web3Modal: undefined,
         initiatedContracts: false,
         account: '',
-        networkId: 1337, // default to 1337
+        networkId: 0, // default to none
         errorMessage: undefined,
         provider: undefined,
     },
@@ -144,7 +144,7 @@ export const web3Machine = Machine<MachineContext, Web3StateSchema, Web3Event>({
                         },
                         onDone: {
                             target: '#waiting',
-                            actions: [assign({ account: '' }), assign({ networkId: 1337 })],
+                            actions: [assign({ account: '' }), assign({ networkId: 0 })],
                         },
                         onError: {
                             target: 'disconnectingFailed',

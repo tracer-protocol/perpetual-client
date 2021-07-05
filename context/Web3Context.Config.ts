@@ -24,6 +24,18 @@ export const networkConfig: Record<string, Network> = {
     //     graphUri: 'http://localhost:8000/subgraphs/name/tetther1122/tracer-graph',
     // },
     // other networks go here
+    '0': {
+        // local
+        previewUrl: '',
+        contracts: {
+            trader: {
+                address: process.env.NEXT_PUBLIC_TRADER_ADDRESS,
+                abi: traderJSON as AbiItem[],
+            },
+        },
+        graphUri: process.env.NEXT_PUBLIC_GRAPH_URI ?? '',
+
+    },
     '42': {
         previewUrl: 'https://kovan.etherscan.io',
         contracts: {
@@ -43,6 +55,6 @@ export const networkConfig: Record<string, Network> = {
                 abi: traderJSON as AbiItem[],
             },
         },
-        graphUri: process.env.NEXT_PUBLIC_GRAPH_URI || 'http://localhost:8000/subgraphs/name/dospore/tracer-graph',
+        graphUri: 'http://localhost:8000/subgraphs/name/dospore/tracer-graph',
     },
 };
