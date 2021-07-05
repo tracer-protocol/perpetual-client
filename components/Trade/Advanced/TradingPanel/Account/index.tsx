@@ -87,7 +87,7 @@ const DepositButtons = styled.div`
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     position: relative;
     flex-direction: column;
-    background-color: ${(props) => (props.zeroBalance ? '#00125D' : 'inherit')};
+    //background-color: ${(props) => (props.zeroBalance ? '#00125D' : 'inherit')};
 `;
 
 const Title = styled.h2`
