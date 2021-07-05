@@ -61,7 +61,10 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
     const [state, send] = useMachine(web3Machine, {
         value: {},
         context: {
-            web3: new Web3(Web3.givenProvider || 'ws://localhost:8545'),
+            web3: new Web3(
+                Web3.givenProvider ||
+                    new Web3.providers.WebsocketProvider(process.env.NEXT_PUBLIC_DEFAULT_RPC || 'ws://localhost:8545'),
+            ),
             web3Modal: undefined,
             initiatedContracts: false,
             account: '',
@@ -142,7 +145,7 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
     // const network: Network.Network | undefined = useSelector((state) =>
     //     Network.selectSingle(state, state.context?.networkId ?? ''),
     // );
-    const config = networkConfig[state.context.networkId ?? '1337'];
+    const config = networkConfig[state.context.networkId ?? '0'];
 
     return (
         <Web3Context.Provider
