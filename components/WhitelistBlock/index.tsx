@@ -185,6 +185,7 @@ const whitelist = [
     // '0xbfa87a09169330c1a84045c3250b96e9f5a0d2f8',
     // '0x3b85ed76a2aff1775eb93a57cbfe66fe1e32f0fc',
     // '0x4f66f66b916142c055da9cca02036aba430a8dce',
+    '0x217917e355855fdf1bb22c52b6fdb7d89133aeec',
     '0x4f66f66b916142c055da9cca02036aba430a8dce',
     '0xb5baffb036576b46f45544174208faa5b7dc1cfb',
     '0xa530e31995ea13db8f7bbc27cca07cb701e1a77d', // start
