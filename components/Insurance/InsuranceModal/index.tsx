@@ -132,9 +132,12 @@ type BProps = {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     tracer: Tracer;
+    belowTarget: boolean 
     poolUserBalance: BigNumber;
 } & Children;
-export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, poolUserBalance }: BProps) => {
+export const InsuranceModal: React.FC<BProps> = ({ 
+    type, show, setShow, tracer, poolUserBalance, belowTarget 
+}: BProps) => {
     const {
         deposit = () => console.error('Deposit is not defined'),
         withdraw = () => console.error('Withdraw is not defined'),
@@ -249,14 +252,14 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, 
                     </>
                 )}
             </SHiddenExpand>
-            {isDeposit ? null : (
+            {(!isDeposit && belowTarget) ?  (
                 <WithdrawalNote className="mb-8">
                     <span className="title">Note:</span> The value of the insurance pool is currently less than the
                     insurance pool target. If you choose to withdraw at this time,{' '}
                     <span className="highlight">you will be required to pay a withdrawal fee.</span>
                 </WithdrawalNote>
-            )}
-            {isDeposit ? (
+            ) : null }
+            {(!isDeposit && belowTarget) || isDeposit ?  (
                 <CheckboxContainer
                     onClick={(e: any) => {
                         e.preventDefault();
@@ -264,19 +267,10 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, 
                     }}
                 >
                     <Checkbox checked={acceptedTerms} />
-                    <CheckboxTitle>I have read and accept Terms of Deposit</CheckboxTitle>
+                    <CheckboxTitle>{isDeposit ? 'I have read and accept Terms of Deposit' : 'I wish to proceed'}</CheckboxTitle>
                 </CheckboxContainer>
-            ) : (
-                <CheckboxContainer
-                    onClick={(e: any) => {
-                        e.preventDefault();
-                        acceptTerms(!acceptedTerms);
-                    }}
-                >
-                    <Checkbox checked={acceptedTerms} />
-                    <CheckboxTitle>I wish to proceed</CheckboxTitle>
-                </CheckboxContainer>
-            )}
+                ) : null
+            }
             <div className="flex items-center justify-center px-6 pt-6 rounded-b" id="insurance-submit">
                 {isDeposit && !tracer?.getInsuranceApproved() ? (
                     <Button

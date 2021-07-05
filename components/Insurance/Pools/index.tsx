@@ -106,6 +106,7 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
                         tracer={pool.tracer}
                         poolUserBalance={pool.userBalance}
                         show={show}
+                        belowTarget={pool.liquidity < pool.target}
                         setShow={setShow}
                         type={type as 'Deposit' | 'Withdraw'}
                     />
