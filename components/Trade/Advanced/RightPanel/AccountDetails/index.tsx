@@ -4,7 +4,11 @@ import styled from 'styled-components';
 import { Table, TRow, TData } from '@components/General/Table';
 import { calcStatus, timeAgo, toApproxCurrency, getPositionText } from '@libs/utils';
 import Web3 from 'web3';
-import { calcLiquidationPrice, calcUnrealised, OMEOrder } from '@tracer-protocol/tracer-utils';
+import {
+    // calcLiquidationPrice,
+    calcUnrealised,
+    OMEOrder,
+} from '@tracer-protocol/tracer-utils';
 import { FilledOrder } from 'types/OrderTypes';
 import { calcLeverage } from '@tracer-protocol/tracer-utils';
 import { Button, Previous, Section } from '@components/General';
@@ -19,46 +23,14 @@ import CustomSubNav from './CustomSubNav';
 import { LIMIT, OrderContext, orderDefaults, OrderState } from '@context/OrderContext';
 import { CloseOrderButton } from '@components/Buttons/OrderButton';
 
-const PositionDetailsContainer = styled.div`
+const PositionTabContainer = styled.div`
     width: 100%;
     display: flex;
-    flex-wrap: wrap;
     position: relative;
 `;
 
-const SPrevious = styled(Previous)`
-    &:after {
-        content: '>>';
-    }
-`;
-
-const PositionDetailsSection = styled(Section)`
-    display: inline-block;
-    position: relative;
-    background-color: #00125d;
-    height: 7vh;
-    padding: 0.2rem 0 0 0.5rem;
-    margin: 0;
-    color: var(--color-secondary);
-    min-height: var(--height-small-container);
-    border-bottom: 1px solid var(--color-accent);
-    border-right: 1px solid var(--color-accent);
-
-    &.b-r-none {
-        border-right: none;
-    }
-    > .label {
-        display: block;
-        font-size: var(--font-size-extra-small);
-    }
-    > .content {
-        padding-left: 0;
-    }
-`;
-
-const SectionContainer = styled.div`
-    width: 100%;
-    display: block;
+const PositionDetailsContainer = styled.div`
+    width: 40%;
 
     &.exposure {
         border-top: 1px solid var(--color-accent);
@@ -67,13 +39,17 @@ const SectionContainer = styled.div`
     }
 `;
 
+const SPrevious = styled(Previous)`
+    &:after {
+        content: '>>';
+    }
+`;
+
 const SSlideSelect = styled(SlideSelect)`
-    position: absolute;
-    right: 0.2rem;
-    top: 0.4rem;
     color: var(--color-text);
     height: var(--height-extra-small-button);
-    width: 100px;
+    width: 8rem;
+    margin: 0.5rem 0 0.5rem 0;
 `;
 
 const SOption = styled(Option)`
@@ -81,7 +57,7 @@ const SOption = styled(Option)`
 `;
 
 const Content = styled.div`
-    font-size: var(--font-size-medium);
+    font-size: var(--font-size-small);
     color: var(--color-text);
     text-align: left;
 `;
@@ -174,49 +150,69 @@ const Exposure: React.FC<{
     );
 };
 
-const LiquidationPrice: React.FC<
-    ContentProps & {
-        orderType: number;
-        fairPrice: BigNumber;
-        maxLeverage: BigNumber;
-    }
-> = ({ exposure, balances, nextPosition, maxLeverage, tradePrice, orderType, fairPrice }) => {
-    if (balances.quote.eq(0)) {
-        return <>-</>;
-    } else if (exposure && tradePrice) {
-        return (
-            <Content>
-                <SPrevious>
-                    {toApproxCurrency(
-                        parseFloat(
-                            calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2),
-                        ),
-                    )}
-                </SPrevious>
-                {toApproxCurrency(
-                    parseFloat(
-                        calcLiquidationPrice(
-                            nextPosition.quote,
-                            nextPosition.base,
-                            orderType === LIMIT ? new BigNumber(tradePrice) : fairPrice,
-                            maxLeverage,
-                        ).toFixed(2),
-                    ),
-                )}
-            </Content>
-        );
-    } // else
-    return (
-        <Content>
-            {toApproxCurrency(
-                parseFloat(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2)),
-            )}
-        </Content>
-    );
-};
+// const LiquidationPrice: React.FC<
+//     ContentProps & {
+//         orderType: number;
+//         fairPrice: BigNumber;
+//         maxLeverage: BigNumber;
+//     }
+// > = ({ exposure, balances, nextPosition, maxLeverage, tradePrice, orderType, fairPrice }) => {
+//     if (balances.quote.eq(0)) {
+//         return <>-</>;
+//     } else if (exposure && tradePrice) {
+//         return (
+//             <Content>
+//                 <SPrevious>
+//                     {toApproxCurrency(
+//                         parseFloat(
+//                             calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2),
+//                         ),
+//                     )}
+//                 </SPrevious>
+//                 {toApproxCurrency(
+//                     parseFloat(
+//                         calcLiquidationPrice(
+//                             nextPosition.quote,
+//                             nextPosition.base,
+//                             orderType === LIMIT ? new BigNumber(tradePrice) : fairPrice,
+//                             maxLeverage,
+//                         ).toFixed(2),
+//                     ),
+//                 )}
+//             </Content>
+//         );
+//     } // else
+//     return (
+//         <Content>
+//             {toApproxCurrency(
+//                 parseFloat(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2)),
+//             )}
+//         </Content>
+//     );
+// };
 
-const CloseOrderButtonContainer = styled.div`
-    padding: 1.5rem;
+const SCloseOrderButton = styled(CloseOrderButton)`
+    margin: 1rem 0 0 0.5rem;
+`;
+
+const PositionSection = styled(Section)`
+    display: block;
+    position: relative;
+    padding: 0.2rem 0 0.2rem 0.5rem;
+    color: var(--color-secondary);
+    border-bottom: 1px solid var(--color-accent);
+    border-right: 1px solid var(--color-accent);
+
+    &.b-r-none {
+        border-right: none;
+    }
+    > .label {
+        display: block;
+        font-size: var(--font-size-extra-small);
+    }
+    > .content {
+        padding-left: 0;
+    }
 `;
 
 interface IProps {
@@ -228,29 +224,66 @@ interface IProps {
     filledOrders: FilledOrder[];
 }
 
-const PositionDetails: React.FC<IProps> = ({
+const PositionDetailsRow = styled.div`
+    display: flex;
+`;
+
+const PositionTab: React.FC<IProps> = ({
     balances,
     fairPrice,
     baseTicker,
     quoteTicker,
-    maxLeverage,
+    // maxLeverage,
     filledOrders,
 }: IProps) => {
     const [currency, setCurrency] = useState(0); // 0 quoted in base
     const { order } = useContext(OrderContext);
     const { base } = balances;
     return (
-        <PositionDetailsContainer>
-            <SectionContainer className="w-2/6 inline-block">
-                <PositionDetailsSection label={'Side'}>
-                    <Position
-                        balances={balances}
-                        nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
-                        tradePrice={order?.price ?? 0}
-                        exposure={order?.exposure ?? 0}
-                    />
-                </PositionDetailsSection>
-                <PositionDetailsSection
+        <PositionTabContainer>
+            <PositionDetailsContainer>
+                <PositionDetailsRow>
+                    <PositionSection label="Side" className="w-1/2">
+                        <Position
+                            balances={balances}
+                            nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
+                            tradePrice={order?.price ?? 0}
+                            exposure={order?.exposure ?? 0}
+                        />
+                    </PositionSection>
+                    <PositionSection
+                        label="Unrealised PnL"
+                        className="w-1/2"
+                        tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
+                    >
+                        {!balances.quote.eq(0) ? (
+                            <Content>{toApproxCurrency(calcUnrealised(base, fairPrice, filledOrders), 3)}</Content>
+                        ) : (
+                            `-`
+                        )}
+                    </PositionSection>
+                </PositionDetailsRow>
+
+                <PositionDetailsRow>
+                    <PositionSection label="Leverage" className="w-1/2">
+                        <Leverage
+                            balances={balances}
+                            nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
+                            tradePrice={order?.price ?? 0}
+                            fairPrice={fairPrice}
+                            orderType={order?.orderType ?? 0}
+                            exposure={order?.exposure ?? 0}
+                        />
+                    </PositionSection>
+                    <PositionSection
+                        label="Realised PnL"
+                        className="w-1/2"
+                        tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
+                    >
+                        -
+                    </PositionSection>
+                </PositionDetailsRow>
+                <PositionSection
                     label={'Exposure'}
                     className="w-full"
                     tooltip={{ key: 'exposure', props: { baseTicker: baseTicker } }}
@@ -272,70 +305,18 @@ const PositionDetails: React.FC<IProps> = ({
                         <SOption>{baseTicker}</SOption>
                         <SOption>{quoteTicker}</SOption>
                     </SSlideSelect>
-                </PositionDetailsSection>
-                <PositionDetailsSection label={'Leverage'}>
-                    <Leverage
-                        balances={balances}
-                        nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
-                        tradePrice={order?.price ?? 0}
-                        fairPrice={fairPrice}
-                        orderType={order?.orderType ?? 0}
-                        exposure={order?.exposure ?? 0}
-                    />
-                </PositionDetailsSection>
-            </SectionContainer>
-            <SectionContainer className="w-2/6 inline-block">
-                <PositionDetailsSection
-                    label={'Liquidation Price'}
-                    tooltip={{ key: 'liquidation-price', props: { quote: balances.quote, position: order?.position } }}
-                >
-                    <LiquidationPrice
-                        balances={balances}
-                        tradePrice={order?.price ?? 0}
-                        fairPrice={fairPrice}
-                        nextPosition={order?.nextPosition ?? defaults.balances}
-                        orderType={order?.orderType ?? 0}
-                        exposure={order?.exposure ?? 0}
-                        maxLeverage={maxLeverage}
-                    />
-                </PositionDetailsSection>
-                <PositionDetailsSection label={'Fair Price'}>
-                    {!balances.quote.eq(0) ? <Content>{toApproxCurrency(fairPrice)}</Content> : `-`}
-                </PositionDetailsSection>
-                <CloseOrderButtonContainer>
-                    <CloseOrderButton />
-                </CloseOrderButtonContainer>
-            </SectionContainer>
-            <SectionContainer className="w-2/6">
-                <PositionDetailsSection
-                    className="b-r-none"
-                    label={'Unrealised PnL'}
-                    tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
-                >
-                    {!balances.quote.eq(0) ? (
-                        <Content>{toApproxCurrency(calcUnrealised(base, fairPrice, filledOrders), 3)}</Content>
-                    ) : (
-                        `-`
-                    )}
-                </PositionDetailsSection>
-                {/* <AccountDetailsSection
-                    label={'Realised PnL'}
-                    className="w-1/2"
-                    tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
-                >
-                </AccountDetailsSection> */}
-            </SectionContainer>
-            <PositionOverlay show={balances.quote.eq(0)}>No Open Position</PositionOverlay>
-        </PositionDetailsContainer>
+                </PositionSection>
+                <SCloseOrderButton />
+            </PositionDetailsContainer>
+        </PositionTabContainer>
     );
 };
 
-const PositionOverlay = styled.div<{ show: boolean }>`
-    display: ${(props) => (props.show ? 'flex' : 'none')};
-    background-color: #00125dd4;
-    position: absolute;
-    height: 100%;
+const PositionOverlay = styled.div`
+    display: flex;
+    background-color: var(--color-background-secondary);
     width: 100%;
+    height: calc(100% - var(--height-extra-small-container));
     justify-content: center;
     align-items: center;
     font-size: var(--font-size-medium);
@@ -476,16 +457,20 @@ export default styled(({ selectedTracer, className }: TSProps) => {
     const content = () => {
         switch (tab) {
             case 0:
-                return (
-                    <PositionDetails
-                        balances={balances}
-                        fairPrice={fairPrice}
-                        maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                        baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                        quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
-                        filledOrders={filledOrders ?? []}
-                    />
-                );
+                if (!balances.quote.eq(0)) {
+                    return (
+                        <PositionTab
+                            balances={balances}
+                            fairPrice={fairPrice}
+                            maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                            baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
+                            quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
+                            filledOrders={filledOrders ?? []}
+                        />
+                    );
+                } else {
+                    return <PositionOverlay>No Open Position</PositionOverlay>;
+                }
             case 1:
                 return (
                     <OpenOrders
@@ -513,6 +498,6 @@ export default styled(({ selectedTracer, className }: TSProps) => {
     );
 })`
     border-top: 1px solid #0c3586;
-    max-height: 50vh;
+    height: 50vh;
     overflow: auto;
 ` as React.FC<TSProps>;

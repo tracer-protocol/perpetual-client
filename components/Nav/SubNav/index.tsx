@@ -14,16 +14,15 @@ export const SubNavContainer = styled.div`
     font-size: var(--font-size-medium);
     border-bottom: 1px solid #0c3586;
     display: flex;
-    height: var(--height-small-container);
 `;
 
 export const SubNavItem = styled.div`
-    color: var(--color-text);
+    color: var(--color-secondary);
+    font-size: var(--font-size-small);
     transition: 0.3s;
     border-right: 1px solid #0c3586;
     text-align: center;
     padding: 0 15px;
-    min-width: 125px;
 
     &.selected {
         background: var(--color-accent);
