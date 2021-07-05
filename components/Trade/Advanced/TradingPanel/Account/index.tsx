@@ -13,6 +13,13 @@ import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import { UserBalance } from 'types';
 // import CalculatorModal from './Calculator';
 
+const ConnectText = styled.p`
+    font-size: var(--font-size-medium);
+    letter-spacing: 0;
+    color: var(--color-text);
+    margin-top: auto;
+`
+
 const SBox = styled(Box)`
     background: #011772;
     text-align: center;
@@ -21,12 +28,6 @@ const SBox = styled(Box)`
     justify-content: center;
     min-height: 250px;
     z-index: 4;
-
-    > p {
-        font-size: var(--font-size-medium);
-        letter-spacing: 0;
-        color: var(--color-text);
-    }
 `;
 
 const Connect = styled(Button)`
@@ -39,7 +40,7 @@ const WalletConnect: React.FC = () => {
     const { handleConnect } = useContext(Web3Context);
     return (
         <SBox>
-            <p>Connect your wallet to get started with Tracer</p>
+            <ConnectText>Connect your wallet to get started with Tracer</ConnectText>
             <Connect
                 className="primary"
                 onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
