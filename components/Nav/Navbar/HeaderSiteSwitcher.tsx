@@ -124,6 +124,7 @@ const StyledHeaderSiteSwitcher = styled.div`
             opacity: 1;
             padding-left: 0;
             &:last-child {
+                cursor: auto;
                 padding-left: 2rem;
             }
         }
@@ -138,9 +139,6 @@ const StyledHeaderSiteSwitcher = styled.div`
         }
         ${MenuItem}:nth-child(5) {
             transition: all 400ms ease 750ms;
-        }
-        ${MenuItem}:nth-child(6) {
-            transition: all 400ms ease 900ms;
         }
     }
 `;
