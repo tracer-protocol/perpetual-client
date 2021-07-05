@@ -34,7 +34,6 @@ export const networkConfig: Record<string, Network> = {
             },
         },
         graphUri: process.env.NEXT_PUBLIC_GRAPH_URI ?? '',
-
     },
     '42': {
         previewUrl: 'https://kovan.etherscan.io',

@@ -18,7 +18,7 @@ const ConnectText = styled.p`
     letter-spacing: 0;
     color: var(--color-text);
     margin-top: auto;
-`
+`;
 
 const SBox = styled(Box)`
     background: #011772;

@@ -84,16 +84,13 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                         <GraphProvider>
                             <FactoryStore>
                                 <TransactionStore>
-                                    {process.env.NEXT_PUBLIC_DEPLOYMENT === 'DEVELOPMENT'
-                                        ? (
+                                    {process.env.NEXT_PUBLIC_DEPLOYMENT === 'DEVELOPMENT' ? (
+                                        <Component {...pageProps} />
+                                    ) : (
+                                        <WhitelistBlock>
                                             <Component {...pageProps} />
-                                        )
-                                        : (
-                                            <WhitelistBlock>
-                                                <Component {...pageProps} />
-                                            </WhitelistBlock>
-                                        )
-                                    }
+                                        </WhitelistBlock>
+                                    )}
                                 </TransactionStore>
                             </FactoryStore>
                         </GraphProvider>
