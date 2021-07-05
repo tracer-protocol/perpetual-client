@@ -132,11 +132,16 @@ type BProps = {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     tracer: Tracer;
-    belowTarget: boolean 
+    belowTarget: boolean;
     poolUserBalance: BigNumber;
 } & Children;
-export const InsuranceModal: React.FC<BProps> = ({ 
-    type, show, setShow, tracer, poolUserBalance, belowTarget 
+export const InsuranceModal: React.FC<BProps> = ({
+    type,
+    show,
+    setShow,
+    tracer,
+    poolUserBalance,
+    belowTarget,
 }: BProps) => {
     const {
         deposit = () => console.error('Deposit is not defined'),
@@ -254,14 +259,14 @@ export const InsuranceModal: React.FC<BProps> = ({
                     </>
                 )}
             </SHiddenExpand>
-            {(!isDeposit && belowTarget) ?  (
+            {!isDeposit && belowTarget ? (
                 <WithdrawalNote className="mb-8">
                     <span className="title">Note:</span> The value of the insurance pool is currently less than the
                     insurance pool target. If you choose to withdraw at this time,{' '}
                     <span className="highlight">you will be required to pay a withdrawal fee.</span>
                 </WithdrawalNote>
-            ) : null }
-            {(!isDeposit && belowTarget) || isDeposit ?  (
+            ) : null}
+            {(!isDeposit && belowTarget) || isDeposit ? (
                 <CheckboxContainer
                     onClick={(e: any) => {
                         e.preventDefault();
@@ -269,10 +274,11 @@ export const InsuranceModal: React.FC<BProps> = ({
                     }}
                 >
                     <Checkbox checked={acceptedTerms} />
-                    <CheckboxTitle>{isDeposit ? 'I have read and accept Terms of Deposit' : 'I wish to proceed'}</CheckboxTitle>
+                    <CheckboxTitle>
+                        {isDeposit ? 'I have read and accept Terms of Deposit' : 'I wish to proceed'}
+                    </CheckboxTitle>
                 </CheckboxContainer>
-                ) : null
-            }
+            ) : null}
             <div className="flex items-center justify-center px-6 pt-6 rounded-b" id="insurance-submit">
                 {isDeposit && !tracer?.getInsuranceApproved() ? (
                     <Button
