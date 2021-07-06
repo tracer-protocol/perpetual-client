@@ -13,43 +13,55 @@ import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import { UserBalance } from 'types';
 // import CalculatorModal from './Calculator';
 
-const ConnectText = styled.p`
+const ConnectText = styled.div`
     font-size: var(--font-size-medium);
-    letter-spacing: 0;
     color: var(--color-text);
-    margin-top: auto;
 `;
 
-const SBox = styled(Box)`
-    background: #011772;
-    text-align: center;
+const ConnectButton = styled.button`
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    min-height: 250px;
-    z-index: 4;
+    align-items: center;
+    font-size: var(--font-size-small);
+    border: 2px solid #fff;
+    border-radius: 100px;
+    width: 160px;
+    height: 40px;
+    transition: 0.2s;
+    padding: 0 10px;
+    margin-top: 10px;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:hover {
+        background: var(--color-primary);
+    }
 `;
 
-const Connect = styled(Button)`
-    width: 100% !important;
-    padding: 0.5rem !important;
-    margin-top: 0.5rem;
-`;
-
-const WalletConnect: React.FC = () => {
+const ConnectOverlay: React.FC = styled(({ className }) => {
     const { handleConnect } = useContext(Web3Context);
     return (
-        <SBox>
-            <ConnectText>Connect your wallet to get started with Tracer</ConnectText>
-            <Connect
-                className="primary"
+        <div className={className}>
+            <ConnectText>No wallet connected.</ConnectText>
+            <ConnectButton
                 onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
             >
                 Connect Wallet
-            </Connect>
-        </SBox>
+            </ConnectButton>
+        </div>
     );
-};
+})`
+    display: flex;
+    background-color: var(--color-background-secondary);
+    opacity: 0.8;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    z-index: 3;
+`;
 
 const NoBalance = styled.span`
     color: var(--color-primary);
@@ -183,73 +195,82 @@ const AccountPanel: React.FC<{
         setDeposit(deposit);
     };
 
-    if (account === '') {
-        return <WalletConnect />;
-    }
     return (
-        <AccountInfo zeroBalance={balances.quote.eq(0)}>
-            <Title>Margin Account</Title>
-            {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
-            {/*    Calculator*/}
-            {/*</SButton>*/}
-            <Item>
-                <h3>
-                    <TooltipSelector tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker } }}>
-                        Equity
-                    </TooltipSelector>
-                </h3>
-                {balances.quote.eq(0) ? (
-                    <NoBalance>-</NoBalance>
-                ) : (
-                    <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</span>
-                )}
-            </Item>
-            <Item>
-                <h3>
-                    <TooltipSelector
-                        tooltip={{ key: 'buying-power', props: { baseTicker: selectedTracer?.baseTicker } }}
+        <div className="relative">
+            <AccountInfo zeroBalance={balances.quote.eq(0)}>
+                <Title>Margin Account</Title>
+                {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
+                {/*    Calculator*/}
+                {/*</SButton>*/}
+                <Item>
+                    <h3>
+                        <TooltipSelector tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker } }}>
+                            Equity
+                        </TooltipSelector>
+                    </h3>
+                    {balances.quote.eq(0) ? (
+                        <NoBalance>-</NoBalance>
+                    ) : (
+                        <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</span>
+                    )}
+                </Item>
+                <Item>
+                    <h3>
+                        <TooltipSelector
+                            tooltip={{ key: 'buying-power', props: { baseTicker: selectedTracer?.baseTicker } }}
+                        >
+                            Buying Power
+                        </TooltipSelector>
+                        <SubText>{` @ ${maxLeverage.toNumber()}x Max Leverage`}</SubText>
+                    </h3>
+                    <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
+                </Item>
+                <Item>
+                    <h3>
+                        <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
+                    </h3>
+                    <AvailableMargin
+                        order={order}
+                        balances={balances}
+                        maxLeverage={maxLeverage}
+                        fairPrice={fairPrice}
+                    />
+                </Item>
+                <DepositButtons>
+                    <SButton
+                        className={balances.quote.eq(0) ? 'primary' : ''}
+                        onClick={(_e: any) => handleClick(true, true)}
                     >
-                        Buying Power
-                    </TooltipSelector>
-                    <SubText>{` @ ${maxLeverage.toNumber()}x Max Leverage`}</SubText>
-                </h3>
-                <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
-            </Item>
-            <Item>
-                <h3>
-                    <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
-                </h3>
-                <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
-            </Item>
-            <DepositButtons>
-                <SButton
-                    className={balances.quote.eq(0) ? 'primary' : ''}
-                    onClick={(_e: any) => handleClick(true, true)}
-                >
-                    Deposit
-                </SButton>
-                <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
-            </DepositButtons>
-            <AccountModal
-                display={popup}
-                close={() => setPopup(false)}
-                isDeposit={deposit}
-                setDeposit={setDeposit}
-                unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
-                balances={balances}
-                maxLeverage={maxLeverage}
-                fairPrice={fairPrice}
-            />
-            {/*TODO: Add calculator*/}
-            {/*<CalculatorModal*/}
-            {/*    display={calculator}*/}
-            {/*    close={() => showCalculator(false)}*/}
-            {/*    exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}*/}
-            {/*    marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}*/}
-            {/*    balances={balances}*/}
-            {/*    price={Number.isNaN(price) ? 0 : price}*/}
-            {/*/>*/}
-        </AccountInfo>
+                        Deposit
+                    </SButton>
+                    <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
+                </DepositButtons>
+                <AccountModal
+                    display={popup}
+                    close={() => setPopup(false)}
+                    isDeposit={deposit}
+                    setDeposit={setDeposit}
+                    unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
+                    balances={balances}
+                    maxLeverage={maxLeverage}
+                    fairPrice={fairPrice}
+                />
+                {/*TODO: Add calculator*/}
+                {/*<CalculatorModal*/}
+                {/*    display={calculator}*/}
+                {/*    close={() => showCalculator(false)}*/}
+                {/*    exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}*/}
+                {/*    marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}*/}
+                {/*    balances={balances}*/}
+                {/*    price={Number.isNaN(price) ? 0 : price}*/}
+                {/*/>*/}
+            </AccountInfo>
+            {account === '' ? (
+                <div className="absolute top-0 w-full h-full">
+                    <ConnectOverlay />
+                </div>
+            ) : null}
+        </div>
     );
 };
 
