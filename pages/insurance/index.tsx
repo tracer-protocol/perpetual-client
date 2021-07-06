@@ -5,6 +5,7 @@ import { SelectedTracerStore } from '@context/TracerContext';
 import Pools from '@components/Insurance/Pools';
 import styled from 'styled-components';
 import { Button } from '@components/Portfolio';
+import Footer from '@components/Footer';
 
 const InsurancePoolsContent = styled.div`
     width: 100%;
@@ -68,6 +69,7 @@ const Insurance: React.FC = styled(({ className }) => {
                     </InsuranceStore>
                 </SelectedTracerStore>
             </div>
+            <Footer />
         </div>
     );
 })`

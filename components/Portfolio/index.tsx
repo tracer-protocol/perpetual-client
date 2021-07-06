@@ -4,10 +4,8 @@ export const LeftPanel = styled.div`
     width: 20%;
     display: flex;
     flex-direction: column;
-    min-height: 92vh;
-    border-top: 1px solid #0c3586;
-    border-right: 1px solid #0c3586;
-    border-left: 1px solid #0c3586;
+    height: 87vh;
+    border: 1px solid #0c3586;
 
     @media only screen and (max-width: 1200px) {
         width: auto;
@@ -18,9 +16,10 @@ export const RightPanel = styled.div`
     width: 80%;
     display: flex;
     flex-direction: column;
-    min-height: 92vh;
+    height: 87vh;
     border-top: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
+    border-bottom: 1px solid #0c3586;
 
     @media only screen and (max-width: 1200px) {
         width: auto;
