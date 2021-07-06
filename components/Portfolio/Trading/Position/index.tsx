@@ -3,6 +3,7 @@ import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 import {
     TableHeading,
+    TableLastHeading,
     TableRow,
     TableCell,
     SecondaryCell,
@@ -11,7 +12,7 @@ import {
     getStatusColour,
     TableHeader,
     Table,
-    TableBody,
+    TableBody, TableLastCell,
 } from '@components/Portfolio';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'types/OrderTypes';
@@ -96,7 +97,11 @@ const Position: React.FC<{
             <Table>
                 <TableHeader>
                     {headings.map((heading, i) =>
-                        i === 7 ? <TableHeading>{heading}</TableHeading> : <TableHeading>{heading}</TableHeading>,
+                        i !== 7 ? (
+                            <TableHeading>{heading}</TableHeading>
+                        ) : (
+                            <TableLastHeading>{heading}</TableLastHeading>
+                        ),
                     )}
                 </TableHeader>
                 <TableBody>
@@ -114,9 +119,9 @@ const Position: React.FC<{
                         if (tracer.loading) {
                             return (
                                 <TableRow>
-                                    <TableCell colSpan={8} className="text-center">
+                                    <TableLastCell colSpan={8} className="text-center">
                                         <Icon component={TracerLoading} className="tracer-loading" />
-                                    </TableCell>
+                                    </TableLastCell>
                                 </TableRow>
                             );
                         } else {

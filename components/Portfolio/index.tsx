@@ -78,6 +78,10 @@ export const TableHeading = styled.th`
     border-bottom: 1px solid var(--color-accent);
 `;
 
+export const TableLastHeading = styled(TableHeading)`
+    border-right: none;
+`;
+
 export const TableBody = styled.tbody``;
 
 export const TableRow = styled.tr`
@@ -95,6 +99,11 @@ export const TableCell = styled.td`
     padding-left: 10px;
     border-right: 1px solid var(--color-accent);
     border-bottom: 1px solid var(--color-accent);
+`;
+
+// Last cell on a table row
+export const TableLastCell = styled(TableCell)`
+    border-right: none;
 `;
 
 export const SecondaryCell = styled.div`
