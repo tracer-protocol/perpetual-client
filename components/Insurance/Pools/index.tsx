@@ -9,7 +9,7 @@ import { Button, Logo } from '@components/General';
 import { CaretDownFilled, LinkOutlined } from '@ant-design/icons';
 import Breakdown from '../PoolHealth';
 import { InsuranceModal } from '../InsuranceModal';
-import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
 import { toPercent } from '@libs/utils';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import Icon from '@ant-design/icons';
@@ -176,28 +176,19 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
         setExpanded(index);
     };
 
-    const TableHeadEndTheme = {
-        minWidth: '700px',
-        padding: '0 1rem',
-        borderRight: '1px solid var(--color-accent)',
-        borderBottom: '1px solid var(--color-accent)',
-    };
-
     return (
         <table id="pools-table" className={className}>
             <thead>
-                <tr>
-                    <TableHead>Market</TableHead>
-                    <TableHead>
-                        <TooltipSelector tooltip={{ key: 'current-apy' }}>Current APY</TooltipSelector>
-                    </TableHead>
-                    <TableHead>
-                        <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Health</TooltipSelector>
-                    </TableHead>
-                    <TableHead theme={TableHeadEndTheme}>
-                        <TooltipSelector tooltip={{ key: 'pool-ownership' }}>Pool Ownership</TooltipSelector>
-                    </TableHead>
-                </tr>
+                <TableHeading>Market</TableHeading>
+                <TableHeading>
+                    <TooltipSelector tooltip={{ key: 'current-apy' }}>Current APY</TooltipSelector>
+                </TableHeading>
+                <TableHeading className="w-1/5 xl:w-1/4">
+                    <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Health</TooltipSelector>
+                </TableHeading>
+                <TableHeading className="w-2/5 xl:w-1/2">
+                    <TooltipSelector tooltip={{ key: 'pool-ownership' }}>Pool Ownership</TooltipSelector>
+                </TableHeading>
             </thead>
             <tbody>
                 {Object.values(pools).map((pool, i) => {

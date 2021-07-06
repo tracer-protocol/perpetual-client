@@ -20,8 +20,10 @@ const Footer: FC = styled(({ className }) => {
     );
 })`
     display: flex;
-    height: 5vh;
-    padding-top: 0.8rem;
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, -50%);
 `;
 
 const FooterContent = styled.div`

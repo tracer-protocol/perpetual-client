@@ -392,11 +392,11 @@ export default class Tracer {
     };
 
     getTracerApproved: () => boolean = () => {
-        return !!this.tracerApproved;
+        return this.tracerApproved;
     };
 
     getInsuranceApproved: () => boolean = () => {
-        return !!this.insuranceApproved;
+        return this.insuranceApproved;
     };
 
     setApproved: (address: string) => void = (address) => {
