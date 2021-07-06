@@ -6,67 +6,16 @@ import DefaultSlider from '@components/General/Slider';
 import { UserBalance } from 'types';
 import { SlideSelect } from '@components/Buttons';
 import TracerModal from '@components/General/TracerModal';
-import { Button, NumberSelect } from '@components/General';
+import { Button, HiddenExpand, LockContainer, NumberSelect } from '@components/General';
 import { Option } from '@components/Buttons/SlideSelect';
-import { CalculatorContext, ContextProps } from '@context/CalculatorContext';
+import { 
+    CalculatorContext, ContextProps, LOCK_EXPOSURE, 
+    LOCK_MARGIN, LOCK_LEVERAGE, LOCK_LIQUIDATION, CalculatorAction 
+} from '@context/CalculatorContext';
+import { defaults } from '@libs/Tracer';
+import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
 
-const CalcSelectContainer = styled.div`
-    margin-top: 1rem;
-    border-top: 1px solid var(--color-accent);
-`;
 
-const CalcSlideSelect = styled(SlideSelect)`
-    max-width: 300px;
-    height: var(--height-medium-button);
-    margin: 1rem auto;
-`;
-
-const SButton = styled(Button)`
-    height: var(--height-small-button);
-    line-height: 28px;
-    padding: 0;
-`;
-
-const CalcButtons = styled.div`
-    margin: 3rem 5rem;
-    display: flex;
-    justify-content: space-around;
-`;
-
-const AccountNumberSelect = styled(NumberSelect)`
-    margin-top: 1rem;
-    > * .balance {
-        color: var(--color-primary);
-    }
-    // > * .balance > .max {
-    //     margin-left: 2rem;
-    // }
-`;
-
-type LProps = {
-    className?: string;
-    value?: number;
-    handleChange: (val: number) => any;
-};
-const Leverage: React.FC<LProps> = styled(({ className, value, handleChange }: LProps) => {
-    return (
-        <div className={className}>
-            <h3>Leverage</h3>
-            <DefaultSlider className="px-5" value={value} handleChange={handleChange} />
-        </div>
-    );
-})`
-    display: flex;
-    flex-direction: column;
-    margin-top: 2rem;
-    margin-bottom: 4rem;
-
-    > h3 {
-        font-size: var(--font-size-small);
-        color: var(--color-primary);
-        margin-bottom: 1rem;
-    }
-`;
 
 type CalculatorModalProps = {
     className?: string;
@@ -77,13 +26,18 @@ type CalculatorModalProps = {
     balances: UserBalance;
     fairPrice: BigNumber;
 };
-export default styled(({ className, close, baseTicker, quoteTicker, balances, display }: CalculatorModalProps) => {
+export default styled(({ 
+    className, close, baseTicker, 
+    quoteTicker, balances, display,
+    fairPrice
+}: CalculatorModalProps) => {
     const { selectedTracer } = useContext(TracerContext);
     const {
-        calculatorState: { exposure, margin, liquidationPrice, leverage, position },
+        calculatorState: { exposure, margin, liquidationPrice, leverage, position, displayLocks, showResult, locked },
         calculatorDispatch,
     } = useContext(CalculatorContext) as ContextProps;
 
+    const isLocked = (locked: number[], value: number) => locked[0] === value || locked[1] === value;
     return (
         <TracerModal
             loading={false}
@@ -105,10 +59,13 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 amount={exposure}
                 setAmount={(val) => {
                     calculatorDispatch({ type: 'setExposure', value: val });
+                    calculatorDispatch({ type: Number.isNaN(val) ? 'unlockValue': 'lockValue', value: LOCK_EXPOSURE })
                 }}
-                hasLock={true}
-                // isLocked={exposureLocked}
-                // lockOnClick={() => setExposureLocked(!exposureLocked)}
+                displayLock={displayLocks}
+                isLocked={isLocked(locked, LOCK_EXPOSURE)}
+                lockOnClick={() => 
+                    calculatorDispatch({ type: 'lockValue', value: LOCK_EXPOSURE })
+                }
             />
 
             <AccountNumberSelect
@@ -116,43 +73,49 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 title={'Margin'}
                 amount={margin}
                 balance={balances.tokenBalance.toNumber()}
-                setAmount={(val) => calculatorDispatch({ type: 'setMargin', value: val })}
-                hasLock={true}
-                // isLocked={marginLocked}
-                // lockOnClick={() => setMarginLocked(!marginLocked)}
+                setAmount={(val) => {
+                    calculatorDispatch({ type: 'setMargin', value: val })
+                    calculatorDispatch({ type: Number.isNaN(val) ? 'unlockValue': 'lockValue', value: LOCK_MARGIN })
+                }}
+                displayLock={displayLocks}
+                isLocked={isLocked(locked, LOCK_MARGIN)}
+                lockOnClick={() => 
+                    calculatorDispatch({ type: 'lockValue', value: LOCK_MARGIN })
+                }
             />
 
             <Leverage
                 value={leverage}
-                handleChange={(val) => calculatorDispatch({ type: 'setLeverage', value: val })}
+                isLocked={isLocked(locked, LOCK_LEVERAGE)}
+                calculatorDispatch={calculatorDispatch}
+                maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
             />
-            {/* <input value={leverage} onChange={(e) => setLeverage(Number(e.target.value))} /> */}
-
-            <div>
-                Leverage:{' '}
-                {/* {showResult
-                    ? isLong
-                        ? calcLeverage(
-                              new BigNumber(marginAmount).negated(),
-                              new BigNumber(exposureAmount),
-                              new BigNumber(1),
-                          ).toNumber()
-                        : calcLeverage(
-                              new BigNumber(marginAmount).negated(),
-                              new BigNumber(-Math.abs(exposureAmount)),
-                              new BigNumber(1),
-                          ).toNumber()
-                    : null} */}
-            </div>
 
             <AccountNumberSelect
                 unit={quoteTicker}
                 title={'Liquidation Price'}
                 amount={liquidationPrice}
-                balance={balances.tokenBalance.toNumber()}
-                setAmount={(val) => calculatorDispatch({ type: 'setLiquidationPrice', value: val })}
+                balance={parseFloat(fairPrice.toFixed(2))}
+                setAmount={(val) => {
+                    calculatorDispatch({ type: 'setLiquidationPrice', value: val })
+                    calculatorDispatch({ type: Number.isNaN(val) ? 'unlockValue': 'lockValue', value: LOCK_LIQUIDATION })
+                }}
+                isLocked={isLocked(locked, LOCK_LIQUIDATION)}
+                displayLock={displayLocks}
+                lockOnClick={() => 
+                    calculatorDispatch({ type: 'lockValue', value: LOCK_LIQUIDATION })
+                }
             />
-
+            <StyledHiddenExpand
+                defaultHeight={0}
+                open={showResult}
+            >
+                <p className="title">Calculator Summary</p>
+                <p>Deposit $1,000 margin to open trade, or continue editing.</p>
+                <div className="text-center">
+                    <SButton className="primary mt-1">Deposit Margin</SButton>
+                </div>
+            </StyledHiddenExpand>
             <CalcButtons>
                 <SButton
                     onClick={(e) => {
@@ -173,4 +136,131 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
             </CalcButtons>
         </TracerModal>
     );
-})`` as React.FC<CalculatorModalProps>;
+})`
+    max-width: 434px !important;
+` as React.FC<CalculatorModalProps>;
+
+const StyledHiddenExpand = styled(HiddenExpand)`
+    background: var(--color-accent);
+    font-size: var(--font-size-small);
+    letter-spacing: -0.32px;
+    color: var(--color-primary);
+    margin-top: 1rem;
+    p.title {
+        color: #fff;
+    }
+`
+
+const CalcSelectContainer = styled.div`
+    margin-top: 1rem;
+    border-top: 1px solid var(--color-accent);
+`;
+
+const CalcSlideSelect = styled(SlideSelect)`
+    max-width: 300px;
+    height: var(--height-medium-button);
+    margin: 1rem auto;
+`;
+
+const SButton = styled(Button)`
+    height: var(--height-small-button);
+    line-height: 28px;
+    padding: 0;
+`;
+
+const CalcButtons = styled.div`
+    display: flex;
+    justify-content: space-around;
+`;
+
+const AccountNumberSelect = styled(NumberSelect)`
+    margin-top: 1rem;
+    > * .balance {
+        color: var(--color-primary);
+    }
+    opacity: ${props => !props.isLocked ? 0.5 : 1};
+
+    > * input {
+        &::placeholder {
+            /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: var(--color-secondary);
+            opacity: 1; /* Firefox */
+        }
+
+        &:-ms-input-placeholder {
+            /* Internet Explorer 10-11 */
+            color: var(--color-secondary);
+        }
+
+        &::-ms-input-placeholder {
+            /* Microsoft Edge */
+            color: var(--color-secondary);
+        }
+    }
+`;
+
+
+type LProps = {
+    className?: string;
+    value: number;
+    maxLeverage: BigNumber;
+    isLocked: boolean;
+    calculatorDispatch: React.Dispatch<CalculatorAction>;
+};
+const Leverage: React.FC<LProps> = styled(({ 
+    className, value, maxLeverage,
+    isLocked, calculatorDispatch
+}: LProps) => {
+    return (
+        <div className={className}>
+            <h3>Leverage</h3>
+            <LockContainer>
+                {isLocked ? (
+                    <LockOutlined
+                        onClick={() =>  {
+                            calculatorDispatch({ type: 'unlockValue', value: LOCK_LEVERAGE})
+                        }}
+                    />
+
+                ): (
+                    <UnlockOutlined
+                        onClick={() =>  {
+                            calculatorDispatch({ type: 'lockValue', value: LOCK_LEVERAGE })
+                        }}
+                    />
+                )}
+            </LockContainer>
+            <DefaultSlider 
+                className="px-5" 
+                value={value}
+                handleChange={(val) => {
+                    calculatorDispatch({ type: 'setLeverage', value: val })
+                    calculatorDispatch({ type: val === 0 ? 'unlockValue' : 'lockValue', value: LOCK_LEVERAGE })
+                }}
+                min={0}
+                defaultValue={0}
+                max={maxLeverage.toNumber()}
+            />
+        </div>
+    );
+})`
+    display: flex;
+    flex-direction: column;
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+    position: relative;
+
+    opacity: ${props => !props.isLocked ? 0.5 : 1};
+
+    ${LockContainer} {
+        position: absolute; 
+        right: 20px;
+        top: 25%;
+    }
+
+    > h3 {
+        font-size: var(--font-size-small);
+        color: var(--color-primary);
+        margin-bottom: 1rem;
+    }
+`;

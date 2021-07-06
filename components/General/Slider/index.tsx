@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-const DEFAULT_VALUE = 1;
-const DEFAULT_MIN = 1;
+const DEFAULT_VALUE = 0;
+const DEFAULT_MIN = 0;
 const DEFAULT_MAX = 100;
 const DEFAULT_STEP = 0.5;
 

@@ -8,6 +8,7 @@ import { After } from '@components/General';
 
 const Unit = styled.span`
     font-size: var(--font-size-medium);
+    line-height: var(--font-size-medium);
     letter-spacing: 0;
     color: var(--color-primary);
     margin-top: auto;
@@ -49,6 +50,21 @@ const Max = styled.span`
     }
 `;
 
+export const LockContainer = styled.div`
+    margin-top: 0.125rem;
+    margin-right: 0.125rem;
+    color: #f4ab57;
+    font-size: 1.2rem;
+    padding: 0 0.7rem;
+    height: 24px;
+    margin-bottom: 0.2rem;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    border-radius: 20px;
+    border: 1px solid #f4ab57;
+`
+
 type NSProps = {
     className?: string;
     amount: number;
@@ -56,7 +72,7 @@ type NSProps = {
     unit: string;
     title: string;
     balance?: number;
-    hasLock?: boolean;
+    displayLock?: boolean;
     isLocked?: boolean;
     lockOnClick?: (e: any) => any;
 } & Children;
@@ -68,27 +84,27 @@ export const NumberSelect: React.FC<NSProps> = ({
     unit,
     title,
     balance,
-    hasLock,
+    displayLock,
     isLocked,
     lockOnClick,
 }: NSProps) => {
-    const getLock = (hasLock: any) => {
+    const getLock = (hasLock: boolean | undefined, isLocked: boolean | undefined) => {
         if (hasLock) {
             if (isLocked) {
                 return (
-                    <LockOutlined
-                        onClick={lockOnClick}
-                        className="mt-2 mr-2"
-                        style={{ color: '#F4AB57', fontSize: '200%' }}
-                    />
+                    <LockContainer>
+                        <LockOutlined
+                            onClick={lockOnClick}
+                        />
+                    </LockContainer>
                 );
             } else {
                 return (
-                    <UnlockOutlined
-                        onClick={lockOnClick}
-                        className="mt-2 mr-2"
-                        style={{ color: '#F4AB57', fontSize: '200%' }}
-                    />
+                    <LockContainer>
+                        <UnlockOutlined
+                            onClick={lockOnClick}
+                        />
+                    </LockContainer>
                 );
             }
         } else {
@@ -123,9 +139,8 @@ export const NumberSelect: React.FC<NSProps> = ({
                     placeholder="0.0"
                     onChange={(e) => setAmount(Math.abs(parseFloat(e.target.value)))}
                     value={!Number.isNaN(amount) ? amount : ''}
-                    disabled={isLocked}
                 />
-                {getLock(hasLock)}
+                {getLock(displayLock, isLocked)}
                 <Unit>{unit}</Unit>
             </BasicInputContainer>
         </div>
