@@ -1,6 +1,5 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
-import { calcLeverage, calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
 import { TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
 import DefaultSlider from '@components/General/Slider';
@@ -9,6 +8,7 @@ import { SlideSelect } from '@components/Buttons';
 import TracerModal from '@components/General/TracerModal';
 import { Button, NumberSelect } from '@components/General';
 import { Option } from '@components/Buttons/SlideSelect';
+import { CalculatorContext, ContextProps } from '@context/CalculatorContext';
 
 const CalcSelectContainer = styled.div`
     margin-top: 1rem;
@@ -17,11 +17,12 @@ const CalcSelectContainer = styled.div`
 
 const CalcSlideSelect = styled(SlideSelect)`
     max-width: 300px;
+    height: var(--height-medium-button);
     margin: 1rem auto;
 `;
 
 const SButton = styled(Button)`
-    height: 28px;
+    height: var(--height-small-button);
     line-height: 28px;
     padding: 0;
 `;
@@ -36,11 +37,10 @@ const AccountNumberSelect = styled(NumberSelect)`
     margin-top: 1rem;
     > * .balance {
         color: var(--color-primary);
-        margin-left: 2rem;
     }
-    > * .balance > .max {
-        margin-left: 2rem;
-    }
+    // > * .balance > .max {
+    //     margin-left: 2rem;
+    // }
 `;
 
 type LProps = {
@@ -72,71 +72,46 @@ type CalculatorModalProps = {
     className?: string;
     close: () => any;
     display: boolean;
-    exposureUnit: string;
-    marginUnit: string;
+    quoteTicker: string;
+    baseTicker: string;
     balances: UserBalance;
-    price: BigNumber;
+    fairPrice: BigNumber;
 };
-export default styled(({ className, close, exposureUnit, marginUnit, balances, display }: CalculatorModalProps) => {
+export default styled(({ 
+    className, 
+    close, 
+    baseTicker, 
+    quoteTicker, 
+    balances, 
+    display
+}: CalculatorModalProps) => {
     const { selectedTracer } = useContext(TracerContext);
-    const [leverage, setLeverage] = useState(1);
-    const [exposureAmount, setExposureAmount] = useState(NaN);
-    const [marginAmount, setMarginAmount] = useState(NaN);
-    const [liquidationAmount, setLiquidationAmount] = useState(NaN);
+    const { 
+        calculatorState: {
+            exposure,
+            margin, 
+            liquidationPrice,
+            leverage,
+            position
+        },
+        calculatorDispatch
+    } = useContext(CalculatorContext) as ContextProps ;
 
-    const [isLong, setPosition] = useState(true);
-    const [showResult, setShowResult] = useState(false);
 
     const [exposureLocked, setExposureLocked] = useState(false);
     const [marginLocked, setMarginLocked] = useState(false);
 
     const Calculate = () => {
-        if (isLong) {
-            setLiquidationAmount(
-                calcLiquidationPrice(
-                    new BigNumber(marginAmount).negated(),
-                    new BigNumber(exposureAmount),
-                    new BigNumber(1),
-                    new BigNumber(25),
-                ).toNumber(),
-            );
-        } else {
-            setLiquidationAmount(
-                calcLiquidationPrice(
-                    new BigNumber(marginAmount).negated(),
-                    new BigNumber(-Math.abs(exposureAmount)),
-                    new BigNumber(1),
-                    new BigNumber(25),
-                ).toNumber(),
-            );
-        }
-        setShowResult(true);
     };
 
     const Reset = () => {
-        setExposureAmount(NaN);
-        setMarginAmount(NaN);
-        setLiquidationAmount(NaN);
-        setShowResult(false);
+        // setExposureAmount(NaN);
+        // setMarginAmount(NaN);
+        // setLiquidationAmount(NaN);
 
         setExposureLocked(false);
         setMarginLocked(false);
     };
-
-    // const ChangeExposure = (e: any) => {
-    //     setExposureAmount(Math.abs(parseFloat(e.target.value)));
-    //     setShowResult(false);
-    // };
-
-    // const ChangeMargin = (e: any) => {
-    //     setMarginAmount(Math.abs(parseFloat(e.target.value)));
-    //     setShowResult(false);
-    // };
-
-    // const ChangeLiquidation = (e: any) => {
-    //     setLiquidationAmount(Math.abs(parseFloat(e.target.value)));
-    //     setShowResult(false);
-    // };
 
     return (
         <TracerModal
@@ -147,41 +122,43 @@ export default styled(({ className, close, exposureUnit, marginUnit, balances, d
             onClose={close}
         >
             <CalcSelectContainer>
-                <CalcSlideSelect value={isLong ? 0 : 1} onClick={() => setPosition(!isLong)}>
+                <CalcSlideSelect value={position} onClick={() => calculatorDispatch({ type: 'setPosition' })}>
                     <Option>Long</Option>
                     <Option>Short</Option>
                 </CalcSlideSelect>
             </CalcSelectContainer>
 
             <AccountNumberSelect
-                unit={exposureUnit}
+                unit={baseTicker}
                 title={'Exposure'}
-                amount={exposureAmount}
-                setAmount={setExposureAmount}
-                // onChange={ChangeExposure}
+                amount={exposure}
+                setAmount={(val) => {
+                    calculatorDispatch({ type: 'setExposure', value: val})
+                }}
                 hasLock={true}
-                isLocked={exposureLocked}
-                lockOnClick={() => setExposureLocked(!exposureLocked)}
+                // isLocked={exposureLocked}
+                // lockOnClick={() => setExposureLocked(!exposureLocked)}
             />
 
             <AccountNumberSelect
-                unit={marginUnit}
+                unit={quoteTicker}
                 title={'Margin'}
-                amount={marginAmount}
+                amount={margin}
                 balance={balances.tokenBalance.toNumber()}
-                setAmount={setMarginAmount}
-                // onChange={ChangeMargin}
+                setAmount={(val) => calculatorDispatch({ type: 'setMargin', value: val})}
                 hasLock={true}
-                isLocked={marginLocked}
-                lockOnClick={() => setMarginLocked(!marginLocked)}
+                // isLocked={marginLocked}
+                // lockOnClick={() => setMarginLocked(!marginLocked)}
             />
 
-            <Leverage value={leverage} handleChange={(val) => setLeverage(val)} />
-            <input value={leverage} onChange={(e) => setLeverage(Number(e.target.value))} />
+            <Leverage value={leverage} 
+                handleChange={(val) => calculatorDispatch({ type: 'setLeverage', value: val })} 
+            />
+            {/* <input value={leverage} onChange={(e) => setLeverage(Number(e.target.value))} /> */}
 
             <div>
                 Leverage:{' '}
-                {showResult
+                {/* {showResult
                     ? isLong
                         ? calcLeverage(
                               new BigNumber(marginAmount).negated(),
@@ -193,35 +170,15 @@ export default styled(({ className, close, exposureUnit, marginUnit, balances, d
                               new BigNumber(-Math.abs(exposureAmount)),
                               new BigNumber(1),
                           ).toNumber()
-                    : null}
-            </div>
-
-            <div>
-                Liquidation Price:{' '}
-                {showResult
-                    ? isLong
-                        ? calcLiquidationPrice(
-                              new BigNumber(marginAmount).negated(),
-                              new BigNumber(exposureAmount),
-                              new BigNumber(1),
-                              new BigNumber(25),
-                          ).toNumber()
-                        : calcLiquidationPrice(
-                              new BigNumber(marginAmount).negated(),
-                              new BigNumber(-Math.abs(exposureAmount)),
-                              new BigNumber(1),
-                              new BigNumber(25),
-                          ).toNumber()
-                    : null}
+                    : null} */}
             </div>
 
             <AccountNumberSelect
-                unit={marginUnit}
+                unit={quoteTicker}
                 title={'Liquidation Price'}
-                amount={liquidationAmount}
+                amount={liquidationPrice}
                 balance={balances.tokenBalance.toNumber()}
-                setAmount={setLiquidationAmount}
-                // onChange={ChangeLiquidation}
+                setAmount={(val) => calculatorDispatch({ type: 'setLiquidationPrice', value: val})}
             />
 
             <CalcButtons>

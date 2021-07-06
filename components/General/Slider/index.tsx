@@ -45,15 +45,16 @@ const defaultHandleStyle = {
     marginTop: '-11px',
 };
 
+const HandleValue = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: var(--font-size-small);
+`;
+
 const { Handle } = Slider;
 const DefaultHandle = (e: any) => {
-    const HandleValue = styled.div`
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        font-size: var(--font-size-small);
-    `;
     const { value } = e;
     return (
         <Handle {...e}>

@@ -11,7 +11,8 @@ import AccountModal from './AccountModal';
 import { LIMIT, OrderState } from '@context/OrderContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import { UserBalance } from 'types';
-// import CalculatorModal from './Calculator';
+import CalculatorModal from './Calculator';
+import { CalculatorStore } from '@context/CalculatorContext';
 
 const SBox = styled(Box)`
     background: #011772;
@@ -172,7 +173,7 @@ const AccountPanel: React.FC<{
 }> = ({ selectedTracer, account, order }) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
-    // const [calculator, showCalculator] = useState(false);
+    const [calculator, showCalculator] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
@@ -188,9 +189,9 @@ const AccountPanel: React.FC<{
     return (
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title>Margin Account</Title>
-            {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
-            {/*    Calculator*/}
-            {/*</SButton>*/}
+            <SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>
+               Calculator
+            </SButton>
             <Item>
                 <h3>
                     <TooltipSelector tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker } }}>
@@ -234,20 +235,21 @@ const AccountPanel: React.FC<{
                 close={() => setPopup(false)}
                 isDeposit={deposit}
                 setDeposit={setDeposit}
-                unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
+                unit={selectedTracer?.quoteTicker ?? 'NO_ID'}
                 balances={balances}
                 maxLeverage={maxLeverage}
                 fairPrice={fairPrice}
             />
-            {/*TODO: Add calculator*/}
-            {/*<CalculatorModal*/}
-            {/*    display={calculator}*/}
-            {/*    close={() => showCalculator(false)}*/}
-            {/*    exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}*/}
-            {/*    marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}*/}
-            {/*    balances={balances}*/}
-            {/*    price={Number.isNaN(price) ? 0 : price}*/}
-            {/*/>*/}
+            <CalculatorStore>
+                <CalculatorModal
+                    display={calculator}
+                    close={() => showCalculator(false)}
+                    baseTicker={selectedTracer?.baseTicker ?? 'NO_ID'}
+                    quoteTicker={selectedTracer?.quoteTicker ?? 'NO_ID'}
+                    balances={balances}
+                    fairPrice={fairPrice}
+                /> 
+            </CalculatorStore>
         </AccountInfo>
     );
 };
