@@ -5,11 +5,10 @@ import { CandleData } from 'types/TracerTypes';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 
 const GraphWrap = styled.div`
-    height: 50vh;
+    height: 45vh;
     width: calc(100% - 40px);
     margin-bottom: 20px;
     padding: 20px;
-    max-height: 50vh;
     position: relative;
 `;
 

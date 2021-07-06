@@ -6,6 +6,7 @@ import { OrderStore, SelectedTracerStore } from 'context';
 import { InsuranceStore } from '@context/InsuranceContext';
 import styled from 'styled-components';
 import { OMEStore } from '@context/OMEContext';
+import Footer from '@components/Footer';
 
 const Trade: React.FC = styled(({ className }) => {
     const router = useRouter();
@@ -25,6 +26,7 @@ const Trade: React.FC = styled(({ className }) => {
                     </InsuranceStore>
                 </OMEStore>
             </SelectedTracerStore>
+            <Footer />
         </div>
     );
 })`
