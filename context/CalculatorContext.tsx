@@ -49,7 +49,7 @@ const defaultState: CalculatorState = {
     position: LONG,
     displayLocks: true,
     showResult: false,
-    locked: [] 
+    locked: [],
 };
 export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) => {
     const initialState: CalculatorState = {
@@ -60,7 +60,7 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
         position: LONG,
         displayLocks: true,
         showResult: false,
-        locked: [] 
+        locked: [],
     };
 
     const reducer = (state: CalculatorState, action: CalculatorAction) => {
@@ -81,26 +81,26 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                     position: (state.position === LONG ? SHORT : LONG) as typeof LONG | typeof SHORT,
                 };
             case 'lockValue':
-                let locked = state.locked;
+                const locked = state.locked;
                 if (locked[0] === action.value || locked[1] === action.value) {
-                    return { 
+                    return {
                         ...state,
-                    }
+                    };
                 }
                 if (locked.length <= 1) {
-                    locked.push(action.value)
+                    locked.push(action.value);
                 } else {
                     locked[1] = action.value;
                 }
                 return {
                     ...state,
                     locked: locked,
-                }
-            case 'unlockValue': 
+                };
+            case 'unlockValue':
                 return {
                     ...state,
-                    locked: state.locked.filter((val) => val !== action.value)
-                }
+                    locked: state.locked.filter((val) => val !== action.value),
+                };
             case 'calculate': {
                 return { ...state, showResult: true };
             }

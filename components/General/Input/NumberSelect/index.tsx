@@ -63,7 +63,7 @@ export const LockContainer = styled.div`
     justify-content: center;
     border-radius: 20px;
     border: 1px solid #f4ab57;
-`
+`;
 
 type NSProps = {
     className?: string;
@@ -93,17 +93,13 @@ export const NumberSelect: React.FC<NSProps> = ({
             if (isLocked) {
                 return (
                     <LockContainer>
-                        <LockOutlined
-                            onClick={lockOnClick}
-                        />
+                        <LockOutlined onClick={lockOnClick} />
                     </LockContainer>
                 );
             } else {
                 return (
                     <LockContainer>
-                        <UnlockOutlined
-                            onClick={lockOnClick}
-                        />
+                        <UnlockOutlined onClick={lockOnClick} />
                     </LockContainer>
                 );
             }
