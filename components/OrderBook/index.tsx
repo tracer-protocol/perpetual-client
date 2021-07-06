@@ -243,18 +243,20 @@ const StyledTriangleDown = styled.img`
     height: 0.5rem;
     transition: all 400ms ease-in-out;
     display: inline;
+    margin-top: -0.2rem;
     margin-left: 0.2rem;
 
     &.rotate {
         transform: rotate(180deg);
-        margin-top: -2px;
+        margin-top: -4px;
     }
 `;
 
 const PrecisionDropdownButton = styled(Button)`
-    height: var(--height-small-button);
+    height: var(--height-extra-small-button);
     padding: 0;
     max-width: 5rem;
+    border-radius: 5px;
 `;
 
 type PDProps = {
@@ -294,7 +296,11 @@ const PrecisionDropdown: React.FC<PDProps> = styled(({ className, decimals, setD
     );
 })`
     position: absolute;
-    right: 0;
-    top: 0;
-    margin: 0.5rem;
+    right: 2.5rem;
+    top: 0.7rem;
+
+    &:hover {
+        background: none;
+        color: var(--color-primary);
+    }
 `;

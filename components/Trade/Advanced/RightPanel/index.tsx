@@ -1,7 +1,7 @@
 import React, { FC, useContext, useState } from 'react';
 import OrderBook from '@components/OrderBook';
 import Tracer, { defaults } from '@libs/Tracer';
-import { Box, Button } from '@components/General';
+import { Box } from '@components/General';
 import RecentTrades from './RecentTrades';
 import { useMostRecentMatched } from '@libs/Graph/hooks/Tracer';
 import { OMEContext } from '@context/OMEContext';
@@ -19,7 +19,6 @@ import Graphs from './Graphs';
 import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
-import useWindowDimensions from "@libs/utils/useWindowDimensions";
 
 const TitledBox = styled(({ className, title, children }) => {
     return (
@@ -124,48 +123,40 @@ const SBox = styled(Box)`
     }
 `;
 
-type HEBProps = {
+type OBTProps = {
     className?: string;
     showOrderBook: boolean;
     onClick: () => void;
 };
-const HEButton = styled(Button)`
-    height: var(--height-small-button);
-    width: 5rem;
-    padding: 0;
-`;
-const HideExpandButton: FC<HEBProps> = styled(({ className, showOrderBook, onClick }: HEBProps) => {
-    return (
-        <HEButton className={className} onClick={onClick}>
-            {showOrderBook ? 'Collapse' : 'Expand'}
-        </HEButton>
-    );
-})`
-    position: absolute;
-    right: ${(props: any) => (props.showOrderBook ? '7rem' : '1rem')};
-    top: 0.6rem;
-`;
+const StyledTriangleDown = styled.img`
+    height: 0.8rem;
+    transition: all 400ms ease-in-out;
+    display: inline;
+    margin-top: -0.2rem;
+    margin-left: 0.2rem;
 
-type PMProps = {
-    className?: string;
-    showOrderBook: boolean;
-    onClick: () => void;
-};
-const PMButton = styled(Button)`
-    height: var(--height-extra-small-button);
-    width: 2rem;
-    padding: 0;
+    &.rotate {
+        transform: rotate(180deg);
+        margin-top: -4px;
+    }
 `;
-const PlusMinusButton: FC<PMProps> = styled(({ className, showOrderBook, onClick }: PMProps) => {
+const OrderBookToggle: FC<OBTProps> = styled(({ className, showOrderBook, onClick }: OBTProps) => {
     return (
-        <PMButton className={className} onClick={onClick}>
-            {showOrderBook ? '-' : '+'}
-        </PMButton>
+        <div className={className} onClick={onClick}>
+            <StyledTriangleDown
+                className={showOrderBook ? 'rotate' : ''}
+                src="/img/general/triangle_down_cropped.svg"
+            />
+        </div>
     );
 })`
     position: absolute;
-    right: ${(props: any) => (props.showOrderBook ? '7rem' : '1rem')};
-    top: 0.8rem;
+    right: 1rem;
+    top: 0.7rem;
+
+    &:hover {
+        cursor: pointer;
+    }
 `;
 
 const TradingView: React.FC<{
@@ -174,7 +165,6 @@ const TradingView: React.FC<{
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
     const [showOrderBook, setShowOrderBook] = useState(true);
-    const { width } = useWindowDimensions();
 
     return (
         <>
@@ -195,17 +185,7 @@ const TradingView: React.FC<{
                 <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
                 <OrderBookContainer>
                     <h3>Order Book</h3>
-                    {width > 1280 ? (
-                        <HideExpandButton
-                            showOrderBook={showOrderBook}
-                            onClick={() => setShowOrderBook(!showOrderBook)}
-                        />
-                    ) : (
-                        <PlusMinusButton
-                            showOrderBook={showOrderBook}
-                            onClick={() => setShowOrderBook(!showOrderBook)}
-                        />
-                    )}
+                    <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
                     {showOrderBook ? (
                         omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
                             <OrderBook
