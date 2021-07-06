@@ -30,7 +30,7 @@ type CalculatorModalProps = {
     fairPrice: BigNumber;
 };
 export default styled(
-    ({ className, close, baseTicker, quoteTicker, balances, display, fairPrice }: CalculatorModalProps) => {
+    ({ className, close, baseTicker, quoteTicker, balances, display }: CalculatorModalProps) => {
         const { selectedTracer } = useContext(TracerContext);
         const {
             calculatorState: {
@@ -106,7 +106,7 @@ export default styled(
                     unit={quoteTicker}
                     title={'Liquidation Price'}
                     amount={liquidationPrice}
-                    balance={parseFloat(fairPrice.toFixed(2))}
+                    // balance={parseFloat(fairPrice.toFixed(2))}
                     setAmount={(val) => {
                         calculatorDispatch({ type: 'setLiquidationPrice', value: val });
                         calculatorDispatch({

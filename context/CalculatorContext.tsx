@@ -1,7 +1,19 @@
-import React, { useReducer } from 'react';
+import React, { useContext, useReducer } from 'react';
 import { Children } from 'types';
 import { LONG, SHORT } from 'context/OrderContext';
-
+import { 
+    calcFromExposureAndLeverage,
+    calcFromExposureAndLiquidation,
+    calcFromExposureAndMargin,
+    calcFromLeverageAndLiquidation,
+    calcFromMarginAndLeverage,
+    calcFromMarginAndLiquidation,
+    
+} from '@tracer-protocol/tracer-utils';
+import BigNumber from 'bignumber.js';
+import { TracerContext } from './TracerContext';
+import { defaults } from '@libs/Tracer';
+import { PositionVars } from '../../tracer-utils/dist/Types/calculator';
 export interface ContextProps {
     calculatorState: CalculatorState;
     calculatorDispatch: React.Dispatch<CalculatorAction>;
@@ -12,7 +24,7 @@ export const CalculatorContext = React.createContext<Partial<ContextProps>>({} a
 export const LOCK_EXPOSURE = 0;
 export const LOCK_MARGIN = 1;
 export const LOCK_LEVERAGE = 2;
-export const LOCK_LIQUIDATION = 3;
+export const LOCK_LIQUIDATION = 4;
 
 type CalculatorState = {
     exposure: number;
@@ -26,7 +38,6 @@ type CalculatorState = {
 };
 
 export type CalculatorAction =
-    | { type: 'calculateFromExposureAndMargin'; exposure: number; margin: number }
     | { type: 'setExposure'; value: number }
     | { type: 'setLiquidationPrice'; value: number }
     | { type: 'setLeverage'; value: number }
@@ -52,6 +63,8 @@ const defaultState: CalculatorState = {
     locked: [],
 };
 export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) => {
+    const { selectedTracer } = useContext(TracerContext);
+
     const initialState: CalculatorState = {
         exposure: NaN,
         margin: NaN,
@@ -65,8 +78,6 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
 
     const reducer = (state: CalculatorState, action: CalculatorAction) => {
         switch (action.type) {
-            case 'calculateFromExposureAndMargin':
-                return { ...state };
             case 'setExposure':
                 return { ...state, exposure: action.value };
             case 'setMargin':
@@ -102,7 +113,19 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                     locked: state.locked.filter((val) => val !== action.value),
                 };
             case 'calculate': {
-                return { ...state, showResult: true };
+                let result = getResult(
+                    state,
+                    selectedTracer?.getFairPrice() ?? defaults.fairPrice,
+                    selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
+                )
+                return { 
+                    ...state, 
+                    showResult: true,
+                    exposure: parseFloat(result.exposure.toFixed(5)),
+                    liquidationPrice: parseFloat(result.liquidationPrice.toFixed(5)),
+                    leverage: parseFloat(result.leverage.toFixed(1)),
+                    margin: parseFloat(result.margin.toFixed(5))
+                };
             }
             case 'reset': {
                 return { ...defaultState, locked: [] };
@@ -125,3 +148,78 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
         </CalculatorContext.Provider>
     );
 };
+
+
+const getResult: (
+    state: CalculatorState, fairPrice: BigNumber, maxLeverage: BigNumber
+) => PositionVars = (state, fairPrice, maxLeverage) => {
+    switch(state.locked[0] + state.locked[1]) {
+        case LOCK_EXPOSURE + LOCK_MARGIN: // 0 and 1
+            return (
+                calcFromExposureAndMargin(
+                    new BigNumber(state.exposure),
+                    new BigNumber(state.margin),
+                    fairPrice,
+                    maxLeverage,
+                    state.position === LONG
+                )
+            )
+        case LOCK_EXPOSURE + LOCK_LEVERAGE: // 0 and 2
+            return (
+                calcFromExposureAndLeverage(
+                    new BigNumber(state.exposure),
+                    new BigNumber(state.leverage),
+                    fairPrice,
+                    maxLeverage,
+                    state.position === LONG
+                )
+            )
+        case LOCK_EXPOSURE + LOCK_LIQUIDATION: // 0 and 4
+            return (
+                calcFromExposureAndLiquidation(
+                    new BigNumber(state.exposure),
+                    new BigNumber(state.liquidationPrice),
+                    fairPrice,
+                    maxLeverage,
+                    state.position === LONG
+                )
+            )
+        case LOCK_MARGIN + LOCK_LEVERAGE: // 1 and 2
+            return (
+                calcFromMarginAndLeverage(
+                    new BigNumber(state.margin),
+                    new BigNumber(state.leverage),
+                    fairPrice,
+                    maxLeverage,
+                    state.position === LONG
+                )
+            )
+        case LOCK_MARGIN + LOCK_LIQUIDATION: // 1 and 4
+            return (
+                calcFromMarginAndLiquidation(
+                    new BigNumber(state.margin),
+                    new BigNumber(state.liquidationPrice),
+                    fairPrice,
+                    maxLeverage,
+                    state.position === LONG
+                )
+            )
+        case LOCK_LEVERAGE + LOCK_LIQUIDATION: // 2 and 4
+            return (
+                calcFromLeverageAndLiquidation(
+                    new BigNumber(state.leverage),
+                    new BigNumber(state.liquidationPrice),
+                    fairPrice,
+                    maxLeverage,
+                    state.position === LONG
+                )
+            )
+        default:
+            return ({
+                exposure: new BigNumber(0),
+                liquidationPrice: new BigNumber(0),
+                margin: new BigNumber(0),
+                leverage: new BigNumber(0),
+            })
+    }
+}
