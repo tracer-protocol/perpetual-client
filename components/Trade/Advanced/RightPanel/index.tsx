@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import OrderBook from '@components/OrderBook';
 import Tracer, { defaults } from '@libs/Tracer';
 import { Box } from '@components/General';
@@ -123,11 +123,48 @@ const SBox = styled(Box)`
     }
 `;
 
+type OBTProps = {
+    className?: string;
+    showOrderBook: boolean;
+    onClick: () => void;
+};
+const StyledTriangleDown = styled.img`
+    height: 0.8rem;
+    transition: all 400ms ease-in-out;
+    display: inline;
+    margin-top: -0.2rem;
+    margin-left: 0.2rem;
+
+    &.rotate {
+        transform: rotate(180deg);
+        margin-top: -4px;
+    }
+`;
+const OrderBookToggle: FC<OBTProps> = styled(({ className, showOrderBook, onClick }: OBTProps) => {
+    return (
+        <div className={className} onClick={onClick}>
+            <StyledTriangleDown
+                className={showOrderBook ? 'rotate' : ''}
+                src="/img/general/triangle_down_cropped.svg"
+            />
+        </div>
+    );
+})`
+    position: absolute;
+    right: 1rem;
+    top: 0.7rem;
+
+    &:hover {
+        cursor: pointer;
+    }
+`;
+
 const TradingView: React.FC<{
     selectedTracer: Tracer | undefined;
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
+    const [showOrderBook, setShowOrderBook] = useState(true);
 
     return (
         <>
@@ -148,16 +185,19 @@ const TradingView: React.FC<{
                 <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
                 <OrderBookContainer>
                     <h3>Order Book</h3>
-                    {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
-                        <OrderBook
-                            askOrders={omeState.orders.askOrders}
-                            bidOrders={omeState.orders.bidOrders}
-                            marketUp={omeState?.marketUp ?? false}
-                            lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
-                        />
-                    ) : (
-                        <Icon component={TracerLoading} className="mb-3 tracer-loading" />
-                    )}
+                    <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
+                    {showOrderBook ? (
+                        omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
+                            <OrderBook
+                                askOrders={omeState.orders.askOrders}
+                                bidOrders={omeState.orders.bidOrders}
+                                marketUp={omeState?.marketUp ?? false}
+                                lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
+                            />
+                        ) : (
+                            <Icon component={TracerLoading} className="mb-3 tracer-loading" />
+                        )
+                    ) : null}
                 </OrderBookContainer>
                 <RecentTrades trades={mostRecentTrades} />
             </SBox>
