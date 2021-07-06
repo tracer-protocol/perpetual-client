@@ -176,28 +176,19 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
         setExpanded(index);
     };
 
-    const TableHeadEndTheme = {
-        minWidth: '700px',
-        padding: '0 1rem',
-        borderRight: '1px solid var(--color-accent)',
-        borderBottom: '1px solid var(--color-accent)',
-    };
-
     return (
         <table id="pools-table" className={className}>
             <thead>
-                <tr>
-                    <TableHead>Market</TableHead>
-                    <TableHead>
-                        <TooltipSelector tooltip={{ key: 'current-apy' }}>Current APY</TooltipSelector>
-                    </TableHead>
-                    <TableHead>
-                        <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Health</TooltipSelector>
-                    </TableHead>
-                    <TableHead theme={TableHeadEndTheme}>
-                        <TooltipSelector tooltip={{ key: 'pool-ownership' }}>Pool Ownership</TooltipSelector>
-                    </TableHead>
-                </tr>
+                <TableHead>Market</TableHead>
+                <TableHead>
+                    <TooltipSelector tooltip={{ key: 'current-apy' }}>Current APY</TooltipSelector>
+                </TableHead>
+                <TableHead>
+                    <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Health</TooltipSelector>
+                </TableHead>
+                <TableHead className="w-1/2">
+                    <TooltipSelector tooltip={{ key: 'pool-ownership' }}>Pool Ownership</TooltipSelector>
+                </TableHead>
             </thead>
             <tbody>
                 {Object.values(pools).map((pool, i) => {
