@@ -190,7 +190,7 @@ const AccountPanel: React.FC<{
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title>Margin Account</Title>
             <SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>
-               Calculator
+                Calculator
             </SButton>
             <Item>
                 <h3>
@@ -248,7 +248,7 @@ const AccountPanel: React.FC<{
                     quoteTicker={selectedTracer?.quoteTicker ?? 'NO_ID'}
                     balances={balances}
                     fairPrice={fairPrice}
-                /> 
+                />
             </CalculatorStore>
         </AccountInfo>
     );

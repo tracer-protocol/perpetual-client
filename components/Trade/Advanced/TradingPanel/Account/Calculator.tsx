@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
@@ -77,41 +77,12 @@ type CalculatorModalProps = {
     balances: UserBalance;
     fairPrice: BigNumber;
 };
-export default styled(({ 
-    className, 
-    close, 
-    baseTicker, 
-    quoteTicker, 
-    balances, 
-    display
-}: CalculatorModalProps) => {
+export default styled(({ className, close, baseTicker, quoteTicker, balances, display }: CalculatorModalProps) => {
     const { selectedTracer } = useContext(TracerContext);
-    const { 
-        calculatorState: {
-            exposure,
-            margin, 
-            liquidationPrice,
-            leverage,
-            position
-        },
-        calculatorDispatch
-    } = useContext(CalculatorContext) as ContextProps ;
-
-
-    const [exposureLocked, setExposureLocked] = useState(false);
-    const [marginLocked, setMarginLocked] = useState(false);
-
-    const Calculate = () => {
-    };
-
-    const Reset = () => {
-        // setExposureAmount(NaN);
-        // setMarginAmount(NaN);
-        // setLiquidationAmount(NaN);
-
-        setExposureLocked(false);
-        setMarginLocked(false);
-    };
+    const {
+        calculatorState: { exposure, margin, liquidationPrice, leverage, position },
+        calculatorDispatch,
+    } = useContext(CalculatorContext) as ContextProps;
 
     return (
         <TracerModal
@@ -133,7 +104,7 @@ export default styled(({
                 title={'Exposure'}
                 amount={exposure}
                 setAmount={(val) => {
-                    calculatorDispatch({ type: 'setExposure', value: val})
+                    calculatorDispatch({ type: 'setExposure', value: val });
                 }}
                 hasLock={true}
                 // isLocked={exposureLocked}
@@ -145,14 +116,15 @@ export default styled(({
                 title={'Margin'}
                 amount={margin}
                 balance={balances.tokenBalance.toNumber()}
-                setAmount={(val) => calculatorDispatch({ type: 'setMargin', value: val})}
+                setAmount={(val) => calculatorDispatch({ type: 'setMargin', value: val })}
                 hasLock={true}
                 // isLocked={marginLocked}
                 // lockOnClick={() => setMarginLocked(!marginLocked)}
             />
 
-            <Leverage value={leverage} 
-                handleChange={(val) => calculatorDispatch({ type: 'setLeverage', value: val })} 
+            <Leverage
+                value={leverage}
+                handleChange={(val) => calculatorDispatch({ type: 'setLeverage', value: val })}
             />
             {/* <input value={leverage} onChange={(e) => setLeverage(Number(e.target.value))} /> */}
 
@@ -178,12 +150,26 @@ export default styled(({
                 title={'Liquidation Price'}
                 amount={liquidationPrice}
                 balance={balances.tokenBalance.toNumber()}
-                setAmount={(val) => calculatorDispatch({ type: 'setLiquidationPrice', value: val})}
+                setAmount={(val) => calculatorDispatch({ type: 'setLiquidationPrice', value: val })}
             />
 
             <CalcButtons>
-                <SButton onClick={Calculate}>Calculate</SButton>
-                <SButton onClick={Reset}>Reset</SButton>
+                <SButton
+                    onClick={(e) => {
+                        e.preventDefault();
+                        calculatorDispatch({ type: 'calculate' });
+                    }}
+                >
+                    Calculate
+                </SButton>
+                <SButton
+                    onClick={(e) => {
+                        e.preventDefault();
+                        calculatorDispatch({ type: 'reset' });
+                    }}
+                >
+                    Reset
+                </SButton>
             </CalcButtons>
         </TracerModal>
     );

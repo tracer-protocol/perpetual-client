@@ -81,7 +81,7 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
         function handleClickOutside(event: any) {
             // @ts-ignore
             if (!ref.current.contains(event.target)) {
-                console.log(event.target)
+                console.log(event.target);
                 props.onClose();
             }
         }
