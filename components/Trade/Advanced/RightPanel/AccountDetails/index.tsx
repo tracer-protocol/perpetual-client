@@ -4,10 +4,7 @@ import styled from 'styled-components';
 import { Table, TRow, TData } from '@components/General/Table';
 import { calcStatus, timeAgo, toApproxCurrency, getPositionText } from '@libs/utils';
 import Web3 from 'web3';
-import {
-    calcUnrealised,
-    OMEOrder,
-} from '@tracer-protocol/tracer-utils';
+import { calcUnrealised, OMEOrder } from '@tracer-protocol/tracer-utils';
 import { FilledOrder } from 'types/OrderTypes';
 import { calcLeverage } from '@tracer-protocol/tracer-utils';
 import { Button, Previous, Section } from '@components/General';
@@ -188,13 +185,7 @@ const PositionDetails = styled.div`
     }
 `;
 
-const PositionTab: React.FC<IProps> = ({
-    balances,
-    fairPrice,
-    baseTicker,
-    quoteTicker,
-    filledOrders,
-}: IProps) => {
+const PositionTab: React.FC<IProps> = ({ balances, fairPrice, baseTicker, quoteTicker, filledOrders }: IProps) => {
     const [currency, setCurrency] = useState(0); // 0 quoted in base
     const { account } = useContext(Web3Context);
     const { order } = useContext(OrderContext);
