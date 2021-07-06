@@ -183,10 +183,10 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                 <TableHeading>
                     <TooltipSelector tooltip={{ key: 'current-apy' }}>Current APY</TooltipSelector>
                 </TableHeading>
-                <TableHeading>
+                <TableHeading className="w-1/5 xl:w-1/4">
                     <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Health</TooltipSelector>
                 </TableHeading>
-                <TableHeading className="w-1/2">
+                <TableHeading className="w-2/5 xl:w-1/2">
                     <TooltipSelector tooltip={{ key: 'pool-ownership' }}>Pool Ownership</TooltipSelector>
                 </TableHeading>
             </thead>
