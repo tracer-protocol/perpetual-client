@@ -352,7 +352,7 @@ const Cancel = styled(Button)`
     }
 `;
 
-const OpenOrders: React.FC<{
+const OrdersTab: React.FC<{
     userOrders: OMEOrder[];
     baseTicker: string;
     refetch: () => void;
@@ -402,7 +402,7 @@ const OpenOrders: React.FC<{
         </STable>
     );
 });
-OpenOrders.displayName = 'OpenOrders';
+OrdersTab.displayName = 'OpenOrders';
 
 const Fills: React.FC<{
     filledOrders: FilledOrder[];
@@ -465,7 +465,7 @@ export default styled(({ selectedTracer, className }: TSProps) => {
                 );
             case 1:
                 return (
-                    <OpenOrders
+                    <OrdersTab
                         userOrders={omeState?.userOrders ?? []}
                         baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
                         refetch={() => omeDispatch({ type: 'refetchUserOrders' })}
