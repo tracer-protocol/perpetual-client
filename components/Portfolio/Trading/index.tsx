@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState} from 'react';
+import React, { FC, useContext, useState } from 'react';
 import SubNav from '@components/Nav/SubNav';
 import Overview from '@components/Portfolio/Trading/Overview';
 import Position from '@components/Portfolio/Trading/Position';

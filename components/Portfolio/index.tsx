@@ -6,10 +6,6 @@ export const LeftPanel = styled.div`
     flex-direction: column;
     height: 87vh;
     border: 1px solid #0c3586;
-
-    @media only screen and (max-width: 1200px) {
-        width: auto;
-    }
 `;
 
 export const RightPanel = styled.div`
@@ -20,10 +16,6 @@ export const RightPanel = styled.div`
     border-top: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
     border-bottom: 1px solid #0c3586;
-
-    @media only screen and (max-width: 1200px) {
-        width: auto;
-    }
 `;
 
 export const Button = styled.div`
@@ -72,69 +64,38 @@ Button.defaultProps = {
     },
 };
 
-export const TableHead = styled.th`
+export const Table = styled.table``;
+
+export const TableHeader = styled.thead``;
+
+export const TableHeading = styled.th`
     text-align: left;
     color: var(--color-primary);
-    max-width: ${(props: any) => props.theme.maxWidth as string};
-    min-width: ${(props: any) => props.theme.minWidth as string};
-    width: ${(props: any) => props.theme.width};
-    height: ${(props: any) => props.theme.height as string};
-    padding: ${(props: any) => props.theme.padding as string};
-    font-weight: normal;
-    border-right: ${(props: any) => props.theme.borderRight as string};
-    border-bottom: ${(props: any) => props.theme.borderBottom as string};
+    height: 40px;
+    font-size: var(--font-size-extra-small);
+    padding-left: 10px;
+    border-right: 1px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
 `;
 
-TableHead.defaultProps = {
-    theme: {
-        maxWidth: '300px',
-        minWidth: '140px',
-        width: 'auto',
-        height: '50px',
-        padding: '0 1rem',
-        borderRight: '1px solid var(--color-accent)',
-        borderBottom: '1px solid var(--color-accent)',
-    },
-};
+export const TableBody = styled.tbody``;
 
 export const TableRow = styled.tr`
     transition: 0.5s;
-    height: ${(props: any) => props.theme.height as string};
-    display: ${(props: any) => props.theme.display as string};
-    color: ${(props: any) => props.theme.color as string};
-    opacity: ${(props: any) => props.theme.opacity as string};
+    color: white;
+    opacity: 1;
 
     &:hover {
-        background: ${(props: any) => props.theme.hoverBG as string};
-        cursor: ${(props: any) => props.theme.hoverCursor as string};
+        background: var(--color-accent);
+        cursor: pointer;
     }
 `;
 
-TableRow.defaultProps = {
-    theme: {
-        display: 'normal',
-        color: '#fff',
-        opacity: 1,
-        hoverBG: 'var(--color-accent)',
-        hoverCursor: 'pointer',
-    },
-};
-
 export const TableCell = styled.td`
-    color: ${(props: any) => props.color as string};
-    padding: ${(props: any) => props.theme.padding as string};
-    height: ${(props: any) => props.theme.height as string};
-    border-right: ${(props: any) => props.theme.borderRight as string};
-    border-bottom: ${(props: any) => props.theme.borderBottom as string};
+    padding-left: 10px;
+    border-right: 1px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
 `;
-
-TableCell.defaultProps = {
-    theme: {
-        padding: '0 1rem',
-        borderRight: '1px solid var(--color-accent)',
-        borderBottom: '1px solid var(--color-accent)',
-    },
-};
 
 export const SecondaryCell = styled.div`
     color: var(--color-secondary);

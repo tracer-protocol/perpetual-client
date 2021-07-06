@@ -11,18 +11,16 @@ export interface SNBProps {
 
 export const SubNavContainer = styled.div`
     letter-spacing: -0.36px;
-    font-size: var(--font-size-medium);
     border-bottom: 1px solid #0c3586;
     display: flex;
 `;
 
 export const SubNavItem = styled.div`
-    color: var(--color-secondary);
-    font-size: var(--font-size-small);
+    color: var(--color-text);
     transition: 0.3s;
     border-right: 1px solid #0c3586;
     text-align: center;
-    padding: 0 15px;
+    padding: 10px 15px;
 
     &.selected {
         background: var(--color-accent);
