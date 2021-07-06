@@ -5,7 +5,6 @@ import { Table, TRow, TData } from '@components/General/Table';
 import { calcStatus, timeAgo, toApproxCurrency, getPositionText } from '@libs/utils';
 import Web3 from 'web3';
 import {
-    // calcLiquidationPrice,
     calcUnrealised,
     OMEOrder,
 } from '@tracer-protocol/tracer-utils';
@@ -137,47 +136,6 @@ const Exposure: React.FC<{
     );
 };
 
-// const LiquidationPrice: React.FC<
-//     ContentProps & {
-//         orderType: number;
-//         fairPrice: BigNumber;
-//         maxLeverage: BigNumber;
-//     }
-// > = ({ exposure, balances, nextPosition, maxLeverage, tradePrice, orderType, fairPrice }) => {
-//     if (balances.quote.eq(0)) {
-//         return <>-</>;
-//     } else if (exposure && tradePrice) {
-//         return (
-//             <Content>
-//                 <SPrevious>
-//                     {toApproxCurrency(
-//                         parseFloat(
-//                             calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2),
-//                         ),
-//                     )}
-//                 </SPrevious>
-//                 {toApproxCurrency(
-//                     parseFloat(
-//                         calcLiquidationPrice(
-//                             nextPosition.quote,
-//                             nextPosition.base,
-//                             orderType === LIMIT ? new BigNumber(tradePrice) : fairPrice,
-//                             maxLeverage,
-//                         ).toFixed(2),
-//                     ),
-//                 )}
-//             </Content>
-//         );
-//     } // else
-//     return (
-//         <Content>
-//             {toApproxCurrency(
-//                 parseFloat(calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage).toFixed(2)),
-//             )}
-//         </Content>
-//     );
-// };
-
 const CloseOrderContainer = styled.div`
     padding: 1rem 0 1rem 1rem;
 `;
@@ -205,7 +163,6 @@ const DetailsSection = styled(Section)`
 interface IProps {
     balances: UserBalance;
     fairPrice: BigNumber;
-    maxLeverage: BigNumber;
     baseTicker: string;
     quoteTicker: string;
     filledOrders: FilledOrder[];
@@ -236,7 +193,6 @@ const PositionTab: React.FC<IProps> = ({
     fairPrice,
     baseTicker,
     quoteTicker,
-    // maxLeverage,
     filledOrders,
 }: IProps) => {
     const [currency, setCurrency] = useState(0); // 0 quoted in base
@@ -457,7 +413,6 @@ export default styled(({ selectedTracer, className }: TSProps) => {
                     <PositionTab
                         balances={balances}
                         fairPrice={fairPrice}
-                        maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                         baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
                         quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
                         filledOrders={filledOrders ?? []}
