@@ -22,6 +22,9 @@ import { Option } from '@components/Buttons/SlideSelect';
 import CustomSubNav from './CustomSubNav';
 import { LIMIT, OrderContext, orderDefaults, OrderState } from '@context/OrderContext';
 import { CloseOrderButton } from '@components/Buttons/OrderButton';
+import { Web3Context } from '@context/Web3Context';
+import ConnectOverlay from '@components/Overlay/ConnectOverlay';
+import PositionOverlay from '@components/Overlay/PositionOverlay';
 
 const SPrevious = styled(Previous)`
     &:after {
@@ -237,6 +240,7 @@ const PositionTab: React.FC<IProps> = ({
     filledOrders,
 }: IProps) => {
     const [currency, setCurrency] = useState(0); // 0 quoted in base
+    const { account } = useContext(Web3Context);
     const { order } = useContext(OrderContext);
     const { base } = balances;
     return (
@@ -310,38 +314,10 @@ const PositionTab: React.FC<IProps> = ({
                     <CloseOrderButton />
                 </CloseOrderContainer>
             </PositionDetails>
-            {balances.quote.eq(0) ? <PositionOverlay /> : null}
+            {account === '' ? <ConnectOverlay /> : balances.quote.eq(0) ? <PositionOverlay /> : null}
         </PositionContent>
     );
 };
-
-const PositionOverlay = styled(({ className }) => {
-    return <div className={className}>No Open Position.</div>;
-})`
-    display: flex;
-    background-color: var(--color-background-secondary);
-    opacity: 0.8;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    font-size: var(--font-size-medium);
-    z-index: 3;
-`;
-
-// const PositionOverlay = styled.div`
-//     display: flex;
-//     background-color: var(--color-background-secondary);
-//     width: 100%;
-//     height: calc(100% - var(--height-extra-small-container));
-//     justify-content: center;
-//     align-items: center;
-//     font-size: var(--font-size-medium);
-//     z-index: 2;
-// `;
 
 const STable = styled(Table)`
     > tbody {

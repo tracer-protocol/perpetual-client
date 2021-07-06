@@ -1,67 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
 import { calcTotalMargin, calcBuyingPower, calcAvailableMarginPercent } from '@tracer-protocol/tracer-utils';
 import { Box, Button, Previous } from '@components/General';
-import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { LIMIT, OrderState } from '@context/OrderContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import { UserBalance } from 'types';
+import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 // import CalculatorModal from './Calculator';
-
-const ConnectText = styled.div`
-    font-size: var(--font-size-medium);
-    color: var(--color-text);
-`;
-
-const ConnectButton = styled.button`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: var(--font-size-small);
-    border: 2px solid #fff;
-    border-radius: 100px;
-    width: 160px;
-    height: 40px;
-    transition: 0.2s;
-    padding: 0 10px;
-    margin-top: 10px;
-
-    &:focus {
-        outline: none;
-    }
-
-    &:hover {
-        background: var(--color-primary);
-    }
-`;
-
-const ConnectOverlay: React.FC = styled(({ className }) => {
-    const { handleConnect } = useContext(Web3Context);
-    return (
-        <div className={className}>
-            <ConnectText>No wallet connected.</ConnectText>
-            <ConnectButton
-                onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
-            >
-                Connect Wallet
-            </ConnectButton>
-        </div>
-    );
-})`
-    display: flex;
-    background-color: var(--color-background-secondary);
-    opacity: 0.8;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    z-index: 3;
-`;
 
 const NoBalance = styled.span`
     color: var(--color-primary);
@@ -265,11 +215,7 @@ const AccountPanel: React.FC<{
                 {/*    price={Number.isNaN(price) ? 0 : price}*/}
                 {/*/>*/}
             </AccountInfo>
-            {account === '' ? (
-                <div className="absolute top-0 w-full h-full">
-                    <ConnectOverlay />
-                </div>
-            ) : null}
+            {account === '' ? <ConnectOverlay /> : null}
         </div>
     );
 };
