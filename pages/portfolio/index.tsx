@@ -5,6 +5,7 @@ import SideNav from '@components/Nav/SideNav';
 import TradingPortfolio from '@components/Portfolio/Trading';
 import InsurancePortfolio from '@components/Portfolio/Insurance';
 import { LeftPanel, RightPanel } from '@components/Portfolio';
+import Footer from '@components/Footer';
 
 export default styled(({ className }) => {
     const [tab, setTab] = useState(0);
@@ -28,6 +29,7 @@ export default styled(({ className }) => {
                 </LeftPanel>
                 <RightPanel>{content()}</RightPanel>
             </div>
+            <Footer />
         </div>
     );
 })`
