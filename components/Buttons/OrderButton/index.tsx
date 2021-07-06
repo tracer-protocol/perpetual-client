@@ -109,8 +109,6 @@ const CloseOrder = styled(Button)`
     height: var(--height-extra-small-button);
     padding: 0;
     width: 130px;
-    margin-left: 0.5rem;
-    margin-top: 0.5rem;
 `;
 
 export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) => {

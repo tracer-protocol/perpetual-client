@@ -23,22 +23,6 @@ import CustomSubNav from './CustomSubNav';
 import { LIMIT, OrderContext, orderDefaults, OrderState } from '@context/OrderContext';
 import { CloseOrderButton } from '@components/Buttons/OrderButton';
 
-const PositionTabContainer = styled.div`
-    width: 100%;
-    display: flex;
-    position: relative;
-`;
-
-const PositionDetailsContainer = styled.div`
-    width: 40%;
-
-    &.exposure {
-        border-top: 1px solid var(--color-accent);
-        border-bottom: 1px solid var(--color-accent);
-        padding-bottom: 0.25rem;
-    }
-`;
-
 const SPrevious = styled(Previous)`
     &:after {
         content: '>>';
@@ -191,11 +175,11 @@ const Exposure: React.FC<{
 //     );
 // };
 
-const SCloseOrderButton = styled(CloseOrderButton)`
-    margin: 1rem 0 0 0.5rem;
+const CloseOrderContainer = styled.div`
+    padding: 1rem 0 1rem 1rem;
 `;
 
-const PositionSection = styled(Section)`
+const DetailsSection = styled(Section)`
     display: block;
     position: relative;
     padding: 0.2rem 0 0.2rem 0.5rem;
@@ -224,8 +208,24 @@ interface IProps {
     filledOrders: FilledOrder[];
 }
 
-const PositionDetailsRow = styled.div`
+const DetailsRow = styled.div`
     display: flex;
+`;
+
+const PositionContent = styled.div`
+    width: 100%;
+    display: flex;
+    position: relative;
+`;
+
+const PositionDetails = styled.div`
+    width: 40%;
+
+    &.exposure {
+        border-top: 1px solid var(--color-accent);
+        border-bottom: 1px solid var(--color-accent);
+        padding-bottom: 0.25rem;
+    }
 `;
 
 const PositionTab: React.FC<IProps> = ({
@@ -240,18 +240,18 @@ const PositionTab: React.FC<IProps> = ({
     const { order } = useContext(OrderContext);
     const { base } = balances;
     return (
-        <PositionTabContainer>
-            <PositionDetailsContainer>
-                <PositionDetailsRow>
-                    <PositionSection label="Side" className="w-1/2">
+        <PositionContent>
+            <PositionDetails>
+                <DetailsRow>
+                    <DetailsSection label="Side" className="w-1/2">
                         <Position
                             balances={balances}
                             nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
                             tradePrice={order?.price ?? 0}
                             exposure={order?.exposure ?? 0}
                         />
-                    </PositionSection>
-                    <PositionSection
+                    </DetailsSection>
+                    <DetailsSection
                         label="Unrealised PnL"
                         className="w-1/2"
                         tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
@@ -261,11 +261,11 @@ const PositionTab: React.FC<IProps> = ({
                         ) : (
                             `-`
                         )}
-                    </PositionSection>
-                </PositionDetailsRow>
+                    </DetailsSection>
+                </DetailsRow>
 
-                <PositionDetailsRow>
-                    <PositionSection label="Leverage" className="w-1/2">
+                <DetailsRow>
+                    <DetailsSection label="Leverage" className="w-1/2">
                         <Leverage
                             balances={balances}
                             nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
@@ -274,16 +274,16 @@ const PositionTab: React.FC<IProps> = ({
                             orderType={order?.orderType ?? 0}
                             exposure={order?.exposure ?? 0}
                         />
-                    </PositionSection>
-                    <PositionSection
+                    </DetailsSection>
+                    <DetailsSection
                         label="Realised PnL"
                         className="w-1/2"
                         tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
                     >
                         -
-                    </PositionSection>
-                </PositionDetailsRow>
-                <PositionSection
+                    </DetailsSection>
+                </DetailsRow>
+                <DetailsSection
                     label={'Exposure'}
                     className="w-full"
                     tooltip={{ key: 'exposure', props: { baseTicker: baseTicker } }}
@@ -305,23 +305,43 @@ const PositionTab: React.FC<IProps> = ({
                         <SOption>{baseTicker}</SOption>
                         <SOption>{quoteTicker}</SOption>
                     </SSlideSelect>
-                </PositionSection>
-                <SCloseOrderButton />
-            </PositionDetailsContainer>
-        </PositionTabContainer>
+                </DetailsSection>
+                <CloseOrderContainer>
+                    <CloseOrderButton />
+                </CloseOrderContainer>
+            </PositionDetails>
+            {balances.quote.eq(0) ? <PositionOverlay /> : null}
+        </PositionContent>
     );
 };
 
-const PositionOverlay = styled.div`
+const PositionOverlay = styled(({ className }) => {
+    return <div className={className}>No Open Position.</div>;
+})`
     display: flex;
     background-color: var(--color-background-secondary);
-    width: 100%;
-    height: calc(100% - var(--height-extra-small-container));
+    opacity: 0.8;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
     font-size: var(--font-size-medium);
-    z-index: 2;
+    z-index: 3;
 `;
+
+// const PositionOverlay = styled.div`
+//     display: flex;
+//     background-color: var(--color-background-secondary);
+//     width: 100%;
+//     height: calc(100% - var(--height-extra-small-container));
+//     justify-content: center;
+//     align-items: center;
+//     font-size: var(--font-size-medium);
+//     z-index: 2;
+// `;
 
 const STable = styled(Table)`
     > tbody {
@@ -457,20 +477,16 @@ export default styled(({ selectedTracer, className }: TSProps) => {
     const content = () => {
         switch (tab) {
             case 0:
-                if (!balances.quote.eq(0)) {
-                    return (
-                        <PositionTab
-                            balances={balances}
-                            fairPrice={fairPrice}
-                            maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                            baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                            quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
-                            filledOrders={filledOrders ?? []}
-                        />
-                    );
-                } else {
-                    return <PositionOverlay>No Open Position</PositionOverlay>;
-                }
+                return (
+                    <PositionTab
+                        balances={balances}
+                        fairPrice={fairPrice}
+                        maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                        baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
+                        quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
+                        filledOrders={filledOrders ?? []}
+                    />
+                );
             case 1:
                 return (
                     <OpenOrders
