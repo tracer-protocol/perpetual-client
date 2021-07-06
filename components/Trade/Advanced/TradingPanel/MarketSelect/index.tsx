@@ -193,5 +193,4 @@ export default styled(({ className }: MSProps) => {
     );
 })`
     width: 100%;
-    display: ${(props) => (props.account === '' ? 'none' : 'block')};
 ` as React.FC<MSProps>;
