@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useReducer } from 'react';
 import { FactoryContext } from './FactoryContext';
-import { Children, Result, UserBalance } from 'types';
+import { Children, Result, UserBalance } from 'libs/types';
 import { createOrder } from '@libs/Ome';
 import { Web3Context } from './Web3Context';
 import { OrderState } from './OrderContext';

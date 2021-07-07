@@ -2,10 +2,10 @@ import React, { useContext } from 'react';
 import Client from './client';
 export * from './queries';
 import { ApolloProvider, useQuery as _useQuery, gql as _gql, ApolloClient } from '@apollo/client';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import { Web3Context } from '@context/Web3Context';
 import BigNumber from 'bignumber.js';
-import { FilledOrder } from 'types/OrderTypes';
+import { FilledOrder } from 'libs/types/OrderTypes';
 import Web3 from 'web3';
 
 type GProps = Children;

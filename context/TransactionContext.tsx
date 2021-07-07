@@ -1,6 +1,6 @@
 import React, { createContext, useRef } from 'react';
 import { AppearanceTypes, useToasts } from 'react-toast-notifications';
-import { Children, Result } from 'types';
+import { Children, Result } from 'libs/types';
 import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
 import { TransactionReceipt } from 'web3/types';

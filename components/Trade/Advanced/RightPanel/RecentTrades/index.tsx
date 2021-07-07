@@ -1,6 +1,6 @@
 import { TradingTable } from '@components/Tables/TradingTable';
 import { toApproxCurrency } from '@libs/utils';
-import { FilledOrder } from 'types/OrderTypes';
+import { FilledOrder } from 'libs/types/OrderTypes';
 import React from 'react';
 import styled from 'styled-components';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Tooltip from 'antd/lib/tooltip';
-import { Children } from 'types/General';
+import { Children } from 'libs/types/General';
 import { BigNumber } from 'bignumber.js';
 
 export const StyledTooltip = styled(Tooltip)`
