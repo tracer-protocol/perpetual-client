@@ -4,7 +4,7 @@ import { calcLeverage, calcLiquidationPrice } from '@tracer-protocol/tracer-util
 import { TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
 import DefaultSlider from '@components/General/Slider';
-import { UserBalance } from 'types';
+import { UserBalance } from 'libs/types';
 import { SlideSelect } from '@components/Buttons';
 import TracerModal from '@components/General/TracerModal';
 import { Button, NumberSelect } from '@components/General';

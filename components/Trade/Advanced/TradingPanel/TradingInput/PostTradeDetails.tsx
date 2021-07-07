@@ -2,7 +2,7 @@ import React from 'react';
 import { toApproxCurrency } from '@libs/utils';
 import { calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
 import { HiddenExpand, Previous, Section } from '@components/General';
-import { UserBalance } from 'types';
+import { UserBalance } from 'libs/types';
 import { BigNumber } from 'bignumber.js';
 import styled from 'styled-components';
 import { OrderState } from '@context/OrderContext';

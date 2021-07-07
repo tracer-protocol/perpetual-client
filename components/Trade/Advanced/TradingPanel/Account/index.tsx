@@ -9,7 +9,7 @@ import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { LIMIT, OrderState } from '@context/OrderContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
-import { UserBalance } from 'types';
+import { UserBalance } from 'libs/types';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 // import CalculatorModal from './Calculator';
 

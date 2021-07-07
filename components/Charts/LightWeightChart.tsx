@@ -1,6 +1,6 @@
 import React, { useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { CandleData } from 'types/TracerTypes';
+import { CandleData } from 'libs/types/TracerTypes';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
 // @ts-ignore

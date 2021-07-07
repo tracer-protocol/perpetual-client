@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useReducer } from 'react';
-import { Children, InsurancePoolInfo } from 'types';
+import { Children, InsurancePoolInfo } from 'libs/types';
 import { Web3Context } from './Web3Context';
 import Web3 from 'web3';
 import { Insurance } from '@tracer-protocol/contracts/types/Insurance';

@@ -1,5 +1,5 @@
 import React, { MouseEventHandler } from 'react';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 
 type TBProps = {
     disabled?: boolean;
