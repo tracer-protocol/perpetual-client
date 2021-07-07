@@ -97,13 +97,23 @@ const Title = styled.h2`
     letter-spacing: -0.4px;
     color: var(--color-text);
     margin-bottom: 0.5rem;
+    display: flex;
+    white-space: nowrap;
 `;
 
 const SButton = styled(Button)`
-    height: 28px;
-    line-height: 28px;
+    height: var(--height-small-button);
+    line-height: var(--height-small-button);
     padding: 0;
     margin: 0;
+`;
+const CalculatorButton = styled(Button)`
+    height: var(--height-extra-small-button);
+    line-height: var(--height-extra-small-button);
+    padding: 0 1rem;
+    margin-left: auto;
+    margin-right: 0;
+    width: auto;
 `;
 
 const SubText = styled.span`
@@ -189,10 +199,10 @@ const AccountPanel: React.FC<{
     }
     return (
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
-            <Title>Margin Account</Title>
-            <SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>
-                Calculator
-            </SButton>
+            <Title>
+                Margin Account
+                <CalculatorButton onClick={() => showCalculator(true)}>Calculator</CalculatorButton>
+            </Title>
             <Item>
                 <h3>
                     <TooltipSelector tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker } }}>
