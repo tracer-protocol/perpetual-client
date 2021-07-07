@@ -12,7 +12,7 @@ import {
 import BigNumber from 'bignumber.js';
 import { TracerContext } from './TracerContext';
 import { defaults } from '@libs/Tracer';
-import { PositionVars } from '../../tracer-utils/dist/Types/calculator';
+import { PositionVars } from '@tracer-protocol/tracer-utils/dist/Types/calculator';
 export interface ContextProps {
     calculatorState: CalculatorState;
     calculatorDispatch: React.Dispatch<CalculatorAction>;
