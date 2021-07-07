@@ -115,7 +115,7 @@ export const NumberSelect: React.FC<NSProps> = ({
                 {balance || balance === 0 ? ( // if there is a balance then display it
                     <>
                         <Balance className={`balance ${amount > balance ? 'invalid' : ''}`}>
-                            {`Available: ${balance}`}
+                            {`Available: ${toApproxCurrency(balance)}`}
                             {amount ? <After className="ml-2 after">{toApproxCurrency(balance - amount)}</After> : null}
                         </Balance>
                         <Max className="max" onClick={(_e) => setAmount(balance)}>

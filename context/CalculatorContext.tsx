@@ -1,4 +1,4 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useContext, useEffect, useReducer } from 'react';
 import { Children } from 'types';
 import { LONG, SHORT } from 'context/OrderContext';
 import {
@@ -13,6 +13,7 @@ import BigNumber from 'bignumber.js';
 import { TracerContext } from './TracerContext';
 import { defaults } from '@libs/Tracer';
 import { PositionVars } from '@tracer-protocol/tracer-utils/dist/Types/calculator';
+import { ErrorKey } from '@components/General/Error';
 export interface ContextProps {
     calculatorState: CalculatorState;
     calculatorDispatch: React.Dispatch<CalculatorAction>;
@@ -34,6 +35,7 @@ type CalculatorState = {
     displayLocks: boolean;
     showResult: boolean;
     locked: number[]; // functions like a stack
+    error: ErrorKey;
 };
 
 export type CalculatorAction =
@@ -41,6 +43,7 @@ export type CalculatorAction =
     | { type: 'setLiquidationPrice'; value: number }
     | { type: 'setLeverage'; value: number }
     | { type: 'setMargin'; value: number }
+    | { type: 'setError'; value: ErrorKey }
     | { type: 'lockValue'; value: number }
     | { type: 'unlockValue'; value: number }
     | { type: 'setPosition' }
@@ -60,6 +63,7 @@ const defaultState: CalculatorState = {
     displayLocks: true,
     showResult: false,
     locked: [],
+    error: 'NO_ERROR'
 };
 export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) => {
     const { selectedTracer } = useContext(TracerContext);
@@ -73,23 +77,27 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
         displayLocks: true,
         showResult: false,
         locked: [],
+        error: 'NO_ERROR'
     };
 
     const reducer = (state: CalculatorState, action: CalculatorAction) => {
         switch (action.type) {
             case 'setExposure':
-                return { ...state, exposure: action.value };
+                return { ...state, showResult: false, exposure: action.value };
             case 'setMargin':
-                return { ...state, margin: action.value };
+                return { ...state, showResult: false, margin: action.value };
             case 'setLiquidationPrice':
-                return { ...state, liquidationPrice: action.value };
+                return { ...state, showResult: false, liquidationPrice: action.value };
             case 'setLeverage':
-                return { ...state, leverage: action.value };
+                return { ...state, showResult: false, leverage: action.value };
             case 'setPosition':
                 return {
                     ...state,
+                    showResult: false,
                     position: (state.position === LONG ? SHORT : LONG) as typeof LONG | typeof SHORT,
                 };
+            case 'setError':
+                return { ...state, error: action.value };
             case 'lockValue':
                 const locked = state.locked;
                 if (locked[0] === action.value || locked[1] === action.value) {
@@ -112,6 +120,12 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                     locked: state.locked.filter((val) => val !== action.value),
                 };
             case 'calculate': {
+                if (state.locked.length < 2) {
+                    return {
+                        ...state,
+                        error: 'INVALID_INPUTS'
+                    }
+                }
                 const result = getResult(
                     state,
                     selectedTracer?.getFairPrice() ?? defaults.fairPrice,
@@ -135,6 +149,22 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
     };
 
     const [calculatorState, calculatorDispatch] = useReducer(reducer, initialState);
+    
+    useEffect(() => {
+        if (calculatorState.showResult) {
+            const error = checkErrors(
+                calculatorState, 
+                selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage, 
+                selectedTracer?.getFairPrice() ?? defaults.fairPrice,
+                selectedTracer?.getBalance().tokenBalance ?? defaults.balances.tokenBalance
+            )
+            if (error !== calculatorState.error) {
+                calculatorDispatch({ type: 'setError', value: error })
+            }
+        } else {
+            calculatorDispatch({ type: 'setError', value: 'NO_ERROR'})
+        }
+    }, [calculatorState.showResult])
 
     return (
         <CalculatorContext.Provider
@@ -211,3 +241,21 @@ const getResult: (state: CalculatorState, fairPrice: BigNumber, maxLeverage: Big
             };
     }
 };
+
+const checkErrors: (
+    calculatorState: CalculatorState, maxLeverage: BigNumber, fairPrice: BigNumber, tokenBalance: BigNumber
+) => ErrorKey = (calculatorState, maxLeverage, fairPrice, tokenBalance) => {
+    if (
+        (calculatorState.position === LONG && calculatorState.liquidationPrice >= fairPrice.toNumber()) ||
+        (calculatorState.position === SHORT && calculatorState.liquidationPrice <= fairPrice.toNumber()) ||
+        (calculatorState.leverage >= maxLeverage.toNumber())
+    ) {
+        return 'INVALID_POSITION'
+    } else if (calculatorState.margin > tokenBalance.toNumber()) {
+        return 'INSUFFICIENT_FUNDS'
+    } else if (calculatorState.margin >= (calculatorState.exposure * fairPrice.toNumber())) {
+        return 'OVER_COLLATERALISED'
+    }
+    return 'NO_ERROR';
+};
+
