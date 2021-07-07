@@ -68,7 +68,7 @@ export const Button = styled.button`
 
         &:hover {
             background: none;
-            color: var(--color-primary);
+            color: var(--color-text);
         }
     }
 `;
