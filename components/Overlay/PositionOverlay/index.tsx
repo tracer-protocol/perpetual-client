@@ -4,6 +4,7 @@ import Overlay from '@components/Overlay';
 
 const StyledOverlay = styled(Overlay)`
     font-size: var(--font-size-medium);
+    background-color: var(--color-background-secondary);
 `;
 
 const PositionOverlay: FC = () => {

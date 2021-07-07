@@ -59,7 +59,7 @@ const InsuranceInfo: FC<IIProps> = styled(({ className, fundingRate }: IIProps) 
                     {(fundingRate.toNumber() * 100).toFixed(5)}%
                 </Section>
             </InfoContent>
-            {showOverlay ? <FogOverlay buttonName="Show Chart" onClick={() => setOverlay(false)} /> : null}
+            {showOverlay ? <FogOverlay buttonName="Show Insurance Health" onClick={() => setOverlay(false)} /> : null}
         </div>
     );
 })`

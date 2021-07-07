@@ -19,5 +19,7 @@ export default FogOverlay;
 
 const ShowButton = styled(Button)`
     height: var(--height-small-button);
-    padding: 0;
+    padding: 0 15px;
+    width: auto;
+    min-width: 160px;
 `;

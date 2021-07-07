@@ -9,7 +9,7 @@ const Overlay: FC<OProps> = styled(({ className, children }: OProps) => {
     return <div className={className}>{children}</div>;
 })`
     display: flex;
-    background-color: var(--color-background-secondary);
+    background-color: var(--color-background);
     opacity: 0.8;
     flex-direction: column;
     justify-content: center;

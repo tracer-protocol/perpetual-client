@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { FC, useState, useCallback } from 'react';
 import { OMEOrder } from 'libs/types/OrderTypes';
 import styled from 'styled-components';
 import { toApproxCurrency } from '@libs/utils';
@@ -7,6 +7,7 @@ import Dropdown from 'antd/lib/dropdown';
 import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
+import FogOverlay from "@components/Overlay/FogOverlay";
 
 interface OProps {
     askOrders: OMEOrder[]; //TODO change these
@@ -25,8 +26,9 @@ const decimalKeyMap: Record<number, number> = {
     6: 100,
 };
 
-export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, className }: OProps) => {
+const OrderBook: FC<OProps> = styled(({ askOrders, bidOrders, lastTradePrice, marketUp, className }: OProps) => {
     const [decimals, setDecimals] = useState(1);
+    const [showOverlay, setOverlay] = useState(true);
 
     const sumQuantities = (orders: OMEOrder[]) => {
         return orders.reduce((total, order) => total + order.quantity, 0);
@@ -145,11 +147,15 @@ export default styled(({ askOrders, bidOrders, lastTradePrice, marketUp, classNa
                 </Item>
             </MarketRow>
             {renderOrders(true, bidOrdersCopy)}
+            {showOverlay ? <FogOverlay buttonName="Show Chart" onClick={() => setOverlay(false)} /> : null}
         </div>
     );
 })`
+    position: relative;
     height: 100%;
-` as React.FC<OProps>;
+`;
+
+export default OrderBook;
 
 const Item = styled.div`
     width: 100%;
