@@ -34,16 +34,16 @@ type CalculatorModalProps = {
 export default styled(({ className, close, baseTicker, quoteTicker, balances, display }: CalculatorModalProps) => {
     const { selectedTracer } = useContext(TracerContext);
     const {
-        calculatorState: { 
-            exposure, 
-            margin, 
-            liquidationPrice, 
-            leverage, 
-            position, 
-            displayLocks, 
-            showResult, 
+        calculatorState: {
+            exposure,
+            margin,
+            liquidationPrice,
+            leverage,
+            position,
+            displayLocks,
+            showResult,
             error,
-            locked 
+            locked,
         },
         calculatorDispatch,
     } = useContext(CalculatorContext) as ContextProps;
@@ -77,9 +77,12 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 }}
                 displayLock={displayLocks}
                 isLocked={isLocked(locked, LOCK_EXPOSURE)}
-                lockOnClick={() => calculatorDispatch({ 
-                    type: isLocked(locked, LOCK_EXPOSURE) ? 'unlockValue': 'lockValue', value: LOCK_EXPOSURE
-                })}
+                lockOnClick={() =>
+                    calculatorDispatch({
+                        type: isLocked(locked, LOCK_EXPOSURE) ? 'unlockValue' : 'lockValue',
+                        value: LOCK_EXPOSURE,
+                    })
+                }
             />
 
             <AccountNumberSelect
@@ -96,9 +99,12 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 }}
                 displayLock={displayLocks}
                 isLocked={isLocked(locked, LOCK_MARGIN)}
-                lockOnClick={() => calculatorDispatch({ 
-                    type: isLocked(locked, LOCK_MARGIN) ? 'unlockValue': 'lockValue', value: LOCK_MARGIN 
-                })}
+                lockOnClick={() =>
+                    calculatorDispatch({
+                        type: isLocked(locked, LOCK_MARGIN) ? 'unlockValue' : 'lockValue',
+                        value: LOCK_MARGIN,
+                    })
+                }
             />
 
             <Leverage
@@ -122,18 +128,22 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 }}
                 isLocked={isLocked(locked, LOCK_LIQUIDATION)}
                 displayLock={displayLocks}
-                lockOnClick={() => calculatorDispatch({ 
-                    type: isLocked(locked, LOCK_LIQUIDATION) ? 'unlockValue': 'lockValue', value: LOCK_LIQUIDATION 
-                })}
+                lockOnClick={() =>
+                    calculatorDispatch({
+                        type: isLocked(locked, LOCK_LIQUIDATION) ? 'unlockValue' : 'lockValue',
+                        value: LOCK_LIQUIDATION,
+                    })
+                }
             />
             <StyledHiddenExpand defaultHeight={0} open={showResult}>
                 <p className="title">Calculator Summary</p>
-                <p>{error === 'NO_ERROR' 
-                    ? `Deposit ${toApproxCurrency(margin)} margin to open trade, or continue editing.`
-                    : `Invalid calculated position. Try increasing your margin or decreasing your exposure`
-                }</p>
+                <p>
+                    {error === 'NO_ERROR'
+                        ? `Deposit ${toApproxCurrency(margin)} margin to open trade, or continue editing.`
+                        : `Invalid calculated position. Try increasing your margin or decreasing your exposure`}
+                </p>
                 <div className="text-center">
-                    <SButton 
+                    <SButton
                         className={`${error === 'NO_ERROR' ? 'primary' : ''} mt-1`}
                         disabled={error !== 'NO_ERROR'}
                     >

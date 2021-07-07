@@ -63,7 +63,7 @@ const defaultState: CalculatorState = {
     displayLocks: true,
     showResult: false,
     locked: [],
-    error: 'NO_ERROR'
+    error: 'NO_ERROR',
 };
 export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) => {
     const { selectedTracer } = useContext(TracerContext);
@@ -77,7 +77,7 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
         displayLocks: true,
         showResult: false,
         locked: [],
-        error: 'NO_ERROR'
+        error: 'NO_ERROR',
     };
 
     const reducer = (state: CalculatorState, action: CalculatorAction) => {
@@ -123,8 +123,8 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                 if (state.locked.length < 2) {
                     return {
                         ...state,
-                        error: 'INVALID_INPUTS'
-                    }
+                        error: 'INVALID_INPUTS',
+                    };
                 }
                 const result = getResult(
                     state,
@@ -149,22 +149,22 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
     };
 
     const [calculatorState, calculatorDispatch] = useReducer(reducer, initialState);
-    
+
     useEffect(() => {
         if (calculatorState.showResult) {
             const error = checkErrors(
-                calculatorState, 
-                selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage, 
+                calculatorState,
+                selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
                 selectedTracer?.getFairPrice() ?? defaults.fairPrice,
-                selectedTracer?.getBalance().tokenBalance ?? defaults.balances.tokenBalance
-            )
+                selectedTracer?.getBalance().tokenBalance ?? defaults.balances.tokenBalance,
+            );
             if (error !== calculatorState.error) {
-                calculatorDispatch({ type: 'setError', value: error })
+                calculatorDispatch({ type: 'setError', value: error });
             }
         } else {
-            calculatorDispatch({ type: 'setError', value: 'NO_ERROR'})
+            calculatorDispatch({ type: 'setError', value: 'NO_ERROR' });
         }
-    }, [calculatorState.showResult])
+    }, [calculatorState.showResult]);
 
     return (
         <CalculatorContext.Provider
@@ -243,19 +243,21 @@ const getResult: (state: CalculatorState, fairPrice: BigNumber, maxLeverage: Big
 };
 
 const checkErrors: (
-    calculatorState: CalculatorState, maxLeverage: BigNumber, fairPrice: BigNumber, tokenBalance: BigNumber
+    calculatorState: CalculatorState,
+    maxLeverage: BigNumber,
+    fairPrice: BigNumber,
+    tokenBalance: BigNumber,
 ) => ErrorKey = (calculatorState, maxLeverage, fairPrice, tokenBalance) => {
     if (
         (calculatorState.position === LONG && calculatorState.liquidationPrice >= fairPrice.toNumber()) ||
         (calculatorState.position === SHORT && calculatorState.liquidationPrice <= fairPrice.toNumber()) ||
-        (calculatorState.leverage >= maxLeverage.toNumber())
+        calculatorState.leverage >= maxLeverage.toNumber()
     ) {
-        return 'INVALID_POSITION'
+        return 'INVALID_POSITION';
     } else if (calculatorState.margin > tokenBalance.toNumber()) {
-        return 'INSUFFICIENT_FUNDS'
-    } else if (calculatorState.margin >= (calculatorState.exposure * fairPrice.toNumber())) {
-        return 'OVER_COLLATERALISED'
+        return 'INSUFFICIENT_FUNDS';
+    } else if (calculatorState.margin >= calculatorState.exposure * fairPrice.toNumber()) {
+        return 'OVER_COLLATERALISED';
     }
     return 'NO_ERROR';
 };
-

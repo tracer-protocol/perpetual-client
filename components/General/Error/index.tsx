@@ -73,8 +73,7 @@ export const CalculatorErrors: Record<string, ErrorBox> = {
     INVALID_POSITION: {
         name: 'Invalid Position',
         message: 'Invalid Position',
-        moreInfo:
-            'This position is above max leverage and will result in instant liquidation',
+        moreInfo: 'This position is above max leverage and will result in instant liquidation',
     },
     INSUFFICIENT_FUNDS: {
         name: 'Insufficient Funds',
@@ -84,15 +83,19 @@ export const CalculatorErrors: Record<string, ErrorBox> = {
         name: 'Over Collateralised Position',
         message: 'This position is over collateralised',
         moreInfo: 'This is not a leveraged position',
-        severity: 'warning'
+        severity: 'warning',
     },
     INVALID_INPUTS: {
         name: 'Invalid Inputs',
-        message: 'You must lock two inputs'
-    }
-}
+        message: 'You must lock two inputs',
+    },
+};
 
-export type ErrorKey = 'NO_ERROR' | keyof typeof MarginErrors | keyof typeof OrderErrors | keyof typeof CalculatorErrors;
+export type ErrorKey =
+    | 'NO_ERROR'
+    | keyof typeof MarginErrors
+    | keyof typeof OrderErrors
+    | keyof typeof CalculatorErrors;
 const Errors: {
     orders: Record<string, ErrorBox>;
     margin: Record<string, ErrorBox>;
@@ -100,7 +103,7 @@ const Errors: {
 } = {
     orders: OrderErrors,
     margin: MarginErrors,
-    calculator: CalculatorErrors
+    calculator: CalculatorErrors,
 };
 
 const SInfoCircleOutlined = styled(InfoCircleOutlined)`
@@ -122,10 +125,14 @@ const Error: React.FC<EProps> = styled(({ className, error, message, context }: 
             : {
                   message: '',
                   moreInfo: '',
-                  severity: ''
+                  severity: '',
               };
     return (
-        <div className={`${className} ${error !== 'NO_ERROR' || !!message ? 'show' : ''} ${error_.severity ? 'warning' : ''}`}>
+        <div
+            className={`${className} ${error !== 'NO_ERROR' || !!message ? 'show' : ''} ${
+                error_.severity ? 'warning' : ''
+            }`}
+        >
             <div className="message">
                 {error_?.message ?? message ?? ''}
                 {error_?.moreInfo ? (
@@ -160,7 +167,7 @@ const Error: React.FC<EProps> = styled(({ className, error, message, context }: 
     }
 
     &.warning {
-        background: #F4AB57;
+        background: #f4ab57;
     }
 
     .message {
