@@ -41,10 +41,12 @@ const Item = styled.div`
     }
 `;
 
-const DepositButtons = styled.div`
-    margin-top: auto;
-    display: flex;
+const DepositButtons = styled.div<{
+    hide: boolean
+}>`
+    margin-top: 10px;
     justify-content: space-between;
+    display: ${props => props.hide ? 'none' : 'flex'};
 `;
 
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
@@ -53,11 +55,14 @@ const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     //background-color: ${(props) => (props.zeroBalance ? '#00125D' : 'inherit')};
 `;
 
-const Title = styled.h2`
+const Title = styled.h2<{
+    hide: boolean;
+}>`
     font-size: var(--font-size-medium);
     letter-spacing: -0.4px;
     color: var(--color-text);
     margin-bottom: 0.5rem;
+    display: ${props => props.hide ? 'none' : 'block'};
 `;
 
 const SButton = styled(Button)`
@@ -148,7 +153,7 @@ const AccountPanel: React.FC<{
     return (
         <div className="relative">
             <AccountInfo zeroBalance={balances.quote.eq(0)}>
-                <Title>Margin Account</Title>
+                <Title hide={!!order?.exposureBN.toNumber() ?? false}>Margin Account</Title>
                 {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
                 {/*    Calculator*/}
                 {/*</SButton>*/}
@@ -175,7 +180,7 @@ const AccountPanel: React.FC<{
                     </h3>
                     <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
                 </Item>
-                <Item>
+                <Item className="mb-0">
                     <h3>
                         <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
                     </h3>
@@ -186,7 +191,7 @@ const AccountPanel: React.FC<{
                         fairPrice={fairPrice}
                     />
                 </Item>
-                <DepositButtons>
+                <DepositButtons hide={!!order?.exposureBN?.toNumber() ?? false}>
                     <SButton
                         className={balances.quote.eq(0) ? 'primary' : ''}
                         onClick={(_e: any) => handleClick(true, true)}
