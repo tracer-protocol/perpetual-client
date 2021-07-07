@@ -127,6 +127,11 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                         ...state,
                         error: 'INVALID_INPUTS',
                     };
+                } else if (isLockedAndFalsey(state.locked, state.exposure, state.margin, state.liquidationPrice)) {
+                    return {
+                        ...state,
+                        error: 'ZEROED_INPUTS'
+                    }
                 }
                 const result = getResult(
                     state,
@@ -243,6 +248,15 @@ const getResult: (state: CalculatorState, fairPrice: BigNumber, maxLeverage: Big
             };
     }
 };
+
+const isLockedAndFalsey = (locked: number[], exposure: number, margin: number, liquidationPrice: number) => {
+    for (let lockedKey of locked) {
+        if (lockedKey === LOCK_EXPOSURE && !exposure) return true;
+        if (lockedKey === LOCK_MARGIN && !margin) return true;
+        if (lockedKey === LOCK_LIQUIDATION && !liquidationPrice) return true;
+    } // else  
+    return false;
+}
 
 const checkErrors: (
     calculatorState: CalculatorState,

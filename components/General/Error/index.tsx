@@ -89,6 +89,10 @@ export const CalculatorErrors: Record<string, ErrorBox> = {
         name: 'Invalid Inputs',
         message: 'You must lock two inputs',
     },
+    ZEROED_INPUTS: {
+        name: 'Zeroed Inputs',
+        message: 'One or locked values are zero'
+    }
 };
 
 export type ErrorKey =
