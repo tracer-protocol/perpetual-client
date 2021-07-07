@@ -14,7 +14,7 @@ import {
 import BigNumber from 'bignumber.js';
 import AccountSummary from './AccountSummary';
 import InsuranceInfo from './InsuranceInfo';
-import Graphs from './Graphs';
+import Graphs from './Graph';
 import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
