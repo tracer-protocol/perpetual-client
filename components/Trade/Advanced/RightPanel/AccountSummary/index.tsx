@@ -114,8 +114,6 @@ const Fills: React.FC<{
                             </TData>
                             <TData>{toApproxCurrency(order.price)}</TData>
                             <TData>{parseFloat(order.amount.toFixed(2))}</TData>
-                            {/*TODO: Fee value*/}
-                            {/*<TData>{toApproxCurrency(order.amount.times(price))}/$0</TData>*/}
                         </TRow>
                     );
                 })}
