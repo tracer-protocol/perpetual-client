@@ -7,15 +7,10 @@ import Dropdown from 'antd/lib/dropdown';
 import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
-import FogOverlay from "@components/Overlay/FogOverlay";
-
-interface OProps {
-    askOrders: OMEOrder[]; //TODO change these
-    bidOrders: OMEOrder[];
-    lastTradePrice: number | BigNumber;
-    marketUp: boolean; // true if the last tradePrice is previous than the tradePrice before that
-    className?: string;
-}
+import FogOverlay from '@components/Overlay/FogOverlay';
+import Icon from '@ant-design/icons';
+// @ts-ignore
+import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
 
 const decimalKeyMap: Record<number, number> = {
     1: 0.01,
@@ -26,8 +21,18 @@ const decimalKeyMap: Record<number, number> = {
     6: 100,
 };
 
+interface OProps {
+    // TODO: change these
+    askOrders: OMEOrder[] | undefined;
+    bidOrders: OMEOrder[] | undefined;
+    lastTradePrice: number | BigNumber;
+    marketUp: boolean; // true if the last tradePrice is previous than the tradePrice before that
+    className?: string;
+}
+
 const OrderBook: FC<OProps> = styled(({ askOrders, bidOrders, lastTradePrice, marketUp, className }: OProps) => {
     const [decimals, setDecimals] = useState(1);
+    const [showOrderBook, setShowOrderBook] = useState(true);
     const [showOverlay, setOverlay] = useState(true);
 
     const sumQuantities = (orders: OMEOrder[]) => {
@@ -41,7 +46,9 @@ const OrderBook: FC<OProps> = styled(({ askOrders, bidOrders, lastTradePrice, ma
     const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
 
     // Deep copy and sort orders
+    // @ts-ignore
     const askOrdersCopy = deepCopyArrayOfObj(askOrders).sort((a, b) => a.price - b.price); // ascending order
+    // @ts-ignore
     const bidOrdersCopy = deepCopyArrayOfObj(bidOrders).sort((a, b) => b.price - a.price); // descending order
 
     const renderOrders = useCallback(
@@ -127,35 +134,97 @@ const OrderBook: FC<OProps> = styled(({ askOrders, bidOrders, lastTradePrice, ma
 
     return (
         <div className={className}>
-            <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
-            <BookRow className="header">
-                <Item>Price</Item>
-                <Item>Quantity</Item>
-                <Item className="cumulative">Cumulative</Item>
-            </BookRow>
-            {renderOrders(false, askOrdersCopy)}
-            <MarketRow>
-                <Item className="mr-auto">
-                    <TooltipSelector tooltip={{ key: 'best' }}>Best</TooltipSelector>
-                    <span className="ask px-1">{toApproxCurrency(askOrdersCopy[0]?.price)}</span>
-                    {` / `}
-                    <span className="bid px-1">{toApproxCurrency(bidOrdersCopy[0]?.price)}</span>
-                </Item>
-                <Item className="no-width">
-                    {`Last`}
-                    <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>{toApproxCurrency(lastTradePrice)}</span>
-                </Item>
-            </MarketRow>
-            {renderOrders(true, bidOrdersCopy)}
-            {showOverlay ? <FogOverlay buttonName="Show Chart" onClick={() => setOverlay(false)} /> : null}
+            <OrderBookContainer>
+                <OrderBookTitle>Order Book</OrderBookTitle>
+                <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
+                {showOrderBook ? (
+                    askOrders?.length || bidOrders?.length ? (
+                        <>
+                            <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
+                            <BookRow className="header">
+                                <Item>Price</Item>
+                                <Item>Quantity</Item>
+                                <Item className="cumulative">Cumulative</Item>
+                            </BookRow>
+                            {renderOrders(false, askOrdersCopy)}
+                            <MarketRow>
+                                <Item className="mr-auto">
+                                    <TooltipSelector tooltip={{ key: 'best' }}>Best</TooltipSelector>
+                                    <span className="ask px-1">{toApproxCurrency(askOrdersCopy[0]?.price)}</span>
+                                    {` / `}
+                                    <span className="bid px-1">{toApproxCurrency(bidOrdersCopy[0]?.price)}</span>
+                                </Item>
+                                <Item className="no-width">
+                                    {`Last`}
+                                    <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>
+                                        {toApproxCurrency(lastTradePrice)}
+                                    </span>
+                                </Item>
+                            </MarketRow>
+                            {renderOrders(true, bidOrdersCopy)}
+                        </>
+                    ) : (
+                        <Icon component={TracerLoading} className="tracer-loading" />
+                    )
+                ) : null}
+            </OrderBookContainer>
+            {showOverlay ? <FogOverlay buttonName="Show Order Book" onClick={() => setOverlay(false)} /> : null}
         </div>
     );
 })`
     position: relative;
-    height: 100%;
 `;
 
 export default OrderBook;
+
+const OrderBookContainer = styled.div`
+    border-top: 1px solid var(--color-accent);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0.6rem 0;
+`;
+
+const OrderBookTitle = styled.div`
+    letter-spacing: -0.4px;
+    color: #ffffff;
+    text-transform: capitalize;
+    font-size: var(--font-size-medium);
+    margin: 0 0.8rem 0.5rem;
+`;
+
+const StyledToggle = styled.img`
+    height: 0.8rem;
+    transition: all 400ms ease-in-out;
+    display: inline;
+    margin-top: -0.2rem;
+    margin-left: 0.2rem;
+
+    &.rotate {
+        transform: rotate(180deg);
+        margin-top: -4px;
+    }
+`;
+interface OBTProps {
+    className?: string;
+    showOrderBook: boolean;
+    onClick: () => void;
+}
+const OrderBookToggle: FC<OBTProps> = styled(({ className, showOrderBook, onClick }: OBTProps) => {
+    return (
+        <div className={className} onClick={onClick}>
+            <StyledToggle className={showOrderBook ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
+        </div>
+    );
+})`
+    position: absolute;
+    right: 1rem;
+    top: 0.7rem;
+
+    &:hover {
+        cursor: pointer;
+    }
+`;
 
 const Item = styled.div`
     width: 100%;
