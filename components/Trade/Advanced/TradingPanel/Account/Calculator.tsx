@@ -19,8 +19,10 @@ import {
     CalculatorAction,
 } from '@context/CalculatorContext';
 import { defaults } from '@libs/Tracer';
-import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
+import { InfoCircleOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { toApproxCurrency } from '@libs/utils';
+import { CalculatorTip } from '@components/Tooltips';
+import { LONG } from '@context/OrderContext';
 
 type CalculatorModalProps = {
     className?: string;
@@ -54,7 +56,14 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
             loading={false}
             className={className}
             show={display}
-            title={`${selectedTracer?.marketId} Calculator`}
+            title={
+                <p>
+                    {`${selectedTracer?.marketId} Calculator`}
+                    <CalculatorTip>
+                        <InfoBox />
+                    </CalculatorTip>
+                </p>
+            }
             onClose={close}
         >
             <CalcSelectContainer>
@@ -139,7 +148,14 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 <p className="title">Calculator Summary</p>
                 <p>
                     {error === 'NO_ERROR'
-                        ? `Deposit ${toApproxCurrency(margin)} margin to open trade, or continue editing.`
+                        ? `
+                            Deposit ${toApproxCurrency(margin)} margin and open a ${
+                              position === LONG ? 'LONG' : 'SHORT'
+                          } 
+                            position of ${parseFloat(
+                                exposure.toFixed(2),
+                            )} ${baseTicker} to achieve account leverage of ${leverage}x. 
+                            This position will be liquidated at ${toApproxCurrency(liquidationPrice)}.`
                         : `Invalid calculated position. Try increasing your margin or decreasing your exposure`}
                 </p>
                 <div className="text-center">
@@ -175,6 +191,12 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
 })`
     max-width: 434px !important;
 ` as React.FC<CalculatorModalProps>;
+
+const InfoBox = styled(InfoCircleOutlined)`
+    vertical-align: 0.125rem;
+    color: var(--color-primary);
+    margin-left: 0.4rem;
+`;
 
 const StyledHiddenExpand = styled(HiddenExpand)`
     background: var(--color-accent);
@@ -268,6 +290,7 @@ const Leverage: React.FC<LProps> = styled(({ className, value, maxLeverage, isLo
                     calculatorDispatch({ type: 'setLeverage', value: val });
                     calculatorDispatch({ type: val === 0 ? 'unlockValue' : 'lockValue', value: LOCK_LEVERAGE });
                 }}
+                step={0.1}
                 min={0}
                 defaultValue={0}
                 max={maxLeverage.toNumber()}

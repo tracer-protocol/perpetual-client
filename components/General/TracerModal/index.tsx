@@ -8,7 +8,7 @@ import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 
 interface TProps {
     show: boolean;
-    title?: string;
+    title?: React.ReactNode;
     subTitle?: string;
     onClose: () => void;
     children: React.ReactNode;
