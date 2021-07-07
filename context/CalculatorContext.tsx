@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useReducer } from 'react';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import { LONG, SHORT } from 'context/OrderContext';
 import {
     calcFromExposureAndLeverage,
@@ -21,6 +21,8 @@ export interface ContextProps {
 
 export const CalculatorContext = React.createContext<Partial<ContextProps>>({} as ContextProps);
 
+// Implemented like this as addition of any two of these values is unique
+//  this makes it easier when calculating and keeping track of which inputs are locked
 export const LOCK_EXPOSURE = 0;
 export const LOCK_MARGIN = 1;
 export const LOCK_LEVERAGE = 2;
