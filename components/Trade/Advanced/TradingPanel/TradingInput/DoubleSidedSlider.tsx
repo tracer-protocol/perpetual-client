@@ -4,7 +4,7 @@ import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 import { calcLeverage } from '@tracer-protocol/tracer-utils';
 import { OrderAction } from '@context/OrderContext';
-import { UserBalance } from 'types';
+import { UserBalance } from 'libs/types';
 import BigNumber from 'bignumber.js';
 
 const DEFAULT_MIN = -12.5;

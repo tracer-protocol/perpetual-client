@@ -15,8 +15,8 @@ import {
     TableBody, TableLastCell,
 } from '@components/Portfolio';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
-import { LabelledOrders } from 'types/OrderTypes';
-import { LabelledTracers } from 'types/TracerTypes';
+import { LabelledOrders } from 'libs/types/OrderTypes';
+import { LabelledTracers } from 'libs/types/TracerTypes';
 // @ts-ignore
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 import Icon from '@ant-design/icons';

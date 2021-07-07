@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { OMEOrder } from 'types/OrderTypes';
+import { OMEOrder } from 'libs/types/OrderTypes';
 import styled from 'styled-components';
 import { toApproxCurrency } from '@libs/utils';
 import BigNumber from 'bignumber.js';

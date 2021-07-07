@@ -1,10 +1,10 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
 import { TracerContext, Web3Context } from './';
-import { Children, OpenOrder, UserBalance } from 'types';
+import { Children, OpenOrder, UserBalance } from 'libs/types';
 import { calcMinimumMargin, calcTotalMargin, calcSlippage } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
-import { OMEOrder } from 'types/OrderTypes';
+import { OMEOrder } from 'libs/types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
 import { defaults, defaults as tracerDefaults } from '@libs/Tracer';
 import { ErrorKey } from '@components/General/Error';

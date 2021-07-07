@@ -1,5 +1,5 @@
 import { CloseOutlined } from '@ant-design/icons';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import React from 'react';
 import styled from 'styled-components';
 import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/TooltipSelector';

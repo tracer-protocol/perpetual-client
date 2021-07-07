@@ -1,55 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
 import { calcTotalMargin, calcBuyingPower, calcAvailableMarginPercent } from '@tracer-protocol/tracer-utils';
 import { Box, Button, Previous } from '@components/General';
-import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { LIMIT, OrderState } from '@context/OrderContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
-import { UserBalance } from 'types';
+import { UserBalance } from 'libs/types';
+import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 // import CalculatorModal from './Calculator';
-
-const ConnectText = styled.p`
-    font-size: var(--font-size-medium);
-    letter-spacing: 0;
-    color: var(--color-text);
-    margin-top: auto;
-`;
-
-const SBox = styled(Box)`
-    background: #011772;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 250px;
-    z-index: 4;
-`;
-
-const Connect = styled(Button)`
-    width: 100% !important;
-    padding: 0.5rem !important;
-    margin-top: 0.5rem;
-`;
-
-const WalletConnect: React.FC = () => {
-    const { handleConnect } = useContext(Web3Context);
-    return (
-        <SBox>
-            <ConnectText>Connect your wallet to get started with Tracer</ConnectText>
-            <Connect
-                className="primary"
-                onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
-            >
-                Connect Wallet
-            </Connect>
-        </SBox>
-    );
-};
 
 const NoBalance = styled.span`
     color: var(--color-primary);
@@ -183,73 +145,78 @@ const AccountPanel: React.FC<{
         setDeposit(deposit);
     };
 
-    if (account === '') {
-        return <WalletConnect />;
-    }
     return (
-        <AccountInfo zeroBalance={balances.quote.eq(0)}>
-            <Title>Margin Account</Title>
-            {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
-            {/*    Calculator*/}
-            {/*</SButton>*/}
-            <Item>
-                <h3>
-                    <TooltipSelector tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker } }}>
-                        Equity
-                    </TooltipSelector>
-                </h3>
-                {balances.quote.eq(0) ? (
-                    <NoBalance>-</NoBalance>
-                ) : (
-                    <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</span>
-                )}
-            </Item>
-            <Item>
-                <h3>
-                    <TooltipSelector
-                        tooltip={{ key: 'buying-power', props: { baseTicker: selectedTracer?.baseTicker } }}
+        <div className="relative">
+            <AccountInfo zeroBalance={balances.quote.eq(0)}>
+                <Title>Margin Account</Title>
+                {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
+                {/*    Calculator*/}
+                {/*</SButton>*/}
+                <Item>
+                    <h3>
+                        <TooltipSelector tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker } }}>
+                            Equity
+                        </TooltipSelector>
+                    </h3>
+                    {balances.quote.eq(0) ? (
+                        <NoBalance>-</NoBalance>
+                    ) : (
+                        <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</span>
+                    )}
+                </Item>
+                <Item>
+                    <h3>
+                        <TooltipSelector
+                            tooltip={{ key: 'buying-power', props: { baseTicker: selectedTracer?.baseTicker } }}
+                        >
+                            Buying Power
+                        </TooltipSelector>
+                        <SubText>{` @ ${maxLeverage.toNumber()}x Max Leverage`}</SubText>
+                    </h3>
+                    <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
+                </Item>
+                <Item>
+                    <h3>
+                        <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
+                    </h3>
+                    <AvailableMargin
+                        order={order}
+                        balances={balances}
+                        maxLeverage={maxLeverage}
+                        fairPrice={fairPrice}
+                    />
+                </Item>
+                <DepositButtons>
+                    <SButton
+                        className={balances.quote.eq(0) ? 'primary' : ''}
+                        onClick={(_e: any) => handleClick(true, true)}
                     >
-                        Buying Power
-                    </TooltipSelector>
-                    <SubText>{` @ ${maxLeverage.toNumber()}x Max Leverage`}</SubText>
-                </h3>
-                <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
-            </Item>
-            <Item>
-                <h3>
-                    <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
-                </h3>
-                <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
-            </Item>
-            <DepositButtons>
-                <SButton
-                    className={balances.quote.eq(0) ? 'primary' : ''}
-                    onClick={(_e: any) => handleClick(true, true)}
-                >
-                    Deposit
-                </SButton>
-                <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
-            </DepositButtons>
-            <AccountModal
-                display={popup}
-                close={() => setPopup(false)}
-                isDeposit={deposit}
-                setDeposit={setDeposit}
-                unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
-                balances={balances}
-                maxLeverage={maxLeverage}
-                fairPrice={fairPrice}
-            />
-            {/*TODO: Add calculator*/}
-            {/*<CalculatorModal*/}
-            {/*    display={calculator}*/}
-            {/*    close={() => showCalculator(false)}*/}
-            {/*    exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}*/}
-            {/*    marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}*/}
-            {/*    balances={balances}*/}
-            {/*    price={Number.isNaN(price) ? 0 : price}*/}
-            {/*/>*/}
-        </AccountInfo>
+                        Deposit
+                    </SButton>
+                    <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
+                </DepositButtons>
+                <AccountModal
+                    display={popup}
+                    close={() => setPopup(false)}
+                    isDeposit={deposit}
+                    setDeposit={setDeposit}
+                    unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
+                    balances={balances}
+                    maxLeverage={maxLeverage}
+                    fairPrice={fairPrice}
+                />
+                {/*TODO: Add calculator*/}
+                {/*<CalculatorModal*/}
+                {/*    display={calculator}*/}
+                {/*    close={() => showCalculator(false)}*/}
+                {/*    exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}*/}
+                {/*    marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}*/}
+                {/*    balances={balances}*/}
+                {/*    price={Number.isNaN(price) ? 0 : price}*/}
+                {/*/>*/}
+            </AccountInfo>
+            {account === '' ? <ConnectOverlay /> : null}
+        </div>
     );
 };
 

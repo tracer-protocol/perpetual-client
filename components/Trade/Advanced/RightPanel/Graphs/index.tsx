@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useCandles } from '@libs/Graph/hooks/Tracer';
-import { CandleData } from 'types/TracerTypes';
+import { CandleData } from 'libs/types/TracerTypes';
 import LightWeightChart from '@components/Charts/LightWeightChart';
 
 const GraphWrap = styled.div`

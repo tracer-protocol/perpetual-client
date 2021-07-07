@@ -17,7 +17,7 @@ import {
 import BigNumber from 'bignumber.js';
 
 import { AbiItem } from 'web3-utils';
-import { UserBalance } from 'types';
+import { UserBalance } from 'libs/types';
 import { checkAllowance } from '../web3/utils';
 import PromiEvent from 'web3/promiEvent';
 // @ts-ignore

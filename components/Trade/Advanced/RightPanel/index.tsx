@@ -12,8 +12,7 @@ import {
     toApproxCurrency,
 } from '@libs/utils';
 import BigNumber from 'bignumber.js';
-
-import AccountSummary from './AccountDetails';
+import AccountSummary from './AccountSummary';
 import InsuranceInfo from './InsuranceInfo';
 import Graphs from './Graphs';
 import Icon from '@ant-design/icons';

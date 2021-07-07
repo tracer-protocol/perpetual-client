@@ -126,7 +126,6 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
     overflow: auto;
     position: relative;
     border-bottom: none;
-    background: #00125D;
     display: block;
     padding: 0;
     z-index: 1;

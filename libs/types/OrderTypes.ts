@@ -22,11 +22,11 @@ export type OMEOrder = {
     maxCumulative?: number;
 };
 
-export type FilledOrder = {
+export interface FilledOrder {
     position: boolean; // true is short, false is long
     amount: BigNumber;
     price: BigNumber;
     timestamp: string;
-};
+}
 
 export type LabelledOrders = Record<string, FilledOrder[]>;
