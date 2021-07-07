@@ -51,6 +51,7 @@ const DepositButtons = styled.div`
 
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     position: relative;
+    box-sizing: border-box;
     flex-direction: column;
 `;
 
