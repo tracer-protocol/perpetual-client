@@ -42,11 +42,11 @@ const Item = styled.div`
 `;
 
 const DepositButtons = styled.div<{
-    hide: boolean
+    hide: boolean;
 }>`
     margin-top: 10px;
     justify-content: space-between;
-    display: ${props => props.hide ? 'none' : 'flex'};
+    display: ${(props) => (props.hide ? 'none' : 'flex')};
 `;
 
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
@@ -62,7 +62,7 @@ const Title = styled.h2<{
     letter-spacing: -0.4px;
     color: var(--color-text);
     margin-bottom: 0.5rem;
-    display: ${props => props.hide ? 'none' : 'block'};
+    display: ${(props) => (props.hide ? 'none' : 'block')};
 `;
 
 const SButton = styled(Button)`

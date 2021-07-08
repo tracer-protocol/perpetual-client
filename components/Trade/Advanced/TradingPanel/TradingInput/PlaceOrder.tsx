@@ -31,11 +31,11 @@ type TIProps = {
     className?: string;
 };
 
-export default styled(({ selectedTracer, className, account }: TIProps) => {
+export default (({ selectedTracer, account }: TIProps) => {
     const { order, orderDispatch } = useContext(OrderContext);
     return (
         <>
-            <Box className={`${className}`}>
+            <StyledBox $hiddenOverflow={order?.error !== 'NO_ERROR'}>
                 {/* Order type select */}
                 <OrderTypeSelect selected={order?.orderType ?? 0} />
 
@@ -112,19 +112,21 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 )}
 
                 {/* Place Order */}
-                <div className="m-2">
+                <div className={`mt-2 mx-2`}>
                     <AdvancedOrderButton>Place Order</AdvancedOrderButton>
                 </div>
-            </Box>
+            </StyledBox>
             <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
         </>
     );
-})`
+}) as React.FC<TIProps>;
+
+const StyledBox = styled(Box)<{ $hiddenOverflow: boolean }>`
     transition: opacity 0.3s 0.1s, height: 0.3s 0.1s, padding 0.1s;
-    overflow: auto;
+    overflow: ${(props) => (props.$hiddenOverflow ? 'hidden' : 'auto')};
     position: relative;
     border-bottom: none;
     display: block;
     padding: 0;
     z-index: 1;
-` as React.FC<TIProps>;
+`;
