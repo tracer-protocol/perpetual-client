@@ -129,7 +129,7 @@ export const LeverageInput: React.FC<{
                     console.error('No dispatch function set');
                 }
             }}
-            amount={leverage}
+            amount={parseFloat(leverage.toFixed(1))}
         />
     );
 };

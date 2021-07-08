@@ -484,6 +484,21 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         });
     }, [order.exposure, order.price, selectedTracer?.getBalance().base]);
 
+    useMemo(() => {
+        let leverage = selectedTracer?.getBalance()?.leverage ?? tracerDefaults.balances.leverage;
+        if (!leverage?.eq(0) && leverage) {
+            const base = selectedTracer?.getBalance().base ?? tracerDefaults.balances.base;
+            if (base.lt(0)) {
+                leverage = leverage.negated();
+            }
+            console.info('Setting leverage', leverage.toNumber());
+            orderDispatch({
+                type: 'setLeverage',
+                value: parseFloat(leverage.toNumber().toFixed(2)),
+            });
+        }
+    }, [selectedTracer?.getBalance().leverage]);
+
     // Check errors
     useMemo(() => {
         if (omeState?.orders) {
