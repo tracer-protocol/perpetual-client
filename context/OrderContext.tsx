@@ -34,8 +34,14 @@ const checkErrors: (
     fairPrice: BigNumber | undefined,
     maxLeverage: BigNumber | undefined,
 ) => ErrorKey = (balances, orders, account, order, fairPrice, maxLeverage) => {
-    const priceBN = order.orderType === LIMIT ? new BigNumber(order.price) : order.marketTradePrice ?? tracerDefaults.fairPrice;
-    const { quote: newQuote, base: newBase } = calcNewBalance(order.exposureBN, priceBN, order.position, balances ?? tracerDefaults.balances);
+    const priceBN =
+        order.orderType === LIMIT ? new BigNumber(order.price) : order.marketTradePrice ?? tracerDefaults.fairPrice;
+    const { quote: newQuote, base: newBase } = calcNewBalance(
+        order.exposureBN,
+        priceBN,
+        order.position,
+        balances ?? tracerDefaults.balances,
+    );
     if (!account) {
         return 'ACCOUNT_DISCONNECTED';
     } else if (orders?.length === 0 && order.orderType === MARKET && order.exposure) {
@@ -53,7 +59,12 @@ const checkErrors: (
         return 'NO_MARGIN_BALANCE';
     } else if (
         calcTotalMargin(newQuote, newBase, fairPrice ?? tracerDefaults.fairPrice).lt(
-            calcMinimumMargin(newQuote, newBase, fairPrice ?? tracerDefaults.fairPrice, maxLeverage ?? tracerDefaults.maxLeverage),
+            calcMinimumMargin(
+                newQuote,
+                newBase,
+                fairPrice ?? tracerDefaults.fairPrice,
+                maxLeverage ?? tracerDefaults.maxLeverage,
+            ),
         )
     ) {
         return 'INVALID_ORDER';
@@ -67,7 +78,7 @@ const calcNewBalance: (
     addedExposure: BigNumber,
     price: BigNumber,
     position: number,
-    balances: UserBalance 
+    balances: UserBalance,
 ) => { base: BigNumber; quote: BigNumber } = (addedExposure, price, position, balances) => {
     if (position === SHORT) {
         const newBalance = balances?.base.minus(addedExposure) ?? tracerDefaults.balances.base; // subtract how much exposure you get
@@ -343,17 +354,24 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, exposure: action.value, exposureBN: new BigNumber(action.value ?? 0) };
             case 'setNextPosition':
                 if (state.orderType === LIMIT) {
-                    return { 
-                        ...state, 
+                    return {
+                        ...state,
                         nextPosition: calcNewBalance(
-                            state.exposureBN, new BigNumber(state.price), state.position, selectedTracer?.getBalance() ?? tracerDefaults.balances
-                        ) 
+                            state.exposureBN,
+                            new BigNumber(state.price),
+                            state.position,
+                            selectedTracer?.getBalance() ?? tracerDefaults.balances,
+                        ),
                     };
                 } else {
-                    return { 
-                        ...state, 
-                        nextPosition: calcNewBalance(state.exposureBN, state.marketTradePrice, state.position, selectedTracer?.getBalance() ?? tracerDefaults.balances
-                        )
+                    return {
+                        ...state,
+                        nextPosition: calcNewBalance(
+                            state.exposureBN,
+                            state.marketTradePrice,
+                            state.position,
+                            selectedTracer?.getBalance() ?? tracerDefaults.balances,
+                        ),
                     };
                 }
             case 'setMaxExposure':
