@@ -141,7 +141,7 @@ const MarketContainer = styled.div`
 `;
 
 const SBox = styled(Box)<{
-    $display: boolean
+    $display: boolean;
 }>`
     background-color: ${(props) => props.color as string}!important;
     position: relative;
