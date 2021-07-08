@@ -13,7 +13,6 @@ import CalculatorModal from './Calculator';
 import { CalculatorStore } from '@context/CalculatorContext';
 import { UserBalance } from 'libs/types';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
-// import CalculatorModal from './Calculator';
 
 const NoBalance = styled.span`
     color: var(--color-primary);
@@ -43,25 +42,30 @@ const Item = styled.div`
     }
 `;
 
-const DepositButtons = styled.div`
-    margin-top: auto;
-    display: flex;
+const DepositButtons = styled.div<{
+    hide: boolean;
+}>`
+    margin-top: 10px;
     justify-content: space-between;
+    display: ${(props) => (props.hide ? 'none' : 'flex')};
 `;
 
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     position: relative;
     box-sizing: border-box;
     flex-direction: column;
+    overflow: auto;
 `;
 
-const Title = styled.h2`
+const Title = styled.h2<{
+    hide: boolean;
+}>`
     font-size: var(--font-size-medium);
     letter-spacing: -0.4px;
     color: var(--color-text);
     margin-bottom: 0.5rem;
-    display: flex;
     white-space: nowrap;
+    display: ${(props) => (props.hide ? 'none' : 'flex')};
 `;
 
 const SButton = styled(Button)`
@@ -159,7 +163,7 @@ const AccountPanel: React.FC<{
 
     return (
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
-            <Title>
+            <Title hide={!!order?.exposureBN.toNumber() ?? false}>
                 Margin Account
                 <CalculatorButton onClick={() => showCalculator(true)}>Calculator</CalculatorButton>
             </Title>
@@ -186,7 +190,7 @@ const AccountPanel: React.FC<{
                 </h3>
                 <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
             </Item>
-            <Item>
+            <Item className="mb-0">
                 <h3>
                     <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
                 </h3>
@@ -197,7 +201,7 @@ const AccountPanel: React.FC<{
                     fairPrice={fairPrice}
                 />
             </Item>
-            <DepositButtons>
+            <DepositButtons hide={!!order?.exposureBN?.toNumber() ?? false}>
                 <SButton
                     className={balances.quote.eq(0) ? 'primary' : ''}
                     onClick={(_e: any) => handleClick(true, true)}
