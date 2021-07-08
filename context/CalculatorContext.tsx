@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useReducer } from 'react';
+import React, { useContext, useReducer } from 'react';
 import { Children } from 'libs/types';
 import { LONG, SHORT } from 'context/OrderContext';
 import {
@@ -47,6 +47,7 @@ export type CalculatorAction =
     | { type: 'setLeverage'; value: number }
     | { type: 'setMargin'; value: number }
     | { type: 'setError'; value: ErrorKey }
+    | { type: 'setShowResult'; value: boolean}
     | { type: 'lockValue'; value: number }
     | { type: 'unlockValue'; value: number }
     | { type: 'setPosition' }
@@ -86,17 +87,16 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
     const reducer = (state: CalculatorState, action: CalculatorAction) => {
         switch (action.type) {
             case 'setExposure':
-                return { ...state, showResult: false, exposure: action.value };
+                return { ...state, exposure: action.value };
             case 'setMargin':
-                return { ...state, showResult: false, margin: action.value };
+                return { ...state, margin: action.value };
             case 'setLiquidationPrice':
-                return { ...state, showResult: false, liquidationPrice: action.value };
+                return { ...state, liquidationPrice: action.value };
             case 'setLeverage':
-                return { ...state, showResult: false, leverage: action.value };
+                return { ...state, leverage: action.value };
             case 'setPosition':
                 return {
                     ...state,
-                    showResult: false,
                     position: (state.position === LONG ? SHORT : LONG) as typeof LONG | typeof SHORT,
                 };
             case 'setError':
@@ -114,40 +114,62 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                     locked[0] = locked[1];
                     locked[1] = action.value;
                 }
+                if (state.showResult) {
+                }
                 return {
                     ...state,
                     locked: locked,
-                };
-            case 'unlockValue':
-                return {
-                    ...state,
-                    locked: state.locked.filter((val) => val !== action.value),
-                };
-            case 'calculate': {
-                if (state.locked.length < 2) {
-                    return {
-                        ...state,
-                        error: 'INVALID_INPUTS',
-                    };
-                } else if (isLockedAndFalsey(state.locked, state.exposure, state.margin, state.liquidationPrice)) {
-                    return {
-                        ...state,
-                        error: 'ZEROED_INPUTS'
-                    }
                 }
-                const result = getResult(
-                    state,
-                    selectedTracer?.getFairPrice() ?? defaults.fairPrice,
-                    selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
-                );
+                
+            case 'unlockValue':
+                const filteredLocked = state.locked.filter((val) => val !== action.value)
                 return {
                     ...state,
-                    showResult: true,
-                    exposure: parseFloat(result.exposure.toFixed(5)),
-                    liquidationPrice: parseFloat(result.liquidationPrice.toFixed(5)),
-                    leverage: parseFloat(result.leverage.toFixed(1)),
-                    margin: parseFloat(result.margin.toFixed(5)),
-                };
+                    locked: filteredLocked,
+                }
+            case 'setShowResult': 
+                return {
+                    ...state,
+                    showResult: action.value 
+                }
+            case 'calculate': {
+                if (state.showResult) {
+                    if (state.locked.length < 2) {
+                        return {
+                            ...state,
+                            error: 'INVALID_INPUTS'
+                        }
+                    } else if (isLockedAndFalsey(
+                        state.locked, state.exposure, state.margin, state.liquidationPrice)) {
+                        return {
+                            ...state,
+                            error: 'ZEROED_INPUTS'
+                        }
+                    }
+                    const result = getResult(
+                        state,
+                        selectedTracer?.getFairPrice() ?? defaults.fairPrice,
+                        selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
+                    );
+                    const error = checkErrors(
+                        state,
+                        result,
+                        selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
+                        selectedTracer?.getFairPrice() ?? defaults.fairPrice,
+                        selectedTracer?.getBalance().tokenBalance ?? defaults.balances.tokenBalance,
+                    );
+                    return {
+                        ...state,
+                        exposure: parseFloat(result.exposure.toFixed(5)),
+                        liquidationPrice: parseFloat(result.liquidationPrice.toFixed(5)),
+                        leverage: parseFloat(result.leverage.toFixed(1)),
+                        margin: parseFloat(result.margin.toFixed(5)),
+                        error: error
+                    };
+                }
+                return {
+                    ...state
+                }
             }
             case 'reset': {
                 return { ...defaultState, locked: [] };
@@ -158,22 +180,6 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
     };
 
     const [calculatorState, calculatorDispatch] = useReducer(reducer, initialState);
-
-    useEffect(() => {
-        if (calculatorState.showResult) {
-            const error = checkErrors(
-                calculatorState,
-                selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
-                selectedTracer?.getFairPrice() ?? defaults.fairPrice,
-                selectedTracer?.getBalance().tokenBalance ?? defaults.balances.tokenBalance,
-            );
-            if (error !== calculatorState.error) {
-                calculatorDispatch({ type: 'setError', value: error });
-            }
-        } else {
-            calculatorDispatch({ type: 'setError', value: 'NO_ERROR' });
-        }
-    }, [calculatorState.showResult]);
 
     return (
         <CalculatorContext.Provider
@@ -262,24 +268,25 @@ const isLockedAndFalsey = (locked: number[], exposure: number, margin: number, l
 
 const checkErrors: (
     calculatorState: CalculatorState,
+    result: PositionVars,
     maxLeverage: BigNumber,
     fairPrice: BigNumber,
     tokenBalance: BigNumber,
-) => ErrorKey = (calculatorState, maxLeverage, fairPrice, tokenBalance) => {
+) => ErrorKey = (calculatorState, result, maxLeverage, fairPrice, tokenBalance) => {
     if (
-        (calculatorState.position === LONG && calculatorState.liquidationPrice >= fairPrice.toNumber()) ||
-        (calculatorState.position === SHORT && calculatorState.liquidationPrice <= fairPrice.toNumber()) ||
-        calculatorState.leverage >= maxLeverage.toNumber()
+        (calculatorState.position === LONG && result.liquidationPrice.gte(fairPrice)) ||
+        (calculatorState.position === SHORT && result.liquidationPrice.lte(fairPrice)) ||
+        result.leverage.gte(maxLeverage)
     ) {
         return 'INVALID_POSITION';
     } else if (
-        (calculatorState.position === LONG && isWithinRange(0.015, calculatorState.liquidationPrice, fairPrice.toNumber())) ||
-        (calculatorState.position === SHORT && isWithinRange(0.015, calculatorState.liquidationPrice, fairPrice.toNumber()))
+        (calculatorState.position === LONG && isWithinRange(0.015, result.liquidationPrice.toNumber(), fairPrice.toNumber())) ||
+        (calculatorState.position === SHORT && isWithinRange(0.015, result.liquidationPrice.toNumber(), fairPrice.toNumber()))
     ) {
         return 'DANGEROUS_POSITION';
-    } else if (calculatorState.margin > tokenBalance.toNumber()) {
+    } else if (result.margin.gt(tokenBalance)) {
         return 'INSUFFICIENT_FUNDS';
-    } else if (calculatorState.margin >= calculatorState.exposure * fairPrice.toNumber()) {
+    } else if (result.margin.gte(result.exposure.times(fairPrice))) {
         return 'OVER_COLLATERALISED';
     }
     return 'NO_ERROR';

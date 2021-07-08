@@ -78,11 +78,12 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 title={'Exposure'}
                 amount={exposure}
                 setAmount={(val) => {
-                    calculatorDispatch({ type: 'setExposure', value: Math.abs(val) });
                     calculatorDispatch({
                         type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
                         value: LOCK_EXPOSURE,
                     });
+                    calculatorDispatch({ type: 'setExposure', value: Math.abs(val) });
+                    calculatorDispatch({ type: 'calculate' });
                 }}
                 displayLock={displayLocks}
                 isLocked={isLocked(locked, LOCK_EXPOSURE)}
@@ -100,11 +101,12 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 amount={margin}
                 balance={balances.tokenBalance.toNumber()}
                 setAmount={(val) => {
-                    calculatorDispatch({ type: 'setMargin', value: Math.abs(val) });
                     calculatorDispatch({
                         type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
                         value: LOCK_MARGIN,
                     });
+                    calculatorDispatch({ type: 'setMargin', value: Math.abs(val) });
+                    calculatorDispatch({ type: 'calculate' });
                 }}
                 displayLock={displayLocks}
                 isLocked={isLocked(locked, LOCK_MARGIN)}
@@ -129,11 +131,12 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 amount={liquidationPrice}
                 // balance={parseFloat(fairPrice.toFixed(2))}
                 setAmount={(val) => {
-                    calculatorDispatch({ type: 'setLiquidationPrice', value: Math.abs(val)});
                     calculatorDispatch({
                         type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
                         value: LOCK_LIQUIDATION,
                     });
+                    calculatorDispatch({ type: 'setLiquidationPrice', value: Math.abs(val)});
+                    calculatorDispatch({ type: 'calculate' });
                 }}
                 isLocked={isLocked(locked, LOCK_LIQUIDATION)}
                 displayLock={displayLocks}
@@ -171,6 +174,7 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 <SButton
                     onClick={(e) => {
                         e.preventDefault();
+                        calculatorDispatch({ type: 'setShowResult', value: true })
                         calculatorDispatch({ type: 'calculate' });
                     }}
                 >
@@ -287,8 +291,9 @@ const Leverage: React.FC<LProps> = styled(({ className, value, maxLeverage, isLo
                 className="px-5"
                 value={value}
                 handleChange={(val) => {
-                    calculatorDispatch({ type: 'setLeverage', value: val });
                     calculatorDispatch({ type: val === 0 ? 'unlockValue' : 'lockValue', value: LOCK_LEVERAGE });
+                    calculatorDispatch({ type: 'setLeverage', value: val });
+                    calculatorDispatch({ type: 'calculate' });
                 }}
                 step={0.1}
                 min={0}
