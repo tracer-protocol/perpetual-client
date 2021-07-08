@@ -78,7 +78,7 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 title={'Exposure'}
                 amount={exposure}
                 setAmount={(val) => {
-                    calculatorDispatch({ type: 'setExposure', value: val });
+                    calculatorDispatch({ type: 'setExposure', value: Math.abs(val) });
                     calculatorDispatch({
                         type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
                         value: LOCK_EXPOSURE,
@@ -100,7 +100,7 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 amount={margin}
                 balance={balances.tokenBalance.toNumber()}
                 setAmount={(val) => {
-                    calculatorDispatch({ type: 'setMargin', value: val });
+                    calculatorDispatch({ type: 'setMargin', value: Math.abs(val) });
                     calculatorDispatch({
                         type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
                         value: LOCK_MARGIN,
@@ -129,7 +129,7 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 amount={liquidationPrice}
                 // balance={parseFloat(fairPrice.toFixed(2))}
                 setAmount={(val) => {
-                    calculatorDispatch({ type: 'setLiquidationPrice', value: val });
+                    calculatorDispatch({ type: 'setLiquidationPrice', value: Math.abs(val)});
                     calculatorDispatch({
                         type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
                         value: LOCK_LIQUIDATION,

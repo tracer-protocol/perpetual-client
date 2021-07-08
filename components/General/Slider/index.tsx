@@ -94,34 +94,19 @@ const DefaultSlider: React.FC<DSProps> = styled(
         const max_ = max ?? DEFAULT_MAX;
         return (
             <div className={className}>
-                {value ? (
-                    <Slider
-                        defaultValue={defaultValue ? defaultValue : DEFAULT_VALUE}
-                        value={value}
-                        min={min_}
-                        max={max_}
-                        step={step ?? DEFAULT_STEP}
-                        marks={marks ?? createMarks(min_, max_)}
-                        railStyle={railStyle ? railStyle : defaultRailStyle}
-                        trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
-                        handleStyle={handleStyle ? handleStyle : defaultHandleStyle}
-                        handle={DefaultHandle}
-                        onChange={handleChange}
-                    />
-                ) : (
-                    <Slider
-                        defaultValue={defaultValue ? defaultValue : DEFAULT_VALUE}
-                        min={min_}
-                        max={max_}
-                        step={step ?? DEFAULT_STEP}
-                        marks={marks ?? createMarks(min_, max_)}
-                        railStyle={railStyle ? railStyle : defaultRailStyle}
-                        trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
-                        handleStyle={handleStyle ? handleStyle : defaultHandleStyle}
-                        handle={DefaultHandle}
-                        onChange={handleChange}
-                    />
-                )}
+                <Slider
+                    defaultValue={defaultValue ? defaultValue : DEFAULT_VALUE}
+                    value={value}
+                    min={min_}
+                    max={max_}
+                    step={step ?? DEFAULT_STEP}
+                    marks={marks ?? createMarks(min_, max_)}
+                    railStyle={railStyle ? railStyle : defaultRailStyle}
+                    trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
+                    handleStyle={handleStyle ? handleStyle : defaultHandleStyle}
+                    handle={DefaultHandle}
+                    onChange={handleChange}
+                />
             </div>
         );
     },
