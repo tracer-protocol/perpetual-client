@@ -1,50 +1,43 @@
-import React from 'react';
-import styled from 'styled-components';
-import { Children } from 'libs/types';
+import styled from "styled-components";
 
-type TProps = {
-    headings: string[];
-    className?: string;
-} & Children;
+export const Table = styled.table``;
 
-export const Table: React.FC<TProps> = styled(({ headings, children, className }: TProps) => {
-    return (
-        <table className={className}>
-            <THead>
-                {headings.map((heading: string) => (
-                    <th key={`${heading}-heading`}>{heading}</th>
-                ))}
-            </THead>
-            {children}
-        </table>
-    );
-})`
-    width: 100%;
-    max-height: 100%;
-    overflow: scroll;
+export const TableHeader = styled.thead``;
+
+export const TableHeading = styled.th`
+    text-align: left;
+    color: var(--color-primary);
+    height: 40px;
+    font-size: var(--font-size-extra-small);
+    padding-left: 10px;
+    border-right: 1px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
 `;
 
-export const THead = styled.thead`
-    color: var(--color-primary);
-    font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
-    text-align: left;
-    > th {
-        padding: 0.7rem 0.5rem;
-        border-bottom: 1px solid var(--color-accent);
-        border-right: 1px solid var(--color-accent);
-        font-weight: normal;
+export const TableLastHeading = styled(TableHeading)`
+    border-right: none;
+`;
+
+export const TableBody = styled.tbody``;
+
+export const TableRow = styled.tr`
+    transition: 0.5s;
+    color: white;
+    opacity: 1;
+
+    &:hover {
+        background: var(--color-accent);
+        cursor: pointer;
     }
 `;
 
-export const TRow = styled.tr`
-    letter-spacing: -0.4px;
-    color: #ffffff;
-    font-size: 14px;
+export const TableCell = styled.td`
+    padding: 0 10px;
+    border-right: 1px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
 `;
 
-export const TData = styled.td`
-    padding: 0.5rem;
-    border-bottom: 1px solid var(--color-accent);
-    border-right: 1px solid var(--color-accent);
+// Last cell on a table row
+export const TableLastCell = styled(TableCell)`
+    border-right: none;
 `;

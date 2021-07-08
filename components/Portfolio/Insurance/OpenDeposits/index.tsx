@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHeading, TableRow, TableCell, Button } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell } from '@components/General/Table';
+import { Button } from '@components/Portfolio';
 
-const OpenDeposits: React.FC = () => {
+const OpenDeposits: FC = () => {
     const headings = [
         'Market',
         'APY',

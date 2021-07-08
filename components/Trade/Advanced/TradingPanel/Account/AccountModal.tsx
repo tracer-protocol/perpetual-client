@@ -263,4 +263,5 @@ export default styled(
     },
 )`
     max-width: 434px !important;
+    z-index: 3;
 ` as React.FC<AMProps>;

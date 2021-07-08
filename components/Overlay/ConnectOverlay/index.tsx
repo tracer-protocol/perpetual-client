@@ -1,42 +1,25 @@
-import React, { useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import styled from 'styled-components';
 import { Web3Context } from '@context/Web3Context';
+import Overlay from '@components/Overlay';
 
-const ConnectOverlay: React.FC = styled(({ className }) => {
+const ConnectOverlay: FC = () => {
     const { handleConnect } = useContext(Web3Context);
     return (
-        <div className={className}>
-            <OverlayContent>
-                <ConnectText>No wallet connected.</ConnectText>
-                <ConnectButton
-                    onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
-                >
-                    Connect Wallet
-                </ConnectButton>
-            </OverlayContent>
-        </div>
+        <StyledOverlay>
+            No wallet connected.
+            <ConnectButton
+                onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
+            >
+                Connect Wallet
+            </ConnectButton>
+        </StyledOverlay>
     );
-})`
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--color-background-secondary);
-    opacity: 0.8;
-    z-index: 3;
-`;
+};
 
-const OverlayContent = styled.div`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-`;
-
-const ConnectText = styled.div`
+const StyledOverlay = styled(Overlay)`
     font-size: var(--font-size-medium);
-    color: var(--color-text);
+    background-color: var(--color-background-secondary);
 `;
 
 const ConnectButton = styled.button`
