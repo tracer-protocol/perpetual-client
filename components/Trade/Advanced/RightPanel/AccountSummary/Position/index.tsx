@@ -1,9 +1,9 @@
 import React, { FC, useContext, useState } from 'react';
 import { Web3Context } from '@context/Web3Context';
-import { LIMIT, OrderContext, orderDefaults, OrderState } from '@context/OrderContext';
+import { OrderContext, orderDefaults } from '@context/OrderContext';
 import { BigNumber } from 'bignumber.js';
-import { getPositionText, toApproxCurrency } from '@libs/utils';
-import { calcLeverage, calcUnrealised } from '@tracer-protocol/tracer-utils';
+import { toApproxCurrency } from '@libs/utils';
+import { calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { CloseOrderButton } from '@components/Buttons/OrderButton';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import PositionOverlay from '@components/Overlay/PositionOverlay';
@@ -13,6 +13,9 @@ import styled from 'styled-components';
 import { Previous, Section } from '@components/General';
 import { SlideSelect } from '@components/Buttons';
 import { Option } from '@components/Buttons/SlideSelect';
+import Side from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Side';
+import Leverage from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Leverage';
+import Exposure from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Exposure';
 
 interface PTProps {
     balances: UserBalance;
@@ -31,7 +34,7 @@ const PositionTab: FC<PTProps> = ({ balances, fairPrice, baseTicker, quoteTicker
             <PositionDetails>
                 <DetailsRow>
                     <DetailsSection label="Side" className="w-1/2">
-                        <Position
+                        <Side
                             balances={balances}
                             nextPosition={order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }}
                             tradePrice={order?.price ?? 0}
@@ -102,9 +105,7 @@ const PositionTab: FC<PTProps> = ({ balances, fairPrice, baseTicker, quoteTicker
     );
 };
 
-const DetailsRow = styled.div`
-    display: flex;
-`;
+export default PositionTab;
 
 const PositionContent = styled.div`
     width: 100%;
@@ -120,6 +121,10 @@ const PositionDetails = styled.div`
         border-bottom: 1px solid var(--color-accent);
         padding-bottom: 0.25rem;
     }
+`;
+
+const DetailsRow = styled.div`
+    display: flex;
 `;
 
 const CloseOrderContainer = styled.div`
@@ -146,85 +151,7 @@ const DetailsSection = styled(Section)`
     }
 `;
 
-const Position: React.FC<ContentProps> = ({ nextPosition, exposure, tradePrice, balances }) => {
-    if (balances.quote.eq(0)) {
-        return <>-</>;
-    } else if (exposure && tradePrice) {
-        return (
-            <Content>
-                <SPrevious>{getPositionText(balances.base)}</SPrevious>
-                {getPositionText(nextPosition.base)}
-            </Content>
-        );
-    } // else
-    return <Content>{getPositionText(balances.base)}</Content>;
-};
-
-const Leverage: React.FC<ContentProps & { orderType: number; fairPrice: BigNumber }> = ({
-    nextPosition,
-    exposure,
-    tradePrice,
-    orderType,
-    fairPrice,
-    balances,
-}) => {
-    const l = calcLeverage(balances.quote, balances.base, fairPrice);
-    if (balances.quote.eq(0)) {
-        return <>-</>;
-    } else if (exposure && tradePrice) {
-        return (
-            <Content>
-                <SPrevious>{`${l.toFixed(2)}x`}</SPrevious>
-                {`${calcLeverage(
-                    nextPosition.quote,
-                    nextPosition.base,
-                    orderType === LIMIT ? new BigNumber(tradePrice) : fairPrice,
-                ).toFixed(2)}x`}
-            </Content>
-        );
-    } // else
-    return <Content>{`${l.toPrecision(3)}x`}</Content>;
-};
-
-const Exposure: React.FC<{
-    baseTicker: string;
-    quoteTicker: string;
-    order: OrderState;
-    balances: UserBalance;
-    fairPrice: BigNumber;
-    currency: number;
-}> = ({ order, baseTicker, quoteTicker, fairPrice, balances, currency }) => {
-    const { nextPosition, exposure, orderType, price } = order;
-    if (balances.quote.eq(0)) {
-        return <>-</>;
-    } else if (exposure && price) {
-        return (
-            <Content className="pt-1">
-                <SPrevious>
-                    {currency === 0
-                        ? `${parseFloat(balances.base.abs().toFixed(2))} ${baseTicker}`
-                        : `${toApproxCurrency(
-                              balances.base.abs().times(orderType === LIMIT ? price : fairPrice),
-                          )} ${quoteTicker}`}
-                </SPrevious>
-                {currency === 0
-                    ? `${parseFloat(nextPosition.base.abs().toFixed(2))} ${baseTicker}`
-                    : `${toApproxCurrency(
-                          nextPosition.base.abs().times(orderType === LIMIT ? price : fairPrice),
-                      )} ${quoteTicker}`}
-            </Content>
-        );
-    } // else
-    return (
-        <Content className="pt-1">
-            {currency === 0
-                ? `${parseFloat(balances.base.abs().toFixed(2))} ${baseTicker}`
-                : `${toApproxCurrency(parseFloat(balances.base.abs().times(fairPrice).toFixed(2)))} ${quoteTicker}`}
-        </Content>
-    );
-};
-
-const SPrevious = styled(Previous)`
+export const SPrevious = styled(Previous)`
     &:after {
         content: '>>';
     }
@@ -241,20 +168,8 @@ const SOption = styled(Option)`
     font-size: var(--font-size-extra-small);
 `;
 
-const Content = styled.div`
+export const Content = styled.div`
     font-size: var(--font-size-small);
     color: var(--color-text);
     text-align: left;
 `;
-
-type ContentProps = {
-    exposure: number;
-    tradePrice: number;
-    nextPosition: {
-        base: BigNumber;
-        quote: BigNumber;
-    };
-    balances: UserBalance;
-};
-
-export default PositionTab;
