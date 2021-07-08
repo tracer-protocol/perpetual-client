@@ -16,6 +16,7 @@ import { Option } from '@components/Buttons/SlideSelect';
 import Side from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Side';
 import Leverage from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Leverage';
 import Exposure from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Exposure';
+// import { createChart } from 'lightweight-charts';
 
 interface PTProps {
     balances: UserBalance;
@@ -29,6 +30,21 @@ const PositionTab: FC<PTProps> = ({ balances, fairPrice, baseTicker, quoteTicker
     const { account } = useContext(Web3Context);
     const { order } = useContext(OrderContext);
     const { base } = balances;
+
+    // const chart = createChart(document.body, { width: 400, height: 300 });
+    // const lineSeries = chart.addLineSeries();
+    // lineSeries.setData([
+    //     { time: '2019-04-11', value: 80.01 },
+    //     { time: '2019-04-12', value: 96.63 },
+    //     { time: '2019-04-13', value: 76.64 },
+    //     { time: '2019-04-14', value: 81.89 },
+    //     { time: '2019-04-15', value: 74.43 },
+    //     { time: '2019-04-16', value: 80.01 },
+    //     { time: '2019-04-17', value: 96.63 },
+    //     { time: '2019-04-18', value: 76.64 },
+    //     { time: '2019-04-19', value: 81.89 },
+    //     { time: '2019-04-20', value: 74.43 },
+    // ]);
     return (
         <PositionContent>
             <PositionDetails>
@@ -100,6 +116,9 @@ const PositionTab: FC<PTProps> = ({ balances, fairPrice, baseTicker, quoteTicker
                     <CloseOrderButton />
                 </CloseOrderContainer>
             </PositionDetails>
+
+            <GraphContainer>
+            </GraphContainer>
             {account === '' ? <ConnectOverlay /> : balances.quote.eq(0) ? <PositionOverlay /> : null}
         </PositionContent>
     );
@@ -121,6 +140,10 @@ const PositionDetails = styled.div`
         border-bottom: 1px solid var(--color-accent);
         padding-bottom: 0.25rem;
     }
+`;
+
+const GraphContainer = styled.div`
+    width: 30%;
 `;
 
 const DetailsRow = styled.div`
