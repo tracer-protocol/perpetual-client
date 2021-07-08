@@ -52,7 +52,7 @@ const DepositButtons = styled.div<{
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     position: relative;
     flex-direction: column;
-    //background-color: ${(props) => (props.zeroBalance ? '#00125D' : 'inherit')};
+    overflow: auto;
 `;
 
 const Title = styled.h2<{
@@ -151,77 +151,75 @@ const AccountPanel: React.FC<{
     };
 
     return (
-        <div className="relative">
-            <AccountInfo zeroBalance={balances.quote.eq(0)}>
-                <Title hide={!!order?.exposureBN.toNumber() ?? false}>Margin Account</Title>
-                {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
-                {/*    Calculator*/}
-                {/*</SButton>*/}
-                <Item>
-                    <h3>
-                        <TooltipSelector tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker } }}>
-                            Equity
-                        </TooltipSelector>
-                    </h3>
-                    {balances.quote.eq(0) ? (
-                        <NoBalance>-</NoBalance>
-                    ) : (
-                        <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</span>
-                    )}
-                </Item>
-                <Item>
-                    <h3>
-                        <TooltipSelector
-                            tooltip={{ key: 'buying-power', props: { baseTicker: selectedTracer?.baseTicker } }}
-                        >
-                            Buying Power
-                        </TooltipSelector>
-                        <SubText>{` @ ${maxLeverage.toNumber()}x Max Leverage`}</SubText>
-                    </h3>
-                    <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
-                </Item>
-                <Item className="mb-0">
-                    <h3>
-                        <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
-                    </h3>
-                    <AvailableMargin
-                        order={order}
-                        balances={balances}
-                        maxLeverage={maxLeverage}
-                        fairPrice={fairPrice}
-                    />
-                </Item>
-                <DepositButtons hide={!!order?.exposureBN?.toNumber() ?? false}>
-                    <SButton
-                        className={balances.quote.eq(0) ? 'primary' : ''}
-                        onClick={(_e: any) => handleClick(true, true)}
+        <AccountInfo zeroBalance={balances.quote.eq(0)}>
+            <Title hide={!!order?.exposureBN.toNumber() ?? false}>Margin Account</Title>
+            {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
+            {/*    Calculator*/}
+            {/*</SButton>*/}
+            <Item>
+                <h3>
+                    <TooltipSelector tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker } }}>
+                        Equity
+                    </TooltipSelector>
+                </h3>
+                {balances.quote.eq(0) ? (
+                    <NoBalance>-</NoBalance>
+                ) : (
+                    <span>{toApproxCurrency(calcTotalMargin(balances.quote, balances.base, fairPrice))}</span>
+                )}
+            </Item>
+            <Item>
+                <h3>
+                    <TooltipSelector
+                        tooltip={{ key: 'buying-power', props: { baseTicker: selectedTracer?.baseTicker } }}
                     >
-                        Deposit
-                    </SButton>
-                    <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
-                </DepositButtons>
-                <AccountModal
-                    display={popup}
-                    close={() => setPopup(false)}
-                    isDeposit={deposit}
-                    setDeposit={setDeposit}
-                    unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
+                        Buying Power
+                    </TooltipSelector>
+                    <SubText>{` @ ${maxLeverage.toNumber()}x Max Leverage`}</SubText>
+                </h3>
+                <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
+            </Item>
+            <Item className="mb-0">
+                <h3>
+                    <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
+                </h3>
+                <AvailableMargin
+                    order={order}
                     balances={balances}
                     maxLeverage={maxLeverage}
                     fairPrice={fairPrice}
                 />
-                {/*TODO: Add calculator*/}
-                {/*<CalculatorModal*/}
-                {/*    display={calculator}*/}
-                {/*    close={() => showCalculator(false)}*/}
-                {/*    exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}*/}
-                {/*    marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}*/}
-                {/*    balances={balances}*/}
-                {/*    price={Number.isNaN(price) ? 0 : price}*/}
-                {/*/>*/}
-            </AccountInfo>
-            {account === '' ? <ConnectOverlay /> : null}
-        </div>
+            </Item>
+            <DepositButtons hide={!!order?.exposureBN?.toNumber() ?? false}>
+                <SButton
+                    className={balances.quote.eq(0) ? 'primary' : ''}
+                    onClick={(_e: any) => handleClick(true, true)}
+                >
+                    Deposit
+                </SButton>
+                <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
+            </DepositButtons>
+            <AccountModal
+                display={popup}
+                close={() => setPopup(false)}
+                isDeposit={deposit}
+                setDeposit={setDeposit}
+                unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
+                balances={balances}
+                maxLeverage={maxLeverage}
+                fairPrice={fairPrice}
+            />
+            {/*TODO: Add calculator*/}
+            {/*<CalculatorModal*/}
+            {/*    display={calculator}*/}
+            {/*    close={() => showCalculator(false)}*/}
+            {/*    exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}*/}
+            {/*    marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}*/}
+            {/*    balances={balances}*/}
+            {/*    price={Number.isNaN(price) ? 0 : price}*/}
+            {/*/>*/}
+        {account === '' ? <ConnectOverlay /> : null}
+        </AccountInfo>
     );
 };
 
