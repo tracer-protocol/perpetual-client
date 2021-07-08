@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import SubNav from '@components/Nav/SubNav';
 import OpenDeposits from '@components/Portfolio/Insurance/OpenDeposits';
 import DepositHistory from '@components/Portfolio/Insurance/DepositHistory';
 import WithdrawalHistory from '@components/Portfolio/Insurance/WithdrawalHistory';
 
-const InsurancePortfolio: React.FC = () => {
+const InsurancePortfolio: FC = () => {
     const [tab, setTab] = useState(0);
     const tabs = ['Open Deposits', 'Deposit History', 'Withdrawal History'];
     const content = () => {
