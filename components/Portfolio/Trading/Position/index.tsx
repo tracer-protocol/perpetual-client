@@ -12,7 +12,8 @@ import {
     getStatusColour,
     TableHeader,
     Table,
-    TableBody, TableLastCell,
+    TableBody,
+    TableLastCell,
 } from '@components/Portfolio';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'libs/types/OrderTypes';

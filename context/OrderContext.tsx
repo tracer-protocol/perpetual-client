@@ -306,11 +306,14 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                         exposureBN: orderDefaults.order.exposureBN,
                     };
                 }
-                const { base: newBase, quote: newQuote } = calcNewBalance(new BigNumber(action.amount), state.marketTradePrice, state.position)
+                const { base: newBase, quote: newQuote } = calcNewBalance(
+                    new BigNumber(action.amount),
+                    state.marketTradePrice,
+                    state.position,
+                );
                 const notional = newBase.times(fairPrice);
                 const newTotalMargin = calcTotalMargin(newQuote, newBase, fairPrice);
                 const targetLeverage = notional.div(newTotalMargin);
-                console.log(targetLeverage.toNumber(), "target")
                 return {
                     ...state,
                     leverage: targetLeverage.toNumber(),

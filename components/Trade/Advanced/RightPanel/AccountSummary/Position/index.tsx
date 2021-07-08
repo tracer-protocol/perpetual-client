@@ -169,8 +169,6 @@ const Leverage: React.FC<ContentProps & { orderType: number; fairPrice: BigNumbe
     balances,
 }) => {
     const l = calcLeverage(balances.quote, balances.base, fairPrice);
-    console.log(nextPosition.quote.toNumber(), nextPosition.base.toNumber())
-    console.log(calcLeverage(nextPosition.quote, nextPosition.base, fairPrice).toNumber())
     if (balances.quote.eq(0)) {
         return <>-</>;
     } else if (exposure && tradePrice) {
