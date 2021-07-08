@@ -14,6 +14,7 @@ import { TracerContext } from './TracerContext';
 import { defaults } from '@libs/Tracer';
 import { PositionVars } from '@tracer-protocol/tracer-utils/dist/Types/calculator';
 import { ErrorKey } from '@components/General/Error';
+import { isWithinRange } from '@libs/utils';
 export interface ContextProps {
     calculatorState: CalculatorState;
     calculatorDispatch: React.Dispatch<CalculatorAction>;
@@ -271,6 +272,11 @@ const checkErrors: (
         calculatorState.leverage >= maxLeverage.toNumber()
     ) {
         return 'INVALID_POSITION';
+    } else if (
+        (calculatorState.position === LONG && isWithinRange(0.015, calculatorState.liquidationPrice, fairPrice.toNumber())) ||
+        (calculatorState.position === SHORT && isWithinRange(0.015, calculatorState.liquidationPrice, fairPrice.toNumber()))
+    ) {
+        return 'DANGEROUS_POSITION';
     } else if (calculatorState.margin > tokenBalance.toNumber()) {
         return 'INSUFFICIENT_FUNDS';
     } else if (calculatorState.margin >= calculatorState.exposure * fairPrice.toNumber()) {
