@@ -102,14 +102,12 @@ const PositionTab: FC<PTProps> = ({ balances, fairPrice, baseTicker, quoteTicker
     );
 };
 
-const DetailsRow = styled.div`
-    display: flex;
+const PositionContent = styled.div`
+    position: relative;
 `;
 
-const PositionContent = styled.div`
-    width: 100%;
+const DetailsRow = styled.div`
     display: flex;
-    position: relative;
 `;
 
 const PositionDetails = styled.div`
