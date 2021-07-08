@@ -110,6 +110,7 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                 if (locked.length <= 1) {
                     locked.push(action.value);
                 } else {
+                    locked[0] = locked[1];
                     locked[1] = action.value;
                 }
                 return {
