@@ -90,7 +90,7 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
     return (
         <div className={className}>
             <span>
-                {pool.userBalance.toNumber()} {pool.iPoolTokenName}
+                {pool.userBalance.toFixed(2)} {pool.iPoolTokenName}
             </span>
             <TooltipSelector tooltip={{ key: 'etherscan-link' }}>
                 <StyledLinkOutlined onClick={() => window.open(pool.iPoolTokenURL, '_blank', 'noopener')} />
@@ -183,7 +183,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                 <TableHeading>
                     <TooltipSelector tooltip={{ key: 'current-apy' }}>Current APY</TooltipSelector>
                 </TableHeading>
-                <TableHeading className="w-1/5 xl:w-1/4">
+                <TableHeading className="w-1/5 xl:w-1/3">
                     <TooltipSelector tooltip={{ key: 'insurance-pool-health' }}>Health</TooltipSelector>
                 </TableHeading>
                 <TableHeading className="w-2/5 xl:w-1/2">
