@@ -140,10 +140,12 @@ const MarketContainer = styled.div`
     height: var(--height-small-container);
 `;
 
-const SBox = styled<any>(Box)`
+const SBox = styled(Box)<{
+    $display: boolean
+}>`
     background-color: ${(props) => props.color as string}!important;
     position: relative;
-    z-index: ${(props) => (props.display ? 4 : 1)};
+    z-index: ${(props) => (props.$display ? 4 : 1)};
     height: var(--height-small-container);
     border-bottom: 1px solid var(--color-accent);
     padding: 0 12px;
@@ -168,7 +170,7 @@ export default styled(({ className }: MSProps) => {
 
     return (
         <div className={`${className}`}>
-            <SBox color={popup ? '#011772' : '#000240'} display={popup} onMouseLeave={() => setPopup(false)}>
+            <SBox color={popup ? '#011772' : '#000240'} $display={popup} onMouseLeave={() => setPopup(false)}>
                 <MarketContainer>
                     <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
                     <div className="my-auto">{selectedTracer?.marketId}</div>
