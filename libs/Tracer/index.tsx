@@ -216,7 +216,6 @@ export default class Tracer {
                     ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
                     : new BigNumber(0),
             };
-
             const { quote, base } = parsedBalances;
             const leverage = calcLeverage(quote, base, this.fairPrice);
             const totalMargin = calcTotalMargin(quote, base, this.fairPrice);
