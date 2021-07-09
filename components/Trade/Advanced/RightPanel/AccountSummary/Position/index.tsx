@@ -36,7 +36,6 @@ const PositionTab: FC<PTProps> = styled(
         const { base } = balances;
         const { selectedTracer } = useContext(TracerContext);
         const { lines } = useLines(selectedTracer?.address ?? '');
-        console.log(lines[lines.length - 1]?.value);
 
         return (
             <div className={className}>
