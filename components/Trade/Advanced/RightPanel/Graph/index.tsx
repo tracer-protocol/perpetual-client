@@ -22,7 +22,7 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className }: GProps) 
     return (
         <div className={className}>
             <GraphContent>
-                <LightWeightChart candleData={candles as CandleData} />
+                <LightWeightChart candleData={candles as CandleData} graphType="candle-graph" />
             </GraphContent>
             {showOverlay ? <FogOverlay buttonName="Show Chart" onClick={() => setOverlay(false)} /> : null}
         </div>
