@@ -1,6 +1,7 @@
 import React, { useContext, useCallback, useReducer, useMemo } from 'react';
 import styled from 'styled-components';
 import { NumberSelect, Section } from '@components/General';
+import { Max } from '@components/General/Input/NumberSelect';
 import { UserBalance } from 'libs/types';
 import ErrorComponent from '@components/General/Error';
 import TracerModal from '@components/General/TracerModal';
@@ -23,7 +24,7 @@ const SNumberSelect = styled(NumberSelect)`
     .balance {
         color: var(--color-secondary);
     }
-    > .balance > .max {
+    > .balance > ${Max} {
         margin-left: 1rem;
     }
 `;

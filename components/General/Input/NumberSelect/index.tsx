@@ -16,7 +16,7 @@ const Unit = styled.span`
     white-space: nowrap;
 `;
 
-const Header = styled.h3`
+export const NumberSelectHeader = styled.h3`
     font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: var(--color-primary);
@@ -38,7 +38,7 @@ const Balance = styled.span`
     }
 `;
 
-const Max = styled.span`
+export const Max = styled.span`
     color: var(--color-primary);
     text-decoration: underline;
     transition: 0.3s;
@@ -49,6 +49,25 @@ const Max = styled.span`
         cursor: pointer;
     }
 `;
+
+type BHProps = {
+    className?: string;
+    amount: number;
+    setAmount: (number: number) => void;
+    title: string;
+    balance: number;
+};
+
+const BalanceHeader: React.FC<BHProps> = ({ title, balance, amount, setAmount }) => (
+    <NumberSelectHeader>
+        {title}
+        <Balance className={`balance ${amount > balance ? 'invalid' : ''}`}>
+            {`Available: ${toApproxCurrency(balance)}`}
+            {amount ? <After className="ml-2 after">{toApproxCurrency(balance - amount)}</After> : null}
+        </Balance>
+        <Max onClick={(_e) => setAmount(balance)}>Max</Max>
+    </NumberSelectHeader>
+);
 
 export const LockContainer = styled.div`
     margin-top: 0.125rem;
@@ -75,6 +94,7 @@ type NSProps = {
     displayLock?: boolean;
     isLocked?: boolean;
     lockOnClick?: (e: any) => any;
+    header?: React.ReactNode;
 } & Children;
 
 export const NumberSelect: React.FC<NSProps> = ({
@@ -87,6 +107,7 @@ export const NumberSelect: React.FC<NSProps> = ({
     displayLock,
     isLocked,
     lockOnClick,
+    header,
 }: NSProps) => {
     const getLock = (hasLock: boolean | undefined, isLocked: boolean | undefined) => {
         if (hasLock) {
@@ -108,24 +129,19 @@ export const NumberSelect: React.FC<NSProps> = ({
         }
     };
 
+    const getHeader = () => {
+        if (header) {
+            return header;
+        } else if (balance) {
+            return <BalanceHeader title={title} amount={amount} balance={balance} setAmount={setAmount} />;
+        } else {
+            return <NumberSelectHeader>{title}</NumberSelectHeader>;
+        }
+    };
+
     return (
         <div className={className}>
-            <Header>
-                {title}
-                {balance || balance === 0 ? ( // if there is a balance then display it
-                    <>
-                        <Balance className={`balance ${amount > balance ? 'invalid' : ''}`}>
-                            {`Available: ${toApproxCurrency(balance)}`}
-                            {amount ? <After className="ml-2 after">{toApproxCurrency(balance - amount)}</After> : null}
-                        </Balance>
-                        <Max className="max" onClick={(_e) => setAmount(balance)}>
-                            Max
-                        </Max>
-                    </>
-                ) : (
-                    ''
-                )}
-            </Header>
+            {getHeader()}
             <BasicInputContainer>
                 <Input
                     id="username"

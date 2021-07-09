@@ -194,12 +194,7 @@ const AccountPanel: React.FC<{
                 <h3>
                     <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
                 </h3>
-                <AvailableMargin
-                    order={order}
-                    balances={balances}
-                    maxLeverage={maxLeverage}
-                    fairPrice={fairPrice}
-                />
+                <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
             </Item>
             <DepositButtons hide={!!order?.exposureBN?.toNumber() ?? false}>
                 <SButton

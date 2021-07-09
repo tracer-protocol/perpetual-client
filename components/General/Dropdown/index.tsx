@@ -3,7 +3,6 @@ import { Children } from 'libs/types';
 import styled from 'styled-components';
 import { useResizeDetector } from 'react-resize-detector';
 
-
 /**
  * Similar component to dropdown only there is no content to begin with
  */
@@ -26,7 +25,6 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
         }
     }, [open, height]);
 
-    
     return (
         <div className={`${className} ${open ? 'open' : ''}`} ref={main}>
             <div className="body" ref={ref}>
@@ -60,7 +58,7 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
 /**
  * Takes two children items, will place the first as the header component and the second as the body
  * @param defaultHeight prevents jumpiness when initialising the dropdown
- */ 
+ */
 type DProps = {
     defaultOpen?: boolean;
     defaultHeight: number;
@@ -71,7 +69,7 @@ type DProps = {
 export const Dropdown: React.FC<DProps> = styled(({ className, defaultOpen, header, body, defaultHeight }: DProps) => {
     const [open, setOpen] = useState(!!defaultOpen);
     const main = useRef(null);
-    const { height: bodyHeight, ref: _body} = useResizeDetector();
+    const { height: bodyHeight, ref: _body } = useResizeDetector();
     const _header = useRef(null);
     useEffect(() => {
         const h = _header.current as unknown as HTMLDivElement;

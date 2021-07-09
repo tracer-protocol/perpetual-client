@@ -9,6 +9,7 @@ import TracerModal from '@components/General/TracerModal';
 import { Button, HiddenExpand, LockContainer, NumberSelect } from '@components/General';
 import { Option } from '@components/Buttons/SlideSelect';
 import ErrorComponent from '@components/General/Error';
+import { Max, NumberSelectHeader } from '@components/General/Input/NumberSelect';
 import {
     CalculatorContext,
     ContextProps,
@@ -129,13 +130,12 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 unit={quoteTicker}
                 title={'Liquidation Price'}
                 amount={liquidationPrice}
-                // balance={parseFloat(fairPrice.toFixed(2))}
                 setAmount={(val) => {
                     calculatorDispatch({
                         type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
                         value: LOCK_LIQUIDATION,
                     });
-                    calculatorDispatch({ type: 'setLiquidationPrice', value: Math.abs(val)});
+                    calculatorDispatch({ type: 'setLiquidationPrice', value: Math.abs(val) });
                     calculatorDispatch({ type: 'calculate' });
                 }}
                 isLocked={isLocked(locked, LOCK_LIQUIDATION)}
@@ -145,6 +145,12 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                         type: isLocked(locked, LOCK_LIQUIDATION) ? 'unlockValue' : 'lockValue',
                         value: LOCK_LIQUIDATION,
                     })
+                }
+                header={
+                    <NumberSelectHeader>
+                        {'Liquidation Price'}
+                        <Max onClick={(_e) => calculatorDispatch({ type: 'setMaxLiquidationPrice' })}>Max</Max>
+                    </NumberSelectHeader>
                 }
             />
             <StyledHiddenExpand defaultHeight={0} open={showResult}>
@@ -174,7 +180,7 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 <SButton
                     onClick={(e) => {
                         e.preventDefault();
-                        calculatorDispatch({ type: 'setShowResult', value: true })
+                        calculatorDispatch({ type: 'setShowResult', value: true });
                         calculatorDispatch({ type: 'calculate' });
                     }}
                 >

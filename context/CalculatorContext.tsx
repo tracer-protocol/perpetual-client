@@ -44,10 +44,11 @@ type CalculatorState = {
 export type CalculatorAction =
     | { type: 'setExposure'; value: number }
     | { type: 'setLiquidationPrice'; value: number }
+    | { type: 'setMaxLiquidationPrice' }
     | { type: 'setLeverage'; value: number }
     | { type: 'setMargin'; value: number }
     | { type: 'setError'; value: ErrorKey }
-    | { type: 'setShowResult'; value: boolean}
+    | { type: 'setShowResult'; value: boolean }
     | { type: 'lockValue'; value: number }
     | { type: 'unlockValue'; value: number }
     | { type: 'setPosition' }
@@ -92,6 +93,10 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                 return { ...state, margin: action.value };
             case 'setLiquidationPrice':
                 return { ...state, liquidationPrice: action.value };
+            case 'setMaxLiquidationPrice':
+                return {
+                    ...state,
+                };
             case 'setLeverage':
                 return { ...state, leverage: action.value };
             case 'setPosition':
@@ -119,32 +124,31 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                 return {
                     ...state,
                     locked: locked,
-                }
-                
+                };
+
             case 'unlockValue':
-                const filteredLocked = state.locked.filter((val) => val !== action.value)
+                const filteredLocked = state.locked.filter((val) => val !== action.value);
                 return {
                     ...state,
                     locked: filteredLocked,
-                }
-            case 'setShowResult': 
+                };
+            case 'setShowResult':
                 return {
                     ...state,
-                    showResult: action.value 
-                }
+                    showResult: action.value,
+                };
             case 'calculate': {
                 if (state.showResult) {
                     if (state.locked.length < 2) {
                         return {
                             ...state,
-                            error: 'INVALID_INPUTS'
-                        }
-                    } else if (isLockedAndFalsey(
-                        state.locked, state.exposure, state.margin, state.liquidationPrice)) {
+                            error: 'INVALID_INPUTS',
+                        };
+                    } else if (isLockedAndFalsey(state.locked, state.exposure, state.margin, state.liquidationPrice)) {
                         return {
                             ...state,
-                            error: 'ZEROED_INPUTS'
-                        }
+                            error: 'ZEROED_INPUTS',
+                        };
                     }
                     const result = getResult(
                         state,
@@ -164,12 +168,12 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                         liquidationPrice: parseFloat(result.liquidationPrice.toFixed(5)),
                         leverage: parseFloat(result.leverage.toFixed(1)),
                         margin: parseFloat(result.margin.toFixed(5)),
-                        error: error
+                        error: error,
                     };
                 }
                 return {
-                    ...state
-                }
+                    ...state,
+                };
             }
             case 'reset': {
                 return { ...defaultState, locked: [] };
@@ -258,13 +262,19 @@ const getResult: (state: CalculatorState, fairPrice: BigNumber, maxLeverage: Big
 };
 
 const isLockedAndFalsey = (locked: number[], exposure: number, margin: number, liquidationPrice: number) => {
-    for (let lockedKey of locked) {
-        if (lockedKey === LOCK_EXPOSURE && !exposure) return true;
-        if (lockedKey === LOCK_MARGIN && !margin) return true;
-        if (lockedKey === LOCK_LIQUIDATION && !liquidationPrice) return true;
-    } // else  
+    for (const lockedKey of locked) {
+        if (lockedKey === LOCK_EXPOSURE && !exposure) {
+            return true;
+        }
+        if (lockedKey === LOCK_MARGIN && !margin) {
+            return true;
+        }
+        if (lockedKey === LOCK_LIQUIDATION && !liquidationPrice) {
+            return true;
+        }
+    } // else
     return false;
-}
+};
 
 const checkErrors: (
     calculatorState: CalculatorState,
@@ -280,8 +290,10 @@ const checkErrors: (
     ) {
         return 'INVALID_POSITION';
     } else if (
-        (calculatorState.position === LONG && isWithinRange(0.015, result.liquidationPrice.toNumber(), fairPrice.toNumber())) ||
-        (calculatorState.position === SHORT && isWithinRange(0.015, result.liquidationPrice.toNumber(), fairPrice.toNumber()))
+        (calculatorState.position === LONG &&
+            isWithinRange(0.015, result.liquidationPrice.toNumber(), fairPrice.toNumber())) ||
+        (calculatorState.position === SHORT &&
+            isWithinRange(0.015, result.liquidationPrice.toNumber(), fairPrice.toNumber()))
     ) {
         return 'DANGEROUS_POSITION';
     } else if (result.margin.gt(tokenBalance)) {

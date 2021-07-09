@@ -92,12 +92,12 @@ export const CalculatorErrors: Record<string, ErrorBox> = {
     DANGEROUS_POSITION: {
         name: 'Dangerous Position',
         message: 'Liquidation price is within 1.5% of current fair price',
-        severity: 'warning'
+        severity: 'warning',
     },
     ZEROED_INPUTS: {
         name: 'Zeroed Inputs',
         message: 'One of the locked values is zero',
-    }
+    },
 };
 
 export type ErrorKey =
