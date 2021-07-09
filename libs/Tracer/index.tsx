@@ -158,7 +158,6 @@ export default class Tracer {
                 this.feeRate = new BigNumber(res[6]).div(priceMultiplier_);
                 this.leveragedNotionalValue = new BigNumber(Web3.utils.fromWei(res[9]));
                 this.insuranceContract = new Insurance(web3, res[7], this.marketId);
-                console.log(this.insuranceContract);
                 this._pricing = res[8]
                     ? (new web3.eth.Contract(pricingAbi as AbiItem[], res[8]) as unknown as Pricing)
                     : undefined;
@@ -174,7 +173,6 @@ export default class Tracer {
                     });
                 this.updateFairPrice();
                 this.updateFundingRates();
-                console.log('before');
                 return true;
             })
             .catch((err) => {
@@ -218,8 +216,6 @@ export default class Tracer {
                     ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
                     : new BigNumber(0),
             };
-
-            console.log(parsedBalances, this.address);
             const { quote, base } = parsedBalances;
             const leverage = calcLeverage(quote, base, this.fairPrice);
             const totalMargin = calcTotalMargin(quote, base, this.fairPrice);

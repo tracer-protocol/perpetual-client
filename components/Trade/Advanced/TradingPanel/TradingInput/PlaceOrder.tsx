@@ -31,11 +31,11 @@ type TIProps = {
     className?: string;
 };
 
-export default styled(({ selectedTracer, className, account }: TIProps) => {
+export default (({ selectedTracer, account }: TIProps) => {
     const { order, orderDispatch } = useContext(OrderContext);
     return (
         <>
-            <Box className={`${className}`}>
+            <StyledBox>
                 {/* Order type select */}
                 <OrderTypeSelect selected={order?.orderType ?? 0} />
 
@@ -99,10 +99,8 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                             className="px-8"
                             min={selectedTracer?.getMaxLeverage().negated().toNumber()}
                             max={selectedTracer?.getMaxLeverage().toNumber()}
-                            value={order?.leverage}
-                            balances={selectedTracer?.getBalance() ?? defaults.balances}
+                            value={order?.leverage ?? 0}
                             orderDispatch={orderDispatch}
-                            fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
                         />
                         <MarketTradeDetails
                             fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
@@ -114,19 +112,22 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
                 )}
 
                 {/* Place Order */}
-                <div className="m-2">
-                    <AdvancedOrderButton>Place Order</AdvancedOrderButton>
-                </div>
-            </Box>
+                {order?.error === 'NO_ERROR' ? (
+                    <div className={`m-2`}>
+                        <AdvancedOrderButton>Place Order</AdvancedOrderButton>
+                    </div>
+                ) : null}
+            </StyledBox>
             <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
         </>
     );
-})`
+}) as React.FC<TIProps>;
+
+const StyledBox = styled(Box)`
     transition: opacity 0.3s 0.1s, height: 0.3s 0.1s, padding 0.1s;
-    overflow: auto;
     position: relative;
     border-bottom: none;
     display: block;
     padding: 0;
     z-index: 1;
-` as React.FC<TIProps>;
+`;
