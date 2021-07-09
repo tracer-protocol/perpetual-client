@@ -188,6 +188,9 @@ export default styled(
                     title={'Amount'}
                     amount={state.amount}
                     balance={parseFloat(available.toFixed(2))}
+                    setMax={(_e) => {
+                        dispatch({ type: 'setAmount', amount: parseFloat(available.toFixed(2)) });
+                    }}
                     setAmount={(amount: number) => dispatch({ type: 'setAmount', amount: amount })}
                 />
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>

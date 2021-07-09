@@ -53,19 +53,19 @@ export const Max = styled.span`
 type BHProps = {
     className?: string;
     amount: number;
-    setAmount: (number: number) => void;
+    setMax?: (any: any) => any;
     title: string;
     balance: number;
 };
 
-const BalanceHeader: React.FC<BHProps> = ({ title, balance, amount, setAmount }) => (
+const BalanceHeader: React.FC<BHProps> = ({ title, balance, amount, setMax }) => (
     <NumberSelectHeader>
         {title}
         <Balance className={`balance ${amount > balance ? 'invalid' : ''}`}>
             {`Available: ${toApproxCurrency(balance)}`}
-            {amount ? <After className="ml-2 after">{toApproxCurrency(balance - amount)}</After> : null}
+            {amount ? <After className="ml-2 after">{toApproxCurrency(Math.max(balance - amount, 0))}</After> : null}
         </Balance>
-        <Max onClick={(_e) => setAmount(balance)}>Max</Max>
+        {setMax ? <Max onClick={setMax}>Max</Max> : null}
     </NumberSelectHeader>
 );
 
@@ -135,7 +135,7 @@ export const NumberSelect: React.FC<NSProps> = ({
         if (header) {
             return header;
         } else if (balance) {
-            return <BalanceHeader title={title} amount={amount} balance={balance} setAmount={setAmount} />;
+            return <BalanceHeader title={title} amount={amount} balance={balance} setMax={setMax} />;
         } else {
             return (
                 <NumberSelectHeader>

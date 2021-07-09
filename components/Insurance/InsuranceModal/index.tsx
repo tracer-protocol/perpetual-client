@@ -218,6 +218,9 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, 
                 title={'Amount'}
                 amount={amount}
                 balance={balance?.toNumber() ?? 0}
+                setMax={(_e) => {
+                    setAmount(balance?.toNumber() ?? 0);
+                }}
                 setAmount={setAmount}
             />
             <SHiddenExpand defaultHeight={0} open={!!amount}>

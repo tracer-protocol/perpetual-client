@@ -108,6 +108,16 @@ export default styled(
                     title={'Margin'}
                     amount={margin}
                     balance={balances.tokenBalance.toNumber()}
+                    setMax={(_e) => {
+                        calculatorDispatch({
+                            type: 'lockValue',
+                            value: LOCK_MARGIN,
+                        });
+                        calculatorDispatch({
+                            type: 'setMargin',
+                            value: parseFloat(balances.tokenBalance.toFixed(5)),
+                        });
+                    }}
                     setAmount={(val) => {
                         calculatorDispatch({
                             type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
