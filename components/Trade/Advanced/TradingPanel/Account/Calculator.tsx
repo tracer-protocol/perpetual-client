@@ -148,7 +148,7 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 }
                 header={
                     <NumberSelectHeader>
-                        {'Liquidation Price'}
+                        {`Liquidation Price`}
                         <Max onClick={(_e) => calculatorDispatch({ type: 'setMaxLiquidationPrice' })}>Max</Max>
                     </NumberSelectHeader>
                 }
@@ -320,7 +320,7 @@ const Leverage: React.FC<LProps> = styled(({ className, value, maxLeverage, isLo
     ${LockContainer} {
         position: absolute;
         right: 20px;
-        top: 25%;
+        top: 15%;
     }
 
     > h3 {
