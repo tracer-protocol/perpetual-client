@@ -423,7 +423,7 @@ export const CalculatorTip: React.FC<TProps> = ({ className, children }: TProps)
         </p>
     );
     return (
-        <StyledTooltip className={className} title={tooltip}>
+        <StyledTooltip className={className} title={tooltip} placement={'right'}>
             {children}
         </StyledTooltip>
     );
