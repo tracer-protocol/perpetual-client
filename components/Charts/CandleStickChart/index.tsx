@@ -1,12 +1,12 @@
 import React, { FC, useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { CandleData, LineData } from 'libs/types/TracerTypes';
+import { CandleData } from '@libs/types/TracerTypes';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
 // @ts-ignore
-import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
+import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
 
-const ChartWrapper = dynamic(import('./LightWeightWrapper'), { ssr: false });
+const ChartWrapper = dynamic(import('../'), { ssr: false });
 
 const chartData = {
     options: {
@@ -72,11 +72,9 @@ const StyledIcon = styled(Icon)`
 `;
 
 interface LWCProps {
-    graphType?: string;
-    candleData?: CandleData;
-    lineData?: LineData;
+    candleData: CandleData | undefined;
 }
-const LightWeightChart: FC<LWCProps> = ({ candleData, lineData, graphType }: LWCProps) => {
+const CandleStickChart: FC<LWCProps> = ({ candleData }: LWCProps) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
     const hasReset = useRef<boolean>(false);
 
@@ -89,21 +87,6 @@ const LightWeightChart: FC<LWCProps> = ({ candleData, lineData, graphType }: LWC
                         data: candleData,
                     },
                 ],
-                lineSeries: [
-                    {
-                        data: lineData,
-                    },
-                ],
-            });
-            hasReset.current = false;
-        } else if (lineData?.length) {
-            setGraphData({
-                ...chartData,
-                lineSeries: [
-                    {
-                        data: lineData,
-                    },
-                ],
             });
             hasReset.current = false;
         } else {
@@ -112,44 +95,25 @@ const LightWeightChart: FC<LWCProps> = ({ candleData, lineData, graphType }: LWC
                 hasReset.current = true;
             }
         }
-    }, [candleData || lineData]);
+    }, [candleData]);
 
     const now = Math.floor(Date.now() / 1000); // timestamp in seconds
     const twoHour = 2 * 60 * 60; // two hours in seconds
 
-    switch (graphType) {
-        case 'candle-graph':
-            if (!graphData || !(graphData?.candlestickSeries as any[])?.length) {
-                return <StyledIcon component={TracerLoading} className="tracer-loading" />;
-            } else {
-                return (
-                    <ChartWrapper
-                        options={graphData.options as Record<string, unknown>}
-                        from={now + twoHour}
-                        to={now - twoHour}
-                        candlestickSeries={graphData.candlestickSeries as any[]}
-                        autoWidth
-                        autoHeight
-                    />
-                );
-            }
-
-        default:
-            if (!graphData || !(graphData?.lineSeries as any[])?.length) {
-                return <StyledIcon component={TracerLoading} className="tracer-loading" />;
-            } else {
-                return (
-                    <ChartWrapper
-                        options={graphData.options as Record<string, unknown>}
-                        from={now + twoHour}
-                        to={now - twoHour}
-                        lineSeries={graphData.lineSeries as any[]}
-                        autoWidth
-                        autoHeight
-                    />
-                );
-            }
+    if (!graphData || !(graphData?.candlestickSeries as any[])?.length) {
+        return <StyledIcon component={TracerLoading} className="tracer-loading" />;
+    } else {
+        return (
+            <ChartWrapper
+                options={graphData.options as Record<string, unknown>}
+                from={now + twoHour}
+                to={now - twoHour}
+                candlestickSeries={graphData.candlestickSeries as any[]}
+                autoWidth
+                autoHeight
+            />
+        );
     }
 };
 
-export default LightWeightChart;
+export default CandleStickChart;

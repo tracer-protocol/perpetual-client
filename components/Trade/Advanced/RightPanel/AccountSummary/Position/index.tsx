@@ -7,7 +7,7 @@ import { calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { CloseOrderButton } from '@components/Buttons/OrderButton';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import PositionOverlay from '@components/Overlay/PositionOverlay';
-import { LineData, UserBalance } from '@libs/types/TracerTypes';
+import { UserBalance } from '@libs/types/TracerTypes';
 import { FilledOrder } from '@libs/types/OrderTypes';
 import styled from 'styled-components';
 import { Previous, Section } from '@components/General';
@@ -16,9 +16,23 @@ import { Option } from '@components/Buttons/SlideSelect';
 import Side from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Side';
 import Leverage from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Leverage';
 import Exposure from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Exposure';
-import LightWeightChart from '@components/Charts/LightWeightChart';
-import { useLines } from '@libs/Graph/hooks/Tracer';
-import { TracerContext } from '@context/TracerContext';
+import PriceLineChart from '@components/Charts/PriceLineChart';
+
+const priceLineChartData = [
+    { time: '2021-08-01', value: 23.56 },
+    { time: '2021-09-01', value: 40.56 },
+    { time: '2021-10-06', value: 50.56 },
+    { time: '2021-10-15', value: 55.56 },
+    { time: '2021-10-30', value: 60.56 },
+    { time: '2021-11-07', value: 64.44 },
+    { time: '2021-12-08', value: 81.89 },
+    { time: '2022-01-09', value: 87.45 },
+    { time: '2022-02-10', value: 93.45 },
+    { time: '2022-03-11', value: 103.25 },
+    { time: '2022-04-12', value: 108.45 },
+    { time: '2022-05-13', value: 112.39 },
+    { time: '2022-06-14', value: 120.45 },
+];
 
 interface PTProps {
     className?: string;
@@ -28,14 +42,13 @@ interface PTProps {
     quoteTicker: string;
     filledOrders: FilledOrder[];
 }
+
 const PositionTab: FC<PTProps> = styled(
     ({ className, balances, fairPrice, baseTicker, quoteTicker, filledOrders }: PTProps) => {
         const [currency, setCurrency] = useState(0); // 0 quoted in base
         const { account } = useContext(Web3Context);
         const { order } = useContext(OrderContext);
         const { base } = balances;
-        const { selectedTracer } = useContext(TracerContext);
-        const { lines } = useLines(selectedTracer?.address ?? '');
 
         return (
             <div className={className}>
@@ -114,7 +127,7 @@ const PositionTab: FC<PTProps> = styled(
                     </PositionDetails>
 
                     <GraphContainer>
-                        <LightWeightChart lineData={lines as LineData} />
+                        <PriceLineChart lineData={priceLineChartData} />
                     </GraphContainer>
 
                     <LegendsContainer>
@@ -124,7 +137,14 @@ const PositionTab: FC<PTProps> = styled(
                                 <LegendsIndicator colour={`var(--color-primary)`} />
                                 Last Price
                             </LegendTitle>
-                            <LegendPrice>{toApproxCurrency(lines[lines.length - 1]?.value)}</LegendPrice>
+                            <LegendPrice>{toApproxCurrency(120.45)}</LegendPrice>
+                        </Legend>
+                        <Legend>
+                            <LegendTitle>
+                                <LegendsIndicator colour="#F15025" />
+                                Liquidation Price
+                            </LegendTitle>
+                            <LegendPrice>{toApproxCurrency(50)}</LegendPrice>
                         </Legend>
                     </LegendsContainer>
                 </PositionInfo>
