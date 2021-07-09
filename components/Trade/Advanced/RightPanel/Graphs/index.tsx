@@ -16,7 +16,7 @@ export default (({ selectedTracerAddress }: { selectedTracerAddress: string }) =
     const { candles } = useCandles(selectedTracerAddress);
     return (
         <GraphWrap>
-            <LightWeightChart candleData={candles as CandleData} />
+            <LightWeightChart candleData={candles as CandleData} graphType="candle-graph" />
         </GraphWrap>
     );
 }) as React.FC<{ selectedTracerAddress: string }>;

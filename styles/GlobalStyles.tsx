@@ -9,6 +9,7 @@ export default createGlobalStyle`
         --color-secondary: #005ea4;
         --color-accent: #002886;
 
+        --font-size-ultra-small: 11px;
         --font-size-extra-small: 13px;
         --font-size-small: 16px;
         --font-size-medium: 20px;
