@@ -8,7 +8,7 @@ import { SlideSelect } from '@components/Buttons';
 import TracerModal from '@components/General/TracerModal';
 import { Button, HiddenExpand, LockContainer, NumberSelect } from '@components/General';
 import { Option } from '@components/Buttons/SlideSelect';
-import ErrorComponent from '@components/General/Error';
+import ErrorComponent, { CalculatorErrors } from '@components/General/Error';
 import { Max, NumberSelectHeader } from '@components/General/Input/NumberSelect';
 import {
     CalculatorContext,
@@ -156,7 +156,7 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
             <StyledHiddenExpand defaultHeight={0} open={showResult}>
                 <p className="title">Calculator Summary</p>
                 <p>
-                    {error === 'NO_ERROR'
+                    {error === 'NO_ERROR' || CalculatorErrors[error].severity
                         ? `
                             Deposit ${toApproxCurrency(margin)} margin and open a ${
                               position === LONG ? 'LONG' : 'SHORT'
@@ -169,8 +169,8 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
                 </p>
                 <div className="text-center">
                     <SButton
-                        className={`${error === 'NO_ERROR' ? 'primary' : ''} mt-1`}
-                        disabled={error !== 'NO_ERROR'}
+                        className={`${error === 'NO_ERROR' || CalculatorErrors[error].severity ? 'primary' : ''} mt-1`}
+                        disabled={error !== 'NO_ERROR' && !CalculatorErrors[error].severity}
                     >
                         Deposit Margin
                     </SButton>
