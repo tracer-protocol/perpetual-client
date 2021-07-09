@@ -68,7 +68,10 @@ export default styled(({ className, close, baseTicker, quoteTicker, balances, di
             onClose={close}
         >
             <CalcSelectContainer>
-                <CalcSlideSelect value={position} onClick={() => calculatorDispatch({ type: 'setPosition' })}>
+                <CalcSlideSelect value={position} onClick={() => {
+                    calculatorDispatch({ type: 'setPosition' })
+                    calculatorDispatch({ type: 'calculate' });
+                }}>
                     <Option>Long</Option>
                     <Option>Short</Option>
                 </CalcSlideSelect>

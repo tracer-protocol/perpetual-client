@@ -73,7 +73,7 @@ export const CalculatorErrors: Record<string, ErrorBox> = {
     INVALID_POSITION: {
         name: 'Invalid Position',
         message: 'Invalid Position',
-        moreInfo: 'This position is above max leverage and will result in instant liquidation',
+        moreInfo: 'This position is liquidateable. Either the position is above max leverage or the liquidation price has already been met.',
     },
     INSUFFICIENT_FUNDS: {
         name: 'Insufficient Funds',
