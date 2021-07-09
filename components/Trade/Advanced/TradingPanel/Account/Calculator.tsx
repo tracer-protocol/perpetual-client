@@ -9,7 +9,7 @@ import TracerModal from '@components/General/TracerModal';
 import { Button, HiddenExpand, LockContainer, NumberSelect } from '@components/General';
 import { Option } from '@components/Buttons/SlideSelect';
 import ErrorComponent, { CalculatorErrors } from '@components/General/Error';
-import { Max, NumberSelectHeader } from '@components/General/Input/NumberSelect';
+import { NumberSelectHeader } from '@components/General/Input/NumberSelect';
 import {
     CalculatorContext,
     ContextProps,
@@ -34,174 +34,181 @@ type CalculatorModalProps = {
     balances: UserBalance;
     fairPrice: BigNumber;
 };
-export default styled(({ className, close, baseTicker, quoteTicker, balances, display }: CalculatorModalProps) => {
-    const { selectedTracer } = useContext(TracerContext);
-    const {
-        calculatorState: {
-            exposure,
-            margin,
-            liquidationPrice,
-            leverage,
-            position,
-            displayLocks,
-            showResult,
-            error,
-            locked,
-        },
-        calculatorDispatch,
-    } = useContext(CalculatorContext) as ContextProps;
+export default styled(
+    ({ className, close, baseTicker, quoteTicker, balances, display, fairPrice }: CalculatorModalProps) => {
+        const { selectedTracer } = useContext(TracerContext);
+        const {
+            calculatorState: {
+                exposure,
+                margin,
+                liquidationPrice,
+                leverage,
+                position,
+                displayLocks,
+                showResult,
+                error,
+                locked,
+            },
+            calculatorDispatch,
+        } = useContext(CalculatorContext) as ContextProps;
 
-    const isLocked = (locked: number[], value: number) => locked[0] === value || locked[1] === value;
-    return (
-        <TracerModal
-            loading={false}
-            className={className}
-            show={display}
-            title={
-                <p>
-                    {`${selectedTracer?.marketId} Calculator`}
-                    <CalculatorTip>
-                        <InfoBox />
-                    </CalculatorTip>
-                </p>
-            }
-            onClose={close}
-        >
-            <CalcSelectContainer>
-                <CalcSlideSelect value={position} onClick={() => {
-                    calculatorDispatch({ type: 'setPosition' })
-                    calculatorDispatch({ type: 'calculate' });
-                }}>
-                    <Option>Long</Option>
-                    <Option>Short</Option>
-                </CalcSlideSelect>
-            </CalcSelectContainer>
-
-            <AccountNumberSelect
-                unit={baseTicker}
-                title={'Exposure'}
-                amount={exposure}
-                setAmount={(val) => {
-                    calculatorDispatch({
-                        type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
-                        value: LOCK_EXPOSURE,
-                    });
-                    calculatorDispatch({ type: 'setExposure', value: Math.abs(val) });
-                    calculatorDispatch({ type: 'calculate' });
-                }}
-                displayLock={displayLocks}
-                isLocked={isLocked(locked, LOCK_EXPOSURE)}
-                lockOnClick={() =>
-                    calculatorDispatch({
-                        type: isLocked(locked, LOCK_EXPOSURE) ? 'unlockValue' : 'lockValue',
-                        value: LOCK_EXPOSURE,
-                    })
+        const isLocked = (locked: number[], value: number) => locked[0] === value || locked[1] === value;
+        return (
+            <TracerModal
+                loading={false}
+                className={className}
+                show={display}
+                title={
+                    <p>
+                        {`${selectedTracer?.marketId} Calculator`}
+                        <CalculatorTip>
+                            <InfoBox />
+                        </CalculatorTip>
+                    </p>
                 }
-            />
+                onClose={close}
+            >
+                <CalcSelectContainer>
+                    <CalcSlideSelect
+                        value={position}
+                        onClick={() => {
+                            calculatorDispatch({ type: 'setPosition' });
+                            calculatorDispatch({ type: 'calculate' });
+                        }}
+                    >
+                        <Option>Long</Option>
+                        <Option>Short</Option>
+                    </CalcSlideSelect>
+                </CalcSelectContainer>
 
-            <AccountNumberSelect
-                unit={quoteTicker}
-                title={'Margin'}
-                amount={margin}
-                balance={balances.tokenBalance.toNumber()}
-                setAmount={(val) => {
-                    calculatorDispatch({
-                        type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
-                        value: LOCK_MARGIN,
-                    });
-                    calculatorDispatch({ type: 'setMargin', value: Math.abs(val) });
-                    calculatorDispatch({ type: 'calculate' });
-                }}
-                displayLock={displayLocks}
-                isLocked={isLocked(locked, LOCK_MARGIN)}
-                lockOnClick={() =>
-                    calculatorDispatch({
-                        type: isLocked(locked, LOCK_MARGIN) ? 'unlockValue' : 'lockValue',
-                        value: LOCK_MARGIN,
-                    })
-                }
-            />
+                <AccountNumberSelect
+                    unit={baseTicker}
+                    title={'Exposure'}
+                    amount={exposure}
+                    setAmount={(val) => {
+                        calculatorDispatch({
+                            type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
+                            value: LOCK_EXPOSURE,
+                        });
+                        calculatorDispatch({ type: 'setExposure', value: Math.abs(val) });
+                        calculatorDispatch({ type: 'calculate' });
+                    }}
+                    displayLock={displayLocks}
+                    isLocked={isLocked(locked, LOCK_EXPOSURE)}
+                    lockOnClick={() =>
+                        calculatorDispatch({
+                            type: isLocked(locked, LOCK_EXPOSURE) ? 'unlockValue' : 'lockValue',
+                            value: LOCK_EXPOSURE,
+                        })
+                    }
+                />
 
-            <Leverage
-                value={leverage}
-                isLocked={isLocked(locked, LOCK_LEVERAGE)}
-                calculatorDispatch={calculatorDispatch}
-                maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
-            />
+                <AccountNumberSelect
+                    unit={quoteTicker}
+                    title={'Margin'}
+                    amount={margin}
+                    balance={balances.tokenBalance.toNumber()}
+                    setAmount={(val) => {
+                        calculatorDispatch({
+                            type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
+                            value: LOCK_MARGIN,
+                        });
+                        calculatorDispatch({ type: 'setMargin', value: Math.abs(val) });
+                        calculatorDispatch({ type: 'calculate' });
+                    }}
+                    displayLock={displayLocks}
+                    isLocked={isLocked(locked, LOCK_MARGIN)}
+                    lockOnClick={() =>
+                        calculatorDispatch({
+                            type: isLocked(locked, LOCK_MARGIN) ? 'unlockValue' : 'lockValue',
+                            value: LOCK_MARGIN,
+                        })
+                    }
+                />
 
-            <AccountNumberSelect
-                unit={quoteTicker}
-                title={'Liquidation Price'}
-                amount={liquidationPrice}
-                setAmount={(val) => {
-                    calculatorDispatch({
-                        type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
-                        value: LOCK_LIQUIDATION,
-                    });
-                    calculatorDispatch({ type: 'setLiquidationPrice', value: Math.abs(val) });
-                    calculatorDispatch({ type: 'calculate' });
-                }}
-                isLocked={isLocked(locked, LOCK_LIQUIDATION)}
-                displayLock={displayLocks}
-                lockOnClick={() =>
-                    calculatorDispatch({
-                        type: isLocked(locked, LOCK_LIQUIDATION) ? 'unlockValue' : 'lockValue',
-                        value: LOCK_LIQUIDATION,
-                    })
-                }
-                header={
-                    <NumberSelectHeader>
-                        {`Liquidation Price`}
-                        <Max onClick={(_e) => calculatorDispatch({ type: 'setMaxLiquidationPrice' })}>Max</Max>
-                    </NumberSelectHeader>
-                }
-            />
-            <StyledHiddenExpand defaultHeight={0} open={showResult}>
-                <p className="title">Calculator Summary</p>
-                <p>
-                    {error === 'NO_ERROR' || CalculatorErrors[error].severity
-                        ? `
+                <Leverage
+                    value={leverage}
+                    isLocked={isLocked(locked, LOCK_LEVERAGE)}
+                    calculatorDispatch={calculatorDispatch}
+                    maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
+                />
+
+                <AccountNumberSelect
+                    unit={quoteTicker}
+                    title={'Liquidation Price'}
+                    amount={liquidationPrice}
+                    setAmount={(val) => {
+                        calculatorDispatch({
+                            type: Number.isNaN(val) ? 'unlockValue' : 'lockValue',
+                            value: LOCK_LIQUIDATION,
+                        });
+                        calculatorDispatch({ type: 'setLiquidationPrice', value: Math.abs(val) });
+                        calculatorDispatch({ type: 'calculate' });
+                    }}
+                    isLocked={isLocked(locked, LOCK_LIQUIDATION)}
+                    displayLock={displayLocks}
+                    lockOnClick={() =>
+                        calculatorDispatch({
+                            type: isLocked(locked, LOCK_LIQUIDATION) ? 'unlockValue' : 'lockValue',
+                            value: LOCK_LIQUIDATION,
+                        })
+                    }
+                    header={
+                        <NumberSelectHeader>
+                            {`Liquidation Price`}
+                            <FairPrice>Fair Price: {toApproxCurrency(fairPrice)}</FairPrice>
+                        </NumberSelectHeader>
+                    }
+                />
+                <StyledHiddenExpand defaultHeight={0} open={showResult}>
+                    <p className="title">Calculator Summary</p>
+                    <p>
+                        {error === 'NO_ERROR' || CalculatorErrors[error].severity
+                            ? `
                             Deposit ${toApproxCurrency(margin)} margin and open a ${
-                              position === LONG ? 'LONG' : 'SHORT'
-                          } 
+                                  position === LONG ? 'LONG' : 'SHORT'
+                              } 
                             position of ${parseFloat(
                                 exposure.toFixed(2),
                             )} ${baseTicker} to achieve account leverage of ${leverage}x. 
                             This position will be liquidated at ${toApproxCurrency(liquidationPrice)}.`
-                        : `Invalid calculated position. Try increasing your margin or decreasing your exposure`}
-                </p>
-                <div className="text-center">
+                            : `Invalid calculated position. Try increasing your margin or decreasing your exposure`}
+                    </p>
+                    <div className="text-center">
+                        <SButton
+                            className={`${
+                                error === 'NO_ERROR' || CalculatorErrors[error].severity ? 'primary' : ''
+                            } mt-1`}
+                            disabled={error !== 'NO_ERROR' && !CalculatorErrors[error].severity}
+                        >
+                            Deposit Margin
+                        </SButton>
+                    </div>
+                </StyledHiddenExpand>
+                <CalcButtons>
                     <SButton
-                        className={`${error === 'NO_ERROR' || CalculatorErrors[error].severity ? 'primary' : ''} mt-1`}
-                        disabled={error !== 'NO_ERROR' && !CalculatorErrors[error].severity}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            calculatorDispatch({ type: 'setShowResult', value: true });
+                            calculatorDispatch({ type: 'calculate' });
+                        }}
                     >
-                        Deposit Margin
+                        Calculate
                     </SButton>
-                </div>
-            </StyledHiddenExpand>
-            <CalcButtons>
-                <SButton
-                    onClick={(e) => {
-                        e.preventDefault();
-                        calculatorDispatch({ type: 'setShowResult', value: true });
-                        calculatorDispatch({ type: 'calculate' });
-                    }}
-                >
-                    Calculate
-                </SButton>
-                <SButton
-                    onClick={(e) => {
-                        e.preventDefault();
-                        calculatorDispatch({ type: 'reset' });
-                    }}
-                >
-                    Reset
-                </SButton>
-            </CalcButtons>
-            <ErrorComponent error={error} context="calculator" />
-        </TracerModal>
-    );
-})`
+                    <SButton
+                        onClick={(e) => {
+                            e.preventDefault();
+                            calculatorDispatch({ type: 'reset' });
+                        }}
+                    >
+                        Reset
+                    </SButton>
+                </CalcButtons>
+                <ErrorComponent error={error} context="calculator" />
+            </TracerModal>
+        );
+    },
+)`
     max-width: 434px !important;
 ` as React.FC<CalculatorModalProps>;
 
@@ -268,6 +275,11 @@ const AccountNumberSelect = styled(NumberSelect)`
             color: var(--color-secondary);
         }
     }
+`;
+
+const FairPrice = styled.span`
+    color: var(--color-secondary);
+    margin-left: auto;
 `;
 
 type LProps = {

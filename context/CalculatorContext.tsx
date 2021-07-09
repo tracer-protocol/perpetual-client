@@ -155,6 +155,7 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                         selectedTracer?.getFairPrice() ?? defaults.fairPrice,
                         selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
                     );
+                    console.log(result.liquidationPrice.toNumber());
                     const error = checkErrors(
                         state,
                         result,
@@ -276,6 +277,21 @@ const isLockedAndFalsey = (locked: number[], exposure: number, margin: number, l
     return false;
 };
 
+const invalidLiquidationPrice: (
+    position: typeof LONG | typeof SHORT,
+    liquidationPrice: BigNumber,
+    fairPrice: BigNumber,
+) => boolean = (position, liquidationPrice, fairPrice) => {
+    return (
+        (position === LONG &&
+            liquidationPrice.gt(fairPrice) &&
+            !isWithinRange(0.015, liquidationPrice.toNumber(), fairPrice.toNumber())) ||
+        (position === SHORT &&
+            liquidationPrice.lt(fairPrice) &&
+            !isWithinRange(0.015, liquidationPrice.toNumber(), fairPrice.toNumber()))
+    );
+};
+
 const checkErrors: (
     calculatorState: CalculatorState,
     result: PositionVars,
@@ -284,8 +300,7 @@ const checkErrors: (
     tokenBalance: BigNumber,
 ) => ErrorKey = (calculatorState, result, maxLeverage, fairPrice, tokenBalance) => {
     if (
-        (calculatorState.position === LONG && result.liquidationPrice.gte(fairPrice)) ||
-        (calculatorState.position === SHORT && result.liquidationPrice.lte(fairPrice)) ||
+        invalidLiquidationPrice(calculatorState.position, result.liquidationPrice, fairPrice) ||
         result.leverage.gte(maxLeverage)
     ) {
         return 'INVALID_POSITION';

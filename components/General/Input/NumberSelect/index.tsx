@@ -90,11 +90,12 @@ type NSProps = {
     setAmount: (number: number) => void;
     unit: string;
     title: string;
-    balance?: number;
-    displayLock?: boolean;
-    isLocked?: boolean;
-    lockOnClick?: (e: any) => any;
-    header?: React.ReactNode;
+    balance?: number; // display users balance
+    displayLock?: boolean; // boolean to display lock
+    isLocked?: boolean; // is lock locked
+    lockOnClick?: (e: any) => any; // handler when lock is clicked
+    setMax?: (e: any) => any; // used if you just want setmax
+    header?: React.ReactNode; // can be used for fully custom header
 } & Children;
 
 export const NumberSelect: React.FC<NSProps> = ({
@@ -107,6 +108,7 @@ export const NumberSelect: React.FC<NSProps> = ({
     displayLock,
     isLocked,
     lockOnClick,
+    setMax,
     header,
 }: NSProps) => {
     const getLock = (hasLock: boolean | undefined, isLocked: boolean | undefined) => {
@@ -135,7 +137,12 @@ export const NumberSelect: React.FC<NSProps> = ({
         } else if (balance) {
             return <BalanceHeader title={title} amount={amount} balance={balance} setAmount={setAmount} />;
         } else {
-            return <NumberSelectHeader>{title}</NumberSelectHeader>;
+            return (
+                <NumberSelectHeader>
+                    {title}
+                    {setMax ? <Max onClick={setMax}>Max</Max> : null}
+                </NumberSelectHeader>
+            );
         }
     };
 
