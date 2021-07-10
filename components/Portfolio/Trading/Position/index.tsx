@@ -98,9 +98,9 @@ const Position: React.FC<{
                 <TableHeader>
                     {headings.map((heading, i) =>
                         i !== 7 ? (
-                            <TableHeading>{heading}</TableHeading>
+                            <TableHeading key={i}>{heading}</TableHeading>
                         ) : (
-                            <TableLastHeading>{heading}</TableLastHeading>
+                            <TableLastHeading key={i}>{heading}</TableLastHeading>
                         ),
                     )}
                 </TableHeader>

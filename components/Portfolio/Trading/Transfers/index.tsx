@@ -48,9 +48,9 @@ const Transfers: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 3 ? (
-                                <TableHeading theme={TableHeadEndTheme}>{heading}</TableHeading>
+                                <TableHeading theme={TableHeadEndTheme} key={i}>{heading}</TableHeading>
                             ) : (
-                                <TableHeading>{heading}</TableHeading>
+                                <TableHeading key={i}>{heading}</TableHeading>
                             ),
                         )}
                     </tr>

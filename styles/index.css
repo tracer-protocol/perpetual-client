@@ -139,3 +139,8 @@ h4 {
 .web3modal-modal-lightbox {
     z-index: 4 !important;
 }
+
+/* Prevent overflow from table on portfolio page */
+div[class^="Portfolio__RightPanel"] {
+    overflow: hidden;
+}
