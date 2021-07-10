@@ -19,9 +19,12 @@ export const RightPanel = styled.div`
 `;
 
 export const Button = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: 0.5s;
     color: var(--color-primary);
-    font-size: var(--font-size-small);
+    font-size: ${(props: any) => props.theme.fontSize ? props.theme.fontSize as string : 'var(--font-size-small)' };
     line-height: 1rem;
     letter-spacing: -0.32px;
     border: 1px solid var(--color-primary);
@@ -29,6 +32,7 @@ export const Button = styled.div`
     text-align: center;
     padding: 10px 0;
     width: ${(props: any) => props.theme.width as string};
+    height: ${(props: any) => props.theme.height as string};
 
     &:hover {
         color: ${(props: any) => props.theme.hoverFG as string};

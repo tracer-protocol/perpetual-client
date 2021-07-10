@@ -26,4 +26,9 @@ export type CandleData = {
     close: number;
 }[];
 
+export type HistoryData = {
+    time: string;
+    value: number;
+}[];
+
 export type LabelledTracers = Record<string, Tracer & { loading: boolean }>;

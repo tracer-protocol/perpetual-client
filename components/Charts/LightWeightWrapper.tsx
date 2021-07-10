@@ -140,6 +140,7 @@ class ChartWrapper extends React.Component<Props> {
                 ? this.chartDiv.current.parentNode.clientHeight
                 : this.props.height || 500;
         this.chart.resize(width, height);
+        if (this.props.lineSeries) this.handleLineSeries();
     };
 
     removeSeries = () => {
@@ -219,6 +220,13 @@ class ChartWrapper extends React.Component<Props> {
         const { from, to } = this.props;
         if (from && to && this.chart) {
             // this.chart.timeScale().setVisibleRange({ from, to });
+        }
+    };
+
+    handleLineSeries = () => {
+        const { from, to, lineSeries } = this.props;
+        if (from && to && this.chart && lineSeries) {
+            this.chart.timeScale().fitContent();
         }
     };
 

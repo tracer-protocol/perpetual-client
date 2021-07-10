@@ -9,12 +9,15 @@ export default createGlobalStyle`
         --color-secondary: #005ea4;
         --color-accent: #002886;
 
+        --table-darkborder: #00156C;
+        
         --font-size-extra-small: 13px;
         --font-size-small: 16px;
         --font-size-medium: 20px;
 
         --height-extra-small-container: 48px;
         --height-small-container: 60px;
+        --height-medium-button: 32px;
         --height-small-button: 28px;
         --height-extra-small-button: 22px;
 
@@ -22,6 +25,7 @@ export default createGlobalStyle`
             --font-size-extra-small: 12px;
             --font-size-small: 13px;
             --font-size-medium: 16px;
+            --font-size-large: 22px;
             --height-small-container: 44px;
             --height-extra-small-container: 40px;
         }
@@ -89,5 +93,11 @@ export default createGlobalStyle`
     /* Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
         background: var(--color-accent);
+    }
+
+    /* Space the buttons and titles on Portfolio pages on opposite ends to each other */
+    .justify-content-between {
+        width: 100%;
+        justify-content: space-between;
     }
 `;
