@@ -1,13 +1,12 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { HistoryData } from 'libs/types/TracerTypes';
+import { HistoryData } from 'types/TracerTypes';
 import LightWeightChart from '@components/Charts/LightWeightLineChart';
 
 const GraphContent = styled.div`
     position: relative;
     width: 100%;
-    height: calc(100% - 20px);
-    margin-bottom: 20px;
+    height: calc(100% - 40px);
 `;
 
 const SmallTitle = styled.h2`

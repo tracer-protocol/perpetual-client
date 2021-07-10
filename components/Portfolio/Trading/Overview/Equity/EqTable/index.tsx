@@ -5,6 +5,7 @@ import profit_arrow_up from 'public/img/general/triangle_up_green.svg';
 
 export const EqTable = styled.table`
     margin: 10px -20px 0px;
+    width: calc(100% + 40px);
     border-top: 1px solid var(--table-darkborder);
 `;
 
@@ -61,7 +62,7 @@ export const EqTableCellEmpty = styled.td<TBCellProps>`
 export const EqTableCellLarge = styled.td`
     display: flex;
     flex-direction: row; 
-    align-items: center;
+    align-items: flex-start;
     flex-wrap: wrap;
     width: 235px;
     padding: 10px 20px;

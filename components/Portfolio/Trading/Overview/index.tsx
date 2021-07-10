@@ -12,7 +12,7 @@ const HPanel = styled.div`
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    height: 400px;
+    height: 410px;
     width: 100%;
     margin-bottom: 20px;
     padding: 20px 15px;
