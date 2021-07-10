@@ -108,7 +108,7 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                         <EqTableCellEmpty>
                         </EqTableCellEmpty>
                         <EqTableCell>
-                            <Amount fontSize="small">
+                            <Amount small={true}>
                                 $0.45
                             </Amount>
                             <Text>
@@ -116,7 +116,7 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount fontSize="small">
+                            <Amount small={true}>
                                 $0.45
                             </Amount>
                             <Text>
@@ -131,7 +131,7 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                         <EqTableCellEmpty>
                         </EqTableCellEmpty>
                         <EqTableCell>
-                            <Amount fontSize="small">
+                            <Amount small={true}>
                                 $0.45
                             </Amount>
                             <Text>
@@ -139,7 +139,7 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount fontSize="small">
+                            <Amount small={true}>
                                 $0.45
                             </Amount>
                             <Text>
@@ -156,7 +156,7 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                         <EqTableCellEmpty border={true}>
                         </EqTableCellEmpty>
                         <EqTableCellLast>
-                            <Amount fontSize="small">
+                            <Amount small={true}>
                                 $0.45
                             </Amount>
                             <Text>
@@ -173,7 +173,7 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                         <EqTableCellEmpty border={true}>
                         </EqTableCellEmpty>
                         <EqTableCellLast>
-                            <Amount fontSize="small">
+                            <Amount small={true}>
                                 $0.45
                             </Amount>
                             <Text>

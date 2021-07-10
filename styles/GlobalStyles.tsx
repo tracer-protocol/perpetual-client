@@ -14,6 +14,7 @@ export default createGlobalStyle`
         --font-size-extra-small: 13px;
         --font-size-small: 16px;
         --font-size-medium: 20px;
+        --font-size-xlarge: 40px;
 
         --height-extra-small-container: 48px;
         --height-small-container: 60px;
@@ -26,6 +27,7 @@ export default createGlobalStyle`
             --font-size-small: 13px;
             --font-size-medium: 16px;
             --font-size-large: 22px;
+            --font-size-xlarge: 40px;
             --height-small-container: 44px;
             --height-extra-small-container: 40px;
         }

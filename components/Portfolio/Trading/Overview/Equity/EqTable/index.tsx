@@ -85,15 +85,15 @@ export const EqTableCellLast = styled.td`
 
 interface AmountProps {
     color?: string;
-    fontSize?: string;
+    small?: boolean;
 }
 export const Amount = styled.span<AmountProps>`
     display: flex;
     align-items: flex-start;
     flex-basis: auto;
     color: ${(props) => props.color ? props.color as string : '#ffffff'};
-    font-size: ${(props) => props.fontSize ? props.fontSize as string : '40px'};
-    line-height: ${(props) => props.fontSize ? props.fontSize as string : '40px'};
+    font-size: ${(props) => props.small ? 'var(--font-size-medium)' : 'var(--font-size-xlarge)'};
+    line-height: ${(props) => props.small ? 'var(--font-size-medium)' : 'var(--font-size-xlarge)'};
 `;
 export const Profit = styled.span`
     font-size: 12px;

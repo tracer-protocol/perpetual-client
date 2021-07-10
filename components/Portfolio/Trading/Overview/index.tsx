@@ -64,7 +64,6 @@ const PortfolioDropdownButton = styled(Button)`
     height: var(--height-medium-button);
     padding: 0;
     min-width: 145px;
-    font-size: var(--font-size-medium);
 `;
 
 type PDProps = {
