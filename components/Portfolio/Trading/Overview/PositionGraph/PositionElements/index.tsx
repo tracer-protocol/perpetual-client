@@ -49,7 +49,7 @@ export const Amount = styled.span<AmountProps>`
 export const CellTitle = styled.span`
     flex-basis: 100%;
     color: #3DA8F5;
-    margin-top: 5px;
+    margin-top: 2px;
     font-size: 12px;
 `;
 

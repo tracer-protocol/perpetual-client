@@ -9,7 +9,7 @@ import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 const ChartWrapper = dynamic(import('@components/Charts/LightWeightWrapper'), { ssr: false });
 // @ts-ignore
 // @ts-nocheck
-const setGraphOptions: (showSeries) => Record<string, unknown> = (showSeries) => {
+const setGraphOptions: (showSeries, setPosition) => Record<string, unknown> = (showSeries, setPosition) => {
     const data: Record<string, unknown> = {
         options: {
             alignLabels: true,
@@ -50,7 +50,7 @@ const setGraphOptions: (showSeries) => Record<string, unknown> = (showSeries) =>
             priceScale: {
                 borderColor: '#37B1F6',
                 // visible: showSeries,
-                position: 'right',
+                position: setPosition,
             },
             // @ts-ignore
             timeScale: {
@@ -59,6 +59,8 @@ const setGraphOptions: (showSeries) => Record<string, unknown> = (showSeries) =>
             },
             layout: {
                 textColor: '#696969',
+                lineColor: '#FFFFFF',
+                lineWidth: 3,
                 fontFamily: 'Akkurat',
                 backgroundColor: 'transparent',
             },
@@ -77,13 +79,13 @@ const StyledIcon = styled(Icon)`
     height: 32px;
 `;
 
-const LightWeightLineChart: React.FC<{ historyData: HistoryData, showSeries: boolean }> = ({ historyData, showSeries }) => {
+const LightWeightLineChart: React.FC<{ historyData: HistoryData, showSeries: boolean, setPosition: string }> = ({ historyData, showSeries, setPosition }) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
     const hasReset = useRef<boolean>(false);
     useMemo(() => {
         if (historyData.length) {
             setGraphData({
-                ...setGraphOptions(showSeries),
+                ...setGraphOptions(showSeries, setPosition),
                 lineSeries: [
                     {
                         data: historyData,
@@ -94,7 +96,7 @@ const LightWeightLineChart: React.FC<{ historyData: HistoryData, showSeries: boo
         } else {
             if (!hasReset.current) {
                 setGraphData({
-                    ...setGraphOptions(showSeries),
+                    ...setGraphOptions(showSeries, setPosition),
                 });
                 hasReset.current = true;
             }

@@ -25,8 +25,9 @@ interface GProps {
     title?: string;
     background?: boolean;
     isPnL?: boolean;
+    setPosition?: string;
 }
-const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, background, isPnL}: GProps) => {
+const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, background, isPnL, setPosition}: GProps) => {
     const history = ([
         { time: '2021-06-11', value: 80.01 },
         { time: '2021-06-12', value: 96.63 },
@@ -56,13 +57,13 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, bac
             }
             <GraphContent>
                 {/* Hide the series for Position graphs but not for the Profit and Loss graph */}
-                <LightWeightChart historyData={history as HistoryData} showSeries={isPnL ? true : false} />
+                <LightWeightChart historyData={history as HistoryData} showSeries={isPnL ? true : false} setPosition={setPosition as string}/>
             </GraphContent>
         </div>
     );
 })`
     width: 100%;
-    height: ${(props) => props.isPnL ? '350px' : '100%'};
+    height: ${(props) => props.isPnL ? 'auto' : '100%'};
     overflow: hidden;
     border-radius: 7px;
     padding: 10px;

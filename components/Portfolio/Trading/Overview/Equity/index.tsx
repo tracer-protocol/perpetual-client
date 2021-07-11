@@ -187,10 +187,10 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
     );
 })`
     width: 100%;
-    height: 350px;
+    height: fit-content;
     overflow: hidden;
     border-radius: 7px;
-    padding: 10px;
+    padding: 10px 10px 0px;
     position: relative;
     background: #002886;
 `;

@@ -69,7 +69,7 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                 </Row>
                 <Row>  
                     <GraphContainer>
-                        <Graph className="positionGraph" selectedTracerAddress={selectedTracerAddress} />
+                        <Graph className="positionGraph" selectedTracerAddress={selectedTracerAddress} setPosition="none" />
                     </GraphContainer>
                 </Row>
                 <Row>

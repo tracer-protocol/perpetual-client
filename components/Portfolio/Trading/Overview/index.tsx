@@ -8,7 +8,6 @@ import Dropdown from 'antd/lib/dropdown';
 import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
 
-
 interface HRowProps {
     background?: string;
     border?: boolean;
@@ -74,12 +73,13 @@ const Counter = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 10px;
+    margin-left: -10px;
     border-radius: 20px;
     background: #3DA8F5;
     color: #00156C;
     width: 52px;
     height: 32px;
+    font-size: var(--font-size-small);
 `;
 
 const PortfolioDropdownButton = styled(Button)`
@@ -90,15 +90,15 @@ const PortfolioDropdownButton = styled(Button)`
 
 const VScrollContainer = styled.div`
     height: auto;
-    overflow: hidden auto;
+    overflow: hidden overlay;
 `;
 
 const HScrollContainer = styled.div`
     display: flex;
-    width: 100%;
+    width: auto;
     height: auto;
     overflow: auto hidden;
-    padding: 15px;
+    padding: 15px 7.5px;
     box-sizing: unset;
 `;
 
@@ -188,7 +188,7 @@ const Overview: FC<{
                 <Graph className="pnlGraph" title="Profit and Loss" isPnL background selectedTracerAddress={selectedTracer?.address ?? ''} />
             </HPanel>
             <HeadingRow border={true}>
-                <Title>Equity Breakdown</Title>
+                <Title>Open Positions</Title>
                 <Counter>4</Counter>
             </HeadingRow>
             <HScrollContainer>

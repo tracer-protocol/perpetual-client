@@ -25,7 +25,8 @@ export const EqTableLastHeading = styled(EqTableHeading)`
     border-right: none;
 `;
 
-export const EqTableBody = styled.tbody``;
+export const EqTableBody = styled.tbody`
+`;
 
 export const EqTableRow = styled.tr`
     transition: 0.5s;
