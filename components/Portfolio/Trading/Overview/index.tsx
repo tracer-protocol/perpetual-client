@@ -1,23 +1,40 @@
 import React, { FC, useState } from 'react';
-import Graphs from './Graph';
+import Graph from './Graph';
+import PositionGraph from './PositionGraph';
 import Equity from './Equity';
 import Tracer from '@libs/Tracer';
 import styled from 'styled-components';
 import Dropdown from 'antd/lib/dropdown';
 import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
-import { Box } from '@components/General';
 
-const HPanel = styled.div`
+
+interface HRowProps {
+    background?: string;
+    border?: boolean;
+}
+const HeadingRow = styled.div<HRowProps>`
+    display: flex;
+    align-items: center;
+    padding: 0px 15px;
+    height: 60px;
+    width: 100%;
+    padding-bottom: 0px;
+    background: ${(props) => props.background ? props.background as string : 'transparent'};
+    border-bottom: ${(props) => props.border ? '1px solid var(--table-lightborder)' : 'none'};
+`;
+
+interface HPanelProps {
+    background?: string;
+}
+const HPanel = styled.div<HPanelProps>`
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    height: 410px;
+    height: auto;
     width: 100%;
-    margin-bottom: 20px;
-    padding: 20px 15px;
-    margin-bottom: 20px;
-
+    padding: 0px 15px 20px;
+    background: ${(props) => props.background ? props.background as string : 'transparent'};
     .equityStats {
         flex-basis: calc(60% - 7.5px);
     }
@@ -31,18 +48,11 @@ const Title = styled.h1`
     font-size: var(--font-size-large);
     letter-spacing: -0.4px;
     color: var(--color-text);
-    margin-bottom: 0.5rem;
     margin-right: 2rem;
     padding: 0;
     width: fit-content;
     white-space: nowrap;
     font-weight: inherit;
-`;
-
-const SBox = styled(Box)`
-    display: flex;
-    width: 100%;
-    padding-bottom: 0px;
 `;
 
 const StyledTriangleDown = styled.img`
@@ -60,10 +70,36 @@ const StyledTriangleDown = styled.img`
     }
 `;
 
+const Counter = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    border-radius: 20px;
+    background: #3DA8F5;
+    color: #00156C;
+    width: 52px;
+    height: 32px;
+`;
+
 const PortfolioDropdownButton = styled(Button)`
     height: var(--height-medium-button);
     padding: 0;
     min-width: 145px;
+`;
+
+const VScrollContainer = styled.div`
+    height: auto;
+    overflow: hidden auto;
+`;
+
+const HScrollContainer = styled.div`
+    display: flex;
+    width: 100%;
+    height: auto;
+    overflow: auto hidden;
+    padding: 15px;
+    box-sizing: unset;
 `;
 
 type PDProps = {
@@ -131,25 +167,36 @@ const Overview: FC<{
     };
 
     return <>
-        <SBox>
-            <Title>Equity Breakdown</Title>
-            <div className='flex justify-content-between'>
-                <PortfolioDropdown 
-                    setOptions={setCurrentPortfolio}
-                    option={currentPortfolio}
-                    keyMap={portfolioKeyMap}
-                />
-                <PortfolioDropdown 
-                    setOptions={setCurrentPNL}
-                    option={currentPNL}
-                    keyMap={pnlKeyMap}
-                />
-            </div>
-        </SBox>
-        <HPanel>
-            <Equity className="equityStats" selectedTracerAddress={selectedTracer?.address ?? ''} />
-            <Graphs className="pnlGraph" selectedTracerAddress={selectedTracer?.address ?? ''} />
-        </HPanel>
+        <VScrollContainer>
+            <HeadingRow background="#00125D">
+                <Title>Equity Breakdown</Title>
+                <div className="flex justify-content-between">
+                    <PortfolioDropdown 
+                        setOptions={setCurrentPortfolio}
+                        option={currentPortfolio}
+                        keyMap={portfolioKeyMap}
+                    />
+                    <PortfolioDropdown 
+                        setOptions={setCurrentPNL}
+                        option={currentPNL}
+                        keyMap={pnlKeyMap}
+                    />
+                </div>
+            </HeadingRow>
+            <HPanel background="#00125D">
+                <Equity className="equityStats" selectedTracerAddress={selectedTracer?.address ?? ''} />
+                <Graph className="pnlGraph" title="Profit and Loss" isPnL background selectedTracerAddress={selectedTracer?.address ?? ''} />
+            </HPanel>
+            <HeadingRow border={true}>
+                <Title>Equity Breakdown</Title>
+                <Counter>4</Counter>
+            </HeadingRow>
+            <HScrollContainer>
+                <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1}/>
+                <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={2}/>
+                <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1}/>
+            </HScrollContainer>
+        </VScrollContainer>
     </>;
 };
 

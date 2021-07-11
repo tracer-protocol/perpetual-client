@@ -22,8 +22,11 @@ const SmallTitle = styled.h2`
 interface GProps {
     className?: string;
     selectedTracerAddress: string;
+    title?: string;
+    background?: boolean;
+    isPnL?: boolean;
 }
-const Graph: FC<GProps> = styled(({ selectedTracerAddress, className }: GProps) => {
+const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, background, isPnL}: GProps) => {
     const history = ([
         { time: '2021-06-11', value: 80.01 },
         { time: '2021-06-12', value: 96.63 },
@@ -48,20 +51,23 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className }: GProps) 
     ]);
     return (
         <div className={className}>
-            <SmallTitle>Profit and Loss</SmallTitle>
+            {title && 
+                <SmallTitle>{title}</SmallTitle>
+            }
             <GraphContent>
-                <LightWeightChart historyData={history as HistoryData} />
+                {/* Hide the series for Position graphs but not for the Profit and Loss graph */}
+                <LightWeightChart historyData={history as HistoryData} showSeries={isPnL ? true : false} />
             </GraphContent>
         </div>
     );
 })`
     width: 100%;
-    height: 100%;
+    height: ${(props) => props.isPnL ? '350px' : '100%'};
     overflow: hidden;
     border-radius: 7px;
     padding: 10px;
     position: relative;
-    background: #002886;
+    background: ${(props) => props.background ? '#002886' : 'transparent'};
 `;
 
 export default Graph;

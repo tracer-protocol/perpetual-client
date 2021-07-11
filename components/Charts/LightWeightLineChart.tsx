@@ -9,7 +9,7 @@ import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 const ChartWrapper = dynamic(import('@components/Charts/LightWeightWrapper'), { ssr: false });
 // @ts-ignore
 // @ts-nocheck
-const setGraphOptions: () => Record<string, unknown> = () => {
+const setGraphOptions: (showSeries) => Record<string, unknown> = (showSeries) => {
     const data: Record<string, unknown> = {
         options: {
             alignLabels: true,
@@ -49,11 +49,13 @@ const setGraphOptions: () => Record<string, unknown> = () => {
             },
             priceScale: {
                 borderColor: '#37B1F6',
+                // visible: showSeries,
                 position: 'right',
             },
             // @ts-ignore
             timeScale: {
                 borderColor: '#37B1F6',
+                visible: showSeries,
             },
             layout: {
                 textColor: '#696969',
@@ -75,13 +77,13 @@ const StyledIcon = styled(Icon)`
     height: 32px;
 `;
 
-const LightWeightLineChart: React.FC<{ historyData: HistoryData }> = ({ historyData }) => {
+const LightWeightLineChart: React.FC<{ historyData: HistoryData, showSeries: boolean }> = ({ historyData, showSeries }) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
     const hasReset = useRef<boolean>(false);
     useMemo(() => {
         if (historyData.length) {
             setGraphData({
-                ...setGraphOptions(),
+                ...setGraphOptions(showSeries),
                 lineSeries: [
                     {
                         data: historyData,
@@ -92,7 +94,7 @@ const LightWeightLineChart: React.FC<{ historyData: HistoryData }> = ({ historyD
         } else {
             if (!hasReset.current) {
                 setGraphData({
-                    ...setGraphOptions(),
+                    ...setGraphOptions(showSeries),
                 });
                 hasReset.current = true;
             }

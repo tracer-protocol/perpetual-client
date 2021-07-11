@@ -9,12 +9,19 @@ export default createGlobalStyle`
         --color-secondary: #005ea4;
         --color-accent: #002886;
 
+        --status-lightblue: #3da8f5;
+        --status-orange: #F15025;
+        --status-white: #fff;
+
         --table-darkborder: #00156C;
+        --table-semidarkborder: #000240;
+        --table-lightborder: #002886;
         
         --font-size-extra-small: 13px;
         --font-size-small: 16px;
         --font-size-medium: 20px;
-        --font-size-xlarge: 40px;
+        --font-size-large: 20px;
+        --font-size-xlarge: 36px;
 
         --height-extra-small-container: 48px;
         --height-small-container: 60px;
@@ -26,7 +33,7 @@ export default createGlobalStyle`
             --font-size-extra-small: 12px;
             --font-size-small: 13px;
             --font-size-medium: 16px;
-            --font-size-large: 22px;
+            --font-size-large: 20px;
             --font-size-xlarge: 40px;
             --height-small-container: 44px;
             --height-extra-small-container: 40px;
