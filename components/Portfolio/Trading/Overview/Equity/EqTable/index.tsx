@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 // @ts-ignore
-import profit_arrow_up from 'public/img/general/triangle_up_green.svg';
+// import profit_arrow_up from 'public/img/general/triangle_up_green.svg';
 // import profit_arrow_down from 'public/img/general/triangle_down_red.svg';
 
 export const EqTable = styled.table`
@@ -23,7 +23,7 @@ export const EqTableRow = styled.tr`
     }
 `;
 
-export const EqTableCellLarge = styled.td<TBCellLargeProps>`
+export const EqTableCellLarge = styled.td`
     display: inline-flex;
     flex-direction: row;
     align-items: flex-start;
