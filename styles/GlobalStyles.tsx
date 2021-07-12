@@ -18,7 +18,7 @@ export default createGlobalStyle`
         --table-semidarkborder: #000240;
         --table-lightborder: #002886;
         
-        --font-size-extra-small: 13px;
+        --font-size-extra-small: 12px;
         --font-size-small: 16px;
         --font-size-medium: 20px;
         --font-size-large: 20px;

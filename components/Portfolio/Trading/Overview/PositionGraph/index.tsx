@@ -103,8 +103,8 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
     );
 })`
     position: relative;
-    width: 425px;
-    min-width: 425px;
+    width: 430px;
+    min-width: 430px;
     overflow: hidden;
     border-radius: 7px;
     background: #00125D;

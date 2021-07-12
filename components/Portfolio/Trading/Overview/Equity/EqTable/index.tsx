@@ -4,8 +4,8 @@ import profit_arrow_up from 'public/img/general/triangle_up_green.svg';
 // import profit_arrow_down from 'public/img/general/triangle_down_red.svg';
 
 export const EqTable = styled.table`
-    margin: 10px -20px 0px;
-    width: calc(100% + 40px);
+    margin: 8px -16px 0px;
+    width: calc(100% + 16px);
 `;
 
 export const EqTableHeader = styled.thead``;
@@ -23,13 +23,13 @@ export const EqTableRow = styled.tr`
     }
 `;
 
-export const EqTableCellLarge = styled.td`
-    display: flex;
+export const EqTableCellLarge = styled.td<TBCellLargeProps>`
+    display: inline-flex;
     flex-direction: row;
     align-items: flex-start;
     flex-wrap: wrap;
     width: 235px;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border-bottom: 1px solid var(--table-darkborder);
     border-top: 1px solid var(--table-darkborder);
 `;
@@ -39,11 +39,22 @@ export const EqTableCellLargeEmpty = styled.td`
 `;
 
 export const EqTableCell = styled.td`
-    padding: 0 10px;
+    padding: 8px 16px;
     width: 135px;
     border-left: 1px solid var(--table-darkborder);
     border-top: 1px solid var(--table-darkborder);
     border-bottom: 1px solid var(--table-darkborder);
+`;
+
+// Last cell on a EqTable row
+export const EqTableCellLast = styled.td`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 8px 16px;
+    border-top: 1px solid var(--table-darkborder);
+    border-left: 1px solid var(--table-darkborder);
 `;
 
 interface TBCellProps {
@@ -58,17 +69,6 @@ export const EqTableCellEmpty = styled.td<TBCellProps>`
             : 'border: none;'}
 `;
 
-// Last cell on a EqTable row
-export const EqTableCellLast = styled.td`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    padding: 10px 20px;
-    border-top: 1px solid var(--table-darkborder);
-    border-left: 1px solid var(--table-darkborder);
-`;
-
 interface AmountProps {
     color?: string;
     small?: boolean;
@@ -81,6 +81,7 @@ export const Amount = styled.span<AmountProps>`
     font-size: ${(props) => (props.small ? 'var(--font-size-medium)' : 'var(--font-size-xlarge)')};
     line-height: ${(props) => (props.small ? 'var(--font-size-medium)' : 'var(--font-size-xlarge)')};
 `;
+
 export const Profit = styled.span`
     font-size: 12px;
     flex-basis: auto;
