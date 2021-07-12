@@ -168,7 +168,7 @@ const Overview: FC<{
     return (
         <>
             <VScrollContainer>
-                <HeadingRow background="#00125D">
+                <HeadingRow background={`#00125D`}>
                     <Title>Equity Breakdown</Title>
                     <div className="flex justify-content-between">
                         <PortfolioDropdown
@@ -179,7 +179,7 @@ const Overview: FC<{
                         <PortfolioDropdown setOptions={setCurrentPNL} option={currentPNL} keyMap={pnlKeyMap} />
                     </div>
                 </HeadingRow>
-                <HPanel background="#00125D">
+                <HPanel background={`#00125D`}>
                     <Equity className="equityStats" selectedTracerAddress={selectedTracer?.address ?? ''} />
                     <Graph
                         className="pnlGraph"
