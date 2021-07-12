@@ -311,39 +311,18 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                         exposureBN: orderDefaults.order.exposureBN,
                     };
                 }
-                const notional = new BigNumber(action.amount).times(fairPrice);
-                let targetLeverage = notional.div(totalMargin);
-                // here targetLeverage and leverage are both positive
-                let position;
-                if (base.lt(0)) {
-                    if (targetLeverage.gt(leverage)) {
-                        // deleverage
-                        position = LONG;
-                    } else {
-                        position = SHORT;
-                    }
-                } else if (base.gt(0)) {
-                    if (targetLeverage.lt(leverage)) {
-                        // deleverage
-                        position = SHORT;
-                    } else {
-                        position = LONG;
-                    }
-                } else {
-                    position = state.position;
-                }
-                if (base.gt(0)) {
-                    targetLeverage = leverage.minus(targetLeverage);
-                } else if (base.lt(0)) {
-                    targetLeverage = targetLeverage.minus(leverage);
-                } else {
-                    // base is 0
-                    targetLeverage = state.position === SHORT ? targetLeverage.negated() : targetLeverage;
-                }
+                const { base: newBase, quote: newQuote } = calcNewBalance(
+                    new BigNumber(action.amount),
+                    state.marketTradePrice,
+                    state.position,
+                    selectedTracer?.getBalance() ?? tracerDefaults.balances
+                );
+                const notional = newBase.times(fairPrice);
+                const newTotalMargin = calcTotalMargin(newQuote, newBase, fairPrice);
+                const targetLeverage = notional.div(newTotalMargin);
                 return {
                     ...state,
                     leverage: targetLeverage.toNumber(),
-                    position: position,
                 };
             }
             case 'setLeverage':
