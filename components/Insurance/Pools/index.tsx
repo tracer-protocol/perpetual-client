@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { TracerContext, InsuranceContext } from 'context';
 import { defaults } from 'libs/Tracer/Insurance';
 import { useRouter } from 'next/router';
-import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 'types';
+import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 'libs/types';
 import styled from 'styled-components';
 import { ProgressBar } from '@components/General';
 import { Button, Logo } from '@components/General';
