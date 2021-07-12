@@ -55,10 +55,10 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                 </Row>
                 <Row>
                     <GraphContainer>
-                        <Graph 
-                            className="positionGraph" 
-                            selectedTracerAddress={selectedTracerAddress} 
-                            setPosition="none" 
+                        <Graph
+                            className="positionGraph"
+                            selectedTracerAddress={selectedTracerAddress}
+                            setPosition="none"
                             positionGraph
                         />
                     </GraphContainer>
@@ -88,14 +88,10 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                 </Row>
                 <Row>
                     <BorderlessCell>
-                        <LargeButton className="primary">
-                            Close Position
-                        </LargeButton>
+                        <LargeButton className="primary">Close Position</LargeButton>
                     </BorderlessCell>
                     <BorderlessCell inner>
-                        <LargeButton className="primary">
-                            Adjust Position
-                        </LargeButton>
+                        <LargeButton className="primary">Adjust Position</LargeButton>
                     </BorderlessCell>
                 </Row>
             </PGContainer>
@@ -107,8 +103,8 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
     min-width: 430px;
     overflow: hidden;
     border-radius: 7px;
-    background: #00125D;
-    margin: 0px 8px;
+    background: #00125d;
+    margin: 0 8px;
 `;
 
 export default PositionGraph;

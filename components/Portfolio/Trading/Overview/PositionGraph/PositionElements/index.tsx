@@ -29,7 +29,6 @@ interface ICellProps {
     inner?: boolean;
 }
 export const InfoCell = styled.td<ICellProps>`
-    padding: 8px 8px 8px 16px;
     flex-basis: 33.3333%;
     border-right: 1px solid var(--table-semidarkborder);
     padding: ${(props) => (props.inner ? '8px' : '8px 8px 8px 16px')};
@@ -44,7 +43,7 @@ export const Amount = styled.span<AmountProps>`
     flex-basis: auto;
     font-size: ${(props) => (props.small ? 'var(--font-size-medium)' : 'var(--font-size-large)')};
     line-height: ${(props) => (props.small ? 'var(--font-size-medium)' : 'var(--font-size-large)')};
-    whitespace: no-wrap;
+    white-space: nowrap;
 `;
 
 export const CellTitle = styled.span`
