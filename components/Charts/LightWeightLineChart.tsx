@@ -77,7 +77,11 @@ const StyledIcon = styled(Icon)`
     height: 32px;
 `;
 
-const LightWeightLineChart: React.FC<{ historyData: HistoryData, positionGraph: boolean, setPosition: string }> = ({ historyData, positionGraph, setPosition }) => {
+const LightWeightLineChart: React.FC<{ historyData: HistoryData; positionGraph: boolean; setPosition?: string }> = ({
+    historyData,
+    positionGraph,
+    setPosition,
+}) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
     const hasReset = useRef<boolean>(false);
     useMemo(() => {
