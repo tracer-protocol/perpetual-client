@@ -155,7 +155,6 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
                         selectedTracer?.getFairPrice() ?? defaults.fairPrice,
                         selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
                     );
-                    console.log(result.liquidationPrice.toNumber());
                     const error = checkErrors(
                         state,
                         result,
