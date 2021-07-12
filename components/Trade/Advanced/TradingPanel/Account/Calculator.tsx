@@ -1,6 +1,6 @@
 import React, { useContext, useReducer } from 'react';
 import styled from 'styled-components';
-import { TracerContext } from 'context';
+import { OrderContext, TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
 import DefaultSlider from '@components/General/Slider';
 import { UserBalance } from 'libs/types';
@@ -64,6 +64,9 @@ export default styled(
             },
             calculatorDispatch,
         } = useContext(CalculatorContext) as ContextProps;
+        const { 
+            orderDispatch = () => console.error('Order dispatch not set')
+        } = useContext(OrderContext);
         const [modalState, modalDispatch] = useReducer(modalReducer, initialState);
 
         const handleClose = () => {
@@ -74,6 +77,7 @@ export default styled(
             });
             calculatorDispatch({ type: 'reset' })
             close();
+            orderDispatch({ type: 'setExposure', value: exposure})
         };
         const isLocked = (locked: number[], value: number) => locked[0] === value || locked[1] === value;
         return (

@@ -52,7 +52,7 @@ const Advanced: React.FC = styled(({ className }) => {
             orderDispatch({ type: 'setLock', value: true });
             orderDispatch({ type: 'setAdvanced', value: true });
         } else {
-            console.error('Order dispatch undefined');
+            console.error('Order dispatch not set');
         }
     }, []);
 
@@ -61,7 +61,7 @@ const Advanced: React.FC = styled(({ className }) => {
             if (orderDispatch) {
                 orderDispatch({ type: 'setOrderType', value: MARKET });
             } else {
-                console.error('Order dispatch undefined');
+                console.error('Order dispatch not set');
             }
         }
     }, [isAdjust]);
