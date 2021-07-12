@@ -4,7 +4,7 @@ import { NumberSelect, Section } from '@components/General';
 import { Max } from '@components/General/Input/NumberSelect';
 import { UserBalance } from 'libs/types';
 import ErrorComponent from '@components/General/Error';
-import TracerModal from '@components/General/TracerModal';
+import TracerModal, { modalReducer, ModalState } from '@components/General/TracerModal';
 import SlideSelect from '@components/General/SlideSelect';
 import { Option } from '@components/General/SlideSelect';
 import { Button, HiddenExpand, Previous } from '@components/General';
