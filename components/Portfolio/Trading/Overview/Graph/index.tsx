@@ -20,8 +20,8 @@ interface GProps {
     setPosition?: string;
     positionGraph?: boolean;
 }
-const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, background, positionGraph, setPosition}: GProps) => {
-    const history = ([
+const Graph: FC<GProps> = styled(({ className, title, positionGraph, setPosition }: GProps) => {
+    const history = [
         { time: '2021-06-11', value: 80.01 },
         { time: '2021-06-12', value: 96.63 },
         { time: '2021-06-13', value: 106.64 },
@@ -42,15 +42,15 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, bac
         { time: '2021-06-28', value: 146.64 },
         { time: '2021-06-29', value: 141.89 },
         { time: '2021-06-30', value: 154.43 },
-    ]);
+    ];
     return (
         <div className={className}>
             {title && <SmallTitle>{title}</SmallTitle>}
             <GraphContent>
                 {/* Hide the series for Position graphs but not for the Profit and Loss graph */}
-                <LightWeightChart 
-                    historyData={history as HistoryData} 
-                    positionGraph={positionGraph as boolean} 
+                <LightWeightChart
+                    historyData={history as HistoryData}
+                    positionGraph={positionGraph as boolean}
                     setPosition={setPosition as string}
                 />
             </GraphContent>
@@ -58,7 +58,7 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, bac
     );
 })`
     width: 100%;
-    height: ${(props) => props.positionGraph ? '100%' : 'auto'};
+    height: ${(props) => (props.positionGraph ? '100%' : 'auto')};
     overflow: hidden;
     border-radius: 7px;
     padding: 16px;
