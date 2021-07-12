@@ -55,7 +55,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
                         statusMessages: {
                             waiting: 'Please sign the transaction through your web3 provider',
                         },
-                        callback: () => {
+                        onSuccess: () => {
                             omeDispatch({ type: 'refetchOrders' });
                             omeDispatch({ type: 'refetchUserOrders' });
                             orderDispatch({ type: 'setExposure', value: NaN });
@@ -133,7 +133,7 @@ export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) =>
                     statusMessages: {
                         waiting: 'Please sign the transaction through your web3 provider',
                     },
-                    callback: () => {
+                    onSuccess: () => {
                         omeDispatch({ type: 'refetchOrders' });
                         omeDispatch({ type: 'refetchUserOrders' });
                         orderDispatch({ type: 'setExposure', value: NaN });

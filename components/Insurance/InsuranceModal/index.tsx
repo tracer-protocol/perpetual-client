@@ -11,6 +11,7 @@ import { CaretDownFilled } from '@ant-design/icons';
 import ErrorComponent from '@components/General/Error';
 import Tracer from '@libs/Tracer';
 import BigNumber from 'bignumber.js';
+import { Options } from '@context/TransactionContext';
 
 const SSlideSelect = styled(SlideSelect)`
     font-size: var(--font-size-small);
@@ -163,8 +164,11 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, 
             const callback = () => {
                 setShow(false);
             };
+            const options: Options = {
+                onSuccess: callback,
+            };
             if (!!deposit && !!withdraw) {
-                isDeposit ? deposit(tracer, amount, callback) : withdraw(tracer, amount, callback);
+                isDeposit ? deposit(tracer, amount, options) : withdraw(tracer, amount, options);
             }
         } catch (err) {
             console.error(`Failed to deposit into insurance pool: ${err}`);

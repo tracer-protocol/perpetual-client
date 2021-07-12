@@ -8,7 +8,7 @@ import { FactoryContext } from '.';
 import { BigNumber } from 'bignumber.js';
 import { initialFactoryState } from './FactoryContext';
 import PromiEvent from 'web3/promiEvent';
-import { TransactionContext } from './TransactionContext';
+import { Options, TransactionContext } from './TransactionContext';
 // @ts-ignore
 import { TransactionReceipt } from 'web3/types';
 import { calcInsuranceAPY } from '@tracer-protocol/tracer-utils';
@@ -41,8 +41,8 @@ export type InsuranceAction =
 
 interface ContextProps {
     poolInfo: InsurancePoolInfo;
-    deposit: (tracer: Tracer, amount: number, _callback?: () => void) => void;
-    withdraw: (tracer: Tracer, amount: number, _callback?: () => void) => void;
+    deposit: (tracer: Tracer, amount: number, options: Options) => void;
+    withdraw: (tracer: Tracer, amount: number, options: Options) => void;
     contract: Insurance;
     pools: Record<string, InsurancePoolInfo>;
 }
@@ -119,7 +119,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
      *
      * @param amount the amount to deposit
      */
-    const deposit = async (tracer: Tracer, amount: number, _callback?: () => any) => {
+    const deposit = async (tracer: Tracer, amount: number, options: Options) => {
         if (!tracer?.address) {
             console.error('Failed to withdraw: Selected tracer address is undefined');
         } else if (!account) {
@@ -136,11 +136,13 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     insuranceContract?.instance?.methods
                         .deposit(Web3.utils.toWei(amount.toString()))
                         .send({ from: account }) as PromiEvent<TransactionReceipt>;
+                const { onSuccess: onSuccess_ } = options ?? {};
                 handleTransaction(callFunc, [amount], {
-                    callback: () => {
+                    ...options,
+                    onSuccess: () => {
                         updatePoolBalance(tracer);
                         updateUserBalance(tracer);
-                        _callback ? _callback() : null;
+                        onSuccess_ ? onSuccess_() : null;
                     },
                 });
             } else {
@@ -151,7 +153,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         }
     };
 
-    const withdraw = async (tracer: Tracer, amount: number, _callback?: () => any) => {
+    const withdraw = async (tracer: Tracer, amount: number, options: Options) => {
         if (!tracer?.address) {
             console.error('Failed to withdraw: Selected tracer address is undefined');
         } else if (handleTransaction) {
@@ -161,11 +163,12 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 insuranceContract?.instance?.methods
                     .withdraw(Web3.utils.toWei(amount.toString()))
                     .send({ from: account });
+            const { onSuccess: onSuccess_ } = options ?? {};
             handleTransaction(callFunc, [amount], {
-                callback: () => {
+                onSuccess: () => {
                     updatePoolBalance(tracer);
                     updateUserBalance(tracer);
-                    _callback ? _callback() : null;
+                    onSuccess_ ? onSuccess_() : null;
                 },
             });
         } else {

@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
+import React, { useContext, useReducer } from 'react';
 import styled from 'styled-components';
 import { TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
 import DefaultSlider from '@components/General/Slider';
 import { UserBalance } from 'libs/types';
 import { SlideSelect } from '@components/Buttons';
-import TracerModal from '@components/General/TracerModal';
+import TracerModal, { ModalAction, modalReducer, ModalState } from '@components/General/TracerModal';
 import { Button, HiddenExpand, LockContainer, NumberSelect } from '@components/General';
 import { Option } from '@components/Buttons/SlideSelect';
-import ErrorComponent, { CalculatorErrors } from '@components/General/Error';
+import ErrorComponent, { CalculatorErrors, ErrorKey } from '@components/General/Error';
 import { NumberSelectHeader } from '@components/General/Input/NumberSelect';
 import {
     CalculatorContext,
@@ -24,6 +24,7 @@ import { InfoCircleOutlined, LockOutlined, UnlockOutlined } from '@ant-design/ic
 import { toApproxCurrency } from '@libs/utils';
 import { CalculatorTip } from '@components/Tooltips';
 import { LONG } from '@context/OrderContext';
+import { Options } from '@context/TransactionContext';
 
 type CalculatorModalProps = {
     className?: string;
@@ -34,9 +35,21 @@ type CalculatorModalProps = {
     balances: UserBalance;
     fairPrice: BigNumber;
 };
+
+const initialState: ModalState = {
+    amount: NaN,
+    loading: false,
+    title: 'Calculator',
+    subTitle: '',
+};
+
 export default styled(
     ({ className, close, baseTicker, quoteTicker, balances, display, fairPrice }: CalculatorModalProps) => {
-        const { selectedTracer } = useContext(TracerContext);
+        const {
+            selectedTracer,
+            deposit = () => console.error('Deposit is not defined'),
+            approve = () => console.error('Approve is not defined'),
+        } = useContext(TracerContext);
         const {
             calculatorState: {
                 exposure,
@@ -51,11 +64,20 @@ export default styled(
             },
             calculatorDispatch,
         } = useContext(CalculatorContext) as ContextProps;
+        const [modalState, modalDispatch] = useReducer(modalReducer, initialState);
 
+        const handleClose = () => {
+            modalDispatch({ type: 'setLoading', loading: false });
+            modalDispatch({
+                type: 'setSubTitle',
+                subTitle: '',
+            });
+            close();
+        };
         const isLocked = (locked: number[], value: number) => locked[0] === value || locked[1] === value;
         return (
             <TracerModal
-                loading={false}
+                loading={modalState.loading}
                 className={className}
                 show={display}
                 title={
@@ -66,6 +88,7 @@ export default styled(
                         </CalculatorTip>
                     </p>
                 }
+                subTitle={modalState.subTitle}
                 onClose={close}
             >
                 <CalcSelectContainer>
@@ -184,16 +207,17 @@ export default styled(
                             This position will be liquidated at ${toApproxCurrency(liquidationPrice)}.`
                             : `Invalid calculated position. Try increasing your margin or decreasing your exposure`}
                     </p>
-                    <div className="text-center">
-                        <SButton
-                            className={`${
-                                error === 'NO_ERROR' || CalculatorErrors[error].severity ? 'primary' : ''
-                            } mt-1`}
-                            disabled={error !== 'NO_ERROR' && !CalculatorErrors[error].severity}
-                        >
-                            Deposit Margin
-                        </SButton>
-                    </div>
+                    <DepositButtons
+                        tracerApproved={selectedTracer?.getTracerApproved() ?? false}
+                        tracerAddress={selectedTracer?.address ?? ''}
+                        quoteTicker={selectedTracer?.quoteTicker ?? ''}
+                        depositAmount={margin}
+                        error={error}
+                        deposit={deposit}
+                        approve={approve}
+                        dispatch={modalDispatch}
+                        handleClose={handleClose}
+                    />
                 </StyledHiddenExpand>
                 <CalcButtons>
                     <SButton
@@ -354,3 +378,82 @@ const Leverage: React.FC<LProps> = styled(({ className, value, maxLeverage, isLo
         margin-bottom: 1rem;
     }
 `;
+
+type DepositButtons = {
+    tracerApproved: boolean;
+    tracerAddress: string;
+    quoteTicker: string;
+    error: ErrorKey;
+    deposit: (amount: number, options: Options) => void;
+    approve: (contract: string, options: Options) => void;
+    depositAmount: number;
+    handleClose: () => any;
+    dispatch: React.Dispatch<ModalAction>;
+};
+
+const DepositButtons: React.FC<DepositButtons> = ({
+    tracerApproved,
+    error,
+    deposit,
+    approve,
+    tracerAddress,
+    depositAmount,
+    handleClose,
+    dispatch,
+    quoteTicker,
+}) => {
+    const closeLoading = () => {
+        dispatch({ type: 'setLoading', loading: false });
+        dispatch({
+            type: 'setSubTitle',
+            subTitle: '',
+        });
+    };
+    return (
+        <div className="text-center">
+            {tracerApproved ? (
+                <SButton
+                    className="primary mr-2"
+                    // disabled={tracerApproved}
+                    onClick={() => {
+                        dispatch({ type: 'setLoading', loading: true });
+                        dispatch({
+                            type: 'setSubTitle',
+                            subTitle: `Confirm the transaction in your wallet to unlock ${quoteTicker}`,
+                        });
+                        approve(tracerAddress, {
+                            afterConfirmation: () => {
+                                dispatch({ type: 'setLoading', loading: false });
+                                dispatch({
+                                    type: 'setSubTitle',
+                                    subTitle: '',
+                                });
+                            },
+                            onError: closeLoading,
+                            onSuccess: closeLoading,
+                        });
+                    }}
+                >
+                    Approve {quoteTicker}
+                </SButton>
+            ) : null}
+            <SButton
+                className={`${error === 'NO_ERROR' || CalculatorErrors[error].severity ? 'primary' : ''} mt-1`}
+                disabled={error !== 'NO_ERROR' && !CalculatorErrors[error].severity}
+                onClick={() => {
+                    dispatch({ type: 'setLoading', loading: true });
+                    dispatch({
+                        type: 'setSubTitle',
+                        subTitle: `Confirm the transaction in your wallet to deposit ${quoteTicker}`,
+                    });
+                    deposit(depositAmount, { 
+                        onSuccess: handleClose,
+                        onError: closeLoading
+                    });
+                }}
+            >
+                Deposit Margin
+            </SButton>
+        </div>
+    );
+};
