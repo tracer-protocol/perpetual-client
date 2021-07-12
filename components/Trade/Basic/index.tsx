@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext } from 'context';
 import BasicInterface2 from '@components/Trade/Basic/BasicInterface2';
-import { SlideSelect, PlaceOrderButton } from '@components/Buttons';
-import { Option } from '@components/Buttons/SlideSelect/Options';
+import { PlaceOrderButton } from '@components/OrderButtons';
+import SlideSelect, { Option } from '@components/General/SlideSelect';
 import { Card, Button, Previous, HiddenExpand } from '@components/General';
 import { OrderAction, OrderState } from '@context/OrderContext';
 import styled from 'styled-components';

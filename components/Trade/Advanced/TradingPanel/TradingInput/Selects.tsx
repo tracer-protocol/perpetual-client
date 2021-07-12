@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { SlideSelect } from '@components/Buttons';
-import { Option } from '@components/Buttons/SlideSelect';
+import SlideSelect from '@components/General/SlideSelect';
+import { Option } from '@components/General/SlideSelect';
 import { OrderContext } from 'context';
 import { MARKET } from '@context/OrderContext';
 

@@ -4,7 +4,7 @@ import { LIMIT, MARKET, orderDefaults } from '@context/OrderContext';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import { Box } from '@components/General';
-import { AdvancedOrderButton } from '@components/Buttons';
+import { AdvancedOrderButton } from '@components/OrderButtons';
 import Error from '@components/General/Error';
 import { Exposure, LeverageInput, Price } from './Inputs';
 import { MarketTradeDetails, LimitTradeDetails } from './PostTradeDetails';

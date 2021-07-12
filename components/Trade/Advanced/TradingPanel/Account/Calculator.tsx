@@ -4,10 +4,9 @@ import { OrderContext, TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
 import DefaultSlider from '@components/General/Slider';
 import { UserBalance } from 'libs/types';
-import { SlideSelect } from '@components/Buttons';
+import SlideSelect, { Option } from '@components/General/SlideSelect';
 import TracerModal, { ModalAction, modalReducer, ModalState } from '@components/General/TracerModal';
 import { Button, HiddenExpand, LockContainer, NumberSelect } from '@components/General';
-import { Option } from '@components/Buttons/SlideSelect';
 import ErrorComponent, { CalculatorErrors, ErrorKey } from '@components/General/Error';
 import { NumberSelectHeader } from '@components/General/Input/NumberSelect';
 import {

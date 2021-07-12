@@ -39,9 +39,7 @@
         "start": "next start",
         "export": "next export ",
         "lint": "eslint '*/**/*.{ts,tsx}' --fix",
-        "lint-staged": "eslint '*/**/*.{js,ts,tsx}' --cache",
-        "storybook": "start-storybook -p 6006",
-        "storybook:build": "build-storybook"
+        "lint-staged": "eslint '*/**/*.{js,ts,tsx}' --cache"
     },
     "husky": {
         "hooks": {
@@ -61,10 +59,6 @@
         ]
     },
     "devDependencies": {
-        "@storybook/addon-actions": "^6.1.21",
-        "@storybook/addon-essentials": "^6.1.21",
-        "@storybook/addon-links": "^6.1.21",
-        "@storybook/react": "^6.1.21",
         "@svgr/webpack": "^5.5.0",
         "@tailwindcss/postcss7-compat": "npm:@tailwindcss/postcss7-compat@^2.0.4",
         "@types/lodash": "^4.14.168",
