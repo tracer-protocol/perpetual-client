@@ -105,7 +105,7 @@ export const Section: React.FC<SProps> = styled(({ className, children, label, t
 })`
     width: 100%;
     display: flex;
-    padding-bottom: 10px;
+    padding-bottom: 0.3rem;
     &:last-child {
         padding-bottom: 0;
     }

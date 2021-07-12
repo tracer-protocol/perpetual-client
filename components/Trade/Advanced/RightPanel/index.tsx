@@ -1,4 +1,4 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC, useContext } from 'react';
 import OrderBook from '@components/OrderBook';
 import Tracer, { defaults } from '@libs/Tracer';
 import { Box } from '@components/General';
@@ -14,10 +14,7 @@ import {
 import BigNumber from 'bignumber.js';
 import AccountSummary from './AccountSummary';
 import InsuranceInfo from './InsuranceInfo';
-import Graphs from './Graphs';
-import Icon from '@ant-design/icons';
-// @ts-ignore
-import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
+import Graphs from './Graph';
 
 const TitledBox = styled(({ className, title, children }) => {
     return (
@@ -91,22 +88,6 @@ const MarketInfo: React.FC<MIProps> = styled(
     display: flex;
 `;
 
-const OrderBookContainer = styled.div`
-    border-top: 1px solid var(--color-accent);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    padding: 0.6rem 0;
-
-    h3 {
-        letter-spacing: -0.4px;
-        color: #ffffff;
-        text-transform: capitalize;
-        font-size: var(--font-size-medium);
-        margin: 0 0.8rem 0.5rem;
-    }
-`;
-
 const SBox = styled(Box)`
     flex-direction: column;
     padding: 0;
@@ -122,48 +103,11 @@ const SBox = styled(Box)`
     }
 `;
 
-type OBTProps = {
-    className?: string;
-    showOrderBook: boolean;
-    onClick: () => void;
-};
-const StyledTriangleDown = styled.img`
-    height: 0.8rem;
-    transition: all 400ms ease-in-out;
-    display: inline;
-    margin-top: -0.2rem;
-    margin-left: 0.2rem;
-
-    &.rotate {
-        transform: rotate(180deg);
-        margin-top: -4px;
-    }
-`;
-const OrderBookToggle: FC<OBTProps> = styled(({ className, showOrderBook, onClick }: OBTProps) => {
-    return (
-        <div className={className} onClick={onClick}>
-            <StyledTriangleDown
-                className={showOrderBook ? 'rotate' : ''}
-                src="/img/general/triangle_down_cropped.svg"
-            />
-        </div>
-    );
-})`
-    position: absolute;
-    right: 1rem;
-    top: 0.7rem;
-
-    &:hover {
-        cursor: pointer;
-    }
-`;
-
-const TradingView: React.FC<{
+const TradingView: FC<{
     selectedTracer: Tracer | undefined;
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
-    const [showOrderBook, setShowOrderBook] = useState(true);
 
     return (
         <>
@@ -182,22 +126,12 @@ const TradingView: React.FC<{
             </SBox>
             <SBox className="sidePanel">
                 <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
-                <OrderBookContainer>
-                    <h3>Order Book</h3>
-                    <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
-                    {showOrderBook ? (
-                        omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
-                            <OrderBook
-                                askOrders={omeState.orders.askOrders}
-                                bidOrders={omeState.orders.bidOrders}
-                                marketUp={omeState?.marketUp ?? false}
-                                lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
-                            />
-                        ) : (
-                            <Icon component={TracerLoading} className="mb-3 tracer-loading" />
-                        )
-                    ) : null}
-                </OrderBookContainer>
+                <OrderBook
+                    askOrders={omeState?.orders.askOrders}
+                    bidOrders={omeState?.orders.bidOrders}
+                    marketUp={omeState?.marketUp ?? false}
+                    lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
+                />
                 <RecentTrades trades={mostRecentTrades} />
             </SBox>
         </>
