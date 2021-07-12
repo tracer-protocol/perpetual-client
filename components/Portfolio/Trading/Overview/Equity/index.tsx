@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import styled from 'styled-components';
 import { LargeButton, SmallTitle } from '@components/Portfolio';
 import {
@@ -23,7 +23,7 @@ interface EqProps {
     className?: string;
     selectedTracerAddress: string;
 }
-// const SetTableHeight = () => {     
+// const SetTableHeight = () => {
 //     const tableEl = document.querySelector<HTMLElement>('.equityStats');
 //     const headingEl = document.querySelector<HTMLElement>('.equityStats [h2^="Portfolio__SmallTitle]');
 //     const firstRowEl = document.querySelector<HTMLElement>('.equityStats tr');
@@ -33,12 +33,12 @@ interface EqProps {
 //         console.log(tableEl.style.height);
 //     }
 // }
-const ToggleTable = () => {     
+const ToggleTable = () => {
     const tableEl = document.querySelector<HTMLElement>('.equityStats');
-    if(tableEl){
-        tableEl.classList.toggle("show");
+    if (tableEl) {
+        tableEl.classList.toggle('show');
     }
-}
+};
 const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
     const [show, setShow] = useState(false);
     const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
