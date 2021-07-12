@@ -19,15 +19,30 @@ import {
     CellDesc,
 } from './EqTable';
 
-const largeButton = {
-    height: '32px',
-    width: '145px',
-    fontSize: 'inherit',
-    fontFamily: 'inherit',
-    hoverFG: '#fff',
-    hoverBG: 'var(--color-primary)',
-    hoverCursor: 'pointer',
-};
+const LargeButton = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.5s;
+    color: var(--color-primary);
+    line-height: 1rem;
+    letter-spacing: -0.32px;
+    border: 1px solid var(--color-primary);
+    border-radius: 20px;
+    text-align: center;
+    padding: 10px 0;
+    height: 32px;
+    width: 145px;
+    font-size: inherit;
+    font-family: inherit;
+    user-select: none;
+    cursor: pointer;
+
+    &:hover {
+        color: #fff;
+        background: var(--color-primary);
+    }
+`;
 
 const SmallTitle = styled.h2`
     font-size: var(--font-size-medium);
@@ -54,9 +69,9 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
         <div className={className}>
             <div className="flex justify-content-between">
                 <SmallTitle>Equity</SmallTitle>
-                <Button theme={largeButton} onClick={(e) => onClick(e)}>
+                <LargeButton onClick={(e) => onClick(e)}>
                     {show ? 'Hide Breakdown' : 'Show Breakdown'}
-                </Button>
+                </LargeButton>
             </div>
             <EqTable>
                 <EqTableBody>
