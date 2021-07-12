@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import styled from 'styled-components';
 import { useCandles } from '@libs/Graph/hooks/Tracer';
 import { CandleData } from 'libs/types/TracerTypes';
-import LightWeightChart from '@components/Charts/LightWeightChart';
+import CandleStickChart from '@components/Charts/CandleStickChart';
 import FogOverlay from '@components/Overlay/FogOverlay';
 
 const GraphContent = styled.div`
@@ -22,7 +22,7 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className }: GProps) 
     return (
         <div className={className}>
             <GraphContent>
-                <LightWeightChart candleData={candles as CandleData} />
+                <CandleStickChart candleData={candles as CandleData} />
             </GraphContent>
             {showOverlay ? <FogOverlay buttonName="Show Chart" onClick={() => setOverlay(false)} /> : null}
         </div>

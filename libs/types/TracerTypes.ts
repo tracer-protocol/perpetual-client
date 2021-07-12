@@ -26,6 +26,11 @@ export type CandleData = {
     close: number;
 }[];
 
+export type LineData = {
+    time: string;
+    value: number;
+}[];
+
 export type HistoryData = {
     time: string;
     value: number;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { createChart } from 'lightweight-charts';
+import * as LightWeightCharts from 'lightweight-charts';
 
 import equal from 'fast-deep-equal';
 
@@ -84,7 +84,7 @@ class ChartWrapper extends React.Component<Props> {
 
     componentDidMount() {
         try {
-            this.chart = createChart(this.chartDiv.current);
+            this.chart = LightWeightCharts.createChart(this.chartDiv.current);
             this.handleUpdateChart();
             this.resizeHandler();
         } catch (err) {
