@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState  } from 'react';
 import styled from 'styled-components';
 import { LargeButton, SmallTitle } from '@components/Portfolio';
 import {
@@ -23,16 +23,6 @@ interface EqProps {
     className?: string;
     selectedTracerAddress: string;
 }
-// const SetTableHeight = () => {     
-//     const tableEl = document.querySelector<HTMLElement>('.equityStats');
-//     const headingEl = document.querySelector<HTMLElement>('.equityStats [h2^="Portfolio__SmallTitle]');
-//     const firstRowEl = document.querySelector<HTMLElement>('.equityStats tr');
-//     if (tableEl && headingEl && firstRowEl){
-//         const tableHeight = headingEl.offsetHeight + firstRowEl.offsetHeight;
-//         tableEl.style.height = tableHeight.toString();
-//         console.log(tableEl.style.height);
-//     }
-// }
 const ToggleTable = () => {     
     const tableEl = document.querySelector<HTMLElement>('.equityStats');
     if(tableEl){
@@ -46,10 +36,6 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
         setShow(!show);
         ToggleTable();
     };
-    // useEffect(() => {
-    //     // on init
-    //     SetTableHeight();
-    // }, []);
 
     return (
         <div className={className}>

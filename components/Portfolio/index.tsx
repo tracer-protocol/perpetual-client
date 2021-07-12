@@ -94,6 +94,15 @@ export const LargeButton = styled.button`
     &:focus {
         border: 1px solid var(--color-primary);
     }
+
+    &.filled {
+        background: var(--color-primary);
+        color: #fff;
+
+        &:hover {
+            background: transparent;
+        }
+    }
 `;
 
 export const SmallTitle = styled.h2`

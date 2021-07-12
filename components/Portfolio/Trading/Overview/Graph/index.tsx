@@ -6,9 +6,9 @@ import { SmallTitle } from '@components/Portfolio';
 
 const GraphContent = styled.div`
     position: relative;
-    width: calc(100% + 42px);
-    margin-left: -42px;
-    height: calc(100% - 42px);
+    width: calc(100% + 48px);
+    margin-left: -48px;
+    height: calc(100% - 48px);
     margin-top: 0.5rem;
 `;
 

@@ -90,7 +90,7 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                     </Row>
                     <Row>
                         <BorderlessCell>
-                            <LargeButton className="primary">
+                            <LargeButton className="primary filled">
                                 Close Position
                             </LargeButton>
                         </BorderlessCell>
