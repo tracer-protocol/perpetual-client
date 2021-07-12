@@ -5,6 +5,38 @@ import styled from 'styled-components';
 
 export const EqTable = styled.table`
     width: 100%;
+    backface-visibility: hidden;
+
+    td {
+        transition: opacity 0.5s ease;
+    }
+    
+    // Remove border from first row of td cells
+    // and add it to the first row instead for 
+    // even border spacing across cells
+    tr:first-of-type td {
+        border-top: unset;
+        border-bottom: unset;
+    }
+
+    // Replace the missing border on the third 
+    // td cell in first row
+    tr:first-of-type td:nth-child(3) {
+        border-bottom: 1px solid var(--table-darkborder);;
+    }
+    tr:first-of-type {
+        border-top: 1px solid var(--table-darkborder);
+        border-bottom: 1px solid var(--table-darkborder);
+    }
+
+    // Fade out rows 2-5 when 'Hide Breakdown' clicked
+    tr:nth-child(2) td,
+    tr:nth-child(3) td,
+    tr:nth-child(4) td,
+    tr:nth-child(5) td {
+        opacity: 0;
+        border-color: transparent;
+    }
 `;
 
 export const EqTableHeader = styled.thead``;
@@ -28,6 +60,7 @@ export const EqTableCellLarge = styled.td`
     align-items: flex-start;
     flex-wrap: wrap;
     width: 235px;
+    overflow: hidden;
     padding: 8px 16px;
     border-bottom: 1px solid var(--table-darkborder);
     border-top: 1px solid var(--table-darkborder);
@@ -52,9 +85,9 @@ export const EqTableCellLast = styled.td`
     align-items: center;
     flex-wrap: wrap;
     padding: 8px 16px;
-    border-top: 1px solid var(--table-darkborder);
     border-left: 1px solid var(--table-darkborder);
-`;
+    border-bottom: 1px solid var(--table-darkborder);;
+    `;
 
 interface TBCellProps {
     border?: boolean;

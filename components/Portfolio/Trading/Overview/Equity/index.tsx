@@ -154,6 +154,14 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
     .heading-row {
         padding: 8px 16px 8px;
     }
+
+    // Remove borders from last row of td elements
+    table tr:last-of-type td {
+
+    }
+    table tr:last-of-type td {
+        border-bottom: 0px;
+    }
 `;
 
 export default Equity;

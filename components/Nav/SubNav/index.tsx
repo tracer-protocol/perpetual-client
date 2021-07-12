@@ -15,13 +15,19 @@ export const SubNavContainer = styled.div`
     display: flex;
 `;
 
-export const SubNavItem = styled.div`
-    color: var(--color-text);
+interface SNIProps {
+    small?: boolean;
+}
+export const SubNavItem = styled.div<SNIProps>`
+    height: ${(props) => (props.small ? 'var(--height-extra-small-container)' : 'var(--height-small-container)')};
+    display: flex;
+    align-items: center;
     transition: 0.3s;
-    border-right: 1px solid #0c3586;
-    text-align: center;
-    padding: 10px 15px;
-
+    color: var(--color-primary);
+    padding: 0px 15px;
+    font-size: var(--font-size-medium);
+    border-right: 1px solid var(--table-lightborder);
+    
     &.selected {
         background: var(--color-accent);
         color: var(--color-text);

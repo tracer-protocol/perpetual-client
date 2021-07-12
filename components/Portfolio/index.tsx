@@ -100,6 +100,7 @@ export const LargeButton = styled.button`
         color: #fff;
 
         &:hover {
+            color: var(--color-primary);
             background: transparent;
         }
     }

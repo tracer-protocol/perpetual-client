@@ -38,6 +38,13 @@ const HPanel = styled.div<HPanelProps>`
         &.show {
             height: fit-content;
             max-height: 400px;
+            tr:nth-child(2) td,
+            tr:nth-child(3) td,
+            tr:nth-child(4) td,
+            tr:nth-child(5) td {
+                opacity: 1;
+                border-color: var(--table-darkborder);
+            }
         }
     }
 
