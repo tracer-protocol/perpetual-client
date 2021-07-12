@@ -1,11 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { calcLeverage } from '@tracer-protocol/tracer-utils';
 import { OrderAction } from '@context/OrderContext';
-import { UserBalance } from 'types';
-import BigNumber from 'bignumber.js';
 
 const DEFAULT_MIN = -12.5;
 const DEFAULT_MAX = 12.5;
@@ -16,20 +13,10 @@ type DSProps = {
     min?: number;
     max?: number;
     orderDispatch: React.Dispatch<OrderAction> | undefined;
-    fairPrice: BigNumber;
-    balances: UserBalance;
 };
-export default styled(
-    ({
-        className,
-        value,
-        min,
-        max,
-        orderDispatch = () => console.error('Order dispatch not set'),
-        fairPrice,
-        balances,
-    }: DSProps) => {
-        const handleChange = (num: number) => {
+export default styled(({ className, value, min, max, orderDispatch }: DSProps) => {
+    const handleChange = (num: number) => {
+        if (orderDispatch) {
             orderDispatch({
                 type: 'setExposureFromLeverage',
                 leverage: num,
@@ -38,43 +25,29 @@ export default styled(
                 type: 'setLeverage',
                 value: num,
             });
-        };
+        }
+    };
 
-        useMemo(() => {
-            if (!balances?.base.eq(0)) {
-                let leverage = calcLeverage(balances.quote, balances.base, fairPrice);
-                if (balances?.base.lt(0)) {
-                    leverage = leverage.negated();
-                }
-                console.info('Setting leverage', leverage.toNumber());
-                orderDispatch({
-                    type: 'setLeverage',
-                    value: parseFloat(leverage.toNumber().toFixed(2)),
-                });
-            }
-        }, [balances]);
-
-        const min_ = min ?? DEFAULT_MIN;
-        const max_ = max ?? DEFAULT_MAX;
-        return (
-            <div className={className}>
-                <Slider
-                    defaultValue={0}
-                    value={value}
-                    min={min_}
-                    max={max_}
-                    step={0.1}
-                    marks={createMarks(min_, max_)}
-                    railStyle={railStyle}
-                    trackStyle={trackStyle}
-                    handleStyle={handleStyle}
-                    handle={CustomHandle}
-                    onChange={handleChange}
-                />
-            </div>
-        );
-    },
-)`
+    const min_ = min ?? DEFAULT_MIN;
+    const max_ = max ?? DEFAULT_MAX;
+    return (
+        <div className={className}>
+            <Slider
+                defaultValue={0}
+                value={value}
+                min={min_}
+                max={max_}
+                step={0.1}
+                marks={createMarks(min_, max_)}
+                railStyle={railStyle}
+                trackStyle={trackStyle}
+                handleStyle={handleStyle}
+                handle={CustomHandle}
+                onChange={handleChange}
+            />
+        </div>
+    );
+})`
     margin-bottom: 3.5rem;
     position: relative;
     .rc-slider-dot {

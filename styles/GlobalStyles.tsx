@@ -67,6 +67,11 @@ export default createGlobalStyle`
 	.ant-tooltip-arrow-content {
 		background-color: var(--color-accent);
 	}
+    
+    .ant-dropdown-menu {
+        top: -4px;
+        padding: 0;
+    }
 
     /** GLOBAL TABLE STYLES */
     .bid, .green {

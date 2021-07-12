@@ -1,7 +1,7 @@
 import React, { useContext, useCallback, useReducer, useMemo } from 'react';
 import styled from 'styled-components';
 import { NumberSelect, Section } from '@components/General';
-import { UserBalance } from 'types';
+import { UserBalance } from 'libs/types';
 import ErrorComponent from '@components/General/Error';
 import TracerModal from '@components/General/TracerModal';
 import { SlideSelect } from '@components/Buttons';
@@ -263,4 +263,5 @@ export default styled(
     },
 )`
     max-width: 434px !important;
+    z-index: 3;
 ` as React.FC<AMProps>;

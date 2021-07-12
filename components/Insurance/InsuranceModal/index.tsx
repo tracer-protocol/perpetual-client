@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import { toApproxCurrency } from '@libs/utils';
 import SlideSelect from '@components/Buttons/SlideSelect';
 import { Option } from '@components/Buttons/SlideSelect/Options';

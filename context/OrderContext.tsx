@@ -1,12 +1,12 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
 import { TracerContext, Web3Context } from './';
-import { Children, OpenOrder, UserBalance } from 'types';
+import { Children, OpenOrder, UserBalance } from 'libs/types';
 import { calcMinimumMargin, calcTotalMargin, calcSlippage } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
-import { OMEOrder } from 'types/OrderTypes';
+import { OMEOrder } from 'libs/types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
-import { defaults, defaults as tracerDefaults } from '@libs/Tracer';
+import { defaults as tracerDefaults } from '@libs/Tracer';
 import { ErrorKey } from '@components/General/Error';
 
 // Position types
@@ -34,8 +34,14 @@ const checkErrors: (
     fairPrice: BigNumber | undefined,
     maxLeverage: BigNumber | undefined,
 ) => ErrorKey = (balances, orders, account, order, fairPrice, maxLeverage) => {
-    const priceBN = order.orderType === LIMIT ? new BigNumber(order.price) : fairPrice ?? tracerDefaults.fairPrice;
-    const { quote: newQuote, base: newBase } = order.nextPosition;
+    const priceBN =
+        order.orderType === LIMIT ? new BigNumber(order.price) : order.marketTradePrice ?? tracerDefaults.fairPrice;
+    const { quote: newQuote, base: newBase } = calcNewBalance(
+        order.exposureBN,
+        priceBN,
+        order.position,
+        balances ?? tracerDefaults.balances,
+    );
     if (!account) {
         return 'ACCOUNT_DISCONNECTED';
     } else if (orders?.length === 0 && order.orderType === MARKET && order.exposure) {
@@ -52,14 +58,40 @@ const checkErrors: (
         // user has no tcr margin balance
         return 'NO_MARGIN_BALANCE';
     } else if (
-        calcTotalMargin(newQuote, newBase, priceBN).lt(
-            calcMinimumMargin(newQuote, newBase, priceBN, maxLeverage ?? tracerDefaults.maxLeverage),
+        calcTotalMargin(newQuote, newBase, fairPrice ?? tracerDefaults.fairPrice).lt(
+            calcMinimumMargin(
+                newQuote,
+                newBase,
+                fairPrice ?? tracerDefaults.fairPrice,
+                maxLeverage ?? tracerDefaults.maxLeverage,
+            ),
         )
     ) {
         return 'INVALID_ORDER';
     } else {
         return 'NO_ERROR';
     }
+};
+
+// calculates the newQuote and newBase based on a given exposre
+const calcNewBalance: (
+    addedExposure: BigNumber,
+    price: BigNumber,
+    position: number,
+    balances: UserBalance,
+) => { base: BigNumber; quote: BigNumber } = (addedExposure, price, position, balances) => {
+    if (position === SHORT) {
+        const newBalance = balances?.base.minus(addedExposure) ?? tracerDefaults.balances.base; // subtract how much exposure you get
+        const newQuote = balances?.quote.plus(addedExposure.times(price)) ?? tracerDefaults.balances.quote; // add how much it costs
+        return {
+            base: newBalance,
+            quote: newQuote,
+        };
+    }
+    return {
+        base: balances?.base.plus(addedExposure) ?? tracerDefaults.balances.base, // add how much exposure you get
+        quote: balances?.quote.minus(addedExposure.times(price)) ?? tracerDefaults.balances.quote, // subtract how much it costs
+    };
 };
 
 export const orderDefaults = {
@@ -148,13 +180,7 @@ export type OrderAction =
     | { type: 'setLeverage'; value: number }
     | { type: 'setLeverage'; value: number }
     | { type: 'setPosition'; value: number }
-    | {
-          type: 'setNextPosition';
-          nextPosition: {
-              base: BigNumber;
-              quote: BigNumber;
-          };
-      }
+    | { type: 'setNextPosition' }
     | { type: 'setPrice'; value: number }
     | { type: 'setOrderType'; value: number }
     | { type: 'setAdjustType'; value: number }
@@ -183,32 +209,11 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         console.error('Reset is not implemented ');
     };
 
-    // calculates the newQuote and newBase based on a given exposre
-    const calcNewBalance: (
-        addedExposure: BigNumber,
-        price: BigNumber,
-        position: number,
-    ) => { base: BigNumber; quote: BigNumber } = (addedExposure, price, position) => {
-        const balances = selectedTracer?.getBalance();
-        if (position === SHORT) {
-            const newBalance = balances?.base.minus(addedExposure) ?? tracerDefaults.balances.base; // subtract how much exposure you get
-            const newQuote = balances?.quote.plus(addedExposure.times(price)) ?? tracerDefaults.balances.quote; // add how much it costs
-            return {
-                base: newBalance,
-                quote: newQuote,
-            };
-        }
-        return {
-            base: balances?.base.plus(addedExposure) ?? tracerDefaults.balances.base, // add how much exposure you get
-            quote: balances?.quote.minus(addedExposure.times(price)) ?? tracerDefaults.balances.quote, // subtract how much it costs
-        };
-    };
-
     const initialState: OrderState = orderDefaults.order;
 
     const reducer = (state: any, action: OrderAction) => {
-        const { quote, base, totalMargin, leverage } = selectedTracer?.getBalance() ?? defaults.balances;
-        const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
+        const { quote, base, totalMargin, leverage } = selectedTracer?.getBalance() ?? tracerDefaults.balances;
+        const fairPrice = selectedTracer?.getFairPrice() ?? tracerDefaults.fairPrice;
         switch (action.type) {
             case 'setMarket':
                 return { ...state, market: action.value };
@@ -348,7 +353,27 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setExposure':
                 return { ...state, exposure: action.value, exposureBN: new BigNumber(action.value ?? 0) };
             case 'setNextPosition':
-                return { ...state, nextPosition: action.nextPosition };
+                if (state.orderType === LIMIT) {
+                    return {
+                        ...state,
+                        nextPosition: calcNewBalance(
+                            state.exposureBN,
+                            new BigNumber(state.price),
+                            state.position,
+                            selectedTracer?.getBalance() ?? tracerDefaults.balances,
+                        ),
+                    };
+                } else {
+                    return {
+                        ...state,
+                        nextPosition: calcNewBalance(
+                            state.exposureBN,
+                            state.marketTradePrice,
+                            state.position,
+                            selectedTracer?.getBalance() ?? tracerDefaults.balances,
+                        ),
+                    };
+                }
             case 'setMaxExposure':
                 const exposure = 1;
                 return { ...state, exposure: exposure };
@@ -454,18 +479,25 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     }, [order.market, order.collateral]);
 
     useEffect(() => {
-        if (order.orderType === LIMIT) {
+        orderDispatch({
+            type: 'setNextPosition',
+        });
+    }, [order.exposure, order.price, selectedTracer?.getBalance().base]);
+
+    useMemo(() => {
+        let leverage = selectedTracer?.getBalance()?.leverage ?? tracerDefaults.balances.leverage;
+        if (!leverage?.eq(0) && leverage) {
+            const base = selectedTracer?.getBalance().base ?? tracerDefaults.balances.base;
+            if (base.lt(0)) {
+                leverage = leverage.negated();
+            }
+            console.info('Setting leverage', leverage.toNumber());
             orderDispatch({
-                type: 'setNextPosition',
-                nextPosition: calcNewBalance(order.exposureBN, new BigNumber(order.price), order.position),
-            });
-        } else {
-            orderDispatch({
-                type: 'setNextPosition',
-                nextPosition: calcNewBalance(order.exposureBN, order.marketTradePrice, order.position),
+                type: 'setLeverage',
+                value: parseFloat(leverage.toNumber().toFixed(2)),
             });
         }
-    }, [order.exposure, order.price]);
+    }, [selectedTracer?.getBalance().leverage]);
 
     // Check errors
     useMemo(() => {

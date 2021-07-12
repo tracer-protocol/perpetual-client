@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useToasts } from 'react-toast-notifications';
 import { LIMIT, LONG, MARKET, OrderState, SHORT } from '@context/OrderContext';
 import { OrderContext, TracerContext, TransactionContext } from 'context';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import Tooltip from 'antd/lib/tooltip';
 import { OMEContext } from '@context/OMEContext';
 import { Button } from '@components/General';
@@ -109,8 +109,6 @@ const CloseOrder = styled(Button)`
     height: var(--height-extra-small-button);
     padding: 0;
     width: 130px;
-    margin-left: 0.5rem;
-    margin-top: 0.5rem;
 `;
 
 export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) => {

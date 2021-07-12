@@ -1,7 +1,7 @@
 import { gql, useQuery } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { useCallback, useRef } from 'react';
-import { FilledOrder, LabelledOrders } from 'types/OrderTypes';
+import { FilledOrder, LabelledOrders } from 'libs/types/OrderTypes';
 import Web3 from 'web3';
 import { toBigNumbers } from '..';
 
