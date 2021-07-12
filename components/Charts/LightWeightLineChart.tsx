@@ -79,7 +79,11 @@ const StyledIcon = styled(Icon)`
     height: 32px;
 `;
 
-const LightWeightLineChart: React.FC<{ historyData: HistoryData, showSeries: boolean, setPosition: string }> = ({ historyData, showSeries, setPosition }) => {
+const LightWeightLineChart: React.FC<{ historyData: HistoryData; showSeries: boolean; setPosition: string }> = ({
+    historyData,
+    showSeries,
+    setPosition,
+}) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
     const hasReset = useRef<boolean>(false);
     useMemo(() => {
@@ -105,7 +109,7 @@ const LightWeightLineChart: React.FC<{ historyData: HistoryData, showSeries: boo
 
     const now = Math.floor(Date.now() / 1000); // timestamp in seconds
     const twoHour = 2 * 60 * 60; // two hours in seconds
-    
+
     // Get first date in the data to specify graph data startpoint
     // const oldestDate = new Date(Date.UTC(historyData[0].time.year,
     //                                     historyData[0].time.month,

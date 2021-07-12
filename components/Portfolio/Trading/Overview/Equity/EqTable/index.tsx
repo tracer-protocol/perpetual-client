@@ -25,8 +25,7 @@ export const EqTableLastHeading = styled(EqTableHeading)`
     border-right: none;
 `;
 
-export const EqTableBody = styled.tbody`
-`;
+export const EqTableBody = styled.tbody``;
 
 export const EqTableRow = styled.tr`
     transition: 0.5s;
@@ -52,17 +51,17 @@ interface TBCellProps {
 }
 export const EqTableCellEmpty = styled.td<TBCellProps>`
     width: 135px;
-    ${(props) => props.border 
-        ? 'border-bottom: 1px solid var(--table-darkborder);\
+    ${(props) =>
+        props.border
+            ? 'border-bottom: 1px solid var(--table-darkborder);\
            border-left: 1px solid var(--table-darkborder);\
            border-right: 1px solid var(--table-darkborder);'
-        : 'border: none;'
-    }
+            : 'border: none;'}
 `;
 
 export const EqTableCellLarge = styled.td`
     display: flex;
-    flex-direction: row; 
+    flex-direction: row;
     align-items: flex-start;
     flex-wrap: wrap;
     width: 235px;
@@ -77,7 +76,7 @@ export const EqTableCellLargeEmpty = styled.td`
 // Last cell on a EqTable row
 export const EqTableCellLast = styled.td`
     display: flex;
-    flex-direction: row; 
+    flex-direction: row;
     align-items: center;
     flex-wrap: wrap;
     padding: 10px 20px;
@@ -92,9 +91,9 @@ export const Amount = styled.span<AmountProps>`
     display: flex;
     align-items: flex-start;
     flex-basis: auto;
-    color: ${(props) => props.color ? props.color as string : '#ffffff'};
-    font-size: ${(props) => props.small ? 'var(--font-size-medium)' : 'var(--font-size-xlarge)'};
-    line-height: ${(props) => props.small ? 'var(--font-size-medium)' : 'var(--font-size-xlarge)'};
+    color: ${(props) => (props.color ? (props.color as string) : '#ffffff')};
+    font-size: ${(props) => (props.small ? 'var(--font-size-medium)' : 'var(--font-size-xlarge)')};
+    line-height: ${(props) => (props.small ? 'var(--font-size-medium)' : 'var(--font-size-xlarge)')};
 `;
 export const Profit = styled.span`
     font-size: 12px;
@@ -103,10 +102,10 @@ export const Profit = styled.span`
 `;
 
 export const ProfitArrow = styled.span<{ direction: string }>`
-    ${(props) => props.direction 
-        ? 'background-image: url(/img/general/triangle_up_green.png);'
-        : 'background-image: url(/img/general/triangle_down_red.png);'
-    }
+    ${(props) =>
+        props.direction
+            ? 'background-image: url(/img/general/triangle_up_green.png);'
+            : 'background-image: url(/img/general/triangle_down_red.png);'}
     width: 14px;
     height: 14px;
     background-size: cover;
@@ -121,14 +120,14 @@ export const Text = styled.p`
     flex-basis: 100%;
     text-align: left;
     font-size: 12px;
-    color: #3DA8F5;
+    color: #3da8f5;
 `;
 
 export const CellTitle = styled.span`
-    color: #3DA8F5;
+    color: #3da8f5;
 `;
 
 export const CellDesc = styled.span`
-    color: #005EA4;
+    color: #005ea4;
     margin-left: 5px;
 `;

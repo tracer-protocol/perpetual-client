@@ -14,7 +14,7 @@ const SmallTitle = styled.h2`
     letter-spacing: -0.4px;
     color: var(--color-text);
     margin-bottom: 0.5rem;
-    flex-basis: 100%
+    flex-basis: 100%;
     width: fit-content;
     white-space: nowrap;
 `;
@@ -27,8 +27,8 @@ interface GProps {
     isPnL?: boolean;
     setPosition?: string;
 }
-const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, background, isPnL, setPosition}: GProps) => {
-    const history = ([
+const Graph: FC<GProps> = styled(({ className, title, isPnL, setPosition }: GProps) => {
+    const history = [
         { time: '2021-06-11', value: 80.01 },
         { time: '2021-06-12', value: 96.63 },
         { time: '2021-06-13', value: 106.64 },
@@ -49,26 +49,28 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, bac
         { time: '2021-06-28', value: 146.64 },
         { time: '2021-06-29', value: 141.89 },
         { time: '2021-06-30', value: 154.43 },
-    ]);
+    ];
     return (
         <div className={className}>
-            {title && 
-                <SmallTitle>{title}</SmallTitle>
-            }
+            {title && <SmallTitle>{title}</SmallTitle>}
             <GraphContent>
                 {/* Hide the series for Position graphs but not for the Profit and Loss graph */}
-                <LightWeightChart historyData={history as HistoryData} showSeries={isPnL ? true : false} setPosition={setPosition as string}/>
+                <LightWeightChart
+                    historyData={history as HistoryData}
+                    showSeries={!!isPnL}
+                    setPosition={setPosition as string}
+                />
             </GraphContent>
         </div>
     );
 })`
     width: 100%;
-    height: ${(props) => props.isPnL ? 'auto' : '100%'};
+    height: ${(props) => (props.isPnL ? 'auto' : '100%')};
     overflow: hidden;
     border-radius: 7px;
     padding: 10px;
     position: relative;
-    background: ${(props) => props.background ? '#002886' : 'transparent'};
+    background: ${(props) => (props.background ? '#002886' : 'transparent')};
 `;
 
 export default Graph;
