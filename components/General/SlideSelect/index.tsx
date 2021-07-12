@@ -19,6 +19,7 @@ type TSSProps = {
     value: number;
     className?: string;
 } & Children;
+
 const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, className }: TSSProps) => {
     const [numChildren, setNumChildren] = useState(0);
     const calcPosition = (numChildren: number) => value * (1 / numChildren) * 100;
