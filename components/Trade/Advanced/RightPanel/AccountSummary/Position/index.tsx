@@ -4,15 +4,15 @@ import { LIMIT, OrderContext, orderDefaults, OrderState } from '@context/OrderCo
 import { BigNumber } from 'bignumber.js';
 import { getPositionText, toApproxCurrency } from '@libs/utils';
 import { calcLeverage, calcUnrealised } from '@tracer-protocol/tracer-utils';
-import { CloseOrderButton } from '@components/Buttons/OrderButton';
+import { CloseOrderButton } from '@components/OrderButtons';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import PositionOverlay from '@components/Overlay/PositionOverlay';
 import { UserBalance } from '@libs/types/TracerTypes';
 import { FilledOrder } from '@libs/types/OrderTypes';
 import styled from 'styled-components';
 import { Previous, Section } from '@components/General';
-import { SlideSelect } from '@components/Buttons';
-import { Option } from '@components/Buttons/SlideSelect';
+import SlideSelect from '@components/General/SlideSelect';
+import { Option } from '@components/General/SlideSelect';
 
 interface PTProps {
     balances: UserBalance;
