@@ -89,7 +89,7 @@ const PortfolioDropdownButton = styled(Button)`
 
 const VScrollContainer = styled.div`
     height: auto;
-    overflow: hidden;
+    overflow: hidden auto;
 `;
 
 const HScrollContainer = styled.div`

@@ -6,7 +6,7 @@ import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 
-const ChartWrapper = dynamic(import('@components/Charts/LightWeightWrapper'), { ssr: false });
+const ChartWrapper = dynamic(import('@components/Charts/'), { ssr: false });
 // @ts-ignore
 // @ts-nocheck
 const setGraphOptions: (showSeries, setPosition) => Record<string, unknown> = (showSeries, setPosition) => {
