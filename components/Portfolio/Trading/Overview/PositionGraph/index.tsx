@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 import Graph from '../Graph';
-import { Button } from '@components/Portfolio';
+import { LargeButton } from '@components/Portfolio';
 import {
     PGContainer,
     Row,
@@ -10,18 +10,8 @@ import {
     Amount,
     CellTitle,
     StatusDot,
-    CellNoBorder,
+    BorderlessCell,
 } from './PositionElements';
-
-const largeButton = {
-    height: '32px',
-    width: '145px',
-    fontSize: 'inherit',
-    fontFamily: 'inherit',
-    hoverFG: '#fff',
-    hoverBG: 'var(--color-primary)',
-    hoverCursor: 'pointer',
-};
 
 const GraphContainer = styled.div`
     height: 150px;
@@ -54,11 +44,11 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                         <Amount>4.2 ETH</Amount>
                         <CellTitle>Exposure</CellTitle>
                     </InfoCell>
-                    <InfoCell>
+                    <InfoCell inner>
                         <Amount>7.33 x</Amount>
                         <CellTitle>Leverage</CellTitle>
                     </InfoCell>
-                    <InfoCell>
+                    <InfoCell inner>
                         <Amount>$42.45 (55%)</Amount>
                         <CellTitle>Leverage</CellTitle>
                     </InfoCell>
@@ -81,14 +71,14 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                             Liquidation Price
                         </CellTitle>
                     </InfoCell>
-                    <InfoCell>
+                    <InfoCell inner>
                         <Amount>$43,234.42</Amount>
                         <CellTitle>
                             <StatusDot type="status-orange" />
                             Break Even Price
                         </CellTitle>
                     </InfoCell>
-                    <InfoCell>
+                    <InfoCell inner>
                         <Amount>$43,234.42</Amount>
                         <CellTitle>
                             <StatusDot type="status-white" />
@@ -97,14 +87,16 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                     </InfoCell>
                 </Row>
                 <Row>
-                    <CellNoBorder>
-                        <Button className="primary" theme={largeButton}>
+                    <BorderlessCell>
+                        <LargeButton className="primary">
                             Close Position
-                        </Button>
-                    </CellNoBorder>
-                    <CellNoBorder>
-                        <Button theme={largeButton}>Adjust Position</Button>
-                    </CellNoBorder>
+                        </LargeButton>
+                    </BorderlessCell>
+                    <BorderlessCell inner>
+                        <LargeButton className="primary">
+                            Adjust Position
+                        </LargeButton>
+                    </BorderlessCell>
                 </Row>
             </PGContainer>
         </div>
@@ -113,11 +105,10 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
     position: relative;
     width: 425px;
     min-width: 425px;
-    height: 380px;
     overflow: hidden;
     border-radius: 7px;
     background: #00125D;
-    margin: 0px 5px;
+    margin: 0px 8px;
 `;
 
 export default PositionGraph;

@@ -2,22 +2,14 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import { HistoryData } from 'libs/types/TracerTypes';
 import LightWeightChart from '@components/Charts/LightWeightLineChart';
+import { SmallTitle } from '@components/Portfolio';
 
 const GraphContent = styled.div`
     position: relative;
-    width: calc(100% + 50px);
-    margin-left: -50px;
-    height: calc(100% - 50px);
-`;
-
-const SmallTitle = styled.h2`
-    font-size: var(--font-size-medium);
-    letter-spacing: -0.4px;
-    color: var(--color-text);
-    margin-bottom: 0.5rem;
-    flex-basis: 100%;
-    width: fit-content;
-    white-space: nowrap;
+    width: calc(100% + 42px);
+    margin-left: -42px;
+    height: calc(100% - 42px);
+    margin-top: 0.5rem;
 `;
 
 interface GProps {
@@ -69,7 +61,7 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, bac
     height: ${(props) => props.positionGraph ? '100%' : 'auto'};
     overflow: hidden;
     border-radius: 7px;
-    padding: 8px;
+    padding: 16px;
     position: relative;
     background: ${(props) => (props.background ? '#002886' : 'transparent')};
 `;

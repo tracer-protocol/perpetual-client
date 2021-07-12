@@ -19,20 +19,20 @@ interface HCellProps {
     borderRight?: boolean;
 }
 export const HeadingCell = styled.td<HCellProps>`
-    padding: 10px;
+    padding: 8px 16px;
     font-size: var(--font-size-large);
     flex-basis: 50%;
     border-right: 1px solid var(--table-semidarkborder);
 `;
 
 interface ICellProps {
-    borderRight?: boolean;
+    inner?: boolean;
 }
 export const InfoCell = styled.td<ICellProps>`
-    padding: 10px;
+    padding: 8px 8px 8px 16px;
     flex-basis: 33.3333%;
-    border-left: 1px solid var(--table-semidarkborder);
-    border-right: ${(props) => (props.borderRight ? '1px solid var(--table-semidarkborder)' : 'none')};
+    border-right: 1px solid var(--table-semidarkborder);
+    padding: ${(props) => (props.inner ? '8px' : '8px 8px 8px 16px')};
 `;
 
 interface AmountProps {
@@ -44,13 +44,14 @@ export const Amount = styled.span<AmountProps>`
     flex-basis: auto;
     font-size: ${(props) => (props.small ? 'var(--font-size-medium)' : 'var(--font-size-large)')};
     line-height: ${(props) => (props.small ? 'var(--font-size-medium)' : 'var(--font-size-large)')};
+    whitespace: no-wrap;
 `;
 
 export const CellTitle = styled.span`
     flex-basis: 100%;
     color: #3da8f5;
     margin-top: 2px;
-    font-size: 12px;
+    font-size: var(--font-size-extra-small);
 `;
 
 interface SDotProps {
@@ -65,10 +66,13 @@ export const StatusDot = styled.span<SDotProps>`
     background-color: ${(props) => props.type && (('var(--' + props.type) as string) + ')'};
 `;
 
-export const CellNoBorder = styled.span`
+interface BcellProps {
+    inner?: boolean;
+}
+export const BorderlessCell = styled.span<BcellProps>`
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 10px;
     flex-basis: 50%;
+    padding: ${(props) => (props.inner ? '8px' : '8px 8px 8px 16px')};
 `;

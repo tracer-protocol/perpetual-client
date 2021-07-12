@@ -202,6 +202,12 @@ class ChartWrapper extends React.Component<Props> {
                     }
                     currentSeries.createPriceLine(liquidationPriceLine);
                     currentSeries.createPriceLine(breakevenPriceLine);
+                    this.chart.applyOptions({
+                        // Hide the price scale on the position graphs
+                        priceScale: {
+                            position: 'none'
+                        },
+                    });
                 }
                 else {
                     currentSeries.applyOptions({
@@ -221,10 +227,10 @@ class ChartWrapper extends React.Component<Props> {
                             visible: true,
                             borderColor: '#3DA8F5',
                         },
+                        layout: {
+                            textColor: '#3DA8F5',
+                        },
                     });
-                    // this.chart.timeScale().applyOptions({
-
-                    // });
                 }
                 series.push(currentSeries);
             });

@@ -6,24 +6,9 @@ import profit_arrow_up from 'public/img/general/triangle_up_green.svg';
 export const EqTable = styled.table`
     margin: 10px -20px 0px;
     width: calc(100% + 40px);
-    border-top: 1px solid var(--table-darkborder);
 `;
 
 export const EqTableHeader = styled.thead``;
-
-export const EqTableHeading = styled.th`
-    text-align: left;
-    color: var(--color-primary);
-    height: 40px;
-    font-size: var(--font-size-extra-small);
-    padding-left: 8px;
-    border-right: 1px solid var(--color-accent);
-    border-bottom: 1px solid var(--color-accent);
-`;
-
-export const EqTableLastHeading = styled(EqTableHeading)`
-    border-right: none;
-`;
 
 export const EqTableBody = styled.tbody``;
 
@@ -38,11 +23,26 @@ export const EqTableRow = styled.tr`
     }
 `;
 
+export const EqTableCellLarge = styled.td`
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    width: 235px;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--table-darkborder);
+    border-top: 1px solid var(--table-darkborder);
+`;
+
+export const EqTableCellLargeEmpty = styled.td`
+    width: 235px;
+`;
+
 export const EqTableCell = styled.td`
     padding: 0 10px;
     width: 135px;
     border-left: 1px solid var(--table-darkborder);
-    border-right: 1px solid var(--table-darkborder);
+    border-top: 1px solid var(--table-darkborder);
     border-bottom: 1px solid var(--table-darkborder);
 `;
 
@@ -54,23 +54,8 @@ export const EqTableCellEmpty = styled.td<TBCellProps>`
     ${(props) =>
         props.border
             ? 'border-bottom: 1px solid var(--table-darkborder);\
-           border-left: 1px solid var(--table-darkborder);\
-           border-right: 1px solid var(--table-darkborder);'
+               border-left: 1px solid var(--table-darkborder);'
             : 'border: none;'}
-`;
-
-export const EqTableCellLarge = styled.td`
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    width: 235px;
-    padding: 10px 20px;
-    border-bottom: 1px solid var(--table-darkborder);
-`;
-
-export const EqTableCellLargeEmpty = styled.td`
-    width: 235px;
 `;
 
 // Last cell on a EqTable row
@@ -80,7 +65,8 @@ export const EqTableCellLast = styled.td`
     align-items: center;
     flex-wrap: wrap;
     padding: 10px 20px;
-    border-bottom: 1px solid var(--table-darkborder);
+    border-top: 1px solid var(--table-darkborder);
+    border-left: 1px solid var(--table-darkborder);
 `;
 
 interface AmountProps {

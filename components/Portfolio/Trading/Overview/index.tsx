@@ -15,7 +15,7 @@ interface HRowProps {
 const HeadingRow = styled.div<HRowProps>`
     display: flex;
     align-items: center;
-    padding: 0 15px;
+    padding: 0 16px;
     height: 60px;
     width: 100%;
     background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
@@ -31,14 +31,14 @@ const HPanel = styled.div<HPanelProps>`
     flex-wrap: wrap;
     height: auto;
     width: 100%;
-    padding: 0 15px 20px;
+    padding: 0 15px 16px;
     background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
     .equityStats {
-        flex-basis: calc(60% - 7.5px);
+        flex-basis: calc(60% - 8px);
     }
 
     .pnlGraph {
-        flex-basis: calc(40% - 7.5px);
+        flex-basis: calc(40% - 8px);
     }
 `;
 
@@ -97,7 +97,7 @@ const HScrollContainer = styled.div`
     width: auto;
     height: auto;
     overflow: auto hidden;
-    padding: 15px 7.5px;
+    padding: 16px 8px;
     box-sizing: unset;
 `;
 
@@ -139,7 +139,7 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
     );
 })`
     position: relative;
-    padding-right: 10px;
+    padding-right: 8px;
     margin: unset;
     &:hover {
         background: none;

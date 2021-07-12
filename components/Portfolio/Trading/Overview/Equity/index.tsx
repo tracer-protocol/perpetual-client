@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
-import { Button } from '@components/Portfolio';
+import { LargeButton, SmallTitle } from '@components/Portfolio';
 import {
     EqTableRow,
     EqTableCell,
@@ -19,48 +19,13 @@ import {
     CellDesc,
 } from './EqTable';
 
-const LargeButton = styled.button`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.5s;
-    color: var(--color-primary);
-    line-height: 1rem;
-    letter-spacing: -0.32px;
-    border: 1px solid var(--color-primary);
-    border-radius: 20px;
-    text-align: center;
-    padding: 10px 0;
-    height: 32px;
-    width: 145px;
-    font-size: inherit;
-    font-family: inherit;
-    user-select: none;
-    cursor: pointer;
-
-    &:hover {
-        color: #fff;
-        background: var(--color-primary);
-    }
-`;
-
-const SmallTitle = styled.h2`
-    font-size: var(--font-size-medium);
-    letter-spacing: -0.4px;
-    color: var(--color-text);
-    margin-bottom: 0.5rem;
-    flex-basis: 100%
-    width: fit-content;
-    white-space: nowrap;
-`;
-
 interface EqProps {
     className?: string;
     selectedTracerAddress: string;
 }
 const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
     const [show, setShow] = useState(false);
-    const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         setShow(!show);
     };
