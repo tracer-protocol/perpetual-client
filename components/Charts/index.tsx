@@ -192,13 +192,13 @@ class ChartWrapper extends React.Component<Props> {
                         price: 85,
                         color: '#3DA8F5',
                         lineWidth: lineWidth,
-                        lineStyle: LineStyle.Solid,
+                        lineStyle: LightWeightCharts.LineStyle.Solid,
                     };
                     const breakevenPriceLine = {
                         price: 145,
                         color: '#F15025',
                         lineWidth: lineWidth,
-                        lineStyle: LineStyle.Solid,
+                        lineStyle: LightWeightCharts.LineStyle.Solid,
                     }
                     currentSeries.createPriceLine(liquidationPriceLine);
                     currentSeries.createPriceLine(breakevenPriceLine);

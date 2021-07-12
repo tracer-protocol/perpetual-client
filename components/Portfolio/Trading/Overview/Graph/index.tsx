@@ -50,7 +50,7 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, bac
         { time: '2021-06-28', value: 146.64 },
         { time: '2021-06-29', value: 141.89 },
         { time: '2021-06-30', value: 154.43 },
-    ];
+    ]);
     return (
         <div className={className}>
             {title && <SmallTitle>{title}</SmallTitle>}

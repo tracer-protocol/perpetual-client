@@ -184,27 +184,22 @@ const Overview: FC<{
                     <Graph
                         className="pnlGraph"
                         title="Profit and Loss"
-                        isPnL
                         background
                         selectedTracerAddress={selectedTracer?.address ?? ''}
                     />
-                </div>
-            </HeadingRow>
-            <HPanel background="#00125D">
-                <Equity className="equityStats" selectedTracerAddress={selectedTracer?.address ?? ''} />
-                <Graph className="pnlGraph" title="Profit and Loss" background selectedTracerAddress={selectedTracer?.address ?? ''} />
-            </HPanel>
-            <HeadingRow border={true}>
-                <Title>Open Positions</Title>
-                <Counter>4</Counter>
-            </HeadingRow>
-            <HScrollContainer>
-                <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1}/>
-                <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={2}/>
-                <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1}/>
-            </HScrollContainer>
+                </HPanel>
+                <HeadingRow border={true}>
+                    <Title>Open Positions</Title>
+                    <Counter>4</Counter>
+                </HeadingRow>
+                <HScrollContainer>
+                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1}/>
+                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={2}/>
+                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1}/>
+                </HScrollContainer>
         </VScrollContainer>
-    </>;
-};
+    </>
+    );
+}
 
 export default Overview;
