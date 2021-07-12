@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { HistoryData } from 'types/TracerTypes';
+import { HistoryData } from 'libs/types/TracerTypes';
 import LightWeightChart from '@components/Charts/LightWeightLineChart';
 
 const GraphContent = styled.div`
