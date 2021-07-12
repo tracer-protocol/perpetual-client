@@ -4,8 +4,7 @@ import styled from 'styled-components';
 // import profit_arrow_down from 'public/img/general/triangle_down_red.svg';
 
 export const EqTable = styled.table`
-    margin: 8px -16px 0px;
-    width: calc(100% + 16px);
+    width: 100%;
 `;
 
 export const EqTableHeader = styled.thead``;

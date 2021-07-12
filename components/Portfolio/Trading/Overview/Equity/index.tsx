@@ -53,7 +53,7 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
 
     return (
         <div className={className}>
-            <div className="flex justify-content-between">
+            <div className="flex justify-content-between heading-row">
                 <SmallTitle>Equity</SmallTitle>
                 <LargeButton onClick={(e) => onClick(e)}>{show ? 'Hide Breakdown' : 'Show Breakdown'}</LargeButton>
             </div>
@@ -161,10 +161,13 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
     width: 100%;
     overflow: hidden;
     border-radius: 7px;
-    padding: 8px 8px 0;
     position: relative;
     background: #002886;
     transition: max-height 0.5s ease;
+
+    .heading-row {
+        padding: 8px 16px 8px;
+    }
 `;
 
 export default Equity;

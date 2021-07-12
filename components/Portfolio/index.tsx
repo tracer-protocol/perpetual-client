@@ -72,7 +72,7 @@ export const LargeButton = styled.button`
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: 0.5s;
+    transition: all 0.5s ease;
     color: var(--color-primary);
     line-height: 1rem;
     letter-spacing: -0.32px;
@@ -86,11 +86,13 @@ export const LargeButton = styled.button`
     font-family: inherit;
     user-select: none;
     cursor: pointer;
-    backface-visibility: hidden;
 
     &:hover {
         color: #fff;
         background: var(--color-primary);
+    }
+    &:focus {
+        border: 1px solid var(--color-primary);
     }
 `;
 

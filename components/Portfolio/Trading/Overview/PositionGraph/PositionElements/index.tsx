@@ -15,6 +15,7 @@ export const Row = styled.tr`
     flex-wrap: wrap;
     color: white;
     border-bottom: 1px solid var(--table-semidarkborder);
+    overflow: hidden;
 `;
 
 interface HCellProps {
