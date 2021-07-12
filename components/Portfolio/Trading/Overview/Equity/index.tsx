@@ -1,6 +1,5 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
-import { Button } from '@components/Portfolio';
 import {
     EqTableRow,
     EqTableCell,
@@ -49,7 +48,7 @@ const SmallTitle = styled.h2`
     letter-spacing: -0.4px;
     color: var(--color-text);
     margin-bottom: 0.5rem;
-    flex-basis: 100%
+    flex-basis: 100%;
     width: fit-content;
     white-space: nowrap;
 `;
@@ -60,7 +59,7 @@ interface EqProps {
 }
 const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
     const [show, setShow] = useState(false);
-    const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    const onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         setShow(!show);
     };
@@ -69,9 +68,7 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
         <div className={className}>
             <div className="flex justify-content-between">
                 <SmallTitle>Equity</SmallTitle>
-                <LargeButton onClick={(e) => onClick(e)}>
-                    {show ? 'Hide Breakdown' : 'Show Breakdown'}
-                </LargeButton>
+                <LargeButton onClick={(e) => onClick(e)}>{show ? 'Hide Breakdown' : 'Show Breakdown'}</LargeButton>
             </div>
             <EqTable>
                 <EqTableBody>
@@ -177,7 +174,7 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
     height: fit-content;
     overflow: hidden;
     border-radius: 7px;
-    padding: 8px 8px 0px;
+    padding: 8px 8px 0;
     position: relative;
     background: #002886;
 `;
