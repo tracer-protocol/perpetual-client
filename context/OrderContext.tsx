@@ -315,6 +315,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     new BigNumber(action.amount),
                     state.marketTradePrice,
                     state.position,
+                    selectedTracer?.getBalance() ?? tracerDefaults.balances
                 );
                 const notional = newBase.times(fairPrice);
                 const newTotalMargin = calcTotalMargin(newQuote, newBase, fairPrice);
