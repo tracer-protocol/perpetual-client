@@ -115,7 +115,7 @@ const PositionTab: FC<PTProps> = styled(
                                 baseTicker={baseTicker}
                             />
                             <SSlideSelect
-                                onClick={(index, _e) => {
+                                onClick={(index: any, _e: any) => {
                                     setCurrency(index);
                                 }}
                                 value={currency}
