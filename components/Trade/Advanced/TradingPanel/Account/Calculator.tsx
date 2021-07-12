@@ -72,6 +72,7 @@ export default styled(
                 type: 'setSubTitle',
                 subTitle: '',
             });
+            calculatorDispatch({ type: 'reset' })
             close();
         };
         const isLocked = (locked: number[], value: number) => locked[0] === value || locked[1] === value;
@@ -411,10 +412,10 @@ const DepositButtons: React.FC<DepositButtons> = ({
     };
     return (
         <div className="text-center">
-            {tracerApproved ? (
+            {!tracerApproved ? (
                 <SButton
                     className="primary mr-2"
-                    // disabled={tracerApproved}
+                    disabled={tracerApproved}
                     onClick={() => {
                         dispatch({ type: 'setLoading', loading: true });
                         dispatch({
