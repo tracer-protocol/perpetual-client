@@ -7,6 +7,8 @@ export const PGContainer = styled.table`
     width: 100%;
 `;
 
+export const TableBody = styled.tbody``;
+
 export const Row = styled.tr`
     display: flex;
     flex-direction: row;
@@ -69,7 +71,7 @@ export const StatusDot = styled.span<SDotProps>`
 interface BcellProps {
     inner?: boolean;
 }
-export const BorderlessCell = styled.span<BcellProps>`
+export const BorderlessCell = styled.td<BcellProps>`
     display: flex;
     align-items: center;
     justify-content: center;

@@ -35,10 +35,15 @@ const HPanel = styled.div<HPanelProps>`
     background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
     .equityStats {
         flex-basis: calc(60% - 8px);
+        &.show {
+            height: fit-content;
+            max-height: 400px;
+        }
     }
 
     .pnlGraph {
         flex-basis: calc(40% - 8px);
+        min-height: 342px;
     }
 `;
 

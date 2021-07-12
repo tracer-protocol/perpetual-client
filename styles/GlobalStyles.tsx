@@ -85,8 +85,8 @@ export default createGlobalStyle`
 
     /* Scroll bar stuff */
     ::-webkit-scrollbar {
-        width: 5px;
-        height: 8px;
+        width: 7px;
+        height: 7px;
     }
 
     /* Track */
@@ -103,6 +103,7 @@ export default createGlobalStyle`
     ::-webkit-scrollbar-thumb {
         background: var(--color-primary);
         cursor: pointer;
+        border-radius: 10px;
     }
 
     /* Handle on hover */

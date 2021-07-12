@@ -4,6 +4,7 @@ import Graph from '../Graph';
 import { LargeButton } from '@components/Portfolio';
 import {
     PGContainer,
+    TableBody,
     Row,
     HeadingCell,
     InfoCell,
@@ -32,72 +33,74 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
     return (
         <div className={className}>
             <PGContainer>
-                <Row>
-                    <HeadingCell>ETH-USDC</HeadingCell>
-                    <HeadingCell className={positionType === 1 ? 'green' : 'red'}>
-                        {positionType === 1 && 'SHORT'}
-                        {positionType === 2 && 'LONG'}
-                    </HeadingCell>
-                </Row>
-                <Row>
-                    <InfoCell>
-                        <Amount>4.2 ETH</Amount>
-                        <CellTitle>Exposure</CellTitle>
-                    </InfoCell>
-                    <InfoCell inner>
-                        <Amount>7.33 x</Amount>
-                        <CellTitle>Leverage</CellTitle>
-                    </InfoCell>
-                    <InfoCell inner>
-                        <Amount>$42.45 (55%)</Amount>
-                        <CellTitle>Leverage</CellTitle>
-                    </InfoCell>
-                </Row>
-                <Row>
-                    <GraphContainer>
-                        <Graph 
-                            className="positionGraph" 
-                            selectedTracerAddress={selectedTracerAddress} 
-                            setPosition="none" 
-                            positionGraph
-                        />
-                    </GraphContainer>
-                </Row>
-                <Row>
-                    <InfoCell>
-                        <Amount>$43,234.42</Amount>
-                        <CellTitle>
-                            <StatusDot type="status-lightblue" />
-                            Liquidation Price
-                        </CellTitle>
-                    </InfoCell>
-                    <InfoCell inner>
-                        <Amount>$43,234.42</Amount>
-                        <CellTitle>
-                            <StatusDot type="status-orange" />
-                            Break Even Price
-                        </CellTitle>
-                    </InfoCell>
-                    <InfoCell inner>
-                        <Amount>$43,234.42</Amount>
-                        <CellTitle>
-                            <StatusDot type="status-white" />
-                            Current Price
-                        </CellTitle>
-                    </InfoCell>
-                </Row>
-                <Row>
-                    <BorderlessCell>
-                        <LargeButton className="primary">
-                            Close Position
-                        </LargeButton>
-                    </BorderlessCell>
-                    <BorderlessCell inner>
-                        <LargeButton className="primary">
-                            Adjust Position
-                        </LargeButton>
-                    </BorderlessCell>
-                </Row>
+                <TableBody>
+                    <Row>
+                        <HeadingCell>ETH-USDC</HeadingCell>
+                        <HeadingCell className={positionType === 1 ? 'green' : 'red'}>
+                            {positionType === 1 && 'SHORT'}
+                            {positionType === 2 && 'LONG'}
+                        </HeadingCell>
+                    </Row>
+                    <Row>
+                        <InfoCell>
+                            <Amount>4.2 ETH</Amount>
+                            <CellTitle>Exposure</CellTitle>
+                        </InfoCell>
+                        <InfoCell inner>
+                            <Amount>7.33 x</Amount>
+                            <CellTitle>Leverage</CellTitle>
+                        </InfoCell>
+                        <InfoCell inner>
+                            <Amount>$42.45 (55%)</Amount>
+                            <CellTitle>Leverage</CellTitle>
+                        </InfoCell>
+                    </Row>
+                    <Row>
+                        <GraphContainer>
+                            <Graph 
+                                className="positionGraph" 
+                                selectedTracerAddress={selectedTracerAddress} 
+                                setPosition="none" 
+                                positionGraph
+                            />
+                        </GraphContainer>
+                    </Row>
+                    <Row>
+                        <InfoCell>
+                            <Amount>$43,234.42</Amount>
+                            <CellTitle>
+                                <StatusDot type="status-lightblue" />
+                                Liquidation Price
+                            </CellTitle>
+                        </InfoCell>
+                        <InfoCell inner>
+                            <Amount>$43,234.42</Amount>
+                            <CellTitle>
+                                <StatusDot type="status-orange" />
+                                Break Even Price
+                            </CellTitle>
+                        </InfoCell>
+                        <InfoCell inner>
+                            <Amount>$43,234.42</Amount>
+                            <CellTitle>
+                                <StatusDot type="status-white" />
+                                Current Price
+                            </CellTitle>
+                        </InfoCell>
+                    </Row>
+                    <Row>
+                        <BorderlessCell>
+                            <LargeButton className="primary">
+                                Close Position
+                            </LargeButton>
+                        </BorderlessCell>
+                        <BorderlessCell inner>
+                            <LargeButton className="primary">
+                                Adjust Position
+                            </LargeButton>
+                        </BorderlessCell>
+                    </Row>
+                </TableBody>
             </PGContainer>
         </div>
     );

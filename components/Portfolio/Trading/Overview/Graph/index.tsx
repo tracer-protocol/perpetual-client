@@ -44,7 +44,7 @@ const Graph: FC<GProps> = styled(({ className, title, positionGraph, setPosition
         { time: '2021-06-30', value: 154.43 },
     ];
     return (
-        <div className={className}>
+        <span className={className}>
             {title && <SmallTitle>{title}</SmallTitle>}
             <GraphContent>
                 {/* Hide the series for Position graphs but not for the Profit and Loss graph */}
@@ -54,7 +54,7 @@ const Graph: FC<GProps> = styled(({ className, title, positionGraph, setPosition
                     setPosition={setPosition as string}
                 />
             </GraphContent>
-        </div>
+        </span>
     );
 })`
     width: 100%;

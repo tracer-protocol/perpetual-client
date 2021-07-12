@@ -86,6 +86,7 @@ export const LargeButton = styled.button`
     font-family: inherit;
     user-select: none;
     cursor: pointer;
+    backface-visibility: hidden;
 
     &:hover {
         color: #fff;
