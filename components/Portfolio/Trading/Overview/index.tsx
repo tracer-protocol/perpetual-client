@@ -185,7 +185,7 @@ const Overview: FC<{
             </HeadingRow>
             <HPanel background="#00125D">
                 <Equity className="equityStats" selectedTracerAddress={selectedTracer?.address ?? ''} />
-                <Graph className="pnlGraph" title="Profit and Loss" isPnL background selectedTracerAddress={selectedTracer?.address ?? ''} />
+                <Graph className="pnlGraph" title="Profit and Loss" background selectedTracerAddress={selectedTracer?.address ?? ''} />
             </HPanel>
             <HeadingRow border={true}>
                 <Title>Open Positions</Title>

@@ -5,8 +5,9 @@ import LightWeightChart from '@components/Charts/LightWeightLineChart';
 
 const GraphContent = styled.div`
     position: relative;
-    width: 100%;
-    height: calc(100% - 40px);
+    width: calc(100% + 50px);
+    margin-left: -50px;
+    height: calc(100% - 50px);
 `;
 
 const SmallTitle = styled.h2`
@@ -14,7 +15,7 @@ const SmallTitle = styled.h2`
     letter-spacing: -0.4px;
     color: var(--color-text);
     margin-bottom: 0.5rem;
-    flex-basis: 100%
+    flex-basis: 100%;
     width: fit-content;
     white-space: nowrap;
 `;
@@ -24,10 +25,10 @@ interface GProps {
     selectedTracerAddress: string;
     title?: string;
     background?: boolean;
-    isPnL?: boolean;
     setPosition?: string;
+    positionGraph?: boolean;
 }
-const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, background, isPnL, setPosition}: GProps) => {
+const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, background, positionGraph, setPosition}: GProps) => {
     const history = ([
         { time: '2021-06-11', value: 80.01 },
         { time: '2021-06-12', value: 96.63 },
@@ -57,16 +58,16 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, bac
             }
             <GraphContent>
                 {/* Hide the series for Position graphs but not for the Profit and Loss graph */}
-                <LightWeightChart historyData={history as HistoryData} showSeries={isPnL ? true : false} setPosition={setPosition as string}/>
+                <LightWeightChart historyData={history as HistoryData} positionGraph={positionGraph as boolean} setPosition={setPosition as string}/>
             </GraphContent>
         </div>
     );
 })`
     width: 100%;
-    height: ${(props) => props.isPnL ? 'auto' : '100%'};
+    height: ${(props) => props.positionGraph ? '100%' : 'auto'};
     overflow: hidden;
     border-radius: 7px;
-    padding: 10px;
+    padding: 8px;
     position: relative;
     background: ${(props) => props.background ? '#002886' : 'transparent'};
 `;

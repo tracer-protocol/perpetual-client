@@ -1,5 +1,5 @@
 import React from 'react';
-import { createChart } from 'lightweight-charts';
+import { createChart, LineStyle } from 'lightweight-charts';
 
 import equal from 'fast-deep-equal';
 
@@ -64,6 +64,7 @@ interface Props {
     onTimeRangeMove?: any;
     darkTheme?: boolean;
     legend?: any;
+    positionGraph?: boolean;
 }
 
 class ChartWrapper extends React.Component<Props> {
@@ -179,9 +180,55 @@ class ChartWrapper extends React.Component<Props> {
 
         props.lineSeries &&
             props.lineSeries.forEach((serie) => {
-                series.push(this.addSeries(serie, 'line'));
-            });
+                const currentSeries = this.addSeries(serie, 'line');
+                currentSeries.applyOptions({
+                    color: '#FFFFFF',
+                    lineWidth: 4,
+                    priceLineVisible: false,
+                });
+                if(props.positionGraph){
+                    const lineWidth = 3;
+                    const liquidationPriceLine = {
+                        price: 85,
+                        color: '#3DA8F5',
+                        lineWidth: lineWidth,
+                        lineStyle: LineStyle.Solid,
+                    };
+                    const breakevenPriceLine = {
+                        price: 145,
+                        color: '#F15025',
+                        lineWidth: lineWidth,
+                        lineStyle: LineStyle.Solid,
+                    }
+                    currentSeries.createPriceLine(liquidationPriceLine);
+                    currentSeries.createPriceLine(breakevenPriceLine);
+                }
+                else {
+                    currentSeries.applyOptions({
+                        color: '#FFFFFF',
+                        lineWidth: 4,
+                        priceLineVisible: false,
+                    });
+                    this.chart.applyOptions({
+                        // priceScale: {
+                        //     position: 'left'
+                        // },
+                        rightPriceScale: {
+                            visible: true,
+                            borderVisible: false,
+                        },
+                        leftPriceScale: {
+                            visible: true,
+                            borderColor: '#3DA8F5',
+                        },
+                    });
+                    // this.chart.timeScale().applyOptions({
 
+                    // });
+                }
+                series.push(currentSeries);
+            });
+            
         props.areaSeries &&
             props.areaSeries.forEach((serie) => {
                 series.push(this.addSeries(serie, 'area'));

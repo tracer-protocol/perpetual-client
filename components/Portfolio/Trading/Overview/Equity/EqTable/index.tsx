@@ -16,7 +16,7 @@ export const EqTableHeading = styled.th`
     color: var(--color-primary);
     height: 40px;
     font-size: var(--font-size-extra-small);
-    padding-left: 10px;
+    padding-left: 8px;
     border-right: 1px solid var(--color-accent);
     border-bottom: 1px solid var(--color-accent);
 `;

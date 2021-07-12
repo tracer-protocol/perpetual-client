@@ -9,7 +9,7 @@ import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 const ChartWrapper = dynamic(import('@components/Charts/LightWeightWrapper'), { ssr: false });
 // @ts-ignore
 // @ts-nocheck
-const setGraphOptions: (showSeries, setPosition) => Record<string, unknown> = (showSeries, setPosition) => {
+const setGraphOptions: (positionGraph, setPosition) => Record<string, unknown> = (positionGraph, setPosition) => {
     const data: Record<string, unknown> = {
         options: {
             alignLabels: true,
@@ -55,12 +55,10 @@ const setGraphOptions: (showSeries, setPosition) => Record<string, unknown> = (s
             // @ts-ignore
             timeScale: {
                 borderColor: '#37B1F6',
-                visible: showSeries,
+                visible: positionGraph,
             },
             layout: {
                 textColor: '#696969',
-                lineColor: '#FFFFFF',
-                lineWidth: 3,
                 fontFamily: 'Akkurat',
                 backgroundColor: 'transparent',
             },
@@ -79,13 +77,13 @@ const StyledIcon = styled(Icon)`
     height: 32px;
 `;
 
-const LightWeightLineChart: React.FC<{ historyData: HistoryData, showSeries: boolean, setPosition: string }> = ({ historyData, showSeries, setPosition }) => {
+const LightWeightLineChart: React.FC<{ historyData: HistoryData, positionGraph: boolean, setPosition: string }> = ({ historyData, positionGraph, setPosition }) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
     const hasReset = useRef<boolean>(false);
     useMemo(() => {
         if (historyData.length) {
             setGraphData({
-                ...setGraphOptions(showSeries, setPosition),
+                ...setGraphOptions(positionGraph, setPosition),
                 lineSeries: [
                     {
                         data: historyData,
@@ -96,7 +94,7 @@ const LightWeightLineChart: React.FC<{ historyData: HistoryData, showSeries: boo
         } else {
             if (!hasReset.current) {
                 setGraphData({
-                    ...setGraphOptions(showSeries, setPosition),
+                    ...setGraphOptions(positionGraph, setPosition),
                 });
                 hasReset.current = true;
             }
@@ -126,6 +124,7 @@ const LightWeightLineChart: React.FC<{ historyData: HistoryData, showSeries: boo
                 lineSeries={graphData.lineSeries as any[]}
                 autoWidth
                 autoHeight
+                positionGraph={positionGraph}
             />
         );
     }
