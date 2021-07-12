@@ -205,13 +205,13 @@ const Overview: FC<{
                     <Counter>4</Counter>
                 </HeadingRow>
                 <HScrollContainer>
-                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1}/>
-                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={2}/>
-                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1}/>
+                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1} />
+                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={2} />
+                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1} />
                 </HScrollContainer>
-        </VScrollContainer>
-    </>
+            </VScrollContainer>
+        </>
     );
-}
+};
 
 export default Overview;

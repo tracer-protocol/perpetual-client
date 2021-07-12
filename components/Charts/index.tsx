@@ -189,13 +189,15 @@ class ChartWrapper extends React.Component<Props> {
                 if(props.positionGraph){
                     const lineWidth = 3;
                     const liquidationPriceLine = {
-                        price: 85,
+                        // TODO: Change later
+                        price: 145,
                         color: '#3DA8F5',
                         lineWidth: lineWidth,
                         lineStyle: LightWeightCharts.LineStyle.Solid,
                     };
                     const breakevenPriceLine = {
-                        price: 145,
+                        // TODO: Change later
+                        price: 85,
                         color: '#F15025',
                         lineWidth: lineWidth,
                         lineStyle: LightWeightCharts.LineStyle.Solid,
