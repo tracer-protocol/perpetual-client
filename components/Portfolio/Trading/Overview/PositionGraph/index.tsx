@@ -57,10 +57,10 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                     </Row>
                     <Row>
                         <GraphContainer>
-                            <Graph 
-                                className="positionGraph" 
-                                selectedTracerAddress={selectedTracerAddress} 
-                                setPosition="none" 
+                            <Graph
+                                className="positionGraph"
+                                selectedTracerAddress={selectedTracerAddress}
+                                setPosition="none"
                                 positionGraph
                             />
                         </GraphContainer>
@@ -84,20 +84,16 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                             <Amount>$43,234.42</Amount>
                             <CellTitle>
                                 <StatusDot type="status-white" />
-                                Current Price
+                                Equity
                             </CellTitle>
                         </InfoCell>
                     </Row>
                     <Row>
                         <BorderlessCell>
-                            <LargeButton className="primary filled">
-                                Close Position
-                            </LargeButton>
+                            <LargeButton className="primary filled">Close Position</LargeButton>
                         </BorderlessCell>
                         <BorderlessCell inner>
-                            <LargeButton className="primary">
-                                Adjust Position
-                            </LargeButton>
+                            <LargeButton className="primary">Adjust Position</LargeButton>
                         </BorderlessCell>
                     </Row>
                 </TableBody>
