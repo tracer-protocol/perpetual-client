@@ -24,7 +24,7 @@ export const Button = styled.div`
     justify-content: center;
     transition: 0.5s;
     color: var(--color-primary);
-    font-size: ${(props: any) => props.theme.fontSize ? props.theme.fontSize as string : 'var(--font-size-small)' };
+    font-size: ${(props: any) => (props.theme.fontSize ? (props.theme.fontSize as string) : 'var(--font-size-small)')};
     line-height: 1rem;
     letter-spacing: -0.32px;
     border: 1px solid var(--color-primary);

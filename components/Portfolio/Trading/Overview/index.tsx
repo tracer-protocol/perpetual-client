@@ -15,12 +15,11 @@ interface HRowProps {
 const HeadingRow = styled.div<HRowProps>`
     display: flex;
     align-items: center;
-    padding: 0px 15px;
+    padding: 0 15px;
     height: 60px;
     width: 100%;
-    padding-bottom: 0px;
-    background: ${(props) => props.background ? props.background as string : 'transparent'};
-    border-bottom: ${(props) => props.border ? '1px solid var(--table-lightborder)' : 'none'};
+    background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
+    border-bottom: ${(props) => (props.border ? '1px solid var(--table-lightborder)' : 'none')};
 `;
 
 interface HPanelProps {
@@ -32,8 +31,8 @@ const HPanel = styled.div<HPanelProps>`
     flex-wrap: wrap;
     height: auto;
     width: 100%;
-    padding: 0px 15px 20px;
-    background: ${(props) => props.background ? props.background as string : 'transparent'};
+    padding: 0 15px 20px;
+    background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
     .equityStats {
         flex-basis: calc(60% - 7.5px);
     }
@@ -75,8 +74,8 @@ const Counter = styled.div`
     justify-content: center;
     margin-left: -10px;
     border-radius: 20px;
-    background: #3DA8F5;
-    color: #00156C;
+    background: #3da8f5;
+    color: #00156c;
     width: 52px;
     height: 32px;
     font-size: var(--font-size-small);
@@ -90,7 +89,7 @@ const PortfolioDropdownButton = styled(Button)`
 
 const VScrollContainer = styled.div`
     height: auto;
-    overflow: hidden overlay;
+    overflow: hidden auto;
 `;
 
 const HScrollContainer = styled.div`
@@ -149,7 +148,7 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
 `;
 
 const Overview: FC<{
-    selectedTracer: Tracer | undefined;
+    selectedTracer?: Tracer | undefined;
 }> = ({ selectedTracer }) => {
     const [currentPortfolio, setCurrentPortfolio] = useState(1);
     const [currentPNL, setCurrentPNL] = useState(1);
@@ -158,7 +157,7 @@ const Overview: FC<{
         1: 'Entire Portfolio',
         2: 'ETH-USDC Market',
     };
-    
+
     const pnlKeyMap: Record<number, string> = {
         1: 'All Time',
         2: 'Today',
@@ -166,20 +165,28 @@ const Overview: FC<{
         4: 'This Month',
     };
 
-    return <>
-        <VScrollContainer>
-            <HeadingRow background="#00125D">
-                <Title>Equity Breakdown</Title>
-                <div className="flex justify-content-between">
-                    <PortfolioDropdown 
-                        setOptions={setCurrentPortfolio}
-                        option={currentPortfolio}
-                        keyMap={portfolioKeyMap}
-                    />
-                    <PortfolioDropdown 
-                        setOptions={setCurrentPNL}
-                        option={currentPNL}
-                        keyMap={pnlKeyMap}
+    return (
+        <>
+            <VScrollContainer>
+                <HeadingRow background={`#00125D`}>
+                    <Title>Equity Breakdown</Title>
+                    <div className="flex justify-content-between">
+                        <PortfolioDropdown
+                            setOptions={setCurrentPortfolio}
+                            option={currentPortfolio}
+                            keyMap={portfolioKeyMap}
+                        />
+                        <PortfolioDropdown setOptions={setCurrentPNL} option={currentPNL} keyMap={pnlKeyMap} />
+                    </div>
+                </HeadingRow>
+                <HPanel background={`#00125D`}>
+                    <Equity className="equityStats" selectedTracerAddress={selectedTracer?.address ?? ''} />
+                    <Graph
+                        className="pnlGraph"
+                        title="Profit and Loss"
+                        isPnL
+                        background
+                        selectedTracerAddress={selectedTracer?.address ?? ''}
                     />
                 </div>
             </HeadingRow>

@@ -1,11 +1,11 @@
 import React, { useEffect, useContext, useReducer } from 'react';
 import { useAllTracers } from '@libs/Graph/hooks/Tracer';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import Tracer from '@libs/Tracer';
 import { Web3Context } from './Web3Context';
 import { useAllUsersMatched } from '@libs/Graph/hooks/Account';
-import { LabelledOrders } from 'types/OrderTypes';
-import { LabelledTracers } from 'types/TracerTypes';
+import { LabelledOrders } from 'libs/types/OrderTypes';
+import { LabelledTracers } from 'libs/types/TracerTypes';
 interface ContextProps {
     allFilledOrders: LabelledOrders;
     factoryState: FactoryState;

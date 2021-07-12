@@ -1,8 +1,8 @@
 import { gql, useQuery } from '@apollo/client';
-import { FilledOrder } from 'types/OrderTypes';
+import { FilledOrder } from 'libs/types/OrderTypes';
 import { useEffect, useRef } from 'react';
 import Web3 from 'web3';
-import { CandleData } from 'types/TracerTypes';
+import { CandleData } from 'libs/types/TracerTypes';
 import { toBigNumbers } from '..';
 
 const ALL_TRACERS = gql`

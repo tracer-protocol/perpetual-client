@@ -1,12 +1,12 @@
 import React, { useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { HistoryData } from 'types/TracerTypes';
+import { HistoryData } from 'libs/types/TracerTypes';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 
-const ChartWrapper = dynamic(import('@components/Charts/LightWeightWrapper'), { ssr: false });
+const ChartWrapper = dynamic(import('@components/Charts/'), { ssr: false });
 // @ts-ignore
 // @ts-nocheck
 const setGraphOptions: (positionGraph, setPosition) => Record<string, unknown> = (positionGraph, setPosition) => {
@@ -103,7 +103,7 @@ const LightWeightLineChart: React.FC<{ historyData: HistoryData, positionGraph: 
 
     const now = Math.floor(Date.now() / 1000); // timestamp in seconds
     const twoHour = 2 * 60 * 60; // two hours in seconds
-    
+
     // Get first date in the data to specify graph data startpoint
     // const oldestDate = new Date(Date.UTC(historyData[0].time.year,
     //                                     historyData[0].time.month,

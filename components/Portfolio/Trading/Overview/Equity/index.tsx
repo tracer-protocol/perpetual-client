@@ -43,7 +43,7 @@ interface EqProps {
     className?: string;
     selectedTracerAddress: string;
 }
-const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProps) => {
+const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
     const [show, setShow] = useState(false);
     const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
@@ -65,7 +65,7 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                         <EqTableCellLarge>
                             <Amount color="#21DD53">
                                 $44.3
-                                <ProfitArrow direction="up"></ProfitArrow>
+                                <ProfitArrow direction="up" />
                             </Amount>
                             <Profit>
                                 <ProfitAmount color="#21DD53">$130 (23%)</ProfitAmount>
@@ -77,25 +77,19 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                             </Text>
                         </EqTableCellLarge>
                         <EqTableCell>
-                            <Amount>
-                                $0.45
-                            </Amount>
+                            <Amount>$0.45</Amount>
                             <Text>
                                 <CellTitle>Deposited Margin</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCell>
-                            <Amount>
-                                $0.45
-                            </Amount>
+                            <Amount>$0.45</Amount>
                             <Text>
                                 <CellTitle>Unrealised PnL</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount>
-                                $0.45
-                            </Amount>
+                            <Amount>$0.45</Amount>
                             <Text>
                                 <CellTitle>Realised PnL</CellTitle>
                             </Text>
@@ -103,22 +97,16 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                     </EqTableRow>
                     {/* Second row */}
                     <EqTableRow>
-                        <EqTableCellLargeEmpty>
-                        </EqTableCellLargeEmpty>
-                        <EqTableCellEmpty>
-                        </EqTableCellEmpty>
+                        <EqTableCellLargeEmpty />
+                        <EqTableCellEmpty />
                         <EqTableCell>
-                            <Amount small>
-                                $0.45
-                            </Amount>
+                            <Amount small>$0.45</Amount>
                             <Text>
                                 <CellTitle>Price Changes</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount small>
-                                $0.45
-                            </Amount>
+                            <Amount small>$0.45</Amount>
                             <Text>
                                 <CellTitle>Price Changes</CellTitle>
                             </Text>
@@ -126,22 +114,16 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                     </EqTableRow>
                     {/* Third row */}
                     <EqTableRow>
-                        <EqTableCellLargeEmpty>
-                        </EqTableCellLargeEmpty>
-                        <EqTableCellEmpty>
-                        </EqTableCellEmpty>
+                        <EqTableCellLargeEmpty />
+                        <EqTableCellEmpty />
                         <EqTableCell>
-                            <Amount small>
-                                $0.45
-                            </Amount>
+                            <Amount small>$0.45</Amount>
                             <Text>
                                 <CellTitle>Funding Rate</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount small>
-                                $0.45
-                            </Amount>
+                            <Amount small>$0.45</Amount>
                             <Text>
                                 <CellTitle>Funding Rate</CellTitle>
                             </Text>
@@ -149,16 +131,11 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                     </EqTableRow>
                     {/* Fourth row */}
                     <EqTableRow>
-                        <EqTableCellLargeEmpty>
-                        </EqTableCellLargeEmpty>
-                        <EqTableCellEmpty>
-                        </EqTableCellEmpty>
-                        <EqTableCellEmpty border>
-                        </EqTableCellEmpty>
+                        <EqTableCellLargeEmpty />
+                        <EqTableCellEmpty />
+                        <EqTableCellEmpty border />
                         <EqTableCellLast>
-                            <Amount small>
-                                $0.45
-                            </Amount>
+                            <Amount small>$0.45</Amount>
                             <Text>
                                 <CellTitle>Trading Fee</CellTitle>
                             </Text>
@@ -166,16 +143,11 @@ const Equity: FC<EqProps> = styled(({ selectedTracerAddress, className }: EqProp
                     </EqTableRow>
                     {/* Fifth row */}
                     <EqTableRow>
-                        <EqTableCellLargeEmpty>
-                        </EqTableCellLargeEmpty>
-                        <EqTableCellEmpty>
-                        </EqTableCellEmpty>
-                        <EqTableCellEmpty border>
-                        </EqTableCellEmpty>
+                        <EqTableCellLargeEmpty />
+                        <EqTableCellEmpty />
+                        <EqTableCellEmpty border />
                         <EqTableCellLast>
-                            <Amount small>
-                                $0.45
-                            </Amount>
+                            <Amount small>$0.45</Amount>
                             <Text>
                                 <CellTitle>Insurance Funding Rate</CellTitle>
                             </Text>

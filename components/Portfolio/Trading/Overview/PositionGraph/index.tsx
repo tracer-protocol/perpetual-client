@@ -7,7 +7,7 @@ import {
     Row,
     HeadingCell,
     InfoCell,
-    Amount, 
+    Amount,
     CellTitle,
     StatusDot,
     CellNoBorder,
@@ -26,10 +26,10 @@ const largeButton = {
 const GraphContainer = styled.div`
     height: 150px;
     width: 100%;
-    
+
     div {
         height: 100% !important;
-        padding: 0;        
+        padding: 0;
     }
 `;
 
@@ -45,12 +45,8 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                 <Row>
                     <HeadingCell>ETH-USDC</HeadingCell>
                     <HeadingCell className={positionType === 1 ? 'green' : 'red'}>
-                        {positionType === 1 && 
-                            'SHORT'
-                        }
-                        {positionType === 2 && 
-                            'LONG'
-                        }
+                        {positionType === 1 && 'SHORT'}
+                        {positionType === 2 && 'LONG'}
                     </HeadingCell>
                 </Row>
                 <Row>
@@ -67,23 +63,37 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                         <CellTitle>Leverage</CellTitle>
                     </InfoCell>
                 </Row>
-                <Row>  
+                <Row>
                     <GraphContainer>
-                        <Graph className="positionGraph" selectedTracerAddress={selectedTracerAddress} setPosition="none" positionGraph/>
+                        <Graph 
+                            className="positionGraph" 
+                            selectedTracerAddress={selectedTracerAddress} 
+                            setPosition="none" 
+                            positionGraph
+                        />
                     </GraphContainer>
                 </Row>
                 <Row>
                     <InfoCell>
                         <Amount>$43,234.42</Amount>
-                        <CellTitle><StatusDot type="status-lightblue"></StatusDot>Liquidation Price</CellTitle>
+                        <CellTitle>
+                            <StatusDot type="status-lightblue" />
+                            Liquidation Price
+                        </CellTitle>
                     </InfoCell>
                     <InfoCell>
                         <Amount>$43,234.42</Amount>
-                        <CellTitle><StatusDot type="status-orange"></StatusDot>Break Even Price</CellTitle>
+                        <CellTitle>
+                            <StatusDot type="status-orange" />
+                            Break Even Price
+                        </CellTitle>
                     </InfoCell>
                     <InfoCell>
                         <Amount>$43,234.42</Amount>
-                        <CellTitle><StatusDot type="status-white"></StatusDot>Current Price</CellTitle>
+                        <CellTitle>
+                            <StatusDot type="status-white" />
+                            Current Price
+                        </CellTitle>
                     </InfoCell>
                 </Row>
                 <Row>
@@ -93,9 +103,7 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                         </Button>
                     </CellNoBorder>
                     <CellNoBorder>
-                        <Button theme={largeButton}>
-                            Adjust Position
-                        </Button>
+                        <Button theme={largeButton}>Adjust Position</Button>
                     </CellNoBorder>
                 </Row>
             </PGContainer>

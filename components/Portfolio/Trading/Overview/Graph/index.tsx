@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { HistoryData } from 'types/TracerTypes';
+import { HistoryData } from 'libs/types/TracerTypes';
 import LightWeightChart from '@components/Charts/LightWeightLineChart';
 
 const GraphContent = styled.div`
@@ -50,15 +50,17 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, bac
         { time: '2021-06-28', value: 146.64 },
         { time: '2021-06-29', value: 141.89 },
         { time: '2021-06-30', value: 154.43 },
-    ]);
+    ];
     return (
         <div className={className}>
-            {title && 
-                <SmallTitle>{title}</SmallTitle>
-            }
+            {title && <SmallTitle>{title}</SmallTitle>}
             <GraphContent>
                 {/* Hide the series for Position graphs but not for the Profit and Loss graph */}
-                <LightWeightChart historyData={history as HistoryData} positionGraph={positionGraph as boolean} setPosition={setPosition as string}/>
+                <LightWeightChart 
+                    historyData={history as HistoryData} 
+                    positionGraph={positionGraph as boolean} 
+                    setPosition={setPosition as string}
+                />
             </GraphContent>
         </div>
     );
@@ -69,7 +71,7 @@ const Graph: FC<GProps> = styled(({ selectedTracerAddress, className, title, bac
     border-radius: 7px;
     padding: 8px;
     position: relative;
-    background: ${(props) => props.background ? '#002886' : 'transparent'};
+    background: ${(props) => (props.background ? '#002886' : 'transparent')};
 `;
 
 export default Graph;

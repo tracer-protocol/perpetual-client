@@ -1,5 +1,5 @@
 import React from 'react';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import styled from 'styled-components';
 import { BasicInputContainer, Input } from '../';
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';

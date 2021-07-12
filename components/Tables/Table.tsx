@@ -1,5 +1,5 @@
 import React, { MouseEvent } from 'react';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 
 type TProps = {
     headings: string[];

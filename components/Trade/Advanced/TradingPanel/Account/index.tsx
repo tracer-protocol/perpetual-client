@@ -1,55 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Tracer } from 'libs';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
 import { calcTotalMargin, calcBuyingPower, calcAvailableMarginPercent } from '@tracer-protocol/tracer-utils';
 import { Box, Button, Previous } from '@components/General';
-import { Web3Context } from 'context';
 import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { LIMIT, OrderState } from '@context/OrderContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
-import { UserBalance } from 'types';
+import { UserBalance } from 'libs/types';
+import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 // import CalculatorModal from './Calculator';
-
-const ConnectText = styled.p`
-    font-size: var(--font-size-medium);
-    letter-spacing: 0;
-    color: var(--color-text);
-    margin-top: auto;
-`;
-
-const SBox = styled(Box)`
-    background: #011772;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    min-height: 250px;
-    z-index: 4;
-`;
-
-const Connect = styled(Button)`
-    width: 100% !important;
-    padding: 0.5rem !important;
-    margin-top: 0.5rem;
-`;
-
-const WalletConnect: React.FC = () => {
-    const { handleConnect } = useContext(Web3Context);
-    return (
-        <SBox>
-            <ConnectText>Connect your wallet to get started with Tracer</ConnectText>
-            <Connect
-                className="primary"
-                onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
-            >
-                Connect Wallet
-            </Connect>
-        </SBox>
-    );
-};
 
 const NoBalance = styled.span`
     color: var(--color-primary);
@@ -79,23 +41,28 @@ const Item = styled.div`
     }
 `;
 
-const DepositButtons = styled.div`
-    margin-top: auto;
-    display: flex;
+const DepositButtons = styled.div<{
+    hide: boolean;
+}>`
+    margin-top: 10px;
     justify-content: space-between;
+    display: ${(props) => (props.hide ? 'none' : 'flex')};
 `;
 
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     position: relative;
     flex-direction: column;
-    //background-color: ${(props) => (props.zeroBalance ? '#00125D' : 'inherit')};
+    overflow: auto;
 `;
 
-const Title = styled.h2`
+const Title = styled.h2<{
+    hide: boolean;
+}>`
     font-size: var(--font-size-medium);
     letter-spacing: -0.4px;
     color: var(--color-text);
     margin-bottom: 0.5rem;
+    display: ${(props) => (props.hide ? 'none' : 'block')};
 `;
 
 const SButton = styled(Button)`
@@ -183,12 +150,9 @@ const AccountPanel: React.FC<{
         setDeposit(deposit);
     };
 
-    if (account === '') {
-        return <WalletConnect />;
-    }
     return (
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
-            <Title>Margin Account</Title>
+            <Title hide={!!order?.exposureBN.toNumber() ?? false}>Margin Account</Title>
             {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
             {/*    Calculator*/}
             {/*</SButton>*/}
@@ -215,13 +179,13 @@ const AccountPanel: React.FC<{
                 </h3>
                 <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
             </Item>
-            <Item>
+            <Item className="mb-0">
                 <h3>
                     <TooltipSelector tooltip={{ key: 'available-margin' }}>Available Margin</TooltipSelector>
                 </h3>
                 <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
             </Item>
-            <DepositButtons>
+            <DepositButtons hide={!!order?.exposureBN?.toNumber() ?? false}>
                 <SButton
                     className={balances.quote.eq(0) ? 'primary' : ''}
                     onClick={(_e: any) => handleClick(true, true)}
@@ -249,6 +213,7 @@ const AccountPanel: React.FC<{
             {/*    balances={balances}*/}
             {/*    price={Number.isNaN(price) ? 0 : price}*/}
             {/*/>*/}
+            {account === '' ? <ConnectOverlay /> : null}
         </AccountInfo>
     );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import styled from 'styled-components';
 
 /**
