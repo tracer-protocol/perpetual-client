@@ -15,10 +15,9 @@ interface HRowProps {
 const HeadingRow = styled.div<HRowProps>`
     display: flex;
     align-items: center;
-    padding: 0px 15px;
+    padding: 0 15px;
     height: 60px;
     width: 100%;
-    padding-bottom: 0px;
     background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
     border-bottom: ${(props) => (props.border ? '1px solid var(--table-lightborder)' : 'none')};
 `;
@@ -32,7 +31,7 @@ const HPanel = styled.div<HPanelProps>`
     flex-wrap: wrap;
     height: auto;
     width: 100%;
-    padding: 0px 15px 20px;
+    padding: 0 15px 20px;
     background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
     .equityStats {
         flex-basis: calc(60% - 7.5px);
@@ -149,7 +148,7 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
 `;
 
 const Overview: FC<{
-    selectedTracer: Tracer | undefined;
+    selectedTracer?: Tracer | undefined;
 }> = ({ selectedTracer }) => {
     const [currentPortfolio, setCurrentPortfolio] = useState(1);
     const [currentPNL, setCurrentPNL] = useState(1);
