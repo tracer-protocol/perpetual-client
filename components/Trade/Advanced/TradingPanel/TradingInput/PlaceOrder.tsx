@@ -13,7 +13,7 @@ import DoubleSidedSlider from './DoubleSidedSlider';
 import Divider from '@components/General/Divider';
 
 const Section = styled.div`
-    margin: 1rem 0;
+    margin: 12px 0;
 `;
 
 const SError = styled(Error)<{ account: string }>`
