@@ -1,5 +1,5 @@
-import React, { FC, useContext } from 'react';
-import OrderBook from '@components/OrderBook';
+import React, { FC, useContext, useState } from 'react';
+import OrderBook, { PrecisionDropdown} from '@components/OrderBook';
 import Tracer, { defaults } from '@libs/Tracer';
 import { Box } from '@components/General';
 import RecentTrades from './RecentTrades';
@@ -15,6 +15,7 @@ import BigNumber from 'bignumber.js';
 import AccountSummary from './AccountSummary';
 import InsuranceInfo from './InsuranceInfo';
 import Graphs from './Graph';
+import SlideSelect, { Option } from '@components/General/SlideSelect';
 
 const TitledBox = styled(({ className, title, children }) => {
     return (
@@ -108,6 +109,8 @@ const TradingView: FC<{
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
+    const [selected, setSelected] = useState(SHOW_BOOK);
+    const [decimals, setDecimals] = useState(1);
 
     return (
         <>
@@ -126,16 +129,51 @@ const TradingView: FC<{
             </SBox>
             <SBox className="sidePanel">
                 <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
-                <OrderBook
-                    askOrders={omeState?.orders.askOrders}
-                    bidOrders={omeState?.orders.bidOrders}
-                    marketUp={omeState?.marketUp ?? false}
-                    lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
-                />
-                <RecentTrades trades={mostRecentTrades} />
+                <StyledSlideSelect
+                    onClick={(index, _e) => setSelected(index)}
+                    value={selected}
+                >
+                    <Option>
+                        Order Book
+                        <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
+                    </Option>
+                    <Option>Recent Trades</Option>
+                </StyledSlideSelect>
+                {selected === SHOW_BOOK 
+                    ?
+                        <OrderBook
+                            askOrders={omeState?.orders.askOrders}
+                            decimals={decimals}
+                            bidOrders={omeState?.orders.bidOrders}
+                            marketUp={omeState?.marketUp ?? false}
+                            lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
+                        />
+                    : 
+                        <RecentTrades trades={mostRecentTrades} />
+                }
             </SBox>
         </>
     );
 };
 
 export default TradingView;
+
+const StyledSlideSelect = styled(SlideSelect)
+`
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-accent);
+    border-top: 0;
+    border-right: 0;
+    width: 100%;
+    border-left: 0;
+    height: var(--height-extra-small-container);
+    ${Option} {
+        font-size: var(--font-size-small);
+    }
+    > .bg-slider {
+        background: var(--color-accent);
+        border-radius: 0;
+    }
+`;
+
+const SHOW_BOOK = 0;
