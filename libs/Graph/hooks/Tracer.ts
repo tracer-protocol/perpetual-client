@@ -3,7 +3,7 @@ import { FilledOrder } from 'libs/types/OrderTypes';
 import { useEffect, useRef } from 'react';
 import Web3 from 'web3';
 import { CandleData } from 'libs/types/TracerTypes';
-import { toBigNumbers } from '..';
+import { toBigNumbers } from 'libs/utils/converters';
 
 const ALL_TRACERS = gql`
     query {
@@ -16,14 +16,18 @@ const ALL_TRACERS = gql`
 
 type Tracers = {
     tracers: {
-        id: string;
-        marketId: string;
+        id: string; // tracer address
+        marketId: string; // tracer market ticker eg BTC/USDC
     }[];
     error: any;
     loading: any;
     refetch: any;
 };
 
+/**
+ * Hook to fetch a list of Tracer adresses deployed by the factory
+ * @returns a list of Tracer objects containing the marketId and id (tracerAddress)
+ */
 export const useAllTracers: () => Tracers = () => {
     const ref = useRef([]);
     const { data, error, loading, refetch } = useQuery(ALL_TRACERS, {
@@ -56,7 +60,7 @@ const TRACER_TRADES = gql`
 /**
  * Fetch the most recent X trades for the tracer market
  * @param tracer market
- * @returns
+ * @returns a list of orders or an empty array
  */
 export const useMostRecentMatched: (tracer: string) => {
     mostRecentTrades: FilledOrder[];

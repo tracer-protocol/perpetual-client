@@ -28,6 +28,12 @@ export type FactoryAction =
 
 export const FactoryContext = React.createContext<Partial<ContextProps>>({});
 
+/**
+ * Wrapper store for the FactoryContext.
+ * Initiates a list of Tracer classes upon receiving a list of tracer addresses.
+ * Has a holistic reference to all Tracers.
+ * TODO allow adding an removing of Tracers based on a given Tracer contract addresses
+ */
 export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
     const { web3, account } = useContext(Web3Context);
     const { tracers } = useAllTracers();
