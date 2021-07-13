@@ -186,33 +186,34 @@ class ChartWrapper extends React.Component<Props> {
                     lineWidth: 4,
                     priceLineVisible: false,
                 });
-                if(props.positionGraph){
+                if (props.positionGraph) {
                     const lineWidth = 3;
                     const liquidationPriceLine = {
-                        price: 85,
+                        // TODO: Change later
+                        price: 145,
                         color: '#3DA8F5',
                         lineWidth: lineWidth,
                         lineStyle: LightWeightCharts.LineStyle.Solid,
                     };
                     const breakevenPriceLine = {
-                        price: 145,
+                        // TODO: Change later
+                        price: 85,
                         color: '#F15025',
                         lineWidth: lineWidth,
                         lineStyle: LightWeightCharts.LineStyle.Solid,
-                    }
+                    };
                     currentSeries.createPriceLine(liquidationPriceLine);
                     currentSeries.createPriceLine(breakevenPriceLine);
                     this.chart.applyOptions({
                         // Hide the price and time scale on the position graphs
                         priceScale: {
-                            position: 'none'
+                            position: 'none',
                         },
                         timeScale: {
                             visible: false
                         },
                     });
-                }
-                else {
+                } else {
                     currentSeries.applyOptions({
                         color: '#FFFFFF',
                         lineWidth: 4,
@@ -237,7 +238,7 @@ class ChartWrapper extends React.Component<Props> {
                 }
                 series.push(currentSeries);
             });
-            
+
         props.areaSeries &&
             props.areaSeries.forEach((serie) => {
                 series.push(this.addSeries(serie, 'area'));

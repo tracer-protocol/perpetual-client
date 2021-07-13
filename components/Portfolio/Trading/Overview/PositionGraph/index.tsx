@@ -69,14 +69,14 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                         <InfoCell>
                             <Amount>$43,234.42</Amount>
                             <CellTitle>
-                                <StatusDot type="status-lightblue" />
+                                <StatusDot type="status-orange" />
                                 Liquidation Price
                             </CellTitle>
                         </InfoCell>
                         <InfoCell inner>
                             <Amount>$43,234.42</Amount>
                             <CellTitle>
-                                <StatusDot type="status-orange" />
+                                <StatusDot type="status-lightblue" />
                                 Break Even Price
                             </CellTitle>
                         </InfoCell>

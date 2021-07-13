@@ -10,19 +10,19 @@ export const EqTable = styled.table`
     td {
         transition: opacity 0.5s ease, border 0.5s ease;
     }
-    
+
     // Remove border from first row of td cells
-    // and add it to the first row instead for 
+    // and add it to the first row instead for
     // even border spacing across cells
     tr:first-of-type td {
         border-top: unset;
         border-bottom: unset;
     }
 
-    // Replace the missing border on the third 
+    // Replace the missing border on the third
     // td cell in first row
     tr:first-of-type td:nth-child(3) {
-        border-bottom: 1px solid var(--table-darkborder);;
+        border-bottom: 1px solid var(--table-darkborder);
     }
     tr:first-of-type {
         border-top: 1px solid var(--table-darkborder);

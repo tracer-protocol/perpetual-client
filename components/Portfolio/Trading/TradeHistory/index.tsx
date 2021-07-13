@@ -58,7 +58,9 @@ const TradeHistory: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 7 ? (
-                                <TableHeading theme={TableHeadEndTheme} key={i}>{heading}</TableHeading>
+                                <TableHeading theme={TableHeadEndTheme} key={i}>
+                                    {heading}
+                                </TableHeading>
                             ) : (
                                 <TableHeading key={i}>{heading}</TableHeading>
                             ),

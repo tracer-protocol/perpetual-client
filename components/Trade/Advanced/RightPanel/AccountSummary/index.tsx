@@ -31,6 +31,7 @@ const AccountSummary: FC<ASProps> = styled(({ selectedTracer, className }: ASPro
                     <PositionTab
                         balances={balances}
                         fairPrice={fairPrice}
+                        maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                         baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
                         quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
                         filledOrders={filledOrders ?? []}
