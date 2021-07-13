@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { FactoryContext, TracerContext } from 'context';
-import { Tracer } from 'libs';
+import Tracer from 'libs/Tracer';
 import { Box, Logo } from '@components/General';
 import styled from 'styled-components';
 import { initialFactoryState } from '@context/FactoryContext';

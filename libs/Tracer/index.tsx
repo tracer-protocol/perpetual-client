@@ -27,6 +27,7 @@ import { calcLeverage, calcTotalMargin } from '@tracer-protocol/tracer-utils';
 import { Callback } from 'web3/types';
 import Insurance from './Insurance';
 
+// Default values
 export const defaults: Record<string, any> = {
     balances: {
         quote: new BigNumber(0),
@@ -52,44 +53,39 @@ export const defaults: Record<string, any> = {
 };
 
 /**
- * Tracer class to interact with the tracer contract
- * @private instance - Web3 Tracer contract instance
- * @private web3 - web3 instance
- * @private account - Tracer account instance for this specific tracer
- *  - TODO might be worth abstracting this instance out into its own class,
- *      the only thing with that is if the account instance needs to be interacted with
- *      that much. So is it even worth...
- * @public address - deployed tracer contract address
- * @public token - Web3 ERC20 token instance of the tracers underlying
+ * Tracer class instance to handle fetching and setting of smart contract data.
+ * Works in conjunction with the contexts to update the UI.
+ * This class contains all the Tracer information, the contexts will trigger updates and respond
+ *  accordingly.
  */
 export default class Tracer {
-    _instance: TracerType;
-    _web3: Web3;
-    _gasOracle: Oracle | undefined;
-    _oracle: Oracle | undefined;
-    _pricing: Pricing | undefined;
-    public insuranceContract: Insurance | undefined;
-    public address: string;
-    public marketId: string;
-    public baseTicker: string;
-    public quoteTicker: string;
-    public token: Erc20Type | undefined;
-    public liquidationGasCost: number | undefined;
-    public quoteTokenDecimals: BigNumber;
-    public maxLeverage: BigNumber;
-    public fundingRateSensitivity: BigNumber;
-    public feeRate: BigNumber;
-    public leveragedNotionalValue: BigNumber;
-    public fundingRate: BigNumber;
-    public insuranceFundingRate: BigNumber;
-    public initialised: Promise<boolean>;
-    public balances: UserBalance;
-    public oraclePrice: BigNumber;
-    public fairPrice: BigNumber;
-    public twentyFourHourChange: number;
-    public insuranceApproved: boolean;
-    public tracerApproved: boolean;
-    public hasSubscribed: boolean;
+    _instance: TracerType; // contract instance
+    _web3: Web3; // web3 instance initialised with
+    _gasOracle: Oracle | undefined; // gasOracle contract instance
+    _oracle: Oracle | undefined; // price oracle contract instance
+    _pricing: Pricing | undefined; // pricing contract instance
+    public token: Erc20Type | undefined; // quote tocken contract instance
+    public insuranceContract: Insurance | undefined; // insuranceContract instance
+    public address: string; // Tracer address
+    public marketId: string; // market ticket in the form of ETH/USDC
+    public baseTicker: string; // base ticker eg ETH from ETH/USDC
+    public quoteTicker: string; // quote ticker eg USDC from ETH/USDC
+    public quoteTokenDecimals: BigNumber; // number of token decimals
+    public liquidationGasCost: number | undefined; 
+    public maxLeverage: BigNumber; // tracers max leverage
+    public fundingRateSensitivity: BigNumber; // rate at which the funding rate changes
+    public feeRate: BigNumber; // fees paid per trade
+    public leveragedNotionalValue: BigNumber; // total value held in the Tracer
+    public fundingRate: BigNumber; // current funding rate
+    public insuranceFundingRate: BigNumber; // current insurance funding rate
+    public balances: UserBalance; // user balances for this Tracer
+    public oraclePrice: BigNumber; // current oracle price
+    public fairPrice: BigNumber; // current fair price
+    public twentyFourHourChange: number; // 24 hour market change in price
+    public insuranceApproved: boolean; // boolean representing if a given user has approved the Insurance contract to spend
+    public tracerApproved: boolean; // boolean representing if a given user has approved the Tracer contract to spend
+    public hasSubscribed: boolean; // boolean representing if this Tracer class has subscribed to contract events
+    public initialised: Promise<boolean>; // variable to tell if this Tracer class has been initialised
 
     constructor(web3: Web3, address: string, marketId: string) {
         this._instance = new web3.eth.Contract(tracerAbi as unknown as AbiItem, address) as unknown as TracerType;
@@ -181,21 +177,21 @@ export default class Tracer {
             });
     };
 
+    /**
+     * Sets a subscription on the matchedOrders event for this Tracer instance
+     * @param callback function to be called when the event is triggered
+     */
     subscribeToMatchedOrders: (callback: Callback<MatchedOrders>) => void = (callback) => {
         this.hasSubscribed = true;
         this._instance.events.MatchedOrders(callback);
     };
 
     /**
-     * Gets the users total margin and position balances
-     * returns in order
-     *  margin, position, totalLeveragedValue,
-     *  deposited, lastUpdatedGasPrice, lastUpdatedIndex
-     *   int256 quote,
-     *   int256 base,
-     *   int256 totalLeveragedValue,
-     *   int256 lastUpdatedGasPrice,
-     *   uint256 lastUpdatedIndex
+     * Updates the user balances for a given tracer.
+     * Fetches the Tracer balance as well as the quoteTocken balance.
+     * Sets the balances public var as well as returns the balances
+     * @param account target user
+     * @returns the balances for the given user
      */
     updateUserBalance: (account: string | undefined) => Promise<UserBalance> = async (account) => {
         try {
@@ -233,8 +229,7 @@ export default class Tracer {
         }
     };
 
-    getBalance: () => UserBalance = () => this.balances;
-
+    /** Updates this Tracers oraclePrice */
     updateOraclePrice: () => Promise<void> = async () => {
         try {
             const price = await this._oracle?.methods.latestAnswer().call();
@@ -245,6 +240,7 @@ export default class Tracer {
         }
     };
 
+    /** Updates this Tracers fairPrice */
     updateFairPrice: () => Promise<void> = async () => {
         try {
             await this.initialised;
@@ -257,7 +253,7 @@ export default class Tracer {
     };
 
     /**
-     * A function that returns the fee rate for the market
+     * Updates the fee rate
      */
     updateFeeRate: () => Promise<void> = async () => {
         const feeRate = await this._instance.methods.feeRate().call();
@@ -266,7 +262,7 @@ export default class Tracer {
     };
 
     /**
-     * A function that returns the funding rate for the market
+     * Updates both the insurance funding rate and the tracer funding rate
      */
     updateFundingRates: () => Promise<void> = async () => {
         try {
@@ -354,6 +350,9 @@ export default class Tracer {
             this.insuranceApproved = res[0] !== 0;
         });
     };
+
+    // getters
+    getBalance: () => UserBalance = () => this.balances;
 
     getOraclePrice: () => BigNumber = () => {
         return this.oraclePrice;
