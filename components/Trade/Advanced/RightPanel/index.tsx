@@ -37,12 +37,14 @@ const TitledBox = styled(({ className, title, children }) => {
     color: var(--color-text);
     letter-spacing: -0.32px;
     font-size: var(--font-size-small);
+    display: flex;
+    padding: 0px 16px;
+    height: var(--height-small-container);
 
     > p {
         color: var(--color-secondary);
         font-size: var(--font-size-extra-small);
         letter-spacing: -0.24px;
-        margin-bottom: 0.2rem;
     }
 `;
 

@@ -131,4 +131,6 @@ const StyledBox = styled(Box)`
     display: block;
     padding: 0;
     z-index: 1;
+    background: var(--color-background-secondary);
+    padding-bottom: 8px;
 `;

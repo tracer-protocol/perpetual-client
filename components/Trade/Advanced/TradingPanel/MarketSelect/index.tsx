@@ -103,11 +103,17 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
         );
     },
 )`
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: var(--color-primary);
     font-size: var(--font-size-small);
     border: 1px solid var(--color-primary);
     border-radius: 20px;
-    padding: 0 12px;
+    width: 150px;
+    padding-right: 10px;
+    height: 28px;
     height: var(--height-small-button);
     text-align: center;
     margin: 15px 0;
@@ -115,9 +121,7 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     @media (max-width: 1600px) {
         height: 22px;
         & > .down-arrow {
-            margin-top: -2px !important;
-            width: 15px;
-            height: 15px;
+            top: 8px;
         }
     }
 
@@ -126,10 +130,15 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     }
 
     > .down-arrow {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 15px;
+        height: 15px;
         margin-top: -5px;
         display: inline-block;
         transition: 0.3s;
-        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
+        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-2px)' : 'translateY(-2px)')};
     }
 `;
 

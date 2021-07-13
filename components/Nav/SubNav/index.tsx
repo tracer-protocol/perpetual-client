@@ -23,6 +23,7 @@ export const SubNavItem = styled.div`
     border-right: 1px solid #0c3586;
     text-align: center;
     padding: 10px 15px;
+    color: var(--color-secondary);
 
     &.selected {
         background: var(--color-accent);

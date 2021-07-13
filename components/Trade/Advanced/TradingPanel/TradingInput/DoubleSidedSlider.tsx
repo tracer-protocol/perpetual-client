@@ -55,8 +55,8 @@ export default styled(({ className, value, min, max, orderDispatch }: DSProps) =
     }
     .rc-slider-rail {
         letter-spacing: -0.16px;
-        font-size: 10px;
-        line-height: 10px;
+        font-size: 8px;
+        line-height: 14px;
         color: var(--color-accent);
     }
     .rc-slider-rail::before {
@@ -105,11 +105,11 @@ const createMarks = (min: number, max: number) => ({
 
 const railStyle = {
     backgroundImage: 'linear-gradient(to right, #F15025 , #05CB3A)',
-    height: 10,
+    height: 14,
 };
 const trackStyle = {
     background: 'transparent',
-    height: 10,
+    height: 14,
 };
 
 const handleStyle = {

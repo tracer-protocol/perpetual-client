@@ -87,10 +87,10 @@ const Identicon = dynamic(import('../Identicon'), { ssr: false });
 
 const ConnectButton: React.FC<any> = styled.button`
     display: flex;
-    border: 2px solid #fff;
+    // border: 2px solid #fff;
     border-radius: 100px;
     width: 160px;
-    height: 50px;
+    height: 40px;
     transition: 0.2s;
     padding: 0 10px;
     margin: auto 10px;
@@ -199,7 +199,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
 })`
     display: flex;
     color: var(--color-text);
-    height: 8vh;
+    height: 60px;
 
     > ul {
         display: flex;

@@ -38,11 +38,11 @@ const createMarks = (min: number, max: number) => ({
 const defaultRailStyle = { backgroundColor: 'var(--color-accent)', height: 10 };
 const defaultTrackStyle = { backgroundColor: 'var(--color-accent)', height: 10 };
 const defaultHandleStyle = {
-    width: '50px',
-    height: '30px',
+    width: '65px',
+    height: '32px',
     background: 'var(--color-primary)',
     borderRadius: '20px',
-    marginTop: '-11px',
+    marginTop: '-9px',
 };
 
 const { Handle } = Slider;
@@ -52,7 +52,7 @@ const DefaultHandle = (e: any) => {
         justify-content: center;
         align-items: center;
         color: white;
-        font-size: var(--font-size-small);
+        font-size: var(--font-size-medium);
     `;
     const { value } = e;
     return (
