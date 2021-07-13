@@ -3,7 +3,7 @@ import { Web3Context } from '@context/Web3Context';
 import { OrderContext, orderDefaults } from '@context/OrderContext';
 import { BigNumber } from 'bignumber.js';
 import { toApproxCurrency } from '@libs/utils';
-import { calcUnrealised } from '@tracer-protocol/tracer-utils';
+import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { CloseOrderButton } from '@components/OrderButtons';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import PositionOverlay from '@components/Overlay/PositionOverlay';
@@ -23,13 +23,14 @@ interface PTProps {
     className?: string;
     balances: UserBalance;
     fairPrice: BigNumber;
+    maxLeverage: BigNumber;
     baseTicker: string;
     quoteTicker: string;
     filledOrders: FilledOrder[];
 }
 
 const PositionTab: FC<PTProps> = styled(
-    ({ className, balances, fairPrice, baseTicker, quoteTicker, filledOrders }: PTProps) => {
+    ({ className, balances, fairPrice, maxLeverage, baseTicker, quoteTicker, filledOrders }: PTProps) => {
         const [currency, setCurrency] = useState(0); // 0 quoted in base
         const { account } = useContext(Web3Context);
         const { order } = useContext(OrderContext);
@@ -131,7 +132,11 @@ const PositionTab: FC<PTProps> = styled(
                                 <LegendsIndicator colour="#F15025" />
                                 Liquidation Price
                             </LegendTitle>
-                            <LegendPrice>{toApproxCurrency(50)}</LegendPrice>
+                            <LegendPrice>
+                                {toApproxCurrency(
+                                    calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage),
+                                )}
+                            </LegendPrice>
                         </Legend>
                     </LegendsContainer>
                 </PositionInfo>
