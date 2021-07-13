@@ -185,7 +185,7 @@ const StyledSlideSelect = styled(SlideSelect)`
     border-left: 0;
     height: var(--height-extra-small-container);
 
-    @media (max-height: 900px) {
+    @media (max-height: 850px) {
         display: flex;
     }
 
@@ -197,7 +197,10 @@ const StyledSlideSelect = styled(SlideSelect)`
         top: 0;
         right: 0;
         width: 100px;
-        max-width: 4rem;
+        font-size: var(--font-size-extra-small);
+        line-height: var(--font-size-extra-small);
+        height: 1rem;
+        max-width: 3rem;
         margin-left: 0.2rem;
     }
     > .bg-slider {

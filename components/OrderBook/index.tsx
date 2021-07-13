@@ -171,8 +171,7 @@ const OrderBook: FC<OProps> = styled(
     },
 )`
     position: relative;
-    display: block;
-    @media (max-height: 900px) {
+    @media (max-height: 850px) {
         display: ${(props) => (props.displayBook ? 'block' : 'none')};
         overflow: auto;
     }
@@ -380,7 +379,7 @@ const OrderBookContainer = styled.div`
     flex-direction: column;
     position: relative;
     padding: 0.6rem 0;
-    @media (max-height: 900px) {
+    @media (max-height: 850px) {
         ${OrderBookTitle}, ${OrderBookToggle}, ${PrecisionDropdown} {
             display: none;
         }

@@ -85,7 +85,7 @@ const RecentTradesContainer = styled.div<{ displayTrades: boolean }>`
     flex-direction: column;
     border-top: 1px solid var(--color-accent);
     display: flex;
-    @media (max-height: 900px) {
+    @media (max-height: 850px) {
         display: ${(props) => (props.displayTrades ? 'flex' : 'none')};
     }
 `;
