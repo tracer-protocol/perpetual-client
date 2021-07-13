@@ -1,4 +1,6 @@
+import { FilledOrder } from '@libs/types/OrderTypes';
 import { BigNumber } from 'bignumber.js';
+import Web3 from 'web3';
 
 // const getPrecision: (a: number) => number = (a) => {
 //     if (!isFinite(a)) {
@@ -125,3 +127,11 @@ export const bigNumberToWei: (num: BigNumber) => string = (num) => {
         return '0';
     }
 };
+
+
+export const toBigNumbers: (orders: any) => FilledOrder[] = (orders) =>
+    orders.map((order: any) => ({
+        ...order,
+        amount: new BigNumber(Web3.utils.fromWei(order.amount)),
+        price: new BigNumber(Web3.utils.fromWei(order.price)),
+    }));
