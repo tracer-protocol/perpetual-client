@@ -3,7 +3,7 @@ import { FilledOrder } from 'libs/types/OrderTypes';
 import { useEffect, useRef } from 'react';
 import Web3 from 'web3';
 import { CandleData, LineData } from 'libs/types/TracerTypes';
-import { toBigNumbers } from '..';
+import { toBigNumbers } from '@libs/utils';
 
 const ALL_TRACERS = gql`
     query {
