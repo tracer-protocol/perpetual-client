@@ -58,7 +58,7 @@ const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
 const Title = styled.h2<{
     hide: boolean;
 }>`
-    font-size: var(--font-size-medium);
+    font-size: var(--font-size-small-heading);
     letter-spacing: -0.4px;
     color: var(--color-text);
     margin-bottom: 0.5rem;

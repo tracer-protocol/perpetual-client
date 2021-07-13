@@ -74,7 +74,7 @@ const InfoContent = styled.div`
 `;
 
 const InfoTitle = styled.div`
-    font-size: var(--font-size-medium);
+    font-size: var(--font-size-small-heading);
     letter-spacing: -0.4px;
     color: #ffffff;
     text-transform: capitalize;
