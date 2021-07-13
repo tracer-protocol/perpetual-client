@@ -53,11 +53,28 @@ export default styled(({ className, value, min, max, orderDispatch }: DSProps) =
     .rc-slider-dot {
         display: none;
     }
+    .rc-slider-rail {
+        letter-spacing: -0.16px;
+        font-size: 10px;
+        line-height: 10px;
+        color: var(--color-accent);
+    }
+    .rc-slider-rail::before {
+        position: absolute;
+        content: "SHORT";
+        left: 8px;
+        top: 0;
+    }
+    .rc-slider-rail::after {
+        position: absolute;
+        content: "LONG";
+        right: 8px;
+        top: 0;
+    }
 ` as React.FC<DSProps>;
 
-const Label = styled(({ className, val, long }: { className?: string; val: number; long: boolean }) => (
+const Label = styled(({ className, val }: { className?: string; val: number; long: boolean }) => (
     <p className={className}>
-        <span className={long ? 'green' : 'red'}>{long ? 'LONG' : 'SHORT'}</span> <br />
         {`${Math.abs(val)}x`}
     </p>
 ))`
@@ -101,7 +118,8 @@ const handleStyle = {
     width: '50px',
     height: '30px',
     lineHeight: '26px',
-    background: 'var(--color-primary)',
+    background: 'var(--color-accent)',
+    borderColor: 'var(--color-accent)',
     borderRadius: '20px',
     marginTop: '-11px',
 };
