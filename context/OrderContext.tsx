@@ -22,9 +22,13 @@ export const LIMIT = 1;
 /**
  * Returns the Error ID relating to the mapping above
  * These do not need to be in numeric order. It doesnt really matter.
- * @param balances
- * @param orders
- * @returns
+ * @param balances user balances
+ * @param orders current orders
+ * @param account user account
+ * @param order current order state
+ * @param fairPrice current fairPrice
+ * @param maxLeverage tracer max leverage
+ * @returns ErrorKey used to map to an error message
  */
 const checkErrors: (
     balances: UserBalance | undefined,
@@ -189,8 +193,10 @@ export type OrderAction =
     | { type: 'setLock'; value: boolean }
     | { type: 'setAdvanced'; value: boolean }
     | { type: 'setOppositeOrders'; orders: FlatOrder[] };
-
-// amountToPay => require margin
+/**
+ * Large context which manages OrderState when interacting with the trading interfaces
+ * Leverages useReducer to provide dispatches which modify and update state.
+ */
 export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const { account } = useContext(Web3Context);
     const { setTracerId, tracerId, selectedTracer } = useContext(TracerContext);
@@ -387,6 +393,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const [order, orderDispatch] = useReducer(reducer, initialState);
 
     useMemo(() => {
+        // sets the oppositeOrders based on the users selected position
+        // triggered when the users position or the list of orders changes
         if (omeState?.orders) {
             const oppositeOrders = (
                 order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders
@@ -407,6 +415,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     }, [order.position, omeState?.orders]);
 
     useMemo(() => {
+        // Updates the price when orderType changes to market. 
+        // If it changes to limit then it resets the price
         if (order.orderType === MARKET) {
             orderDispatch({
                 type: 'setPrice',
@@ -452,18 +462,20 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [order.exposure, order.oppositeOrders]);
 
-    // Handles setting the selected tracer Id on a market or collateral change
     useEffect(() => {
+        // Handles setting the selected tracer Id on a market or collateral change
         setTracerId ? setTracerId(`${order.market}/${order.collateral}`) : console.error('Error setting tracerId');
     }, [order.market, order.collateral]);
 
     useEffect(() => {
+        // sets the next position when exposire, price or the users base balance changes
         orderDispatch({
             type: 'setNextPosition',
         });
     }, [order.exposure, order.price, selectedTracer?.getBalance().base]);
 
     useMemo(() => {
+        // sets the leverage when the users account leverage changes
         let leverage = selectedTracer?.getBalance()?.leverage ?? tracerDefaults.balances.leverage;
         if (!leverage?.eq(0) && leverage) {
             const base = selectedTracer?.getBalance().base ?? tracerDefaults.balances.base;
@@ -478,8 +490,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         }
     }, [selectedTracer?.getBalance().leverage]);
 
-    // Check errors
     useMemo(() => {
+        // Check errors and update the error state if there is an error
         if (omeState?.orders) {
             const oppositeOrders = order.position === LONG ? omeState.orders.askOrders : omeState.orders.bidOrders;
             const error = checkErrors(

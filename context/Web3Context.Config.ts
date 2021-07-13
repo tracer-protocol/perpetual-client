@@ -11,7 +11,15 @@ export type Network = {
     };
     graphUri: string;
 };
-
+/**
+ * Network store which allows swapping between networks and fetching from different data sources.
+ * Keys are the ID of the network.
+ * The 0 network is a default network when the user has not connected their address.
+ *  The data sources for the 0 network are populated from the env variables.
+ * The local config also uses the ENV variables so the commit history is not riddled with updates to 
+ *  this config.
+ * Do not change the other network configs unless the contract addresses have changed.
+ */
 export const networkConfig: Record<string, Network> = {
     // '1': {
     //     previewUrl: '',
@@ -23,9 +31,7 @@ export const networkConfig: Record<string, Network> = {
     //     },
     //     graphUri: 'http://localhost:8000/subgraphs/name/tetther1122/tracer-graph',
     // },
-    // other networks go here
     '0': {
-        // local
         previewUrl: '',
         contracts: {
             trader: {

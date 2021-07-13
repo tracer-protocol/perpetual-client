@@ -1,5 +1,8 @@
 import { BigNumber } from 'bignumber.js';
 
+/**
+ * Individual open order
+ */
 export type OpenOrder = {
     amount: BigNumber;
     price: BigNumber;
@@ -9,11 +12,17 @@ export type OpenOrder = {
     id: number; // order id
 };
 
+/**
+ * All open orders
+ */
 export interface OpenOrders {
     shortOrders: OpenOrder[];
     longOrders: OpenOrder[];
 }
 
+/**
+ * Type used for the UI order book
+ */
 export type OMEOrder = {
     // this type is for the ui book
     cumulative: number;
