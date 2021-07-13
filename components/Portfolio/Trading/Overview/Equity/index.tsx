@@ -41,7 +41,7 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
         <div className={className}>
             <div className="flex justify-content-between heading-row">
                 <SmallTitle>Equity</SmallTitle>
-                <LargeButton onClick={(e) => onClick(e)}>{show ? 'Hide Breakdown' : 'Show Breakdown'}</LargeButton>
+                <LargeButton onClick={(e: any) => onClick(e)}>{show ? 'Hide Breakdown' : 'Show Breakdown'}</LargeButton>
             </div>
             <EqTable>
                 <EqTableBody>

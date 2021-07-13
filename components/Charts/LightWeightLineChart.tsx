@@ -77,11 +77,18 @@ const StyledIcon = styled(Icon)`
     height: 32px;
 `;
 
-const LightWeightLineChart: React.FC<{ historyData: HistoryData; positionGraph: boolean; setPosition?: string }> = ({
+interface PLCProps {
+    historyData: HistoryData;
+    positionGraph: boolean;
+    setPosition?: string;
+    liquidationPrice?: number;
+}
+const LightWeightLineChart: React.FC<PLCProps> = ({
     historyData,
     positionGraph,
     setPosition,
-}) => {
+    liquidationPrice,
+}: PLCProps) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
     const hasReset = useRef<boolean>(false);
     useMemo(() => {
@@ -129,6 +136,7 @@ const LightWeightLineChart: React.FC<{ historyData: HistoryData; positionGraph: 
                 autoWidth
                 autoHeight
                 positionGraph={positionGraph}
+                liquidationPrice={liquidationPrice}
             />
         );
     }

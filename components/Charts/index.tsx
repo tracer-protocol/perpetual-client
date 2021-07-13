@@ -65,8 +65,8 @@ interface Props {
     darkTheme?: boolean;
     legend?: any;
     positionGraph?: boolean;
+    liquidationPrice?: number;
 }
-
 class ChartWrapper extends React.Component<Props> {
     private chartDiv: React.RefObject<any>;
     private legendDiv: React.RefObject<any>;
@@ -189,16 +189,15 @@ class ChartWrapper extends React.Component<Props> {
                 if (props.positionGraph) {
                     const lineWidth = 3;
                     const liquidationPriceLine = {
-                        // TODO: Change later
-                        price: 145,
-                        color: '#3DA8F5',
+                        price: this.props.liquidationPrice,
+                        color: '#F15025',
                         lineWidth: lineWidth,
                         lineStyle: LightWeightCharts.LineStyle.Solid,
                     };
                     const breakevenPriceLine = {
                         // TODO: Change later
-                        price: 85,
-                        color: '#F15025',
+                        price: 2160,
+                        color: '#3DA8F5',
                         lineWidth: lineWidth,
                         lineStyle: LightWeightCharts.LineStyle.Solid,
                     };

@@ -37,6 +37,7 @@ const PositionTab: FC<PTProps> = styled(
         const { base } = balances;
         const { selectedTracer } = useContext(TracerContext);
         const { lines } = useLines(selectedTracer?.address ?? '');
+        const liquidationPrice = calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage);
 
         return (
             <div className={className}>
@@ -115,7 +116,11 @@ const PositionTab: FC<PTProps> = styled(
                     </PositionDetails>
 
                     <GraphContainer>
-                        <LightWeightChart historyData={lines as LineData} positionGraph />
+                        <LightWeightChart
+                            historyData={lines as LineData}
+                            liquidationPrice={liquidationPrice.toNumber()}
+                            positionGraph
+                        />
                     </GraphContainer>
 
                     <LegendsContainer>
@@ -132,11 +137,7 @@ const PositionTab: FC<PTProps> = styled(
                                 <LegendsIndicator colour="#F15025" />
                                 Liquidation Price
                             </LegendTitle>
-                            <LegendPrice>
-                                {toApproxCurrency(
-                                    calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage),
-                                )}
-                            </LegendPrice>
+                            <LegendPrice>{toApproxCurrency(liquidationPrice)}</LegendPrice>
                         </Legend>
                     </LegendsContainer>
                 </PositionInfo>

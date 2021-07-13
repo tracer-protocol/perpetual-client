@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import Graph from './Graph';
 import PositionGraph from './PositionGraph';
 import Equity from './Equity';
@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Dropdown from 'antd/lib/dropdown';
 import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
+import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
 
 interface HRowProps {
     background?: string;
@@ -164,6 +165,18 @@ const Overview: FC<{
 }> = ({ selectedTracer }) => {
     const [currentPortfolio, setCurrentPortfolio] = useState(1);
     const [currentPNL, setCurrentPNL] = useState(1);
+    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
+    const [tracersAddress, setTracersAddress] = useState<string[]>([]);
+
+    useEffect(() => {
+        if (tracers) {
+            const temp = [];
+            for (const key of Object.keys(tracers)) {
+                temp.push(tracers[key].address);
+            }
+            setTracersAddress(temp);
+        }
+    }, [tracersAddress]);
 
     const portfolioKeyMap: Record<number, string> = {
         1: 'Entire Portfolio',
@@ -193,21 +206,29 @@ const Overview: FC<{
                 </HeadingRow>
                 <HPanel background={`#00125D`}>
                     <Equity className="equityStats" selectedTracerAddress={selectedTracer?.address ?? ''} />
-                    <Graph
-                        className="pnlGraph"
-                        title="Profit and Loss"
-                        background
-                        selectedTracerAddress={selectedTracer?.address ?? ''}
-                    />
+                    {tracersAddress[0] === undefined ? null : (
+                        <Graph
+                            className="pnlGraph"
+                            title="Profit and Loss"
+                            background
+                            selectedTracerAddress={tracersAddress[0]}
+                        />
+                    )}
                 </HPanel>
                 <HeadingRow border={true}>
                     <Title>Open Positions</Title>
                     <Counter>4</Counter>
                 </HeadingRow>
                 <HScrollContainer>
-                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1} />
-                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={2} />
-                    <PositionGraph selectedTracerAddress={selectedTracer?.address ?? ''} positionType={1} />
+                    {tracersAddress[0] === undefined ? null : (
+                        <PositionGraph selectedTracerAddress={tracersAddress[0]} positionType={1} />
+                    )}
+                    {tracersAddress[0] === undefined ? null : (
+                        <PositionGraph selectedTracerAddress={tracersAddress[0]} positionType={2} />
+                    )}
+                    {tracersAddress[0] === undefined ? null : (
+                        <PositionGraph selectedTracerAddress={tracersAddress[0]} positionType={1} />
+                    )}
                 </HScrollContainer>
             </VScrollContainer>
         </>
