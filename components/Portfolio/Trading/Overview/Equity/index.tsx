@@ -1,6 +1,11 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
 import { LargeButton, SmallTitle } from '@components/Portfolio';
+import { UserBalance } from '@libs/types/TracerTypes';
+import { BigNumber } from 'bignumber.js';
+import { FilledOrder } from '@libs/types/OrderTypes';
+import { toApproxCurrency } from '@libs/utils';
+import { calcUnrealised } from '@tracer-protocol/tracer-utils';
 import {
     EqTableRow,
     EqTableCell,
@@ -19,18 +24,24 @@ import {
     CellDesc,
 } from './EqTable';
 
-interface EqProps {
-    className?: string;
-    selectedTracerAddress: string;
-}
 const ToggleTable = () => {
     const tableEl = document.querySelector<HTMLElement>('.equityStats');
     if (tableEl) {
         tableEl.classList.toggle('show');
     }
 };
-const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
+
+interface EqProps {
+    className?: string;
+    balances: UserBalance;
+    filledOrders: FilledOrder[];
+    fairPrice: BigNumber;
+    baseTicker: string;
+    quoteTicker: string;
+}
+const Equity: FC<EqProps> = styled(({ className, balances, fairPrice, filledOrders, baseTicker, quoteTicker }: EqProps) => {
     const [show, setShow] = useState(false);
+    const { base } = balances;
     const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         setShow(!show);
@@ -49,32 +60,38 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
                     <EqTableRow>
                         <EqTableCellLarge>
                             <Amount color="#21DD53">
-                                $44.3
-                                <ProfitArrow direction="up" />
+                                -
+                                <ProfitArrow direction="none" />
                             </Amount>
                             <Profit>
-                                <ProfitAmount color="#21DD53">$130 (23%)</ProfitAmount>
+                                <ProfitAmount color="#21DD53"><span>$0</span> (0%)</ProfitAmount>
                                 <Text>All time</Text>
                             </Profit>
                             <Text>
                                 <CellTitle>Equity</CellTitle>
-                                <CellDesc>Over 4 open positions</CellDesc>
+                                <CellDesc>Over 0 open positions</CellDesc>
                             </Text>
                         </EqTableCellLarge>
                         <EqTableCell>
-                            <Amount>$0.45</Amount>
+                            <Amount>-</Amount>
                             <Text>
                                 <CellTitle>Deposited Margin</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCell>
-                            <Amount>$0.45</Amount>
+                            <Amount>
+                                {!balances.quote.eq(0) ? (
+                                    toApproxCurrency(calcUnrealised(base, fairPrice, filledOrders), 3)
+                                ) : (
+                                    `-`
+                                )}
+                            </Amount>
                             <Text>
                                 <CellTitle>Unrealised PnL</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount>$0.45</Amount>
+                            <Amount>-</Amount>
                             <Text>
                                 <CellTitle>Realised PnL</CellTitle>
                             </Text>
@@ -85,13 +102,13 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
                         <EqTableCellLargeEmpty />
                         <EqTableCellEmpty />
                         <EqTableCell>
-                            <Amount small>$0.45</Amount>
+                            <Amount small>-</Amount>
                             <Text>
                                 <CellTitle>Price Changes</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount small>$0.45</Amount>
+                            <Amount small>-</Amount>
                             <Text>
                                 <CellTitle>Price Changes</CellTitle>
                             </Text>
@@ -102,13 +119,13 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
                         <EqTableCellLargeEmpty />
                         <EqTableCellEmpty />
                         <EqTableCell>
-                            <Amount small>$0.45</Amount>
+                            <Amount small>-</Amount>
                             <Text>
                                 <CellTitle>Funding Rate</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount small>$0.45</Amount>
+                            <Amount small>-</Amount>
                             <Text>
                                 <CellTitle>Funding Rate</CellTitle>
                             </Text>
@@ -120,7 +137,7 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
                         <EqTableCellEmpty />
                         <EqTableCellEmpty border />
                         <EqTableCellLast>
-                            <Amount small>$0.45</Amount>
+                            <Amount small>-</Amount>
                             <Text>
                                 <CellTitle>Trading Fee</CellTitle>
                             </Text>
@@ -132,7 +149,7 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
                         <EqTableCellEmpty />
                         <EqTableCellEmpty border />
                         <EqTableCellLast>
-                            <Amount small>$0.45</Amount>
+                            <Amount small>-</Amount>
                             <Text>
                                 <CellTitle>Insurance Funding Rate</CellTitle>
                             </Text>

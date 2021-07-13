@@ -1,7 +1,4 @@
 import styled from 'styled-components';
-// @ts-ignore
-// import profit_arrow_up from 'public/img/general/triangle_up_green.svg';
-// import profit_arrow_down from 'public/img/general/triangle_down_red.svg';
 
 export const EqTable = styled.table`
     width: 100%;
@@ -121,14 +118,23 @@ export const Profit = styled.span`
 `;
 
 export const ProfitArrow = styled.span<{ direction: string }>`
-    ${(props) =>
-        props.direction
-            ? 'background-image: url(/img/general/triangle_up_green.png);'
-            : 'background-image: url(/img/general/triangle_down_red.png);'}
+    ${(props) => props.direction === 'up' && 'background-image: url(/img/general/triangle_up_green.png);'}
+    ${(props) => props.direction === 'down' && 'background-image: url(/img/general/triangle_down_red.png);'}
     width: 14px;
     height: 14px;
     background-size: cover;
     margin-left: 5px;
+    position: relative;
+    &:after {
+        ${(props) => props.direction === 'none' && 'content: "-";'}
+        position: absolute;
+        top: 0;
+        left: 3px;
+        font-size: 14px;
+        line-height: 9px;
+        color: #fff;
+        font-weight: bold;
+    }
 `;
 
 export const ProfitAmount = styled.span<{ color: string }>`

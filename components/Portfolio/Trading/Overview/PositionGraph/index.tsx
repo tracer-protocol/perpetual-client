@@ -1,7 +1,11 @@
-import React, { FC } from 'react';
+import React, { FC, useContext, useState } from 'react';
 import styled from 'styled-components';
 import Graph from '../Graph';
 import { LargeButton } from '@components/Portfolio';
+import { UserBalance } from '@libs/types/TracerTypes';
+import { BigNumber } from 'bignumber.js';
+import { OrderContext, orderDefaults } from '@context/OrderContext';
+import Exposure from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Exposure';
 import {
     PGContainer,
     TableBody,
@@ -28,8 +32,15 @@ interface PGProps {
     className?: string;
     selectedTracerAddress: string;
     positionType: number;
+    balances: UserBalance;
+    baseTicker: string;
+    fairPrice: BigNumber;
+    quoteTicker: string;
 }
-const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, positionType }: PGProps) => {
+const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, positionType, balances, fairPrice, quoteTicker, baseTicker }: PGProps) => {
+    const [currency, setCurrency] = useState(0); // 0 quoted in base
+    const { order } = useContext(OrderContext);
+    
     return (
         <span className={className}>
             <PGContainer>
@@ -43,7 +54,16 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                     </Row>
                     <Row>
                         <InfoCell>
-                            <Amount>4.2 ETH</Amount>
+                            <Amount>
+                                <Exposure
+                                    balances={balances}
+                                    fairPrice={fairPrice}
+                                    currency={currency}
+                                    order={order ?? orderDefaults.order}
+                                    quoteTicker={quoteTicker}
+                                    baseTicker={baseTicker}
+                                />
+                            </Amount>
                             <CellTitle>Exposure</CellTitle>
                         </InfoCell>
                         <InfoCell inner>
@@ -52,7 +72,7 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                         </InfoCell>
                         <InfoCell inner>
                             <Amount>$42.45 (55%)</Amount>
-                            <CellTitle>Leverage</CellTitle>
+                            <CellTitle>Available Margin</CellTitle>
                         </InfoCell>
                     </Row>
                     <Row>
