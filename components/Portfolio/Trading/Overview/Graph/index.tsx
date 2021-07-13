@@ -9,7 +9,6 @@ const GraphContent = styled.div`
     width: calc(100% + 48px);
     margin-left: -48px;
     height: calc(100% - 48px);
-    margin-top: 0.5rem;
 `;
 
 interface GProps {
@@ -64,6 +63,10 @@ const Graph: FC<GProps> = styled(({ className, title, positionGraph, setPosition
     padding: ${(props) => (props.positionGraph ? '0' : '16px')};
     position: relative;
     background: ${(props) => (props.background ? '#002886' : 'transparent')};
+
+    h2 {
+        margin-bottom: 0.5rem;
+    }
 `;
 
 export default Graph;
