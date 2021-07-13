@@ -71,6 +71,10 @@ export default InsuranceInfo;
 
 const InfoContent = styled.div`
     padding: 10px;
+
+    ${ProgressBar} {
+        margin: 12px 0;
+    }
 `;
 
 const InfoTitle = styled.div`

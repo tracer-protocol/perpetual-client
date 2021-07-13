@@ -206,14 +206,14 @@ type IProps = {
     className?: string;
 };
 
-export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IProps) => {
+export const ProgressBar = styled(({ percent, className }: IProps) => {
     return (
         <div className={className}>
             <div className="progress" />
             <p className="label">{percent}%</p>
         </div>
     );
-})`
+})<IProps>`
     background: var(--color-accent);
     position: relative;
     height: 32px;
