@@ -10,7 +10,6 @@ const GraphContent = styled.div`
     width: calc(100% + 48px);
     margin-left: -48px;
     height: calc(100% - 48px);
-    margin-top: 0.5rem;
 `;
 
 interface GProps {
@@ -25,7 +24,7 @@ const Graph: FC<GProps> = styled(({ className, title, positionGraph, setPosition
     const { lines } = useLines(selectedTracerAddress);
 
     return (
-        <span className={className}>
+        <figure className={className}>
             {title && <SmallTitle>{title}</SmallTitle>}
             <GraphContent>
                 {/* Hide the series for Position graphs but not for the Profit and Loss graph */}
@@ -35,16 +34,20 @@ const Graph: FC<GProps> = styled(({ className, title, positionGraph, setPosition
                     setPosition={setPosition as string}
                 />
             </GraphContent>
-        </span>
+        </figure>
     );
 })`
     width: 100%;
     height: ${(props) => (props.positionGraph ? '100%' : 'auto')};
     overflow: hidden;
     border-radius: 7px;
-    padding: 16px;
+    padding: ${(props) => (props.positionGraph ? '0' : '16px')};
     position: relative;
     background: ${(props) => (props.background ? '#002886' : 'transparent')};
+
+    h2 {
+        margin-bottom: 0.5rem;
+    }
 `;
 
 export default Graph;

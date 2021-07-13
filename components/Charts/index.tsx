@@ -204,9 +204,12 @@ class ChartWrapper extends React.Component<Props> {
                     currentSeries.createPriceLine(liquidationPriceLine);
                     currentSeries.createPriceLine(breakevenPriceLine);
                     this.chart.applyOptions({
-                        // Hide the price scale on the position graphs
+                        // Hide the price and time scale on the position graphs
                         priceScale: {
                             position: 'none',
+                        },
+                        timeScale: {
+                            visible: false
                         },
                     });
                 } else {
