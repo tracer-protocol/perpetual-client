@@ -174,6 +174,7 @@ const OrderBook: FC<OProps> = styled(
     display: block;
     @media (max-height: 900px) {
         display: ${(props) => (props.displayBook ? 'block' : 'none')};
+        overflow: auto;
     }
 `;
 

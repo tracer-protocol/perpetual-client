@@ -65,6 +65,10 @@ const InsuranceInfo: FC<IIProps> = styled(({ className, fundingRate }: IIProps) 
 })`
     position: relative;
     max-height: 25vh;
+    @media(max-height: 900px) {
+        min-height: 20vh ;
+        overflow: auto;
+    }
 `;
 
 export default InsuranceInfo;
