@@ -171,10 +171,10 @@ const Overview: FC<{
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
     const {
-        omeState,
-        omeDispatch = () => {
-            console.error('OME dispatch is undefined');
-        },
+        // omeState,
+        // omeDispatch = () => {
+        //     console.error('OME dispatch is undefined');
+        // },
         filledOrders,
     } = useContext(OMEContext);
 
@@ -218,8 +218,8 @@ const Overview: FC<{
                 </HeadingRow>
                 <HPanel background={`#00125D`}>
                     {!tracersAddress || !tracersAddress[0] ? null : (
-                        <Equity 
-                            className="equityStats" 
+                        <Equity
+                            className="equityStats"
                             balances={balances}
                             fairPrice={fairPrice}
                             baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
@@ -242,9 +242,9 @@ const Overview: FC<{
                 </HeadingRow>
                 <HScrollContainer>
                     {!tracersAddress || !tracersAddress[0] ? null : (
-                        <PositionGraph 
-                            selectedTracerAddress={tracersAddress[0]} 
-                            positionType={1} 
+                        <PositionGraph
+                            selectedTracerAddress={tracersAddress[0]}
+                            positionType={1}
                             balances={balances}
                             fairPrice={fairPrice}
                             baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
@@ -252,9 +252,9 @@ const Overview: FC<{
                         />
                     )}
                     {!tracersAddress || !tracersAddress[0] ? null : (
-                        <PositionGraph 
-                            selectedTracerAddress={tracersAddress[0]} 
-                            positionType={2} 
+                        <PositionGraph
+                            selectedTracerAddress={tracersAddress[0]}
+                            positionType={2}
                             balances={balances}
                             fairPrice={fairPrice}
                             baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
@@ -262,9 +262,9 @@ const Overview: FC<{
                         />
                     )}
                     {!tracersAddress || !tracersAddress[0] ? null : (
-                        <PositionGraph 
-                            selectedTracerAddress={tracersAddress[0]} 
-                            positionType={1} 
+                        <PositionGraph
+                            selectedTracerAddress={tracersAddress[0]}
+                            positionType={1}
                             balances={balances}
                             fairPrice={fairPrice}
                             baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}

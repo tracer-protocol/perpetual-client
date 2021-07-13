@@ -83,7 +83,7 @@ export const EqTableCellLast = styled.td`
     flex-wrap: wrap;
     padding: 8px 16px;
     border-left: 1px solid var(--table-darkborder);
-    border-bottom: 1px solid var(--table-darkborder);;
+    border-bottom: 1px solid var(--table-darkborder);
 `;
 
 interface TBCellProps {

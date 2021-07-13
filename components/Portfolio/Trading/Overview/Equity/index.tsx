@@ -39,7 +39,7 @@ interface EqProps {
     baseTicker: string;
     quoteTicker: string;
 }
-const Equity: FC<EqProps> = styled(({ className, balances, fairPrice, filledOrders, baseTicker, quoteTicker }: EqProps) => {
+const Equity: FC<EqProps> = styled(({ className, balances, fairPrice, filledOrders }: EqProps) => {
     const [show, setShow] = useState(false);
     const { base } = balances;
     const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -64,7 +64,9 @@ const Equity: FC<EqProps> = styled(({ className, balances, fairPrice, filledOrde
                                 <ProfitArrow direction="none" />
                             </Amount>
                             <Profit>
-                                <ProfitAmount color="#21DD53"><span>$0</span> (0%)</ProfitAmount>
+                                <ProfitAmount color="#21DD53">
+                                    <span>$0</span> (0%)
+                                </ProfitAmount>
                                 <Text>All time</Text>
                             </Profit>
                             <Text>
@@ -80,11 +82,9 @@ const Equity: FC<EqProps> = styled(({ className, balances, fairPrice, filledOrde
                         </EqTableCell>
                         <EqTableCell>
                             <Amount>
-                                {!balances.quote.eq(0) ? (
-                                    toApproxCurrency(calcUnrealised(base, fairPrice, filledOrders), 3)
-                                ) : (
-                                    `-`
-                                )}
+                                {!balances.quote.eq(0)
+                                    ? toApproxCurrency(calcUnrealised(base, fairPrice, filledOrders), 3)
+                                    : `-`}
                             </Amount>
                             <Text>
                                 <CellTitle>Unrealised PnL</CellTitle>
