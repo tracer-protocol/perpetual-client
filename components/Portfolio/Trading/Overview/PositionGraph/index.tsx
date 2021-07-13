@@ -31,7 +31,7 @@ interface PGProps {
 }
 const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, positionType }: PGProps) => {
     return (
-        <div className={className}>
+        <span className={className}>
             <PGContainer>
                 <TableBody>
                     <Row>
@@ -98,7 +98,7 @@ const PositionGraph: FC<PGProps> = styled(({ selectedTracerAddress, className, p
                     </Row>
                 </TableBody>
             </PGContainer>
-        </div>
+        </span>
     );
 })`
     position: relative;

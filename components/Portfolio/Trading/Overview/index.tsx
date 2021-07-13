@@ -96,7 +96,7 @@ const Counter = styled.div`
 const PortfolioDropdownButton = styled(Button)`
     height: var(--height-medium-button);
     padding: 0;
-    min-width: 145px;
+    min-width: 170px;
 `;
 
 const VScrollContainer = styled.div`

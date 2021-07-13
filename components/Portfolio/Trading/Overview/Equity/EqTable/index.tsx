@@ -8,7 +8,7 @@ export const EqTable = styled.table`
     backface-visibility: hidden;
 
     td {
-        transition: opacity 0.5s ease;
+        transition: opacity 0.5s ease, border 0.5s ease;
     }
     
     // Remove border from first row of td cells
@@ -87,7 +87,7 @@ export const EqTableCellLast = styled.td`
     padding: 8px 16px;
     border-left: 1px solid var(--table-darkborder);
     border-bottom: 1px solid var(--table-darkborder);;
-    `;
+`;
 
 interface TBCellProps {
     border?: boolean;
