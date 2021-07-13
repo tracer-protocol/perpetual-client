@@ -177,20 +177,13 @@ const OrderBook: FC<OProps> = styled(({ askOrders, bidOrders, lastTradePrice, ma
 
 export default OrderBook;
 
-const OrderBookContainer = styled.div`
-    border-top: 1px solid var(--color-accent);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    padding: 0.6rem 0;
-`;
-
 const OrderBookTitle = styled.div`
     letter-spacing: -0.4px;
     color: #ffffff;
     text-transform: capitalize;
-    font-size: var(--font-size-medium);
+    font-size: var(--font-size-small-heading);
     margin: 0 0.8rem 0.5rem;
+
 `;
 
 const StyledToggle = styled.img`
@@ -376,5 +369,18 @@ const PrecisionDropdown: React.FC<PDProps> = styled(({ className, decimals, setD
     &:hover {
         background: none;
         color: var(--color-primary);
+    }
+`;
+
+const OrderBookContainer = styled.div`
+    border-top: 1px solid var(--color-accent);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0.6rem 0;
+    @media(max-height: 900px) {
+        ${OrderBookTitle}, ${OrderBookToggle}, ${PrecisionDropdown} {
+            display: none;
+        }
     }
 `;

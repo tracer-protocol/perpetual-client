@@ -42,7 +42,7 @@ const Item = styled.div`
 const DepositButtons = styled.div<{
     hide: boolean;
 }>`
-    margin-top: 10px;
+    margin-top: 1rem;
     justify-content: space-between;
     display: ${(props) => (props.hide ? 'none' : 'flex')};
 `;
@@ -51,6 +51,7 @@ const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     position: relative;
     flex-direction: column;
     overflow: auto;
+    min-height: 80px;
 `;
 
 const Title = styled.h2<{

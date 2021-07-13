@@ -127,6 +127,7 @@ const StyledBox = styled(Box)`
     transition: opacity 0.3s 0.1s, height: 0.3s 0.1s, padding 0.1s;
     position: relative;
     border-bottom: none;
+    overflow: auto;
     display: block;
     padding: 0;
     z-index: 1;
