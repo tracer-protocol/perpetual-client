@@ -1,6 +1,9 @@
 import Tracer from '@libs/Tracer';
 import { BigNumber } from 'bignumber.js';
 
+/**
+ * User balances of a Tracer
+ */
 export type UserBalance = {
     quote: BigNumber; // the accounts deposited funds
     base: BigNumber; // the position the user currently has
@@ -11,6 +14,9 @@ export type UserBalance = {
     totalMargin: BigNumber; // the users current totalMargin
 };
 
+/**
+ * Funding Rate type
+ */
 export type FundingRate = {
     recordTime: number;
     recordPrice: number;
@@ -18,6 +24,9 @@ export type FundingRate = {
     fundingRateValue: number;
 };
 
+/**
+ * Candle data for a Tracer market. Used for graph on advanced trading page.
+ */
 export type CandleData = {
     time: string;
     open: number;

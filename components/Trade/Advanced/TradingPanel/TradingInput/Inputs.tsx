@@ -1,6 +1,6 @@
 import React from 'react';
 import SmallInput, { InputContainer } from '@components/General/Input/SmallInput';
-import { Tracer } from 'libs';
+import Tracer from 'libs/Tracer';
 import { LIMIT, MARKET, OrderAction, OrderState } from '@context/OrderContext';
 import DefaultSlider from '@components/General/Slider';
 import styled from 'styled-components';

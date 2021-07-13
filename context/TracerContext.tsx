@@ -36,6 +36,13 @@ type StoreProps = {
     tracer?: string;
 } & Children;
 
+/**
+ * TracerStore which handles connection to the currently selectedTracer.
+ * Useful on the trading interface but lacks the holistic overview that the FactoryContext has.
+ * Used for calling functions on a specifically selectedTracer.
+ * Leverages hooks to ensure the UI is responding correctly when updating TracerState.
+ * Tracer state is updated by calling functions from the Tracer class.
+ */
 export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
     const { account, web3, config, networkId } = useContext(Web3Context);
     const { factoryState } = useContext(FactoryContext);

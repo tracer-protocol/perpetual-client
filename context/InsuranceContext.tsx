@@ -51,11 +51,15 @@ interface State {
     pools: Record<string, InsurancePoolInfo>;
 }
 
-/**
- *
- */
 export const InsuranceContext = React.createContext<Partial<ContextProps>>({});
 
+/**
+ * Handles responsiveness and state when interacting with the insurance pools.
+ * The insurance contract class is stored in each of the Tracer classes.
+ * Functions are called on the Insurance class.
+ * This context store provides useEffect hooks and pool state updates to update the UI.
+ * Also provides deposit and withdraw functions similar to the TracerContext
+ */
 export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     const { account, config } = useContext(Web3Context);
     const { factoryState: { tracers, hasSetTracers } = initialFactoryState } = useContext(FactoryContext);

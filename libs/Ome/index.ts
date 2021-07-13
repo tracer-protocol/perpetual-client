@@ -1,12 +1,17 @@
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { Result } from 'libs/types/General';
+/** Book API's */
 
+// url of the OME. NOTE: THIS DOES NOT CHANGE WITH THE NETWORK
+// TODO if we want multiple networks with actual trading we'd need multiple OME's
+//  or the OME architecture needs to change
 const BASE_URL = process.env.NEXT_PUBLIC_OME_BASE_URL || 'http://localhost:8989';
 
-/** Book API's */
 
 /**
  * Gets the orders related to a specific book
+ * @param market Tracer market
+ * @returns a full list of currently open orders for a given Tracer
  */
 export const getOrders: (market: string) => Promise<Response> = async (market) => {
     return fetch(`${BASE_URL}/book/${omefy(market)}`, {
@@ -24,6 +29,13 @@ export const getOrders: (market: string) => Promise<Response> = async (market) =
         });
 };
 
+/**
+ * Gets the orders related to a specific book and user
+ * @param market Tracer market
+ * @param account target user
+ * @returns a list of user orders given a Tracer market
+ *  or an empty array if an error is catched
+ */
 export const getUsersOrders: (market: string, account: string) => Promise<OMEOrder[]> = async (
     market: string,
     account: string,

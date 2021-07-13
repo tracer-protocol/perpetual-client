@@ -2,9 +2,9 @@ import Web3 from 'web3';
 import { ERC20 as ERC20Token } from '@tracer-protocol/contracts/types/ERC20';
 
 /**
- *gi
+ * Checks the allowance of a contract to spend a given from address's funds
  * @param token token that is being deposited
- * @param from address
+ * @param from address (generally the users address)
  * @param contractAddress insurance contract or individual tracer contract
  * @returns 0 if not approved 1 if approved and -1 if something went wrong
  */

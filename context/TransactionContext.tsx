@@ -47,8 +47,13 @@ export const TransactionContext = createContext<{
 
 // type Status = 'INITIALIZED' | 'PROCESSING' | 'ERROR' | 'SUCCESS'
 
-// TODO store a list of transactions with a transaction state so the user can view all pending transactions
-// The list can be populate when the user visits the page
+/**
+ * TransactionStore which makes creating and updating Toasters easier when calling transactions.
+ * Call handleTransaction with the required params to automatically update the toaster as the transaction
+ *  moves through the various stages of its lifestile. 
+ * TODO store a list of transactions with a transaction state so the user can view all pending transactions
+ * TODO populate the current pending transactions when the user visits the page
+ */
 export const TransactionStore: React.FC = ({ children }: Children) => {
     const { addToast, updateToast } = useToasts();
     const pendingRef = useRef('');
@@ -135,6 +140,7 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         });
     };
 
+    /** Adds a pending toaster with id set to an object ref if the order is Partially or Fully Matched */
     const setPending = (status: 'PartialMatch' | 'FullMatch') => {
         const toastId = addToast(
             [
@@ -149,6 +155,7 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         pendingRef.current = toastId as unknown as string;
     };
 
+    /** Closes the pending toaster attached to the pendingRef */
     const closePending = () => {
         if (pendingRef.current) {
             updateToast(pendingRef.current as unknown as string, {

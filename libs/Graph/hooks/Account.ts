@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import { useCallback, useRef } from 'react';
 import { FilledOrder, LabelledOrders } from 'libs/types/OrderTypes';
 import Web3 from 'web3';
-import { toBigNumbers } from '..';
+import { toBigNumbers } from 'libs/utils/converters';
 
 const ALL_TRACERS = gql`
     query TracerData($user: String!) {
@@ -26,6 +26,10 @@ const ALL_TRACERS = gql`
     }
 `;
 
+/**
+ * Fetches all Tracer trades made by a given user
+ * @param user target user
+ */
 export const useAccountData: (user: string | undefined) => any = (user) => {
     // eslint-disable-line
     const ref = useRef([]);
@@ -61,6 +65,12 @@ const USER_TRACER_TRADES = gql`
     }
 `;
 
+/**
+ * Fetches a list of matched orders for a given user and Tracer
+ * @param tracer market
+ * @param account target user
+ * @returns a list of orders that the user has made and have been matched on chain
+ */
 export const useUsersMatched: (
     tracer: string,
     account: string,
@@ -114,6 +124,11 @@ const groupTracers = (filledOrders: any[]) =>
         return r;
     }, Object.create(null));
 
+/**
+ * Fetchs all the users matched orders not specific to a given Tracer
+ * @param account target user
+ * @returns all user matched orders on chain
+ */
 export const useAllUsersMatched: (account: string) => {
     allFilledOrders: LabelledOrders;
     error: any;
