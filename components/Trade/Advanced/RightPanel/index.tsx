@@ -16,6 +16,7 @@ import AccountSummary from './AccountSummary';
 import InsuranceInfo from './InsuranceInfo';
 import Graphs from './Graph';
 import SlideSelect, { Option } from '@components/General/SlideSelect';
+import { FilledOrder, OMEOrder } from '@libs/types/OrderTypes';
 
 const TitledBox = styled(({ className, title, children }) => {
     return (
@@ -109,8 +110,6 @@ const TradingView: FC<{
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
-    const [selected, setSelected] = useState(SHOW_BOOK);
-    const [decimals, setDecimals] = useState(1);
 
     return (
         <>
@@ -129,28 +128,13 @@ const TradingView: FC<{
             </SBox>
             <SBox className="sidePanel">
                 <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
-                <StyledSlideSelect
-                    onClick={(index, _e) => setSelected(index)}
-                    value={selected}
-                >
-                    <Option>
-                        Order Book
-                        <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
-                    </Option>
-                    <Option>Recent Trades</Option>
-                </StyledSlideSelect>
-                {selected === SHOW_BOOK 
-                    ?
-                        <OrderBook
-                            askOrders={omeState?.orders.askOrders}
-                            decimals={decimals}
-                            bidOrders={omeState?.orders.bidOrders}
-                            marketUp={omeState?.marketUp ?? false}
-                            lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
-                        />
-                    : 
-                        <RecentTrades trades={mostRecentTrades} />
-                }
+                <TradesAndBook 
+                    askOrders={omeState?.orders.askOrders}
+                    bidOrders={omeState?.orders.bidOrders}
+                    marketUp={omeState?.marketUp ?? false}
+                    lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
+                    mostRecentTrades={mostRecentTrades}
+                />
             </SBox>
         </>
     );
@@ -158,17 +142,72 @@ const TradingView: FC<{
 
 export default TradingView;
 
+const TradesAndBook: React.FC<{
+    askOrders: OMEOrder[] | undefined,
+    bidOrders: OMEOrder[] | undefined,
+    marketUp: boolean,
+    lastTradePrice: BigNumber,
+    mostRecentTrades: FilledOrder[]
+}> = ({
+    askOrders, bidOrders, marketUp, lastTradePrice, mostRecentTrades
+}) => {
+    const [decimals, setDecimals] = useState(1);
+    const [selected, setSelected] = useState(SHOW_BOOK);
+    return (
+        <>
+            <StyledSlideSelect
+                onClick={(index, _e) => setSelected(index)}
+                value={selected}
+            >
+                <Option>
+                    Order Book
+                    <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
+                </Option>
+                <Option>Recent Trades</Option>
+            </StyledSlideSelect>
+            <OrderBook
+                askOrders={askOrders}
+                decimals={decimals}
+                setDecimals={setDecimals}
+                bidOrders={bidOrders}
+                marketUp={marketUp ?? false}
+                lastTradePrice={lastTradePrice ?? new BigNumber(0)}
+                displayBook={selected===SHOW_BOOK}
+            />
+            <RecentTrades trades={mostRecentTrades} 
+                displayTrades={selected!==SHOW_BOOK}
+            />
+        </>
+    )
+
+}
+
 const StyledSlideSelect = styled(SlideSelect)
 `
     border-radius: 0;
-    border-bottom: 1px solid var(--color-accent);
-    border-top: 0;
+    border-top: 1px solid var(--color-accent);
+    border-bottom: 0;
     border-right: 0;
+    margin: 0;
+    display: none;
     width: 100%;
     border-left: 0;
     height: var(--height-extra-small-container);
+
+    @media(max-height: 900px) {
+        display: flex;
+    }
+
     ${Option} {
         font-size: var(--font-size-small);
+    }
+    ${Option} ${PrecisionDropdown} {
+        position: relative;
+        top: 0;
+        right: 0;
+        width: 100px;
+        max-width: 4rem;
+        margin-left: 0.2rem;
     }
     > .bg-slider {
         background: var(--color-accent);

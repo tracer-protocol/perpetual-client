@@ -27,11 +27,16 @@ interface OProps {
     bidOrders: OMEOrder[] | undefined;
     lastTradePrice: number | BigNumber;
     marketUp: boolean; // true if the last tradePrice is previous than the tradePrice before that
+    decimals: number;
+    displayBook: boolean;
+    setDecimals: React.Dispatch<React.SetStateAction<number>>;
     className?: string;
 }
 
-const OrderBook: FC<OProps> = styled(({ askOrders, bidOrders, lastTradePrice, marketUp, className }: OProps) => {
-    const [decimals, setDecimals] = useState(1);
+const OrderBook: FC<OProps> = styled(({ 
+    askOrders, bidOrders, lastTradePrice, marketUp,
+    decimals, setDecimals, className 
+}: OProps) => {
     const [showOrderBook, setShowOrderBook] = useState(true);
     const [showOverlay, setOverlay] = useState(true);
 
@@ -39,17 +44,11 @@ const OrderBook: FC<OProps> = styled(({ askOrders, bidOrders, lastTradePrice, ma
         return orders.reduce((total, order) => total + order.quantity, 0);
     };
 
-    // const totalAsks = sumQuantities(askOrders);
-    // const totalBids = sumQuantities(bidOrders);
-    // const maxCumulative = Math.max(totalAsks, totalBids);
-
     const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
 
     // Deep copy and sort orders
-    // @ts-ignore
-    const askOrdersCopy = deepCopyArrayOfObj(askOrders).sort((a, b) => a.price - b.price); // ascending order
-    // @ts-ignore
-    const bidOrdersCopy = deepCopyArrayOfObj(bidOrders).sort((a, b) => b.price - a.price); // descending order
+    const askOrdersCopy = deepCopyArrayOfObj(askOrders ?? []).sort((a, b) => a.price - b.price); // ascending order
+    const bidOrdersCopy = deepCopyArrayOfObj(bidOrders ?? []).sort((a, b) => b.price - a.price); // descending order
 
     const renderOrders = useCallback(
         (bid: boolean, orders: OMEOrder[]) => {
@@ -173,6 +172,10 @@ const OrderBook: FC<OProps> = styled(({ askOrders, bidOrders, lastTradePrice, ma
     );
 })`
     position: relative;
+    display: block;
+    @media(max-height: 900px) {
+        display: ${props => props.displayBook ? 'block' : 'none'};
+    }
 `;
 
 export default OrderBook;
@@ -203,13 +206,13 @@ interface OBTProps {
     showOrderBook: boolean;
     onClick: () => void;
 }
-const OrderBookToggle: FC<OBTProps> = styled(({ className, showOrderBook, onClick }: OBTProps) => {
+const OrderBookToggle = styled(({ className, showOrderBook, onClick }: OBTProps) => {
     return (
         <div className={className} onClick={onClick}>
             <StyledToggle className={showOrderBook ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
         </div>
     );
-})`
+})<OBTProps>`
     position: absolute;
     right: 1rem;
     top: 0.7rem;
@@ -332,7 +335,7 @@ type PDProps = {
     className?: string;
 };
 
-const PrecisionDropdown: React.FC<PDProps> = styled(({ className, decimals, setDecimals }: PDProps) => {
+export const PrecisionDropdown = styled(({ className, decimals, setDecimals }: PDProps) => {
     const [rotated, setRotated] = useState(false);
     const menu = (
         <Menu
@@ -361,7 +364,7 @@ const PrecisionDropdown: React.FC<PDProps> = styled(({ className, decimals, setD
             </PrecisionDropdownButton>
         </Dropdown>
     );
-})`
+})<PDProps>`
     position: absolute;
     right: 2.5rem;
     top: 0.7rem;
