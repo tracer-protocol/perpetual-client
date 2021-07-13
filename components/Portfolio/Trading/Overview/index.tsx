@@ -168,15 +168,17 @@ const Overview: FC<{
     const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const [tracersAddress, setTracersAddress] = useState<string[]>([]);
 
-    useEffect(() => {
-        if (tracers) {
-            const temp = [];
-            for (const key of Object.keys(tracers)) {
-                temp.push(tracers[key].address);
-            }
-            setTracersAddress(temp);
+    const fetchTracers = setTimeout(async function getInfo() {
+        const temp: string[] = [];
+        for (const key of Object.keys(tracers)) {
+            temp.push(tracers[key].address);
         }
-    }, [tracersAddress]);
+        setTracersAddress(temp);
+    }, 100);
+
+    useEffect(() => {
+        fetchTracers;
+    });
 
     const portfolioKeyMap: Record<number, string> = {
         1: 'Entire Portfolio',
@@ -206,7 +208,7 @@ const Overview: FC<{
                 </HeadingRow>
                 <HPanel background={`#00125D`}>
                     <Equity className="equityStats" selectedTracerAddress={selectedTracer?.address ?? ''} />
-                    {tracersAddress[0] === undefined ? null : (
+                    {!tracersAddress || !tracersAddress[0] ? null : (
                         <Graph
                             className="pnlGraph"
                             title="Profit and Loss"
@@ -220,13 +222,13 @@ const Overview: FC<{
                     <Counter>4</Counter>
                 </HeadingRow>
                 <HScrollContainer>
-                    {tracersAddress[0] === undefined ? null : (
+                    {!tracersAddress || !tracersAddress[0] ? null : (
                         <PositionGraph selectedTracerAddress={tracersAddress[0]} positionType={1} />
                     )}
-                    {tracersAddress[0] === undefined ? null : (
+                    {!tracersAddress || !tracersAddress[0] ? null : (
                         <PositionGraph selectedTracerAddress={tracersAddress[0]} positionType={2} />
                     )}
-                    {tracersAddress[0] === undefined ? null : (
+                    {!tracersAddress || !tracersAddress[0] ? null : (
                         <PositionGraph selectedTracerAddress={tracersAddress[0]} positionType={1} />
                     )}
                 </HScrollContainer>
