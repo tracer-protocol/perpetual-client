@@ -21,22 +21,20 @@ const Item = styled.div`
     width: 100%;
     font-size: var(--font-size-small);
     margin-bottom: 10px;
+    display: flex;
 
     > span {
-        width: 100%;
-        display: flex;
+        margin-left: auto;
+        text-align: right;
         font-size: var(--font-size-small);
         letter-spacing: -0.32px;
-    }
-
-    > span a:nth-child(2) {
-        margin-left: auto;
-        color: #21dd53;
     }
 
     > h3 {
         letter-spacing: -0.32px;
         color: var(--color-primary);
+        display: inline-block;
+        white-space: nowrap;
         text-transform: capitalize;
     }
 `;
@@ -72,11 +70,11 @@ const SButton = styled(Button)`
     margin: 0;
 `;
 
-const SubText = styled.span`
+const SubText = styled.div`
     letter-spacing: -0.32px;
     color: var(--color-secondary);
     font-size: var(--font-size-small);
-    display: inline !important;
+    line-height: var(--font-size-small);
 `;
 
 type InfoProps = {
@@ -175,9 +173,11 @@ const AccountPanel: React.FC<{
                     >
                         Buying Power
                     </TooltipSelector>
-                    <SubText>{` @ ${maxLeverage.toNumber()}x Max Leverage`}</SubText>
                 </h3>
-                <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
+                <span>
+                    <BuyingPower order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
+                    <SubText>{` @ ${maxLeverage.toNumber()}x Max Leverage`}</SubText>
+                </span>
             </Item>
             <Item className="mb-0">
                 <h3>
