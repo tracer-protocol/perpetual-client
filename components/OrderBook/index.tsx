@@ -33,148 +33,147 @@ interface OProps {
     className?: string;
 }
 
-const OrderBook: FC<OProps> = styled(({ 
-    askOrders, bidOrders, lastTradePrice, marketUp,
-    decimals, setDecimals, className 
-}: OProps) => {
-    const [showOrderBook, setShowOrderBook] = useState(true);
-    const [showOverlay, setOverlay] = useState(true);
+const OrderBook: FC<OProps> = styled(
+    ({ askOrders, bidOrders, lastTradePrice, marketUp, decimals, setDecimals, className }: OProps) => {
+        const [showOrderBook, setShowOrderBook] = useState(true);
+        const [showOverlay, setOverlay] = useState(true);
 
-    const sumQuantities = (orders: OMEOrder[]) => {
-        return orders.reduce((total, order) => total + order.quantity, 0);
-    };
+        const sumQuantities = (orders: OMEOrder[]) => {
+            return orders.reduce((total, order) => total + order.quantity, 0);
+        };
 
-    const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
+        const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
 
-    // Deep copy and sort orders
-    const askOrdersCopy = deepCopyArrayOfObj(askOrders ?? []).sort((a, b) => a.price - b.price); // ascending order
-    const bidOrdersCopy = deepCopyArrayOfObj(bidOrders ?? []).sort((a, b) => b.price - a.price); // descending order
+        // Deep copy and sort orders
+        const askOrdersCopy = deepCopyArrayOfObj(askOrders ?? []).sort((a, b) => a.price - b.price); // ascending order
+        const bidOrdersCopy = deepCopyArrayOfObj(bidOrders ?? []).sort((a, b) => b.price - a.price); // descending order
 
-    const renderOrders = useCallback(
-        (bid: boolean, orders: OMEOrder[]) => {
-            if (!orders.length) {
-                return (
-                    <BookRow key={'empty-book-row'}>
-                        <Item className="py-1" />
-                    </BookRow>
-                );
-            } // return an empty row
-            const rows: {
-                bid: boolean;
-                price: number;
-                cumulative: number;
-                quantity: number;
-            }[] = [];
-            let cumulative = 0;
-            let missedBracket = 0;
+        const renderOrders = useCallback(
+            (bid: boolean, orders: OMEOrder[]) => {
+                if (!orders.length) {
+                    return (
+                        <BookRow key={'empty-book-row'}>
+                            <Item className="py-1" />
+                        </BookRow>
+                    );
+                } // return an empty row
+                const rows: {
+                    bid: boolean;
+                    price: number;
+                    cumulative: number;
+                    quantity: number;
+                }[] = [];
+                let cumulative = 0;
+                let missedBracket = 0;
 
-            for (let i = 0; i < orders.length; i++) {
-                if (rows.length >= 8) {
-                    break;
-                }
-                const order = orders[i];
-                // round to the nearest bracket below current price for bid and above for ask
-                const bracket = bid
-                    ? Math.floor(order.price / decimalKeyMap[decimals]) * decimalKeyMap[decimals]
-                    : Math.ceil(order.price / decimalKeyMap[decimals]) * decimalKeyMap[decimals];
-                let innerCumulative = 0;
-                for (let p = i; p < orders.length; p++) {
-                    if ((bid && orders[p].price < bracket) || (!bid && orders[p].price > bracket)) {
-                        // if we just exit because price we want to recheck this next loop so set it to p -1
-                        i = p - 1;
-                        if (p >= orders.length - 1) {
-                            missedBracket = bid
-                                ? Math.floor(orders[p].price / decimalKeyMap[decimals]) * decimalKeyMap[decimals]
-                                : Math.ceil(orders[p].price / decimalKeyMap[decimals]) * decimalKeyMap[decimals];
-                            // if its the end of the line then we want to set missed order
-                            i = p;
+                for (let i = 0; i < orders.length; i++) {
+                    if (rows.length >= 8) {
+                        break;
+                    }
+                    const order = orders[i];
+                    // round to the nearest bracket below current price for bid and above for ask
+                    const bracket = bid
+                        ? Math.floor(order.price / decimalKeyMap[decimals]) * decimalKeyMap[decimals]
+                        : Math.ceil(order.price / decimalKeyMap[decimals]) * decimalKeyMap[decimals];
+                    let innerCumulative = 0;
+                    for (let p = i; p < orders.length; p++) {
+                        if ((bid && orders[p].price < bracket) || (!bid && orders[p].price > bracket)) {
+                            // if we just exit because price we want to recheck this next loop so set it to p -1
+                            i = p - 1;
+                            if (p >= orders.length - 1) {
+                                missedBracket = bid
+                                    ? Math.floor(orders[p].price / decimalKeyMap[decimals]) * decimalKeyMap[decimals]
+                                    : Math.ceil(orders[p].price / decimalKeyMap[decimals]) * decimalKeyMap[decimals];
+                                // if its the end of the line then we want to set missed order
+                                i = p;
+                            }
+                            break;
                         }
-                        break;
+                        innerCumulative += orders[p].quantity;
+                        if (p >= orders.length - 1) {
+                            // weve reached the last order
+                            i = p;
+                            break;
+                        }
                     }
-                    innerCumulative += orders[p].quantity;
-                    if (p >= orders.length - 1) {
-                        // weve reached the last order
-                        i = p;
-                        break;
-                    }
-                }
-                cumulative += innerCumulative;
-                rows.push({
-                    bid: bid,
-                    price: bracket,
-                    cumulative: cumulative,
-                    quantity: innerCumulative,
-                });
-                if (missedBracket) {
-                    // this will be the very last order
+                    cumulative += innerCumulative;
                     rows.push({
                         bid: bid,
-                        price: missedBracket,
-                        cumulative: cumulative + orders[i].quantity,
-                        quantity: orders[i].quantity,
+                        price: bracket,
+                        cumulative: cumulative,
+                        quantity: innerCumulative,
                     });
+                    if (missedBracket) {
+                        // this will be the very last order
+                        rows.push({
+                            bid: bid,
+                            price: missedBracket,
+                            cumulative: cumulative + orders[i].quantity,
+                            quantity: orders[i].quantity,
+                        });
+                    }
                 }
-            }
-            const maxCumulative = sumQuantities(rows);
-            const withSetMax = rows.map((row) => (
-                <Order
-                    key={`book-row-${row.price}`}
-                    maxCumulative={maxCumulative}
-                    bid={row.bid}
-                    price={row.price}
-                    cumulative={row.cumulative}
-                    quantity={row.quantity}
-                />
-            ));
-            return !bid ? withSetMax.reverse() : withSetMax;
-        },
-        [decimals],
-    );
+                const maxCumulative = sumQuantities(rows);
+                const withSetMax = rows.map((row) => (
+                    <Order
+                        key={`book-row-${row.price}`}
+                        maxCumulative={maxCumulative}
+                        bid={row.bid}
+                        price={row.price}
+                        cumulative={row.cumulative}
+                        quantity={row.quantity}
+                    />
+                ));
+                return !bid ? withSetMax.reverse() : withSetMax;
+            },
+            [decimals],
+        );
 
-    return (
-        <div className={className}>
-            <OrderBookContainer>
-                <OrderBookTitle>Order Book</OrderBookTitle>
-                <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
-                {showOrderBook ? (
-                    askOrders?.length || bidOrders?.length ? (
-                        <>
-                            <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
-                            <BookRow className="header">
-                                <Item>Price</Item>
-                                <Item>Quantity</Item>
-                                <Item className="cumulative">Cumulative</Item>
-                            </BookRow>
-                            {renderOrders(false, askOrdersCopy)}
-                            <MarketRow>
-                                <Item className="mr-auto">
-                                    <TooltipSelector tooltip={{ key: 'best' }}>Best</TooltipSelector>
-                                    <span className="ask px-1">{toApproxCurrency(askOrdersCopy[0]?.price)}</span>
-                                    {` / `}
-                                    <span className="bid px-1">{toApproxCurrency(bidOrdersCopy[0]?.price)}</span>
-                                </Item>
-                                <Item className="no-width">
-                                    {`Last`}
-                                    <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>
-                                        {toApproxCurrency(lastTradePrice)}
-                                    </span>
-                                </Item>
-                            </MarketRow>
-                            {renderOrders(true, bidOrdersCopy)}
-                        </>
-                    ) : (
-                        <Icon component={TracerLoading} className="tracer-loading" />
-                    )
-                ) : null}
-            </OrderBookContainer>
-            {showOverlay ? <FogOverlay buttonName="Show Order Book" onClick={() => setOverlay(false)} /> : null}
-        </div>
-    );
-})`
+        return (
+            <div className={className}>
+                <OrderBookContainer>
+                    <OrderBookTitle>Order Book</OrderBookTitle>
+                    <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
+                    {showOrderBook ? (
+                        askOrders?.length || bidOrders?.length ? (
+                            <>
+                                <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
+                                <BookRow className="header">
+                                    <Item>Price</Item>
+                                    <Item>Quantity</Item>
+                                    <Item className="cumulative">Cumulative</Item>
+                                </BookRow>
+                                {renderOrders(false, askOrdersCopy)}
+                                <MarketRow>
+                                    <Item className="mr-auto">
+                                        <TooltipSelector tooltip={{ key: 'best' }}>Best</TooltipSelector>
+                                        <span className="ask px-1">{toApproxCurrency(askOrdersCopy[0]?.price)}</span>
+                                        {` / `}
+                                        <span className="bid px-1">{toApproxCurrency(bidOrdersCopy[0]?.price)}</span>
+                                    </Item>
+                                    <Item className="no-width">
+                                        {`Last`}
+                                        <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>
+                                            {toApproxCurrency(lastTradePrice)}
+                                        </span>
+                                    </Item>
+                                </MarketRow>
+                                {renderOrders(true, bidOrdersCopy)}
+                            </>
+                        ) : (
+                            <Icon component={TracerLoading} className="tracer-loading" />
+                        )
+                    ) : null}
+                </OrderBookContainer>
+                {showOverlay ? <FogOverlay buttonName="Show Order Book" onClick={() => setOverlay(false)} /> : null}
+            </div>
+        );
+    },
+)`
     position: relative;
     display: block;
-    @media(max-height: 900px) {
-        display: ${props => props.displayBook ? 'block' : 'none'};
+    @media (max-height: 900px) {
+        display: ${(props) => (props.displayBook ? 'block' : 'none')};
     }
 `;
 
@@ -186,7 +185,6 @@ const OrderBookTitle = styled.div`
     text-transform: capitalize;
     font-size: var(--font-size-small-heading);
     margin: 0 0.8rem 0.5rem;
-
 `;
 
 const StyledToggle = styled.img`
@@ -381,7 +379,7 @@ const OrderBookContainer = styled.div`
     flex-direction: column;
     position: relative;
     padding: 0.6rem 0;
-    @media(max-height: 900px) {
+    @media (max-height: 900px) {
         ${OrderBookTitle}, ${OrderBookToggle}, ${PrecisionDropdown} {
             display: none;
         }

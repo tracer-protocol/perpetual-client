@@ -1,5 +1,5 @@
 import React, { FC, useContext, useState } from 'react';
-import OrderBook, { PrecisionDropdown} from '@components/OrderBook';
+import OrderBook, { PrecisionDropdown } from '@components/OrderBook';
 import Tracer, { defaults } from '@libs/Tracer';
 import { Box } from '@components/General';
 import RecentTrades from './RecentTrades';
@@ -128,7 +128,7 @@ const TradingView: FC<{
             </SBox>
             <SBox className="sidePanel">
                 <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
-                <TradesAndBook 
+                <TradesAndBook
                     askOrders={omeState?.orders.askOrders}
                     bidOrders={omeState?.orders.bidOrders}
                     marketUp={omeState?.marketUp ?? false}
@@ -143,22 +143,17 @@ const TradingView: FC<{
 export default TradingView;
 
 const TradesAndBook: React.FC<{
-    askOrders: OMEOrder[] | undefined,
-    bidOrders: OMEOrder[] | undefined,
-    marketUp: boolean,
-    lastTradePrice: BigNumber,
-    mostRecentTrades: FilledOrder[]
-}> = ({
-    askOrders, bidOrders, marketUp, lastTradePrice, mostRecentTrades
-}) => {
+    askOrders: OMEOrder[] | undefined;
+    bidOrders: OMEOrder[] | undefined;
+    marketUp: boolean;
+    lastTradePrice: BigNumber;
+    mostRecentTrades: FilledOrder[];
+}> = ({ askOrders, bidOrders, marketUp, lastTradePrice, mostRecentTrades }) => {
     const [decimals, setDecimals] = useState(1);
     const [selected, setSelected] = useState(SHOW_BOOK);
     return (
         <>
-            <StyledSlideSelect
-                onClick={(index, _e) => setSelected(index)}
-                value={selected}
-            >
+            <StyledSlideSelect onClick={(index, _e) => setSelected(index)} value={selected}>
                 <Option>
                     Order Book
                     <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
@@ -172,18 +167,14 @@ const TradesAndBook: React.FC<{
                 bidOrders={bidOrders}
                 marketUp={marketUp ?? false}
                 lastTradePrice={lastTradePrice ?? new BigNumber(0)}
-                displayBook={selected===SHOW_BOOK}
+                displayBook={selected === SHOW_BOOK}
             />
-            <RecentTrades trades={mostRecentTrades} 
-                displayTrades={selected!==SHOW_BOOK}
-            />
+            <RecentTrades trades={mostRecentTrades} displayTrades={selected !== SHOW_BOOK} />
         </>
-    )
+    );
+};
 
-}
-
-const StyledSlideSelect = styled(SlideSelect)
-`
+const StyledSlideSelect = styled(SlideSelect)`
     border-radius: 0;
     border-top: 1px solid var(--color-accent);
     border-bottom: 0;
@@ -194,7 +185,7 @@ const StyledSlideSelect = styled(SlideSelect)
     border-left: 0;
     height: var(--height-extra-small-container);
 
-    @media(max-height: 900px) {
+    @media (max-height: 900px) {
         display: flex;
     }
 

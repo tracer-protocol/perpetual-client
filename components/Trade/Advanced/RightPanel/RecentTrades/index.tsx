@@ -32,7 +32,7 @@ const STradingTable = styled(TradingTable)`
 `;
 interface RTProps {
     trades: FilledOrder[];
-    displayTrades: boolean
+    displayTrades: boolean;
 }
 const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => {
     const [showOverlay, setOverlay] = useState(true);
@@ -86,8 +86,8 @@ const RecentTradesContainer = styled.div<{ displayTrades: boolean }>`
     border-top: 1px solid var(--color-accent);
 
     display: flex;
-    @media(max-height: 900px) {
-        display: ${props => props.displayTrades ? 'flex' : 'none'};
+    @media (max-height: 900px) {
+        display: ${(props) => (props.displayTrades ? 'flex' : 'none')};
     }
 `;
 

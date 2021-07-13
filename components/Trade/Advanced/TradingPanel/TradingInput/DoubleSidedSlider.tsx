@@ -61,22 +61,20 @@ export default styled(({ className, value, min, max, orderDispatch }: DSProps) =
     }
     .rc-slider-rail::before {
         position: absolute;
-        content: "SHORT";
+        content: 'SHORT';
         left: 8px;
         top: 0;
     }
     .rc-slider-rail::after {
         position: absolute;
-        content: "LONG";
+        content: 'LONG';
         right: 8px;
         top: 0;
     }
 ` as React.FC<DSProps>;
 
 const Label = styled(({ className, val }: { className?: string; val: number; long: boolean }) => (
-    <p className={className}>
-        {`${Math.abs(val)}x`}
-    </p>
+    <p className={className}>{`${Math.abs(val)}x`}</p>
 ))`
     margin-left: ${(props) => (props.long ? '-3rem' : '3rem')};
     text-align: ${(props) => (props.long ? 'right' : 'left')};
