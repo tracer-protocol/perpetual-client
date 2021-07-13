@@ -141,6 +141,6 @@ h4 {
 }
 
 /* Prevent overflow from table on portfolio page */
-div[class^="Portfolio__RightPanel"] {
+div[class^='Portfolio__RightPanel'] {
     overflow: hidden;
 }

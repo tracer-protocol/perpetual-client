@@ -186,7 +186,7 @@ class ChartWrapper extends React.Component<Props> {
                     lineWidth: 4,
                     priceLineVisible: false,
                 });
-                if(props.positionGraph){
+                if (props.positionGraph) {
                     const lineWidth = 3;
                     const liquidationPriceLine = {
                         // TODO: Change later
@@ -201,17 +201,16 @@ class ChartWrapper extends React.Component<Props> {
                         color: '#F15025',
                         lineWidth: lineWidth,
                         lineStyle: LightWeightCharts.LineStyle.Solid,
-                    }
+                    };
                     currentSeries.createPriceLine(liquidationPriceLine);
                     currentSeries.createPriceLine(breakevenPriceLine);
                     this.chart.applyOptions({
                         // Hide the price scale on the position graphs
                         priceScale: {
-                            position: 'none'
+                            position: 'none',
                         },
                     });
-                }
-                else {
+                } else {
                     currentSeries.applyOptions({
                         color: '#FFFFFF',
                         lineWidth: 4,
@@ -236,7 +235,7 @@ class ChartWrapper extends React.Component<Props> {
                 }
                 series.push(currentSeries);
             });
-            
+
         props.areaSeries &&
             props.areaSeries.forEach((serie) => {
                 series.push(this.addSeries(serie, 'area'));

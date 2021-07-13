@@ -1,4 +1,4 @@
-import React, { FC, useState  } from 'react';
+import React, { FC, useState } from 'react';
 import styled from 'styled-components';
 import { LargeButton, SmallTitle } from '@components/Portfolio';
 import {
@@ -23,7 +23,7 @@ interface EqProps {
     className?: string;
     selectedTracerAddress: string;
 }
-const ToggleTable = () => {     
+const ToggleTable = () => {
     const tableEl = document.querySelector<HTMLElement>('.equityStats');
     if (tableEl) {
         tableEl.classList.toggle('show');
@@ -157,10 +157,9 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
 
     // Remove borders from last row of td elements
     table tr:last-of-type td {
-
     }
     table tr:last-of-type td {
-        border-bottom: 0px;
+        border-bottom: 0;
     }
 `;
 

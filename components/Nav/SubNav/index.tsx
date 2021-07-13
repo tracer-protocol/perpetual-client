@@ -27,7 +27,7 @@ export const SubNavItem = styled.div<SNIProps>`
     padding: 0px 15px;
     font-size: var(--font-size-medium);
     border-right: 1px solid var(--table-lightborder);
-    
+
     &.selected {
         background: var(--color-accent);
         color: var(--color-text);
