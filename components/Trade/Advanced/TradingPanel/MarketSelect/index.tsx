@@ -98,47 +98,47 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
         return (
             <div className={className}>
                 <span>{arrowUp ? 'Hide Markets' : 'View Markets'}</span>
-                <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
+                <img className="down-arrow" src="/img/general/triangle_down.svg" alt="Down Arrow" />
             </div>
         );
     },
 )`
     position: relative;
     display: flex;
-    align-items: center;
-    justify-content: center;
     color: var(--color-primary);
     font-size: var(--font-size-small);
     border: 1px solid var(--color-primary);
     border-radius: 20px;
-    width: 150px;
+    width: 147px;
     padding-right: 10px;
-    height: 28px;
     height: var(--height-small-button);
     text-align: center;
-    margin: 15px 0;
+    margin: auto 0;
+
+    @media (max-width: 1279px) {
+        width: 120px;
+        padding-right: 5px;
+    }
 
     @media (max-width: 1600px) {
         height: 22px;
-        & > .down-arrow {
-            top: 8px;
-        }
     }
 
     &:hover {
         cursor: pointer;
     }
 
+    > span {
+        margin-left: auto;
+    }
+
     > .down-arrow {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 15px;
-        height: 15px;
-        margin-top: -5px;
+        margin: auto 0 auto auto;
+        width: 1em;
+        height: 1em;
         display: inline-block;
         transition: 0.3s;
-        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-2px)' : 'translateY(-2px)')};
+        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-2px)' : 'translateY(-1px)')};
     }
 `;
 
@@ -184,7 +184,7 @@ export default styled(({ className }: MSProps) => {
                     <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
                     <div className="my-auto">{selectedTracer?.marketId}</div>
                 </MarketContainer>
-                <div className="ml-auto" onMouseEnter={() => setPopup(true)}>
+                <div className="ml-auto flex" onMouseEnter={() => setPopup(true)}>
                     <MarketSelectDropdownButton arrowUp={popup} />
                 </div>
                 <MarketSelectDropdown
