@@ -186,7 +186,13 @@ const StyledSlideSelect = styled(SlideSelect)`
     width: 100%;
     border-left: 0;
     height: var(--height-extra-small-container);
+    color: var(--color-secondary);
 
+    > .selected {
+        font-weight: bold;
+        color: #fff;
+    }
+    
     @media (max-height: 850px) {
         display: flex;
     }
@@ -194,6 +200,7 @@ const StyledSlideSelect = styled(SlideSelect)`
     ${Option} {
         font-size: var(--font-size-small);
     }
+
     ${Option} ${PrecisionDropdown} {
         position: relative;
         top: 0;
