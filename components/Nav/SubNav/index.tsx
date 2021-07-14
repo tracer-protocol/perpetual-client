@@ -15,11 +15,8 @@ export const SubNavContainer = styled.div`
     display: flex;
 `;
 
-interface SNIProps {
-    small?: boolean;
-}
-export const SubNavItem = styled.div<SNIProps>`
-    height: ${(props) => (props.small ? 'var(--height-extra-small-container)' : 'var(--height-small-container)')};
+export const SubNavItem = styled.div`
+    height: var(--height-small-container);
     display: flex;
     align-items: center;
     transition: 0.3s;
