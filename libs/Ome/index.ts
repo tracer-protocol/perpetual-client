@@ -7,7 +7,6 @@ import { Result } from 'libs/types/General';
 //  or the OME architecture needs to change
 const BASE_URL = process.env.NEXT_PUBLIC_OME_BASE_URL || 'http://localhost:8989';
 
-
 /**
  * Gets the orders related to a specific book
  * @param market Tracer market

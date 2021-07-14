@@ -192,7 +192,7 @@ const StyledSlideSelect = styled(SlideSelect)`
         font-weight: bold;
         color: #fff;
     }
-    
+
     @media (max-height: 850px) {
         display: flex;
     }

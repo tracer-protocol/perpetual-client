@@ -86,7 +86,7 @@ export const OMEContext = React.createContext<Partial<ContextProps>>({});
  *  of the store.
  * FilledOrders are also fetched in this context to keep order related things in one context.
  * FilledOrders are fetched from The Graph through the useUsersMatched hook.
- * This could eventually incorporate a websocket connection or be removed in place of 
+ * This could eventually incorporate a websocket connection or be removed in place of
  *  a WS with direct connection to the OME and/or API
  */
 export const OMEStore: React.FC<Children> = ({ children }: Children) => {

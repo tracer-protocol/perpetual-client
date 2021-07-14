@@ -43,10 +43,7 @@ const Overlay = styled.div`
 const Advanced: React.FC = styled(({ className }) => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
-    const { 
-        order, 
-        orderDispatch = () => console.error("Order dispatch not set")
-    } = useContext(OrderContext);
+    const { order, orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
 
     useEffect(() => {
         if (orderDispatch) {

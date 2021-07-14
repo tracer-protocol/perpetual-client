@@ -26,7 +26,7 @@ type OrderInfo = {
     bid: boolean;
     price: number;
     quantity: number;
-}
+};
 
 interface OProps {
     askOrders: OMEOrder[] | undefined;
@@ -41,7 +41,7 @@ interface OProps {
 
 const OrderBook: FC<OProps> = styled(
     ({ askOrders, bidOrders, lastTradePrice, marketUp, decimals, setDecimals, className }: OProps) => {
-        const { orderDispatch = () => console.error("Order dispatch not set")} = useContext(OrderContext);
+        const { orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
         const [showOrderBook, setShowOrderBook] = useState(true);
         const [showOverlay, setOverlay] = useState(true);
 
@@ -52,15 +52,15 @@ const OrderBook: FC<OProps> = styled(
         const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
 
         const setOrderFromBook: (order: OrderInfo) => void = (order) => {
-            orderDispatch({ 
-                type: 'setOrderFromBook', 
+            orderDispatch({
+                type: 'setOrderFromBook',
                 order: {
                     bid: order.bid,
                     price: Number.isNaN(order.price) ? 0 : parseFloat(order.price.toFixed(2)),
-                    quantity: parseFloat(order.quantity.toFixed(2))
-                }
-            })
-        }
+                    quantity: parseFloat(order.quantity.toFixed(2)),
+                },
+            });
+        };
         // Deep copy and sort orders
         const askOrdersCopy = deepCopyArrayOfObj(askOrders ?? []).sort((a, b) => a.price - b.price); // ascending order
         const bidOrdersCopy = deepCopyArrayOfObj(bidOrders ?? []).sort((a, b) => b.price - a.price); // descending order
@@ -165,34 +165,43 @@ const OrderBook: FC<OProps> = styled(
                                 <MarketRow>
                                     <Item className="mr-auto">
                                         <TooltipSelector tooltip={{ key: 'best' }}>Best</TooltipSelector>
-                                        <span className="ask px-1" 
-                                            onClick={(_e) => setOrderFromBook({
-                                                quantity: 0,
-                                                price: askOrdersCopy[0]?.price ?? 0,
-                                                bid: false
-                                            })}
+                                        <span
+                                            className="ask px-1"
+                                            onClick={(_e) =>
+                                                setOrderFromBook({
+                                                    quantity: 0,
+                                                    price: askOrdersCopy[0]?.price ?? 0,
+                                                    bid: false,
+                                                })
+                                            }
                                         >
                                             {toApproxCurrency(askOrdersCopy[0]?.price)}
                                         </span>
                                         {` / `}
-                                        <span className="bid px-1"
-                                            onClick={(_e) => setOrderFromBook({
-                                                quantity: 0,
-                                                price: bidOrdersCopy[0]?.price ?? 0,
-                                                bid: true
-                                            })}
+                                        <span
+                                            className="bid px-1"
+                                            onClick={(_e) =>
+                                                setOrderFromBook({
+                                                    quantity: 0,
+                                                    price: bidOrdersCopy[0]?.price ?? 0,
+                                                    bid: true,
+                                                })
+                                            }
                                         >
                                             {toApproxCurrency(bidOrdersCopy[0]?.price)}
                                         </span>
                                     </Item>
                                     <Item className="no-width">
                                         {`Last`}
-                                        <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}
-                                            onClick={(_e) => setOrderFromBook({
-                                                quantity: 0,
-                                                price: lastTradePrice.toNumber(),
-                                                bid: true
-                                            })}
+                                        <span
+                                            className={`${marketUp ? 'bid' : 'ask'} pl-1`}
+                                            onClick={(_e) =>
+                                                setOrderFromBook({
+                                                    quantity: 0,
+                                                    price: lastTradePrice.toNumber(),
+                                                    bid: true,
+                                                })
+                                            }
                                         >
                                             {toApproxCurrency(lastTradePrice)}
                                         </span>

@@ -46,9 +46,10 @@ export const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }
             onClick={(index, _e) => {
                 if (orderDispatch) {
                     orderDispatch({ type: 'setOrderType', value: index });
-                    if (index === LIMIT) { // resetting the price if its a limit order
-                        orderDispatch({ type: 'setPrice', value: NaN});
-                    } 
+                    if (index === LIMIT) {
+                        // resetting the price if its a limit order
+                        orderDispatch({ type: 'setPrice', value: NaN });
+                    }
                     if (index === MARKET) {
                         orderDispatch({ type: 'setLock', value: true });
                     }
