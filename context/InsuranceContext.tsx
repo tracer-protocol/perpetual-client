@@ -132,11 +132,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         } else if (handleTransaction && !!tracer) {
             const insuranceContract = tracer.getInsuranceContract();
             if (!!insuranceContract) {
-                // const approved = await tracer.checkAllowance(account, insuranceContract.address);
-                // if (approved === 0) {
-                //     // not approved
-                //     handleTransaction(tracer.approve, [account, insuranceContract.address]);
-                // }
+                
                 const approved = await selectedTracer?.checkAllowance(account, insuranceContract.address);
                 if (approved === 0) {
                     // not approved
