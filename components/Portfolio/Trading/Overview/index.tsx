@@ -9,6 +9,8 @@ import { OMEContext } from '@context/OMEContext';
 import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
 import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
+import ConnectOverlay from '@components/Overlay/ConnectOverlay';
+import { Web3Context } from '@context/Web3Context';
 
 interface HRowProps {
     background?: string;
@@ -28,6 +30,7 @@ interface HPanelProps {
     background?: string;
 }
 const HPanel = styled.div<HPanelProps>`
+    position: relative;
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -164,6 +167,7 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
 const Overview: FC<{
     selectedTracer?: Tracer | undefined;
 }> = ({ selectedTracer }) => {
+    const { account } = useContext(Web3Context);
     const [currentPortfolio, setCurrentPortfolio] = useState(1);
     const [currentPNL, setCurrentPNL] = useState(1);
     const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
@@ -217,24 +221,25 @@ const Overview: FC<{
                     </div>
                 </HeadingRow>
                 <HPanel background={`#00125D`}>
-                    {!tracersAddress || !tracersAddress[0] ? null : (
-                        <Equity
-                            className="equityStats"
-                            balances={balances}
-                            fairPrice={fairPrice}
-                            baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                            quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
-                            filledOrders={filledOrders ?? []}
-                        />
-                    )}
-                    {!tracersAddress || !tracersAddress[0] ? null : (
+                    <Equity
+                        className="equityStats"
+                        balances={balances}
+                        fairPrice={fairPrice}
+                        baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
+                        quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
+                        filledOrders={filledOrders ?? []}
+                    />
+                    {!tracersAddress || !tracersAddress[0] ? (
+                        <Graph className="pnlGraph" title="Profit and Loss" background selectedTracerAddress={``} />
+                    ) : (
                         <Graph
                             className="pnlGraph"
                             title="Profit and Loss"
                             background
-                            selectedTracerAddress={tracersAddress[0]}
+                            selectedTracerAddress={tracersAddress[0] ?? ''}
                         />
                     )}
+                    {account === '' ? <ConnectOverlay /> : null}
                 </HPanel>
                 <HeadingRow border={true}>
                     <Title>Open Positions</Title>
