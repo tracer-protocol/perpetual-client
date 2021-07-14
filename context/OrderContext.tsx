@@ -379,7 +379,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     // if there is no price set error to no open orders
                     return { ...state, error: 'NO_ORDERS' };
                 } else {
-                    return { ...state, price: price };
+                    return { ...state, price: parseFloat(price.toFixed(2))};
                 }
             case 'setSlippage':
                 return { ...state, slippage: action.value };

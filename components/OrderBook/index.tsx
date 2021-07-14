@@ -31,7 +31,7 @@ type OrderInfo = {
 interface OProps {
     askOrders: OMEOrder[] | undefined;
     bidOrders: OMEOrder[] | undefined;
-    lastTradePrice: number | BigNumber;
+    lastTradePrice: BigNumber;
     marketUp: boolean; // true if the last tradePrice is previous than the tradePrice before that
     decimals: number;
     displayBook: boolean;
@@ -56,8 +56,8 @@ const OrderBook: FC<OProps> = styled(
                 type: 'setOrderFromBook', 
                 order: {
                     bid: order.bid,
-                    price: Number.isNaN(order.price) ? 0 : order.price,
-                    quantity: order.quantity
+                    price: Number.isNaN(order.price) ? 0 : parseFloat(order.price.toFixed(2)),
+                    quantity: parseFloat(order.quantity.toFixed(2))
                 }
             })
         }
@@ -168,7 +168,7 @@ const OrderBook: FC<OProps> = styled(
                                         <span className="ask px-1" 
                                             onClick={(_e) => setOrderFromBook({
                                                 quantity: 0,
-                                                price: parseFloat(askOrdersCopy[0]?.price.toFixed(2)),
+                                                price: askOrdersCopy[0]?.price ?? 0,
                                                 bid: false
                                             })}
                                         >
@@ -178,7 +178,7 @@ const OrderBook: FC<OProps> = styled(
                                         <span className="bid px-1"
                                             onClick={(_e) => setOrderFromBook({
                                                 quantity: 0,
-                                                price: parseFloat(bidOrdersCopy[0]?.price.toFixed(2)),
+                                                price: bidOrdersCopy[0]?.price ?? 0,
                                                 bid: true
                                             })}
                                         >
@@ -190,7 +190,7 @@ const OrderBook: FC<OProps> = styled(
                                         <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}
                                             onClick={(_e) => setOrderFromBook({
                                                 quantity: 0,
-                                                price: parseFloat(lastTradePrice.toFixed(2)),
+                                                price: lastTradePrice.toNumber(),
                                                 bid: true
                                             })}
                                         >
