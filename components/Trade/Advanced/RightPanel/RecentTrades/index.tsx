@@ -32,12 +32,13 @@ const STradingTable = styled(TradingTable)`
 `;
 interface RTProps {
     trades: FilledOrder[];
+    displayTrades: boolean;
 }
-const RecentTrades: React.FC<RTProps> = ({ trades }: RTProps) => {
+const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => {
     const [showOverlay, setOverlay] = useState(true);
 
     return (
-        <RecentTradesContainer>
+        <RecentTradesContainer displayTrades={displayTrades}>
             <RecentTradesTitle>Recent Trades</RecentTradesTitle>
             {trades?.length ? (
                 <TableContainer>
@@ -77,17 +78,21 @@ const RecentTrades: React.FC<RTProps> = ({ trades }: RTProps) => {
 
 export default RecentTrades;
 
-const RecentTradesContainer = styled.div`
+const RecentTradesContainer = styled.div<{ displayTrades: boolean }>`
     height: 100%;
     position: relative;
-    display: flex;
     overflow: auto;
     flex-direction: column;
     border-top: 1px solid var(--color-accent);
+    display: flex;
+    @media (max-height: 850px) {
+        display: ${(props) => (props.displayTrades ? 'flex' : 'none')};
+    }
 `;
 
 const RecentTradesTitle = styled.div`
-    font-size: var(--font-size-medium);
+    font-size: var(--font-size-small-heading);
+    font-weight: bold;
     letter-spacing: -0.4px;
     color: #ffffff;
     text-transform: capitalize;
