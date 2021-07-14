@@ -15,8 +15,8 @@ import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualS
 import { bigNumberToWei } from '@libs/utils';
 interface ContextProps {
     tracerId: string | undefined;
-    deposit: (amount: number, _callback?: () => void) => void;
-    withdraw: (amount: number, _callback?: () => void) => void;
+    deposit: (amount: number, options: Options) => void;
+    withdraw: (amount: number, options: Options) => void;
     approve: (contract: string, options: Options) => void;
     setTracerId: (tracerId: string) => any;
     selectedTracer: Tracer | undefined;
@@ -162,21 +162,21 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     };
 
     const approve = async (contract: string, options: Options) => {
-        const { callback: callback_ } = options ?? {};
+        const { onSuccess: onSuccess_ } = options ?? {};
         if (handleTransaction) {
             if (!contract) {
                 console.error('Failed to approve: contract is undefined');
                 return false;
             }
-            const callback = () => {
+            const onSuccess = () => {
                 selectedTracer?.setApproved(contract);
                 fetchUserData();
-                callback_ ? callback_() : null;
+                onSuccess_ ? onSuccess_() : null;
             };
 
             handleTransaction(selectedTracer.approve, [account, contract], {
                 ...options,
-                callback,
+                onSuccess,
                 statusMessages: {
                     userConfirmed: 'Unlock USDC Submitted',
                     pending: 'Transaction to unlock USDC is pending',
@@ -187,22 +187,32 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     };
 
-    const deposit = async (amount: number, _callback?: () => any) => {
+    const deposit = async (amount: number, options: Options) => {
         if (handleTransaction) {
+            const { onSuccess: onSuccess_, onError: onError_ } = options ?? {};
             const approved = await selectedTracer?.checkAllowance(account, selectedTracer.address);
             if (approved === 0) {
-                // not approved
-                handleTransaction(selectedTracer.approve, [account, selectedTracer.address]);
+                // not approved 
+                // unlikely to get in here since there is an approve button
+                console.error("Tracer is not approved for deposit")
+                handleTransaction(selectedTracer.approve, [account, selectedTracer.address], {
+                    onSuccess: () => {
+                        selectedTracer?.setApproved(selectedTracer?.address);
+                        fetchUserData();
+                        onSuccess_ ? onSuccess_() : null;
+                    }
+                });
             }
-            const callback = async (res: Result) => {
+            const onSuccess = async (res: Result) => {
                 if (res.status !== 'error') {
                     const balance = await selectedTracer?.updateUserBalance(account);
                     tracerDispatch({ type: 'setUserBalance', value: balance });
-                    _callback ? _callback() : null;
+                    onSuccess_ ? onSuccess_() : null;
                 }
             };
             handleTransaction(selectedTracer?.deposit, [amount, account], {
-                callback,
+                onSuccess,
+                onError: onError_,
                 statusMessages: {
                     pending: 'Transaction to deposit USDC is pending',
                 },
@@ -211,17 +221,19 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             console.error(`Failed to deposit: handleTransaction is undefined `);
         }
     };
-    const withdraw = async (amount: number, _callback?: () => any) => {
+    const withdraw = async (amount: number, options: Options) => {
         if (handleTransaction) {
-            const callback = async (res: Result) => {
+            const { onSuccess: onSuccess_, onError: onError_ } = options ?? {};
+            const onSuccess = async (res: Result) => {
                 if (res.status !== 'error') {
                     const balance = await selectedTracer?.updateUserBalance(account);
                     tracerDispatch({ type: 'setUserBalance', value: balance });
-                    _callback ? _callback() : null;
+                    onSuccess_ ? onSuccess_() : null;
                 }
             };
             handleTransaction(selectedTracer?.withdraw, [amount, account], {
-                callback,
+                onSuccess,
+                onError: onError_,
                 statusMessages: {
                     pending: 'Transaction to withdraw USDC is pending',
                 },
@@ -254,8 +266,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         <TracerContext.Provider
             value={{
                 tracerId,
-                deposit: (amount, _callback) => deposit(amount, _callback),
-                withdraw: (amount, _callback) => withdraw(amount, _callback),
+                deposit: (amount, options) => deposit(amount, options),
+                withdraw: (amount, options) => withdraw(amount, options),
                 approve: (contract, options) => approve(contract, options),
                 setTracerId: (tracerId: string) =>
                     tracerDispatch({ type: 'setSelectedTracer', value: factoryState?.tracers?.[tracerId] }),

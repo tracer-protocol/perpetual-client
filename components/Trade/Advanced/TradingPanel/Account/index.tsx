@@ -8,9 +8,10 @@ import Tracer, { defaults } from '@libs/Tracer';
 import AccountModal from './AccountModal';
 import { LIMIT, OrderState } from '@context/OrderContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
+import CalculatorModal from './Calculator';
+import { CalculatorStore } from '@context/CalculatorContext';
 import { UserBalance } from 'libs/types';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
-// import CalculatorModal from './Calculator';
 
 const NoBalance = styled.span`
     color: var(--color-primary);
@@ -48,6 +49,7 @@ const DepositButtons = styled.div<{
 
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     position: relative;
+    box-sizing: border-box;
     flex-direction: column;
     overflow: auto;
     min-height: 80px;
@@ -61,14 +63,23 @@ const Title = styled.h2<{
     letter-spacing: -0.4px;
     color: var(--color-text);
     margin-bottom: 0.5rem;
-    display: ${(props) => (props.hide ? 'none' : 'block')};
+    white-space: nowrap;
+    display: ${(props) => (props.hide ? 'none' : 'flex')};
 `;
 
 const SButton = styled(Button)`
-    height: 28px;
-    line-height: 28px;
+    height: var(--height-small-button);
+    line-height: var(--height-small-button);
     padding: 0;
     margin: 0;
+`;
+const CalculatorButton = styled(Button)`
+    height: var(--height-extra-small-button);
+    line-height: var(--height-extra-small-button);
+    padding: 0 1rem;
+    margin-left: auto;
+    margin-right: 0;
+    width: auto;
 `;
 
 const SubText = styled.div`
@@ -139,7 +150,7 @@ const AccountPanel: React.FC<{
 }> = ({ selectedTracer, account, order }) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
-    // const [calculator, showCalculator] = useState(false);
+    const [calculator, showCalculator] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
@@ -151,10 +162,10 @@ const AccountPanel: React.FC<{
 
     return (
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
-            <Title hide={!!order?.exposureBN.toNumber() ?? false}>Margin Account</Title>
-            {/*<SButton className="ml-auto mr-1" onClick={() => showCalculator(true)}>*/}
-            {/*    Calculator*/}
-            {/*</SButton>*/}
+            <Title hide={!!order?.exposureBN.toNumber() ?? false}>
+                Margin Account
+                <CalculatorButton onClick={() => showCalculator(true)}>Calculator</CalculatorButton>
+            </Title>
             <Item>
                 <h3>
                     <TooltipSelector tooltip={{ key: 'equity', props: { baseTicker: selectedTracer?.baseTicker } }}>
@@ -205,15 +216,16 @@ const AccountPanel: React.FC<{
                 maxLeverage={maxLeverage}
                 fairPrice={fairPrice}
             />
-            {/*TODO: Add calculator*/}
-            {/*<CalculatorModal*/}
-            {/*    display={calculator}*/}
-            {/*    close={() => showCalculator(false)}*/}
-            {/*    exposureUnit={selectedTracer?.marketId?.split('/')[0] ?? 'NO_ID'}*/}
-            {/*    marginUnit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}*/}
-            {/*    balances={balances}*/}
-            {/*    price={Number.isNaN(price) ? 0 : price}*/}
-            {/*/>*/}
+            <CalculatorStore>
+                <CalculatorModal
+                    display={calculator}
+                    close={() => showCalculator(false)}
+                    baseTicker={selectedTracer?.baseTicker ?? 'NO_ID'}
+                    quoteTicker={selectedTracer?.quoteTicker ?? 'NO_ID'}
+                    balances={balances}
+                    fairPrice={fairPrice}
+                />
+            </CalculatorStore>
             {account === '' ? <ConnectOverlay /> : null}
         </AccountInfo>
     );

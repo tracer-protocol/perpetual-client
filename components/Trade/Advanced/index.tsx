@@ -1,9 +1,10 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext, Web3Context } from 'context';
 import { MarketSelect, AccountPanel } from './TradingPanel';
 import { PlaceOrder } from './TradingPanel/TradingInput';
 import styled from 'styled-components';
 import TradingView from './RightPanel';
+import { MARKET } from '@context/OrderContext';
 
 const TradingPanel = styled.div`
     width: 25%;
@@ -44,15 +45,26 @@ const Advanced: React.FC = styled(({ className }) => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
     const { order, orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
+    const [isAdjust] = useState(false);
 
     useEffect(() => {
         if (orderDispatch) {
             orderDispatch({ type: 'setLock', value: true });
             orderDispatch({ type: 'setAdvanced', value: true });
         } else {
-            console.error('Order dispatch undefined');
+            console.error('Order dispatch not set');
         }
     }, []);
+
+    useEffect(() => {
+        if (isAdjust) {
+            if (orderDispatch) {
+                orderDispatch({ type: 'setOrderType', value: MARKET });
+            } else {
+                console.error('Order dispatch not set');
+            }
+        }
+    }, [isAdjust]);
 
     return (
         <div className={`container ${className}`}>

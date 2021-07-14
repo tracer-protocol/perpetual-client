@@ -6,7 +6,8 @@ import PromiEvent from 'web3/promiEvent';
 import { TransactionReceipt } from 'web3/types';
 
 export type Options = {
-    callback?: (...args: any) => any; // eslint-disable-line
+    onSuccess?: (receipt?: TransactionReceipt) => any; // eslint-disable-line
+    onError?: (error?: Error | Result) => any;
     afterConfirmation?: (hash: string) => any;
     statusMessages?: {
         waiting?: string; // transaction message for when we are waiting for the user to confirm
@@ -59,7 +60,7 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
 
     /** Specifically handles transactions */
     const handleTransaction: HandleTransactionType = async (callMethod, params, options) => {
-        const { statusMessages, callback, afterConfirmation } = options ?? {};
+        const { statusMessages, onError, onSuccess, afterConfirmation } = options ?? {};
         // actually returns a string error in the library
         let toastId = addToast(
             ['Pending Transaction', statusMessages?.waiting ?? 'Approve transaction with provider'],
@@ -90,6 +91,7 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
                     appearance: 'success',
                     autoDismiss: true,
                 });
+                onSuccess ? onSuccess(receipt) : null;
             })
             .on('error', (error) => {
                 updateToast(toastId as unknown as string, {
@@ -101,13 +103,13 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
                     appearance: 'error',
                     autoDismiss: true,
                 });
+                onError ? onError(error) : null;
             });
-        callback ? callback(await res) : null;
     };
 
     /** Very similiar function to above but handles regular async functions, mainly signing */
     const handleAsync: HandleAsyncType = async (callMethod, params, options) => {
-        const { statusMessages, callback } = options ?? {};
+        const { statusMessages, onError, onSuccess } = options ?? {};
         // actually returns a string error in the library
         const toastId = addToast(
             ['Pending Transaction', statusMessages?.waiting ?? 'Approve transaction with provider'],
@@ -126,14 +128,15 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
                     appearance: 'error',
                     autoDismiss: true,
                 });
+                onError ? onError(res) : null;
             } else {
                 updateToast(toastId as unknown as string, {
                     content: statusMessages?.success ?? `${res.message}`,
                     appearance: 'success',
                     autoDismiss: true,
                 });
+                onSuccess ? onSuccess(res) : null;
             }
-            callback ? callback(res) : null;
         });
     };
 

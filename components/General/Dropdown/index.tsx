@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Children } from 'libs/types';
 import styled from 'styled-components';
+import { useResizeDetector } from 'react-resize-detector';
 
 /**
  * Similar component to dropdown only there is no content to begin with
@@ -11,20 +12,22 @@ type HEProps = {
     className?: string;
 } & Children;
 export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, defaultHeight, open }: HEProps) => {
-    const main = useRef(null);
-    const body = useRef(null);
+    const main = useRef<HTMLDivElement>(null);
+    const { height, ref } = useResizeDetector();
+
     useEffect(() => {
-        const b = body.current as unknown as HTMLDivElement;
+        const m = main.current as unknown as HTMLDivElement;
         if (open) {
             // all heights plus 10px for padding
-            (main.current as unknown as HTMLDivElement).style.height = `${b.clientHeight + 10}px`;
+            m.style.height = `${(height ?? 0) + 10}px`;
         } else {
-            (main.current as unknown as HTMLDivElement).style.height = `${defaultHeight}px`;
+            m.style.height = `${defaultHeight}px`;
         }
-    }, [open]);
+    }, [open, height]);
+
     return (
         <div className={`${className} ${open ? 'open' : ''}`} ref={main}>
-            <div className="body" ref={body}>
+            <div className="body" ref={ref}>
                 {children}
             </div>
         </div>
@@ -66,22 +69,21 @@ type DProps = {
 export const Dropdown: React.FC<DProps> = styled(({ className, defaultOpen, header, body, defaultHeight }: DProps) => {
     const [open, setOpen] = useState(!!defaultOpen);
     const main = useRef(null);
+    const { height: bodyHeight, ref: _body } = useResizeDetector();
     const _header = useRef(null);
-    const _body = useRef(null);
     useEffect(() => {
         const h = _header.current as unknown as HTMLDivElement;
-        const b = _body.current as unknown as HTMLDivElement;
         if (open) {
             // all heights plus 10px for padding
             (main.current as unknown as HTMLDivElement).style.height = `${
-                h.clientHeight ? h.clientHeight + b.clientHeight + 10 : defaultHeight
+                h.clientHeight ? h.clientHeight + (bodyHeight ?? 0) + 10 : defaultHeight
             }px`;
         } else {
             (main.current as unknown as HTMLDivElement).style.height = `${
                 h.clientHeight ? h.clientHeight : defaultHeight
             }px`;
         }
-    }, [open]);
+    }, [open, bodyHeight]);
     return (
         <div className={className} onClick={(_e) => setOpen(!open)} ref={main}>
             <div ref={_header} className={open ? 'open' : ''}>

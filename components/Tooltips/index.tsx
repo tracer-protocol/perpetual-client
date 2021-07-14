@@ -413,3 +413,18 @@ export const NewOrderTip: React.FC<BTProps> = ({ baseTicker, className, children
         </StyledTooltip>
     );
 };
+
+export const CalculatorTip: React.FC<TProps> = ({ className, children }: TProps) => {
+    const tooltip = (
+        <p>
+            <strong>Enter any two input fields</strong> and select calculate to determine the remaining variables.
+            Continue editing until you{"'"}re happy with the values, and then deposit the margin required to open the
+            trade.
+        </p>
+    );
+    return (
+        <StyledTooltip className={className} title={tooltip} placement={'right'}>
+            {children}
+        </StyledTooltip>
+    );
+};

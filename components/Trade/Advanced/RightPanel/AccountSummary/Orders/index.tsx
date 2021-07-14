@@ -22,7 +22,7 @@ const OrdersTab: React.FC<{
                   statusMessages: {
                       waiting: `Cancelling order: ${orderId} on market ${market} `,
                   },
-                  callback: () => refetch(),
+                  onSuccess: () => refetch(),
               })
             : console.error('Failed to cancel order: Handle transaction not defined');
     };
