@@ -169,7 +169,7 @@ const OrderBook: FC<OProps> = styled(
                                             className="ask px-1"
                                             onClick={(_e) =>
                                                 setOrderFromBook({
-                                                    quantity: 0,
+                                                    quantity: askOrdersCopy[0]?.quantity ?? 0,
                                                     price: askOrdersCopy[0]?.price ?? 0,
                                                     bid: false,
                                                 })
@@ -182,7 +182,7 @@ const OrderBook: FC<OProps> = styled(
                                             className="bid px-1"
                                             onClick={(_e) =>
                                                 setOrderFromBook({
-                                                    quantity: 0,
+                                                    quantity: bidOrdersCopy[0]?.quantity ?? 0,
                                                     price: bidOrdersCopy[0]?.price ?? 0,
                                                     bid: true,
                                                 })
