@@ -393,6 +393,9 @@ const PrecisionDropdownButton = styled(Button)`
     height: var(--height-extra-small-button);
     padding: 0;
     max-width: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 type PDProps = {

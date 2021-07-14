@@ -43,10 +43,11 @@ module.exports = withAntdLess({
                         limit: 100000,
                     },
                 },
-            }, {
+            },
+            {
                 test: /\.svg$/,
-                use: ["@svgr/webpack"]
-            }
+                use: ['@svgr/webpack'],
+            },
         );
         return config;
     },

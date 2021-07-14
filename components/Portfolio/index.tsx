@@ -19,9 +19,12 @@ export const RightPanel = styled.div`
 `;
 
 export const Button = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: 0.5s;
     color: var(--color-primary);
-    font-size: var(--font-size-small);
+    font-size: ${(props: any) => (props.theme.fontSize ? (props.theme.fontSize as string) : 'var(--font-size-small)')};
     line-height: 1rem;
     letter-spacing: -0.32px;
     border: 1px solid var(--color-primary);
@@ -29,6 +32,7 @@ export const Button = styled.div`
     text-align: center;
     padding: 10px 0;
     width: ${(props: any) => props.theme.width as string};
+    height: ${(props: any) => props.theme.height as string};
 
     &:hover {
         color: ${(props: any) => props.theme.hoverFG as string};
@@ -63,6 +67,95 @@ Button.defaultProps = {
         hoverCursor: 'pointer',
     },
 };
+
+export const LargeButton = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
+    color: var(--color-primary);
+    line-height: 1rem;
+    letter-spacing: -0.32px;
+    border: 1px solid var(--color-primary);
+    border-radius: 20px;
+    text-align: center;
+    padding: 10px 0;
+    height: 32px;
+    width: 170px;
+    font-size: inherit;
+    font-family: inherit;
+    user-select: none;
+    cursor: pointer;
+
+    &:hover {
+        color: #fff;
+        background: var(--color-primary);
+    }
+    &:focus {
+        border: 1px solid var(--color-primary);
+    }
+
+    &.filled {
+        background: var(--color-primary);
+        color: #fff;
+
+        &:hover {
+            color: var(--color-primary);
+            background: transparent;
+        }
+    }
+`;
+
+export const SmallTitle = styled.h2`
+    font-size: var(--font-size-medium);
+    letter-spacing: -0.4px;
+    color: var(--color-text);
+    flex-basis: 100%;
+    width: fit-content;
+    white-space: nowrap;
+`;
+
+export const Table = styled.table``;
+
+export const TableHeader = styled.thead``;
+
+export const TableHeading = styled.th`
+    text-align: left;
+    color: var(--color-primary);
+    height: 40px;
+    font-size: var(--font-size-extra-small);
+    padding-left: 10px;
+    border-right: 1px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
+`;
+
+export const TableLastHeading = styled(TableHeading)`
+    border-right: none;
+`;
+
+export const TableBody = styled.tbody``;
+
+export const TableRow = styled.tr`
+    transition: 0.5s;
+    color: white;
+    opacity: 1;
+
+    &:hover {
+        background: var(--color-accent);
+        cursor: pointer;
+    }
+`;
+
+export const TableCell = styled.td`
+    padding: 0 10px;
+    border-right: 1px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
+`;
+
+// Last cell on a table row
+export const TableLastCell = styled(TableCell)`
+    border-right: none;
+`;
 
 export const SecondaryCell = styled.div`
     color: var(--color-secondary);

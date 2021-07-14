@@ -1,15 +1,15 @@
 import React, { useMemo, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { CandleData } from 'libs/types/TracerTypes';
+import { HistoryData } from 'libs/types/TracerTypes';
 import styled from 'styled-components';
 import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 
-const ChartWrapper = dynamic(import('./LightWeightWrapper'), { ssr: false });
+const ChartWrapper = dynamic(import('@components/Charts/'), { ssr: false });
 // @ts-ignore
 // @ts-nocheck
-const setGraphOptions: () => Record<string, unknown> = () => {
+const setGraphOptions: (positionGraph, setPosition) => Record<string, unknown> = (positionGraph, setPosition) => {
     const data: Record<string, unknown> = {
         options: {
             alignLabels: true,
@@ -17,6 +17,7 @@ const setGraphOptions: () => Record<string, unknown> = () => {
                 rightOffset: 1,
                 barSpacing: 3,
                 fixLeftEdge: true,
+                fixRightEdge: true,
                 lockVisibleTimeRangeOnResize: true,
                 rightBarStaysOnScroll: true,
                 borderVisible: false,
@@ -48,16 +49,18 @@ const setGraphOptions: () => Record<string, unknown> = () => {
             },
             priceScale: {
                 borderColor: '#37B1F6',
-                position: 'left',
+                // visible: showSeries,
+                position: setPosition,
             },
             // @ts-ignore
             timeScale: {
                 borderColor: '#37B1F6',
+                visible: positionGraph,
             },
             layout: {
                 textColor: '#696969',
                 fontFamily: 'Akkurat',
-                backgroundColor: '#000240',
+                backgroundColor: 'transparent',
             },
         },
     };
@@ -67,24 +70,34 @@ const setGraphOptions: () => Record<string, unknown> = () => {
 const StyledIcon = styled(Icon)`
     position: absolute;
     margin: auto;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     width: 32px;
     height: 32px;
 `;
 
-const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) => {
+interface PLCProps {
+    historyData: HistoryData;
+    positionGraph: boolean;
+    setPosition?: string;
+    liquidationPrice?: number;
+}
+const LightWeightLineChart: React.FC<PLCProps> = ({
+    historyData,
+    positionGraph,
+    setPosition,
+    liquidationPrice,
+}: PLCProps) => {
     const [graphData, setGraphData] = useState<Record<string, unknown>>();
     const hasReset = useRef<boolean>(false);
     useMemo(() => {
-        if (candleData.length) {
+        if (historyData.length) {
             setGraphData({
-                ...setGraphOptions(),
-                candlestickSeries: [
+                ...setGraphOptions(positionGraph, setPosition),
+                lineSeries: [
                     {
-                        data: candleData,
+                        data: historyData,
                     },
                 ],
             });
@@ -92,17 +105,26 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
         } else {
             if (!hasReset.current) {
                 setGraphData({
-                    ...setGraphOptions(),
+                    ...setGraphOptions(positionGraph, setPosition),
                 });
                 hasReset.current = true;
             }
         }
-    }, [candleData]);
+    }, [historyData]);
 
     const now = Math.floor(Date.now() / 1000); // timestamp in seconds
     const twoHour = 2 * 60 * 60; // two hours in seconds
 
-    if (!graphData || !(graphData?.candlestickSeries as any[])?.length) {
+    // Get first date in the data to specify graph data startpoint
+    // const oldestDate = new Date(Date.UTC(historyData[0].time.year,
+    //                                     historyData[0].time.month,
+    //                                     historyData[0].time.day
+    // ));
+
+    // Convert the date to timestamp in seconds
+    // const fromTime = Math.floor(oldestDate.getTime() / 1000);
+
+    if (!graphData || !(graphData?.lineSeries as any[])?.length) {
         return <StyledIcon component={TracerLoading} className="tracer-loading" />;
     } else {
         return (
@@ -110,12 +132,14 @@ const LightWeightChart: React.FC<{ candleData: CandleData }> = ({ candleData }) 
                 options={graphData.options as Record<string, unknown>}
                 from={now + twoHour}
                 to={now - twoHour}
-                candlestickSeries={graphData.candlestickSeries as any[]}
+                lineSeries={graphData.lineSeries as any[]}
                 autoWidth
                 autoHeight
+                positionGraph={positionGraph}
+                liquidationPrice={liquidationPrice}
             />
         );
     }
 };
 
-export default LightWeightChart;
+export default LightWeightLineChart;

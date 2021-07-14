@@ -1,10 +1,10 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHeading, TableRow, TableCell } from '@components/General/Table';
+import { TableHeading, TableRow, TableCell } from '@components/Portfolio';
 import { DateAndTime } from '@components/General';
 
-const TradeHistory: FC = () => {
+const TradeHistory: React.FC = () => {
     const headings = ['Date', 'Market', 'Position', 'Exposure / Price', 'Slippage', 'Fees', 'Total Cost', 'Order Type'];
 
     const tracers = [
@@ -58,9 +58,11 @@ const TradeHistory: FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 7 ? (
-                                <TableHeading theme={TableHeadEndTheme}>{heading}</TableHeading>
+                                <TableHeading theme={TableHeadEndTheme} key={i}>
+                                    {heading}
+                                </TableHeading>
                             ) : (
-                                <TableHeading>{heading}</TableHeading>
+                                <TableHeading key={i}>{heading}</TableHeading>
                             ),
                         )}
                     </tr>

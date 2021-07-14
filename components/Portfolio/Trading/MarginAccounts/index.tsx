@@ -1,13 +1,12 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHeading, TableRow, TableCell } from '@components/General/Table';
-import { Button, StatusIndicator, getStatusColour } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell, Button, StatusIndicator, getStatusColour } from '@components/Portfolio';
 import Tooltip from 'antd/lib/tooltip';
 
 const NoLeverageTip = <p>You have no leveraged trades open in this market.</p>;
 
-const MarginAccounts: FC = () => {
+const MarginAccounts: React.FC = () => {
     const headings = ['Market', 'Equity', 'Maintenance Margin', 'Available Margin', 'Status of Position'];
 
     const tracers = [

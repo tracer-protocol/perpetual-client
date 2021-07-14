@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { useState } from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 import {
@@ -6,12 +6,15 @@ import {
     TableLastHeading,
     TableRow,
     TableCell,
+    SecondaryCell,
+    Button,
+    StatusIndicator,
+    getStatusColour,
     TableHeader,
     Table,
     TableBody,
     TableLastCell,
-} from '@components/General/Table';
-import { SecondaryCell, Button, StatusIndicator, getStatusColour } from '@components/Portfolio';
+} from '@components/Portfolio';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'libs/types/OrderTypes';
 import { LabelledTracers } from 'libs/types/TracerTypes';
@@ -19,7 +22,7 @@ import { LabelledTracers } from 'libs/types/TracerTypes';
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 import Icon from '@ant-design/icons';
 
-const Position: FC<{
+const Position: React.FC<{
     tracers: LabelledTracers;
     allFilledOrders: LabelledOrders;
 }> = ({ tracers, allFilledOrders }) => {
@@ -96,9 +99,9 @@ const Position: FC<{
                 <TableHeader>
                     {headings.map((heading, i) =>
                         i !== 7 ? (
-                            <TableHeading>{heading}</TableHeading>
+                            <TableHeading key={i}>{heading}</TableHeading>
                         ) : (
-                            <TableLastHeading>{heading}</TableLastHeading>
+                            <TableLastHeading key={i}>{heading}</TableLastHeading>
                         ),
                     )}
                 </TableHeader>

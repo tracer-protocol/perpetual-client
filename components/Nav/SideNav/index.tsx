@@ -14,9 +14,13 @@ const SideNavContainer = styled.div`
 `;
 
 const SideNavItem = styled.div`
-    color: var(--color-primary);
+    height: var(--height-small-container);
+    display: flex;
+    align-items: center;
     transition: 0.3s;
-    padding: 10px 15px;
+    color: var(--color-primary);
+    padding: 0px 15px;
+    font-size: var(--font-size-medium);
 
     &.selected {
         background: var(--color-secondary);
