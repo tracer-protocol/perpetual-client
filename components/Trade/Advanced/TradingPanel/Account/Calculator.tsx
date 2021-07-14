@@ -68,7 +68,7 @@ export default styled(
         } = useContext(OrderContext);
         const [modalState, modalDispatch] = useReducer(modalReducer, initialState);
 
-        const handleClose = () => {
+        const closeAfterDeposit = () => {
             modalDispatch({ type: 'setLoading', loading: false });
             modalDispatch({
                 type: 'setSubTitle',
@@ -76,7 +76,9 @@ export default styled(
             });
             calculatorDispatch({ type: 'reset' })
             close();
-            orderDispatch({ type: 'setExposure', value: exposure})
+            orderDispatch({ type: 'setExposure', value: exposure })
+            orderDispatch({ type: 'setPosition', value: position })
+            orderDispatch({ type: 'setLeverageFromExposure', amount: exposure})
         };
         const isLocked = (locked: number[], value: number) => locked[0] === value || locked[1] === value;
         return (
@@ -220,7 +222,7 @@ export default styled(
                         deposit={deposit}
                         approve={approve}
                         dispatch={modalDispatch}
-                        handleClose={handleClose}
+                        handleClose={closeAfterDeposit}
                     />
                 </StyledHiddenExpand>
                 <CalcButtons>
