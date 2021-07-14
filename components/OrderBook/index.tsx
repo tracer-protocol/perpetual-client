@@ -310,11 +310,11 @@ const Order: React.FC<BProps> = ({ className, cumulative, quantity, price, maxCu
 };
 
 const StyledTriangleDown = styled.img`
-    height: 0.5rem;
+    height: 0.5em;
     transition: all 400ms ease-in-out;
     display: inline;
-    margin-top: -0.2rem;
-    margin-left: 0.2rem;
+    margin-top: -0.2em;
+    margin-left: 10%;
 
     &.rotate {
         transform: rotate(180deg);
