@@ -57,7 +57,7 @@ export const Web3Context = React.createContext<Partial<ContextProps>>({
  * Leveraged XState to manage what stage of connecting the user was in as working with
  *  providers can be frustrating.
  * Subscribes to a small set of events and triggers XState updates as these are fired.
- * As XState updates its networkID, this store provides a config value retrieved by the 
+ * As XState updates its networkID, this store provides a config value retrieved by the
  *  networkID key and the config in ./Web3Context.Config
  * TODO update to custom connection modal
  * TODO Addition of more subscriptions to provider events such as

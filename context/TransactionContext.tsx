@@ -50,7 +50,7 @@ export const TransactionContext = createContext<{
 /**
  * TransactionStore which makes creating and updating Toasters easier when calling transactions.
  * Call handleTransaction with the required params to automatically update the toaster as the transaction
- *  moves through the various stages of its lifestile. 
+ *  moves through the various stages of its lifestile.
  * TODO store a list of transactions with a transaction state so the user can view all pending transactions
  * TODO populate the current pending transactions when the user visits the page
  */

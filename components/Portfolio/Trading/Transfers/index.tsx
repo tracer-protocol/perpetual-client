@@ -1,10 +1,9 @@
-import React, { FC } from 'react';
+import React from 'react';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHeading, TableRow, TableCell } from '@components/General/Table';
-import { SecondaryCell } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
 import { DateAndTime } from '@components/General';
 
-const Transfers: FC = () => {
+const Transfers: React.FC = () => {
     const headings = ['Date', 'Type', 'Amount / Currency', 'Transaction Details'];
 
     const tracers = [
@@ -49,9 +48,11 @@ const Transfers: FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 3 ? (
-                                <TableHeading theme={TableHeadEndTheme}>{heading}</TableHeading>
+                                <TableHeading theme={TableHeadEndTheme} key={i}>
+                                    {heading}
+                                </TableHeading>
                             ) : (
-                                <TableHeading>{heading}</TableHeading>
+                                <TableHeading key={i}>{heading}</TableHeading>
                             ),
                         )}
                     </tr>

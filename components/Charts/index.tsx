@@ -1,5 +1,5 @@
 import React from 'react';
-import { createChart } from 'lightweight-charts';
+import * as LightWeightCharts from 'lightweight-charts';
 
 import equal from 'fast-deep-equal';
 
@@ -64,8 +64,9 @@ interface Props {
     onTimeRangeMove?: any;
     darkTheme?: boolean;
     legend?: any;
+    positionGraph?: boolean;
+    liquidationPrice?: number;
 }
-
 class ChartWrapper extends React.Component<Props> {
     private chartDiv: React.RefObject<any>;
     private legendDiv: React.RefObject<any>;
@@ -84,7 +85,7 @@ class ChartWrapper extends React.Component<Props> {
 
     componentDidMount() {
         try {
-            this.chart = createChart(this.chartDiv.current);
+            this.chart = LightWeightCharts.createChart(this.chartDiv.current);
             this.handleUpdateChart();
             this.resizeHandler();
         } catch (err) {
@@ -140,6 +141,7 @@ class ChartWrapper extends React.Component<Props> {
                 ? this.chartDiv.current.parentNode.clientHeight
                 : this.props.height || 500;
         this.chart.resize(width, height);
+        if (this.props.lineSeries) this.handleLineSeries();
     };
 
     removeSeries = () => {
@@ -178,7 +180,62 @@ class ChartWrapper extends React.Component<Props> {
 
         props.lineSeries &&
             props.lineSeries.forEach((serie) => {
-                series.push(this.addSeries(serie, 'line'));
+                const currentSeries = this.addSeries(serie, 'line');
+                currentSeries.applyOptions({
+                    color: '#FFFFFF',
+                    lineWidth: 4,
+                    priceLineVisible: false,
+                });
+                if (props.positionGraph) {
+                    const lineWidth = 3;
+                    const liquidationPriceLine = {
+                        price: this.props.liquidationPrice,
+                        color: '#F15025',
+                        lineWidth: lineWidth,
+                        lineStyle: LightWeightCharts.LineStyle.Solid,
+                    };
+                    const breakevenPriceLine = {
+                        // TODO: Change later
+                        price: 2160,
+                        color: '#3DA8F5',
+                        lineWidth: lineWidth,
+                        lineStyle: LightWeightCharts.LineStyle.Solid,
+                    };
+                    currentSeries.createPriceLine(liquidationPriceLine);
+                    currentSeries.createPriceLine(breakevenPriceLine);
+                    this.chart.applyOptions({
+                        // Hide the price and time scale on the position graphs
+                        priceScale: {
+                            position: 'none',
+                        },
+                        timeScale: {
+                            visible: false
+                        },
+                    });
+                } else {
+                    currentSeries.applyOptions({
+                        color: '#FFFFFF',
+                        lineWidth: 4,
+                        priceLineVisible: false,
+                    });
+                    this.chart.applyOptions({
+                        // priceScale: {
+                        //     position: 'left'
+                        // },
+                        rightPriceScale: {
+                            visible: true,
+                            borderVisible: false,
+                        },
+                        leftPriceScale: {
+                            visible: true,
+                            borderColor: '#3DA8F5',
+                        },
+                        layout: {
+                            textColor: '#3DA8F5',
+                        },
+                    });
+                }
+                series.push(currentSeries);
             });
 
         props.areaSeries &&
@@ -219,6 +276,13 @@ class ChartWrapper extends React.Component<Props> {
         const { from, to } = this.props;
         if (from && to && this.chart) {
             // this.chart.timeScale().setVisibleRange({ from, to });
+        }
+    };
+
+    handleLineSeries = () => {
+        const { from, to, lineSeries } = this.props;
+        if (from && to && this.chart && lineSeries) {
+            this.chart.timeScale().fitContent();
         }
     };
 

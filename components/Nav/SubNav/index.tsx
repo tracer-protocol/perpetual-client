@@ -15,15 +15,20 @@ export const SubNavContainer = styled.div`
     display: flex;
 `;
 
-export const SubNavItem = styled.div`
-    color: var(--color-text);
+interface SNIProps {
+    small?: boolean;
+}
+export const SubNavItem = styled.div<SNIProps>`
+    height: ${(props) => (props.small ? 'var(--height-extra-small-container)' : 'var(--height-small-container)')};
+    display: flex;
+    align-items: center;
+    transition: 0.3s;
+    color: var(--color-secondary);
+    padding: 10px 15px;
     font-size: var(--font-size-small-heading);
     line-height: var(--font-size-small-heading);
-    transition: 0.3s;
-    border-right: 1px solid #0c3586;
+    border-right: 1px solid var(--table-lightborder);
     text-align: center;
-    padding: 10px 15px;
-    color: var(--color-secondary);
 
     &.selected {
         background: var(--color-accent);

@@ -1,4 +1,4 @@
-import React, { FC, useState, useCallback } from 'react';
+import React, { FC, useState, useCallback, useContext } from 'react';
 import { OMEOrder } from 'libs/types/OrderTypes';
 import styled from 'styled-components';
 import { toApproxCurrency } from '@libs/utils';
@@ -11,6 +11,7 @@ import FogOverlay from '@components/Overlay/FogOverlay';
 import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
+import { OrderContext } from '@context/OrderContext';
 
 const decimalKeyMap: Record<number, number> = {
     1: 0.01,
@@ -21,11 +22,16 @@ const decimalKeyMap: Record<number, number> = {
     6: 100,
 };
 
+type OrderInfo = {
+    bid: boolean;
+    price: number;
+    quantity: number;
+};
+
 interface OProps {
-    // TODO: change these
     askOrders: OMEOrder[] | undefined;
     bidOrders: OMEOrder[] | undefined;
-    lastTradePrice: number | BigNumber;
+    lastTradePrice: BigNumber;
     marketUp: boolean; // true if the last tradePrice is previous than the tradePrice before that
     decimals: number;
     displayBook: boolean;
@@ -35,6 +41,7 @@ interface OProps {
 
 const OrderBook: FC<OProps> = styled(
     ({ askOrders, bidOrders, lastTradePrice, marketUp, decimals, setDecimals, className }: OProps) => {
+        const { orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
         const [showOrderBook, setShowOrderBook] = useState(true);
         const [showOverlay, setOverlay] = useState(true);
 
@@ -44,6 +51,16 @@ const OrderBook: FC<OProps> = styled(
 
         const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
 
+        const setOrderFromBook: (order: OrderInfo) => void = (order) => {
+            orderDispatch({
+                type: 'setOrderFromBook',
+                order: {
+                    bid: order.bid,
+                    price: Number.isNaN(order.price) ? 0 : parseFloat(order.price.toFixed(2)),
+                    quantity: parseFloat(order.quantity.toFixed(2)),
+                },
+            });
+        };
         // Deep copy and sort orders
         const askOrdersCopy = deepCopyArrayOfObj(askOrders ?? []).sort((a, b) => a.price - b.price); // ascending order
         const bidOrdersCopy = deepCopyArrayOfObj(bidOrders ?? []).sort((a, b) => b.price - a.price); // descending order
@@ -122,6 +139,7 @@ const OrderBook: FC<OProps> = styled(
                         price={row.price}
                         cumulative={row.cumulative}
                         quantity={row.quantity}
+                        onClick={(_e) => setOrderFromBook(row)}
                     />
                 ));
                 return !bid ? withSetMax.reverse() : withSetMax;
@@ -147,13 +165,44 @@ const OrderBook: FC<OProps> = styled(
                                 <MarketRow>
                                     <Item className="mr-auto">
                                         <TooltipSelector tooltip={{ key: 'best' }}>Best</TooltipSelector>
-                                        <span className="ask px-1">{toApproxCurrency(askOrdersCopy[0]?.price)}</span>
+                                        <span
+                                            className="ask px-1"
+                                            onClick={(_e) =>
+                                                setOrderFromBook({
+                                                    quantity: askOrdersCopy[0]?.quantity ?? 0,
+                                                    price: askOrdersCopy[0]?.price ?? 0,
+                                                    bid: false,
+                                                })
+                                            }
+                                        >
+                                            {toApproxCurrency(askOrdersCopy[0]?.price)}
+                                        </span>
                                         {` / `}
-                                        <span className="bid px-1">{toApproxCurrency(bidOrdersCopy[0]?.price)}</span>
+                                        <span
+                                            className="bid px-1"
+                                            onClick={(_e) =>
+                                                setOrderFromBook({
+                                                    quantity: bidOrdersCopy[0]?.quantity ?? 0,
+                                                    price: bidOrdersCopy[0]?.price ?? 0,
+                                                    bid: true,
+                                                })
+                                            }
+                                        >
+                                            {toApproxCurrency(bidOrdersCopy[0]?.price)}
+                                        </span>
                                     </Item>
                                     <Item className="no-width">
                                         {`Last`}
-                                        <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>
+                                        <span
+                                            className={`${marketUp ? 'bid' : 'ask'} pl-1`}
+                                            onClick={(_e) =>
+                                                setOrderFromBook({
+                                                    quantity: 0,
+                                                    price: lastTradePrice.toNumber(),
+                                                    bid: true,
+                                                })
+                                            }
+                                        >
                                             {toApproxCurrency(lastTradePrice)}
                                         </span>
                                     </Item>
@@ -246,6 +295,12 @@ const BookRow = styled.div`
     line-height: var(--font-size-small);
     padding: 1px 0;
     letter-spacing: -0.32px;
+    transition: 0.1s;
+
+    &:hover {
+        opacity: 0.8;
+        cursor: pointer;
+    }
 
     &.header {
         margin-bottom: 0.4rem;
@@ -269,6 +324,16 @@ const BookRow = styled.div`
 const MarketRow = styled(BookRow)`
     background: var(--color-background-secondary);
     padding: 0.5rem 0;
+    &:hover {
+        opacity: 1;
+    }
+    ${Item} > span {
+        transition: 0.1s;
+    }
+    ${Item} > span:hover {
+        opacity: 0.7;
+        cursor: pointer;
+    }
     @media (max-width: 1279px) {
         display: inline-block;
         ${Item}:first-child {
@@ -290,12 +355,13 @@ interface BProps {
     price: number;
     maxCumulative?: number;
     bid: boolean;
+    onClick: React.MouseEventHandler<HTMLDivElement>;
     className?: string;
 }
 
-const Order: React.FC<BProps> = ({ className, cumulative, quantity, price, maxCumulative, bid }: BProps) => {
+const Order: React.FC<BProps> = ({ className, cumulative, quantity, price, maxCumulative, bid, onClick }: BProps) => {
     return (
-        <BookRow className={className}>
+        <BookRow className={className} onClick={onClick}>
             <Item className={`${bid ? 'bid' : 'ask'} price`}>{toApproxCurrency(price)}</Item>
             <Item className={`quantity`}>{quantity.toFixed(2)}</Item>
             <Item
@@ -327,6 +393,9 @@ const PrecisionDropdownButton = styled(Button)`
     height: var(--height-extra-small-button);
     padding: 0;
     max-width: 5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
 type PDProps = {
