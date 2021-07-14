@@ -128,7 +128,7 @@ const PositionTab: FC<PTProps> = styled(
                         <Legend>
                             <LegendTitle>
                                 <LegendsIndicator colour={`var(--color-text)`} />
-                                Equity
+                                Last Price
                             </LegendTitle>
                             <LegendPrice>{toApproxCurrency(lines[lines.length - 1]?.value)}</LegendPrice>
                         </Legend>
