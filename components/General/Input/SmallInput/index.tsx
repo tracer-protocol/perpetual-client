@@ -1,5 +1,5 @@
 import React, { ChangeEvent } from 'react';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import styled from 'styled-components';
 import { NumberInput } from '@components/General';
 import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/TooltipSelector';
@@ -26,6 +26,7 @@ const Unit = styled.div`
     letter-spacing: -0.4px;
     color: var(--color-secondary);
     font-size: var(--font-size-medium);
+    line-height: var(--font-size-medium);
     margin: auto 0 auto auto;
     padding-left: 4px;
 `;
@@ -90,6 +91,7 @@ const SmallInput: React.FC<SIProps> = styled(
     width: 100%;
     justify-content: space-between;
     margin: 12px 0;
+    height: 32px;
 
     > .label {
         letter-spacing: -0.32px;

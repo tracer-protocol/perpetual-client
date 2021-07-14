@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { SlideSelect } from '@components/Buttons';
-import { Option } from '@components/Buttons/SlideSelect';
+import SlideSelect from '@components/General/SlideSelect';
+import { Option } from '@components/General/SlideSelect';
 import { OrderContext } from 'context';
-import { MARKET } from '@context/OrderContext';
+import { LIMIT, MARKET } from '@context/OrderContext';
 
 type SProps = {
     selected: number;
@@ -24,9 +24,7 @@ export const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
                 if (orderDispatch) {
                     orderDispatch({ type: 'setPosition', value: index });
                     if (order?.orderType === MARKET) {
-                        const leverage = (order?.leverage ?? 0) * -1; // negate it
-                        orderDispatch({ type: 'setLeverage', value: leverage });
-                        orderDispatch({ type: 'setExposureFromLeverage', leverage: leverage });
+                        orderDispatch({ type: 'setLeverageFromExposure', amount: order?.exposure });
                     }
                 } else {
                     console.error('Order dispatch function not set');
@@ -48,7 +46,11 @@ export const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }
             onClick={(index, _e) => {
                 if (orderDispatch) {
                     orderDispatch({ type: 'setOrderType', value: index });
-                    if (index === 0) {
+                    if (index === LIMIT) {
+                        // resetting the price if its a limit order
+                        orderDispatch({ type: 'setPrice', value: NaN });
+                    }
+                    if (index === MARKET) {
                         orderDispatch({ type: 'setLock', value: true });
                     }
                 } else {
@@ -69,7 +71,7 @@ export const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }
     border-left: 0;
     height: var(--height-extra-small-container);
     ${Option} {
-        font-size: var(--font-size-medium);
+        font-size: var(--font-size-small-heading);
     }
     > .bg-slider {
         background: var(--color-accent);

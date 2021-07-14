@@ -9,7 +9,7 @@ export const markets: any = (orderDispatch: React.Dispatch<OrderAction> | undefi
         onClick={({ key }) =>
             orderDispatch
                 ? orderDispatch({ type: 'setMarket', value: key.toString() })
-                : console.error('Order dispatch undefined')
+                : console.error('Order dispatch not set')
         }
     >
         {options.map((option: string) => {
@@ -23,7 +23,7 @@ export const collaterals: any = (orderDispatch: React.Dispatch<OrderAction> | un
         onClick={({ key }) =>
             orderDispatch
                 ? orderDispatch({ type: 'setCollateral', value: key.toString() })
-                : console.error('Order dispatch undefined')
+                : console.error('Order dispatch not set')
         }
     >
         {options?.map((option) => {

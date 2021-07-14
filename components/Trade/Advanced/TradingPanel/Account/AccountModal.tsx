@@ -1,11 +1,12 @@
 import React, { useContext, useCallback, useReducer, useMemo } from 'react';
 import styled from 'styled-components';
 import { NumberSelect, Section } from '@components/General';
-import { UserBalance } from 'types';
+import { Max } from '@components/General/Input/NumberSelect';
+import { UserBalance } from 'libs/types';
 import ErrorComponent from '@components/General/Error';
-import TracerModal from '@components/General/TracerModal';
-import { SlideSelect } from '@components/Buttons';
-import { Option } from '@components/Buttons/SlideSelect';
+import TracerModal, { modalReducer, ModalState } from '@components/General/TracerModal';
+import SlideSelect from '@components/General/SlideSelect';
+import { Option } from '@components/General/SlideSelect';
 import { Button, HiddenExpand, Previous } from '@components/General';
 import { TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
@@ -17,13 +18,14 @@ import {
 } from '@tracer-protocol/tracer-utils';
 import { toApproxCurrency } from '@libs/utils';
 import { defaults } from '@libs/Tracer';
+import { Options } from '@context/TransactionContext';
 
 const SNumberSelect = styled(NumberSelect)`
     margin-top: 1rem;
     .balance {
         color: var(--color-secondary);
     }
-    > .balance > .max {
+    > .balance > ${Max} {
         margin-left: 1rem;
     }
 `;
@@ -76,48 +78,11 @@ type AMProps = {
     maxLeverage: BigNumber;
 };
 
-type ModalState = {
-    amount: number;
-    loading: boolean;
-    title: string;
-    subTitle: string;
-};
-type ModalAction =
-    | { type: 'setAmount'; amount: number }
-    | { type: 'setTitles'; title: string; subTitle: string }
-    | { type: 'setLoading'; loading: boolean };
-
 const initialState: ModalState = {
     amount: NaN,
     loading: false,
     title: 'Deposit Margin',
     subTitle: '',
-};
-
-const reducer = (state: ModalState, action: ModalAction) => {
-    switch (action.type) {
-        case 'setAmount': {
-            return {
-                ...state,
-                amount: action.amount,
-            };
-        }
-        case 'setTitles': {
-            return {
-                ...state,
-                title: action.title,
-                subTitle: action.subTitle,
-            };
-        }
-        case 'setLoading': {
-            return {
-                ...state,
-                loading: action.loading,
-            };
-        }
-        default:
-            throw new Error('Unexpected action');
-    }
 };
 
 export default styled(
@@ -128,7 +93,7 @@ export default styled(
             approve = () => console.error('Approve is not defined'),
             selectedTracer,
         } = useContext(TracerContext);
-        const [state, dispatch] = useReducer(reducer, initialState);
+        const [state, dispatch] = useReducer(modalReducer, initialState);
 
         const available = isDeposit
             ? balances.tokenBalance
@@ -139,9 +104,8 @@ export default styled(
             if (state.amount > available.toNumber()) {
                 return 'INSUFFICIENT_FUNDS';
             } else if (
-                (state.amount < calcMinimumMargin(balances.quote, balances.base, fairPrice, maxLeverage).toNumber() ||
-                    // TODO remove 160 for dynamic calculation of liquidation gas cost
-                    state.amount < 150 - balances.totalMargin.toNumber()) &&
+                // TODO remove 160 for dynamic calculation of liquidation gas cost
+                state.amount < 150 - balances.totalMargin.toNumber() &&
                 isDeposit
             ) {
                 return 'DEPOSIT_MORE';
@@ -158,16 +122,18 @@ export default styled(
         const handleClose = () => {
             dispatch({ type: 'setAmount', amount: NaN });
             dispatch({ type: 'setLoading', loading: false });
-            dispatch({ type: 'setTitles', title: 'Deposit Margin', subTitle: '' });
+            dispatch({ type: 'setTitle', title: 'Deposit Margin' });
+            dispatch({ type: 'setSubTitle', subTitle: '' });
             close();
         };
 
         useMemo(() => {
             if (isDeposit) {
-                dispatch({ type: 'setTitles', title: 'Deposit Margin', subTitle: '' });
+                dispatch({ type: 'setTitle', title: 'Deposit Margin' });
             } else {
-                dispatch({ type: 'setTitles', title: 'Withdraw Margin', subTitle: '' });
+                dispatch({ type: 'setTitle', title: 'Withdraw Margin' });
             }
+            dispatch({ type: 'setSubTitle', subTitle: '' });
         }, [isDeposit]);
         return (
             <TracerModal
@@ -187,6 +153,9 @@ export default styled(
                     title={'Amount'}
                     amount={state.amount}
                     balance={parseFloat(available.toFixed(2))}
+                    setMax={(_e) => {
+                        dispatch({ type: 'setAmount', amount: parseFloat(available.toFixed(2)) });
+                    }}
                     setAmount={(amount: number) => dispatch({ type: 'setAmount', amount: amount })}
                 />
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>
@@ -221,16 +190,22 @@ export default styled(
                             onClick={() => {
                                 dispatch({ type: 'setLoading', loading: true });
                                 dispatch({
-                                    type: 'setTitles',
+                                    type: 'setTitle',
                                     title: 'Waiting for Confirmation',
+                                });
+                                dispatch({
+                                    type: 'setSubTitle',
                                     subTitle: 'Confirm the transaction in your wallet to unlock USD',
                                 });
                                 approve(selectedTracer?.address ?? '', {
                                     afterConfirmation: () => {
                                         dispatch({ type: 'setLoading', loading: false });
                                         dispatch({
-                                            type: 'setTitles',
+                                            type: 'setTitle',
                                             title: isDeposit ? 'Deposit Margin' : 'Withdraw Margin',
+                                        });
+                                        dispatch({
+                                            type: 'setSubTitle',
                                             subTitle: '',
                                         });
                                     },
@@ -245,13 +220,20 @@ export default styled(
                         onClick={() => {
                             dispatch({ type: 'setLoading', loading: true });
                             dispatch({
-                                type: 'setTitles',
+                                type: 'setTitle',
                                 title: 'Waiting for Confirmation',
+                            });
+                            dispatch({
+                                type: 'setSubTitle',
                                 subTitle: `Confirm the transaction in your wallet to ${
                                     isDeposit ? 'deposit' : 'withdraw'
-                                } USD`,
+                                } ${selectedTracer?.quoteTicker ?? 'USD'}`,
                             });
-                            isDeposit ? deposit(state.amount, handleClose) : withdraw(state.amount, handleClose);
+                            const options: Options = {
+                                onError: handleClose,
+                                onSuccess: handleClose,
+                            };
+                            isDeposit ? deposit(state.amount, options) : withdraw(state.amount, options);
                         }}
                     >
                         {isDeposit ? 'Deposit' : 'Withdraw'}
@@ -263,4 +245,5 @@ export default styled(
     },
 )`
     max-width: 434px !important;
+    z-index: 3;
 ` as React.FC<AMProps>;

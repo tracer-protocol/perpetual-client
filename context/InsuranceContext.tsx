@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useReducer } from 'react';
-import { Children, InsurancePoolInfo } from 'types';
+import { Children, InsurancePoolInfo } from 'libs/types';
 import { Web3Context } from './Web3Context';
 import Web3 from 'web3';
 import { Insurance } from '@tracer-protocol/contracts/types/Insurance';
@@ -41,8 +41,8 @@ export type InsuranceAction =
 
 interface ContextProps {
     poolInfo: InsurancePoolInfo;
-    deposit: (tracer: Tracer, amount: number, _callback?: () => void) => void;
-    withdraw: (tracer: Tracer, amount: number, _callback?: () => void) => void;
+    deposit: (tracer: Tracer, amount: number, options: Options) => void;
+    withdraw: (tracer: Tracer, amount: number, options: Options) => void;
     approve: (tracer: Tracer, options?: Options) => void;
     contract: Insurance;
     pools: Record<string, InsurancePoolInfo>;
@@ -52,11 +52,15 @@ interface State {
     pools: Record<string, InsurancePoolInfo>;
 }
 
-/**
- *
- */
 export const InsuranceContext = React.createContext<Partial<ContextProps>>({});
 
+/**
+ * Handles responsiveness and state when interacting with the insurance pools.
+ * The insurance contract class is stored in each of the Tracer classes.
+ * Functions are called on the Insurance class.
+ * This context store provides useEffect hooks and pool state updates to update the UI.
+ * Also provides deposit and withdraw functions similar to the TracerContext
+ */
 export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     const { account, config } = useContext(Web3Context);
     const { factoryState: { tracers, hasSetTracers } = initialFactoryState } = useContext(FactoryContext);
@@ -120,7 +124,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
      *
      * @param amount the amount to deposit
      */
-    const deposit = async (tracer: Tracer, amount: number, _callback?: () => any) => {
+    const deposit = async (tracer: Tracer, amount: number, options: Options) => {
         if (!tracer?.address) {
             console.error('Failed to withdraw: Selected tracer address is undefined');
         } else if (!account) {
@@ -143,12 +147,13 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     insuranceContract?.instance?.methods
                         .deposit(Web3.utils.toWei(amount.toString()))
                         .send({ from: account }) as PromiEvent<TransactionReceipt>;
-
+                const { onSuccess: onSuccess_ } = options ?? {};
                 handleTransaction(callFunc, [amount], {
-                    callback: async () => {
+                    ...options,
+                    onSuccess: () => {
                         updatePoolBalance(tracer);
                         updateUserBalance(tracer);
-                        _callback ? _callback() : null;
+                        onSuccess_ ? onSuccess_() : null;
                     },
                     statusMessages: {
                         pending: 'Transaction to deposit USDC is pending',
@@ -162,7 +167,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         }
     };
 
-    const withdraw = async (tracer: Tracer, amount: number, _callback?: () => any) => {
+    const withdraw = async (tracer: Tracer, amount: number, options: Options) => {
         if (!tracer?.address) {
             console.error('Failed to withdraw: Selected tracer address is undefined');
         } else if (handleTransaction) {
@@ -172,11 +177,12 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 insuranceContract?.instance?.methods
                     .withdraw(Web3.utils.toWei(amount.toString()))
                     .send({ from: account });
+            const { onSuccess: onSuccess_ } = options ?? {};
             handleTransaction(callFunc, [amount], {
-                callback: () => {
+                onSuccess: () => {
                     updatePoolBalance(tracer);
                     updateUserBalance(tracer);
-                    _callback ? _callback() : null;
+                    onSuccess_ ? onSuccess_() : null;
                 },
             });
         } else {
@@ -185,21 +191,21 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     };
 
     const approve = async (tracer: Tracer, options?: Options) => {
-        const { callback: callback_ } = options ?? {};
+        const { onSuccess: onSuccess_} = options ?? {};
         if (handleTransaction) {
             const insuranceContract = tracer.getInsuranceContract();
             if (!insuranceContract || !insuranceContract.address) {
                 console.error('Failed to approve: contract is undefined');
                 return false;
             }
-            const callback = () => {
+            const onSuccess = () => {
                 tracer?.setApproved(insuranceContract.address);
-                callback_ ? callback_() : null;
+                onSuccess_ ? onSuccess_() : null;
             };
 
             handleTransaction(tracer.approve, [account, insuranceContract.address], {
                 ...options,
-                callback,
+                onSuccess,
                 statusMessages: {
                     userConfirmed: `Unlock ${tracer.quoteTicker} Submitted`,
                     pending: `Transaction to unlock ${tracer.quoteTicker} is pending`,

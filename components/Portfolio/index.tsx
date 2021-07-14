@@ -4,33 +4,27 @@ export const LeftPanel = styled.div`
     width: 20%;
     display: flex;
     flex-direction: column;
-    min-height: 92vh;
-    border-top: 1px solid #0c3586;
-    border-right: 1px solid #0c3586;
-    border-left: 1px solid #0c3586;
-
-    @media only screen and (max-width: 1200px) {
-        width: auto;
-    }
+    height: 87vh;
+    border: 1px solid #0c3586;
 `;
 
 export const RightPanel = styled.div`
     width: 80%;
     display: flex;
     flex-direction: column;
-    min-height: 92vh;
+    height: 87vh;
     border-top: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
-
-    @media only screen and (max-width: 1200px) {
-        width: auto;
-    }
+    border-bottom: 1px solid #0c3586;
 `;
 
 export const Button = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: 0.5s;
     color: var(--color-primary);
-    font-size: var(--font-size-small);
+    font-size: ${(props: any) => (props.theme.fontSize ? (props.theme.fontSize as string) : 'var(--font-size-small)')};
     line-height: 1rem;
     letter-spacing: -0.32px;
     border: 1px solid var(--color-primary);
@@ -38,6 +32,7 @@ export const Button = styled.div`
     text-align: center;
     padding: 10px 0;
     width: ${(props: any) => props.theme.width as string};
+    height: ${(props: any) => props.theme.height as string};
 
     &:hover {
         color: ${(props: any) => props.theme.hoverFG as string};
@@ -73,69 +68,94 @@ Button.defaultProps = {
     },
 };
 
-export const TableHead = styled.th`
-    text-align: left;
+export const LargeButton = styled.button`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.5s ease;
     color: var(--color-primary);
-    max-width: ${(props: any) => props.theme.maxWidth as string};
-    min-width: ${(props: any) => props.theme.minWidth as string};
-    width: ${(props: any) => props.theme.width};
-    height: ${(props: any) => props.theme.height as string};
-    padding: ${(props: any) => props.theme.padding as string};
-    font-weight: normal;
-    border-right: ${(props: any) => props.theme.borderRight as string};
-    border-bottom: ${(props: any) => props.theme.borderBottom as string};
-`;
-
-TableHead.defaultProps = {
-    theme: {
-        maxWidth: '300px',
-        minWidth: '140px',
-        width: 'auto',
-        height: '50px',
-        padding: '0 1rem',
-        borderRight: '1px solid var(--color-accent)',
-        borderBottom: '1px solid var(--color-accent)',
-    },
-};
-
-export const TableRow = styled.tr`
-    transition: 0.5s;
-    height: ${(props: any) => props.theme.height as string};
-    display: ${(props: any) => props.theme.display as string};
-    color: ${(props: any) => props.theme.color as string};
-    opacity: ${(props: any) => props.theme.opacity as string};
+    line-height: 1rem;
+    letter-spacing: -0.32px;
+    border: 1px solid var(--color-primary);
+    border-radius: 20px;
+    text-align: center;
+    padding: 10px 0;
+    height: 32px;
+    width: 170px;
+    font-size: inherit;
+    font-family: inherit;
+    user-select: none;
+    cursor: pointer;
 
     &:hover {
-        background: ${(props: any) => props.theme.hoverBG as string};
-        cursor: ${(props: any) => props.theme.hoverCursor as string};
+        color: #fff;
+        background: var(--color-primary);
+    }
+    &:focus {
+        border: 1px solid var(--color-primary);
+    }
+
+    &.filled {
+        background: var(--color-primary);
+        color: #fff;
+
+        &:hover {
+            color: var(--color-primary);
+            background: transparent;
+        }
     }
 `;
 
-TableRow.defaultProps = {
-    theme: {
-        display: 'normal',
-        color: '#fff',
-        opacity: 1,
-        hoverBG: 'var(--color-accent)',
-        hoverCursor: 'pointer',
-    },
-};
-
-export const TableCell = styled.td`
-    color: ${(props: any) => props.color as string};
-    padding: ${(props: any) => props.theme.padding as string};
-    height: ${(props: any) => props.theme.height as string};
-    border-right: ${(props: any) => props.theme.borderRight as string};
-    border-bottom: ${(props: any) => props.theme.borderBottom as string};
+export const SmallTitle = styled.h2`
+    font-size: var(--font-size-medium);
+    letter-spacing: -0.4px;
+    color: var(--color-text);
+    flex-basis: 100%;
+    width: fit-content;
+    white-space: nowrap;
 `;
 
-TableCell.defaultProps = {
-    theme: {
-        padding: '0 1rem',
-        borderRight: '1px solid var(--color-accent)',
-        borderBottom: '1px solid var(--color-accent)',
-    },
-};
+export const Table = styled.table``;
+
+export const TableHeader = styled.thead``;
+
+export const TableHeading = styled.th`
+    text-align: left;
+    color: var(--color-primary);
+    height: 40px;
+    font-size: var(--font-size-extra-small);
+    padding-left: 10px;
+    border-right: 1px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
+`;
+
+export const TableLastHeading = styled(TableHeading)`
+    border-right: none;
+`;
+
+export const TableBody = styled.tbody``;
+
+export const TableRow = styled.tr`
+    transition: 0.5s;
+    color: white;
+    opacity: 1;
+
+    &:hover {
+        background: var(--color-accent);
+        cursor: pointer;
+    }
+`;
+
+export const TableCell = styled.td`
+    padding: 0 10px;
+    border-right: 1px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
+`;
+
+// Last cell on a table row
+export const TableLastCell = styled(TableCell)`
+    border-right: none;
+`;
 
 export const SecondaryCell = styled.div`
     color: var(--color-secondary);

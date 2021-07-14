@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Web3 from 'web3';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import { useMachine } from '@xstate/react';
 
 import { web3Machine } from '@machines/Web3Machine';
@@ -50,18 +50,30 @@ export const Web3Context = React.createContext<Partial<ContextProps>>({
     updateTrigger: undefined,
 });
 
-// TODO refactor this a little such that its a little easier to read
-// Addition of more subscriptions to provider events such as
-//  - new block header, should trigger a page update
-//  - pending transaction should place the account in a loading state
+/**
+ * Uses an XState machine to handle connection state.
+ * Initiates a Web3Modal which allows the user to select a provider.
+ * The XState provides a set of dispatches which trigger connection functionality.
+ * Leveraged XState to manage what stage of connecting the user was in as working with
+ *  providers can be frustrating.
+ * Subscribes to a small set of events and triggers XState updates as these are fired.
+ * As XState updates its networkID, this store provides a config value retrieved by the
+ *  networkID key and the config in ./Web3Context.Config
+ * TODO update to custom connection modal
+ * TODO Addition of more subscriptions to provider events such as
+ *  - new block header, should trigger a page update
+ *  - pending transaction should place the account in a loading state
+ */
 export const Web3Store: React.FC<Children> = ({ children }: Children) => {
-    // @ts-ignore
     const [trigger, setTrigger] = useState(false);
     // @ts-ignore
     const [state, send] = useMachine(web3Machine, {
         value: {},
         context: {
-            web3: new Web3(Web3.givenProvider || 'ws://localhost:8545'),
+            web3: new Web3(
+                Web3.givenProvider ||
+                    new Web3.providers.WebsocketProvider(process.env.NEXT_PUBLIC_DEFAULT_RPC || 'ws://localhost:8545'),
+            ),
             web3Modal: undefined,
             initiatedContracts: false,
             account: '',
@@ -138,11 +150,7 @@ export const Web3Store: React.FC<Children> = ({ children }: Children) => {
     };
 
     console.debug(`State: ${JSON.stringify(state.value)}`);
-
-    // const network: Network.Network | undefined = useSelector((state) =>
-    //     Network.selectSingle(state, state.context?.networkId ?? ''),
-    // );
-    const config = networkConfig[state.context.networkId ?? '1337'];
+    const config = networkConfig[state.context.networkId ?? '0'];
 
     return (
         <Web3Context.Provider

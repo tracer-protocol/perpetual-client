@@ -3,8 +3,8 @@ import { OrderContext } from 'context';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import { Box } from '@components/General';
-import { AdvancedOrderButton, SlideSelect } from '@components/Buttons';
-import { Option } from '@components/Buttons/SlideSelect';
+import { AdvancedOrderButton } from '@components/OrderButtons';
+import SlideSelect, { Option } from '@components/General/SlideSelect';
 import Error from '@components/General/Error';
 import { Exposure, Leverage } from './Inputs';
 import { OrderAction, orderDefaults, OrderState } from '@context/OrderContext';
@@ -124,7 +124,7 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
     const { order, orderDispatch } = useContext(OrderContext);
     return (
         <>
-            <Box className={`${className} ${account === '' ? 'hide' : ''} `}>
+            <Box className={`${className}`}>
                 {/* Position select */}
                 <AdjustTypeSelect
                     selected={order?.adjustType ?? 0}
@@ -157,10 +157,4 @@ export default styled(({ selectedTracer, className, account }: TIProps) => {
     padding: 0;
     height: 100%;
     z-index: 1;
-    &.hide {
-        height: 0;
-        padding: 0;
-        opacity: 0;
-        border: none;
-    }
 ` as React.FC<TIProps>;

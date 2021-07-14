@@ -1,11 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
-import { calcLeverage } from '@tracer-protocol/tracer-utils';
 import { OrderAction } from '@context/OrderContext';
-import { UserBalance } from 'types';
-import BigNumber from 'bignumber.js';
 
 const DEFAULT_MIN = -12.5;
 const DEFAULT_MAX = 12.5;
@@ -16,20 +13,10 @@ type DSProps = {
     min?: number;
     max?: number;
     orderDispatch: React.Dispatch<OrderAction> | undefined;
-    fairPrice: BigNumber;
-    balances: UserBalance;
 };
-export default styled(
-    ({
-        className,
-        value,
-        min,
-        max,
-        orderDispatch = () => console.error('Order dispatch not set'),
-        fairPrice,
-        balances,
-    }: DSProps) => {
-        const handleChange = (num: number) => {
+export default styled(({ className, value, min, max, orderDispatch }: DSProps) => {
+    const handleChange = (num: number) => {
+        if (orderDispatch) {
             orderDispatch({
                 type: 'setExposureFromLeverage',
                 leverage: num,
@@ -38,55 +25,56 @@ export default styled(
                 type: 'setLeverage',
                 value: num,
             });
-        };
+        }
+    };
 
-        useMemo(() => {
-            if (!balances?.base.eq(0)) {
-                let leverage = calcLeverage(balances.quote, balances.base, fairPrice);
-                if (balances?.base.lt(0)) {
-                    leverage = leverage.negated();
-                }
-                console.info('Setting leverage', leverage.toNumber());
-                orderDispatch({
-                    type: 'setLeverage',
-                    value: parseFloat(leverage.toNumber().toFixed(2)),
-                });
-            }
-        }, [balances]);
-
-        const min_ = min ?? DEFAULT_MIN;
-        const max_ = max ?? DEFAULT_MAX;
-        return (
-            <div className={className}>
-                <Slider
-                    defaultValue={0}
-                    value={value}
-                    min={min_}
-                    max={max_}
-                    step={0.1}
-                    marks={createMarks(min_, max_)}
-                    railStyle={railStyle}
-                    trackStyle={trackStyle}
-                    handleStyle={handleStyle}
-                    handle={CustomHandle}
-                    onChange={handleChange}
-                />
-            </div>
-        );
-    },
-)`
+    const min_ = min ?? DEFAULT_MIN;
+    const max_ = max ?? DEFAULT_MAX;
+    return (
+        <div className={className}>
+            <Slider
+                defaultValue={0}
+                value={value}
+                min={min_}
+                max={max_}
+                step={0.1}
+                marks={createMarks(min_, max_)}
+                railStyle={railStyle}
+                trackStyle={trackStyle}
+                handleStyle={handleStyle}
+                handle={CustomHandle}
+                onChange={handleChange}
+            />
+        </div>
+    );
+})`
     margin-bottom: 3.5rem;
     position: relative;
     .rc-slider-dot {
         display: none;
     }
+    .rc-slider-rail {
+        letter-spacing: -0.16px;
+        font-size: 8px;
+        line-height: 14px;
+        color: var(--color-accent);
+    }
+    .rc-slider-rail::before {
+        position: absolute;
+        content: 'SHORT';
+        left: 8px;
+        top: 0;
+    }
+    .rc-slider-rail::after {
+        position: absolute;
+        content: 'LONG';
+        right: 8px;
+        top: 0;
+    }
 ` as React.FC<DSProps>;
 
-const Label = styled(({ className, val, long }: { className?: string; val: number; long: boolean }) => (
-    <p className={className}>
-        <span className={long ? 'green' : 'red'}>{long ? 'LONG' : 'SHORT'}</span> <br />
-        {`${Math.abs(val)}x`}
-    </p>
+const Label = styled(({ className, val }: { className?: string; val: number; long: boolean }) => (
+    <p className={className}>{`${Math.abs(val)}x`}</p>
 ))`
     margin-left: ${(props) => (props.long ? '-3rem' : '3rem')};
     text-align: ${(props) => (props.long ? 'right' : 'left')};
@@ -117,18 +105,19 @@ const createMarks = (min: number, max: number) => ({
 
 const railStyle = {
     backgroundImage: 'linear-gradient(to right, #F15025 , #05CB3A)',
-    height: 10,
+    height: 14,
 };
 const trackStyle = {
     background: 'transparent',
-    height: 10,
+    height: 14,
 };
 
 const handleStyle = {
     width: '50px',
     height: '30px',
     lineHeight: '26px',
-    background: 'var(--color-primary)',
+    background: 'var(--color-accent)',
+    borderColor: 'var(--color-accent)',
     borderRadius: '20px',
     marginTop: '-11px',
 };

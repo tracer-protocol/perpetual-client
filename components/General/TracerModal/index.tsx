@@ -6,9 +6,53 @@ import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
 
+export type ModalState = {
+    amount: number;
+    loading: boolean;
+    title: string;
+    subTitle: string;
+};
+
+export type ModalAction =
+    | { type: 'setAmount'; amount: number }
+    | { type: 'setTitle'; title: string }
+    | { type: 'setSubTitle'; subTitle: string }
+    | { type: 'setLoading'; loading: boolean };
+
+export const modalReducer: (state: ModalState, action: ModalAction) => ModalState = (state, action)=> {
+    switch (action.type) {
+        case 'setAmount': {
+            return {
+                ...state,
+                amount: action.amount,
+            };
+        }
+        case 'setTitle': {
+            return {
+                ...state,
+                title: action.title,
+            };
+        }
+        case 'setSubTitle': {
+            return {
+                ...state,
+                subTitle: action.subTitle,
+            };
+        }
+        case 'setLoading': {
+            return {
+                ...state,
+                loading: action.loading,
+            };
+        }
+        default:
+            throw new Error('Unexpected action');
+    }
+};
+
 interface TProps {
     show: boolean;
-    title?: string;
+    title?: React.ReactNode;
     subTitle?: string;
     onClose: () => void;
     children: React.ReactNode;

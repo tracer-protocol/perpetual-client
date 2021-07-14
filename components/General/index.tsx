@@ -1,5 +1,5 @@
 import { CloseOutlined } from '@ant-design/icons';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import React from 'react';
 import styled from 'styled-components';
 import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/TooltipSelector';
@@ -33,7 +33,7 @@ export const Button = styled.button`
     border: 1px solid var(--color-primary);
     border-radius: 20px;
     text-align: center;
-    padding: 10px 0;
+    padding: 0.5rem 0;
     width: 160px;
     margin: auto;
 
@@ -68,7 +68,7 @@ export const Button = styled.button`
 
         &:hover {
             background: none;
-            color: var(--color-primary);
+            color: var(--color-text);
         }
     }
 `;
@@ -105,7 +105,7 @@ export const Section: React.FC<SProps> = styled(({ className, children, label, t
 })`
     width: 100%;
     display: flex;
-    padding-bottom: 10px;
+    padding-bottom: 0.3rem;
     &:last-child {
         padding-bottom: 0;
     }
@@ -206,14 +206,14 @@ type IProps = {
     className?: string;
 };
 
-export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IProps) => {
+export const ProgressBar = styled(({ percent, className }: IProps) => {
     return (
         <div className={className}>
             <div className="progress" />
             <p className="label">{percent}%</p>
         </div>
     );
-})`
+})<IProps>`
     background: var(--color-accent);
     position: relative;
     height: 32px;

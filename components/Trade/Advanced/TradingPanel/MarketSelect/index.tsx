@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { FactoryContext, TracerContext } from 'context';
-import { Tracer } from 'libs';
+import Tracer from 'libs/Tracer';
 import { Box, Logo } from '@components/General';
 import styled from 'styled-components';
 import { initialFactoryState } from '@context/FactoryContext';
@@ -98,38 +98,47 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
         return (
             <div className={className}>
                 <span>{arrowUp ? 'Hide Markets' : 'View Markets'}</span>
-                <img className="down-arrow w-4 ml-1" src="/img/general/triangle_down.svg" alt="Down Arrow" />
+                <img className="down-arrow" src="/img/general/triangle_down.svg" alt="Down Arrow" />
             </div>
         );
     },
 )`
+    position: relative;
+    display: flex;
     color: var(--color-primary);
     font-size: var(--font-size-small);
     border: 1px solid var(--color-primary);
     border-radius: 20px;
-    padding: 0 12px;
+    width: 147px;
+    padding-right: 10px;
     height: var(--height-small-button);
     text-align: center;
-    margin: 15px 0;
+    margin: auto 0;
+
+    @media (max-width: 1279px) {
+        width: 120px;
+        padding-right: 5px;
+    }
 
     @media (max-width: 1600px) {
         height: 22px;
-        & > .down-arrow {
-            margin-top: -2px !important;
-            width: 15px;
-            height: 15px;
-        }
     }
 
     &:hover {
         cursor: pointer;
     }
 
+    > span {
+        margin-left: auto;
+    }
+
     > .down-arrow {
-        margin-top: -5px;
+        margin: auto 0 auto auto;
+        width: 1em;
+        height: 1em;
         display: inline-block;
         transition: 0.3s;
-        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
+        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-2px)' : 'translateY(-1px)')};
     }
 `;
 
@@ -140,10 +149,12 @@ const MarketContainer = styled.div`
     height: var(--height-small-container);
 `;
 
-const SBox = styled<any>(Box)`
+const SBox = styled(Box)<{
+    $display: boolean;
+}>`
     background-color: ${(props) => props.color as string}!important;
     position: relative;
-    z-index: ${(props) => (props.display ? 4 : 1)};
+    z-index: ${(props) => (props.$display ? 4 : 1)};
     height: var(--height-small-container);
     border-bottom: 1px solid var(--color-accent);
     padding: 0 12px;
@@ -168,12 +179,12 @@ export default styled(({ className }: MSProps) => {
 
     return (
         <div className={`${className}`}>
-            <SBox color={popup ? '#011772' : '#000240'} display={popup} onMouseLeave={() => setPopup(false)}>
+            <SBox color={popup ? '#011772' : '#000240'} $display={popup} onMouseLeave={() => setPopup(false)}>
                 <MarketContainer>
                     <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
                     <div className="my-auto">{selectedTracer?.marketId}</div>
                 </MarketContainer>
-                <div className="ml-auto" onMouseEnter={() => setPopup(true)}>
+                <div className="ml-auto flex" onMouseEnter={() => setPopup(true)}>
                     <MarketSelectDropdownButton arrowUp={popup} />
                 </div>
                 <MarketSelectDropdown
@@ -193,5 +204,4 @@ export default styled(({ className }: MSProps) => {
     );
 })`
     width: 100%;
-    display: ${(props) => (props.account === '' ? 'none' : 'block')};
 ` as React.FC<MSProps>;

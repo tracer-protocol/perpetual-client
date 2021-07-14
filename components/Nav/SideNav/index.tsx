@@ -10,16 +10,17 @@ interface SNBProps {
 }
 
 const SideNavContainer = styled.div`
-    letter-spacing: -0.36px;
-    font-size: var(--font-size-medium);
     border-bottom: 1px solid #0c3586;
 `;
 
 const SideNavItem = styled.div`
-    color: var(--color-primary);
+    height: var(--height-small-container);
+    display: flex;
+    align-items: center;
     transition: 0.3s;
-    padding: 15px;
-    min-width: 125px;
+    color: var(--color-primary);
+    padding: 0px 15px;
+    font-size: var(--font-size-medium);
 
     &.selected {
         background: var(--color-secondary);

@@ -11,19 +11,24 @@ export interface SNBProps {
 
 export const SubNavContainer = styled.div`
     letter-spacing: -0.36px;
-    font-size: var(--font-size-medium);
     border-bottom: 1px solid #0c3586;
     display: flex;
-    height: var(--height-small-container);
 `;
 
-export const SubNavItem = styled.div`
-    color: var(--color-text);
+interface SNIProps {
+    small?: boolean;
+}
+export const SubNavItem = styled.div<SNIProps>`
+    height: ${(props) => (props.small ? 'var(--height-extra-small-container)' : 'var(--height-small-container)')};
+    display: flex;
+    align-items: center;
     transition: 0.3s;
-    border-right: 1px solid #0c3586;
+    color: var(--color-secondary);
+    padding: 10px 15px;
+    font-size: var(--font-size-small-heading);
+    line-height: var(--font-size-small-heading);
+    border-right: 1px solid var(--table-lightborder);
     text-align: center;
-    padding: 0 15px;
-    min-width: 125px;
 
     &.selected {
         background: var(--color-accent);

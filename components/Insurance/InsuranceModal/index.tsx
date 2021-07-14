@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import { toApproxCurrency } from '@libs/utils';
-import SlideSelect from '@components/Buttons/SlideSelect';
-import { Option } from '@components/Buttons/SlideSelect/Options';
+import SlideSelect from '@components/General/SlideSelect';
+import { Option } from '@components/General/SlideSelect/Options';
 import { Button, Checkbox, Dropdown, HiddenExpand, Previous, NumberSelect, Section } from '@components/General';
 import TracerModal from '@components/General/TracerModal';
 import styled from 'styled-components';
@@ -11,6 +11,7 @@ import { CaretDownFilled } from '@ant-design/icons';
 import ErrorComponent from '@components/General/Error';
 import Tracer from '@libs/Tracer';
 import BigNumber from 'bignumber.js';
+import { Options } from '@context/TransactionContext';
 
 const SSlideSelect = styled(SlideSelect)`
     font-size: var(--font-size-small);
@@ -175,7 +176,12 @@ export const InsuranceModal: React.FC<BProps> = ({
             const callback = () => {
                 setShow(false);
             };
-            isDeposit ? deposit(tracer, amount, callback) : withdraw(tracer, amount, callback);
+            const options: Options = {
+                onSuccess: callback,
+            };
+            if (!!deposit && !!withdraw) {
+                isDeposit ? deposit(tracer, amount, options) : withdraw(tracer, amount, options);
+            }
         } catch (err) {
             console.error(`Failed to deposit into insurance pool: ${err}`);
         }
@@ -230,6 +236,9 @@ export const InsuranceModal: React.FC<BProps> = ({
                 title={'Amount'}
                 amount={amount}
                 balance={balance?.toNumber() ?? 0}
+                setMax={(_e) => {
+                    setAmount(balance?.toNumber() ?? 0);
+                }}
                 setAmount={setAmount}
             />
             <SHiddenExpand defaultHeight={0} open={!!amount}>

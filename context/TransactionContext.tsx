@@ -1,12 +1,13 @@
 import React, { createContext, useRef } from 'react';
 import { AppearanceTypes, useToasts } from 'react-toast-notifications';
-import { Children, Result } from 'types';
+import { Children, Result } from 'libs/types';
 import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
 import { TransactionReceipt } from 'web3/types';
 
 export type Options = {
-    callback?: (...args: any) => any; // eslint-disable-line
+    onSuccess?: (receipt?: TransactionReceipt) => any; // eslint-disable-line
+    onError?: (error?: Error | Result) => any;
     afterConfirmation?: (hash: string) => any;
     statusMessages?: {
         waiting?: string; // transaction message for when we are waiting for the user to confirm
@@ -46,15 +47,20 @@ export const TransactionContext = createContext<{
 
 // type Status = 'INITIALIZED' | 'PROCESSING' | 'ERROR' | 'SUCCESS'
 
-// TODO store a list of transactions with a transaction state so the user can view all pending transactions
-// The list can be populate when the user visits the page
+/**
+ * TransactionStore which makes creating and updating Toasters easier when calling transactions.
+ * Call handleTransaction with the required params to automatically update the toaster as the transaction
+ *  moves through the various stages of its lifestile.
+ * TODO store a list of transactions with a transaction state so the user can view all pending transactions
+ * TODO populate the current pending transactions when the user visits the page
+ */
 export const TransactionStore: React.FC = ({ children }: Children) => {
     const { addToast, updateToast } = useToasts();
     const pendingRef = useRef('');
 
     /** Specifically handles transactions */
     const handleTransaction: HandleTransactionType = async (callMethod, params, options) => {
-        const { statusMessages, callback, afterConfirmation } = options ?? {};
+        const { statusMessages, onError, onSuccess, afterConfirmation } = options ?? {};
         // actually returns a string error in the library
         let toastId = addToast(
             ['Pending Transaction', statusMessages?.waiting ?? 'Approve transaction with provider'],
@@ -85,6 +91,7 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
                     appearance: 'success',
                     autoDismiss: true,
                 });
+                onSuccess ? onSuccess(receipt) : null;
             })
             .on('error', (error) => {
                 updateToast(toastId as unknown as string, {
@@ -96,13 +103,13 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
                     appearance: 'error',
                     autoDismiss: true,
                 });
+                onError ? onError(error) : null;
             });
-        callback ? callback(await res) : null;
     };
 
     /** Very similiar function to above but handles regular async functions, mainly signing */
     const handleAsync: HandleAsyncType = async (callMethod, params, options) => {
-        const { statusMessages, callback } = options ?? {};
+        const { statusMessages, onError, onSuccess } = options ?? {};
         // actually returns a string error in the library
         const toastId = addToast(
             ['Pending Transaction', statusMessages?.waiting ?? 'Approve transaction with provider'],
@@ -121,17 +128,19 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
                     appearance: 'error',
                     autoDismiss: true,
                 });
+                onError ? onError(res) : null;
             } else {
                 updateToast(toastId as unknown as string, {
                     content: statusMessages?.success ?? `${res.message}`,
                     appearance: 'success',
                     autoDismiss: true,
                 });
+                onSuccess ? onSuccess(res) : null;
             }
-            callback ? callback(res) : null;
         });
     };
 
+    /** Adds a pending toaster with id set to an object ref if the order is Partially or Fully Matched */
     const setPending = (status: 'PartialMatch' | 'FullMatch') => {
         const toastId = addToast(
             [
@@ -146,6 +155,7 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         pendingRef.current = toastId as unknown as string;
     };
 
+    /** Closes the pending toaster attached to the pendingRef */
     const closePending = () => {
         if (pendingRef.current) {
             updateToast(pendingRef.current as unknown as string, {

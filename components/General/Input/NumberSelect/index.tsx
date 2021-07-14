@@ -1,5 +1,5 @@
 import React from 'react';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import styled from 'styled-components';
 import { BasicInputContainer, Input } from '../';
 import { LockOutlined, UnlockOutlined } from '@ant-design/icons';
@@ -8,6 +8,7 @@ import { After } from '@components/General';
 
 const Unit = styled.span`
     font-size: var(--font-size-medium);
+    line-height: var(--font-size-medium);
     letter-spacing: 0;
     color: var(--color-primary);
     margin-top: auto;
@@ -15,7 +16,7 @@ const Unit = styled.span`
     white-space: nowrap;
 `;
 
-const Header = styled.h3`
+export const NumberSelectHeader = styled.h3`
     font-size: var(--font-size-small);
     letter-spacing: -0.32px;
     color: var(--color-primary);
@@ -37,7 +38,7 @@ const Balance = styled.span`
     }
 `;
 
-const Max = styled.span`
+export const Max = styled.span`
     color: var(--color-primary);
     text-decoration: underline;
     transition: 0.3s;
@@ -49,16 +50,52 @@ const Max = styled.span`
     }
 `;
 
+type BHProps = {
+    className?: string;
+    amount: number;
+    setMax?: (any: any) => any;
+    title: string;
+    balance: number;
+};
+
+const BalanceHeader: React.FC<BHProps> = ({ title, balance, amount, setMax }) => (
+    <NumberSelectHeader>
+        {title}
+        <Balance className={`balance ${amount > balance ? 'invalid' : ''}`}>
+            {`Available: ${toApproxCurrency(balance)}`}
+            {amount ? <After className="ml-2 after">{toApproxCurrency(Math.max(balance - amount, 0))}</After> : null}
+        </Balance>
+        {setMax ? <Max onClick={setMax}>Max</Max> : null}
+    </NumberSelectHeader>
+);
+
+export const LockContainer = styled.div`
+    margin-top: 0.125rem;
+    margin-right: 0.125rem;
+    color: #f4ab57;
+    font-size: 1.2rem;
+    padding: 0 0.7rem;
+    height: 24px;
+    margin-bottom: 0.2rem;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    border-radius: 20px;
+    border: 1px solid #f4ab57;
+`;
+
 type NSProps = {
     className?: string;
     amount: number;
     setAmount: (number: number) => void;
     unit: string;
     title: string;
-    balance?: number;
-    hasLock?: boolean;
-    isLocked?: boolean;
-    lockOnClick?: (e: any) => any;
+    balance?: number; // display users balance
+    displayLock?: boolean; // boolean to display lock
+    isLocked?: boolean; // is lock locked
+    lockOnClick?: (e: any) => any; // handler when lock is clicked
+    setMax?: (e: any) => any; // used if you just want setmax
+    header?: React.ReactNode; // can be used for fully custom header
 } & Children;
 
 export const NumberSelect: React.FC<NSProps> = ({
@@ -68,27 +105,25 @@ export const NumberSelect: React.FC<NSProps> = ({
     unit,
     title,
     balance,
-    hasLock,
+    displayLock,
     isLocked,
     lockOnClick,
+    setMax,
+    header,
 }: NSProps) => {
-    const getLock = (hasLock: any) => {
+    const getLock = (hasLock: boolean | undefined, isLocked: boolean | undefined) => {
         if (hasLock) {
             if (isLocked) {
                 return (
-                    <LockOutlined
-                        onClick={lockOnClick}
-                        className="mt-2 mr-2"
-                        style={{ color: '#F4AB57', fontSize: '200%' }}
-                    />
+                    <LockContainer>
+                        <LockOutlined onClick={lockOnClick} />
+                    </LockContainer>
                 );
             } else {
                 return (
-                    <UnlockOutlined
-                        onClick={lockOnClick}
-                        className="mt-2 mr-2"
-                        style={{ color: '#F4AB57', fontSize: '200%' }}
-                    />
+                    <LockContainer>
+                        <UnlockOutlined onClick={lockOnClick} />
+                    </LockContainer>
                 );
             }
         } else {
@@ -96,24 +131,24 @@ export const NumberSelect: React.FC<NSProps> = ({
         }
     };
 
+    const getHeader = () => {
+        if (header) {
+            return header;
+        } else if (balance) {
+            return <BalanceHeader title={title} amount={amount} balance={balance} setMax={setMax} />;
+        } else {
+            return (
+                <NumberSelectHeader>
+                    {title}
+                    {setMax ? <Max onClick={setMax}>Max</Max> : null}
+                </NumberSelectHeader>
+            );
+        }
+    };
+
     return (
         <div className={className}>
-            <Header>
-                {title}
-                {balance || balance === 0 ? ( // if there is a balance then display it
-                    <>
-                        <Balance className={`balance ${amount > balance ? 'invalid' : ''}`}>
-                            {`Available: ${balance}`}
-                            {amount ? <After className="ml-2 after">{toApproxCurrency(balance - amount)}</After> : null}
-                        </Balance>
-                        <Max className="max" onClick={(_e) => setAmount(balance)}>
-                            Max
-                        </Max>
-                    </>
-                ) : (
-                    ''
-                )}
-            </Header>
+            {getHeader()}
             <BasicInputContainer>
                 <Input
                     id="username"
@@ -123,9 +158,8 @@ export const NumberSelect: React.FC<NSProps> = ({
                     placeholder="0.0"
                     onChange={(e) => setAmount(Math.abs(parseFloat(e.target.value)))}
                     value={!Number.isNaN(amount) ? amount : ''}
-                    disabled={isLocked}
                 />
-                {getLock(hasLock)}
+                {getLock(displayLock, isLocked)}
                 <Unit>{unit}</Unit>
             </BasicInputContainer>
         </div>

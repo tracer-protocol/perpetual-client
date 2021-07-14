@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext, Web3Context } from 'context';
 import { MarketSelect, AccountPanel } from './TradingPanel';
-import { ModifyOrder, PlaceOrder } from './TradingPanel/TradingInput';
+import { PlaceOrder } from './TradingPanel/TradingInput';
 import styled from 'styled-components';
 import TradingView from './RightPanel';
 import { MARKET } from '@context/OrderContext';
@@ -10,16 +10,18 @@ const TradingPanel = styled.div`
     width: 25%;
     display: flex;
     flex-direction: column;
-    height: 92vh;
+    height: 87vh;
     position: relative;
     border-left: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
+    border-bottom: 1px solid #0c3586;
 `;
 
 const RightPanel = styled.div`
     width: 75%;
     display: flex;
-    height: 92vh;
+    height: 87vh;
+    border-bottom: 1px solid #0c3586;
 `;
 
 const Overlay = styled.div`
@@ -42,7 +44,7 @@ const Overlay = styled.div`
 const Advanced: React.FC = styled(({ className }) => {
     const { account } = useContext(Web3Context);
     const { selectedTracer } = useContext(TracerContext);
-    const { order, orderDispatch } = useContext(OrderContext);
+    const { order, orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
     const [isAdjust] = useState(false);
 
     useEffect(() => {
@@ -50,7 +52,7 @@ const Advanced: React.FC = styled(({ className }) => {
             orderDispatch({ type: 'setLock', value: true });
             orderDispatch({ type: 'setAdvanced', value: true });
         } else {
-            console.error('Order dispatch undefined');
+            console.error('Order dispatch not set');
         }
     }, []);
 
@@ -59,7 +61,7 @@ const Advanced: React.FC = styled(({ className }) => {
             if (orderDispatch) {
                 orderDispatch({ type: 'setOrderType', value: MARKET });
             } else {
-                console.error('Order dispatch undefined');
+                console.error('Order dispatch not set');
             }
         }
     }, [isAdjust]);
@@ -68,11 +70,7 @@ const Advanced: React.FC = styled(({ className }) => {
         <div className={`container ${className}`}>
             <TradingPanel>
                 <MarketSelect account={account ?? ''} />
-                {isAdjust ? (
-                    <ModifyOrder selectedTracer={selectedTracer} account={account ?? ''} />
-                ) : (
-                    <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
-                )}
+                <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
                 <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} order={order} />
             </TradingPanel>
             <RightPanel>
@@ -84,7 +82,6 @@ const Advanced: React.FC = styled(({ className }) => {
 })`
     display: flex;
     height: 100%;
-    max-height: 92vh;
 `;
 
 export default Advanced;

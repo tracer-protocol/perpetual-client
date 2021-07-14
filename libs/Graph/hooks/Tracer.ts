@@ -1,9 +1,9 @@
 import { gql, useQuery } from '@apollo/client';
-import { FilledOrder } from 'types/OrderTypes';
+import { FilledOrder } from 'libs/types/OrderTypes';
 import { useEffect, useRef } from 'react';
 import Web3 from 'web3';
-import { CandleData } from 'types/TracerTypes';
-import { toBigNumbers } from '..';
+import { CandleData, LineData } from 'libs/types/TracerTypes';
+import { toBigNumbers } from '@libs/utils';
 
 const ALL_TRACERS = gql`
     query {
@@ -16,14 +16,18 @@ const ALL_TRACERS = gql`
 
 type Tracers = {
     tracers: {
-        id: string;
-        marketId: string;
+        id: string; // tracer address
+        marketId: string; // tracer market ticker eg BTC/USDC
     }[];
     error: any;
     loading: any;
     refetch: any;
 };
 
+/**
+ * Hook to fetch a list of Tracer adresses deployed by the factory
+ * @returns a list of Tracer objects containing the marketId and id (tracerAddress)
+ */
 export const useAllTracers: () => Tracers = () => {
     const ref = useRef([]);
     const { data, error, loading, refetch } = useQuery(ALL_TRACERS, {
@@ -56,7 +60,7 @@ const TRACER_TRADES = gql`
 /**
  * Fetch the most recent X trades for the tracer market
  * @param tracer market
- * @returns
+ * @returns a list of orders or an empty array
  */
 export const useMostRecentMatched: (tracer: string) => {
     mostRecentTrades: FilledOrder[];
@@ -156,6 +160,60 @@ export const useCandles: (tracer: string) => {
 
     return {
         candles: ref.current,
+        error,
+        loading,
+        refetch,
+    };
+};
+
+const parseLines: (data: any) => LineData = (data) => {
+    const foundTimes: Record<number, boolean> = {};
+    if (!data) {
+        return [];
+    }
+    const parsedData = [];
+    for (let i = 0; i < data?.length ?? 0; i++) {
+        const candle = data[i];
+        if (foundTimes[candle.time]) {
+            continue;
+        }
+        if (i === 0) {
+            continue;
+        }
+        foundTimes[candle.time] = true;
+        parsedData.push({
+            time: candle.time,
+            value: parseFloat(Web3.utils.fromWei(candle.close)),
+        });
+    }
+    return parsedData;
+};
+
+export const useLines: (tracer: string) => {
+    lines: LineData;
+    error: any;
+    loading: any;
+    refetch: any;
+} = (tracer) => {
+    const ref = useRef<LineData>([]);
+    const { data, error, loading, refetch } = useQuery(ALL_CANDLES, {
+        variables: { tracer: tracer.toLowerCase() },
+        errorPolicy: 'all',
+        onError: ({ graphQLErrors }) => {
+            if (graphQLErrors) {
+                graphQLErrors.map((err) => console.error(`Failed to fetch line trades: ${err}`));
+            }
+        },
+    });
+
+    useEffect(() => {
+        if (data?.candles?.length > ref.current.length) {
+            ref.current = parseLines(data?.candles);
+        }
+    }, [data?.candles]);
+
+    return {
+        lines: ref.current,
         error,
         loading,
         refetch,

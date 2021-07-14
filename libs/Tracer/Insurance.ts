@@ -15,20 +15,23 @@ export const defaults: Record<string, any> = {
     iTokenAddress: '',
 };
 
+/**
+ * Insurance class to seperate some of the functionality from the Tracer class
+ */
 export default class Insurance {
-    instance: InsuranceType;
-    address: string;
-    market: string;
-    liquidity: BigNumber;
-    target: BigNumber;
-    userBalance: BigNumber;
-    rewards: BigNumber;
-    health: BigNumber;
-    apy: BigNumber;
-    buffer: BigNumber;
-    iTokenAddress: string;
-    iPoolTokenName: string;
-    initialised: Promise<boolean>;
+    instance: InsuranceType; // contract instance
+    address: string; // insurance contract address
+    market: string; // parent Tracer market
+    liquidity: BigNumber; // insurance pool liquidity
+    target: BigNumber; // insurance pool target
+    userBalance: BigNumber; // insurance pool user token balance
+    rewards: BigNumber; // total insurance pool rewards
+    health: BigNumber; // insurance pool health (percentile of current pool liquidity and pool target)
+    apy: BigNumber; // insurance pool APY
+    buffer: BigNumber; // set amount of pool liquidity that acts as the insurance pool buffer
+    iTokenAddress: string; // insurance pool token address
+    iPoolTokenName: string; // insurance pool token name
+    initialised: Promise<boolean>; // boolean value to tell if this class has been initialised
 
     constructor(web3: Web3, address: string, marketId: string) {
         this.instance = new web3.eth.Contract(insuranceAbi as AbiItem[], address) as unknown as InsuranceType;
@@ -46,6 +49,7 @@ export default class Insurance {
         this.initialised = this.init();
     }
 
+    /** Initialises this class. Sets the pools balances and iTokenAddress */
     init: () => Promise<boolean> = async () => {
         try {
             const iTokenAddress = await this.instance?.methods.token().call();
@@ -58,6 +62,11 @@ export default class Insurance {
         }
     };
 
+    /**
+     * Gets a target users account balance
+     * @param account target user
+     * @returns the parsed users account balance
+     */
     getUserBalance: (account: string) => Promise<BigNumber> = async (account) => {
         if (account) {
             const userBalance_ = await this.instance?.methods.getPoolUserBalance(account as string).call();
@@ -67,6 +76,10 @@ export default class Insurance {
         }
     };
 
+    /**
+     * Gets the pool balances
+     * @returns an object containing all the pool balances
+     */
     getPoolBalances: () => Promise<{
         target: BigNumber;
         liquidity: BigNumber;

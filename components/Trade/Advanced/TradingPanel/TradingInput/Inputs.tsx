@@ -1,7 +1,7 @@
 import React from 'react';
 import SmallInput, { InputContainer } from '@components/General/Input/SmallInput';
-import { Tracer } from 'libs';
-import { LIMIT, MARKET, OrderAction, OrderState } from '@context/OrderContext';
+import Tracer from 'libs/Tracer';
+import { MARKET, OrderAction, OrderState } from '@context/OrderContext';
 import DefaultSlider from '@components/General/Slider';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
@@ -66,15 +66,14 @@ export const Price: React.FC<{
             className={className ?? ''}
             setMax={(e) => {
                 e.preventDefault();
-                orderDispatch ? orderDispatch({ type: 'setBestPrice' }) : console.error('No dispatch function set');
+                orderDispatch ? orderDispatch({ type: 'setBestPrice' }) : console.error('Order dispatch not set');
             }}
             maxText={'Best'}
             onChange={(e) => {
                 if (orderDispatch) {
                     orderDispatch({ type: 'setPrice', value: parseFloat(e.target.value) });
-                    orderDispatch({ type: 'setOrderType', value: LIMIT });
                 } else {
-                    console.error('No dispatch function set');
+                    console.error('Order dispatch not set');
                 }
             }}
             unit={selectedTracer?.quoteTicker ?? ''}
@@ -129,7 +128,7 @@ export const LeverageInput: React.FC<{
                     console.error('No dispatch function set');
                 }
             }}
-            amount={leverage}
+            amount={parseFloat(leverage.toFixed(1))}
         />
     );
 };

@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-const DEFAULT_VALUE = 1;
-const DEFAULT_MIN = 1;
+const DEFAULT_VALUE = 0;
+const DEFAULT_MIN = 0;
 const DEFAULT_MAX = 100;
 const DEFAULT_STEP = 0.5;
 
@@ -38,22 +38,23 @@ const createMarks = (min: number, max: number) => ({
 const defaultRailStyle = { backgroundColor: 'var(--color-accent)', height: 10 };
 const defaultTrackStyle = { backgroundColor: 'var(--color-accent)', height: 10 };
 const defaultHandleStyle = {
-    width: '50px',
-    height: '30px',
+    width: '65px',
+    height: '32px',
     background: 'var(--color-primary)',
     borderRadius: '20px',
-    marginTop: '-11px',
+    marginTop: '-9px',
 };
+
+const HandleValue = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: var(--font-size-medium);
+`;
 
 const { Handle } = Slider;
 const DefaultHandle = (e: any) => {
-    const HandleValue = styled.div`
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: white;
-        font-size: var(--font-size-small);
-    `;
     const { value } = e;
     return (
         <Handle {...e}>
@@ -93,34 +94,19 @@ const DefaultSlider: React.FC<DSProps> = styled(
         const max_ = max ?? DEFAULT_MAX;
         return (
             <div className={className}>
-                {value ? (
-                    <Slider
-                        defaultValue={defaultValue ? defaultValue : DEFAULT_VALUE}
-                        value={value}
-                        min={min_}
-                        max={max_}
-                        step={step ?? DEFAULT_STEP}
-                        marks={marks ?? createMarks(min_, max_)}
-                        railStyle={railStyle ? railStyle : defaultRailStyle}
-                        trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
-                        handleStyle={handleStyle ? handleStyle : defaultHandleStyle}
-                        handle={DefaultHandle}
-                        onChange={handleChange}
-                    />
-                ) : (
-                    <Slider
-                        defaultValue={defaultValue ? defaultValue : DEFAULT_VALUE}
-                        min={min_}
-                        max={max_}
-                        step={step ?? DEFAULT_STEP}
-                        marks={marks ?? createMarks(min_, max_)}
-                        railStyle={railStyle ? railStyle : defaultRailStyle}
-                        trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
-                        handleStyle={handleStyle ? handleStyle : defaultHandleStyle}
-                        handle={DefaultHandle}
-                        onChange={handleChange}
-                    />
-                )}
+                <Slider
+                    defaultValue={defaultValue ? defaultValue : DEFAULT_VALUE}
+                    value={value}
+                    min={min_}
+                    max={max_}
+                    step={step ?? DEFAULT_STEP}
+                    marks={marks ?? createMarks(min_, max_)}
+                    railStyle={railStyle ? railStyle : defaultRailStyle}
+                    trackStyle={trackStyle ? trackStyle : defaultTrackStyle}
+                    handleStyle={handleStyle ? handleStyle : defaultHandleStyle}
+                    handle={DefaultHandle}
+                    onChange={handleChange}
+                />
             </div>
         );
     },

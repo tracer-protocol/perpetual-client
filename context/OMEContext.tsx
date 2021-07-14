@@ -1,10 +1,10 @@
 import { getOrders, getUsersOrders } from '@libs/Ome';
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import React, { useContext, useEffect, useMemo, useReducer, useRef } from 'react';
-import { Children } from 'types';
+import { Children } from 'libs/types';
 import { TracerContext } from './TracerContext';
 import { Web3Context } from './Web3Context';
-import { FilledOrder, OMEOrder as FlattenedOMEOrder } from 'types/OrderTypes';
+import { FilledOrder, OMEOrder as FlattenedOMEOrder } from 'libs/types/OrderTypes';
 import Web3 from 'web3';
 // @ts-ignore
 import { Callback } from 'web3/types';
@@ -81,6 +81,14 @@ type OMEAction =
 
 export const OMEContext = React.createContext<Partial<ContextProps>>({});
 
+/**
+ * Provides a store of OME data that can be updated, used and refetched by all children
+ *  of the store.
+ * FilledOrders are also fetched in this context to keep order related things in one context.
+ * FilledOrders are fetched from The Graph through the useUsersMatched hook.
+ * This could eventually incorporate a websocket connection or be removed in place of
+ *  a WS with direct connection to the OME and/or API
+ */
 export const OMEStore: React.FC<Children> = ({ children }: Children) => {
     const isMounted = useRef(true);
     const { account } = useContext(Web3Context);

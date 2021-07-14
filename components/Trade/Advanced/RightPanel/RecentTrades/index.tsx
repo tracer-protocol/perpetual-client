@@ -1,8 +1,12 @@
 import { TradingTable } from '@components/Tables/TradingTable';
 import { toApproxCurrency } from '@libs/utils';
-import { FilledOrder } from 'types/OrderTypes';
-import React from 'react';
+import { FilledOrder } from 'libs/types/OrderTypes';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import FogOverlay from '@components/Overlay/FogOverlay';
+// @ts-ignore
+import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
+import Icon from '@ant-design/icons';
 
 const STradingTable = styled(TradingTable)`
     tbody {
@@ -13,30 +17,31 @@ const STradingTable = styled(TradingTable)`
 
     thead {
         text-align: left;
-        margin-bottom: 0.5rem;
+        margin-bottom: 5px;
     }
 
     .time-header {
         text-align: right;
-        padding-right: 0.8rem;
+        padding-right: 15px;
     }
 
     .time-cell {
         text-align: right;
-        padding-right: 0.5rem;
+        padding-right: 10px;
     }
 `;
 interface RTProps {
     trades: FilledOrder[];
-    className?: string;
+    displayTrades: boolean;
 }
+const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => {
+    const [showOverlay, setOverlay] = useState(true);
 
-const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) => {
     return (
-        <div className={className}>
-            <h3>Recent Trades</h3>
+        <RecentTradesContainer displayTrades={displayTrades}>
+            <RecentTradesTitle>Recent Trades</RecentTradesTitle>
             {trades?.length ? (
-                <div className="h-full">
+                <TableContainer>
                     <STradingTable>
                         <thead>
                             <th>Price</th>
@@ -62,28 +67,39 @@ const RecentTrades: React.FC<RTProps> = styled(({ trades, className }: RTProps) 
                             })}
                         </tbody>
                     </STradingTable>
-                </div>
+                </TableContainer>
             ) : (
-                <p>No recent trades</p>
+                <Icon component={TracerLoading} className="tracer-loading" />
             )}
-        </div>
+            {showOverlay ? <FogOverlay buttonName="Show Recent Trades" onClick={() => setOverlay(false)} /> : null}
+        </RecentTradesContainer>
     );
-})`
-    padding: 10px 0 10px 10px;
+};
+
+export default RecentTrades;
+
+const RecentTradesContainer = styled.div<{ displayTrades: boolean }>`
     height: 100%;
     position: relative;
-    display: flex;
     overflow: auto;
     flex-direction: column;
     border-top: 1px solid var(--color-accent);
-
-    h3 {
-        font-size: var(--font-size-medium);
-        letter-spacing: -0.4px;
-        color: #ffffff;
-        text-transform: capitalize;
-        margin-bottom: 10px;
+    display: flex;
+    @media (max-height: 850px) {
+        display: ${(props) => (props.displayTrades ? 'flex' : 'none')};
     }
 `;
 
-export default RecentTrades;
+const RecentTradesTitle = styled.div`
+    font-size: var(--font-size-small-heading);
+    font-weight: bold;
+    letter-spacing: -0.4px;
+    color: #ffffff;
+    text-transform: capitalize;
+    padding: 10px 0 0 10px;
+`;
+
+const TableContainer = styled.div`
+    height: 100%;
+    padding: 10px 0 10px 10px;
+`;

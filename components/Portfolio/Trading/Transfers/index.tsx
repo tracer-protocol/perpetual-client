@@ -1,6 +1,6 @@
 import React from 'react';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHead, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
 import { DateAndTime } from '@components/General';
 
 const Transfers: React.FC = () => {
@@ -48,9 +48,11 @@ const Transfers: React.FC = () => {
                     <tr>
                         {headings.map((heading, i) =>
                             i === 3 ? (
-                                <TableHead theme={TableHeadEndTheme}>{heading}</TableHead>
+                                <TableHeading theme={TableHeadEndTheme} key={i}>
+                                    {heading}
+                                </TableHeading>
                             ) : (
-                                <TableHead>{heading}</TableHead>
+                                <TableHeading key={i}>{heading}</TableHeading>
                             ),
                         )}
                     </tr>

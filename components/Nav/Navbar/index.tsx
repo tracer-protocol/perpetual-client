@@ -87,10 +87,10 @@ const Identicon = dynamic(import('../Identicon'), { ssr: false });
 
 const ConnectButton: React.FC<any> = styled.button`
     display: flex;
-    border: 2px solid #fff;
+    // border: 2px solid #fff;
     border-radius: 100px;
     width: 160px;
-    height: 50px;
+    height: 40px;
     transition: 0.2s;
     padding: 0 10px;
     margin: auto 10px;
@@ -175,12 +175,11 @@ const NavBarContent: React.FC = styled(({ className }) => {
                         <a className="m-auto ">Insurance</a>
                     </Link>
                 </li>
-                {/*TODO: Add back portfolio*/}
-                {/*<li className={linkStyles + (route === 'portfolio' ? ' selected' : '')}>*/}
-                {/*    <Link href="/portfolio">*/}
-                {/*        <a className="m-auto">Portfolio</a>*/}
-                {/*    </Link>*/}
-                {/*</li>*/}
+                <li className={linkStyles + (route === 'portfolio' ? ' selected' : '')}>
+                    <Link href="/portfolio">
+                        <a className="m-auto">Portfolio</a>
+                    </Link>
+                </li>
             </ul>
             <ConnectButton
                 onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
@@ -200,7 +199,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
 })`
     display: flex;
     color: var(--color-text);
-    height: 8vh;
+    height: 60px;
 
     > ul {
         display: flex;

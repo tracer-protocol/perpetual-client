@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import OrderBook from '@components/OrderBook';
+import React, { FC, useContext, useState } from 'react';
+import OrderBook, { PrecisionDropdown } from '@components/OrderBook';
 import Tracer, { defaults } from '@libs/Tracer';
 import { Box } from '@components/General';
 import RecentTrades from './RecentTrades';
@@ -12,13 +12,11 @@ import {
     toApproxCurrency,
 } from '@libs/utils';
 import BigNumber from 'bignumber.js';
-
-import AccountSummary from './AccountDetails';
+import AccountSummary from './AccountSummary';
 import InsuranceInfo from './InsuranceInfo';
-import Graphs from './Graphs';
-import Icon from '@ant-design/icons';
-// @ts-ignore
-import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
+import Graphs from './Graph';
+import SlideSelect, { Option } from '@components/General/SlideSelect';
+import { FilledOrder, OMEOrder } from '@libs/types/OrderTypes';
 
 const TitledBox = styled(({ className, title, children }) => {
     return (
@@ -39,12 +37,14 @@ const TitledBox = styled(({ className, title, children }) => {
     color: var(--color-text);
     letter-spacing: -0.32px;
     font-size: var(--font-size-small);
+    display: flex;
+    padding: 0px 16px;
+    height: var(--height-small-container);
 
     > p {
         color: var(--color-secondary);
         font-size: var(--font-size-extra-small);
         letter-spacing: -0.24px;
-        margin-bottom: 0.2rem;
     }
 `;
 
@@ -92,22 +92,6 @@ const MarketInfo: React.FC<MIProps> = styled(
     display: flex;
 `;
 
-const OrderBookContainer = styled.div`
-    border-top: 1px solid var(--color-accent);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    padding: 0.6rem 0;
-
-    h3 {
-        letter-spacing: -0.4px;
-        color: #ffffff;
-        text-transform: capitalize;
-        font-size: var(--font-size-medium);
-        margin: 0 0.8rem 0.5rem;
-    }
-`;
-
 const SBox = styled(Box)`
     flex-direction: column;
     padding: 0;
@@ -123,7 +107,7 @@ const SBox = styled(Box)`
     }
 `;
 
-const TradingView: React.FC<{
+const TradingView: FC<{
     selectedTracer: Tracer | undefined;
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
@@ -146,23 +130,92 @@ const TradingView: React.FC<{
             </SBox>
             <SBox className="sidePanel">
                 <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
-                <OrderBookContainer>
-                    <h3>Order Book</h3>
-                    {omeState?.orders?.askOrders?.length || omeState?.orders?.bidOrders?.length ? (
-                        <OrderBook
-                            askOrders={omeState.orders.askOrders}
-                            bidOrders={omeState.orders.bidOrders}
-                            marketUp={omeState?.marketUp ?? false}
-                            lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
-                        />
-                    ) : (
-                        <Icon component={TracerLoading} className="mb-3 tracer-loading" />
-                    )}
-                </OrderBookContainer>
-                <RecentTrades trades={mostRecentTrades} />
+                <TradesAndBook
+                    askOrders={omeState?.orders.askOrders}
+                    bidOrders={omeState?.orders.bidOrders}
+                    marketUp={omeState?.marketUp ?? false}
+                    lastTradePrice={omeState?.lastTradePrice ?? new BigNumber(0)}
+                    mostRecentTrades={mostRecentTrades}
+                />
             </SBox>
         </>
     );
 };
 
 export default TradingView;
+
+const TradesAndBook: React.FC<{
+    askOrders: OMEOrder[] | undefined;
+    bidOrders: OMEOrder[] | undefined;
+    marketUp: boolean;
+    lastTradePrice: BigNumber;
+    mostRecentTrades: FilledOrder[];
+}> = ({ askOrders, bidOrders, marketUp, lastTradePrice, mostRecentTrades }) => {
+    const [decimals, setDecimals] = useState(1);
+    const [selected, setSelected] = useState(SHOW_BOOK);
+    return (
+        <>
+            <StyledSlideSelect onClick={(index, _e) => setSelected(index)} value={selected}>
+                <Option>
+                    Order Book
+                    <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
+                </Option>
+                <Option>Recent Trades</Option>
+            </StyledSlideSelect>
+            <OrderBook
+                askOrders={askOrders}
+                decimals={decimals}
+                setDecimals={setDecimals}
+                bidOrders={bidOrders}
+                marketUp={marketUp ?? false}
+                lastTradePrice={lastTradePrice ?? new BigNumber(0)}
+                displayBook={selected === SHOW_BOOK}
+            />
+            <RecentTrades trades={mostRecentTrades} displayTrades={selected !== SHOW_BOOK} />
+        </>
+    );
+};
+
+const StyledSlideSelect = styled(SlideSelect)`
+    border-radius: 0;
+    border-top: 1px solid var(--color-accent);
+    border-bottom: 0;
+    border-right: 0;
+    margin: 0;
+    display: none;
+    width: 100%;
+    border-left: 0;
+    height: var(--height-extra-small-container);
+    color: var(--color-secondary);
+
+    > .selected {
+        font-weight: bold;
+        color: #fff;
+    }
+
+    @media (max-height: 850px) {
+        display: flex;
+    }
+
+    ${Option} {
+        font-size: var(--font-size-small);
+    }
+
+    ${Option} ${PrecisionDropdown} {
+        position: relative;
+        top: 0;
+        right: 0;
+        width: 100px;
+        font-size: var(--font-size-extra-small);
+        line-height: var(--font-size-extra-small);
+        height: 1rem;
+        max-width: 3rem;
+        margin-left: 0.2rem;
+    }
+    > .bg-slider {
+        background: var(--color-accent);
+        border-radius: 0;
+    }
+`;
+
+const SHOW_BOOK = 0;
