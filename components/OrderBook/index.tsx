@@ -180,10 +180,11 @@ const OrderBook: FC<OProps> = styled(
 export default OrderBook;
 
 const OrderBookTitle = styled.div`
+    font-size: var(--font-size-small-heading);
+    font-weight: bold;
     letter-spacing: -0.4px;
     color: #ffffff;
     text-transform: capitalize;
-    font-size: var(--font-size-small-heading);
     margin: 0 0.8rem 0.5rem;
 `;
 
