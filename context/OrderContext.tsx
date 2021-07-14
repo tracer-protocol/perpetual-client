@@ -179,6 +179,14 @@ export type OrderAction =
           type: 'setLeverageFromExposure';
           amount: number;
       }
+    | {
+          type: 'setOrderFromBook';
+          order: {
+              bid: boolean; // is it a bid
+              price: number;
+              quantity: number; // amount of the order
+          };
+      }
     | { type: 'setSlippage'; value: number }
     | { type: 'setMarketTradePrice'; value: BigNumber }
     | { type: 'setLeverage'; value: number }
@@ -371,7 +379,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     // if there is no price set error to no open orders
                     return { ...state, error: 'NO_ORDERS' };
                 } else {
-                    return { ...state, price: price };
+                    return { ...state, price: parseFloat(price.toFixed(2)) };
                 }
             case 'setSlippage':
                 return { ...state, slippage: action.value };
@@ -385,6 +393,15 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 return { ...state, lock: action.value };
             case 'setAdvanced':
                 return { ...state, advanced: action.value };
+            case 'setOrderFromBook': {
+                return {
+                    ...state,
+                    position: action.order.bid ? LONG : SHORT,
+                    orderType: LIMIT,
+                    exposure: action.order.quantity,
+                    price: action.order.price,
+                };
+            }
             default:
                 throw new Error(`Unexpected action`);
         }
@@ -415,15 +432,13 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     }, [order.position, omeState?.orders]);
 
     useMemo(() => {
-        // Updates the price when orderType changes to market. 
+        // Updates the price when orderType changes to market.
         // If it changes to limit then it resets the price
         if (order.orderType === MARKET) {
             orderDispatch({
                 type: 'setPrice',
                 value: (order.position === LONG ? omeState?.maxAndMins?.maxAsk : omeState?.maxAndMins?.minBid) ?? NaN,
             });
-        } else {
-            orderDispatch({ type: 'setPrice', value: NaN });
         }
     }, [order.position, order.orderType]);
 

@@ -71,7 +71,7 @@ export default class Tracer {
     public baseTicker: string; // base ticker eg ETH from ETH/USDC
     public quoteTicker: string; // quote ticker eg USDC from ETH/USDC
     public quoteTokenDecimals: BigNumber; // number of token decimals
-    public liquidationGasCost: number | undefined; 
+    public liquidationGasCost: number | undefined;
     public maxLeverage: BigNumber; // tracers max leverage
     public fundingRateSensitivity: BigNumber; // rate at which the funding rate changes
     public feeRate: BigNumber; // fees paid per trade

@@ -6,7 +6,7 @@ import Web3 from 'web3';
  * Simple func to convert a number to a percentage by multiplying
  *  it by 100 and returning the string
  * Fixes the return to two decimal places.
- * @param 
+ * @param
  * @returns 0.00% if the number is NaN < 0.001 for very small percentages and the percentage otherwise
  */
 export const toPercent: (value: number) => string = (value) => {
@@ -146,10 +146,12 @@ export const bigNumberToWei: (num: BigNumber) => string = (num) => {
  * @param orders list of orders to convert
  * @returns a list of FilledOrder Objects
  */
-export const toBigNumbers: (orders: {
-    amount: string,
-    price: string
-}[]) => FilledOrder[] = (orders) =>
+export const toBigNumbers: (
+    orders: {
+        amount: string;
+        price: string;
+    }[],
+) => FilledOrder[] = (orders) =>
     orders.map((order: any) => ({
         ...order,
         amount: new BigNumber(Web3.utils.fromWei(order.amount)),

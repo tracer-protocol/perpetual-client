@@ -19,4 +19,3 @@ export default GraphProvider;
 export const useGlobalLoadingState = Client.useGlobalLoadingState;
 export const useQuery = _useQuery;
 export const gql = _gql;
-

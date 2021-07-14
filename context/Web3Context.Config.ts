@@ -16,7 +16,7 @@ export type Network = {
  * Keys are the ID of the network.
  * The 0 network is a default network when the user has not connected their address.
  *  The data sources for the 0 network are populated from the env variables.
- * The local config also uses the ENV variables so the commit history is not riddled with updates to 
+ * The local config also uses the ENV variables so the commit history is not riddled with updates to
  *  this config.
  * Do not change the other network configs unless the contract addresses have changed.
  */

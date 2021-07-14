@@ -139,8 +139,9 @@ export default styled(
             if (state.amount > available.toNumber()) {
                 return 'INSUFFICIENT_FUNDS';
             } else if (
-                    // TODO remove 160 for dynamic calculation of liquidation gas cost
-                    state.amount < (150 - balances.totalMargin.toNumber()) && isDeposit
+                // TODO remove 160 for dynamic calculation of liquidation gas cost
+                state.amount < 150 - balances.totalMargin.toNumber() &&
+                isDeposit
             ) {
                 return 'DEPOSIT_MORE';
             } else if (
