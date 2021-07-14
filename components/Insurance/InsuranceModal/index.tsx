@@ -133,10 +133,22 @@ type BProps = {
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     tracer: Tracer;
+    belowTarget: boolean;
     poolUserBalance: BigNumber;
 } & Children;
-export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, poolUserBalance }: BProps) => {
-    const { deposit, withdraw } = useContext(InsuranceContext);
+export const InsuranceModal: React.FC<BProps> = ({
+    type,
+    show,
+    setShow,
+    tracer,
+    poolUserBalance,
+    belowTarget,
+}: BProps) => {
+    const {
+        deposit = () => console.error('Deposit is not defined'),
+        withdraw = () => console.error('Withdraw is not defined'),
+        approve = () => console.error('Approve is not defined'),
+    } = useContext(InsuranceContext);
     const [isDeposit, setIsDeposit] = useState(true);
     const poolBalance = poolUserBalance ?? defaults.userBalance;
     const balance = isDeposit ? tracer?.getBalance().tokenBalance : poolBalance;
@@ -182,6 +194,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, 
             id="insurance-modal"
             onClose={() => {
                 setIsDeposit(type === 'Deposit');
+                acceptTerms(false);
                 setShow(false);
                 setAmount(NaN);
             }}
@@ -190,6 +203,7 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, 
             <SSlideSelect
                 onClick={(index: number, _e: any) => {
                     setAmount(NaN); // reset amount
+                    acceptTerms(false); // reset approval
                     setIsDeposit(index === 0);
                 }}
                 value={isDeposit ? 0 : 1}
@@ -244,10 +258,6 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, 
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>
                 )}
-                {/*<SSection label={`Pool Balance`}>*/}
-                {/*    <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>*/}
-                {/*    {`${toApproxCurrency(newBalance)}`}*/}
-                {/*</SSection>*/}
                 {isDeposit || amount > balance.toNumber() ? null : (
                     <>
                         <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(fee)}`}</WithdrawalFee>
@@ -257,22 +267,15 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, 
                         >{`${toApproxCurrency(amount - fee)}`}</SSection>
                     </>
                 )}
-                {/*<SSection label="Predicted Date for Profitable Withdrawal">*/}
-                {/*    {new Date().toLocaleDateString('en-US', {*/}
-                {/*        year: 'numeric',*/}
-                {/*        month: 'long',*/}
-                {/*        day: 'numeric',*/}
-                {/*    })}*/}
-                {/*</SSection>*/}
             </SHiddenExpand>
-            {isDeposit ? null : (
+            {!isDeposit && belowTarget ? (
                 <WithdrawalNote className="mb-8">
                     <span className="title">Note:</span> The value of the insurance pool is currently less than the
                     insurance pool target. If you choose to withdraw at this time,{' '}
                     <span className="highlight">you will be required to pay a withdrawal fee.</span>
                 </WithdrawalNote>
-            )}
-            {isDeposit ? (
+            ) : null}
+            {(!isDeposit && belowTarget) || isDeposit ? (
                 <CheckboxContainer
                     onClick={(e: any) => {
                         e.preventDefault();
@@ -280,25 +283,26 @@ export const InsuranceModal: React.FC<BProps> = ({ type, show, setShow, tracer, 
                     }}
                 >
                     <Checkbox checked={acceptedTerms} />
-                    <CheckboxTitle>I have read and accept Terms of Deposit</CheckboxTitle>
+                    <CheckboxTitle>
+                        {isDeposit ? 'I have read and accept Terms of Deposit' : 'I wish to proceed'}
+                    </CheckboxTitle>
                 </CheckboxContainer>
-            ) : (
-                <CheckboxContainer
-                    onClick={(e: any) => {
-                        e.preventDefault();
-                        acceptTerms(!acceptedTerms);
-                    }}
-                >
-                    <Checkbox checked={acceptedTerms} />
-                    <CheckboxTitle>I wish to proceed</CheckboxTitle>
-                </CheckboxContainer>
-            )}
+            ) : null}
             <div className="flex items-center justify-center px-6 pt-6 rounded-b" id="insurance-submit">
-                {valid ? (
-                    <Button onClick={() => submit(amount)}>{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
-                ) : (
-                    <Button className="disabled">{isDeposit ? 'Deposit' : 'Withdraw'}</Button>
-                )}
+                {isDeposit && !tracer?.getInsuranceApproved() ? (
+                    <Button
+                        className="primary"
+                        disabled={tracer?.getInsuranceApproved()}
+                        onClick={() => {
+                            approve(tracer);
+                        }}
+                    >
+                        Approve {tracer.quoteTicker}
+                    </Button>
+                ) : null}
+                <Button disabled={!tracer?.getInsuranceApproved() || !valid} onClick={() => submit(amount)}>
+                    {isDeposit ? 'Deposit' : 'Withdraw'}
+                </Button>
             </div>
             <ErrorComponent context="margin" error={amount > balance.toNumber() ? 'INSUFFICIENT_FUNDS' : 'NO_ERROR'} />
         </TracerModal>

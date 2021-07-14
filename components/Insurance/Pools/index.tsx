@@ -90,7 +90,7 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
     return (
         <div className={className}>
             <span>
-                {pool.userBalance.toFixed(2)} {pool.iPoolTokenName}
+                {parseFloat(pool.userBalance.toFixed(2))} {pool.iPoolTokenName}
             </span>
             <TooltipSelector tooltip={{ key: 'etherscan-link' }}>
                 <StyledLinkOutlined onClick={() => window.open(pool.iPoolTokenURL, '_blank', 'noopener')} />
@@ -106,6 +106,7 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
                         tracer={pool.tracer}
                         poolUserBalance={pool.userBalance}
                         show={show}
+                        belowTarget={pool.liquidity < pool.target}
                         setShow={setShow}
                         type={type as 'Deposit' | 'Withdraw'}
                     />

@@ -43,6 +43,7 @@ interface ContextProps {
     poolInfo: InsurancePoolInfo;
     deposit: (tracer: Tracer, amount: number, options: Options) => void;
     withdraw: (tracer: Tracer, amount: number, options: Options) => void;
+    approve: (tracer: Tracer, options?: Options) => void;
     contract: Insurance;
     pools: Record<string, InsurancePoolInfo>;
 }
@@ -131,11 +132,13 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         } else if (handleTransaction && !!tracer) {
             const insuranceContract = tracer.getInsuranceContract();
             if (!!insuranceContract) {
-                const approved = await tracer?.checkAllowance(account, insuranceContract.address);
+                
+                const approved = await selectedTracer?.checkAllowance(account, insuranceContract.address);
                 if (approved === 0) {
                     // not approved
-                    await handleTransaction(tracer?.approve, [account, insuranceContract.address]);
+                    handleTransaction(tracer.approve, [account, insuranceContract.address]);
                 }
+
                 const callFunc: (amount: number) => PromiEvent<TransactionReceipt> = (amount: number) =>
                     insuranceContract?.instance?.methods
                         .deposit(Web3.utils.toWei(amount.toString()))
@@ -147,6 +150,9 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                         updatePoolBalance(tracer);
                         updateUserBalance(tracer);
                         onSuccess_ ? onSuccess_() : null;
+                    },
+                    statusMessages: {
+                        pending: 'Transaction to deposit USDC is pending',
                     },
                 });
             } else {
@@ -177,6 +183,32 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
             });
         } else {
             console.error(`Failed to withdraw from insurance pool: No deposit function found`);
+        }
+    };
+
+    const approve = async (tracer: Tracer, options?: Options) => {
+        const { onSuccess: onSuccess_} = options ?? {};
+        if (handleTransaction) {
+            const insuranceContract = tracer.getInsuranceContract();
+            if (!insuranceContract || !insuranceContract.address) {
+                console.error('Failed to approve: contract is undefined');
+                return false;
+            }
+            const onSuccess = () => {
+                tracer?.setApproved(insuranceContract.address);
+                onSuccess_ ? onSuccess_() : null;
+            };
+
+            handleTransaction(tracer.approve, [account, insuranceContract.address], {
+                ...options,
+                onSuccess,
+                statusMessages: {
+                    userConfirmed: `Unlock ${tracer.quoteTicker} Submitted`,
+                    pending: `Transaction to unlock ${tracer.quoteTicker} is pending`,
+                },
+            });
+        } else {
+            console.error(`Failed to approve: handleTransaction is undefined `);
         }
     };
 
@@ -277,6 +309,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 },
                 deposit,
                 withdraw,
+                approve,
                 pools: state.pools,
             }}
         >

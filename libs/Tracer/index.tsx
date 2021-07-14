@@ -347,7 +347,7 @@ export default class Tracer {
             checkAllowance(this.token, account, this.insuranceContract?.address),
         ]).then((res) => {
             this.tracerApproved = res[0] !== 0;
-            this.insuranceApproved = res[0] !== 0;
+            this.insuranceApproved = res[1] !== 0;
         });
     };
 
