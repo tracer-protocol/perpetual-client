@@ -17,10 +17,13 @@ export const SubNavContainer = styled.div`
 
 export const SubNavItem = styled.div`
     color: var(--color-text);
+    font-size: var(--font-size-small-heading);
+    line-height: var(--font-size-small-heading);
     transition: 0.3s;
     border-right: 1px solid #0c3586;
     text-align: center;
     padding: 10px 15px;
+    color: var(--color-secondary);
 
     &.selected {
         background: var(--color-accent);

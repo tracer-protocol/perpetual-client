@@ -65,16 +65,25 @@ const InsuranceInfo: FC<IIProps> = styled(({ className, fundingRate }: IIProps) 
 })`
     position: relative;
     max-height: 25vh;
+    @media (max-height: 850px) {
+        min-height: 24vh;
+        overflow: auto;
+    }
 `;
 
 export default InsuranceInfo;
 
 const InfoContent = styled.div`
     padding: 10px;
+
+    ${ProgressBar} {
+        margin: 12px 0;
+    }
 `;
 
 const InfoTitle = styled.div`
-    font-size: var(--font-size-medium);
+    font-size: var(--font-size-small-heading);
+    font-weight: bold;
     letter-spacing: -0.4px;
     color: #ffffff;
     text-transform: capitalize;
