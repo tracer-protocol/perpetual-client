@@ -212,7 +212,7 @@ const DetailsRow = styled.div`
 `;
 
 const CloseOrderContainer = styled.div`
-    padding: 1rem 0 1rem 0.5rem;
+    padding: 8px 0 8px 0.5rem;
 `;
 
 const DetailsSection = styled(Section)`
@@ -245,7 +245,7 @@ const SSlideSelect = styled(SlideSelect)`
     color: var(--color-text);
     height: var(--height-extra-small-button);
     width: 8rem;
-    margin: 0.5rem 0 0.5rem 0;
+    margin: 0.2rem 0 0.2rem 0;
 `;
 
 const SOption = styled(Option)`

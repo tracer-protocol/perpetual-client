@@ -33,7 +33,7 @@ export const Button = styled.button`
     border: 1px solid var(--color-primary);
     border-radius: 20px;
     text-align: center;
-    padding: 10px 0;
+    padding: 0.5rem 0;
     width: 160px;
     margin: auto;
 
@@ -206,14 +206,14 @@ type IProps = {
     className?: string;
 };
 
-export const ProgressBar: React.FC<IProps> = styled(({ percent, className }: IProps) => {
+export const ProgressBar = styled(({ percent, className }: IProps) => {
     return (
         <div className={className}>
             <div className="progress" />
             <p className="label">{percent}%</p>
         </div>
     );
-})`
+})<IProps>`
     background: var(--color-accent);
     position: relative;
     height: 32px;

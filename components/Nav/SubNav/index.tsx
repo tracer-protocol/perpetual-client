@@ -23,10 +23,12 @@ export const SubNavItem = styled.div<SNIProps>`
     display: flex;
     align-items: center;
     transition: 0.3s;
-    color: var(--color-primary);
-    padding: 0px 15px;
-    font-size: var(--font-size-medium);
+    color: var(--color-secondary);
+    padding: 10px 15px;
+    font-size: var(--font-size-small-heading);
+    line-height: var(--font-size-small-heading);
     border-right: 1px solid var(--table-lightborder);
+    text-align: center;
 
     &.selected {
         background: var(--color-accent);

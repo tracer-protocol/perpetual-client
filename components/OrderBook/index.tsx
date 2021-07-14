@@ -27,169 +27,164 @@ interface OProps {
     bidOrders: OMEOrder[] | undefined;
     lastTradePrice: number | BigNumber;
     marketUp: boolean; // true if the last tradePrice is previous than the tradePrice before that
+    decimals: number;
+    displayBook: boolean;
+    setDecimals: React.Dispatch<React.SetStateAction<number>>;
     className?: string;
 }
 
-const OrderBook: FC<OProps> = styled(({ askOrders, bidOrders, lastTradePrice, marketUp, className }: OProps) => {
-    const [decimals, setDecimals] = useState(1);
-    const [showOrderBook, setShowOrderBook] = useState(true);
-    const [showOverlay, setOverlay] = useState(true);
+const OrderBook: FC<OProps> = styled(
+    ({ askOrders, bidOrders, lastTradePrice, marketUp, decimals, setDecimals, className }: OProps) => {
+        const [showOrderBook, setShowOrderBook] = useState(true);
+        const [showOverlay, setOverlay] = useState(true);
 
-    const sumQuantities = (orders: OMEOrder[]) => {
-        return orders.reduce((total, order) => total + order.quantity, 0);
-    };
+        const sumQuantities = (orders: OMEOrder[]) => {
+            return orders.reduce((total, order) => total + order.quantity, 0);
+        };
 
-    // const totalAsks = sumQuantities(askOrders);
-    // const totalBids = sumQuantities(bidOrders);
-    // const maxCumulative = Math.max(totalAsks, totalBids);
+        const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
 
-    const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
+        // Deep copy and sort orders
+        const askOrdersCopy = deepCopyArrayOfObj(askOrders ?? []).sort((a, b) => a.price - b.price); // ascending order
+        const bidOrdersCopy = deepCopyArrayOfObj(bidOrders ?? []).sort((a, b) => b.price - a.price); // descending order
 
-    // Deep copy and sort orders
-    // @ts-ignore
-    const askOrdersCopy = deepCopyArrayOfObj(askOrders).sort((a, b) => a.price - b.price); // ascending order
-    // @ts-ignore
-    const bidOrdersCopy = deepCopyArrayOfObj(bidOrders).sort((a, b) => b.price - a.price); // descending order
+        const renderOrders = useCallback(
+            (bid: boolean, orders: OMEOrder[]) => {
+                if (!orders.length) {
+                    return (
+                        <BookRow key={'empty-book-row'}>
+                            <Item className="py-1" />
+                        </BookRow>
+                    );
+                } // return an empty row
+                const rows: {
+                    bid: boolean;
+                    price: number;
+                    cumulative: number;
+                    quantity: number;
+                }[] = [];
+                let cumulative = 0;
+                let missedBracket = 0;
 
-    const renderOrders = useCallback(
-        (bid: boolean, orders: OMEOrder[]) => {
-            if (!orders.length) {
-                return (
-                    <BookRow key={'empty-book-row'}>
-                        <Item className="py-1" />
-                    </BookRow>
-                );
-            } // return an empty row
-            const rows: {
-                bid: boolean;
-                price: number;
-                cumulative: number;
-                quantity: number;
-            }[] = [];
-            let cumulative = 0;
-            let missedBracket = 0;
-
-            for (let i = 0; i < orders.length; i++) {
-                if (rows.length >= 8) {
-                    break;
-                }
-                const order = orders[i];
-                // round to the nearest bracket below current price for bid and above for ask
-                const bracket = bid
-                    ? Math.floor(order.price / decimalKeyMap[decimals]) * decimalKeyMap[decimals]
-                    : Math.ceil(order.price / decimalKeyMap[decimals]) * decimalKeyMap[decimals];
-                let innerCumulative = 0;
-                for (let p = i; p < orders.length; p++) {
-                    if ((bid && orders[p].price < bracket) || (!bid && orders[p].price > bracket)) {
-                        // if we just exit because price we want to recheck this next loop so set it to p -1
-                        i = p - 1;
-                        if (p >= orders.length - 1) {
-                            missedBracket = bid
-                                ? Math.floor(orders[p].price / decimalKeyMap[decimals]) * decimalKeyMap[decimals]
-                                : Math.ceil(orders[p].price / decimalKeyMap[decimals]) * decimalKeyMap[decimals];
-                            // if its the end of the line then we want to set missed order
-                            i = p;
+                for (let i = 0; i < orders.length; i++) {
+                    if (rows.length >= 8) {
+                        break;
+                    }
+                    const order = orders[i];
+                    // round to the nearest bracket below current price for bid and above for ask
+                    const bracket = bid
+                        ? Math.floor(order.price / decimalKeyMap[decimals]) * decimalKeyMap[decimals]
+                        : Math.ceil(order.price / decimalKeyMap[decimals]) * decimalKeyMap[decimals];
+                    let innerCumulative = 0;
+                    for (let p = i; p < orders.length; p++) {
+                        if ((bid && orders[p].price < bracket) || (!bid && orders[p].price > bracket)) {
+                            // if we just exit because price we want to recheck this next loop so set it to p -1
+                            i = p - 1;
+                            if (p >= orders.length - 1) {
+                                missedBracket = bid
+                                    ? Math.floor(orders[p].price / decimalKeyMap[decimals]) * decimalKeyMap[decimals]
+                                    : Math.ceil(orders[p].price / decimalKeyMap[decimals]) * decimalKeyMap[decimals];
+                                // if its the end of the line then we want to set missed order
+                                i = p;
+                            }
+                            break;
                         }
-                        break;
+                        innerCumulative += orders[p].quantity;
+                        if (p >= orders.length - 1) {
+                            // weve reached the last order
+                            i = p;
+                            break;
+                        }
                     }
-                    innerCumulative += orders[p].quantity;
-                    if (p >= orders.length - 1) {
-                        // weve reached the last order
-                        i = p;
-                        break;
-                    }
-                }
-                cumulative += innerCumulative;
-                rows.push({
-                    bid: bid,
-                    price: bracket,
-                    cumulative: cumulative,
-                    quantity: innerCumulative,
-                });
-                if (missedBracket) {
-                    // this will be the very last order
+                    cumulative += innerCumulative;
                     rows.push({
                         bid: bid,
-                        price: missedBracket,
-                        cumulative: cumulative + orders[i].quantity,
-                        quantity: orders[i].quantity,
+                        price: bracket,
+                        cumulative: cumulative,
+                        quantity: innerCumulative,
                     });
+                    if (missedBracket) {
+                        // this will be the very last order
+                        rows.push({
+                            bid: bid,
+                            price: missedBracket,
+                            cumulative: cumulative + orders[i].quantity,
+                            quantity: orders[i].quantity,
+                        });
+                    }
                 }
-            }
-            const maxCumulative = sumQuantities(rows);
-            const withSetMax = rows.map((row) => (
-                <Order
-                    key={`book-row-${row.price}`}
-                    maxCumulative={maxCumulative}
-                    bid={row.bid}
-                    price={row.price}
-                    cumulative={row.cumulative}
-                    quantity={row.quantity}
-                />
-            ));
-            return !bid ? withSetMax.reverse() : withSetMax;
-        },
-        [decimals],
-    );
+                const maxCumulative = sumQuantities(rows);
+                const withSetMax = rows.map((row) => (
+                    <Order
+                        key={`book-row-${row.price}`}
+                        maxCumulative={maxCumulative}
+                        bid={row.bid}
+                        price={row.price}
+                        cumulative={row.cumulative}
+                        quantity={row.quantity}
+                    />
+                ));
+                return !bid ? withSetMax.reverse() : withSetMax;
+            },
+            [decimals],
+        );
 
-    return (
-        <div className={className}>
-            <OrderBookContainer>
-                <OrderBookTitle>Order Book</OrderBookTitle>
-                <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
-                {showOrderBook ? (
-                    askOrders?.length || bidOrders?.length ? (
-                        <>
-                            <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
-                            <BookRow className="header">
-                                <Item>Price</Item>
-                                <Item>Quantity</Item>
-                                <Item className="cumulative">Cumulative</Item>
-                            </BookRow>
-                            {renderOrders(false, askOrdersCopy)}
-                            <MarketRow>
-                                <Item className="mr-auto">
-                                    <TooltipSelector tooltip={{ key: 'best' }}>Best</TooltipSelector>
-                                    <span className="ask px-1">{toApproxCurrency(askOrdersCopy[0]?.price)}</span>
-                                    {` / `}
-                                    <span className="bid px-1">{toApproxCurrency(bidOrdersCopy[0]?.price)}</span>
-                                </Item>
-                                <Item className="no-width">
-                                    {`Last`}
-                                    <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>
-                                        {toApproxCurrency(lastTradePrice)}
-                                    </span>
-                                </Item>
-                            </MarketRow>
-                            {renderOrders(true, bidOrdersCopy)}
-                        </>
-                    ) : (
-                        <Icon component={TracerLoading} className="tracer-loading" />
-                    )
-                ) : null}
-            </OrderBookContainer>
-            {showOverlay ? <FogOverlay buttonName="Show Order Book" onClick={() => setOverlay(false)} /> : null}
-        </div>
-    );
-})`
+        return (
+            <div className={className}>
+                <OrderBookContainer>
+                    <OrderBookTitle>Order Book</OrderBookTitle>
+                    <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
+                    {showOrderBook ? (
+                        askOrders?.length || bidOrders?.length ? (
+                            <>
+                                <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
+                                <BookRow className="header">
+                                    <Item>Price</Item>
+                                    <Item>Quantity</Item>
+                                    <Item className="cumulative">Cumulative</Item>
+                                </BookRow>
+                                {renderOrders(false, askOrdersCopy)}
+                                <MarketRow>
+                                    <Item className="mr-auto">
+                                        <TooltipSelector tooltip={{ key: 'best' }}>Best</TooltipSelector>
+                                        <span className="ask px-1">{toApproxCurrency(askOrdersCopy[0]?.price)}</span>
+                                        {` / `}
+                                        <span className="bid px-1">{toApproxCurrency(bidOrdersCopy[0]?.price)}</span>
+                                    </Item>
+                                    <Item className="no-width">
+                                        {`Last`}
+                                        <span className={`${marketUp ? 'bid' : 'ask'} pl-1`}>
+                                            {toApproxCurrency(lastTradePrice)}
+                                        </span>
+                                    </Item>
+                                </MarketRow>
+                                {renderOrders(true, bidOrdersCopy)}
+                            </>
+                        ) : (
+                            <Icon component={TracerLoading} className="tracer-loading" />
+                        )
+                    ) : null}
+                </OrderBookContainer>
+                {showOverlay ? <FogOverlay buttonName="Show Order Book" onClick={() => setOverlay(false)} /> : null}
+            </div>
+        );
+    },
+)`
     position: relative;
+    @media (max-height: 850px) {
+        display: ${(props) => (props.displayBook ? 'block' : 'none')};
+        overflow: auto;
+    }
 `;
 
 export default OrderBook;
 
-const OrderBookContainer = styled.div`
-    border-top: 1px solid var(--color-accent);
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    padding: 0.6rem 0;
-`;
-
 const OrderBookTitle = styled.div`
+    font-size: var(--font-size-small-heading);
+    font-weight: bold;
     letter-spacing: -0.4px;
     color: #ffffff;
     text-transform: capitalize;
-    font-size: var(--font-size-medium);
     margin: 0 0.8rem 0.5rem;
 `;
 
@@ -210,13 +205,13 @@ interface OBTProps {
     showOrderBook: boolean;
     onClick: () => void;
 }
-const OrderBookToggle: FC<OBTProps> = styled(({ className, showOrderBook, onClick }: OBTProps) => {
+const OrderBookToggle = styled(({ className, showOrderBook, onClick }: OBTProps) => {
     return (
         <div className={className} onClick={onClick}>
             <StyledToggle className={showOrderBook ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
         </div>
     );
-})`
+})<OBTProps>`
     position: absolute;
     right: 1rem;
     top: 0.7rem;
@@ -230,6 +225,7 @@ const Item = styled.div`
     width: 100%;
     white-space: nowrap;
     margin: 0 0.8rem;
+    // border-radius: 2px;
 
     &.cumulative {
         text-align: right;
@@ -315,11 +311,11 @@ const Order: React.FC<BProps> = ({ className, cumulative, quantity, price, maxCu
 };
 
 const StyledTriangleDown = styled.img`
-    height: 0.5rem;
+    height: 0.5em;
     transition: all 400ms ease-in-out;
     display: inline;
-    margin-top: -0.2rem;
-    margin-left: 0.2rem;
+    margin-top: -0.2em;
+    margin-left: 10%;
 
     &.rotate {
         transform: rotate(180deg);
@@ -342,7 +338,7 @@ type PDProps = {
     className?: string;
 };
 
-const PrecisionDropdown: React.FC<PDProps> = styled(({ className, decimals, setDecimals }: PDProps) => {
+export const PrecisionDropdown = styled(({ className, decimals, setDecimals }: PDProps) => {
     const [rotated, setRotated] = useState(false);
     const menu = (
         <Menu
@@ -371,7 +367,7 @@ const PrecisionDropdown: React.FC<PDProps> = styled(({ className, decimals, setD
             </PrecisionDropdownButton>
         </Dropdown>
     );
-})`
+})<PDProps>`
     position: absolute;
     right: 2.5rem;
     top: 0.7rem;
@@ -379,5 +375,18 @@ const PrecisionDropdown: React.FC<PDProps> = styled(({ className, decimals, setD
     &:hover {
         background: none;
         color: var(--color-primary);
+    }
+`;
+
+const OrderBookContainer = styled.div`
+    border-top: 1px solid var(--color-accent);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 0.6rem 0;
+    @media (max-height: 850px) {
+        ${OrderBookTitle}, ${OrderBookToggle}, ${PrecisionDropdown} {
+            display: none;
+        }
     }
 `;

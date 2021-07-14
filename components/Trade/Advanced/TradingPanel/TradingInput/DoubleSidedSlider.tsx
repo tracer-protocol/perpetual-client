@@ -53,13 +53,28 @@ export default styled(({ className, value, min, max, orderDispatch }: DSProps) =
     .rc-slider-dot {
         display: none;
     }
+    .rc-slider-rail {
+        letter-spacing: -0.16px;
+        font-size: 8px;
+        line-height: 14px;
+        color: var(--color-accent);
+    }
+    .rc-slider-rail::before {
+        position: absolute;
+        content: 'SHORT';
+        left: 8px;
+        top: 0;
+    }
+    .rc-slider-rail::after {
+        position: absolute;
+        content: 'LONG';
+        right: 8px;
+        top: 0;
+    }
 ` as React.FC<DSProps>;
 
-const Label = styled(({ className, val, long }: { className?: string; val: number; long: boolean }) => (
-    <p className={className}>
-        <span className={long ? 'green' : 'red'}>{long ? 'LONG' : 'SHORT'}</span> <br />
-        {`${Math.abs(val)}x`}
-    </p>
+const Label = styled(({ className, val }: { className?: string; val: number; long: boolean }) => (
+    <p className={className}>{`${Math.abs(val)}x`}</p>
 ))`
     margin-left: ${(props) => (props.long ? '-3rem' : '3rem')};
     text-align: ${(props) => (props.long ? 'right' : 'left')};
@@ -90,18 +105,19 @@ const createMarks = (min: number, max: number) => ({
 
 const railStyle = {
     backgroundImage: 'linear-gradient(to right, #F15025 , #05CB3A)',
-    height: 10,
+    height: 14,
 };
 const trackStyle = {
     background: 'transparent',
-    height: 10,
+    height: 14,
 };
 
 const handleStyle = {
     width: '50px',
     height: '30px',
     lineHeight: '26px',
-    background: 'var(--color-primary)',
+    background: 'var(--color-accent)',
+    borderColor: 'var(--color-accent)',
     borderRadius: '20px',
     marginTop: '-11px',
 };

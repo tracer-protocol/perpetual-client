@@ -13,7 +13,7 @@ import DoubleSidedSlider from './DoubleSidedSlider';
 import Divider from '@components/General/Divider';
 
 const Section = styled.div`
-    margin: 1rem 0;
+    margin: 12px 0;
 `;
 
 const SError = styled(Error)<{ account: string }>`
@@ -127,7 +127,10 @@ const StyledBox = styled(Box)`
     transition: opacity 0.3s 0.1s, height: 0.3s 0.1s, padding 0.1s;
     position: relative;
     border-bottom: none;
+    overflow: auto;
     display: block;
     padding: 0;
     z-index: 1;
+    background: var(--color-background-secondary);
+    padding-bottom: 8px;
 `;

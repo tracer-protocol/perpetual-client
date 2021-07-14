@@ -20,11 +20,12 @@ export default createGlobalStyle`
         
         --font-size-extra-small: 12px;
         --font-size-small: 16px;
+        --font-size-small-heading: 16px;
         --font-size-medium: 20px;
         --font-size-large: 20px;
         --font-size-xlarge: 36px;
 
-        --height-extra-small-container: 48px;
+        --height-extra-small-container: 40px;
         --height-small-container: 60px;
         --height-medium-button: 32px;
         --height-small-button: 28px;
@@ -37,7 +38,6 @@ export default createGlobalStyle`
             --font-size-large: 18px;
             --font-size-xlarge: 40px;
             --height-small-container: 44px;
-            --height-extra-small-container: 40px;
         }
       
         background-color: var(--color-background);
