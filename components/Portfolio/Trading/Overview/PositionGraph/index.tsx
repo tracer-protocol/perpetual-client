@@ -105,7 +105,7 @@ const PositionGraph: FC<PGProps> = styled(
                                 <Amount>$43,234.42</Amount>
                                 <CellTitle>
                                     <StatusDot type="status-white" />
-                                    Equity
+                                    Last Price
                                 </CellTitle>
                             </InfoCell>
                         </Row>
