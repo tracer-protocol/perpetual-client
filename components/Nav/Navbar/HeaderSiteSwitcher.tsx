@@ -78,15 +78,17 @@ const MenuItem = styled.div`
         padding-left: 2rem;
     }
     &:first-child {
-        height: 8vh;
+        height: 60px;
         opacity: 0;
     }
     &:first-child > ${StyledTracerLogo} {
         opacity: 0;
     }
     > a {
-        display: block;
-        padding: 1.5rem 2rem;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        padding-left: 2rem;
         transition: all 300ms ease;
     }
     &:first-child > a {
@@ -97,7 +99,7 @@ const MenuItem = styled.div`
         background: var(--color-primary);
     }
     &:last-child {
-        padding: 1rem 2rem 0 2rem;
+        padding: 0.5rem 2rem 0 2rem;
         border-bottom: none;
     }
 `;
