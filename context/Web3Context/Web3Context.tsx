@@ -36,7 +36,10 @@ type Web3Context = {
 
 const Web3Context = React.createContext<Web3Context | undefined>(undefined);
 
-const Web3Provider: React.FC<Web3ContextProps> = ({
+/**
+ * Handles connection through BlockNative Onboard library
+ */
+const Web3Store: React.FC<Web3ContextProps> = ({
     children,
     onboardConfig,
     networkIds,
@@ -140,7 +143,7 @@ const Web3Provider: React.FC<Web3ContextProps> = ({
                 await onboard?.walletSelect();
                 await checkIsReady();
             } catch (err) {
-                console.log(err);
+                console.error(err);
             }
         }
     }
@@ -177,4 +180,4 @@ const useWeb3: () => Web3Context = () => {
     return context;
 };
 
-export { Web3Provider, useWeb3 };
+export { Web3Store, useWeb3 };

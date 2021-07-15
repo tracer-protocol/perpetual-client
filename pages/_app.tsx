@@ -13,7 +13,7 @@ import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
 import GlobalStyles from 'styles/GlobalStyles';
 import styled from 'styled-components';
-import { Web3Provider } from '@context/Web3Context/Web3Context';
+import { Web3Store } from '@context/Web3Context/Web3Context';
 
 const USERSNAP_GLOBAL_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_GLOBAL_API_KEY;
 const USERSNAP_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_API_KEY;
@@ -80,18 +80,12 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
             <Desktop>
                 <ToastProvider components={{ Toast: Notification }}>
                     {/* <ThemeProvider theme={theme}> */}
-                    <Web3Provider
+                    <Web3Store
                         networkIds={[42]}
                         onboardConfig={{
                             hideBranding: true,
                             walletSelect: {
                                 heading: 'Connect Wallet',
-                                // wallets: [
-                                //     { walletName: 'detectedwallet' },
-                                //     { walletName: "coinbase", preferred: true },
-                                //     { walletName: "metamask", preferred: true },
-                                //     { walletName: "authereum" },
-                                // ],
                                 agreement: {
                                     version: '1.0',
                                     termsUrl: 'https://google.com',
@@ -106,7 +100,7 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                                 </TransactionStore>
                             </FactoryStore>
                         </GraphProvider>
-                    </Web3Provider>
+                    </Web3Store>
                     {/* </ThemeProvider> */}
                 </ToastProvider>
             </Desktop>
