@@ -7,14 +7,13 @@ import Head from 'next/head';
 import 'antd/dist/antd.css';
 import '../styles/index.css';
 import { ToastProvider } from 'react-toast-notifications';
-import { Web3Store } from '@context/Web3Context';
 import GraphProvider from '@libs/Graph';
 import { Notification } from '@components/General/Notification';
 import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
 import GlobalStyles from 'styles/GlobalStyles';
 import styled from 'styled-components';
-// import WhitelistBlock from '@components/WhitelistBlock';
+import { Web3Store } from '@context/Web3Context/Web3Context';
 
 const USERSNAP_GLOBAL_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_GLOBAL_API_KEY;
 const USERSNAP_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_API_KEY;
@@ -42,8 +41,8 @@ const Mobile = styled.div`
         font-weight: lighter;
     }
 `;
-const App = ({ Component, pageProps }: AppProps) => {
-    // eslint-disable-line
+
+const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
     useEffect(() => {
         // @ts-ignore
         window.onUsersnapCXLoad = function (api) {
@@ -81,18 +80,23 @@ const App = ({ Component, pageProps }: AppProps) => {
             <Desktop>
                 <ToastProvider components={{ Toast: Notification }}>
                     {/* <ThemeProvider theme={theme}> */}
-                    <Web3Store>
+                    <Web3Store
+                        networkIds={[42]}
+                        onboardConfig={{
+                            hideBranding: true,
+                            walletSelect: {
+                                heading: 'Connect Wallet',
+                                // agreement: {
+                                //     version: '1.0',
+                                //     termsUrl: 'https://google.com',
+                                // },
+                            },
+                        }}
+                    >
                         <GraphProvider>
                             <FactoryStore>
                                 <TransactionStore>
                                     <Component {...pageProps} />
-                                    {/*{process.env.NEXT_PUBLIC_DEPLOYMENT === 'DEVELOPMENT' ? (*/}
-                                    {/*    <Component {...pageProps} />*/}
-                                    {/*) : (*/}
-                                    {/*    <WhitelistBlock>*/}
-                                    {/*        <Component {...pageProps} />*/}
-                                    {/*    </WhitelistBlock>*/}
-                                    {/*)}*/}
                                 </TransactionStore>
                             </FactoryStore>
                         </GraphProvider>

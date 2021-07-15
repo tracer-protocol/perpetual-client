@@ -19,7 +19,7 @@ export type ModalAction =
     | { type: 'setSubTitle'; subTitle: string }
     | { type: 'setLoading'; loading: boolean };
 
-export const modalReducer: (state: ModalState, action: ModalAction) => ModalState = (state, action)=> {
+export const modalReducer: (state: ModalState, action: ModalAction) => ModalState = (state, action) => {
     switch (action.type) {
         case 'setAmount': {
             return {

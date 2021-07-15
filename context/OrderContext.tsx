@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
-import { TracerContext, Web3Context } from './';
+import { TracerContext } from './';
 import { Children, OpenOrder, UserBalance } from 'libs/types';
 import { calcMinimumMargin, calcTotalMargin, calcSlippage } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
@@ -8,6 +8,7 @@ import { OMEOrder } from 'libs/types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
 import { defaults as tracerDefaults } from '@libs/Tracer';
 import { ErrorKey } from '@components/General/Error';
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 // Position types
 export const LONG = 0;
@@ -206,7 +207,7 @@ export type OrderAction =
  * Leverages useReducer to provide dispatches which modify and update state.
  */
 export const OrderStore: React.FC<Children> = ({ children }: Children) => {
-    const { account } = useContext(Web3Context);
+    const { account } = useWeb3();
     const { setTracerId, tracerId, selectedTracer } = useContext(TracerContext);
     const { omeState } = useContext(OMEContext);
 
