@@ -141,13 +141,20 @@ const TradingView: FC<{
 
 export default TradingView;
 
-const TradesAndBook: React.FC<{
+interface TBProps {
     askOrders: OMEOrder[] | undefined;
     bidOrders: OMEOrder[] | undefined;
     marketUp: boolean;
     lastTradePrice: BigNumber;
     mostRecentTrades: FilledOrder[];
-}> = ({ askOrders, bidOrders, marketUp, lastTradePrice, mostRecentTrades }) => {
+}
+const TradesAndBook: React.FC<TBProps> = ({
+    askOrders,
+    bidOrders,
+    marketUp,
+    lastTradePrice,
+    mostRecentTrades,
+}: TBProps) => {
     const [decimals, setDecimals] = useState(1);
     const [selected, setSelected] = useState(SHOW_BOOK);
     return (
