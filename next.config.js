@@ -4,6 +4,8 @@ const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 module.exports = withAntdLess({
     cssModules: true,
+    // for netlify plugin
+    target: 'serverless',
     // // optional
     modifyVars: { '@primary-color': '#0000bd' },
     // // optional
