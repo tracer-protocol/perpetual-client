@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import dynamic from 'next/dynamic';
 import styled from 'styled-components';
 
 // @ts-ignore
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import HeaderSiteSwitcher from './HeaderSiteSwitcher';
 import { useWeb3 } from '@context/Web3Context/Web3Context'
+import AccountDropdown from './AccountDropdown';
 
 
 // const NetworkButton = styled.span`
@@ -56,14 +56,15 @@ const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
 const useEnsName = (account: string) => {
     const [ensName, setEnsName] = useState(account);
     const [ens, setEns] = useState(undefined);
-    const { provider } = useWeb3();
+    const { web3 } = useWeb3();
 
     useEffect(() => {
-        if (provider) {
+        if (web3?.currentProvider) {
+            const provider = web3.currentProvider;
             const ens = new ENS({ provider, ensAddress: getEnsAddress('1') });
             setEns(ens);
         }
-    }, [provider]);
+    }, [web3]);
 
     useEffect(() => {
         if (!!ens && !!account) {
@@ -84,26 +85,7 @@ const useEnsName = (account: string) => {
     return ensName;
 };
 
-const Identicon = dynamic(import('../Identicon'), { ssr: false });
 
-const ConnectButton: React.FC<any> = styled.button`
-    display: flex;
-    // border: 2px solid #fff;
-    border-radius: 100px;
-    width: 160px;
-    height: 40px;
-    transition: 0.2s;
-    padding: 0 10px;
-    margin: auto 10px;
-
-    &:focus {
-        outline: none;
-    }
-
-    &:hover {
-        background: var(--color-primary);
-    }
-`;
 
 const NavBar: React.FC = styled(({ className }) => {
     return (
@@ -121,27 +103,8 @@ const NavBar: React.FC = styled(({ className }) => {
 const NavBarContent: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
     const route = routes[1];
-    // const secondaryRoute = routes[2];
-    const { account, onboard, network } = useWeb3();
+    const { account, onboard, network, resetOnboard, ethBalance } = useWeb3();
     const ensName = useEnsName(account ?? '');
-
-    const buttonContent = () => {
-        if (!account) {
-            return 'Connect Wallet';
-        }
-        if (ensName) {
-            const len = ensName.length;
-            if (len > 14) {
-                return `${ensName.slice(0, 7)}...${ensName.slice(len - 4, len)}`;
-            } else {
-                return ensName;
-            }
-        } else if (account) {
-            return `${account.slice(0, 7)}...${account.slice(36, 40)}`;
-        } else {
-            return 'Connect Wallet';
-        }
-    };
 
     const linkStyles = 'mx-2 py-2';
 
@@ -182,14 +145,15 @@ const NavBarContent: React.FC = styled(({ className }) => {
                     </Link>
                 </li>
             </ul>
-            <ConnectButton
-                onClick={onboard?.walletSelect}
+            <AccountDropdown
+                onboard={onboard}
+                account={account}
+                ensName={ensName}
+                network={network ?? 0}
+                tokenBalance={ethBalance ?? 0}
+                logout={resetOnboard}
             >
-                <div className="m-auto flex text-sm font-bold">
-                    <Identicon account={account ?? ''} />
-                    <div className="px-2">{buttonContent()}</div>
-                </div>
-            </ConnectButton>
+            </AccountDropdown>
 
             {/** TODO this will need to change to Arbritrum network id */}
             {process.env.NEXT_PUBLIC_DEPLOYMENT !== 'DEVELOPMENT' ? (

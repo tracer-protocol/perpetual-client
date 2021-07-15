@@ -186,8 +186,8 @@ export default createGlobalStyle`
         width: 56px;
         height: 28px!important;
         top: 1em!important;
-
         border: 1px solid var(--color-primary);
+        border-radius: 20px!important;
         svg {
             fill: var(--color-primary)!important;
             width: 14px!important;

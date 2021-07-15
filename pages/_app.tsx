@@ -85,22 +85,6 @@ const App = ({ Component, pageProps }: AppProps) => {
                     {/* <ThemeProvider theme={theme}> */}
                     <Web3Provider
                         networkIds={[5, 6]}
-                        tokensToWatch={{
-                            5: [
-                                {
-                                address: '0x14dd060db55c0e7cc072bd3ab4709d55583119c0',
-                                name: 'TEST Goerli',
-                                symbol: 'TSTG',
-                                },
-                            ],
-                            6: [
-                                {
-                                address: '0x14dd060db55c0e7cc072bd3ab4709d55583119c0',
-                                name: 'TEST Kotti',
-                                symbol: 'TSTK',
-                                },
-                            ],
-                        }}
                         onboardConfig={{
                             hideBranding: true,
                             walletSelect: {

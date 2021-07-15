@@ -35,8 +35,7 @@ export const FactoryContext = React.createContext<Partial<ContextProps>>({});
  * TODO allow adding an removing of Tracers based on a given Tracer contract addresses
  */
 export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
-    const { web3, account, config } = useWeb3();
-    console.log(config)
+    const { web3, account } = useWeb3();
     const { tracers } = useAllTracers();
 
     const reducer = (state: FactoryState, action: FactoryAction) => {
