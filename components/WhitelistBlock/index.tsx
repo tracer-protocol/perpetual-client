@@ -1,10 +1,10 @@
 import { Button } from '@components/General';
-import { Web3Context } from '@context/Web3Context';
-import React, { useContext, useEffect, useState } from 'react';
+import { useWeb3 } from '@context/Web3Context/Web3Context';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 export default styled(({ className, children }) => {
-    const { account, handleConnect } = useContext(Web3Context);
+    const { account, handleConnect } = useWeb3();
     const [validAddress, setValidAddress] = useState(false);
 
     useEffect(() => {
@@ -35,11 +35,7 @@ export default styled(({ className, children }) => {
                         <br />
                         started with Tracer
                     </p>
-                    <Button
-                        onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
-                    >
-                        Connect Wallet
-                    </Button>
+                    <Button onClick={() => handleConnect()}>Connect Wallet</Button>
                 </div>
             );
         }

@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useReducer } from 'react';
 import { FactoryContext } from './FactoryContext';
 import { Children, Result, UserBalance } from 'libs/types';
 import { createOrder } from '@libs/Ome';
-import { Web3Context } from './Web3Context';
 import { OrderState } from './OrderContext';
 import Web3 from 'web3';
 import { orderToOMEOrder, OrderData, signOrdersV4 } from '@tracer-protocol/tracer-utils';
@@ -13,6 +12,7 @@ import { defaults } from '@libs/Tracer';
 import { Callback } from 'web3/types';
 import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 import { bigNumberToWei } from '@libs/utils';
+import { useWeb3 } from './Web3Context/Web3Context';
 interface ContextProps {
     tracerId: string | undefined;
     deposit: (amount: number, options: Options) => void;
@@ -44,7 +44,7 @@ type StoreProps = {
  * Tracer state is updated by calling functions from the Tracer class.
  */
 export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
-    const { account, web3, config, networkId } = useContext(Web3Context);
+    const { account, web3, config, network } = useWeb3();
     const { factoryState } = useContext(FactoryContext);
     const { handleTransaction, setPending, closePending } = useContext(TransactionContext);
 
@@ -137,7 +137,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             },
         ];
         try {
-            const signedMakes = await signOrdersV4(web3, makes, config?.contracts.trader.address as string, networkId);
+            const signedMakes = await signOrdersV4(web3, makes, config?.contracts.trader.address as string, network);
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             console.info('Placing OME order', omeOrder);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
@@ -192,15 +192,15 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const { onSuccess: onSuccess_, onError: onError_ } = options ?? {};
             const approved = await selectedTracer?.checkAllowance(account, selectedTracer.address);
             if (approved === 0) {
-                // not approved 
+                // not approved
                 // unlikely to get in here since there is an approve button
-                console.error("Tracer is not approved for deposit")
+                console.error('Tracer is not approved for deposit');
                 handleTransaction(selectedTracer.approve, [account, selectedTracer.address], {
                     onSuccess: () => {
                         selectedTracer?.setApproved(selectedTracer?.address);
                         fetchUserData();
                         onSuccess_ ? onSuccess_() : null;
-                    }
+                    },
                 });
             }
             const onSuccess = async (res: Result) => {

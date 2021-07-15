@@ -9,7 +9,7 @@ import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
 import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
-import { Web3Context } from '@context/Web3Context';
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 interface HRowProps {
     background?: string;
@@ -164,7 +164,7 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
 `;
 
 const Overview: FC = () => {
-    const { account } = useContext(Web3Context);
+    const { account } = useWeb3();
     const [currentPortfolio, setCurrentPortfolio] = useState(1);
     const [currentPNL, setCurrentPNL] = useState(1);
     const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);

@@ -1,5 +1,4 @@
 import React, { FC, useContext, useState } from 'react';
-import { Web3Context } from '@context/Web3Context';
 import { OrderContext, orderDefaults } from '@context/OrderContext';
 import { BigNumber } from 'bignumber.js';
 import { toApproxCurrency } from '@libs/utils';
@@ -18,6 +17,7 @@ import Exposure from '@components/Trade/Advanced/RightPanel/AccountSummary/Posit
 import LightWeightChart from '@components/Charts/LightWeightLineChart';
 import { useLines } from '@libs/Graph/hooks/Tracer';
 import { TracerContext } from '@context/TracerContext';
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 interface PTProps {
     className?: string;
@@ -32,7 +32,7 @@ interface PTProps {
 const PositionTab: FC<PTProps> = styled(
     ({ className, balances, fairPrice, maxLeverage, baseTicker, quoteTicker, filledOrders }: PTProps) => {
         const [currency, setCurrency] = useState(0); // 0 quoted in base
-        const { account } = useContext(Web3Context);
+        const { account } = useWeb3();
         const { order } = useContext(OrderContext);
         const { base } = balances;
         const { selectedTracer } = useContext(TracerContext);

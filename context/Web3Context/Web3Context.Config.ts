@@ -21,16 +21,6 @@ export type Network = {
  * Do not change the other network configs unless the contract addresses have changed.
  */
 export const networkConfig: Record<string, Network> = {
-    // '1': {
-    //     previewUrl: '',
-    //     contracts: {
-    //         oracle: {
-    //             address: process.env.NEXT_PUBLIC_ORACLE_ADDRESS,
-    //             abi: oracleJSON.abi as AbiItem[],
-    //         },
-    //     },
-    //     graphUri: 'http://localhost:8000/subgraphs/name/tetther1122/tracer-graph',
-    // },
     '0': {
         previewUrl: '',
         contracts: {

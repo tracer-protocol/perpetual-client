@@ -19,7 +19,7 @@ const Trade: React.FC = styled(({ className }) => {
                 <OMEStore>
                     <InsuranceStore>
                         {/*TODO: Enable basic trading*/}
-                        {/*<OrderStore>{advanced ? <Advanced /> : <Basic />}</OrderStore>*/}
+                        {/* <OrderStore>{advanced ? <Advanced /> : <Basic />}</OrderStore> */}
                         <OrderStore>
                             <Advanced />
                         </OrderStore>
