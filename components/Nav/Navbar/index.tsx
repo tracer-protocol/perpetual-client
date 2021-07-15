@@ -6,9 +6,8 @@ import styled from 'styled-components';
 // @ts-ignore
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import HeaderSiteSwitcher from './HeaderSiteSwitcher';
-import { useWeb3 } from '@context/Web3Context/Web3Context'
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 import AccountDropdown from './AccountDropdown';
-
 
 // const NetworkButton = styled.span`
 //     border: 1px solid #fff;
@@ -85,8 +84,6 @@ const useEnsName = (account: string) => {
     return ensName;
 };
 
-
-
 const NavBar: React.FC = styled(({ className }) => {
     return (
         <div className={className}>
@@ -152,8 +149,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
                 network={network ?? 0}
                 tokenBalance={ethBalance ?? 0}
                 logout={resetOnboard}
-            >
-            </AccountDropdown>
+            ></AccountDropdown>
 
             {/** TODO this will need to change to Arbritrum network id */}
             {process.env.NEXT_PUBLIC_DEPLOYMENT !== 'DEVELOPMENT' ? (

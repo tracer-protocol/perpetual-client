@@ -132,7 +132,6 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
         } else if (handleTransaction && !!tracer) {
             const insuranceContract = tracer.getInsuranceContract();
             if (!!insuranceContract) {
-                
                 const approved = await selectedTracer?.checkAllowance(account, insuranceContract.address);
                 if (approved === 0) {
                     // not approved
@@ -187,7 +186,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
     };
 
     const approve = async (tracer: Tracer, options?: Options) => {
-        const { onSuccess: onSuccess_} = options ?? {};
+        const { onSuccess: onSuccess_ } = options ?? {};
         if (handleTransaction) {
             const insuranceContract = tracer.getInsuranceContract();
             if (!insuranceContract || !insuranceContract.address) {

@@ -17,7 +17,7 @@ import Exposure from '@components/Trade/Advanced/RightPanel/AccountSummary/Posit
 import LightWeightChart from '@components/Charts/LightWeightLineChart';
 import { useLines } from '@libs/Graph/hooks/Tracer';
 import { TracerContext } from '@context/TracerContext';
-import { useWeb3 } from '@context/Web3Context/Web3Context'
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 interface PTProps {
     className?: string;

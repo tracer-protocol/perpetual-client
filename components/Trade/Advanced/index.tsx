@@ -5,7 +5,7 @@ import { PlaceOrder } from './TradingPanel/TradingInput';
 import styled from 'styled-components';
 import TradingView from './RightPanel';
 import { MARKET } from '@context/OrderContext';
-import { useWeb3 } from '@context/Web3Context/Web3Context'
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 const TradingPanel = styled.div`
     width: 25%;

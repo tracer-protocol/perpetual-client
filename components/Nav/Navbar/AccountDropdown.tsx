@@ -1,26 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
-import {
-  API as OnboardApi,
-} from 'bnc-onboard/dist/src/interfaces';
+import { API as OnboardApi } from 'bnc-onboard/dist/src/interfaces';
 import { Button, Section } from '@components/General';
 import { Menu, MenuItem } from './HeaderDropdown';
 
-export default (({ 
-    account, 
-    onboard, 
-    ensName, 
-    logout,
-    tokenBalance,
-    network
-}) => {
+export default (({ account, onboard, ensName, logout, tokenBalance, network }) => {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
         function handleClickOutside(event: any) {
             const dropdown = document.getElementById('account-dropdown');
-            if (dropdown ) {
+            if (dropdown) {
                 if (!dropdown.contains(event.target)) {
                     setOpen(false);
                 }
@@ -30,7 +21,7 @@ export default (({
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [open])
+    }, [open]);
     return (
         <StyledDropdown className={open ? 'open' : ''} id="account-dropdown">
             <MainButton>
@@ -40,7 +31,7 @@ export default (({
                         if (!!account) {
                             setOpen(true);
                         } else {
-                            setOpen(false)
+                            setOpen(false);
                             onboard?.walletSelect();
                         }
                     }}
@@ -55,46 +46,51 @@ export default (({
             <StyledMenu>
                 <MenuItem></MenuItem>
                 <MenuItem>
-                    <Section className="p-0" label="Balance" >
+                    <Section className="p-0" label="Balance">
                         {`${parseFloat(tokenBalance.toFixed(5))} ETH`}
                     </Section>
-                    <Section label="Network">
-                        {networkName(network)}
-                    </Section>
+                    <Section label="Network">{networkName(network)}</Section>
                 </MenuItem>
                 <MenuItem>
                     <StyledButton onClick={() => onboard?.walletSelect()}>Switch Wallets</StyledButton>
-                    <StyledButton onClick={() => { setOpen(false); logout() }}>Logout</StyledButton>
+                    <StyledButton
+                        onClick={() => {
+                            setOpen(false);
+                            logout();
+                        }}
+                    >
+                        Logout
+                    </StyledButton>
                 </MenuItem>
             </StyledMenu>
         </StyledDropdown>
-    )
+    );
 }) as React.FC<{
-	account: string | undefined,
-    ensName: string,
-	onboard: OnboardApi | undefined,
-    logout: () => void,
-    network: number,
-    tokenBalance: number
+    account: string | undefined;
+    ensName: string;
+    onboard: OnboardApi | undefined;
+    logout: () => void;
+    network: number;
+    tokenBalance: number;
 }>;
 
 function networkName(id: any) {
-  switch (Number(id)) {
-    case 1:
-      return 'main';
-    case 3:
-      return 'ropsten';
-    case 4:
-      return 'rinkeby';
-    case 5:
-      return 'goerli';
-    case 6:
-      return 'kotti';
-    case 42:
-      return 'kovan';
-    default:
-      return 'localhost';
-  }
+    switch (Number(id)) {
+        case 1:
+            return 'main';
+        case 3:
+            return 'ropsten';
+        case 4:
+            return 'rinkeby';
+        case 5:
+            return 'goerli';
+        case 6:
+            return 'kotti';
+        case 42:
+            return 'kovan';
+        default:
+            return 'localhost';
+    }
 }
 
 const buttonContent: (account: string | undefined, ensName: string) => string = (account, ensName) => {
@@ -141,10 +137,10 @@ const MainButton = styled.div`
 
 const StyledMenu = styled(Menu)`
     text-align: center;
-    padding: 1rem!important;
-    right: -2rem!important;
+    padding: 1rem !important;
+    right: -2rem !important;
     font-size: var(--font-size-small);
-`
+`;
 
 const StyledDropdown = styled.div`
     position: relative;
@@ -166,7 +162,7 @@ const StyledDropdown = styled.div`
             }
             &:last-child {
                 display: flex;
-                padding: 1rem 0 0 0!important;
+                padding: 1rem 0 0 0 !important;
             }
         }
         ${MenuItem}:nth-child(2) {
@@ -190,4 +186,4 @@ const StyledButton = styled(Button)`
     line-height: var(--height-extra-small-button);
     font-size: var(--font-size-extra-small);
     padding: 0;
-`
+`;

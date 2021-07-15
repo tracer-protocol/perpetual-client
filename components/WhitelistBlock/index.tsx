@@ -35,11 +35,7 @@ export default styled(({ className, children }) => {
                         <br />
                         started with Tracer
                     </p>
-                    <Button
-                        onClick={() => onboard?.walletSelect()}
-                    >
-                        Connect Wallet
-                    </Button>
+                    <Button onClick={() => onboard?.walletSelect()}>Connect Wallet</Button>
                 </div>
             );
         }

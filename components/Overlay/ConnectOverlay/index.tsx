@@ -8,11 +8,7 @@ const ConnectOverlay: FC = () => {
     return (
         <StyledOverlay>
             No wallet connected.
-            <ConnectButton
-                onClick={() => onboard?.walletSelect()}
-            >
-                Connect Wallet
-            </ConnectButton>
+            <ConnectButton onClick={() => onboard?.walletSelect()}>Connect Wallet</ConnectButton>
         </StyledOverlay>
     );
 };

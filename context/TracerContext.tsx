@@ -192,15 +192,15 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const { onSuccess: onSuccess_, onError: onError_ } = options ?? {};
             const approved = await selectedTracer?.checkAllowance(account, selectedTracer.address);
             if (approved === 0) {
-                // not approved 
+                // not approved
                 // unlikely to get in here since there is an approve button
-                console.error("Tracer is not approved for deposit")
+                console.error('Tracer is not approved for deposit');
                 handleTransaction(selectedTracer.approve, [account, selectedTracer.address], {
                     onSuccess: () => {
                         selectedTracer?.setApproved(selectedTracer?.address);
                         fetchUserData();
                         onSuccess_ ? onSuccess_() : null;
-                    }
+                    },
                 });
             }
             const onSuccess = async (res: Result) => {

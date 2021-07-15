@@ -13,9 +13,7 @@ import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
 import GlobalStyles from 'styles/GlobalStyles';
 import styled from 'styled-components';
-import { Web3Provider } from '@context/Web3Context/Web3Context'
-
-
+import { Web3Provider } from '@context/Web3Context/Web3Context';
 
 const USERSNAP_GLOBAL_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_GLOBAL_API_KEY;
 const USERSNAP_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_API_KEY;
@@ -44,8 +42,7 @@ const Mobile = styled.div`
     }
 `;
 
-const App = ({ Component, pageProps }: AppProps) => {
-    // eslint-disable-line
+const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
     useEffect(() => {
         // @ts-ignore
         window.onUsersnapCXLoad = function (api) {
@@ -84,7 +81,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                 <ToastProvider components={{ Toast: Notification }}>
                     {/* <ThemeProvider theme={theme}> */}
                     <Web3Provider
-                        networkIds={[5, 6]}
+                        networkIds={[42]}
                         onboardConfig={{
                             hideBranding: true,
                             walletSelect: {
@@ -93,12 +90,10 @@ const App = ({ Component, pageProps }: AppProps) => {
                                 // wallets: Array,
                                 agreement: {
                                     version: '1.0',
-                                   termsUrl: 'https://google.com',
-                                // privacyUrl: String
-                                }
-                            }
+                                    termsUrl: 'https://google.com',
+                                },
+                            },
                         }}
-                       
                     >
                         <GraphProvider>
                             <FactoryStore>

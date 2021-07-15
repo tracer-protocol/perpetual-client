@@ -10,7 +10,7 @@ import { Callback } from 'web3/types';
 import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 import { useUsersMatched } from '@libs/Graph/hooks/Account';
 import BigNumber from 'bignumber.js';
-import { useWeb3 } from '@context/Web3Context/Web3Context'
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 type Orders = {
     askOrders: FlattenedOMEOrder[];

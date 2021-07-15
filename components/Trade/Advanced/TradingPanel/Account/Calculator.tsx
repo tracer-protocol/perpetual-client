@@ -63,9 +63,7 @@ export default styled(
             },
             calculatorDispatch,
         } = useContext(CalculatorContext) as ContextProps;
-        const { 
-            orderDispatch = () => console.error('Order dispatch not set')
-        } = useContext(OrderContext);
+        const { orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
         const [modalState, modalDispatch] = useReducer(modalReducer, initialState);
 
         const closeAfterDeposit = () => {
@@ -74,11 +72,11 @@ export default styled(
                 type: 'setSubTitle',
                 subTitle: '',
             });
-            calculatorDispatch({ type: 'reset' })
+            calculatorDispatch({ type: 'reset' });
             close();
-            orderDispatch({ type: 'setExposure', value: exposure })
-            orderDispatch({ type: 'setPosition', value: position })
-            orderDispatch({ type: 'setLeverageFromExposure', amount: exposure})
+            orderDispatch({ type: 'setExposure', value: exposure });
+            orderDispatch({ type: 'setPosition', value: position });
+            orderDispatch({ type: 'setLeverageFromExposure', amount: exposure });
         };
         const isLocked = (locked: number[], value: number) => locked[0] === value || locked[1] === value;
         return (
@@ -452,9 +450,9 @@ const DepositButtons: React.FC<DepositButtons> = ({
                         type: 'setSubTitle',
                         subTitle: `Confirm the transaction in your wallet to deposit ${quoteTicker}`,
                     });
-                    deposit(depositAmount, { 
+                    deposit(depositAmount, {
                         onSuccess: handleClose,
-                        onError: closeLoading
+                        onError: closeLoading,
                     });
                 }}
             >
