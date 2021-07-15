@@ -1,6 +1,5 @@
 import React, { useEffect, useContext, useReducer } from 'react';
 import { Children, InsurancePoolInfo } from 'libs/types';
-import { Web3Context } from './Web3Context';
 import Web3 from 'web3';
 import { Insurance } from '@tracer-protocol/contracts/types/Insurance';
 import { TracerContext } from './TracerContext';
@@ -13,6 +12,7 @@ import { Options, TransactionContext } from './TransactionContext';
 import { TransactionReceipt } from 'web3/types';
 import { calcInsuranceAPY } from '@tracer-protocol/tracer-utils';
 import Tracer from '@libs/Tracer';
+import { useWeb3 } from './Web3Context/Web3Context';
 
 export const defaults: Record<string, any> = {
     userBalance: new BigNumber(0),
@@ -62,7 +62,7 @@ export const InsuranceContext = React.createContext<Partial<ContextProps>>({});
  * Also provides deposit and withdraw functions similar to the TracerContext
  */
 export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
-    const { account, config } = useContext(Web3Context);
+    const { account, config } = useWeb3();
     const { factoryState: { tracers, hasSetTracers } = initialFactoryState } = useContext(FactoryContext);
     const { selectedTracer } = useContext(TracerContext);
     const { handleTransaction } = useContext(TransactionContext);

@@ -1,15 +1,15 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
-import { Web3Context } from '@context/Web3Context';
 import Overlay from '@components/Overlay';
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 const ConnectOverlay: FC = () => {
-    const { handleConnect } = useContext(Web3Context);
+    const { onboard } = useWeb3();
     return (
         <StyledOverlay>
             No wallet connected.
             <ConnectButton
-                onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
+                onClick={() => onboard?.walletSelect()}
             >
                 Connect Wallet
             </ConnectButton>

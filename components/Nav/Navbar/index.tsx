@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
@@ -6,8 +6,9 @@ import styled from 'styled-components';
 
 // @ts-ignore
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
-import { Web3Context } from 'context';
 import HeaderSiteSwitcher from './HeaderSiteSwitcher';
+import { useWeb3 } from '@context/Web3Context/Web3Context'
+
 
 // const NetworkButton = styled.span`
 //     border: 1px solid #fff;
@@ -55,7 +56,7 @@ const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
 const useEnsName = (account: string) => {
     const [ensName, setEnsName] = useState(account);
     const [ens, setEns] = useState(undefined);
-    const { provider } = useContext(Web3Context);
+    const { provider } = useWeb3();
 
     useEffect(() => {
         if (provider) {
@@ -121,7 +122,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
     const route = routes[1];
     // const secondaryRoute = routes[2];
-    const { handleConnect, account, networkId } = useContext(Web3Context);
+    const { account, onboard, network } = useWeb3();
     const ensName = useEnsName(account ?? '');
 
     const buttonContent = () => {
@@ -182,7 +183,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
                 </li>
             </ul>
             <ConnectButton
-                onClick={() => (handleConnect ? handleConnect() : console.error('Connect button is undefined'))}
+                onClick={onboard?.walletSelect}
             >
                 <div className="m-auto flex text-sm font-bold">
                     <Identicon account={account ?? ''} />
@@ -192,7 +193,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
 
             {/** TODO this will need to change to Arbritrum network id */}
             {process.env.NEXT_PUBLIC_DEPLOYMENT !== 'DEVELOPMENT' ? (
-                <UnknownNetwork display={networkId !== 42 && !!networkId} />
+                <UnknownNetwork display={network !== 42 && !!network} />
             ) : null}
         </nav>
     );

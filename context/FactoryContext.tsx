@@ -1,11 +1,11 @@
-import React, { useEffect, useContext, useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { useAllTracers } from '@libs/Graph/hooks/Tracer';
 import { Children } from 'libs/types';
 import Tracer from '@libs/Tracer';
-import { Web3Context } from './Web3Context';
 import { useAllUsersMatched } from '@libs/Graph/hooks/Account';
 import { LabelledOrders } from 'libs/types/OrderTypes';
 import { LabelledTracers } from 'libs/types/TracerTypes';
+import { useWeb3 } from './Web3Context/Web3Context';
 interface ContextProps {
     allFilledOrders: LabelledOrders;
     factoryState: FactoryState;
@@ -35,7 +35,8 @@ export const FactoryContext = React.createContext<Partial<ContextProps>>({});
  * TODO allow adding an removing of Tracers based on a given Tracer contract addresses
  */
 export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
-    const { web3, account } = useContext(Web3Context);
+    const { web3, account, config } = useWeb3();
+    console.log(config)
     const { tracers } = useAllTracers();
 
     const reducer = (state: FactoryState, action: FactoryAction) => {

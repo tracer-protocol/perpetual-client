@@ -13,6 +13,7 @@ import { defaults } from '@libs/Tracer';
 import { Callback } from 'web3/types';
 import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 import { bigNumberToWei } from '@libs/utils';
+import { useWeb3 } from './Web3Context/Web3Context';
 interface ContextProps {
     tracerId: string | undefined;
     deposit: (amount: number, options: Options) => void;
@@ -44,7 +45,7 @@ type StoreProps = {
  * Tracer state is updated by calling functions from the Tracer class.
  */
 export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: StoreProps) => {
-    const { account, web3, config, networkId } = useContext(Web3Context);
+    const { account, web3, config, network } = useWeb3();
     const { factoryState } = useContext(FactoryContext);
     const { handleTransaction, setPending, closePending } = useContext(TransactionContext);
 
@@ -137,7 +138,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             },
         ];
         try {
-            const signedMakes = await signOrdersV4(web3, makes, config?.contracts.trader.address as string, networkId);
+            const signedMakes = await signOrdersV4(web3, makes, config?.contracts.trader.address as string, network);
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             console.info('Placing OME order', omeOrder);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);

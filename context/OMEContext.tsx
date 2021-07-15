@@ -11,6 +11,7 @@ import { Callback } from 'web3/types';
 import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 import { useUsersMatched } from '@libs/Graph/hooks/Account';
 import BigNumber from 'bignumber.js';
+import { useWeb3 } from '@context/Web3Context/Web3Context'
 
 type Orders = {
     askOrders: FlattenedOMEOrder[];
@@ -91,7 +92,7 @@ export const OMEContext = React.createContext<Partial<ContextProps>>({});
  */
 export const OMEStore: React.FC<Children> = ({ children }: Children) => {
     const isMounted = useRef(true);
-    const { account } = useContext(Web3Context);
+    const { account } = useWeb3();
     const { selectedTracer } = useContext(TracerContext);
 
     const { filledOrders, refetchFilledOrders } = useUsersMatched(selectedTracer?.address ?? '', account ?? '');

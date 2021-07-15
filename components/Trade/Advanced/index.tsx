@@ -5,6 +5,7 @@ import { PlaceOrder } from './TradingPanel/TradingInput';
 import styled from 'styled-components';
 import TradingView from './RightPanel';
 import { MARKET } from '@context/OrderContext';
+import { useWeb3 } from '@context/Web3Context/Web3Context'
 
 const TradingPanel = styled.div`
     width: 25%;
@@ -42,7 +43,7 @@ const Overlay = styled.div`
 `;
 
 const Advanced: React.FC = styled(({ className }) => {
-    const { account } = useContext(Web3Context);
+    const { account } = useWeb3();
     const { selectedTracer } = useContext(TracerContext);
     const { order, orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
     const [isAdjust] = useState(false);
