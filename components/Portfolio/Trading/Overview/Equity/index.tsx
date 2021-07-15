@@ -4,8 +4,6 @@ import { LargeButton, SmallTitle } from '@components/Portfolio';
 import { UserBalance } from '@libs/types/TracerTypes';
 import { BigNumber } from 'bignumber.js';
 import { FilledOrder } from '@libs/types/OrderTypes';
-import { toApproxCurrency } from '@libs/utils';
-import { calcUnrealised } from '@tracer-protocol/tracer-utils';
 import {
     EqTableRow,
     EqTableCell,
@@ -33,15 +31,14 @@ const ToggleTable = () => {
 
 interface EqProps {
     className?: string;
-    balances: UserBalance;
-    filledOrders: FilledOrder[];
-    fairPrice: BigNumber;
-    baseTicker: string;
-    quoteTicker: string;
+    balances?: UserBalance;
+    filledOrders?: FilledOrder[];
+    fairPrice?: BigNumber;
+    baseTicker?: string;
+    quoteTicker?: string;
 }
-const Equity: FC<EqProps> = styled(({ className, balances, fairPrice, filledOrders }: EqProps) => {
+const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
     const [show, setShow] = useState(false);
-    const { base } = balances;
     const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         setShow(!show);
@@ -81,11 +78,7 @@ const Equity: FC<EqProps> = styled(({ className, balances, fairPrice, filledOrde
                             </Text>
                         </EqTableCell>
                         <EqTableCell>
-                            <Amount>
-                                {!balances.quote.eq(0)
-                                    ? toApproxCurrency(calcUnrealised(base, fairPrice, filledOrders), 3)
-                                    : `-`}
-                            </Amount>
+                            <Amount>-</Amount>
                             <Text>
                                 <CellTitle>Unrealised PnL</CellTitle>
                             </Text>

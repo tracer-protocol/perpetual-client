@@ -2,10 +2,9 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import Graph from './Graph';
 import PositionGraph from './PositionGraph';
 import Equity from './Equity';
-import Tracer, { defaults } from '@libs/Tracer';
+import { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import Dropdown from 'antd/lib/dropdown';
-import { OMEContext } from '@context/OMEContext';
 import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
 import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
@@ -164,31 +163,20 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
     }
 `;
 
-const Overview: FC<{
-    selectedTracer?: Tracer | undefined;
-}> = ({ selectedTracer }) => {
+const Overview: FC = () => {
     const { account } = useContext(Web3Context);
     const [currentPortfolio, setCurrentPortfolio] = useState(1);
     const [currentPNL, setCurrentPNL] = useState(1);
     const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
-    const [tracersAddress, setTracersAddress] = useState<string[]>([]);
-    const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
-    const {
-        // omeState,
-        // omeDispatch = () => {
-        //     console.error('OME dispatch is undefined');
-        // },
-        filledOrders,
-    } = useContext(OMEContext);
+    const [fetchedTracers, setFetchedTracers] = useState<any>([]);
 
     const fetchTracers = setTimeout(async function getInfo() {
-        const temp: string[] = [];
+        const tempTracers = [];
         for (const key of Object.keys(tracers)) {
-            temp.push(tracers[key].address);
+            tempTracers.push(tracers[key]);
         }
-        setTracersAddress(temp);
-    }, 100);
+        setFetchedTracers(tempTracers);
+    }, 1000);
 
     useEffect(() => {
         fetchTracers;
@@ -221,24 +209,13 @@ const Overview: FC<{
                     </div>
                 </HeadingRow>
                 <HPanel background={`#00125D`}>
-                    <Equity
-                        className="equityStats"
-                        balances={balances}
-                        fairPrice={fairPrice}
-                        baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                        quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
-                        filledOrders={filledOrders ?? []}
+                    <Equity className="equityStats" />
+                    <Graph
+                        className="pnlGraph"
+                        title="Profit and Loss"
+                        background
+                        selectedTracerAddress={fetchedTracers[0]?.address ?? ''}
                     />
-                    {!tracersAddress || !tracersAddress[0] ? (
-                        <Graph className="pnlGraph" title="Profit and Loss" background selectedTracerAddress={``} />
-                    ) : (
-                        <Graph
-                            className="pnlGraph"
-                            title="Profit and Loss"
-                            background
-                            selectedTracerAddress={tracersAddress[0] ?? ''}
-                        />
-                    )}
                     {account === '' ? <ConnectOverlay /> : null}
                 </HPanel>
                 <HeadingRow border={true}>
@@ -246,36 +223,17 @@ const Overview: FC<{
                     <Counter>4</Counter>
                 </HeadingRow>
                 <HScrollContainer>
-                    {!tracersAddress || !tracersAddress[0] ? null : (
+                    {fetchedTracers.map((tracer: any, i: number) => (
                         <PositionGraph
-                            selectedTracerAddress={tracersAddress[0]}
-                            positionType={1}
-                            balances={balances}
-                            fairPrice={fairPrice}
-                            baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                            quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
+                            key={`position-graph-${i}`}
+                            selectedTracerAddress={tracer?.address ?? ''}
+                            positionType={i}
+                            balances={tracer?.getBalance() ?? defaults.balances}
+                            fairPrice={tracer?.getFairPrice() ?? defaults.fairPrice}
+                            baseTicker={tracer?.baseTicker ?? defaults.baseTicker}
+                            quoteTicker={tracer?.quoteTicker ?? defaults.quoteTicker}
                         />
-                    )}
-                    {!tracersAddress || !tracersAddress[0] ? null : (
-                        <PositionGraph
-                            selectedTracerAddress={tracersAddress[0]}
-                            positionType={2}
-                            balances={balances}
-                            fairPrice={fairPrice}
-                            baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                            quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
-                        />
-                    )}
-                    {!tracersAddress || !tracersAddress[0] ? null : (
-                        <PositionGraph
-                            selectedTracerAddress={tracersAddress[0]}
-                            positionType={1}
-                            balances={balances}
-                            fairPrice={fairPrice}
-                            baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                            quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
-                        />
-                    )}
+                    ))}
                 </HScrollContainer>
             </VScrollContainer>
         </>
