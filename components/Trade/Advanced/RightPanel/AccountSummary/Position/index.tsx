@@ -1,5 +1,4 @@
 import React, { FC, useContext, useState } from 'react';
-import { Web3Context } from '@context/Web3Context';
 import { OrderContext, orderDefaults } from '@context/OrderContext';
 import { BigNumber } from 'bignumber.js';
 import { toApproxCurrency } from '@libs/utils';

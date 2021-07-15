@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
-import { TracerContext, Web3Context } from './';
+import { TracerContext } from './';
 import { Children, OpenOrder, UserBalance } from 'libs/types';
 import { calcMinimumMargin, calcTotalMargin, calcSlippage } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';

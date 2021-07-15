@@ -7,7 +7,6 @@ import Head from 'next/head';
 import 'antd/dist/antd.css';
 import '../styles/index.css';
 import { ToastProvider } from 'react-toast-notifications';
-// import { Web3Store } from '@context/Web3Context';
 import GraphProvider from '@libs/Graph';
 import { Notification } from '@components/General/Notification';
 import { TransactionStore } from '@context/TransactionContext';

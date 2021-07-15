@@ -3,7 +3,6 @@ import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import React, { useContext, useEffect, useMemo, useReducer, useRef } from 'react';
 import { Children } from 'libs/types';
 import { TracerContext } from './TracerContext';
-import { Web3Context } from './Web3Context';
 import { FilledOrder, OMEOrder as FlattenedOMEOrder } from 'libs/types/OrderTypes';
 import Web3 from 'web3';
 // @ts-ignore

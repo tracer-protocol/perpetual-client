@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useReducer } from 'react';
 import { FactoryContext } from './FactoryContext';
 import { Children, Result, UserBalance } from 'libs/types';
 import { createOrder } from '@libs/Ome';
-import { Web3Context } from './Web3Context';
 import { OrderState } from './OrderContext';
 import Web3 from 'web3';
 import { orderToOMEOrder, OrderData, signOrdersV4 } from '@tracer-protocol/tracer-utils';

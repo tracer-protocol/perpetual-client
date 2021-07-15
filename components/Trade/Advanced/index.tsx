@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { OrderContext, TracerContext, Web3Context } from 'context';
+import { OrderContext, TracerContext } from 'context';
 import { MarketSelect, AccountPanel } from './TradingPanel';
 import { PlaceOrder } from './TradingPanel/TradingInput';
 import styled from 'styled-components';
