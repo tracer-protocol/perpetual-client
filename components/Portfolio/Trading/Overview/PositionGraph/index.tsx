@@ -5,7 +5,6 @@ import { LargeButton } from '@components/Portfolio';
 import { UserBalance } from '@libs/types/TracerTypes';
 import { BigNumber } from 'bignumber.js';
 import { OrderContext, orderDefaults } from '@context/OrderContext';
-import Exposure from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Exposure';
 import {
     PGContainer,
     TableBody,
@@ -17,6 +16,8 @@ import {
     StatusDot,
     BorderlessCell,
 } from './PositionElements';
+import Exposure from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Exposure';
+import Leverage from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Leverage';
 
 const GraphContainer = styled.div`
     height: 150px;
@@ -67,8 +68,17 @@ const PositionGraph: FC<PGProps> = styled(
                                 </Amount>
                                 <CellTitle>Exposure</CellTitle>
                             </InfoCell>
-                            <InfoCell inner>
-                                <Amount>7.33 x</Amount>
+                            <InfoCell>
+                                <Leverage
+                                    balances={balances}
+                                    nextPosition={
+                                        order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }
+                                    }
+                                    tradePrice={order?.price ?? 0}
+                                    fairPrice={fairPrice}
+                                    orderType={order?.orderType ?? 0}
+                                    exposure={order?.exposure ?? 0}
+                                />
                                 <CellTitle>Leverage</CellTitle>
                             </InfoCell>
                             <InfoCell inner>
@@ -88,21 +98,21 @@ const PositionGraph: FC<PGProps> = styled(
                         </Row>
                         <Row>
                             <InfoCell>
-                                <Amount>$43,234.42</Amount>
+                                <Amount>-</Amount>
                                 <CellTitle>
                                     <StatusDot type="status-orange" />
                                     Liquidation Price
                                 </CellTitle>
                             </InfoCell>
                             <InfoCell inner>
-                                <Amount>$43,234.42</Amount>
+                                <Amount>-</Amount>
                                 <CellTitle>
                                     <StatusDot type="status-lightblue" />
                                     Break Even Price
                                 </CellTitle>
                             </InfoCell>
                             <InfoCell inner>
-                                <Amount>$43,234.42</Amount>
+                                <Amount>-</Amount>
                                 <CellTitle>
                                     <StatusDot type="status-white" />
                                     Last Price
