@@ -86,8 +86,12 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                             hideBranding: true,
                             walletSelect: {
                                 heading: 'Connect Wallet',
-                                // description: String,
-                                // wallets: Array,
+                                wallets: [
+                                    { walletName: 'detectedwallet' },
+                                    { walletName: "coinbase", preferred: true },
+                                    { walletName: "metamask", preferred: true },
+                                    { walletName: "authereum" },
+                                ],
                                 agreement: {
                                     version: '1.0',
                                     termsUrl: 'https://google.com',
