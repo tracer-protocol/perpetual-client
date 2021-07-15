@@ -100,7 +100,7 @@ const NavBar: React.FC = styled(({ className }) => {
 const NavBarContent: React.FC = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
     const route = routes[1];
-    const { account, onboard, network, resetOnboard, ethBalance } = useWeb3();
+    const { account, onboard, network, resetOnboard, ethBalance, handleConnect } = useWeb3();
     const ensName = useEnsName(account ?? '');
 
     const linkStyles = 'mx-2 py-2';
@@ -149,6 +149,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
                 network={network ?? 0}
                 tokenBalance={ethBalance ?? 0}
                 logout={resetOnboard}
+                handleConnect={handleConnect}
             ></AccountDropdown>
 
             {/** TODO this will need to change to Arbritrum network id */}

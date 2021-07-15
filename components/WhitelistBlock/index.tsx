@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 export default styled(({ className, children }) => {
-    const { account, onboard } = useWeb3();
+    const { account, handleConnect } = useWeb3();
     const [validAddress, setValidAddress] = useState(false);
 
     useEffect(() => {
@@ -35,7 +35,7 @@ export default styled(({ className, children }) => {
                         <br />
                         started with Tracer
                     </p>
-                    <Button onClick={() => onboard?.walletSelect()}>Connect Wallet</Button>
+                    <Button onClick={() => handleConnect()}>Connect Wallet</Button>
                 </div>
             );
         }

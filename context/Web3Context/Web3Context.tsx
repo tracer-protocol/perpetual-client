@@ -31,6 +31,7 @@ type Web3Context = {
     web3?: Web3;
     checkIsReady(): Promise<boolean>;
     resetOnboard(): void;
+    handleConnect(): void;
 };
 
 const Web3Context = React.createContext<Web3Context | undefined>(undefined);
@@ -66,6 +67,7 @@ const Web3Provider: React.FC<Web3ContextProps> = ({
                     walletCheck: checks,
                     subscriptions: {
                         address: (address) => {
+                            console.info(`Changing address: ${address}`);
                             setAccount(address);
                             checkIsReady();
                             onboardConfig?.subscriptions?.address && onboardConfig?.subscriptions?.address(address);
@@ -126,11 +128,22 @@ const Web3Provider: React.FC<Web3ContextProps> = ({
         return !!isReady;
     };
 
-    const resetOnboard = () => {
+    const resetOnboard = async () => {
         localStorage.setItem('onboard.selectedWallet', '');
         setIsReady(false);
-        onboard?.walletReset();
+        await onboard?.walletReset();
     };
+
+    const handleConnect = async () => {
+        if (onboard) {
+            try {
+                await onboard?.walletSelect();
+                await checkIsReady();
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
 
     const onboardState = onboard?.getState();
 
@@ -146,6 +159,7 @@ const Web3Provider: React.FC<Web3ContextProps> = ({
                 isReady: isReady,
                 checkIsReady,
                 resetOnboard,
+                handleConnect,
                 config,
                 isMobile: !!onboardState?.mobileDevice,
             }}

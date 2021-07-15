@@ -4,11 +4,11 @@ import Overlay from '@components/Overlay';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 const ConnectOverlay: FC = () => {
-    const { onboard } = useWeb3();
+    const { handleConnect } = useWeb3();
     return (
         <StyledOverlay>
             No wallet connected.
-            <ConnectButton onClick={() => onboard?.walletSelect()}>Connect Wallet</ConnectButton>
+            <ConnectButton onClick={() => handleConnect()}>Connect Wallet</ConnectButton>
         </StyledOverlay>
     );
 };

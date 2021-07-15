@@ -195,4 +195,18 @@ export default createGlobalStyle`
         }
     }
 
+    /** Unsopported Network Styles */
+    .bn-onboard-prepare-description {
+        padding: 0 1rem;
+    }
+
+    .bn-onboard-prepare-button-right {
+        margin-right: 1rem;
+    }
+
+    /** Different Wallet Connect Styles */
+    .bn-onboard-modal-selected-wallet {
+        padding: 0 1rem;
+    }
+
 `;

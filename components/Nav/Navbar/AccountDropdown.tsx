@@ -5,7 +5,7 @@ import { API as OnboardApi } from 'bnc-onboard/dist/src/interfaces';
 import { Button, Section } from '@components/General';
 import { Menu, MenuItem } from './HeaderDropdown';
 
-export default (({ account, onboard, ensName, logout, tokenBalance, network }) => {
+export default (({ account, onboard, ensName, logout, handleConnect, tokenBalance, network }) => {
     const [open, setOpen] = useState(false);
 
     useEffect(() => {
@@ -27,12 +27,12 @@ export default (({ account, onboard, ensName, logout, tokenBalance, network }) =
             <MainButton>
                 <AccountDropdown
                     className={!open ? 'show-hover' : ''}
-                    onClick={() => {
+                    onClick={async () => {
                         if (!!account) {
                             setOpen(true);
                         } else {
                             setOpen(false);
-                            onboard?.walletSelect();
+                            handleConnect();
                         }
                     }}
                 >
@@ -70,6 +70,7 @@ export default (({ account, onboard, ensName, logout, tokenBalance, network }) =
     ensName: string;
     onboard: OnboardApi | undefined;
     logout: () => void;
+    handleConnect: () => void;
     network: number;
     tokenBalance: number;
 }>;
@@ -155,7 +156,7 @@ const StyledDropdown = styled.div`
         ${MenuItem} {
             opacity: 1;
             padding-left: 0;
-            
+
             &:nth-child(2) {
                 transition: all 400ms ease 300ms;
                 padding-top: 0.2rem;
