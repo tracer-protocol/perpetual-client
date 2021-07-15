@@ -86,10 +86,10 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                             hideBranding: true,
                             walletSelect: {
                                 heading: 'Connect Wallet',
-                                agreement: {
-                                    version: '1.0',
-                                    termsUrl: 'https://google.com',
-                                },
+                                // agreement: {
+                                //     version: '1.0',
+                                //     termsUrl: 'https://google.com',
+                                // },
                             },
                         }}
                     >
