@@ -155,27 +155,19 @@ const StyledDropdown = styled.div`
         ${MenuItem} {
             opacity: 1;
             padding-left: 0;
-
+            
             &:nth-child(2) {
+                transition: all 400ms ease 300ms;
                 padding-top: 0.2rem;
                 padding-bottom: 0.2rem;
+            }
+            &:nth-child(3) {
+                transition: all 400ms ease 450ms;
             }
             &:last-child {
                 display: flex;
                 padding: 1rem 0 0 0 !important;
             }
-        }
-        ${MenuItem}:nth-child(2) {
-            transition: all 400ms ease 300ms;
-        }
-        ${MenuItem}:nth-child(3) {
-            transition: all 400ms ease 450ms;
-        }
-        ${MenuItem}:nth-child(4) {
-            transition: all 400ms ease 600ms;
-        }
-        ${MenuItem}:nth-child(5) {
-            transition: all 400ms ease 750ms;
         }
     }
 `;
