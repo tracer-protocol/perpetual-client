@@ -22,7 +22,7 @@ const HeadingRow = styled.div<HRowProps>`
     padding: 0 16px;
     height: 60px;
     width: 100%;
-    background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
+    background: ${(props: any) => (props.background ? (props.background as string) : 'transparent')};
     border-bottom: ${(props) => (props.border ? '1px solid var(--table-lightborder)' : 'none')};
 `;
 
@@ -37,7 +37,7 @@ const HPanel = styled.div<HPanelProps>`
     height: auto;
     width: 100%;
     padding: 0 15px 16px;
-    background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
+    background: ${(props: any) => (props.background ? (props.background as string) : 'transparent')};
     .equityStats {
         flex-basis: calc(60% - 8px);
         &.show {
