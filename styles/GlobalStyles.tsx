@@ -116,4 +116,69 @@ export default createGlobalStyle`
         width: 100%;
         justify-content: space-between;
     }
+
+    /** BNC-Onboarding styles */
+    .bn-onboard-modal-content {
+        background: var(--color-background-secondary)!important;
+        color: var(--color-text)!important;
+        font-weight: lighter!important;
+        width: 422px;
+        padding: 1rem 0!important;
+    }
+    .bn-onboard-custom.bn-onboard-modal { 
+        z-index: 99;
+    }
+
+    .bn-onboard-modal-terms-of-service {
+        padding: 0 1rem;
+    }
+
+    /** Description Styles */
+    .bn-onboard-select-description {
+        padding: 0 1rem;
+    }
+
+    /** Header Styles */
+    .bn-onboard-modal-content-header {
+        padding: 0 1rem;
+    }
+
+    .bn-onboard-modal-content-header-icon {
+        display: none!important;
+    }
+
+    .bn-onboard-modal-content-header h3 {
+        color: var(--color-text)!important;
+        font-weight: lighter!important;
+        margin-left: 0!important;
+    }
+
+    /** Wallet Styles */
+    .bn-onboard-modal-select-wallets li {
+        width: 100%;
+        padding: 0!important;
+        height: 63px;
+        .bn-onboard-selected-wallet {
+            background: var(--color-background)!important;
+        }
+        .bn-onboard-icon-button {
+            width: 100%;
+            border-radius: 0;
+            padding: 0 1.25em;
+            height: 100%;
+            margin: 0;
+        }
+    }
+    .bn-onboard-modal-select-wallets li:hover {
+        background: var(--color-accent);
+    }
+
+    /** Footer Styles */
+    .bn-onboard-select-info-container {
+        padding: 0 1rem;
+    }
+    .bn-onboard-select-wallet-definition {
+        padding: 0 1rem;
+    }
+
 `;

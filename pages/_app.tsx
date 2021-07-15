@@ -83,35 +83,47 @@ const App = ({ Component, pageProps }: AppProps) => {
             <Desktop>
                 <ToastProvider components={{ Toast: Notification }}>
                     {/* <ThemeProvider theme={theme}> */}
-                    {/* <Web3Store> */}
-                        <Web3Provider
-                            networkIds={[5, 6]}
-                                tokensToWatch={{
-                                5: [
-                                    {
-                                    address: '0x14dd060db55c0e7cc072bd3ab4709d55583119c0',
-                                    name: 'TEST Goerli',
-                                    symbol: 'TSTG',
-                                    },
-                                ],
-                                6: [
-                                    {
-                                    address: '0x14dd060db55c0e7cc072bd3ab4709d55583119c0',
-                                    name: 'TEST Kotti',
-                                    symbol: 'TSTK',
-                                    },
-                                ],
-                            }}
-                        >
-                            <GraphProvider>
-                                <FactoryStore>
-                                    <TransactionStore>
-                                        <Component {...pageProps} />
-                                    </TransactionStore>
-                                </FactoryStore>
-                            </GraphProvider>
-                        </Web3Provider>
-                    {/* </Web3Store> */}
+                    <Web3Provider
+                        networkIds={[5, 6]}
+                        tokensToWatch={{
+                            5: [
+                                {
+                                address: '0x14dd060db55c0e7cc072bd3ab4709d55583119c0',
+                                name: 'TEST Goerli',
+                                symbol: 'TSTG',
+                                },
+                            ],
+                            6: [
+                                {
+                                address: '0x14dd060db55c0e7cc072bd3ab4709d55583119c0',
+                                name: 'TEST Kotti',
+                                symbol: 'TSTK',
+                                },
+                            ],
+                        }}
+                        onboardConfig={{
+                            hideBranding: true,
+                            walletSelect: {
+                                heading: 'Connect Wallet',
+                                // description: String,
+                                // wallets: Array,
+                                agreement: {
+                                    version: '1.0',
+                                   termsUrl: 'https://google.com',
+                                // privacyUrl: String
+                                }
+                            }
+                        }}
+                       
+                    >
+                        <GraphProvider>
+                            <FactoryStore>
+                                <TransactionStore>
+                                    <Component {...pageProps} />
+                                </TransactionStore>
+                            </FactoryStore>
+                        </GraphProvider>
+                    </Web3Provider>
                     {/* </ThemeProvider> */}
                 </ToastProvider>
             </Desktop>

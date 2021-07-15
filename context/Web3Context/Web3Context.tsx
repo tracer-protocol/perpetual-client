@@ -134,13 +134,13 @@ const Web3Provider = ({
               if (!networkIds || networkIds.includes(network)) {
                 onboard.config({ networkId: network });
               }
-              wallet &&
-                wallet.provider &&
+                wallet && 
+                wallet?.provider &&
                 setProvider(
                   new ethers.providers.Web3Provider(wallet.provider, 'any')
                 ) && setWeb3(new Web3(wallet.provider));
               setNetwork(network);
-              console.info("Changing network")
+              console.info(`Changing network ${network}`)
               setConfig(networkConfig[network])
               checkIsReady();
               onboardConfig?.subscriptions?.network &&
