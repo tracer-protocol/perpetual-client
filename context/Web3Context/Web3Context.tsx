@@ -20,9 +20,6 @@ import Web3 from 'web3';
 
 export type OnboardConfig = Partial<Omit<Initialization, 'networkId'>>;
 
-type EthGasStationSettings = 'fast' | 'fastest' | 'safeLow' | 'average';
-type EtherchainGasSettings = 'safeLow' | 'standard' | 'fast' | 'fastest';
-
 type TokenConfig = {
   address: string;
   name?: string;
@@ -38,9 +35,6 @@ type Web3ContextProps = {
   cacheWalletSelection?: boolean;
   checkNetwork?: boolean;
   children: React.ReactNode;
-  ethGasStationApiKey?: string;
-  gasPricePollingInterval?: number; //Seconds between gas price polls. Defaults to 0 - Disabled
-  gasPriceSetting?: EthGasStationSettings | EtherchainGasSettings;
   networkIds?: number[];
   onboardConfig?: OnboardConfig;
   spenderAddress?: string;
@@ -50,7 +44,6 @@ type Web3ContextProps = {
 type Web3Context = {
   account?: string;
   ethBalance?: number;
-  gasPrice: number;
   isReady: boolean;
   isMobile: boolean;
   network?: number;
@@ -61,7 +54,6 @@ type Web3Context = {
   web3?: Web3;
   tokens: Tokens;
   checkIsReady(): Promise<boolean>;
-  refreshGasPrice(): Promise<void>;
   resetOnboard(): void;
   signMessage(message: string): Promise<string>;
 };
@@ -72,9 +64,6 @@ const Web3Provider = ({
   children,
   onboardConfig,
   networkIds,
-  ethGasStationApiKey,
-  gasPricePollingInterval = 0,
-  gasPriceSetting = 'fast',
   tokensToWatch,
   spenderAddress,
   cacheWalletSelection = true,
@@ -92,7 +81,6 @@ const Web3Provider = ({
   const [isReady, setIsReady] = useState<boolean>(false);
   const [config, setConfig] = useState<Network>(networkConfig[0])
   const [tokens, tokensDispatch] = useReducer(tokensReducer, {});
-  const [gasPrice, setGasPrice] = useState(0);
 
   // Initialize OnboardJS
   useEffect(() => {
@@ -173,22 +161,6 @@ const Web3Provider = ({
 
     initializeOnboard();
   }, []);
-
-  // Gas Price poller
-  useEffect(() => {
-    let poller: NodeJS.Timeout;
-    if (network === 1 && gasPricePollingInterval > 0) {
-      refreshGasPrice();
-      poller = setInterval(refreshGasPrice, gasPricePollingInterval * 1000);
-    } else {
-      setGasPrice(10);
-    }
-    return () => {
-      if (poller) {
-        clearInterval(poller);
-      }
-    };
-  }, [network]);
 
   // Token balance and allowance listener
   // TODO: Allowance check not needed unless target is specificed
@@ -353,32 +325,6 @@ const Web3Provider = ({
     onboard?.walletReset();
   };
 
-  const refreshGasPrice = async () => {
-    try {
-      let gasPrice;
-      if (ethGasStationApiKey) {
-        const ethGasStationResponse = await (
-          await fetch(
-            `https://ethgasstation.info/api/ethgasAPI.json?api-key=${ethGasStationApiKey}`
-          )
-        ).json();
-        gasPrice = ethGasStationResponse[gasPriceSetting] / 10;
-      } else {
-        const etherchainResponse = await (
-          await fetch('https://www.etherchain.org/api/gasPriceOracle')
-        ).json();
-        gasPrice = Number(etherchainResponse[gasPriceSetting]);
-      }
-
-      const newGasPrice = !isNaN(Number(gasPrice)) ? Number(gasPrice) : 65;
-      setGasPrice(newGasPrice);
-    } catch (error) {
-      console.log(error);
-      console.log('Using 65 gwei as default');
-      setGasPrice(65);
-    }
-  };
-
   const onboardState = onboard?.getState();
 
   return (
@@ -394,9 +340,7 @@ const Web3Provider = ({
         isReady: isReady,
         checkIsReady,
         resetOnboard,
-        gasPrice,
         config,
-        refreshGasPrice,
         isMobile: !!onboardState?.mobileDevice,
         tokens: tokens,
         signMessage,

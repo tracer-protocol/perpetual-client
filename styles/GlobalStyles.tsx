@@ -181,4 +181,18 @@ export default createGlobalStyle`
         padding: 0 1rem;
     }
 
+    /** Close Styles */
+    .bn-onboard-modal-content-close {
+        width: 56px;
+        height: 28px!important;
+        top: 1em!important;
+
+        border: 1px solid var(--color-primary);
+        svg {
+            fill: var(--color-primary)!important;
+            width: 14px!important;
+            height: 14px!important;
+        }
+    }
+
 `;
