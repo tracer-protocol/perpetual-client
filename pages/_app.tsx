@@ -81,7 +81,7 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                 <ToastProvider components={{ Toast: Notification }}>
                     {/* <ThemeProvider theme={theme}> */}
                     <Web3Store
-                        networkIds={[42]}
+                        networkIds={[42, 421611]}
                         onboardConfig={{
                             hideBranding: true,
                             walletSelect: {
