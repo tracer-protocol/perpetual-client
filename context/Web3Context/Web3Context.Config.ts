@@ -35,7 +35,7 @@ export const networkConfig: Record<string, Network> = {
         previewUrl: 'https://rinkeby-explorer.arbitrum.io/#',
         contracts: {
             trader: {
-                address: '0x99A6D4c839B9494F5d1528c18A839bD6e528498c',
+                address: '0x5A36DA9Ef7C090269F716791ea2CEE623A00dcaF',
                 abi: traderJSON as AbiItem[],
             },
         },
