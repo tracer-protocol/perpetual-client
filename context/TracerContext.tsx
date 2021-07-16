@@ -10,7 +10,7 @@ import { TransactionContext, Options } from './TransactionContext';
 import { defaults } from '@libs/Tracer';
 // @ts-ignore
 import { Callback } from 'web3/types';
-import { MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
+import { FailedOrders, MatchedOrders } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
 import { bigNumberToWei } from '@libs/utils';
 import { useWeb3 } from './Web3Context/Web3Context';
 interface ContextProps {
@@ -115,9 +115,21 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
         ) {
             fetchUserData();
-            closePending ? closePending() : console.error('Close pending is undefined');
+            closePending ? closePending(true) : console.error('Close pending is undefined');
         }
     };
+
+    const failedOrders: Callback<FailedOrders> = (err: Error, res: FailedOrders) => {
+        if (err) {
+            console.error('Failed to listen on failed orders', err.message);
+        } else if (
+            account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
+            account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
+        ) {
+            console.log(res.returnValues)
+            closePending ? closePending(false) : console.error('Close pending is undefined');
+        }
+    }
 
     const placeOrder: (order: OrderState) => Promise<Result> = async (order) => {
         const { exposureBN, price, position } = order;
@@ -256,6 +268,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             selectedTracer?.updateFeeRate();
             if (!selectedTracer?.hasSubscribed) {
                 selectedTracer?.subscribeToMatchedOrders(matchedOrders);
+                selectedTracer?.subscribeToFailedOrders(failedOrders);
+                selectedTracer?.setSubscribed(true);
             }
         }
     }, [selectedTracer]);

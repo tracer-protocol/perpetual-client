@@ -37,7 +37,7 @@ export const TransactionContext = createContext<{
     handleTransaction: HandleTransactionType;
     handleAsync: HandleAsyncType;
     setPending: ((status: 'PartialMatch' | 'FullMatch') => void) | undefined;
-    closePending: (() => void) | undefined;
+    closePending: ((success: boolean) => void) | undefined;
 }>({
     handleTransaction: undefined,
     handleAsync: undefined,
@@ -156,14 +156,23 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     };
 
     /** Closes the pending toaster attached to the pendingRef */
-    const closePending = () => {
+    const closePending = (success: boolean) => {
         if (pendingRef.current) {
-            updateToast(pendingRef.current as unknown as string, {
-                content: 'Successfully matched orders on chain',
-                appearance: 'success',
-                autoDismiss: true,
-            });
-            pendingRef.current = '';
+            if (success) {
+                updateToast(pendingRef.current as unknown as string, {
+                    content: 'Successfully matched orders on chain',
+                    appearance: 'success',
+                    autoDismiss: true,
+                });
+                pendingRef.current = '';
+            } else {
+                updateToast(pendingRef.current as unknown as string, {
+                    content: 'Failed to match orders on chain',
+                    appearance: 'error',
+                    autoDismiss: true,
+                });
+                pendingRef.current = '';
+            }
         }
     };
 

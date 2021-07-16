@@ -182,9 +182,23 @@ export default class Tracer {
      * @param callback function to be called when the event is triggered
      */
     subscribeToMatchedOrders: (callback: Callback<MatchedOrders>) => void = (callback) => {
-        this.hasSubscribed = true;
         this._instance.events.MatchedOrders(callback);
     };
+
+    /**
+     * Sets a subscription on the failedOrders event for this Tracer instance
+     * @param callback function to be called when the event is triggered
+     */
+    subscribeToFailedOrdersOrders: (callback: Callback<MatchedOrders>) => void = (callback) => {
+        this._instance.events.FailedOrders(callback);
+    };
+
+    /**
+     * Sets the subscribed variable
+     */
+    setSubscribed: (val: boolean) => void = (val) => {
+        this.hasSubscribed = val;
+    }
 
     /**
      * Updates the user balances for a given tracer.
