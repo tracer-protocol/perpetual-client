@@ -177,7 +177,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
             ></AccountDropdown>
 
             {/** TODO this will need to change to Arbritrum network id */}
-            {process.env.NEXT_PUBLIC_DEPLOYMENT === 'DEVELOPMENT' ? (
+            {process.env.NEXT_PUBLIC_DEPLOYMENT !== 'DEVELOPMENT' ? (
                 <UnknownNetwork display={network !== 421611 && !!network} />
             ) : null}
         </nav>
