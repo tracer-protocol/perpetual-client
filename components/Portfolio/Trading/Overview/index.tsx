@@ -126,7 +126,6 @@ type PDProps = {
     keyMap: Record<number, string>;
     className?: string;
 };
-
 const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, option, keyMap }: PDProps) => {
     const [rotated, setRotated] = useState(false);
     const menu = (
