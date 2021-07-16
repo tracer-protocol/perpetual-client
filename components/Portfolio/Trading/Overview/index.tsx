@@ -10,6 +10,7 @@ import { Menu, MenuItem } from '@components/General/Menu';
 import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
+import PositionOverlay from '@components/Overlay/PositionOverlay';
 
 interface HRowProps {
     background?: string;
@@ -109,9 +110,11 @@ const VScrollContainer = styled.div`
 `;
 
 const HScrollContainer = styled.div`
+    position: relative;
     display: flex;
     width: auto;
     height: auto;
+    min-height: 30vh;
     overflow: auto hidden;
     padding: 16px 8px;
     box-sizing: unset;
@@ -235,6 +238,11 @@ const Overview: FC = () => {
                             maxLeverage={tracer?.getMaxLeverage() ?? defaults.maxLeverage}
                         />
                     ))}
+                    {!account ? (
+                        <ConnectOverlay />
+                    ) : fetchedTracers[0]?.getBalance()?.quote.eq(0) ? (
+                        <PositionOverlay />
+                    ) : null}
                 </HScrollContainer>
             </VScrollContainer>
         </>
