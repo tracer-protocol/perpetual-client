@@ -216,7 +216,7 @@ const Overview: FC = () => {
                         background
                         selectedTracerAddress={fetchedTracers[0]?.address ?? ''}
                     />
-                    {account === '' ? <ConnectOverlay /> : null}
+                    {!account ? <ConnectOverlay /> : null}
                 </HPanel>
                 <HeadingRow border={true}>
                     <Title>Open Positions</Title>

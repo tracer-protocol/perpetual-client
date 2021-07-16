@@ -226,7 +226,7 @@ const AccountPanel: React.FC<{
                     fairPrice={fairPrice}
                 />
             </CalculatorStore>
-            {account === '' ? <ConnectOverlay /> : null}
+            {!account ? <ConnectOverlay /> : null}
         </AccountInfo>
     );
 };
