@@ -189,7 +189,7 @@ export default class Tracer {
      * Sets a subscription on the failedOrders event for this Tracer instance
      * @param callback function to be called when the event is triggered
      */
-    subscribeToFailedOrdersOrders: (callback: Callback<MatchedOrders>) => void = (callback) => {
+    subscribeToFailedOrders: (callback: Callback<MatchedOrders>) => void = (callback) => {
         this._instance.events.FailedOrders(callback);
     };
 

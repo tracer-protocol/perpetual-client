@@ -89,6 +89,8 @@ function networkName(id: any) {
             return 'kotti';
         case 42:
             return 'kovan';
+        case 421611:
+            return 'arbitrum'
         default:
             return 'localhost';
     }
