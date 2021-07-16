@@ -232,6 +232,7 @@ const Overview: FC = () => {
                             fairPrice={tracer?.getFairPrice() ?? defaults.fairPrice}
                             baseTicker={tracer?.baseTicker ?? defaults.baseTicker}
                             quoteTicker={tracer?.quoteTicker ?? defaults.quoteTicker}
+                            maxLeverage={tracer?.getMaxLeverage() ?? defaults.maxLeverage}
                         />
                     ))}
                 </HScrollContainer>

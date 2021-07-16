@@ -118,7 +118,7 @@ const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPr
         );
     }
 };
-const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }) => {
+export const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }) => {
     if (balances.quote.eq(0)) {
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {

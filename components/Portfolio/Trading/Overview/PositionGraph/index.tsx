@@ -18,6 +18,10 @@ import {
 } from './PositionElements';
 import Exposure from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Exposure';
 import Leverage from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Leverage';
+import { AvailableMargin } from '@components/Trade/Advanced/TradingPanel/Account';
+import { useLines } from '@libs/Graph/hooks/Tracer';
+import { toApproxCurrency } from '@libs/utils';
+import { calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
 
 const GraphContainer = styled.div`
     height: 150px;
@@ -36,12 +40,23 @@ interface PGProps {
     balances: UserBalance;
     baseTicker: string;
     fairPrice: BigNumber;
+    maxLeverage: BigNumber;
     quoteTicker: string;
 }
 const PositionGraph: FC<PGProps> = styled(
-    ({ selectedTracerAddress, className, positionType, balances, fairPrice, quoteTicker, baseTicker }: PGProps) => {
+    ({
+        selectedTracerAddress,
+        className,
+        positionType,
+        balances,
+        fairPrice,
+        quoteTicker,
+        baseTicker,
+        maxLeverage,
+    }: PGProps) => {
         const [currency] = useState(0); // 0 quoted in base
         const { order } = useContext(OrderContext);
+        const { lines } = useLines(selectedTracerAddress);
 
         return (
             <span className={className}>
@@ -69,20 +84,29 @@ const PositionGraph: FC<PGProps> = styled(
                                 <CellTitle>Exposure</CellTitle>
                             </InfoCell>
                             <InfoCell>
-                                <Leverage
-                                    balances={balances}
-                                    nextPosition={
-                                        order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }
-                                    }
-                                    tradePrice={order?.price ?? 0}
-                                    fairPrice={fairPrice}
-                                    orderType={order?.orderType ?? 0}
-                                    exposure={order?.exposure ?? 0}
-                                />
+                                <Amount>
+                                    <Leverage
+                                        balances={balances}
+                                        nextPosition={
+                                            order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }
+                                        }
+                                        tradePrice={order?.price ?? 0}
+                                        fairPrice={fairPrice}
+                                        orderType={order?.orderType ?? 0}
+                                        exposure={order?.exposure ?? 0}
+                                    />
+                                </Amount>
                                 <CellTitle>Leverage</CellTitle>
                             </InfoCell>
                             <InfoCell inner>
-                                <Amount>$42.45 (55%)</Amount>
+                                <Amount>
+                                    <AvailableMargin
+                                        order={order}
+                                        balances={balances}
+                                        maxLeverage={maxLeverage}
+                                        fairPrice={fairPrice}
+                                    />
+                                </Amount>
                                 <CellTitle>Available Margin</CellTitle>
                             </InfoCell>
                         </Row>
@@ -98,7 +122,11 @@ const PositionGraph: FC<PGProps> = styled(
                         </Row>
                         <Row>
                             <InfoCell>
-                                <Amount>-</Amount>
+                                <Amount>
+                                    {toApproxCurrency(
+                                        calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage),
+                                    )}
+                                </Amount>
                                 <CellTitle>
                                     <StatusDot type="status-orange" />
                                     Liquidation Price
@@ -112,7 +140,7 @@ const PositionGraph: FC<PGProps> = styled(
                                 </CellTitle>
                             </InfoCell>
                             <InfoCell inner>
-                                <Amount>-</Amount>
+                                <Amount>{toApproxCurrency(lines[lines.length - 1]?.value)}</Amount>
                                 <CellTitle>
                                     <StatusDot type="status-white" />
                                     Last Price
