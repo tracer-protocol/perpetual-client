@@ -85,29 +85,31 @@ export default (({ selectedTracer, account }: TIProps) => {
                 ) : (
                     <>
                         {/* MARKET ORDER */}
-                        <Divider
-                            text={'Adjust Position'}
-                            tooltip={{ key: 'adjust-position', props: { baseTicker: order?.market } }}
-                        />
-                        <LeverageInput
-                            className="px-8"
-                            orderDispatch={orderDispatch}
-                            selectedTracer={selectedTracer}
-                            leverage={order?.leverage ?? 0}
-                        />
-                        <DoubleSidedSlider
-                            className="px-8"
-                            min={selectedTracer?.getMaxLeverage().negated().toNumber()}
-                            max={selectedTracer?.getMaxLeverage().toNumber()}
-                            value={order?.leverage ?? 0}
-                            orderDispatch={orderDispatch}
-                        />
-                        <MarketTradeDetails
-                            fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
-                            balances={selectedTracer?.getBalance() ?? defaults.balances}
-                            order={order ?? orderDefaults.order}
-                            maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                        />
+                        <div className="AdjustPanel">
+                            <Divider
+                                text={'Adjust Position'}
+                                tooltip={{ key: 'adjust-position', props: { baseTicker: order?.market } }}
+                            />
+                            <LeverageInput
+                                className="px-8"
+                                orderDispatch={orderDispatch}
+                                selectedTracer={selectedTracer}
+                                leverage={order?.leverage ?? 0}
+                            />
+                            <DoubleSidedSlider
+                                className="px-8"
+                                min={selectedTracer?.getMaxLeverage().negated().toNumber()}
+                                max={selectedTracer?.getMaxLeverage().toNumber()}
+                                value={order?.leverage ?? 0}
+                                orderDispatch={orderDispatch}
+                            />
+                            <MarketTradeDetails
+                                fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
+                                balances={selectedTracer?.getBalance() ?? defaults.balances}
+                                order={order ?? orderDefaults.order}
+                                maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                            />
+                        </div>
                     </>
                 )}
 

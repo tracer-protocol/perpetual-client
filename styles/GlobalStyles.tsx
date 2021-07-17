@@ -21,7 +21,7 @@ export default createGlobalStyle`
         --font-size-extra-small: 12px;
         --font-size-small: 16px;
         --font-size-small-heading: 16px;
-        --font-size-medium: 20px;
+        --font-size-medium: 18px;
         --font-size-large: 20px;
         --font-size-xlarge: 36px;
 
@@ -209,4 +209,109 @@ export default createGlobalStyle`
         padding: 0 1rem;
     }
 
+    // Override Reactour styles
+    .reactour__helper {
+        width: 390px;
+        max-width: 390px;
+        top: 50px;
+        background-color: var(--color-accent);
+        color: white;
+        padding: 0px;
+        overflow: hidden;
+        transition: all 0.5s ease;
+    }
+    .reactour__close,
+    .reactour__helper [data-tour-elem="left-arrow"],
+    .reactour__helper [data-tour-elem="right-arrow"] {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 56px;
+        height: 28px;
+        border: 1px solid var(--color-primary);
+        border-radius: 50px;
+        background-image: url('/img/reactour/close.svg');
+        background-position: center center;
+        background-size: 17px 17px;
+        background-repeat: no-repeat;
+        transition: background-color 0.5s ease;
+        backface-visibility: hidden;
+    }
+
+    .reactour__close {
+        top: 16px;
+        right: 16px;
+        width: 56px !important;
+        height: 28px !important;
+    }
+
+    .reactour__close svg,
+    .reactour__helper [data-tour-elem="left-arrow"] svg,
+    .reactour__helper [data-tour-elem="right-arrow"] svg {
+        display: none;
+    }
+
+    .reactour__close:hover {
+        background-color: var(--color-primary);
+        background-image: url('/img/reactour/close-white.svg');
+    }
+    
+    // Change the background overlay colour 
+    // to semi transparent dark blue
+    #___reactour > div:first-of-type svg rect {
+        fill: var(--color-background);
+        opacity: 0.87;
+    }
+
+    // Helper arrows 
+    .reactour__helper [data-tour-elem="left-arrow"],
+    .reactour__helper [data-tour-elem="right-arrow"] {
+        position: absolute;
+        width: 65px;
+        height: 32px;
+        flex: 0 0 65px;
+        background-size: 17px 15px;
+    }
+
+    // Left arrow
+    .reactour__helper [data-tour-elem="left-arrow"] {
+        left: 16px;
+        background-image: url('/img/reactour/arrow-left.svg');
+        background-position: 20px 50%;
+    }
+    .reactour__helper [data-tour-elem="left-arrow"]:hover {
+        background-color: var(--color-primary);
+        background-image: url('/img/reactour/arrow-left-white.svg');
+    }
+
+    // Right arrow
+    .reactour__helper [data-tour-elem="right-arrow"] {
+        right: 16px;
+        background-image: url('/img/reactour/arrow-right.svg');
+        background-position: 60% 50%;
+    }
+    .reactour__helper [data-tour-elem="right-arrow"]:hover {
+        background-color: var(--color-primary);
+        background-image: url('/img/reactour/arrow-right-white.svg');
+    }
+
+    // Controls
+    .reactour__helper [data-tour-elem="controls"] {
+        margin-bottom: 16px;
+        margin-top: 0;
+        height: 32px;
+    }
+
+    .reactour__helper [data-tour-elem="dot"] {
+        width: 14px;
+        height: 14px;
+        transform: unset;
+        background: var(--color-background-secondary);
+        border: unset;
+    }
+
+    // Active dot
+    .reactour__helper button.reactour__dot--is-active {
+        background: var(--color-primary); 
+    }
 `;

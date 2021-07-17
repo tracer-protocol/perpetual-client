@@ -115,6 +115,7 @@ const NavBar: React.FC = styled(({ className }) => {
         </div>
     );
 })`
+    z-index: 1000000;
     background-image: url('/img/nav-bg.png');
     background-repeat: no-repeat;
     background-size: cover;

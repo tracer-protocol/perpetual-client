@@ -6,6 +6,11 @@ import styled from 'styled-components';
 import TradingView from './RightPanel';
 import { MARKET } from '@context/OrderContext';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
+import dynamic from 'next/dynamic';
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import { tourConfig } from './TourSteps'
+
+const Tour = dynamic(import('reactour'), { ssr: false });
 
 const TradingPanel = styled.div`
     width: 25%;
@@ -47,6 +52,7 @@ const Advanced: React.FC = styled(({ className }) => {
     const { selectedTracer } = useContext(TracerContext);
     const { order, orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
     const [isAdjust] = useState(false);
+    const [isTourOpen, setTourOpen] = useState<boolean>(false);
 
     useEffect(() => {
         if (orderDispatch) {
@@ -67,9 +73,28 @@ const Advanced: React.FC = styled(({ className }) => {
         }
     }, [isAdjust]);
 
+    const closeTour = () => {
+        setTourOpen(false);
+
+        // Reset the elements affected by the tour
+
+        // Show the 'No Position Open' again
+        const positionOverlay = document.querySelector('div[class*="PositionOverlay__StyledOverlay"]') as HTMLElement;
+        if (positionOverlay) {
+            positionOverlay.style.display = 'block';
+        }
+
+        // Disable the 'Close Position' button
+        const closeOrderButton = document.querySelector('button[class*="OrderButtons__CloseOrder"]') as HTMLButtonElement;
+        if (closeOrderButton) {
+            closeOrderButton.disabled = true;
+        }
+    };
+    
     return (
+        // Remove after testing
         <div className={`container ${className}`}>
-            <TradingPanel>
+            <TradingPanel onClick={() => setTourOpen(true)}  >
                 <MarketSelect account={account ?? ''} />
                 <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
                 <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} order={order} />
@@ -78,6 +103,18 @@ const Advanced: React.FC = styled(({ className }) => {
                 <TradingView selectedTracer={selectedTracer} />
             </RightPanel>
             <Overlay id="trading-overlay" />
+            <Tour
+                onRequestClose={closeTour}
+                steps={tourConfig as Array<any>}
+                maskSpace={0}
+                isOpen={isTourOpen}
+                maskClassName="mask"
+                className="helper"
+                rounded={5}
+                showNumber={false}
+                onAfterOpen={(e) => disableBodyScroll(e)}
+                onBeforeClose={(e) => enableBodyScroll(e)}
+            />
         </div>
     );
 })`
