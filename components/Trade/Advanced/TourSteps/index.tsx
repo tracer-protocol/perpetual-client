@@ -168,7 +168,7 @@ export const tourConfig = [
     },
     // Adjust position panel
     {
-        selector: '.AdjustPanel',
+        selector: '.AdjustPanelContainer',
         content: () => (
           <Prompt>
             <HelperTitle>Adjust Your Position</HelperTitle>

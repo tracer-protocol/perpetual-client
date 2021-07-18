@@ -230,7 +230,7 @@ export default createGlobalStyle`
         height: 28px;
         border: 1px solid var(--color-primary);
         border-radius: 50px;
-        background-image: url('/img/reactour/close.svg');
+        background-image: url('/img/general/close.svg');
         background-position: center center;
         background-size: 17px 17px;
         background-repeat: no-repeat;
@@ -253,7 +253,7 @@ export default createGlobalStyle`
 
     .reactour__close:hover {
         background-color: var(--color-primary);
-        background-image: url('/img/reactour/close-white.svg');
+        background-image: url('/img/general/close-white.svg');
     }
     
     // Change the background overlay colour 

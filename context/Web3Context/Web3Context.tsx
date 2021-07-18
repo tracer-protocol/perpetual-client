@@ -8,7 +8,9 @@ import { API as OnboardApi, Wallet, Initialization } from 'bnc-onboard/dist/src/
 import { formatEther } from '@ethersproject/units';
 import { Network, networkConfig } from './Web3Context.Config';
 import Web3 from 'web3';
-
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import dynamic from 'next/dynamic';
+import { tourConfig } from '@components/Trade/Advanced/TourSteps'
 export type OnboardConfig = Partial<Omit<Initialization, 'networkId'>>;
 
 type Web3ContextProps = {
@@ -127,8 +129,15 @@ const Web3Store: React.FC<Web3ContextProps> = ({
         setIsReady(!!isReady);
         if (!isReady) {
             setEthBalance(0);
+            triggerTutorial();
         }
         return !!isReady;
+    };
+
+    const triggerTutorial = async () => {
+        // If cookie with flag does not exists,
+        // start tutorial
+        setTourOpen(true);
     };
 
     const resetOnboard = async () => {
@@ -150,25 +159,81 @@ const Web3Store: React.FC<Web3ContextProps> = ({
 
     const onboardState = onboard?.getState();
 
+    // Reactour
+    const Tour = dynamic(import('reactour'), { ssr: false });
+    const [isTourOpen, setTourOpen] = useState<boolean>(false);
+
+    const closeTour = () => {
+        setTourOpen(false);
+
+        // Reset the elements affected by the tour
+
+        // Show the 'No Position Open' again
+        const positionOverlay = document.querySelector('div[class*="PositionOverlay__StyledOverlay"]') as HTMLElement;
+        if (positionOverlay) {
+            positionOverlay.style.display = 'block';
+        }
+
+        // Disable the 'Close Position' button
+        const closeOrderButton = document.querySelector('button[class*="OrderButtons__CloseOrder"]') as HTMLButtonElement;
+        if (closeOrderButton) {
+            closeOrderButton.disabled = true;
+        }
+    };
+
+    const highlightDots = (e: HTMLDivElement) => {
+        e.addEventListener('click', function () {
+            const navDots: Array<any> = Array.from(document.querySelectorAll('nav[data-tour-elem="navigation"] button'));
+            var currentIndex = 0;
+            // Wait for Reactour to apply styling
+            setTimeout(function(){
+                navDots.map((dot, i) => { 
+                    if(dot.classList.contains('reactour__dot--is-active')){
+                        currentIndex = i;
+                    }
+                });
+                navDots.slice(0, currentIndex).map((dot) => {
+                    dot.classList.add('reactour__dot--is-active');
+                });
+            }, 10);
+        });
+        // Also prevent body scrolling when tour open
+        disableBodyScroll(e);
+    }
+
     return (
-        <Web3Context.Provider
-            value={{
-                account: account,
-                network: network,
-                ethBalance: ethBalance,
-                web3: web3,
-                wallet: wallet,
-                onboard: onboard,
-                isReady: isReady,
-                checkIsReady,
-                resetOnboard,
-                handleConnect,
-                config,
-                isMobile: !!onboardState?.mobileDevice,
-            }}
-        >
-            {children}
-        </Web3Context.Provider>
+        <>
+            <Web3Context.Provider
+                value={{
+                    account: account,
+                    network: network,
+                    ethBalance: ethBalance,
+                    web3: web3,
+                    wallet: wallet,
+                    onboard: onboard,
+                    isReady: isReady,
+                    checkIsReady,
+                    resetOnboard,
+                    handleConnect,
+                    config,
+                    isMobile: !!onboardState?.mobileDevice,
+                }}
+            >
+                {children}
+            </Web3Context.Provider>
+            <Tour
+                onRequestClose={closeTour}
+                steps={tourConfig as Array<any>}
+                maskSpace={0}
+                isOpen={isTourOpen}
+                maskClassName="mask"
+                className="helper"
+                rounded={5}
+                showNumber={false}
+                onAfterOpen={(e) => highlightDots(e)}
+                onBeforeClose={(e) => enableBodyScroll(e)}
+            />
+        </>
     );
 };
 

@@ -64,6 +64,7 @@ export default (({ selectedTracer, account }: TIProps) => {
                 </Details> */}
 
                 {/*Dont display price select if it is a market order*/}
+                <div className="AdjustPanelContainer">
                 {order?.orderType === LIMIT ? (
                     <>
                         {/* LIMIT ORDER */}
@@ -119,6 +120,7 @@ export default (({ selectedTracer, account }: TIProps) => {
                         <AdvancedOrderButton>Place Order</AdvancedOrderButton>
                     </div>
                 ) : null}
+                </div>
             </StyledBox>
             <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
         </>
