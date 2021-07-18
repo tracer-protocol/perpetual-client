@@ -36,6 +36,7 @@ const HelperList = styled.ul`
 //     padding: '0px',
 //     overflow: 'hidden',
 // };
+
 export const tourConfig = [
     // Wallet button
     {

@@ -90,6 +90,26 @@ const Advanced: React.FC = styled(({ className }) => {
             closeOrderButton.disabled = true;
         }
     };
+
+    const highlightDots = (e: HTMLDivElement) => {
+        e.addEventListener('click', function () {
+            const navDots: Array<any> = Array.from(document.querySelectorAll('nav[data-tour-elem="navigation"] button'));
+            var currentIndex = 0;
+            // Wait for Reactour to apply styling
+            setTimeout(function(){
+                navDots.map((dot, i) => { 
+                    if(dot.classList.contains('reactour__dot--is-active')){
+                        currentIndex = i;
+                    }
+                });
+                navDots.slice(0, currentIndex).map((dot) => {
+                    dot.classList.add('reactour__dot--is-active');
+                });
+            }, 10);
+        });
+        // Also prevent body scrolling when tour open
+        disableBodyScroll(e);
+    }
     
     return (
         // Remove after testing
@@ -103,6 +123,7 @@ const Advanced: React.FC = styled(({ className }) => {
                 <TradingView selectedTracer={selectedTracer} />
             </RightPanel>
             <Overlay id="trading-overlay" />
+            {/* TODO: detect wallet connect first time, set a cookie */}
             <Tour
                 onRequestClose={closeTour}
                 steps={tourConfig as Array<any>}
@@ -112,7 +133,7 @@ const Advanced: React.FC = styled(({ className }) => {
                 className="helper"
                 rounded={5}
                 showNumber={false}
-                onAfterOpen={(e) => disableBodyScroll(e)}
+                onAfterOpen={(e) => highlightDots(e)}
                 onBeforeClose={(e) => enableBodyScroll(e)}
             />
         </div>
