@@ -79,10 +79,24 @@ const appearances: Record<
 };
 
 const IconWrap = styled.span`
-    width: 30px;
-    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: auto;
     font-size: var(--font-size-medium);
     line-height: 20px;
+    border-right: 1px solid var(--color-accent);
+
+    span[role="img"] {
+        width: 73px;
+        height: auto;
+
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    }
 `;
 const Header: React.FC<any> = ({ appearance: appearance_, onDismiss, title }) => {
     const appearance = appearances[appearance_] ?? appearances['info']; //default info
@@ -95,9 +109,10 @@ const Header: React.FC<any> = ({ appearance: appearance_, onDismiss, title }) =>
                 letterSpacing: '-0.38px',
                 width: '100%',
                 display: 'flex',
+                padding: '16px 16px 8px',
+                borderBottom: '1px solid var(--color-accent)'
             }}
         >
-            <IconWrap>{appearance.icon}</IconWrap>
             <span>{title}</span>
             <Close onClick={onDismiss} />
         </div>
@@ -138,7 +153,7 @@ const Content = styled((props: any) => (
     color: var(--color-secondary);
     min-height: 40;
     width: 100%;
-    padding: 5px;
+    padding: 8px 16px 16px;
     word-break: break-word;
 `;
 
@@ -154,26 +169,38 @@ type HProps = {
     transitionState: TransitionState; // inherited from ToastProvider
 };
 
-const toastWidth = 360;
+const toastWidth = 'auto';
 
-const Close = styled(CloseOutlined)`
-    padding: 0;
-    margin-top: 0.2rem;
-    margin-left: auto;
-    margin-bottom: auto;
-    line-height: 14px;
-    color: var(--color-primary);
-    transition: 0.3s;
+const Close = styled.button`
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 56px;
+    height: 28px;
     border: 1px solid var(--color-primary);
-    padding: 2px 13px;
-    border-radius: 10px;
+    border-radius: 50px;
+    background-image: url('/img/general/close.svg');
+    background-position: center center;
+    background-size: 17px 17px;
+    background-repeat: no-repeat;
+    transition: background-color 0.5s ease;
+    backface-visibility: hidden;
+    
     &: hover {
         cursor: pointer;
-        opacity: 0.8;
-        border: 1px solid #fff;
-        color: var(--color-text);
+        background-color: var(--color-primary);
+        background-image: url('/img/general/close-white.svg');
     }
 `;
+
+const ContentWrapper = styled.div`
+    display: inline-flex;
+    flex-direction: column;
+`;
+
 const Hashie: React.FC<HProps | any> = ({
     transitionDuration,
     transitionState,
@@ -189,8 +216,10 @@ const Hashie: React.FC<HProps | any> = ({
     let children_ = React.Children.toArray(children);
     return (
         <div
-            className="rounded-md mb-2 flex flex-col p-2"
+            className="rounded-md mb-2 flex"
             style={{
+                position: 'relative',
+                display: 'flex',
                 backgroundColor: '#00156C',
                 boxShadow: '0 3px 8px rgba(0, 0, 0, 0.175)',
                 color: appearance.text,
@@ -199,15 +228,18 @@ const Hashie: React.FC<HProps | any> = ({
                 ...hashieStates(placement)[transitionState],
             }}
         >
-            <Header
-                appearance={appearance_}
-                autoDismiss={autoDismiss}
-                autoDismissTimeout={autoDismissTimeout}
-                isRunning={isRunning}
-                onDismiss={onDismiss}
-                title={children_[0]}
-            />
-            <Content>{children_[1]}</Content>
+            <IconWrap>{appearance.icon}</IconWrap>
+            <ContentWrapper>
+                <Header
+                    appearance={appearance_}
+                    autoDismiss={autoDismiss}
+                    autoDismissTimeout={autoDismissTimeout}
+                    isRunning={isRunning}
+                    onDismiss={onDismiss}
+                    title={children_[0]}
+                />
+                <Content>{children_[1]}</Content>
+            </ContentWrapper>
             <Countdown display={autoDismiss} autoDismissTimeout={autoDismissTimeout} />
         </div>
     );
