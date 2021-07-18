@@ -11,6 +11,7 @@ import Web3 from 'web3';
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import dynamic from 'next/dynamic';
 import { tourConfig } from '@components/Trade/Advanced/TourSteps'
+import Cookies from 'universal-cookie';
 export type OnboardConfig = Partial<Omit<Initialization, 'networkId'>>;
 
 type Web3ContextProps = {
@@ -129,15 +130,21 @@ const Web3Store: React.FC<Web3ContextProps> = ({
         setIsReady(!!isReady);
         if (!isReady) {
             setEthBalance(0);
+        }
+        else if(isReady){
             triggerTutorial();
         }
         return !!isReady;
     };
 
     const triggerTutorial = async () => {
-        // If cookie with flag does not exists,
+        // If cookie with flag does not exist,
         // start tutorial
-        setTourOpen(true);
+        const cookies = new Cookies();
+        if(cookies.get('tutorialCompleted') != 'true'){
+            cookies.set('tutorialCompleted', 'true', { path: '/' });
+            setTourOpen(true);
+        }
     };
 
     const resetOnboard = async () => {
@@ -230,6 +237,7 @@ const Web3Store: React.FC<Web3ContextProps> = ({
                 className="helper"
                 rounded={5}
                 showNumber={false}
+                updateDelay={0}
                 onAfterOpen={(e) => highlightDots(e)}
                 onBeforeClose={(e) => enableBodyScroll(e)}
             />

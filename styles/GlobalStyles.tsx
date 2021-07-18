@@ -210,19 +210,19 @@ export default createGlobalStyle`
     }
 
     // Override Reactour styles
-    .reactour__helper {
+    .helper {
         width: 390px;
-        max-width: 390px;
+        max-width: 390px !important;
         top: 50px;
-        background-color: var(--color-accent);
-        color: white;
-        padding: 0px;
+        background-color: var(--color-accent) !important;
+        color: white !important;
+        padding: 0px !important;
         overflow: hidden;
-        transition: all 0.5s ease;
+        transition: all 0.5s ease !important;
     }
     .reactour__close,
-    .reactour__helper [data-tour-elem="left-arrow"],
-    .reactour__helper [data-tour-elem="right-arrow"] {
+    .helper [data-tour-elem="left-arrow"],
+    .helper [data-tour-elem="right-arrow"] {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -246,8 +246,8 @@ export default createGlobalStyle`
     }
 
     .reactour__close svg,
-    .reactour__helper [data-tour-elem="left-arrow"] svg,
-    .reactour__helper [data-tour-elem="right-arrow"] svg {
+    .helper [data-tour-elem="left-arrow"] svg,
+    .helper [data-tour-elem="right-arrow"] svg {
         display: none;
     }
 
@@ -264,8 +264,8 @@ export default createGlobalStyle`
     }
 
     // Helper arrows 
-    .reactour__helper [data-tour-elem="left-arrow"],
-    .reactour__helper [data-tour-elem="right-arrow"] {
+    .helper [data-tour-elem="left-arrow"],
+    .helper [data-tour-elem="right-arrow"] {
         position: absolute;
         width: 65px;
         height: 32px;
@@ -274,35 +274,35 @@ export default createGlobalStyle`
     }
 
     // Left arrow
-    .reactour__helper [data-tour-elem="left-arrow"] {
+    .helper [data-tour-elem="left-arrow"] {
         left: 16px;
         background-image: url('/img/reactour/arrow-left.svg');
         background-position: 20px 50%;
     }
-    .reactour__helper [data-tour-elem="left-arrow"]:hover {
+    .helper [data-tour-elem="left-arrow"]:hover {
         background-color: var(--color-primary);
         background-image: url('/img/reactour/arrow-left-white.svg');
     }
 
     // Right arrow
-    .reactour__helper [data-tour-elem="right-arrow"] {
+    .helper [data-tour-elem="right-arrow"] {
         right: 16px;
         background-image: url('/img/reactour/arrow-right.svg');
         background-position: 60% 50%;
     }
-    .reactour__helper [data-tour-elem="right-arrow"]:hover {
+    .helper [data-tour-elem="right-arrow"]:hover {
         background-color: var(--color-primary);
         background-image: url('/img/reactour/arrow-right-white.svg');
     }
 
     // Controls
-    .reactour__helper [data-tour-elem="controls"] {
+    .helper [data-tour-elem="controls"] {
         margin-bottom: 16px;
         margin-top: 0;
         height: 32px;
     }
 
-    .reactour__helper [data-tour-elem="dot"] {
+    .helper [data-tour-elem="dot"] {
         width: 14px;
         height: 14px;
         transform: unset;
@@ -311,7 +311,7 @@ export default createGlobalStyle`
     }
 
     // Active dot
-    .reactour__helper button.reactour__dot--is-active {
+    .helper button.reactour__dot--is-active {
         background: var(--color-primary); 
     }
 `;
