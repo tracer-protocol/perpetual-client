@@ -314,10 +314,4 @@ export default createGlobalStyle`
     .helper button.reactour__dot--is-active {
         background: var(--color-primary) !important; 
     }
-
-    // React toast notifications
-    .react-toast-notifications__container {
-        top: 65px !important;
-        z-index: 100001;
-    }
 `;
