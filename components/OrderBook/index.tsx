@@ -11,7 +11,7 @@ import FogOverlay from '@components/Overlay/FogOverlay';
 import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
-import { OrderContext } from '@context/OrderContext';
+import { LIMIT, OrderContext, SHORT, LONG } from '@context/OrderContext';
 
 const decimalKeyMap: Record<number, number> = {
     1: 0.01,
@@ -52,14 +52,10 @@ const OrderBook: FC<OProps> = styled(
         const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
 
         const setOrderFromBook: (order: OrderInfo) => void = (order) => {
-            orderDispatch({
-                type: 'setOrderFromBook',
-                order: {
-                    bid: order.bid,
-                    price: Number.isNaN(order.price) ? 0 : parseFloat(order.price.toFixed(2)),
-                    quantity: parseFloat(order.quantity.toFixed(2)),
-                },
-            });
+            orderDispatch({ type: 'setOrderType', value: LIMIT })
+            orderDispatch({ type: 'setExposure', value: parseFloat(order.quantity.toFixed(2)) });
+            orderDispatch({ type: 'setPosition', value: order.bid ? SHORT : LONG });
+            orderDispatch({ type: 'setPrice', value: Number.isNaN(order.price) ? 0 : parseFloat(order.price.toFixed(2)) })
         };
         // Deep copy and sort orders
         const askOrdersCopy = deepCopyArrayOfObj(askOrders ?? []).sort((a, b) => a.price - b.price); // ascending order

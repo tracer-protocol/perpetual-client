@@ -78,6 +78,15 @@ const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => 
 
 export default RecentTrades;
 
+const RecentTradesTitle = styled.div`
+    font-size: var(--font-size-small-heading);
+    font-weight: bold;
+    letter-spacing: -0.4px;
+    color: #ffffff;
+    text-transform: capitalize;
+    padding: 10px 0 0 10px;
+`;
+
 const RecentTradesContainer = styled.div<{ displayTrades: boolean }>`
     height: 100%;
     position: relative;
@@ -87,16 +96,10 @@ const RecentTradesContainer = styled.div<{ displayTrades: boolean }>`
     display: flex;
     @media (max-height: 850px) {
         display: ${(props) => (props.displayTrades ? 'flex' : 'none')};
+        ${RecentTradesTitle} {
+            display: none;
+        }
     }
-`;
-
-const RecentTradesTitle = styled.div`
-    font-size: var(--font-size-small-heading);
-    font-weight: bold;
-    letter-spacing: -0.4px;
-    color: #ffffff;
-    text-transform: capitalize;
-    padding: 10px 0 0 10px;
 `;
 
 const TableContainer = styled.div`

@@ -26,6 +26,9 @@ export const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
                     if (order?.orderType === MARKET) {
                         orderDispatch({ type: 'setLeverageFromExposure', amount: order?.exposure });
                     }
+                    orderDispatch({
+                        type: 'setNextPosition',
+                    });
                 } else {
                     console.error('Order dispatch function not set');
                 }

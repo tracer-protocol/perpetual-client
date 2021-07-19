@@ -9,17 +9,41 @@ import HeaderSiteSwitcher from './HeaderSiteSwitcher';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
 import AccountDropdown from './AccountDropdown';
 
-// const NetworkButton = styled.span`
-//     border: 1px solid #fff;
-//     transition: 0.3s;
-//     border-radius: 20px;
-//     padding: 0 10px;
-//     &:hover {
-//         cursor: pointer;
-//         background: #fff;
-//         color: #f15025;
-//     }
-// `;
+const switchNetworks = async () => {
+    // @ts-ignore
+    const ethereum = window.ethereum;
+    try {
+        await ethereum.request({
+            method: 'wallet_switchEthereumChain',
+            params: [{ chainId: '0x66EEB' }], //arbitrum
+        });
+        } catch (error) {
+            // This error code indicates that the chain has not been added to MetaMask.
+            if (error.code === 4902) {
+                try {
+                    await ethereum.request({
+                        method: 'wallet_addEthereumChain',
+                        params: [{ chainId: '0x66EEB', rpcUrl: 'https://rinkeby.arbitrum.io/rpc' }],
+                    });
+                } catch (addError) {
+                    // handle "add" error
+                }
+            }
+            // handle other "switch" errors
+        }
+}
+
+const NetworkButton = styled.span`
+    border: 1px solid #fff;
+    transition: 0.3s;
+    border-radius: 20px;
+    padding: 0 10px;
+    &:hover {
+        cursor: pointer;
+        background: #fff;
+        color: #f15025;
+    }
+`;
 
 type UNProps = {
     display: boolean;
@@ -31,7 +55,7 @@ const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
     return (
         <div className={className}>
             You are connected to the wrong network.
-            {/*Switch to <NetworkButton>Kovan Testnet.</NetworkButton>*/}
+            Switch to <NetworkButton onClick={() => switchNetworks()}>Arbitrum Testnet.</NetworkButton>
         </div>
     );
 })`
@@ -154,7 +178,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
 
             {/** TODO this will need to change to Arbritrum network id */}
             {process.env.NEXT_PUBLIC_DEPLOYMENT !== 'DEVELOPMENT' ? (
-                <UnknownNetwork display={network !== 42 && !!network} />
+                <UnknownNetwork display={network !== 421611 && !!network} />
             ) : null}
         </nav>
     );
