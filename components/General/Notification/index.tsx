@@ -95,6 +95,7 @@ const IconWrap = styled.span`
         svg {
             width: 100%;
             height: auto;
+            fill: #fff;
         }
     }
 `;
@@ -103,7 +104,7 @@ const Header: React.FC<any> = ({ appearance: appearance_, onDismiss, title }) =>
     return (
         <div
             style={{
-                color: appearance.text,
+                color: '#fff',
                 fontWeight: 'bold',
                 fontSize: '19px',
                 letterSpacing: '-0.38px',
@@ -155,6 +156,7 @@ const Content = styled((props: any) => (
     width: 100%;
     padding: 8px 16px 16px;
     word-break: break-word;
+    color: var(--color-primary);
 `;
 
 type HProps = {
@@ -225,6 +227,7 @@ const Hashie: React.FC<HProps | any> = ({
                 color: appearance.text,
                 transition: `transform ${transitionDuration}ms cubic-bezier(0.2, 0, 0, 1), opacity ${transitionDuration}ms`,
                 width: toastWidth,
+                cursor: 'default',
                 ...hashieStates(placement)[transitionState],
             }}
         >
