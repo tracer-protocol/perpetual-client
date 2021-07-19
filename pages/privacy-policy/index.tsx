@@ -2,6 +2,7 @@ import React from 'react';
 import NavBar from '@components/Nav';
 import styled from 'styled-components';
 import Footer from '@components/Footer';
+import Link from 'next/link';
 
 const GeneralContainer = styled.div`
     max-height: calc(100vh - 100px);
@@ -17,6 +18,10 @@ const BodyText = styled.div`
 
     p:last-of-type {
         padding-bottom: 0px;
+    }
+
+    a {
+        color: var(--color-secondary);
     }
 `;
 const Title = styled.h1`
@@ -59,7 +64,7 @@ const PrivacyPolicy: React.FC = styled(({ className }) => {
                         In this Privacy Policy, ’us’ ‘we’ or ‘our’ means Tracer DAO. We are committed to respecting your privacy. Our Privacy Policy sets out how we collect, use, store and disclose your personal information.
                     </Text>
                     <Text>
-                        This Privacy Policy applies to our services, which include the services we provide on https://tracer.finance/ or any other websites, pages, features, or content we own or operate or when you use related services. If you do not agree with the terms of this Privacy Policy, do not access or use the services, websites, or any other aspect of our business. 
+                        This Privacy Policy applies to our services, which include the services we provide on <Link href="https://tracer.finance/">https://tracer.finance/</Link> or any other websites, pages, features, or content we own or operate or when you use related services. If you do not agree with the terms of this Privacy Policy, do not access or use the services, websites, or any other aspect of our business. 
                     </Text>
                     <Text>
                         By providing personal information to us, you consent to our collection, use and disclosure of your personal information in accordance with this Privacy Policy and any other arrangements that apply between us. We may change our Privacy Policy from time to time by publishing changes to it on our website. We encourage you to check our website periodically to ensure that you are aware of our current Privacy Policy.
@@ -178,7 +183,7 @@ const PrivacyPolicy: React.FC = styled(({ className }) => {
                         Contact Us
                     </SmallTitle>
                     <Text>
-                        For further information about our Privacy Policy or practices, or to access or correct your personal information, or make a complaint, please contact us at hello@tracer.finance.
+                        For further information about our Privacy Policy or practices, or to access or correct your personal information, or make a complaint, please contact us at <Link href="mailto:hello@tracer.finance">hello@tracer.finance</Link>.
                     </Text>
                     <SmallTitle>
                         Effective
