@@ -51,6 +51,7 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
             api.init();
             api.show(USERSNAP_API_KEY);
         };
+
     }, []);
     return (
         <div>
@@ -116,3 +117,4 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
 };
 
 export default App;
+
