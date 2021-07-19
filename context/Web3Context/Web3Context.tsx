@@ -12,6 +12,7 @@ import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import dynamic from 'next/dynamic';
 import { tourConfig } from '@components/Trade/Advanced/TourSteps'
 import Cookies from 'universal-cookie';
+import { useToasts } from 'react-toast-notifications';
 export type OnboardConfig = Partial<Omit<Initialization, 'networkId'>>;
 
 type Web3ContextProps = {
@@ -57,6 +58,7 @@ const Web3Store: React.FC<Web3ContextProps> = ({
     const [onboard, setOnboard] = useState<OnboardApi | undefined>(undefined);
     const [isReady, setIsReady] = useState<boolean>(false);
     const [config, setConfig] = useState<Network>(networkConfig[0]);
+    const { addToast } = useToasts();
 
     // Initialize OnboardJS
     useEffect(() => {
@@ -142,10 +144,26 @@ const Web3Store: React.FC<Web3ContextProps> = ({
         // start tutorial
         const cookies = new Cookies();
         if(cookies.get('tutorialCompleted') != 'true'){
-            cookies.set('tutorialCompleted', 'true', { path: '/' });
-            setTourOpen(true);
+            addToast(['Trading with Tracer', `Click here to learn how to trade with Tracer`], {
+                appearance: 'info',
+                autoDismiss: false,
+            });
+            // Get the toast notification element
+            const toast = document.querySelector('.react-toast-notifications__container div[class^="Notification__Content-"]') as HTMLDivElement;
+            toast.addEventListener('click', function () {
+                const closeButton = document.querySelector('[class*="Notification__Close"]') as HTMLButtonElement;
+                closeButton.click();
+                setTourOpen(true);
+            });
         }
     };
+
+    const setTutorialComplete = () => {
+        const cookies = new Cookies();
+        if(cookies.get('tutorialCompleted') != 'true'){
+            cookies.set('tutorialCompleted', 'true', { path: '/' });
+        }
+    }
 
     const resetOnboard = async () => {
         localStorage.setItem('onboard.selectedWallet', '');
@@ -178,7 +196,7 @@ const Web3Store: React.FC<Web3ContextProps> = ({
         // Show the 'No Position Open' again
         const positionOverlay = document.querySelector('div[class*="PositionOverlay__StyledOverlay"]') as HTMLElement;
         if (positionOverlay) {
-            positionOverlay.style.display = 'block';
+            positionOverlay.removeAttribute('style');
         }
 
         // Disable the 'Close Position' button
@@ -186,6 +204,18 @@ const Web3Store: React.FC<Web3ContextProps> = ({
         if (closeOrderButton) {
             closeOrderButton.disabled = true;
         }
+
+        // Reset Calculator and Margin modal Z-indexes
+        const calculatorEl = document.querySelector('div[class*="Calculator"]') as HTMLElement;
+        const marginModalEl = document.querySelector('div[class*="AccountModal"]') as HTMLElement;
+        if(calculatorEl){
+            calculatorEl.removeAttribute('style');
+        }
+        if (marginModalEl) {
+            marginModalEl.removeAttribute('style');
+        }
+
+        setTutorialComplete();
     };
 
     const highlightDots = (e: HTMLDivElement) => {

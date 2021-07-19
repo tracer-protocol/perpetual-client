@@ -54,6 +54,7 @@ export const tourConfig = [
             const marginModalEl = document.querySelector('div[class*="AccountModal"]') as HTMLElement;
             if(calculatorEl){
                 calculatorEl.style.display = 'block';
+                calculatorEl.style.zIndex = '100000';
             }
             if(marginModalEl){
                 marginModalEl.style.display = 'block';
@@ -61,10 +62,7 @@ export const tourConfig = [
         },
         position: 'bottom',
         style: {
-            backgroundColor: "var(--color-accent)",
-            color: "white",
-            padding: '0px',
-            overflow: 'hidden',
+            top: '50px',
             left: '0px',
         }
     },
@@ -105,7 +103,7 @@ export const tourConfig = [
             const marginModalEl = document.querySelector('div[class*="AccountModal"]') as HTMLElement;
             depositButton?.click();
             if (marginModalEl) {
-                marginModalEl.style.zIndex = '100000';
+                marginModalEl.style.zIndex = '100001';
             }
         },
         position: 'left',

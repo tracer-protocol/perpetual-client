@@ -228,9 +228,9 @@ export default createGlobalStyle`
         align-items: center;
         width: 56px;
         height: 28px;
-        border: 1px solid var(--color-primary);
+        border: 1px solid var(--color-primary) !important;
         border-radius: 50px;
-        background-image: url('/img/general/close.svg');
+        background-image: url('/img/general/close.svg') !important;
         background-position: center center;
         background-size: 17px 17px;
         background-repeat: no-repeat;
@@ -239,8 +239,8 @@ export default createGlobalStyle`
     }
 
     .reactour__close {
-        top: 16px;
-        right: 16px;
+        top: 16px !important;
+        right: 16px !important;
         width: 56px !important;
         height: 28px !important;
     }
@@ -252,8 +252,8 @@ export default createGlobalStyle`
     }
 
     .reactour__close:hover {
-        background-color: var(--color-primary);
-        background-image: url('/img/general/close-white.svg');
+        background-color: var(--color-primary) !important;
+        background-image: url('/img/general/close-white.svg') !important;
     }
     
     // Change the background overlay colour 
@@ -276,23 +276,23 @@ export default createGlobalStyle`
     // Left arrow
     .helper [data-tour-elem="left-arrow"] {
         left: 16px;
-        background-image: url('/img/reactour/arrow-left.svg');
+        background-image: url('/img/reactour/arrow-left.svg') !important;
         background-position: 20px 50%;
     }
     .helper [data-tour-elem="left-arrow"]:hover {
-        background-color: var(--color-primary);
-        background-image: url('/img/reactour/arrow-left-white.svg');
+        background-color: var(--color-primary) !important;
+        background-image: url('/img/reactour/arrow-left-white.svg') !important;
     }
 
     // Right arrow
     .helper [data-tour-elem="right-arrow"] {
         right: 16px;
-        background-image: url('/img/reactour/arrow-right.svg');
+        background-image: url('/img/reactour/arrow-right.svg') !important;
         background-position: 60% 50%;
     }
     .helper [data-tour-elem="right-arrow"]:hover {
-        background-color: var(--color-primary);
-        background-image: url('/img/reactour/arrow-right-white.svg');
+        background-color: var(--color-primary) !important;
+        background-image: url('/img/reactour/arrow-right-white.svg') !important;
     }
 
     // Controls
@@ -306,12 +306,18 @@ export default createGlobalStyle`
         width: 14px;
         height: 14px;
         transform: unset;
-        background: var(--color-background-secondary);
+        background: var(--color-background-secondary) !important;
         border: unset;
     }
 
     // Active dot
     .helper button.reactour__dot--is-active {
-        background: var(--color-primary); 
+        background: var(--color-primary) !important; 
+    }
+
+    // React toast notifications
+    .react-toast-notifications__container {
+        top: 65px !important;
+        z-index: 100001;
     }
 `;
