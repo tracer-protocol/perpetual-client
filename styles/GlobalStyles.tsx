@@ -209,4 +209,9 @@ export default createGlobalStyle`
         padding: 0 1rem;
     }
 
+    // React toast notifications
+    .react-toast-notifications__container {
+        top: 65px !important;
+        z-index: 100001;
+    }
 `;

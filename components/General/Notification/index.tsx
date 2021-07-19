@@ -1,6 +1,5 @@
 import React from 'react';
 import Icon, {
-    CloseOutlined,
     InfoCircleFilled,
     WarningOutlined,
     CloseCircleTwoTone,
@@ -157,6 +156,10 @@ const Content = styled((props: any) => (
     padding: 8px 16px 16px;
     word-break: break-word;
     color: var(--color-primary);
+
+    strong {
+        color: #fff;
+    }
 `;
 
 type HProps = {
