@@ -30,12 +30,6 @@ const HelperList = styled.ul`
     padding-inline-start: 16px;
 `;
 
-// const defaultStyles = {
-//     backgroundColor: "var(--color-accent)",
-//     color: "white",
-//     padding: '0px',
-//     overflow: 'hidden',
-// };
 
 export const tourConfig = [
     // Wallet button
