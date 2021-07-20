@@ -8,11 +8,6 @@ import { API as OnboardApi, Wallet, Initialization } from 'bnc-onboard/dist/src/
 import { formatEther } from '@ethersproject/units';
 import { Network, networkConfig } from './Web3Context.Config';
 import Web3 from 'web3';
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
-import dynamic from 'next/dynamic';
-import { tourConfig } from '@components/Trade/Advanced/TourSteps'
-import Cookies from 'universal-cookie';
-import { useToasts } from 'react-toast-notifications';
 export type OnboardConfig = Partial<Omit<Initialization, 'networkId'>>;
 
 type Web3ContextProps = {
@@ -58,7 +53,6 @@ const Web3Store: React.FC<Web3ContextProps> = ({
     const [onboard, setOnboard] = useState<OnboardApi | undefined>(undefined);
     const [isReady, setIsReady] = useState<boolean>(false);
     const [config, setConfig] = useState<Network>(networkConfig[0]);
-    const { addToast } = useToasts();
 
     // Initialize OnboardJS
     useEffect(() => {
@@ -133,37 +127,8 @@ const Web3Store: React.FC<Web3ContextProps> = ({
         if (!isReady) {
             setEthBalance(0);
         }
-        else if(isReady){
-            triggerTutorial();
-        }
         return !!isReady;
     };
-
-    const triggerTutorial = async () => {
-        // If cookie with flag does not exist,
-        // start tutorial
-        const cookies = new Cookies();
-        if(cookies.get('tutorialCompleted') != 'true'){
-            addToast(['Trading with Tracer', `Click here to learn how to trade with Tracer`], {
-                appearance: 'info',
-                autoDismiss: false,
-            });
-            // Get the toast notification element
-            const toast = document.querySelector('.react-toast-notifications__container div[class^="Notification__Content-"]') as HTMLDivElement;
-            toast.addEventListener('click', function () {
-                const closeButton = document.querySelector('[class*="Notification__Close"]') as HTMLButtonElement;
-                closeButton.click();
-                setTourOpen(true);
-            });
-        }
-    };
-
-    const setTutorialComplete = () => {
-        const cookies = new Cookies();
-        if(cookies.get('tutorialCompleted') != 'true'){
-            cookies.set('tutorialCompleted', 'true', { path: '/' });
-        }
-    }
 
     const resetOnboard = async () => {
         localStorage.setItem('onboard.selectedWallet', '');
@@ -183,60 +148,6 @@ const Web3Store: React.FC<Web3ContextProps> = ({
     }
 
     const onboardState = onboard?.getState();
-
-    // Reactour
-    const Tour = dynamic(import('reactour'), { ssr: false });
-    const [isTourOpen, setTourOpen] = useState<boolean>(false);
-
-    const closeTour = () => {
-        setTourOpen(false);
-
-        // Reset the elements affected by the tour
-
-        // Show the 'No Position Open' again
-        const positionOverlay = document.querySelector('div[class*="PositionOverlay__StyledOverlay"]') as HTMLElement;
-        if (positionOverlay) {
-            positionOverlay.removeAttribute('style');
-        }
-
-        // Disable the 'Close Position' button
-        const closeOrderButton = document.querySelector('button[class*="OrderButtons__CloseOrder"]') as HTMLButtonElement;
-        if (closeOrderButton) {
-            closeOrderButton.disabled = true;
-        }
-
-        // Reset Calculator and Margin modal Z-indexes
-        const calculatorEl = document.querySelector('div[class*="Calculator"]') as HTMLElement;
-        const marginModalEl = document.querySelector('div[class*="AccountModal"]') as HTMLElement;
-        if(calculatorEl){
-            calculatorEl.removeAttribute('style');
-        }
-        if (marginModalEl) {
-            marginModalEl.removeAttribute('style');
-        }
-
-        setTutorialComplete();
-    };
-
-    const highlightDots = (e: HTMLDivElement) => {
-        e.addEventListener('click', function () {
-            const navDots: Array<any> = Array.from(document.querySelectorAll('nav[data-tour-elem="navigation"] button'));
-            var currentIndex = 0;
-            // Wait for Reactour to apply styling
-            setTimeout(function(){
-                navDots.map((dot, i) => { 
-                    if(dot.classList.contains('reactour__dot--is-active')){
-                        currentIndex = i;
-                    }
-                });
-                navDots.slice(0, currentIndex).map((dot) => {
-                    dot.classList.add('reactour__dot--is-active');
-                });
-            }, 10);
-        });
-        // Also prevent body scrolling when tour open
-        disableBodyScroll(e);
-    }
 
     return (
         <>
@@ -258,19 +169,6 @@ const Web3Store: React.FC<Web3ContextProps> = ({
             >
                 {children}
             </Web3Context.Provider>
-            <Tour
-                onRequestClose={closeTour}
-                steps={tourConfig as Array<any>}
-                maskSpace={0}
-                isOpen={isTourOpen}
-                maskClassName="mask"
-                className="helper"
-                rounded={5}
-                showNumber={false}
-                updateDelay={0}
-                onAfterOpen={(e) => highlightDots(e)}
-                onBeforeClose={(e) => enableBodyScroll(e)}
-            />
         </>
     );
 };

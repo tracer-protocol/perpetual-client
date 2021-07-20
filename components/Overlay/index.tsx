@@ -4,9 +4,10 @@ import styled from 'styled-components';
 interface OProps {
     className?: string;
     children?: React.ReactNode;
+    id?: string;
 }
-const Overlay: FC<OProps> = styled(({ className, children }: OProps) => {
-    return <div className={className}>{children}</div>;
+const Overlay: FC<OProps> = styled(({ className, children, id }: OProps) => {
+    return <div className={className} id={id}>{children}</div>;
 })`
     display: flex;
     background-color: var(--color-background);

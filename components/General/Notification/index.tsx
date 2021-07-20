@@ -99,7 +99,7 @@ const Header: React.FC<any> = ({ appearance: appearance_, onDismiss, title }) =>
         >
             <IconWrap>{appearance.icon}</IconWrap>
             <span>{title}</span>
-            <Close onClick={onDismiss} />
+            <Close className="toast-close" onClick={onDismiss} />
         </div>
     );
 };
@@ -207,7 +207,7 @@ const Hashie: React.FC<HProps | any> = ({
                 onDismiss={onDismiss}
                 title={children_[0]}
             />
-            <Content>{children_[1]}</Content>
+            <Content className="notification-content">{children_[1]}</Content>
             <Countdown display={autoDismiss} autoDismissTimeout={autoDismissTimeout} />
         </div>
     );

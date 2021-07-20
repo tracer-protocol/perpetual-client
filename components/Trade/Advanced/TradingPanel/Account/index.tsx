@@ -164,7 +164,7 @@ const AccountPanel: React.FC<{
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title hide={!!order?.exposureBN.toNumber() ?? false}>
                 Margin Account
-                <CalculatorButton onClick={() => showCalculator(true)}>Calculator</CalculatorButton>
+                <CalculatorButton id="calc-button" onClick={() => showCalculator(true)}>Calculator</CalculatorButton>
             </Title>
             <Item>
                 <h3>
@@ -201,10 +201,16 @@ const AccountPanel: React.FC<{
                 <SButton
                     className={balances.quote.eq(0) ? 'primary' : ''}
                     onClick={(_e: any) => handleClick(true, true)}
+                    id="deposit-button"
                 >
                     Deposit
                 </SButton>
-                <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
+                <SButton 
+                    onClick={(_e: any) => handleClick(true, false)}
+                    id="withdraw-button"
+                >
+                    Withdraw
+                </SButton>
             </DepositButtons>
             <AccountModal
                 display={popup}

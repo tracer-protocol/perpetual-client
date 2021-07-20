@@ -157,7 +157,7 @@ export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) =>
     } else {
         return (
             <Tooltip title={OrderErrors[orderState?.error ?? -1]?.message}>
-                <CloseOrder disabled={true}>Close Order</CloseOrder>
+                <CloseOrder disabled={true} id="close-order-button">Close Order</CloseOrder>
             </Tooltip>
         );
     }

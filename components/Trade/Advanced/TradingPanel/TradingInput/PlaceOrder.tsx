@@ -35,7 +35,7 @@ export default (({ selectedTracer, account }: TIProps) => {
     const { order, orderDispatch } = useContext(OrderContext);
     return (
         <>
-            <StyledBox>
+            <StyledBox id="placeorder-panel">
                 {/* Order type select */}
                 <OrderTypeSelect selected={order?.orderType ?? 0} />
 
@@ -64,7 +64,7 @@ export default (({ selectedTracer, account }: TIProps) => {
                 </Details> */}
 
                 {/*Dont display price select if it is a market order*/}
-                <div className="AdjustPanelContainer">
+                <div id="adjustment-container">
                 {order?.orderType === LIMIT ? (
                     <>
                         {/* LIMIT ORDER */}
@@ -86,7 +86,7 @@ export default (({ selectedTracer, account }: TIProps) => {
                 ) : (
                     <>
                         {/* MARKET ORDER */}
-                        <div className="AdjustPanel">
+                        <div id="order-panel">
                             <Divider
                                 text={'Adjust Position'}
                                 tooltip={{ key: 'adjust-position', props: { baseTicker: order?.market } }}

@@ -8,7 +8,7 @@ const StyledOverlay = styled(Overlay)`
 `;
 
 const PositionOverlay: FC = () => {
-    return <StyledOverlay>No Open Position.</StyledOverlay>;
+    return <StyledOverlay id="position-overlay">No Open Position.</StyledOverlay>;
 };
 
 export default PositionOverlay;

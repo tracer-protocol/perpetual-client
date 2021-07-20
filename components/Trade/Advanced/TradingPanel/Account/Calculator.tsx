@@ -94,6 +94,7 @@ export default styled(
                 }
                 subTitle={modalState.subTitle}
                 onClose={close}
+                id="calculator-modal"
             >
                 <CalcSelectContainer>
                     <CalcSlideSelect
