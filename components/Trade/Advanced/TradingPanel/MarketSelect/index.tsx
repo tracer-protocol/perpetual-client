@@ -5,7 +5,7 @@ import { Box, Logo } from '@components/General';
 import styled from 'styled-components';
 import { initialFactoryState } from '@context/FactoryContext';
 import { toApproxCurrency } from '@libs/utils';
-// import MarketChange from '@components/General/MarketChange';
+import MarketChange from '@components/General/MarketChange';
 
 const SLogo = styled(Logo)`
     margin-top: 0;
@@ -38,7 +38,7 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
                             <div className="my-auto">{tracer.marketId}</div>
                         </MarketContainer>
                         <div className="info">
-                            {/*<MarketChange className="mr-2" amount={0} />*/}
+                            <MarketChange className="mr-2" amount={0} />
                             <div>{toApproxCurrency(tracer.getOraclePrice())}</div>
                         </div>
                     </Box>
