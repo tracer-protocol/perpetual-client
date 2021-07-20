@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { LargeButton, SmallTitle } from '@components/Portfolio';
 import { UserBalance } from '@libs/types/TracerTypes';
 import { BigNumber } from 'bignumber.js';
-import { FilledOrder } from '@libs/types/OrderTypes';
 import {
     EqTableRow,
     EqTableCell,
@@ -31,11 +30,10 @@ const ToggleTable = () => {
 
 interface EqProps {
     className?: string;
-    balances?: UserBalance;
-    filledOrders?: FilledOrder[];
-    fairPrice?: BigNumber;
-    baseTicker?: string;
-    quoteTicker?: string;
+    balances: UserBalance;
+    fairPrice: BigNumber;
+    baseTicker: string;
+    quoteTicker: string;
 }
 const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
     const [show, setShow] = useState(false);

@@ -211,7 +211,13 @@ const Overview: FC = () => {
                     </div>
                 </HeadingRow>
                 <HPanel background={`#00125D`}>
-                    <Equity className="equityStats" />
+                    <Equity
+                        className="equityStats"
+                        balances={fetchedTracers[0]?.getBalance() ?? defaults.balances}
+                        fairPrice={fetchedTracers[0]?.getFairPrice() ?? defaults.fairPrice}
+                        baseTicker={fetchedTracers[0]?.baseTicker ?? defaults.baseTicker}
+                        quoteTicker={fetchedTracers[0]?.quoteTicker ?? defaults.quoteTicker}
+                    />
                     <Graph
                         className="pnlGraph"
                         title="Profit and Loss"
