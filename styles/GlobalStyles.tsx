@@ -195,7 +195,7 @@ export default createGlobalStyle`
         }
     }
 
-    /** Unsopported Network Styles */
+    /** Unsupported Network Styles */
     .bn-onboard-prepare-description {
         padding: 0 1rem;
     }
@@ -209,9 +209,14 @@ export default createGlobalStyle`
         padding: 0 1rem;
     }
 
-    // React toast notifications
+    /** React toast notifications */
     .react-toast-notifications__container {
         top: 65px !important;
         z-index: 100001;
+    }
+
+    /** Show close button on hover*/
+    .toast-notification:hover button.close-notification {
+        opacity: 1;
     }
 `;

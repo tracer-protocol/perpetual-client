@@ -104,15 +104,13 @@ const Header: React.FC<any> = ({ appearance: onDismiss, title }) => {
                 width: '100%',
                 display: 'flex',
                 padding: '16px 16px 8px',
-                borderBottom: '1px solid var(--color-accent)'
             }}
         >
             <span>{title}</span>
-            <Close onClick={onDismiss} />
+            <Close onClick={onDismiss} className="close-notification"/>
         </div>
     );
 };
-
 const STimer = styled<any>(Timer)`
     #refetchLoader {
         animation: countdown-width ${(props) => props.autoDismissTimeout}s linear;
@@ -184,8 +182,9 @@ const Close = styled.button`
     background-position: center center;
     background-size: 17px 17px;
     background-repeat: no-repeat;
-    transition: background-color 0.5s ease;
+    transition: background-color 0.5s ease, opacity 0.5s ease;
     backface-visibility: hidden;
+    opacity: 0;
     
     &:hover {
         cursor: pointer;
@@ -214,7 +213,7 @@ const Hashie: React.FC<HProps | any> = ({
     let children_ = React.Children.toArray(children);
     return (
         <div
-            className="rounded-md mb-2 flex"
+            className="rounded-md mb-2 flex toast-notification"
             style={{
                 position: 'relative',
                 display: 'flex',
