@@ -1,10 +1,5 @@
 import React from 'react';
-import Icon, {
-    InfoCircleFilled,
-    WarningOutlined,
-    CloseCircleTwoTone,
-    CheckCircleTwoTone,
-} from '@ant-design/icons';
+import Icon, { InfoCircleFilled, WarningOutlined, CloseCircleTwoTone, CheckCircleTwoTone } from '@ant-design/icons';
 import styled from 'styled-components';
 import Timer from '@components/Timer';
 // @ts-ignore
@@ -98,8 +93,7 @@ const IconWrap = styled.span`
         }
     }
 `;
-const Header: React.FC<any> = ({ appearance: appearance_, onDismiss, title }) => {
-    const appearance = appearances[appearance_] ?? appearances['info']; //default info
+const Header: React.FC<any> = ({ appearance: onDismiss, title }) => {
     return (
         <div
             style={{
@@ -150,8 +144,7 @@ const Content = styled((props: any) => (
     flex-grow: 1;
     font-size: var(--font-size-medium);
     line-height: 1.4;
-    color: var(--color-secondary);
-    min-height: 40;
+    min-height: 40px;
     width: 100%;
     padding: 8px 16px 16px;
     word-break: break-word;
@@ -194,7 +187,7 @@ const Close = styled.button`
     transition: background-color 0.5s ease;
     backface-visibility: hidden;
     
-    &: hover {
+    &:hover {
         cursor: pointer;
         background-color: var(--color-primary);
         background-image: url('/img/general/close-white.svg');
