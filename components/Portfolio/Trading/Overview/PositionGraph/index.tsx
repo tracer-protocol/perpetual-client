@@ -58,6 +58,11 @@ const PositionGraph: FC<PGProps> = styled(
         const { order } = useContext(OrderContext);
         const { lines } = useLines(selectedTracerAddress);
 
+        // TODO: Need to define positions in context
+        const closePosition = async (_e: any) => {
+            console.log('Create position function not found');
+        };
+
         return (
             <span className={className}>
                 <PGContainer>
@@ -149,7 +154,9 @@ const PositionGraph: FC<PGProps> = styled(
                         </Row>
                         <Row>
                             <BorderlessCell>
-                                <LargeButton className="primary filled">Close Position</LargeButton>
+                                <LargeButton className="primary filled" onClick={closePosition}>
+                                    Close Position
+                                </LargeButton>
                             </BorderlessCell>
                             <BorderlessCell inner>
                                 <LargeButton className="primary">Adjust Position</LargeButton>
