@@ -1,4 +1,3 @@
-import { CloseOutlined } from '@ant-design/icons';
 import { Children } from 'libs/types';
 import React from 'react';
 import styled from 'styled-components';
@@ -194,7 +193,7 @@ export const Close = styled.button`
     background-repeat: no-repeat;
     transition: background-color 0.5s ease;
     backface-visibility: hidden;
-    
+
     &:hover {
         cursor: pointer;
         background-color: var(--color-primary);
