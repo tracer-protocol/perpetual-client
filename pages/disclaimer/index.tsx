@@ -77,7 +77,7 @@ const Disclaimer: React.FC = styled(({ className }) => {
                     </Text>
                     <Text>
                         Discussions with updated information on the Tracer protocol{"'"}s governance can be found in{' '}
-                        <Link href="https://discourse.tracer.finance/">Tracer DAO{"'"}s Discourse</Link>.
+                        <Link href="https://discourse.tracer.finance/">{'Tracer DAO\'s Discourse'}</Link>.
                     </Text>
                 </BodyText>
             </GeneralContainer>
