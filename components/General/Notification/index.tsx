@@ -93,6 +93,30 @@ const IconWrap = styled.span`
         }
     }
 `;
+const Close = styled.button`
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 56px;
+    height: 28px;
+    border: 1px solid var(--color-primary);
+    border-radius: 50px;
+    background-image: url('/img/general/close.svg');
+    background-position: center center;
+    background-size: 17px 17px;
+    background-repeat: no-repeat;
+    transition: background-color 0.5s ease;
+    backface-visibility: hidden;
+    
+    &:hover {
+        cursor: pointer;
+        background-color: var(--color-primary);
+        background-image: url('/img/general/close-white.svg');
+    }
+`;
 const Header: React.FC<any> = ({ appearance: onDismiss, title }) => {
     return (
         <div
@@ -168,31 +192,6 @@ type HProps = {
 };
 
 const toastWidth = 'auto';
-
-const Close = styled.button`
-    position: absolute;
-    top: 16px;
-    right: 16px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 56px;
-    height: 28px;
-    border: 1px solid var(--color-primary);
-    border-radius: 50px;
-    background-image: url('/img/general/close.svg');
-    background-position: center center;
-    background-size: 17px 17px;
-    background-repeat: no-repeat;
-    transition: background-color 0.5s ease;
-    backface-visibility: hidden;
-    
-    &:hover {
-        cursor: pointer;
-        background-color: var(--color-primary);
-        background-image: url('/img/general/close-white.svg');
-    }
-`;
 
 const ContentWrapper = styled.div`
     display: inline-flex;
