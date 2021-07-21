@@ -64,7 +64,6 @@ interface TProps {
 export const Title = styled.h3`
     text-align: left;
     font-size: var(--font-size-medium);
-    line-height: 40px;
     letter-spacing: -0.4px;
     color: #ffffff;
 `;

@@ -3,31 +3,97 @@ import styled from 'styled-components';
 import Overlay from '@components/Overlay';
 import { Menu, MenuItem } from '@components/General/Menu';
 import Dropdown from 'antd/lib/dropdown';
-import { Button } from '@components/General';
+import { Button, Logo } from '@components/General';
+import { toApproxCurrency } from '@libs/utils';
+import MarketChange from '@components/General/MarketChange';
 
 const StyledOverlay = styled(Overlay)`
     font-size: var(--font-size-medium);
     background-color: var(--color-background-secondary);
 `;
 
-const PositionOverlay: FC = () => {
-    const [currentMarket, setCurrentMarket] = useState(1);
+interface POProps {
+    tracers?: any;
+}
+const PositionOverlay: FC<POProps> = ({ tracers }: POProps) => {
+    const [currentMarket, setCurrentMarket] = useState(-1);
 
-    const marketKeyMap: Record<number, string> = {
-        1: 'ETH',
-        2: 'BTC',
-        3: 'TSLA',
-    };
+    const marketKeyMap: Record<number, string> = {};
+
+    tracers?.map((tracer: any, i: number) => {
+        marketKeyMap[i] = tracer.marketId;
+    });
 
     return (
         <StyledOverlay>
             No Open Position.
             <SelectMarketDropdown setOptions={setCurrentMarket} option={currentMarket} keyMap={marketKeyMap} />
+            {currentMarket !== -1 ? (
+                <MarketPreviewContainer>
+                    <InfoCol>
+                        <div className="title">Market</div>
+                        <div className="row">
+                            <SLogo ticker={tracers[currentMarket]?.baseTicker} /> {tracers[currentMarket]?.marketId}
+                        </div>
+                    </InfoCol>
+                    <InfoCol>
+                        <div className="title">Last Price</div>
+                        {tracers !== undefined ? (
+                            <div className="row">
+                                {toApproxCurrency(tracers[currentMarket]?.getOraclePrice()) ?? null}
+                            </div>
+                        ) : null}
+                    </InfoCol>
+                    <InfoCol>
+                        <div className="title">24h</div>
+                        <div className="row">
+                            <MarketChange amount={2.38} />
+                        </div>
+                    </InfoCol>
+                    <InfoCol>
+                        <div className="title">Max Leverage</div>
+                        {tracers !== undefined ? (
+                            <div className="row">{toApproxCurrency(tracers[currentMarket]?.maxLeverage) ?? null}</div>
+                        ) : null}
+                    </InfoCol>
+                </MarketPreviewContainer>
+            ) : null}
         </StyledOverlay>
     );
 };
 
 export default PositionOverlay;
+
+const MarketPreviewContainer = styled.div`
+    display: flex;
+    background-color: var(--color-accent);
+    width: 600px;
+    padding: 10px 20px;
+    border-radius: 7px;
+    margin-top: 10px;
+
+    .title {
+        height: 20px;
+        color: var(--color-secondary);
+        font-size: var(--font-size-small);
+        display: flex;
+        align-items: center;
+    }
+
+    .row {
+        height: 40px;
+        display: flex;
+        align-items: center;
+    }
+`;
+
+const SLogo = styled(Logo)`
+    margin-right: 5px;
+`;
+
+const InfoCol = styled.div`
+    width: 25%;
+`;
 
 interface PDProps {
     setOptions: (val: number) => void;
@@ -70,6 +136,7 @@ const SelectMarketDropdown: React.FC<PDProps> = styled(({ className, setOptions,
     position: relative;
     padding-right: 8px;
     margin: unset;
+
     &:hover {
         background: none;
         color: var(--color-primary);

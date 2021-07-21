@@ -22,7 +22,7 @@ const HeadingRow = styled.div<HRowProps>`
     padding: 0 16px;
     height: 60px;
     width: 100%;
-    background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
+    background: ${(props: any) => (props.background ? (props.background as string) : 'transparent')};
     border-bottom: ${(props) => (props.border ? '1px solid var(--table-lightborder)' : 'none')};
 `;
 
@@ -228,7 +228,7 @@ const Overview: FC = () => {
                 </HPanel>
                 <HeadingRow border={true}>
                     <Title>Open Positions</Title>
-                    <Counter>4</Counter>
+                    <Counter>{fetchedTracers?.length}</Counter>
                 </HeadingRow>
                 <HScrollContainer>
                     {fetchedTracers.map((tracer: any, i: number) => (
@@ -246,7 +246,7 @@ const Overview: FC = () => {
                     {!account ? (
                         <ConnectOverlay />
                     ) : fetchedTracers[0]?.getBalance()?.quote.eq(0) ? (
-                        <PositionOverlay />
+                        <PositionOverlay tracers={fetchedTracers} />
                     ) : null}
                 </HScrollContainer>
             </VScrollContainer>

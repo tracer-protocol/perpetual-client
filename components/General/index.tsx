@@ -1,4 +1,3 @@
-import { CloseOutlined } from '@ant-design/icons';
 import { Children } from 'libs/types';
 import React from 'react';
 import styled from 'styled-components';
@@ -177,27 +176,28 @@ export const After = styled.span`
     }
 `;
 
-export const Close = styled(CloseOutlined)`
-    background: var(--color-accent);
-    border-radius: 20px;
-    width: 58px;
-    height: 40px;
-    transition: 0.3s;
+export const Close = styled.button`
+    position: absolute;
+    top: 16px;
+    right: 16px;
     display: flex;
-    top: 0;
-    right: 20px;
-
-    > svg {
-        transition: 0.3s;
-        margin: auto;
-        height: 20px;
-        width: 20px;
-        color: var(--color-text);
-    }
+    justify-content: center;
+    align-items: center;
+    width: 56px;
+    height: 28px;
+    border: 1px solid var(--color-primary);
+    border-radius: 50px;
+    background-image: url('/img/general/close.svg');
+    background-position: center center;
+    background-size: 17px 17px;
+    background-repeat: no-repeat;
+    transition: background-color 0.5s ease;
+    backface-visibility: hidden;
 
     &:hover {
         cursor: pointer;
-        background: var(--color-primary);
+        background-color: var(--color-primary);
+        background-image: url('/img/general/close-white.svg');
     }
 `;
 
