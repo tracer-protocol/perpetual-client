@@ -198,7 +198,7 @@ export default class Tracer {
      */
     setSubscribed: (val: boolean) => void = (val) => {
         this.hasSubscribed = val;
-    }
+    };
 
     /**
      * Updates the user balances for a given tracer.

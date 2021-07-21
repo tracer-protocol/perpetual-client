@@ -52,10 +52,13 @@ const OrderBook: FC<OProps> = styled(
         const deepCopyArrayOfObj = (arr: OMEOrder[]) => arr.map((order) => Object.assign({}, order));
 
         const setOrderFromBook: (order: OrderInfo) => void = (order) => {
-            orderDispatch({ type: 'setOrderType', value: LIMIT })
+            orderDispatch({ type: 'setOrderType', value: LIMIT });
             orderDispatch({ type: 'setExposure', value: parseFloat(order.quantity.toFixed(2)) });
             orderDispatch({ type: 'setPosition', value: order.bid ? SHORT : LONG });
-            orderDispatch({ type: 'setPrice', value: Number.isNaN(order.price) ? 0 : parseFloat(order.price.toFixed(2)) })
+            orderDispatch({
+                type: 'setPrice',
+                value: Number.isNaN(order.price) ? 0 : parseFloat(order.price.toFixed(2)),
+            });
         };
         // Deep copy and sort orders
         const askOrdersCopy = deepCopyArrayOfObj(askOrders ?? []).sort((a, b) => a.price - b.price); // ascending order
