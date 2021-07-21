@@ -11,22 +11,22 @@ const Footer: FC = styled(({ className }) => {
             </Section>
             <Section>
                 <Item>
-                    <Link href='/privacy-policy'>Privacy Policy</Link>
+                    <Link href="/privacy-policy">Privacy Policy</Link>
                 </Item>
                 <Item>
-                    <Link href='/terms-of-use'>Terms of Use</Link>
+                    <Link href="/terms-of-use">Terms of Use</Link>
                 </Item>
                 <Item>
-                    <Link href='/disclaimer'>Disclaimer</Link>
+                    <Link href="/disclaimer">Disclaimer</Link>
                 </Item>
                 <Item>
-                    <Link href='https://docs.tracer.finance/'>Docs</Link>
+                    <Link href="https://docs.tracer.finance/">Docs</Link>
                 </Item>
                 <Item>
-                    <Link href='https://docs.tracer.finance/perpetual-swaps-faq/'>FAQs</Link>
+                    <Link href="https://docs.tracer.finance/perpetual-swaps-faq/">FAQs</Link>
                 </Item>
                 <Item>
-                    <Link href='https://docs.tracer.finance/trader-tutorials'>Tutorials</Link>
+                    <Link href="https://docs.tracer.finance/trader-tutorials">Tutorials</Link>
                 </Item>
             </Section>
         </FooterContent>
