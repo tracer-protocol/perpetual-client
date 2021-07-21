@@ -11,22 +11,34 @@ const Footer: FC = styled(({ className }) => {
             </Section>
             <Section>
                 <Item>
-                    <Link href='/privacy-policy'>Privacy Policy</Link>
+                    <Link href="/privacy-policy">Privacy Policy</Link>
                 </Item>
                 <Item>
-                    <Link href='/terms-of-use'>Terms of Use</Link>
+                    <Link href="/terms-of-use">Terms of Use</Link>
                 </Item>
                 <Item>
-                    <Link href='/disclaimer'>Disclaimer</Link>
+                    <Link href="/disclaimer">Disclaimer</Link>
                 </Item>
                 <Item>
-                    <Link href='https://docs.tracer.finance/'>Docs</Link>
+                    <a onClick={() => window.open('https://docs.tracer.finance', '_blank', 'noopener')}>Docs</a>
                 </Item>
                 <Item>
-                    <Link href='https://docs.tracer.finance/perpetual-swaps-faq/'>FAQs</Link>
+                    <a
+                        onClick={() =>
+                            window.open('https://docs.tracer.finance/perpetual-swaps-faq', '_blank', 'noopener')
+                        }
+                    >
+                        FAQs
+                    </a>
                 </Item>
                 <Item>
-                    <Link href='https://docs.tracer.finance/trader-tutorials'>Tutorials</Link>
+                    <a
+                        onClick={() =>
+                            window.open('https://docs.tracer.finance/trader-tutorials', '_blank', 'noopener')
+                        }
+                    >
+                        Tutorials
+                    </a>
                 </Item>
             </Section>
         </FooterContent>

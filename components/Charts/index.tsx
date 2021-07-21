@@ -209,7 +209,7 @@ class ChartWrapper extends React.Component<Props> {
                             position: 'none',
                         },
                         timeScale: {
-                            visible: false
+                            visible: false,
                         },
                     });
                 } else {
