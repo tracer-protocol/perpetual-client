@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import Link from 'next/link';
 import styled from 'styled-components';
 
 const Footer: FC = styled(({ className }) => {
@@ -9,12 +10,24 @@ const Footer: FC = styled(({ className }) => {
                 <Copyright>&copy; 2021 Tracer DAO</Copyright>
             </Section>
             <Section>
-                <Item>Privacy Policy</Item>
-                <Item>Terms of Use</Item>
-                <Item>Disclaimer</Item>
-                <Item>Docs</Item>
-                <Item>FAQs</Item>
-                <Item>Tutorials</Item>
+                <Item>
+                    <Link href='/privacy-policy'>Privacy Policy</Link>
+                </Item>
+                <Item>
+                    <Link href='/terms-of-use'>Terms of Use</Link>
+                </Item>
+                <Item>
+                    <Link href='/disclaimer'>Disclaimer</Link>
+                </Item>
+                <Item>
+                    <Link href='https://docs.tracer.finance/'>Docs</Link>
+                </Item>
+                <Item>
+                    <Link href='https://docs.tracer.finance/perpetual-swaps-faq/'>FAQs</Link>
+                </Item>
+                <Item>
+                    <Link href='https://docs.tracer.finance/trader-tutorials'>Tutorials</Link>
+                </Item>
             </Section>
         </FooterContent>
     );

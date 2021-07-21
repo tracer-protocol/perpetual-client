@@ -36,7 +36,7 @@ const Exposure: React.FC<EProps> = ({ order, baseTicker, quoteTicker, fairPrice,
         );
     } else {
         return (
-            <Content className="pt-1">
+            <Content>
                 {currency === 0
                     ? `${parseFloat(balances.base.abs().toFixed(2))} ${baseTicker}`
                     : `${toApproxCurrency(parseFloat(balances.base.abs().times(fairPrice).toFixed(2)))} ${quoteTicker}`}

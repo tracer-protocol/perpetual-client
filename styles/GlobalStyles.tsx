@@ -120,4 +120,10 @@ export default createGlobalStyle`
     .bn-onboard-custom.bn-onboard-modal { 
         z-index: 99;
     }
+
+    // React toast notifications
+    .react-toast-notifications__container {
+        top: 65px !important;
+        z-index: 100001;
+    }
 `;
