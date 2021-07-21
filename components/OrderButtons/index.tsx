@@ -74,7 +74,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
                     autoDismiss: true,
                 });
             } else {
-                addToast(['Transaction Failed', `Invalid order: An unhandled error occured`], {
+                addToast(['Transaction Failed', 'Invalid order: An unhandled error occured'], {
                     appearance: 'error',
                     autoDismiss: true,
                 });

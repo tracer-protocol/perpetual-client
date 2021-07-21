@@ -243,17 +243,17 @@ export const InsuranceModal: React.FC<BProps> = ({
             />
             <SHiddenExpand defaultHeight={0} open={!!amount}>
                 {isDeposit ? (
-                    <SSection className={`title`} label={`Deposit Summary`} />
+                    <SSection className={'title'} label={'Deposit Summary'} />
                 ) : (
-                    <SSection className={`title`} label={`Withdrawal Summary`} />
+                    <SSection className={'title'} label={'Withdrawal Summary'} />
                 )}
                 {!isDeposit && amount > balance.toNumber() ? (
-                    <PoolOwnershipInsufficient label={`Pool Ownership`}>
+                    <PoolOwnershipInsufficient label={'Pool Ownership'}>
                         <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </PoolOwnershipInsufficient>
                 ) : (
-                    <SSection label={`Pool Ownership`}>
+                    <SSection label={'Pool Ownership'}>
                         <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>

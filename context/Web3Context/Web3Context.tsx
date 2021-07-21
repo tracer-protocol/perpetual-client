@@ -146,7 +146,7 @@ const Web3Store: React.FC<Web3ContextProps> = ({
                 console.error(err);
             }
         }
-    }
+    };
 
     const onboardState = onboard?.getState();
 

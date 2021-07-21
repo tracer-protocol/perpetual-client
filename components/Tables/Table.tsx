@@ -39,7 +39,7 @@ export const TableRow: React.FC<RProps> = ({ rowData, compact, onClick, children
 
 const Table: React.FC<TProps> = ({ headings, squared, compact, children }: TProps) => {
     return (
-        <table className={`table-auto w-full text-center`}>
+        <table className={'table-auto w-full text-center'}>
             <thead className="border-b-2 border-blue-300">
                 <tr className="text-blue-100 font-bold w-full">
                     {headings.map((heading, index) => {

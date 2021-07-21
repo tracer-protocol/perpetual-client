@@ -160,17 +160,17 @@ export default styled(
                 />
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>
                     <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
-                    <Section label={`Equity`}>
+                    <Section label={'Equity'}>
                         <Previous>{`${toApproxCurrency(balances.totalMargin)}`}</Previous>
                         {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, fairPrice))}`}
                     </Section>
-                    <Section label={`Buying Power`}>
+                    <Section label={'Buying Power'}>
                         <Previous>{`${toApproxCurrency(
                             calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
                         )}`}</Previous>
                         {`${toApproxCurrency(calcBuyingPower(newBalance, balances.base, fairPrice, maxLeverage))}`}
                     </Section>
-                    <Section label={`Available Margin`}>
+                    <Section label={'Available Margin'}>
                         <Previous>{`${calcAvailableMarginPercent(
                             balances.quote,
                             balances.base,
