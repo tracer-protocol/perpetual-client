@@ -167,13 +167,13 @@ export default styled(
                         <Previous>{`${toApproxCurrency(balances.totalMargin)}`}</Previous>
                         {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, fairPrice))}`}
                     </Section>
-                    <Section label={`Buying Power`}>
+                    <Section label={'Buying Power'}>
                         <Previous>{`${toApproxCurrency(
                             calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
                         )}`}</Previous>
                         {`${toApproxCurrency(calcBuyingPower(newBalance, balances.base, fairPrice, maxLeverage))}`}
                     </Section>
-                    <Section label={`Available Margin`}>
+                    <Section label={'Available Margin'}>
                         <Previous>{`${calcAvailableMarginPercent(
                             balances.quote,
                             balances.base,

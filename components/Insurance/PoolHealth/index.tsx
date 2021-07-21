@@ -163,12 +163,12 @@ const Breakdown: React.FC<BProps> = styled(
                     <Label
                         title="Holdings"
                         value={parseFloat(liquidity.toFixed(2))}
-                        tooltip={{ key: `pool-holdings`, props: { baseTicker: baseTicker } }}
+                        tooltip={{ key: 'pool-holdings', props: { baseTicker: baseTicker } }}
                     />
                     <Label
                         title="Target"
                         value={parseFloat(target.toFixed(2))}
-                        tooltip={{ key: `pool-target`, props: { baseTicker: baseTicker } }}
+                        tooltip={{ key: 'pool-target', props: { baseTicker: baseTicker } }}
                     />
                 </div>
                 <BreakdownBar

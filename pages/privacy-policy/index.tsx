@@ -9,13 +9,13 @@ const PrivacyPolicy: React.FC = styled(({ className }) => {
     return (
         <div className={className}>
             <NavBar />
-            <GeneralContainer className={`container`}>
+            <GeneralContainer className={'container'}>
                 <MainTitle>Privacy Policy</MainTitle>
                 <BodyText>
                     <Text>
-                        In this Privacy Policy, 'us' 'we' or 'our' means Tracer DAO. We are committed to respecting your
-                        privacy. Our Privacy Policy sets out how we collect, use, store and disclose your personal
-                        information.
+                        In this Privacy Policy, {"'"}us{"'"} {"'"}we{"'"} or {"'"}our{"'"} means Tracer DAO. We are
+                        committed to respecting your privacy. Our Privacy Policy sets out how we collect, use, store and
+                        disclose your personal information.
                     </Text>
                     <Text>
                         This Privacy Policy applies to our services, which include the services we provide on{' '}
@@ -86,8 +86,8 @@ const PrivacyPolicy: React.FC = styled(({ className }) => {
                         <ListItem>to enable you to access and use our website, services and app;</ListItem>
                         <ListItem>
                             to operate, protect, improve and optimise our website, services and app, business and our
-                            users' experience, such as to perform analytics, conduct research and for advertising and
-                            marketing;{' '}
+                            users{"'"} experience, such as to perform analytics, conduct research and for advertising
+                            and marketing;{' '}
                         </ListItem>
                         <ListItem>
                             to send you service, support and administrative messages, reminders, technical notices,

@@ -113,7 +113,7 @@ export default (({ selectedTracer, account }: TIProps) => {
 
                 {/* Place Order */}
                 {order?.error === 'NO_ERROR' ? (
-                    <div className={`m-2`}>
+                    <div className={'m-2'}>
                         <AdvancedOrderButton>Place Order</AdvancedOrderButton>
                     </div>
                 ) : null}

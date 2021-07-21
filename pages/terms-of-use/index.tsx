@@ -8,7 +8,7 @@ const Terms: React.FC = styled(({ className }) => {
     return (
         <div className={className}>
             <NavBar />
-            <GeneralContainer className={`container`}>
+            <GeneralContainer className={'container'}>
                 <MainTitle>Terms of Use</MainTitle>
                 <BodyText>
                     <SubHeading>Last Updated on July 8, 2021</SubHeading>
@@ -22,40 +22,42 @@ const Terms: React.FC = styled(({ className }) => {
                     <Text>
                         These terms and conditions, together with any documents and additional terms they expressly
                         incorporate by reference, which includes any other terms and conditions or other agreement that
-                        Tracer DAO ("Tracer DAO," "we," "us" and "our") posts publicly or makes available to you or the
-                        company or other legal entity you represent ("you" or "your") (collectively, these "Terms"), are
-                        entered into between Tracer DAO and you concerning your use of, and access to, Tracer DAO's
-                        websites, including tracer.finance/exchange/; web applications; mobile applications; and all
-                        associated sites linked thereto by Tracer DAO or its affiliates (collectively with any materials
-                        and services available therein, and successor website(s) or application(s) thereto, the "Site").
+                        Tracer DAO ({'"'}Tracer DAO,{'"'} {'"'}we,{'"'} {'"'}us{'"'} and {'"'}our{'"'}) posts publicly
+                        or makes available to you or the company or other legal entity you represent ({'"'}you{'"'} or{' '}
+                        {'"'}your{'"'}) (collectively, these {'"'}Terms{'"'}), are entered into between Tracer DAO and
+                        you concerning your use of, and access to, Tracer DAO{"'"}s websites, including
+                        tracer.finance/exchange/; web applications; mobile applications; and all associated sites linked
+                        thereto by Tracer DAO or its affiliates (collectively with any materials and services available
+                        therein, and successor website(s) or application(s) thereto, the {'"'}Site{'"'}).
                     </Text>
                     <Text>
                         BY ACCESSING OR USING THE SITE, YOU REPRESENT AND WARRANT THAT YOU WILL NOT USE THE SITE IF THE
                         LAWS APPLICABLE TO YOU OF DUE TO YOUR COUNTRY OF RESIDENCY AND/OR CITIZENSHIP PROHIBIT YOU FROM
                         DOING SO IN ACCORDANCE WITH THESE TERMS. OUR PERPETUAL SWAP CONTRACTS ARE NOT OFFERED TO PERSONS
                         OR ENTITIES WHO RESIDE IN, ARE CITIZENS OF, ARE LOCATED IN, ARE INCORPORATED IN, OR HAVE A
-                        REGISTERED OFFICE IN THE UNITED STATES OF AMERICA (COLLECTIVELY, "US PERSONS") OR ANY RESTRICTED
-                        TERRITORY, AS DEFINED BELOW (ANY SUCH PERSON OR ENTITY FROM THE UNITED STATES OF AMERICA OR A
-                        RESTRICTED TERRITORY, A "RESTRICTED PERSON"). WE DO NOT MAKE EXCEPTIONS; THEREFORE, IF YOU ARE A
-                        RESTRICTED PERSON, DO NOT ATTEMPT TO USE OUR PERPETUAL SWAP CONTRACTS, SITE OR SERVICES. USE OF
-                        A VIRTUAL PRIVATE NETWORK ("VPN") TO CIRCUMVENT THE RESTRICTIONS SET FORTH HEREIN IS PROHIBITED.
-                        PURSUANT TO APPLICABLE LAWS AND REGULATIONS, TRACER DAO MAINTAINS THE RIGHT TO SELECT ITS
-                        MARKETS AND JURISDICTIONS TO OPERATE AND MAY RESTRICT OR DENY THE USE OF THE SITE OR ANY PART
-                        THEREOF, IN CERTAIN COUNTRIES AT ITS DISCRETION.
+                        REGISTERED OFFICE IN THE UNITED STATES OF AMERICA (COLLECTIVELY, {'"'}US PERSONS{'"'}) OR ANY
+                        RESTRICTED TERRITORY, AS DEFINED BELOW (ANY SUCH PERSON OR ENTITY FROM THE UNITED STATES OF
+                        AMERICA OR A RESTRICTED TERRITORY, A {'"'}RESTRICTED PERSON{'"'}). WE DO NOT MAKE EXCEPTIONS;
+                        THEREFORE, IF YOU ARE A RESTRICTED PERSON, DO NOT ATTEMPT TO USE OUR PERPETUAL SWAP CONTRACTS,
+                        SITE OR SERVICES. USE OF A VIRTUAL PRIVATE NETWORK ({'"'}VPN{'"'}) TO CIRCUMVENT THE
+                        RESTRICTIONS SET FORTH HEREIN IS PROHIBITED. PURSUANT TO APPLICABLE LAWS AND REGULATIONS, TRACER
+                        DAO MAINTAINS THE RIGHT TO SELECT ITS MARKETS AND JURISDICTIONS TO OPERATE AND MAY RESTRICT OR
+                        DENY THE USE OF THE SITE OR ANY PART THEREOF, IN CERTAIN COUNTRIES AT ITS DISCRETION.
                     </Text>
                     <Text>
                         Please read these Terms carefully, as these Terms govern your use of the Site and access to the
                         factory; matching engine; smart contracts; decentralised applications; APIs and all other
-                        software that Tracer DAO has developed for entering into perpetual swap contracts ("Perpetual
-                        Swap Contracts") related to any asset with an ascertainable price feed, including
+                        software that Tracer DAO has developed for entering into perpetual swap contracts ({'"'}
+                        Perpetual Swap Contracts{'"'}) related to any asset with an ascertainable price feed, including
                         cryptocurrencies, cryptographic tokens and other blockchain-based assets (collectively,
-                        "Assets") (collectively, the "Services"). These Terms expressly cover your rights and
-                        obligations, and our disclaimers and limitations of legal liability, relating to your use of,
-                        and access to, the Site and the Services. By clicking "I accept" (or a similar language) to
-                        these Terms, acknowledging these Terms and Conditions by other means, or otherwise accessing or
-                        using the Site or the Services, you accept and agree to be bound by and to comply with these
-                        Terms, including, without limitation, the mandatory arbitration provision in Section 15. If you
-                        do not agree to these Terms, then you must not access or use the Site or the Services.
+                        {'"'}Assets{'"'}) (collectively, the {'"'}Services{'"'}). These Terms expressly cover your
+                        rights and obligations, and our disclaimers and limitations of legal liability, relating to your
+                        use of, and access to, the Site and the Services. By clicking {'"'}I accept{'"'} (or a similar
+                        language) to these Terms, acknowledging these Terms and Conditions by other means, or otherwise
+                        accessing or using the Site or the Services, you accept and agree to be bound by and to comply
+                        with these Terms, including, without limitation, the mandatory arbitration provision in Section
+                        15. If you do not agree to these Terms, then you must not access or use the Site or the
+                        Services.
                     </Text>
                     <Text>
                         Please carefully review the disclosures and disclaimers set forth in Section 12 in their
@@ -69,9 +71,9 @@ const Terms: React.FC = styled(({ className }) => {
                     <Text>
                         We reserve the right, in our sole discretion, to modify these Terms from time to time. If we
                         make changes, we will provide you with notice of such changes, such as by providing notice
-                        through the Services or updating the "Last Updated" date at the top of these Terms. Unless we
-                        state otherwise in our notice, all such modifications are effective immediately, and your
-                        continued use of the Site and the Services after we provide that notice will confirm your
+                        through the Services or updating the {'"'}Last Updated{'"'} date at the top of these Terms.
+                        Unless we state otherwise in our notice, all such modifications are effective immediately, and
+                        your continued use of the Site and the Services after we provide that notice will confirm your
                         acceptance of the changes. If you do not agree to the amended Terms, then you must stop using
                         the Site and the Services.
                     </Text>
@@ -88,8 +90,8 @@ const Terms: React.FC = styled(({ className }) => {
                         </ListItem>
                         <ListItem>
                             if you are entering into these Terms as an entity, then you must have the legal authority to
-                            accept these Terms on that entity's behalf, in which case "you" (except as used in this
-                            paragraph) will mean that entity;
+                            accept these Terms on that entity{"'"}s behalf, in which case {'"'}you{'"'} (except as used
+                            in this paragraph) will mean that entity;
                         </ListItem>
                         <ListItem>
                             if you are entering into these Terms to access Perpetual Swaps Contracts or will in the
@@ -103,16 +105,16 @@ const Terms: React.FC = styled(({ className }) => {
                         <ListItem>
                             you are not a resident of, reside in, a citizen of, incorporated in, or have a registered
                             office in China, the United States, Antigua and Barbuda, Algeria, Bangladesh, Bolivia,
-                            Belarus, Burundi, Myanmar (Burma), Cote D'Ivoire (Ivory Coast), Crimea and Sevastopol, Cuba,
-                            Democratic Republic of Congo, Ecuador, Iran, Iraq, Liberia, Libya, Magnitsky, Mali, Morocco,
-                            Nepal, North Korea, Somalia, Sudan, Syria, Venezuela, Yemen, Zimbabwe or any other country
-                            to which the United States, the United Kingdom or the European Union embargoes goods or
-                            imposes similar sanctions (collectively, "Restricted Territories");
+                            Belarus, Burundi, Myanmar (Burma), Cote D{"'"}Ivoire (Ivory Coast), Crimea and Sevastopol,
+                            Cuba, Democratic Republic of Congo, Ecuador, Iran, Iraq, Liberia, Libya, Magnitsky, Mali,
+                            Morocco, Nepal, North Korea, Somalia, Sudan, Syria, Venezuela, Yemen, Zimbabwe or any other
+                            country to which the United States, the United Kingdom or the European Union embargoes goods
+                            or imposes similar sanctions (collectively, {'"'}Restricted Territories{'"'});
                         </ListItem>
                         <ListItem>
                             you are not a member of any sanctions list or equivalent maintained by the United States
                             government, the United Kingdom government, by the European Union or the United Nations
-                            (collectively, "Sanctions Lists Persons");
+                            (collectively, {'"'}Sanctions Lists Persons{'"'});
                         </ListItem>
                         <ListItem>
                             you do not intend to transact with any Restricted Territories or Sanctions List Persons;
@@ -128,7 +130,7 @@ const Terms: React.FC = styled(({ className }) => {
                             state, municipal, local or other governmental, regulatory, judicial or administrative
                             authority having jurisdiction over Tracer DAO, you, the Site or the Services, or as
                             otherwise duly enacted, enforceable by law, the common law or equity (collectively,
-                            "Applicable Laws"); or (b) contribute to or facilitate any illegal activity.
+                            {'"'}Applicable Laws{'"'}); or (b) contribute to or facilitate any illegal activity.
                         </ListItem>
                     </List>
                     <Text>
@@ -140,7 +142,7 @@ const Terms: React.FC = styled(({ className }) => {
                             from time to time the Site and the Services may be inaccessible or inoperable for any
                             reason, including, without limitation: (a) equipment malfunctions; (b) periodic maintenance
                             procedures or repairs that Tracer DAO or any of its suppliers or contractors may undertake
-                            from time to time; (c) causes beyond Tracer DAO's control or that Tracer DAO could not
+                            from time to time; (c) causes beyond Tracer DAO{"'"}s control or that Tracer DAO could not
                             reasonably foresee; (d) disruptions and temporary or permanent unavailability of underlying
                             blockchain infrastructure; or (e) unavailability of third-party service providers or
                             external partners for any reason;
@@ -220,11 +222,11 @@ const Terms: React.FC = styled(({ className }) => {
                     <Title>3. FEES AND PRICE ESTIMATES</Title>
                     <Text>
                         In connection with your use of the Services, you are required to pay all fees necessary for
-                        interacting with the Ethereum blockchain, including "gas" costs, as well as all other fees
-                        reflected on the Site at the time of your use of the Services. Although we attempt to provide
-                        accurate fee information, fee information displayed on the Site reflect our estimates of fees,
-                        which may vary from the actual fees paid to use the Services and interact with the Ethereum
-                        blockchain.
+                        interacting with the Ethereum blockchain, including {'"'}gas{'"'} costs, as well as all other
+                        fees reflected on the Site at the time of your use of the Services. Although we attempt to
+                        provide accurate fee information, fee information displayed on the Site reflect our estimates of
+                        fees, which may vary from the actual fees paid to use the Services and interact with the
+                        Ethereum blockchain.
                     </Text>
                     <Title>4. NO PROFESSIONAL ADVICE OR FIDUCIARY DUTIES</Title>
                     <Text>
@@ -242,8 +244,8 @@ const Terms: React.FC = styled(({ className }) => {
                     </Text>
                     <Title>5. PROHIBITED ACTIVITY</Title>
                     <Text>
-                        You may not use the Services to engage in the categories of activity set forth below
-                        ("Prohibited Uses"). The specific activities set forth below are representative, but not
+                        You may not use the Services to engage in the categories of activity set forth below ({'"'}
+                        Prohibited Uses{'"'}). The specific activities set forth below are representative, but not
                         exhaustive, of the Prohibited Uses. If you are uncertain as to whether or not your use of the
                         Services involves a Prohibited Use or have other questions about how these requirements apply to
                         you, then please contact us at hello@tracer.finance. By using the Site or Services, you confirm
@@ -309,27 +311,27 @@ const Terms: React.FC = styled(({ className }) => {
                         irrevocable, non-exclusive, worldwide license to use, copy, modify, create derivative works of,
                         display, perform, publish and distribute, in any form, medium, or manner, any content that is
                         available to other users as a result of your use of the Site or the Services (collectively,
-                        "Your Content"), including, without limitation, for promoting Tracer DAO, its affiliates, the
-                        Services or the Site. You represent and warrant that (a) you own Your Content or have the right
-                        to grant the rights and licenses in these Terms; and (b) Your Content and our use of Your
-                        Content, as licensed herein, does not and will not violate, misappropriate or infringe on any
-                        third party's rights.
+                        {'"'}Your Content{'"'}), including, without limitation, for promoting Tracer DAO, its
+                        affiliates, the Services or the Site. You represent and warrant that (a) you own Your Content or
+                        have the right to grant the rights and licenses in these Terms; and (b) Your Content and our use
+                        of Your Content, as licensed herein, does not and will not violate, misappropriate or infringe
+                        on any third party{"'"}s rights.
                     </Text>
                     <Title>7. PROPRIETARY RIGHTS</Title>
                     <Text>
                         7.1 The Site and the Services are governed by the most recent version of the open-source license
-                        commonly known as the "GNU General Public License v3.0" a copy of which (as it applies to the
-                        Site and the Services) can be found at{' '}
+                        commonly known as the {'"'}GNU General Public License v3.0{'"'} a copy of which (as it applies
+                        to the Site and the Services) can be found at{' '}
                         <Link href="https://www.gnu.org/licenses/gpl-3.0.en.html">here</Link> (as of the date these
                         Terms were last updated) and any other applicable licensing terms for the Site and the Services
-                        in these Terms (collectively, the "Tracer DAO License"). You acknowledge that the Site or the
-                        Services may use, incorporate or link to certain open-source components and that your use of the
-                        Site or Services is subject to, and you will comply with any, applicable open-source licenses
-                        that govern any such open-source components (collectively, "Open-Source Licenses"). Without
-                        limiting the generality of the foregoing, you may not (a) resell, lease, lend, share,
-                        distribute, or otherwise permit any third party to use the Site or the Services; (b) use the
-                        Site or the Services for time-sharing or service bureau purposes; or (c) otherwise use the Site
-                        or the Services in a manner that violates the Tracer DAO License or any other Open-Source
+                        in these Terms (collectively, the {'"'}Tracer DAO License{'"'}). You acknowledge that the Site
+                        or the Services may use, incorporate or link to certain open-source components and that your use
+                        of the Site or Services is subject to, and you will comply with any, applicable open-source
+                        licenses that govern any such open-source components (collectively, {'"'}Open-Source Licenses
+                        {'"'}). Without limiting the generality of the foregoing, you may not (a) resell, lease, lend,
+                        share, distribute, or otherwise permit any third party to use the Site or the Services; (b) use
+                        the Site or the Services for time-sharing or service bureau purposes; or (c) otherwise use the
+                        Site or the Services in a manner that violates the Tracer DAO License or any other Open-Source
                         Licenses.
                     </Text>
                     <Text>
@@ -382,8 +384,8 @@ const Terms: React.FC = styled(({ className }) => {
                         agree (a) that Tracer DAO is not responsible for the operation of the software and networks
                         underlying the Services, (b) that there exists no guarantee of the functionality, security, or
                         availability of that software and networks, and (c) that the underlying networks are subject to
-                        sudden changes in operating rules, such as those commonly referred to as "forks," which may
-                        materially affect the Services. Blockchain networks use public/private key cryptography. You
+                        sudden changes in operating rules, such as those commonly referred to as {'"'}forks{'"'}, which
+                        may materially affect the Services. Blockchain networks use public/private key cryptography. You
                         alone are responsible for securing your private key(s). We do not have access to your private
                         key(s). Losing control of your private key(s) will permanently and irreversibly deny you access
                         to Assets on the Ethereum blockchain or other blockchain-based network. Neither Tracer DAO nor
@@ -478,17 +480,17 @@ const Terms: React.FC = styled(({ className }) => {
                     <Text>
                         You will defend, indemnify, and hold harmless Tracer DAO, its members, its service providers,
                         its affiliates, and their respective shareholders, employees, directors, agents, service
-                        providers and representatives, suppliers, and contractors (collectively, "Indemnified Parties")
-                        from any claim, demand, lawsuit, action, proceeding, investigation, liability, damage, loss,
-                        cost or expense, including without limitation reasonable legal fees, arising out of or relating
-                        to (a) your use of, or conduct in connection with, the Site or the Services; (b) Assets
-                        associated with your Ethereum address; (c) any feedback or user content you provide to Tracer
-                        DAO, if any, concerning the Site or the Services; (d) your violation of these Terms; or (e) your
-                        infringement or misappropriation of the rights of any other person or entity. If you are
-                        obligated to indemnify any Indemnified Party, Tracer DAO (or, at its discretion, the applicable
-                        Indemnified Party) will have the right, in its sole discretion, to control any action or
-                        proceeding and to determine whether Tracer DAO wishes to settle, and if so, on what terms, and
-                        you agree to corporate with Tracer DAO in the defense.
+                        providers and representatives, suppliers, and contractors (collectively, {'"'}Indemnified
+                        Parties{'"'}) from any claim, demand, lawsuit, action, proceeding, investigation, liability,
+                        damage, loss, cost or expense, including without limitation reasonable legal fees, arising out
+                        of or relating to (a) your use of, or conduct in connection with, the Site or the Services; (b)
+                        Assets associated with your Ethereum address; (c) any feedback or user content you provide to
+                        Tracer DAO, if any, concerning the Site or the Services; (d) your violation of these Terms; or
+                        (e) your infringement or misappropriation of the rights of any other person or entity. If you
+                        are obligated to indemnify any Indemnified Party, Tracer DAO (or, at its discretion, the
+                        applicable Indemnified Party) will have the right, in its sole discretion, to control any action
+                        or proceeding and to determine whether Tracer DAO wishes to settle, and if so, on what terms,
+                        and you agree to corporate with Tracer DAO in the defense.
                     </Text>
                     <Title>12. DISCLOSURES; DISCLAIMERS</Title>
                     <Text>
@@ -496,13 +498,14 @@ const Terms: React.FC = styled(({ className }) => {
                         derivatives exchange platform or offer trade execution or clearing services and, therefore, has
                         no oversight, involvement, or control concerning your transactions using the Services. All
                         transactions between users of Tracer DAO-developed open-source software are executed
-                        peer-to-peer directly between the users' Ethereum addresses through a smart contract. You are
-                        responsible for complying with all Applicable Laws that govern your use of the Services,
+                        peer-to-peer directly between the users{"'"} Ethereum addresses through a smart contract. You
+                        are responsible for complying with all Applicable Laws that govern your use of the Services,
                         including, but not limited to, the regulations promulgated thereunder by the Australian
-                        Securities and Investments Commission ("ASIC"), the U.S. Commodity Futures Trading Commission
-                        ("CFTC"), the federal securities laws and the regulations promulgated thereunder by ASIC, the
-                        U.S. Securities and Exchange Commission ("SEC") and all foreign Applicable Laws. For this
-                        reason, no US Person may enter into Perpetual Swap Contracts using the Services.
+                        Securities and Investments Commission ({'"'}ASIC{'"'}), the U.S. Commodity Futures Trading
+                        Commission ({'"'}CFTC{'"'}), the federal securities laws and the regulations promulgated
+                        thereunder by ASIC, the U.S. Securities and Exchange Commission ({'"'}SEC{'"'}) and all foreign
+                        Applicable Laws. For this reason, no US Person may enter into Perpetual Swap Contracts using the
+                        Services.
                     </Text>
                     <Text>
                         12.2 You understand that Tracer DAO is not registered or licensed by ASIC, SEC, or any financial
@@ -521,17 +524,18 @@ const Terms: React.FC = styled(({ className }) => {
                     </Text>
                     <Text>
                         12.4 To the maximum extent permitted under Applicable Law, the Site and the Services (and any of
-                        their content or functionality) provided by or on behalf of us are provided on an "AS IS" and
-                        "AS AVAILABLE" basis, and we expressly disclaim, and you hereby waive, any representations,
-                        conditions or warranties of any kind, whether express or implied, legal, statutory or otherwise,
-                        or arising from statute, otherwise in law, course of dealing, or usage of trade, including,
-                        without limitation, the implied or legal warranties and conditions of merchantability,
-                        merchantable quality, quality or fitness for a particular purpose, title, security,
-                        availability, reliability, accuracy, quiet enjoyment and non-infringement of third party rights.
-                        Without limiting the foregoing, we do not represent or warrant that the Site or the Services
-                        (including any data relating thereto) will be uninterrupted, available at any particular time,
-                        or error-free. Further, we do not warrant that errors in the Site or the Service are correctable
-                        or will be correctable.
+                        their content or functionality) provided by or on behalf of us are provided on an {'"'}AS IS
+                        {'"'} and
+                        {'"'}AS AVAILABLE{'"'} basis, and we expressly disclaim, and you hereby waive, any
+                        representations, conditions or warranties of any kind, whether express or implied, legal,
+                        statutory or otherwise, or arising from statute, otherwise in law, course of dealing, or usage
+                        of trade, including, without limitation, the implied or legal warranties and conditions of
+                        merchantability, merchantable quality, quality or fitness for a particular purpose, title,
+                        security, availability, reliability, accuracy, quiet enjoyment and non-infringement of third
+                        party rights. Without limiting the foregoing, we do not represent or warrant that the Site or
+                        the Services (including any data relating thereto) will be uninterrupted, available at any
+                        particular time, or error-free. Further, we do not warrant that errors in the Site or the
+                        Service are correctable or will be correctable.
                     </Text>
                     <Text>
                         12.5 You acknowledge that your data on the Site may become irretrievably lost or corrupted or
@@ -551,7 +555,7 @@ const Terms: React.FC = styled(({ className }) => {
                     <Text>
                         In no event shall Tracer DAO, its members, its service providers, its affiliates, and their
                         respective shareholders, employees, directors, agents, service providers and representatives,
-                        suppliers, and contractors (collectively, the "Risk Limited Parties") be liable for any
+                        suppliers, and contractors (collectively, the {'"'}Risk Limited Parties{'"'}) be liable for any
                         incidental, indirect, special, punitive, consequential or similar damages or liabilities
                         whatsoever (including, without limitation, damages for loss of fiat, assets, data, information,
                         revenue, opportunities, use, goodwill, profits or other business or financial benefit) arising
@@ -567,7 +571,7 @@ const Terms: React.FC = styled(({ className }) => {
                     </Text>
                     <Title>14. LIMITATION OF LIABILITY</Title>
                     <Text>
-                        In no event shall Tracer DAO's aggregate liability (together with its members, its service
+                        In no event shall Tracer DAO{"'"}s aggregate liability (together with its members, its service
                         providers, its affiliates, and their respective shareholders, employees, directors, agents,
                         service providers and representatives, suppliers, and contractors) arising out of or in
                         connection with the Site and the Services (and any of their content and functionality), any
@@ -597,10 +601,10 @@ const Terms: React.FC = styled(({ className }) => {
                         affiliates, and their respective shareholders, employees, directors, agents, service providers
                         and representatives, suppliers, and contractors) or relating in any way to the Services, you
                         agree to first contact Tracer DAO and attempt to resolve the claim informally by sending a
-                        written notice of your claim ("Notice") to Tracer DAO by email at hello@tracer.finance. The
-                        Notice must (a) include your name, residence address, email address, and telephone number; (b)
-                        describe the nature and basis of the claim; and (c) set forth the specific relief sought. Our
-                        notice to you will be similar in form to that described above. If you and Tracer DAO cannot
+                        written notice of your claim ({'"'}Notice{'"'}) to Tracer DAO by email at hello@tracer.finance.
+                        The Notice must (a) include your name, residence address, email address, and telephone number;
+                        (b) describe the nature and basis of the claim; and (c) set forth the specific relief sought.
+                        Our notice to you will be similar in form to that described above. If you and Tracer DAO cannot
                         reach an agreement to resolve the claim within thirty (30) days after such Notice is received,
                         then either party may submit the dispute to binding arbitration.
                     </Text>
@@ -629,7 +633,7 @@ const Terms: React.FC = styled(({ className }) => {
                         15.7 If any portion of this Section 15 is found to be unenforceable or unlawful for any reason,
                         (a) the unenforceable or unlawful provision shall be severed from these Terms; (b) severance of
                         the unenforceable or unlawful provision shall have no impact whatsoever on the remainder of this
-                        Section 15 or the parties' ability to compel arbitration of any remaining claims on an
+                        Section 15 or the parties{"'"} ability to compel arbitration of any remaining claims on an
                         individual basis under this Section 15; and (c) to the extent that any claims must therefore
                         proceed on a class, collective, consolidated, or representative basis, such claims must be
                         litigated in a civil court of competent jurisdiction and not in arbitration, and the parties
@@ -647,9 +651,9 @@ const Terms: React.FC = styled(({ className }) => {
                     </Text>
                     <Text>
                         16.2 You consent to receive all communications, agreements, documents, receipts, notices, and
-                        disclosures electronically (collectively, our "Communications") that we provide in connection
-                        with these Terms or any Services. You agree that we may provide our Communications to you by
-                        posting them on the Site or by emailing them to you at the email address you provide in
+                        disclosures electronically (collectively, our {'"'}Communications{'"'}) that we provide in
+                        connection with these Terms or any Services. You agree that we may provide our Communications to
+                        you by posting them on the Site or by emailing them to you at the email address you provide in
                         connection with using the Services, if any. You should maintain copies of our Communications by
                         printing a paper copy or saving an electronic copy. You may also contact us with questions,
                         complaints, or claims concerning the Services at{' '}
