@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import TradingView from './RightPanel';
 import { MARKET } from '@context/OrderContext';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
-import { useToasts } from 'react-toast-notifications';
 
 const TradingPanel = styled.div`
     width: 25%;
@@ -48,16 +47,7 @@ const Advanced: React.FC = styled(({ className }) => {
     const { selectedTracer } = useContext(TracerContext);
     const { order, orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
     const [isAdjust] = useState(false);
-    const { addToast } = useToasts();
  
-    // Remove after
-    useEffect(() => {
-        addToast(['Trading with Tracer', `Click here to learn how to trade with Tracer`], {
-            appearance: 'info',
-            autoDismiss: false,
-        });
-    }, []);
-            
     useEffect(() => {
         if (orderDispatch) {
             orderDispatch({ type: 'setLock', value: true });

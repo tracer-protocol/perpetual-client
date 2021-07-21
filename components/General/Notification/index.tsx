@@ -103,7 +103,7 @@ const Header: React.FC<any> = ({ appearance: onDismiss, title }) => {
                 letterSpacing: '-0.38px',
                 width: '100%',
                 display: 'flex',
-                padding: '16px 16px 8px',
+                padding: '16px 16px 0px',
             }}
         >
             <span>{title}</span>
