@@ -31,7 +31,8 @@ export const networkConfig: Record<string, Network> = {
         },
         graphUri: process.env.NEXT_PUBLIC_GRAPH_URI ?? '',
     },
-    '421611': { // arbitrum
+    '421611': {
+        // arbitrum
         previewUrl: 'https://rinkeby-explorer.arbitrum.io/#',
         contracts: {
             trader: {
@@ -40,7 +41,6 @@ export const networkConfig: Record<string, Network> = {
             },
         },
         graphUri: 'https://api.thegraph.com/subgraphs/name/tracer-protocol/tracer-arbitrum',
-
     },
     '42': {
         previewUrl: 'https://kovan.etherscan.io',
