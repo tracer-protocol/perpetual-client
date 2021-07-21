@@ -9,16 +9,16 @@ const Disclaimer: React.FC = styled(({ className }) => {
     return (
         <div className={className}>
             <NavBar />
-            <GeneralContainer className={`container`}>
+            <GeneralContainer className={'container'}>
                 <MainTitle>Tracer Protocol Disclaimer</MainTitle>
                 <BodyText>
                     <SubHeading>Last Updated on July 7, 2021</SubHeading>
                     <Text>
-                        Your use of a smart contract governed by Tracer DAO, including Tracer Perpetual Swaps, ("Tracer
-                        protocol") involves various risks, including, but not limited to, the risks outlined below. By
-                        interacting with the Tracer protocol, you accept those risks. If you choose to use the Tracer
-                        protocol, this Disclaimer applies in addition to Tracer's Terms of Use, which are available{' '}
-                        <Link href="/terms-of-use/">here</Link>.
+                        Your use of a smart contract governed by Tracer DAO, including Tracer Perpetual Swaps, ({'"'}
+                        Tracer protocol{'"'}) involves various risks, including, but not limited to, the risks outlined
+                        below. By interacting with the Tracer protocol, you accept those risks. If you choose to use the
+                        Tracer protocol, this Disclaimer applies in addition to Tracer{"'"}s Terms of Use, which are
+                        available <Link href="/terms-of-use/">here</Link>.
                     </Text>
                     <Title>Price and asset risk:</Title>
                     <Text>
@@ -35,8 +35,8 @@ const Disclaimer: React.FC = styled(({ className }) => {
                     <Text>
                         When interacting with the Tracer protocol, your positions are subject to liquidation risk.
                         Despite having well defined liquidation penalties, your loss could be 100% of your position.
-                        This risk is not only theoretical, during the so-called "Black Thursday", around $8M of user's
-                        positions in MakerDAO was lost.{' '}
+                        This risk is not only theoretical, during the so-called {'"'}Black Thursday{'"'}, around $8M of
+                        user{"'"}s positions in MakerDAO was lost.{' '}
                         <b>
                             The Tracer protocol is non-custodial, and therefore can not help users to avoid
                             liquidations, or recover funds following liquidation.
@@ -47,8 +47,8 @@ const Disclaimer: React.FC = styled(({ className }) => {
                         Tracer relies on oracles to provide spot price data for assets. This price data is used as part
                         of the liquidation flow and, as a result, has inherent risks. Should oracle prices not be
                         updated, or should they be updated erroneously, there is risk a user may be liquidated
-                        unexpectedly. At this time, the Tracer protocol uses Chainlink's oracle network; however, this
-                        may be subject to change.
+                        unexpectedly. At this time, the Tracer protocol uses Chainlink{"'"}s oracle network; however,
+                        this may be subject to change.
                     </Text>
                     <Title>Smart contract and software risk:</Title>
                     <Text>
@@ -61,10 +61,10 @@ const Disclaimer: React.FC = styled(({ className }) => {
                     <Title>Contract upgrade risk:</Title>
                     <Text>
                         Contract upgrades may be implemented by Tracer DAO, via proposal, to the Tracer protocol. While
-                        these upgrades will likely be audited prior to implementation, the Tracer protocol's codebase is
-                        subject to change and, as such, risks of exploits and bugs are present. You must remain aware of
-                        updates being implemented by Tracer DAO to the Tracer protocol, and ensure that, following any
-                        update, the Tracer protocol is safe to use.
+                        these upgrades will likely be audited prior to implementation, the Tracer protocol{"'"}s
+                        codebase is subject to change and, as such, risks of exploits and bugs are present. You must
+                        remain aware of updates being implemented by Tracer DAO to the Tracer protocol, and ensure that,
+                        following any update, the Tracer protocol is safe to use.
                     </Text>
                     <Title>Governance risk:</Title>
                     <Text>
@@ -76,8 +76,8 @@ const Disclaimer: React.FC = styled(({ className }) => {
                         anything else of value. For the avoidance of doubt, Tracer DAO does not control user funds.
                     </Text>
                     <Text>
-                        Discussions with updated information on the Tracer protocol's governance can be found in{' '}
-                        <Link href="https://discourse.tracer.finance/">Tracer DAO's Discourse</Link>.
+                        Discussions with updated information on the Tracer protocol{"'"}s governance can be found in{' '}
+                        <Link href="https://discourse.tracer.finance/">{"Tracer DAO's Discourse"}</Link>.
                     </Text>
                 </BodyText>
             </GeneralContainer>

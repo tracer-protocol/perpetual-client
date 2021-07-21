@@ -96,9 +96,9 @@ export const Section: React.FC<SProps> = styled(({ className, children, label, t
             {tooltip ? (
                 <TooltipSelector tooltip={tooltip}>{label}</TooltipSelector>
             ) : (
-                <div className={`label`}>{label}</div>
+                <div className={'label'}>{label}</div>
             )}
-            <span className={`content`}>{children}</span>
+            <span className={'content'}>{children}</span>
         </div>
     );
 })`

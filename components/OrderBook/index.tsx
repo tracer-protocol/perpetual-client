@@ -176,7 +176,7 @@ const OrderBook: FC<OProps> = styled(
                                         >
                                             {toApproxCurrency(askOrdersCopy[0]?.price)}
                                         </span>
-                                        {` / `}
+                                        {' / '}
                                         <span
                                             className="bid px-1"
                                             onClick={(_e) =>
@@ -191,7 +191,7 @@ const OrderBook: FC<OProps> = styled(
                                         </span>
                                     </Item>
                                     <Item className="no-width">
-                                        {`Last`}
+                                        {'Last'}
                                         <span
                                             className={`${marketUp ? 'bid' : 'ask'} pl-1`}
                                             onClick={(_e) =>
@@ -362,7 +362,7 @@ const Order: React.FC<BProps> = ({ className, cumulative, quantity, price, maxCu
     return (
         <BookRow className={className} onClick={onClick}>
             <Item className={`${bid ? 'bid' : 'ask'} price`}>{toApproxCurrency(price)}</Item>
-            <Item className={`quantity`}>{quantity.toFixed(2)}</Item>
+            <Item className={'quantity'}>{quantity.toFixed(2)}</Item>
             <Item
                 className={`fill-${bid ? 'bid' : 'ask'} cumulative`}
                 style={{

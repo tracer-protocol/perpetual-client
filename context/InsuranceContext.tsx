@@ -158,7 +158,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 console.error('Failed to withdraw from insuracnce pool: Inusurance contract undefined');
             }
         } else {
-            console.error(`Failed to withdraw from insurance pool: No deposit function found`);
+            console.error('Failed to withdraw from insurance pool: No deposit function found');
         }
     };
 
@@ -181,7 +181,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 },
             });
         } else {
-            console.error(`Failed to withdraw from insurance pool: No deposit function found`);
+            console.error('Failed to withdraw from insurance pool: No deposit function found');
         }
     };
 
@@ -207,7 +207,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                 },
             });
         } else {
-            console.error(`Failed to approve: handleTransaction is undefined `);
+            console.error('Failed to approve: handleTransaction is undefined ');
         }
     };
 

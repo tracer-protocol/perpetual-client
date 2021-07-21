@@ -39,7 +39,8 @@
         "build": "next build",
         "start": "next start",
         "export": "next export ",
-        "lint": "eslint '*/**/*.{ts,tsx}' --fix",
+        "lint": "eslint '*/**/*.{ts,tsx}'",
+	"lint:fix": "eslint '*/**/*.{ts,tsx}' --fix",
         "lint-staged": "eslint '*/**/*.{js,ts,tsx}' --cache"
     },
     "husky": {

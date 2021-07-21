@@ -137,7 +137,7 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
         <>
             <div className={`${props.className} ${props.show ? 'show' : ''} model`} id={props.id}>
                 {/*content*/}
-                <div className={`content`} ref={ref}>
+                <div className={'content'} ref={ref}>
                     {/*header*/}
                     <Header>
                         <Title>{props.title}</Title>
