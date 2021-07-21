@@ -228,7 +228,7 @@ const Overview: FC = () => {
                 </HPanel>
                 <HeadingRow border={true}>
                     <Title>Open Positions</Title>
-                    <Counter>4</Counter>
+                    <Counter>{fetchedTracers?.length}</Counter>
                 </HeadingRow>
                 <HScrollContainer>
                     {fetchedTracers.map((tracer: any, i: number) => (
