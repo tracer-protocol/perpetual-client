@@ -18,6 +18,7 @@ export default (({ account, onboard, ensName, logout, handleConnect, tokenBalanc
             }
         }
         document.addEventListener('mousedown', handleClickOutside);
+        // test
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
