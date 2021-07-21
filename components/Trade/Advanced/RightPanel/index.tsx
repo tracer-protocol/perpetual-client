@@ -160,7 +160,7 @@ const TradesAndBook: React.FC<TBProps> = ({
     return (
         <>
             <StyledSlideSelect onClick={(index, _e) => setSelected(index)} value={selected}>
-                <Option>
+                <Option id="orderbook-dropdown">
                     Order Book
                     <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
                 </Option>
@@ -197,8 +197,13 @@ const StyledSlideSelect = styled(SlideSelect)`
         color: #fff;
     }
 
-    @media (max-height: 850px) {
+    @media (max-height: 1080px) {
         display: flex;
+
+        #orderbook-dropdown {
+            display: flex;
+            align-items: center;
+        }
     }
 
     ${Option} {
@@ -210,11 +215,10 @@ const StyledSlideSelect = styled(SlideSelect)`
         top: 0;
         right: 0;
         width: 100px;
-        font-size: var(--font-size-extra-small);
-        line-height: var(--font-size-extra-small);
-        height: 1rem;
-        max-width: 3rem;
-        margin-left: 0.2rem;
+        font-size: var(--font-size-small);
+        width: 80px;
+        height: 28px;
+        margin-left: 8px;
     }
     > .bg-slider {
         background: var(--color-accent);
