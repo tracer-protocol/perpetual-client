@@ -3,8 +3,8 @@
 
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import Onboard from 'bnc-onboard';
-import { API as OnboardApi, Wallet, Initialization } from 'bnc-onboard/dist/src/interfaces';
+import Onboard from '@tracer-protocol/onboard';
+import { API as OnboardApi, Wallet, Initialization } from '@tracer-protocol/onboard/dist/src/interfaces';
 import { formatEther } from '@ethersproject/units';
 import { Network, networkConfig } from './Web3Context.Config';
 import Web3 from 'web3';

@@ -52,6 +52,7 @@ const App = ({ Component, pageProps }: AppProps) => {
             api.init();
             api.show(USERSNAP_API_KEY);
         };
+
     }, []);
     return (
         <div>
@@ -117,3 +118,4 @@ const App = ({ Component, pageProps }: AppProps) => {
 };
 
 export default App;
+
