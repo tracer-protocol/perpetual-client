@@ -387,7 +387,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setAdvanced':
                 return { ...state, advanced: action.value };
             default:
-                throw new Error(`Unexpected action`);
+                throw new Error('Unexpected action');
         }
     };
 

@@ -8,7 +8,7 @@ const Terms: React.FC = styled(({ className }) => {
     return (
         <div className={className}>
             <NavBar />
-            <GeneralContainer className={`container`}>
+            <GeneralContainer className={'container'}>
                 <MainTitle>Terms of Use</MainTitle>
                 <BodyText>
                     <SubHeading>Last Updated on July 8, 2021</SubHeading>

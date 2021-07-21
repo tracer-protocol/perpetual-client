@@ -9,7 +9,7 @@ const PrivacyPolicy: React.FC = styled(({ className }) => {
     return (
         <div className={className}>
             <NavBar />
-            <GeneralContainer className={`container`}>
+            <GeneralContainer className={'container'}>
                 <MainTitle>Privacy Policy</MainTitle>
                 <BodyText>
                     <Text>

@@ -9,7 +9,7 @@ const Disclaimer: React.FC = styled(({ className }) => {
     return (
         <div className={className}>
             <NavBar />
-            <GeneralContainer className={`container`}>
+            <GeneralContainer className={'container'}>
                 <MainTitle>Tracer Protocol Disclaimer</MainTitle>
                 <BodyText>
                     <SubHeading>Last Updated on July 7, 2021</SubHeading>
@@ -77,7 +77,7 @@ const Disclaimer: React.FC = styled(({ className }) => {
                     </Text>
                     <Text>
                         Discussions with updated information on the Tracer protocol{"'"}s governance can be found in{' '}
-                        <Link href="https://discourse.tracer.finance/">{'Tracer DAO\'s Discourse'}</Link>.
+                        <Link href="https://discourse.tracer.finance/">{"Tracer DAO's Discourse"}</Link>.
                     </Text>
                 </BodyText>
             </GeneralContainer>
