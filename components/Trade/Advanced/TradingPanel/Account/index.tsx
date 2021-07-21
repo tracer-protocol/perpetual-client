@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
 import { calcTotalMargin, calcBuyingPower, calcAvailableMarginPercent } from '@tracer-protocol/tracer-utils';
@@ -13,89 +13,13 @@ import { CalculatorStore } from '@context/CalculatorContext';
 import { UserBalance } from 'libs/types';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 
-const NoBalance = styled.span`
-    color: var(--color-primary);
-`;
-
-const Item = styled.div`
-    width: 100%;
-    font-size: var(--font-size-small);
-    margin-bottom: 10px;
-    display: flex;
-
-    > span {
-        margin-left: auto;
-        text-align: right;
-        font-size: var(--font-size-small);
-        letter-spacing: -0.32px;
-    }
-
-    > h3 {
-        letter-spacing: -0.32px;
-        color: var(--color-primary);
-        display: inline-block;
-        white-space: nowrap;
-        text-transform: capitalize;
-    }
-`;
-
-const DepositButtons = styled.div<{
-    hide: boolean;
-}>`
-    margin-top: 1rem;
-    justify-content: space-between;
-    display: ${(props) => (props.hide ? 'none' : 'flex')};
-`;
-
-const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
-    position: relative;
-    box-sizing: border-box;
-    flex-direction: column;
-    overflow: auto;
-    min-height: 80px;
-`;
-
-const Title = styled.h2<{
-    hide: boolean;
-}>`
-    font-size: var(--font-size-small-heading);
-    font-weight: bold;
-    letter-spacing: -0.4px;
-    color: var(--color-text);
-    margin-bottom: 0.5rem;
-    white-space: nowrap;
-    display: ${(props) => (props.hide ? 'none' : 'flex')};
-`;
-
-const SButton = styled(Button)`
-    height: var(--height-small-button);
-    line-height: var(--height-small-button);
-    padding: 0;
-    margin: 0;
-`;
-const CalculatorButton = styled(Button)`
-    height: var(--height-extra-small-button);
-    line-height: var(--height-extra-small-button);
-    padding: 0 1rem;
-    margin-left: auto;
-    margin-right: 0;
-    width: auto;
-`;
-
-const SubText = styled.div`
-    letter-spacing: -0.32px;
-    color: var(--color-secondary);
-    font-size: var(--font-size-small);
-    line-height: var(--font-size-small);
-`;
-
 type InfoProps = {
     order: OrderState | undefined;
     balances: UserBalance;
     maxLeverage: BigNumber;
     fairPrice: BigNumber;
 };
-const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }) => {
+const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }: InfoProps) => {
     if (balances.quote.eq(0)) {
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
@@ -118,7 +42,8 @@ const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPr
         );
     }
 };
-export const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }) => {
+
+export const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }: InfoProps) => {
     if (balances.quote.eq(0)) {
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
@@ -143,11 +68,12 @@ export const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLever
     }
 };
 
-const AccountPanel: React.FC<{
+interface APProps {
     selectedTracer: Tracer | undefined;
     account: string;
     order: OrderState | undefined;
-}> = ({ selectedTracer, account, order }) => {
+}
+const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
     const [calculator, showCalculator] = useState(false);
@@ -232,3 +158,75 @@ const AccountPanel: React.FC<{
 };
 
 export default AccountPanel;
+
+const NoBalance = styled.span`
+    color: var(--color-primary);
+`;
+
+const Item = styled.div`
+    width: 100%;
+    font-size: var(--font-size-small);
+    margin-bottom: 10px;
+    display: flex;
+
+    > span {
+        margin-left: auto;
+        text-align: right;
+        font-size: var(--font-size-small);
+        letter-spacing: -0.32px;
+    }
+
+    > h3 {
+        letter-spacing: -0.32px;
+        color: var(--color-primary);
+        display: inline-block;
+        white-space: nowrap;
+        text-transform: capitalize;
+    }
+`;
+
+const DepositButtons = styled.div<{
+    hide: boolean;
+}>`
+    margin-top: 1rem;
+    justify-content: space-between;
+    display: ${(props) => (props.hide ? 'none' : 'flex')};
+`;
+
+const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
+    position: relative;
+    box-sizing: border-box;
+    flex-direction: column;
+    overflow: auto;
+    min-height: 80px;
+`;
+
+const Title = styled.h2<{
+    hide: boolean;
+}>`
+    font-size: var(--font-size-small-heading);
+    font-weight: bold;
+    letter-spacing: -0.4px;
+    color: var(--color-text);
+    margin-bottom: 0.5rem;
+    white-space: nowrap;
+    display: ${(props: any) => (props.hide ? 'none' : 'flex')};
+`;
+
+const SButton = styled(Button)`
+    height: var(--height-small-button);
+    padding: 0;
+    margin: 0;
+`;
+
+const CalculatorButton = styled(SButton)`
+    margin-left: auto;
+    margin-right: 0;
+`;
+
+const SubText = styled.div`
+    letter-spacing: -0.32px;
+    color: var(--color-secondary);
+    font-size: var(--font-size-small);
+    line-height: var(--font-size-small);
+`;
