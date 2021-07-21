@@ -17,21 +17,21 @@ const switchNetworks = async () => {
             method: 'wallet_switchEthereumChain',
             params: [{ chainId: '0x66EEB' }], //arbitrum
         });
-        } catch (error) {
-            // This error code indicates that the chain has not been added to MetaMask.
-            if (error.code === 4902) {
-                try {
-                    await ethereum.request({
-                        method: 'wallet_addEthereumChain',
-                        params: [{ chainId: '0x66EEB', rpcUrl: 'https://rinkeby.arbitrum.io/rpc' }],
-                    });
-                } catch (addError) {
-                    // handle "add" error
-                }
+    } catch (error) {
+        // This error code indicates that the chain has not been added to MetaMask.
+        if (error.code === 4902) {
+            try {
+                await ethereum.request({
+                    method: 'wallet_addEthereumChain',
+                    params: [{ chainId: '0x66EEB', rpcUrl: 'https://rinkeby.arbitrum.io/rpc' }],
+                });
+            } catch (addError) {
+                // handle "add" error
             }
-            // handle other "switch" errors
         }
-}
+        // handle other "switch" errors
+    }
+};
 
 const NetworkButton = styled.span`
     border: 1px solid #fff;
@@ -54,8 +54,8 @@ const UnknownNetwork: React.FC<UNProps> = styled(({ className }: UNProps) => {
     // https://docs.metamask.io/guide/rpc-api.html#other-rpc-methods
     return (
         <div className={className}>
-            You are connected to the wrong network.
-            Switch to <NetworkButton onClick={() => switchNetworks()}>Arbitrum Testnet.</NetworkButton>
+            You are connected to the wrong network. Switch to{' '}
+            <NetworkButton onClick={() => switchNetworks()}>Arbitrum Testnet.</NetworkButton>
         </div>
     );
 })`
@@ -174,7 +174,7 @@ const NavBarContent: React.FC = styled(({ className }) => {
                 tokenBalance={ethBalance ?? 0}
                 logout={resetOnboard}
                 handleConnect={handleConnect}
-            ></AccountDropdown>
+            />
 
             {/** TODO this will need to change to Arbritrum network id */}
             {process.env.NEXT_PUBLIC_DEPLOYMENT !== 'DEVELOPMENT' ? (
