@@ -100,10 +100,19 @@ const Advanced: React.FC = styled(({ className }) => {
                     closeButton.click();
                     setTourOpen(true);
                 });
+                listenForDismiss();
             }, 10);
         }
     };
-    
+
+    // If user closes toast notification
+    const listenForDismiss = async () => {
+        const closeButton = document.querySelector('.toast-close') as HTMLButtonElement;
+        closeButton.addEventListener('click', function () {
+            setTutorialComplete();
+        });
+    };
+
     const setTutorialComplete = () => {
         const cookies = new Cookies();
         if(cookies.get('tutorialCompleted') != 'true'){
@@ -160,7 +169,7 @@ const Advanced: React.FC = styled(({ className }) => {
         // Also prevent body scrolling when tour open
         disableBodyScroll(e);
     };
-    
+
     return (
         <>
             <div className={`container ${className}`}>
