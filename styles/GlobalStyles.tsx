@@ -154,6 +154,19 @@ export default createGlobalStyle`
     }
 
     /** Wallet Styles */
+
+    /** Legal modal*/
+    #legal-modal {
+        max-width: 420px;
+    }
+    #legal-modal #checkbox-container {
+        margin-top: 16px;
+    }
+
+    #legal-modal span,
+    #legal-modal input {
+        color: #fff;
+    }
     .bn-onboard-modal-select-wallets li {
         width: 100%;
         padding: 0!important;

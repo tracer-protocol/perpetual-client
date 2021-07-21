@@ -8,6 +8,11 @@ import { API as OnboardApi, Wallet, Initialization } from 'bnc-onboard/dist/src/
 import { formatEther } from '@ethersproject/units';
 import { Network, networkConfig } from './Web3Context.Config';
 import Web3 from 'web3';
+import Cookies from 'universal-cookie';
+import { Checkbox, CheckboxContainer, CheckboxTitle } from '@components/General';
+import TracerModal from '@components/General/TracerModal';
+import styled from 'styled-components';
+import Link from 'next/link';
 
 export type OnboardConfig = Partial<Omit<Initialization, 'networkId'>>;
 
@@ -34,6 +39,24 @@ type Web3Context = {
     handleConnect(): void;
 };
 
+export const Terms = styled.div`
+    background: var(--color-background);
+    border-radius: 7px;
+    padding: 16px;
+    margin-top: 8px;
+
+    p {
+        color: #fff;
+        font-size: var(--font-size-small);
+        margin-bottom: 8px;
+    }
+
+    a {
+        font-size: var(--font-size-small);
+        color: var(--color-primary);
+    }
+`;
+
 const Web3Context = React.createContext<Web3Context | undefined>(undefined);
 
 /**
@@ -54,6 +77,8 @@ const Web3Store: React.FC<Web3ContextProps> = ({
     const [onboard, setOnboard] = useState<OnboardApi | undefined>(undefined);
     const [isReady, setIsReady] = useState<boolean>(false);
     const [config, setConfig] = useState<Network>(networkConfig[0]);
+    const [showTerms, setShowTerms] = useState<boolean>(false);
+    const [acceptedTerms, acceptTerms] = useState(false);
 
     // Initialize OnboardJS
     useEffect(() => {
@@ -122,6 +147,15 @@ const Web3Store: React.FC<Web3ContextProps> = ({
         initializeOnboard();
     }, []);
 
+    useEffect(() => {
+        const cookies = new Cookies();
+        if(acceptedTerms){
+            cookies.set('acceptedTerms', 'true', { path: '/' });
+            handleConnect();
+            setShowTerms(false);
+        }
+    }, [acceptedTerms]);
+
     const checkIsReady = async () => {
         const isReady = await onboard?.walletCheck();
         setIsReady(!!isReady);
@@ -137,11 +171,26 @@ const Web3Store: React.FC<Web3ContextProps> = ({
         await onboard?.walletReset();
     };
 
+    const acceptLegalTerms = () => {
+        const cookies = new Cookies();
+        if(cookies.get('acceptedTerms') != 'true'){
+            setShowTerms(true);
+        }
+        else {
+            setShowTerms(false);
+            acceptTerms(true);
+        }
+        return acceptedTerms;
+    };
+
     const handleConnect = async () => {
         if (onboard) {
             try {
-                await onboard?.walletSelect();
-                await checkIsReady();
+                const accepted = acceptLegalTerms();
+                if(accepted){
+                    await onboard?.walletSelect();
+                    await checkIsReady();
+                }
             } catch (err) {
                 console.error(err);
             }
@@ -149,26 +198,63 @@ const Web3Store: React.FC<Web3ContextProps> = ({
     };
 
     const onboardState = onboard?.getState();
-
     return (
-        <Web3Context.Provider
-            value={{
-                account: account,
-                network: network,
-                ethBalance: ethBalance,
-                web3: web3,
-                wallet: wallet,
-                onboard: onboard,
-                isReady: isReady,
-                checkIsReady,
-                resetOnboard,
-                handleConnect,
-                config,
-                isMobile: !!onboardState?.mobileDevice,
-            }}
-        >
-            {children}
-        </Web3Context.Provider>
+        <>
+            <Web3Context.Provider
+                value={{
+                    account: account,
+                    network: network,
+                    ethBalance: ethBalance,
+                    web3: web3,
+                    wallet: wallet,
+                    onboard: onboard,
+                    isReady: isReady,
+                    checkIsReady,
+                    resetOnboard,
+                    handleConnect,
+                    config,
+                    isMobile: !!onboardState?.mobileDevice,
+                }}
+            >
+                {children}
+            </Web3Context.Provider>
+            <TracerModal
+                loading={false}
+                show={showTerms}
+                id="legal-modal"
+                onClose={() => {
+                    acceptTerms(false);
+                    setShowTerms(false);
+                }}
+                title="Connect Wallet"
+            >
+                <Terms>
+                    <p>
+                        By connecting your wallet, you accept Tracer’s Terms of Use 
+                        and represent and warrant that you are not a resident of any 
+                        of the following countries:
+                    </p>
+                    <p>
+                        China, the United States, Antigua and Barbuda, Algeria, Bangladesh, 
+                        Bolivia, Belarus, Burundi, Myanmar (Burma), Cote D’Ivoire (Ivory Coast), 
+                        Crimea and Sevastopol, Cuba, Democratic Republic of Congo, Ecuador, 
+                        Iran, Iraq, Liberia, Libya, Magnitsky, Mali, Morocco, Nepal, North Korea, 
+                        Somalia, Sudan, Syria, Venezuela, Yemen or Zimbabwe.
+                    </p>
+                    <Link href="/terms-of-use"><a target="_blank" rel="noreferrer">Read More</a></Link>
+                </Terms>
+                <CheckboxContainer
+                    onClick={(e: any) => {
+                        e.preventDefault();
+                        acceptTerms(!acceptedTerms);
+                    }}
+                    id="checkbox-container"
+                >
+                    <Checkbox checked={acceptedTerms} />
+                    <CheckboxTitle>I agree to Tracer’s Terms of use</CheckboxTitle>
+                </CheckboxContainer>
+            </TracerModal>
+        </>
     );
 };
 
