@@ -35,6 +35,17 @@ const Trade: React.FC = styled(({ className }) => {
     flex-direction: column;
     background-color: var(--color-background);
     color: var(--color-text);
+
+    .container {
+        max-width: 100%!important;
+    }
+
+    ${NavBar} {
+        padding: 0 0.5rem;
+    }
+    ${Footer} {
+        padding: 0 0.5rem;
+    }
 `;
 
 export default Trade;

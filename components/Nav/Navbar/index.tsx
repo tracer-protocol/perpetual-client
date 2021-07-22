@@ -108,7 +108,7 @@ const useEnsName = (account: string) => {
     return ensName;
 };
 
-const NavBar: React.FC = styled(({ className }) => {
+const NavBar = styled(({ className }) => {
     return (
         <div className={className}>
             <NavBarContent />
