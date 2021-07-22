@@ -74,10 +74,10 @@ export default styled(
             });
             calculatorDispatch({ type: 'reset' });
             close();
-            orderDispatch({ type: 'setOrderType', value: LIMIT })
+            orderDispatch({ type: 'setOrderType', value: LIMIT });
             orderDispatch({ type: 'setExposure', value: exposure });
             orderDispatch({ type: 'setPosition', value: position });
-            orderDispatch({ type: 'setPrice', value: parseFloat(fairPrice.toFixed(2)) })
+            orderDispatch({ type: 'setPrice', value: parseFloat(fairPrice.toFixed(2)) });
             orderDispatch({ type: 'setLeverageFromExposure', amount: exposure });
         };
         const isLocked = (locked: number[], value: number) => locked[0] === value || locked[1] === value;
