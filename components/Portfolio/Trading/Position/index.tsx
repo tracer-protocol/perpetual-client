@@ -44,24 +44,6 @@ const Position: React.FC<{
         setShow(!show);
     };
 
-    const activeButton = {
-        width: '100px',
-        hoverFG: '#fff',
-        hoverBG: 'var(--color-primary)',
-        hoverCursor: 'pointer',
-    };
-
-    const inactiveButton = {
-        width: '100px',
-    };
-
-    const largeButton = {
-        width: '250px',
-        hoverFG: '#fff',
-        hoverBG: 'var(--color-primary)',
-        hoverCursor: 'pointer',
-    };
-
     const openRow = {
         display: 'normal',
         color: '#fff',
@@ -162,9 +144,7 @@ const Position: React.FC<{
                                             </StatusIndicator>
                                             <div className="mx-2 my-auto">{status}</div>
                                             <div className="my-auto ml-auto">
-                                                <Button theme={status !== 'Closed' ? activeButton : inactiveButton}>
-                                                    Close
-                                                </Button>
+                                                <Button>Close</Button>
                                             </div>
                                         </div>
                                     </TableCell>
@@ -175,7 +155,7 @@ const Position: React.FC<{
                 </TableBody>
             </Table>
             <div className="flex mt-8 justify-center">
-                <Button theme={largeButton} onClick={(e: any) => onClick(e)}>
+                <Button onClick={(e: any) => onClick(e)}>
                     {show ? 'Hide Closed Positions' : 'Show Closed Positions'}
                 </Button>
             </div>
