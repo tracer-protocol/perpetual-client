@@ -150,7 +150,10 @@ const SBox = styled(Box)<{
     z-index: ${(props) => (props.$display ? 4 : 1)};
     height: var(--height-small-container);
     border-bottom: 1px solid var(--color-accent);
-    padding: 0 12px;
+    padding: 0 16px;
+    @media (min-width: 1800px) {
+        padding: 0 12px;
+    }
 `;
 
 type MSProps = {

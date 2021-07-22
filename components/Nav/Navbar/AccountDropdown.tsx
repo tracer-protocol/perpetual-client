@@ -138,7 +138,7 @@ const MainButton = styled.div`
     z-index: 11;
 `;
 
-const StyledMenu = styled(Menu)`
+export const StyledMenu = styled(Menu)`
     text-align: center;
     padding: 1rem !important;
     right: -2rem !important;

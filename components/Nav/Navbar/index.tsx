@@ -108,20 +108,7 @@ const useEnsName = (account: string) => {
     return ensName;
 };
 
-const NavBar: React.FC = styled(({ className }) => {
-    return (
-        <div className={className}>
-            <NavBarContent />
-        </div>
-    );
-})`
-    background-image: url('/img/nav-bg.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative;
-`;
-
-const NavBarContent: React.FC = styled(({ className }) => {
+const NavBarContent = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
     const route = routes[1];
     const { account, onboard, network, resetOnboard, ethBalance, handleConnect } = useWeb3();
@@ -187,6 +174,10 @@ const NavBarContent: React.FC = styled(({ className }) => {
     color: var(--color-text);
     height: 60px;
 
+    background-image: url('/img/nav-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+
     > ul {
         display: flex;
         margin-left: auto;
@@ -237,4 +228,4 @@ const NavBarContent: React.FC = styled(({ className }) => {
     }
 `;
 
-export default NavBar;
+export default NavBarContent;
