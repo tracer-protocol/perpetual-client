@@ -219,7 +219,7 @@ const OrderBook: FC<OProps> = styled(
     },
 )`
     position: relative;
-    @media (max-height: 850px) {
+    @media (max-height: 1080px) {
         display: ${(props) => (props.displayBook ? 'block' : 'none')};
         overflow: auto;
     }
