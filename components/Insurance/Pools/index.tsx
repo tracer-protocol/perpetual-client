@@ -127,7 +127,7 @@ const Collapsible = styled.div`
 
     .selected &,
     &.show {
-        height: 16rem;
+        height: 280px;
     }
 `;
 
