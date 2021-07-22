@@ -6,6 +6,7 @@ import { OrderStore, SelectedTracerStore } from 'context';
 import { InsuranceStore } from '@context/InsuranceContext';
 import styled from 'styled-components';
 import { OMEStore } from '@context/OMEContext';
+import { StyledMenu as AccountDropdown } from '@components/Nav/Navbar/AccountDropdown';
 import Footer from '@components/Footer';
 
 const Trade: React.FC = styled(({ className }) => {
@@ -43,6 +44,11 @@ const Trade: React.FC = styled(({ className }) => {
     ${NavBar} {
         padding: 0 0.5rem;
     }
+
+    ${AccountDropdown} {
+        right: -0.5rem!important;
+    }
+
     ${Footer} {
         padding: 0 0.5rem;
     }
