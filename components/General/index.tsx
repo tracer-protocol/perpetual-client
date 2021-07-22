@@ -33,7 +33,7 @@ export const Button = styled.button<{ height?: 'medium' | 'small' | 'extra-small
     align-items: center;
     text-align: center;
     color: var(--color-primary);
-    height: var(--height-${(props: any) => props.height as string}-button);
+    height: var(--height-${(props) => props.height as string}-button);
     cursor: pointer;
 
     &:hover {

@@ -22,7 +22,7 @@ const HeadingRow = styled.div<HRowProps>`
     padding: 0 16px;
     height: 60px;
     width: 100%;
-    background: ${(props: any) => (props.background ? (props.background as string) : 'transparent')};
+    background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
     border-bottom: ${(props) => (props.border ? '1px solid var(--table-lightborder)' : 'none')};
 `;
 

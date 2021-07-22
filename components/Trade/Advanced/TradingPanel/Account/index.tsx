@@ -189,7 +189,7 @@ const Item = styled.div`
 const DepositWithdraw = styled.div<{ hide: boolean }>`
     margin-top: 1rem;
     justify-content: space-between;
-    display: ${(props: any) => (props.hide ? 'none' : 'flex')};
+    display: ${(props) => (props.hide ? 'none' : 'flex')};
 `;
 
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
@@ -203,7 +203,7 @@ const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
 const Title = styled.div<{ hide: boolean }>`
     margin-bottom: 0.5rem;
     white-space: nowrap;
-    display: ${(props: any) => (props.hide ? 'none' : 'flex')};
+    display: ${(props) => (props.hide ? 'none' : 'flex')};
     justify-content: space-between;
 
     > span {

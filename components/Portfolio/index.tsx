@@ -81,8 +81,10 @@ export const SecondaryCell = styled.div`
     font-size: var(--font-size-small);
 `;
 
-export const StatusIndicator = styled.div`
-    color: ${(props: any) => props.color as string};
+export const StatusIndicator = styled.div<{
+    color: string;
+}>`
+    color: ${(props) => props.color};
 `;
 
 export function getStatusColour(status: string): string {

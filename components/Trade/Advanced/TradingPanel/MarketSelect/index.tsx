@@ -93,7 +93,7 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
             </div>
         );
     },
-)`
+)<MarketSelectDropdownButtonProps>`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -114,7 +114,7 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
         width: 15px;
         height: 15px;
         transition: 0.3s;
-        transform: ${(props: any) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
+        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
     }
 
     @media (max-width: 1279px) {
@@ -135,7 +135,7 @@ const MarketContainer = styled.div`
 `;
 
 const SBox = styled(Box)<{ $display: boolean; color: string }>`
-    background-color: ${(props: any) => props.color as string}!important;
+    background-color: ${(props) => props.color as string}!important;
     position: relative;
     z-index: ${(props) => (props.$display ? 4 : 1)};
     height: var(--height-small-container);
