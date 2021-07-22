@@ -280,8 +280,6 @@ const CalcSlideSelect = styled(SlideSelect)`
 
 const SButton = styled(Button)`
     height: var(--height-small-button);
-    line-height: 28px;
-    padding: 0;
 `;
 
 const CalcButtons = styled.div`

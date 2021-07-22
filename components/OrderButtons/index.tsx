@@ -107,7 +107,6 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
 
 const CloseOrder = styled(Button)`
     height: var(--height-extra-small-button);
-    padding: 0;
     width: 130px;
 `;
 

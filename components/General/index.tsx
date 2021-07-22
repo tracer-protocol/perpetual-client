@@ -24,29 +24,27 @@ export const Box = styled.div`
 `;
 
 export const Button = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
     transition: 0.3s;
-    color: var(--color-primary);
+    width: 160px;
     font-size: var(--font-size-small);
-    line-height: 1rem;
-    letter-spacing: -0.32px;
+    color: var(--color-primary);
     border: 1px solid var(--color-primary);
     border-radius: 20px;
-    text-align: center;
-    padding: 0.5rem 0;
-    width: 160px;
-    margin: auto;
-
-    &:focus,
-    &:active {
-        border: 1px solid var(--color-text);
-        outline: 0;
-        box-shadow: none;
-    }
 
     &:hover {
         cursor: pointer;
         background: var(--color-primary);
         color: var(--color-text);
+    }
+
+    &:focus,
+    &:active {
+        outline: none;
+        border: 1px solid var(--color-primary);
+        border-radius: 20px;
     }
 
     &.primary {

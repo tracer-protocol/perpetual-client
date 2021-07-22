@@ -215,8 +215,6 @@ const Title = styled.h2<{
 
 const SButton = styled(Button)`
     height: var(--height-small-button);
-    padding: 0;
-    margin: 0;
 `;
 
 const CalculatorButton = styled(SButton)`
