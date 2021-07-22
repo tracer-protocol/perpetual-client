@@ -22,7 +22,7 @@ import { defaults } from '@libs/Tracer';
 import { InfoCircleOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { toApproxCurrency } from '@libs/utils';
 import { CalculatorTip } from '@components/Tooltips';
-import { LONG } from '@libs/types/OrderTypes';
+import { LIMIT, LONG } from '@libs/types/OrderTypes';
 import { Options } from '@context/TransactionContext';
 
 type CalculatorModalProps = {
@@ -74,8 +74,10 @@ export default styled(
             });
             calculatorDispatch({ type: 'reset' });
             close();
+            orderDispatch({ type: 'setOrderType', value: LIMIT })
             orderDispatch({ type: 'setExposure', value: exposure });
             orderDispatch({ type: 'setPosition', value: position });
+            orderDispatch({ type: 'setPrice', value: parseFloat(fairPrice.toFixed(2)) })
             orderDispatch({ type: 'setLeverageFromExposure', amount: exposure });
         };
         const isLocked = (locked: number[], value: number) => locked[0] === value || locked[1] === value;
