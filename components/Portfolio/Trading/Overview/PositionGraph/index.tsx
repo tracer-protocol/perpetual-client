@@ -1,7 +1,6 @@
 import React, { FC, useContext, useState } from 'react';
 import styled from 'styled-components';
 import Graph from '../Graph';
-import { LargeButton } from '@components/Portfolio';
 import { UserBalance } from '@libs/types/TracerTypes';
 import { BigNumber } from 'bignumber.js';
 import { OrderContext, orderDefaults } from '@context/OrderContext';
@@ -22,6 +21,7 @@ import { AvailableMargin } from '@components/Trade/Advanced/TradingPanel/Account
 import { useLines } from '@libs/Graph/hooks/Tracer';
 import { toApproxCurrency } from '@libs/utils';
 import { calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
+import { Button } from '@components/General';
 
 const GraphContainer = styled.div`
     height: 150px;
@@ -154,12 +154,12 @@ const PositionGraph: FC<PGProps> = styled(
                         </Row>
                         <Row>
                             <BorderlessCell>
-                                <LargeButton className="primary filled" onClick={closePosition}>
+                                <Button className="primary" onClick={closePosition}>
                                     Close Position
-                                </LargeButton>
+                                </Button>
                             </BorderlessCell>
                             <BorderlessCell inner>
-                                <LargeButton className="primary">Adjust Position</LargeButton>
+                                <Button className="primary">Adjust Position</Button>
                             </BorderlessCell>
                         </Row>
                     </TableBody>

@@ -98,12 +98,6 @@ const Counter = styled.div`
     font-size: var(--font-size-small);
 `;
 
-const PortfolioDropdownButton = styled(Button)`
-    height: var(--height-medium-button);
-    padding: 0;
-    min-width: 170px;
-`;
-
 const VScrollContainer = styled.div`
     height: auto;
     overflow: hidden auto;
@@ -149,10 +143,10 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
     };
     return (
         <Dropdown className={className} overlay={menu} placement="bottomCenter" onVisibleChange={handleVisibleChange}>
-            <PortfolioDropdownButton>
+            <Button height="medium">
                 {keyMap[option]}
                 <StyledTriangleDown className={rotated ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
-            </PortfolioDropdownButton>
+            </Button>
         </Dropdown>
     );
 })`

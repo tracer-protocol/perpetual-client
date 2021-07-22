@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { Button } from '@components/General';
 
 export const LeftPanel = styled.div`
     width: 20%;
@@ -17,23 +16,6 @@ export const RightPanel = styled.div`
     border-top: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
     border-bottom: 1px solid #0c3586;
-`;
-
-export const LargeButton = styled(Button)`
-    line-height: 1rem;
-    padding: 10px 0;
-    height: 32px;
-    width: 170px;
-
-    &.filled {
-        background: var(--color-primary);
-        color: #fff;
-
-        &:hover {
-            color: var(--color-primary);
-            background: transparent;
-        }
-    }
 `;
 
 export const SmallTitle = styled.h2`

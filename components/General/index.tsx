@@ -24,22 +24,28 @@ export const Box = styled.div`
 `;
 
 export const Button = styled.button<{ height?: 'medium' | 'small' | 'extra-small' }>`
+    width: 160px;
+    border-radius: 20px;
+    transition: 0.3s;
+    border: 1px solid var(--color-primary);
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    transition: 0.3s;
-    width: 160px;
     color: var(--color-primary);
-    border: 1px solid var(--color-primary);
-    border-radius: 20px;
     height: var(--height-${(props: any) => props.height as string}-button);
-    user-select: none;
     cursor: pointer;
 
     &:hover {
         background: var(--color-primary);
         color: var(--color-text);
+    }
+
+    &:focus,
+    &:active {
+        outline: none;
+        border: 1px solid var(--color-primary);
+        border-radius: 20px;
     }
 
     &.primary {
