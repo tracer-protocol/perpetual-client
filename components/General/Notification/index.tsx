@@ -93,7 +93,7 @@ const IconWrap = styled.span`
         }
     }
 `;
-const Close = styled.button`
+const Close = styled.div`
     position: absolute;
     top: 16px;
     right: 16px;
@@ -116,10 +116,9 @@ const Close = styled.button`
         cursor: pointer;
         background-color: var(--color-primary);
         background-image: url('/img/general/close-white.svg');
-        opacity: 1;
     } 
 `;
-const Header: React.FC<any> = ({ appearance: onDismiss, title }) => {
+const Header: React.FC<{ onDismiss: (e: any) => any, title: React.ReactNode }> = ({ onDismiss, title }) => {
     return (
         <div
             style={{
@@ -206,7 +205,7 @@ const Hashie: React.FC<HProps | any> = ({
     appearance: appearance_,
     placement,
     autoDismissTimeout,
-    isRunning,
+    // isRunning,
     children,
 }: HProps) => {
     const appearance = appearances[appearance_] ?? appearances['info']; //default info
@@ -224,10 +223,6 @@ const Hashie: React.FC<HProps | any> = ({
             <IconWrap>{appearance.icon}</IconWrap>
             <ContentWrapper>
                 <Header
-                    appearance={appearance_}
-                    autoDismiss={autoDismiss}
-                    autoDismissTimeout={autoDismissTimeout}
-                    isRunning={isRunning}
                     onDismiss={onDismiss}
                     title={children_[0]}
                 />

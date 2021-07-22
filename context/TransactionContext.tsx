@@ -58,16 +58,6 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     const { addToast, updateToast } = useToasts();
     const pendingRef = useRef('');
 
-    useEffect(() => {
-        addToast(
-            ['Pending Transaction', 'Big long notification message'],
-            {
-                appearance: 'loading' as AppearanceTypes,
-                autoDismiss: false,
-            },
-        );
-    }, [])
-
     /** Specifically handles transactions */
     const handleTransaction: HandleTransactionType = async (callMethod, params, options) => {
         const { statusMessages, onError, onSuccess, afterConfirmation } = options ?? {};
