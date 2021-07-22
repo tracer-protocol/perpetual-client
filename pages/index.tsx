@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import { NavBarContent } from '@components/Nav/Navbar';
 import NavBar from '@components/Nav';
 import { Advanced } from '@components/Trade';
 import { OrderStore, SelectedTracerStore } from 'context';
@@ -41,7 +42,7 @@ const Trade: React.FC = styled(({ className }) => {
         max-width: 100% !important;
     }
 
-    ${NavBar}, ${Footer} {
+    ${NavBarContent}, ${Footer} {
         padding: 0 16px;
     }
 
@@ -50,7 +51,7 @@ const Trade: React.FC = styled(({ className }) => {
     }
 
     @media (min-width: 1800px) {
-        ${NavBar}, ${Footer} {
+        ${NavBarContent}, ${Footer} {
             padding: 0 5rem;
         }
     }
