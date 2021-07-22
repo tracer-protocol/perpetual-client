@@ -47,7 +47,7 @@ const Advanced: React.FC = styled(({ className }) => {
     const { selectedTracer } = useContext(TracerContext);
     const { order, orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
     const [isAdjust] = useState(false);
- 
+
     useEffect(() => {
         if (orderDispatch) {
             orderDispatch({ type: 'setLock', value: true });
