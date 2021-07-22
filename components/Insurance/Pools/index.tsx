@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { TracerContext, InsuranceContext } from 'context';
+import { TracerContext } from '@context/TracerContext';
+import { InsuranceContext } from '@context/InsuranceContext';
 import { defaults } from 'libs/Tracer/Insurance';
 import { useRouter } from 'next/router';
 import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 'libs/types';
