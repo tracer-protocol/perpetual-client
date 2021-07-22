@@ -240,7 +240,7 @@ const Overview: FC = () => {
                     {!account ? (
                         <ConnectOverlay />
                     ) : fetchedTracers[0]?.getBalance()?.quote.eq(0) ? (
-                        <PositionOverlay tracers={fetchedTracers} />
+                        <PositionOverlay tracers={fetchedTracers} showMarketPreview={true} />
                     ) : null}
                 </HScrollContainer>
             </VScrollContainer>

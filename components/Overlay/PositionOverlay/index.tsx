@@ -9,8 +9,9 @@ import MarketChange from '@components/General/MarketChange';
 
 interface POProps {
     tracers?: any;
+    showMarketPreview: boolean;
 }
-const PositionOverlay: FC<POProps> = ({ tracers }: POProps) => {
+const PositionOverlay: FC<POProps> = ({ tracers, showMarketPreview }: POProps) => {
     const [currentMarket, setCurrentMarket] = useState(-1);
 
     const marketKeyMap: Record<number, string> = {};
@@ -22,8 +23,10 @@ const PositionOverlay: FC<POProps> = ({ tracers }: POProps) => {
     return (
         <StyledOverlay>
             <OverlayTitle>No Open Position.</OverlayTitle>
-            <SelectMarketDropdown setOptions={setCurrentMarket} option={currentMarket} keyMap={marketKeyMap} />
-            {currentMarket !== -1 ? (
+            {showMarketPreview ? (
+                <SelectMarketDropdown setOptions={setCurrentMarket} option={currentMarket} keyMap={marketKeyMap} />
+            ) : null}
+            {currentMarket !== -1 && showMarketPreview ? (
                 <MarketPreviewContainer>
                     <InfoCol>
                         <div className="title">Market</div>
