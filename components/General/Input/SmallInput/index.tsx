@@ -63,29 +63,32 @@ type SIProps = {
 } & Children;
 
 const SmallInput: React.FC<SIProps> = styled(
-    ({ title, amount, onChange, unit, setMax, maxText, tooltip, className }: SIProps) => (
-        <div className={className}>
-            {tooltip ? (
-                <TooltipSelector tooltip={tooltip}>{title}</TooltipSelector>
-            ) : (
-                <span className="label">{title}</span>
-            )}
-            <InputContainer>
-                <Max className={`${!setMax ? 'hide' : ''}`} onClick={setMax}>
-                    {maxText}
-                </Max>
-                <NumberInput
-                    id="margin"
-                    type="number"
-                    placeholder="0.0"
-                    min={0}
-                    onChange={onChange}
-                    value={!Number.isNaN(amount) ? amount : ''}
-                />
-                {unit ? <Unit>{unit}</Unit> : null}
-            </InputContainer>
-        </div>
-    ),
+    ({ title, amount, onChange, unit, setMax, maxText, tooltip, className }: SIProps) => {
+        return (
+            <div className={className}>
+                {tooltip ? (
+                    <TooltipSelector tooltip={tooltip}>{title}</TooltipSelector>
+                ) : (
+                    <span className="label">{title}</span>
+                )}
+                <InputContainer>
+                    <Max className={`${!setMax ? 'hide' : ''}`} onClick={setMax}>
+                        {maxText}
+                    </Max>
+                    <NumberInput
+                        id="margin"
+                        type="number"
+                        placeholder="0.0"
+                        min={0}
+                        onChange={onChange}
+                        // This always displays a positive value. It also effects the onChange
+                        value={!Number.isNaN(amount) ? Math.abs(amount ?? 0) : ''}
+                    />
+                    {unit ? <Unit>{unit}</Unit> : null}
+                </InputContainer>
+            </div>
+        );
+    },
 )`
     display: flex;
     width: 100%;

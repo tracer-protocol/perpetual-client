@@ -15,6 +15,7 @@ import { BigNumber } from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import DefaultSlider from '@components/General/Slider';
 import { orderDefaults } from '@context/OrderContext';
+import { Position as PositionType } from '@libs/types/OrderTypes';
 
 type PProps = {
     dispatch: React.Dispatch<OrderAction> | undefined;
@@ -28,7 +29,7 @@ const Position: React.FC<PProps> = styled(({ className, dispatch, position }: PP
             <SlideSelect
                 onClick={(index, _e) =>
                     dispatch
-                        ? dispatch({ type: 'setPosition', value: index })
+                        ? dispatch({ type: 'setPosition', value: index as PositionType })
                         : console.error('Order dispatch function not set')
                 }
                 value={position}
