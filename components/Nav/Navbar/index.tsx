@@ -16,7 +16,6 @@ const NavBar: React.FC = styled(({ className }) => {
     position: relative;
 `;
 
-
 export const NavBarContent = styled(({ className }) => {
     const routes = useRouter().asPath.split('/');
     const route = routes[1];
@@ -243,4 +242,3 @@ const useEnsName = (account: string) => {
 
     return ensName;
 };
-
