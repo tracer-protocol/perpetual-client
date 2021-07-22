@@ -54,4 +54,4 @@ export const NumberInput = styled((props) => {
     & input[type='number'] {
         -moz-appearance: textfield;
     }
-`
+`;

@@ -87,8 +87,8 @@ const SmallInput: React.FC<SIProps> = styled(
                     {unit ? <Unit>{unit}</Unit> : null}
                 </InputContainer>
             </div>
-        )
-    }
+        );
+    },
 )`
     display: flex;
     width: 100%;

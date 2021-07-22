@@ -1,6 +1,5 @@
 import { BigNumber } from 'bignumber.js';
 
-
 // Position types
 export const LONG = 0;
 export const SHORT = 1;
