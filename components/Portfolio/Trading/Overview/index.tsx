@@ -22,7 +22,7 @@ const HeadingRow = styled.div<HRowProps>`
     padding: 0 16px;
     height: 60px;
     width: 100%;
-    background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
+    background: ${(props: any) => (props.background ? (props.background as string) : 'transparent')};
     border-bottom: ${(props) => (props.border ? '1px solid var(--table-lightborder)' : 'none')};
 `;
 
@@ -199,7 +199,7 @@ const Overview: FC = () => {
     return (
         <>
             <VScrollContainer>
-                <HeadingRow background={`#00125D`}>
+                <HeadingRow background={'#00125D'}>
                     <Title>Equity Breakdown</Title>
                     <div className="flex justify-content-between">
                         <PortfolioDropdown
@@ -210,7 +210,7 @@ const Overview: FC = () => {
                         <PortfolioDropdown setOptions={setCurrentPNL} option={currentPNL} keyMap={pnlKeyMap} />
                     </div>
                 </HeadingRow>
-                <HPanel background={`#00125D`}>
+                <HPanel background={'#00125D'}>
                     <Equity
                         className="equityStats"
                         balances={fetchedTracers[0]?.getBalance() ?? defaults.balances}
@@ -228,7 +228,7 @@ const Overview: FC = () => {
                 </HPanel>
                 <HeadingRow border={true}>
                     <Title>Open Positions</Title>
-                    <Counter>4</Counter>
+                    <Counter>{fetchedTracers?.length}</Counter>
                 </HeadingRow>
                 <HScrollContainer>
                     {fetchedTracers.map((tracer: any, i: number) => (
@@ -246,7 +246,7 @@ const Overview: FC = () => {
                     {!account ? (
                         <ConnectOverlay />
                     ) : fetchedTracers[0]?.getBalance()?.quote.eq(0) ? (
-                        <PositionOverlay />
+                        <PositionOverlay tracers={fetchedTracers} />
                     ) : null}
                 </HScrollContainer>
             </VScrollContainer>

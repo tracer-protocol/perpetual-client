@@ -22,6 +22,7 @@ export const NumberSelectHeader = styled.h3`
     color: var(--color-primary);
     display: flex;
     justify-content: space-between;
+    margin-bottom: 8px;
 `;
 
 const Balance = styled.span`

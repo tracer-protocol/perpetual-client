@@ -19,7 +19,7 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
         const m = main.current as unknown as HTMLDivElement;
         if (open) {
             // all heights plus 10px for padding
-            m.style.height = `${(height ?? 0) + 10}px`;
+            m.style.height = `${height ?? 0}px`;
         } else {
             m.style.height = `${defaultHeight}px`;
         }
@@ -37,7 +37,7 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
     transition: 0.3s ease-in-out;
     height: ${(props) => props.defaultHeight}px;
     margin-bottom: 1rem;
-    border-radius: 5px;
+    border-radius: 7px;
     text-align: left;
     font-size: var(--font-size-small);
     letter-spacing: -0.32px;
@@ -46,12 +46,17 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
     & > .body {
         transition: 0.3s ease-in;
         opacity: 0;
-        padding: 0 10px;
     }
 
     &.open .body {
         opacity: 1;
-        padding: 5px 10px;
+    }
+    div[class*='General__Section'] {
+        padding: 6px 16px;
+        border-bottom: 1px solid var(--table-darkborder);
+    }
+    div[class*='General__Section']:last-of-type {
+        border-bottom: 0;
     }
 `;
 

@@ -126,10 +126,10 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
             account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
         ) {
-            console.log(res.returnValues)
+            console.log(res.returnValues);
             closePending ? closePending(false) : console.error('Close pending is undefined');
         }
-    }
+    };
 
     const placeOrder: (order: OrderState) => Promise<Result> = async (order) => {
         const { exposureBN, price, position } = order;
@@ -161,7 +161,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             } else if (res.message === 'Add') {
                 return {
                     status: res.status,
-                    message: `Successfully created order`,
+                    message: 'Successfully created order',
                 };
             }
             return {
@@ -195,7 +195,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 },
             });
         } else {
-            console.error(`Failed to approve: handleTransaction is undefined `);
+            console.error('Failed to approve: handleTransaction is undefined ');
         }
     };
 
@@ -230,7 +230,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 },
             });
         } else {
-            console.error(`Failed to deposit: handleTransaction is undefined `);
+            console.error('Failed to deposit: handleTransaction is undefined ');
         }
     };
     const withdraw = async (amount: number, options: Options) => {
@@ -251,7 +251,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 },
             });
         } else {
-            console.error(`Failed to widthdraw handleTransaction is undefined `);
+            console.error('Failed to widthdraw handleTransaction is undefined ');
         }
     };
 

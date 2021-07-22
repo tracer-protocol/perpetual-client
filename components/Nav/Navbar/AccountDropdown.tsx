@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
-import { API as OnboardApi } from 'bnc-onboard/dist/src/interfaces';
+import { API as OnboardApi } from '@tracer-protocol/onboard/dist/src/interfaces';
 import { Button, Section } from '@components/General';
 import { Menu, MenuItem } from './HeaderDropdown';
 
@@ -90,7 +90,7 @@ function networkName(id: any) {
         case 42:
             return 'kovan';
         case 421611:
-            return 'arbitrum'
+            return 'arbitrum';
         default:
             return 'localhost';
     }

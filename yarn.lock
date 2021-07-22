@@ -1851,7 +1851,7 @@
     rlp "^2.2.4"
     semaphore-async-await "^1.5.1"
 
-"@ethereumjs/common@^2.3.0", "@ethereumjs/common@^2.4.0":
+"@ethereumjs/common@^2.0.0", "@ethereumjs/common@^2.3.0", "@ethereumjs/common@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@ethereumjs/common/-/common-2.4.0.tgz#2d67f6e6ba22246c5c89104e6b9a119fb3039766"
   integrity sha512-UdkhFWzWcJCZVsj1O/H8/oqj/0RVYjLc1OhPjBrQdALAkQHpCp8xXI4WLnuGTADqTdJZww0NtgwG+TRPkXt27w==
@@ -1869,7 +1869,7 @@
     ethereumjs-util "^7.0.7"
     miller-rabin "^4.0.0"
 
-"@ethereumjs/tx@^3.2.1", "@ethereumjs/tx@^3.3.0":
+"@ethereumjs/tx@^3.0.0", "@ethereumjs/tx@^3.2.1", "@ethereumjs/tx@^3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@ethereumjs/tx/-/tx-3.3.0.tgz#14ed1b7fa0f28e1cd61e3ecbdab824205f6a4378"
   integrity sha512-yTwEj2lVzSMgE6Hjw9Oa1DZks/nKTWM8Wn4ykDNapBPua2f4nXO3qKnni86O6lgDj5fVNRqbDsD0yy7/XNGDEA==
@@ -3348,6 +3348,40 @@
     solidity-coverage "^0.7.16"
     truffle-contract-size "^2.0.0"
 
+"@tracer-protocol/onboard@^1.29.1":
+  version "1.29.1"
+  resolved "https://registry.yarnpkg.com/@tracer-protocol/onboard/-/onboard-1.29.1.tgz#9bcf1df86220c12762ebea2519a649e2b2e7b0ab"
+  integrity sha512-c9NOeBhd0apTSQ7cjSXf7BwS24nadamKVRJvu3p6CPNId5q+bePG/+/xKdnA0KTs+FIY5m89CfGceH6PMybkBw==
+  dependencies:
+    "@cvbb/eth-keyring" "^1.1.0"
+    "@ethereumjs/common" "^2.0.0"
+    "@ethereumjs/tx" "^3.0.0"
+    "@gnosis.pm/safe-apps-provider" "^0.5.0"
+    "@gnosis.pm/safe-apps-sdk" "^3.0.0"
+    "@ledgerhq/hw-app-eth" "^5.49.0"
+    "@ledgerhq/hw-transport-u2f" "^5.21.0"
+    "@ledgerhq/hw-transport-webusb" "5.53.0"
+    "@portis/web3" "^4.0.0"
+    "@shapeshiftoss/hdwallet-core" "^1.15.2"
+    "@shapeshiftoss/hdwallet-keepkey" "^1.15.2"
+    "@shapeshiftoss/hdwallet-keepkey-webusb" "^1.15.2"
+    "@toruslabs/torus-embed" "^1.10.11"
+    "@walletconnect/web3-provider" "^1.4.1"
+    authereum "^0.1.12"
+    bignumber.js "^9.0.0"
+    bnc-sdk "^3.4.1"
+    bowser "^2.10.0"
+    eth-lattice-keyring "^0.2.7"
+    eth-provider "^0.6.1"
+    eth-sig-util "^3.0.1"
+    ethereumjs-util "^7.0.3"
+    fortmatic "^2.2.1"
+    hdkey "^2.0.1"
+    regenerator-runtime "^0.13.7"
+    trezor-connect "^8.1.9"
+    walletlink "^2.1.0"
+    web3-provider-engine "^15.0.4"
+
 "@tracer-protocol/tracer-utils@^0.1.2":
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@tracer-protocol/tracer-utils/-/tracer-utils-0.1.3.tgz#5caa06e237c83aaf034210af42989a105aa66144"
@@ -3360,10 +3394,10 @@
     tslib "^2.1.0"
     web3 "^1.3.4"
 
-"@tracer-protocol/tracer-utils@^0.2.24":
-  version "0.2.25"
-  resolved "https://registry.yarnpkg.com/@tracer-protocol/tracer-utils/-/tracer-utils-0.2.25.tgz#e849657af01d8fcc5af9127d9ebd7725a524130e"
-  integrity sha512-cPjjPU5G1aw5C7/gR+qVFxFgEbSaKpNDsP8ZS9oCyPzYQA7/zBfpQbUwvAcSFDHGyyyR7sSFoq0JPAgP4AF3Cg==
+"@tracer-protocol/tracer-utils@^0.2.26":
+  version "0.2.26"
+  resolved "https://registry.yarnpkg.com/@tracer-protocol/tracer-utils/-/tracer-utils-0.2.26.tgz#17f11de53caea347bd17699d9f588621462ff139"
+  integrity sha512-nR67bYwOWotPbw2h0+R6ma5iS9cvowi2fblo2kogT95WGXGzVqfr0hTVzhBzPWkjMUnN5ZOJJTQBnUrSF7iKGw==
   dependencies:
     "@types/node" "^14.14.37"
     bignumber.js "^9.0.1"
@@ -6187,39 +6221,6 @@ bnb-javascript-sdk-nobroadcast@^2.16.14:
     url "^0.11.0"
     uuid "^3.3.2"
     websocket-stream "^5.5.0"
-
-bnc-onboard@^1.30.0:
-  version "1.30.0"
-  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.30.0.tgz#44207f682f265c1cf02185d877353c8720e8e692"
-  integrity sha512-C9vzxbkIHgbw6YOplV9O5/4LECDQkZ7XG6Y3/JkndBodQCmnMa+JctueIKqxFAxhASRkDRwwuPuyTUfDKr2jUw==
-  dependencies:
-    "@cvbb/eth-keyring" "^1.1.0"
-    "@gnosis.pm/safe-apps-provider" "^0.5.0"
-    "@gnosis.pm/safe-apps-sdk" "^3.0.0"
-    "@ledgerhq/hw-app-eth" "^5.49.0"
-    "@ledgerhq/hw-transport-u2f" "^5.21.0"
-    "@ledgerhq/hw-transport-webusb" "5.53.0"
-    "@portis/web3" "^4.0.0"
-    "@shapeshiftoss/hdwallet-core" "^1.15.2"
-    "@shapeshiftoss/hdwallet-keepkey" "^1.15.2"
-    "@shapeshiftoss/hdwallet-keepkey-webusb" "^1.15.2"
-    "@toruslabs/torus-embed" "^1.10.11"
-    "@walletconnect/web3-provider" "^1.4.1"
-    authereum "^0.1.12"
-    bignumber.js "^9.0.0"
-    bnc-sdk "^3.4.1"
-    bowser "^2.10.0"
-    eth-lattice-keyring "^0.2.7"
-    eth-provider "^0.6.1"
-    eth-sig-util "^3.0.1"
-    ethereumjs-tx "^2.1.2"
-    ethereumjs-util "^7.0.3"
-    fortmatic "^2.2.1"
-    hdkey "^2.0.1"
-    regenerator-runtime "^0.13.7"
-    trezor-connect "^8.1.9"
-    walletlink "^2.1.0"
-    web3-provider-engine "^15.0.4"
 
 bnc-sdk@^3.4.1:
   version "3.4.1"

@@ -4,7 +4,7 @@ import { MarketSelect, AccountPanel } from './TradingPanel';
 import { PlaceOrder } from './TradingPanel/TradingInput';
 import styled from 'styled-components';
 import TradingView from './RightPanel';
-import { MARKET } from '@context/OrderContext';
+import { MARKET } from '@libs/types/OrderTypes';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 const TradingPanel = styled.div`

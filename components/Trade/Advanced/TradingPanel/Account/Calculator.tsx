@@ -22,7 +22,7 @@ import { defaults } from '@libs/Tracer';
 import { InfoCircleOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { toApproxCurrency } from '@libs/utils';
 import { CalculatorTip } from '@components/Tooltips';
-import { LONG } from '@context/OrderContext';
+import { LONG } from '@libs/types/OrderTypes';
 import { Options } from '@context/TransactionContext';
 
 type CalculatorModalProps = {
@@ -192,7 +192,7 @@ export default styled(
                     }
                     header={
                         <NumberSelectHeader>
-                            {`Liquidation Price`}
+                            {'Liquidation Price'}
                             <FairPrice>Fair Price: {toApproxCurrency(fairPrice)}</FairPrice>
                         </NumberSelectHeader>
                     }
@@ -209,7 +209,7 @@ export default styled(
                                 exposure.toFixed(2),
                             )} ${baseTicker} to achieve account leverage of ${leverage}x. 
                             This position will be liquidated at ${toApproxCurrency(liquidationPrice)}.`
-                            : `Invalid calculated position. Try increasing your margin or decreasing your exposure`}
+                            : 'Invalid calculated position. Try increasing your margin or decreasing your exposure'}
                     </p>
                     <DepositButtons
                         tracerApproved={selectedTracer?.getTracerApproved() ?? false}

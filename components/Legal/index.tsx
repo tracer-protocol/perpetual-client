@@ -57,5 +57,4 @@ export const List = styled.ul`
     padding-inline-start: 16px;
     margin-bottom: 16px;
 `;
-export const ListItem = styled.li`
-`;
+export const ListItem = styled.li``;

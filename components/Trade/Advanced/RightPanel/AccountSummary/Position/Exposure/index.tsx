@@ -1,5 +1,6 @@
 import React from 'react';
-import { LIMIT, OrderState } from '@context/OrderContext';
+import { OrderState } from '@context/OrderContext';
+import { LIMIT } from '@libs/types/OrderTypes';
 import { UserBalance } from '@libs/types';
 import { BigNumber } from 'bignumber.js';
 import { toApproxCurrency } from '@libs/utils';
