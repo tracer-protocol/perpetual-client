@@ -144,6 +144,13 @@ export const TableRow = styled.tr`
         background: var(--color-accent);
         cursor: pointer;
     }
+
+    &.selected {
+        &:hover {
+            background: none;
+            cursor: auto;
+        }
+    }
 `;
 
 export const TableCell = styled.td`
