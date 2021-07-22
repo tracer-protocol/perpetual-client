@@ -151,7 +151,7 @@ const SBox = styled(Box)<{
     height: var(--height-small-container);
     border-bottom: 1px solid var(--color-accent);
     padding: 0 16px;
-    @media(min-width: 1800px) {
+    @media (min-width: 1800px) {
         padding: 0 12px;
     }
 `;
