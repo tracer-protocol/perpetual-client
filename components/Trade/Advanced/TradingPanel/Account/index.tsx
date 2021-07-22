@@ -174,11 +174,11 @@ const Item = styled.div`
         margin-left: auto;
         text-align: right;
         font-size: var(--font-size-small);
-        letter-spacing: -0.32px;
+        letter-spacing: var(--letter-spacing-small);
     }
 
     > h3 {
-        letter-spacing: -0.32px;
+        letter-spacing: var(--letter-spacing-small);
         color: var(--color-primary);
         display: inline-block;
         white-space: nowrap;
@@ -209,13 +209,13 @@ const Title = styled.div<{ hide: boolean }>`
     > span {
         font-size: var(--font-size-small-heading);
         font-weight: bold;
-        letter-spacing: -0.4px;
+        letter-spacing: var(--letter-spacing-extra-small);
         color: var(--color-text);
     }
 `;
 
 const SubText = styled.div`
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: var(--color-secondary);
     font-size: var(--font-size-small);
     line-height: var(--font-size-small);

@@ -25,6 +25,9 @@ export default createGlobalStyle`
         --font-size-large: 20px;
         --font-size-xlarge: 36px;
 
+        --letter-spacing-small: -0.32px;
+        --letter-spacing-extra-small: -0.4px;
+
         --height-extra-small-container: 40px;
         --height-small-container: 60px;
 

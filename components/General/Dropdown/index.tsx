@@ -40,7 +40,7 @@ export const HiddenExpand: React.FC<HEProps> = styled(({ className, children, de
     border-radius: 7px;
     text-align: left;
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     background: var(--color-background);
 
     & > .body {
@@ -105,6 +105,6 @@ export const Dropdown: React.FC<DProps> = styled(({ className, defaultOpen, head
     border-radius: 5px;
     text-align: left;
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     cursor: pointer;
 `;

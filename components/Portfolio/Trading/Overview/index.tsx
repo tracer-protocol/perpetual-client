@@ -61,7 +61,7 @@ const HPanel = styled.div<HPanelProps>`
 
 const Title = styled.h1`
     font-size: var(--font-size-large);
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: var(--color-text);
     margin-right: 2rem;
     padding: 0;

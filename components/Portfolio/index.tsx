@@ -20,7 +20,7 @@ export const RightPanel = styled.div`
 
 export const SmallTitle = styled.h2`
     font-size: var(--font-size-medium);
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: var(--color-text);
     flex-basis: 100%;
     width: fit-content;

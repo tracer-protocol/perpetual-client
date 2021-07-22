@@ -129,7 +129,7 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
 
 const MarketContainer = styled.div`
     font-size: var(--font-size-medium);
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     display: flex;
     height: var(--height-small-container);
 `;

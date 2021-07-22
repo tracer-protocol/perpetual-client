@@ -7,7 +7,7 @@ import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/Tool
 const Max = styled.a`
     transition: 0.3s;
     margin: auto 0 auto 20px;
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     font-size: var(--font-size-small);
     color: var(--color-primary);
     text-decoration: underline;
@@ -23,7 +23,7 @@ const Max = styled.a`
 `;
 
 const Unit = styled.div`
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: var(--color-secondary);
     font-size: var(--font-size-medium);
     line-height: var(--font-size-medium);
@@ -97,7 +97,7 @@ const SmallInput: React.FC<SIProps> = styled(
     height: 32px;
 
     > .label {
-        letter-spacing: -0.32px;
+        letter-spacing: var(--letter-spacing-small);
         font-size: var(--font-size-small);
         color: var(--color-primary);
         margin: auto 0;

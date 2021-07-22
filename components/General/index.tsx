@@ -79,7 +79,7 @@ export const Card = styled.div`
 
     h1 {
         font-size: var(--font-size-medium);
-        letter-spacing: -0.4px;
+        letter-spacing: var(--letter-spacing-extra-small);
         color: #ffffff;
     }
 `;
@@ -228,7 +228,7 @@ export const ProgressBar = styled(({ percent, className }: IProps) => {
     }
 
     > .label {
-        letter-spacing: -0.32px;
+        letter-spacing: var(--letter-spacing-small);
         font-size: var(--font-size-small);
         position: absolute;
         height: fit-content;

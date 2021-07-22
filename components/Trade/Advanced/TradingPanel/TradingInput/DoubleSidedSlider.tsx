@@ -54,7 +54,6 @@ export default styled(({ className, value, min, max, orderDispatch }: DSProps) =
         display: none;
     }
     .rc-slider-rail {
-        letter-spacing: -0.16px;
         font-size: 8px;
         line-height: 14px;
         color: var(--color-accent);
