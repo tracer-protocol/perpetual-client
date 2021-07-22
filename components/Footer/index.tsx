@@ -1,8 +1,8 @@
-import React, { FC } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 
-const Footer: FC = styled(({ className }) => {
+const Footer = styled(({ className }) => {
     return (
         <FooterContent className={`${className} container`}>
             <Section>

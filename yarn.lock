@@ -3348,10 +3348,10 @@
     solidity-coverage "^0.7.16"
     truffle-contract-size "^2.0.0"
 
-"@tracer-protocol/onboard@^1.29.0":
-  version "1.29.0"
-  resolved "https://registry.yarnpkg.com/@tracer-protocol/onboard/-/onboard-1.29.0.tgz#8f272114381462968b1acaecdfe75cb61727ed61"
-  integrity sha512-Gi9zFDo9A8b2JyG8rUngg90aWdffIlGCD9+X3ZcxX6NKlo0DfxLAisBVmChvCW3MMoDbCLrRieYeGF0z5YHs5Q==
+"@tracer-protocol/onboard@^1.29.1":
+  version "1.29.1"
+  resolved "https://registry.yarnpkg.com/@tracer-protocol/onboard/-/onboard-1.29.1.tgz#9bcf1df86220c12762ebea2519a649e2b2e7b0ab"
+  integrity sha512-c9NOeBhd0apTSQ7cjSXf7BwS24nadamKVRJvu3p6CPNId5q+bePG/+/xKdnA0KTs+FIY5m89CfGceH6PMybkBw==
   dependencies:
     "@cvbb/eth-keyring" "^1.1.0"
     "@ethereumjs/common" "^2.0.0"
