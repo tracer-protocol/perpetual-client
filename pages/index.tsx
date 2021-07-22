@@ -41,16 +41,18 @@ const Trade: React.FC = styled(({ className }) => {
         max-width: 100% !important;
     }
 
-    ${NavBar} {
-        padding: 0 0.5rem;
+    ${NavBar}, ${Footer} {
+        padding: 0 12px;
     }
 
     ${AccountDropdown} {
         right: -0.5rem !important;
     }
 
-    ${Footer} {
-        padding: 0 0.5rem;
+    @media (min-width: 1800px) {
+        ${NavBar}, ${Footer} {
+            padding: 0 5rem;
+        }
     }
 `;
 
