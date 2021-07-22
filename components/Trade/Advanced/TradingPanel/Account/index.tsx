@@ -90,7 +90,7 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title hide={!!order?.exposureBN.toNumber() ?? false}>
                 Margin Account
-                <CalculatorButton onClick={() => showCalculator(true)}>Calculator</CalculatorButton>
+                <Button onClick={() => showCalculator(true)}>Calculator</Button>
             </Title>
             <Item>
                 <h3>
@@ -123,15 +123,15 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
                 </h3>
                 <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
             </Item>
-            <DepositButtons hide={!!order?.exposureBN?.toNumber() ?? false}>
-                <SButton
+            <DepositWithdraw hide={!!order?.exposureBN?.toNumber() ?? false}>
+                <Button
                     className={balances.quote.eq(0) ? 'primary' : ''}
                     onClick={(_e: any) => handleClick(true, true)}
                 >
                     Deposit
-                </SButton>
-                <SButton onClick={(_e: any) => handleClick(true, false)}>Withdraw</SButton>
-            </DepositButtons>
+                </Button>
+                <Button onClick={(_e: any) => handleClick(true, false)}>Withdraw</Button>
+            </DepositWithdraw>
             <AccountModal
                 display={popup}
                 close={() => setPopup(false)}
@@ -185,12 +185,10 @@ const Item = styled.div`
     }
 `;
 
-const DepositButtons = styled.div<{
-    hide: boolean;
-}>`
+const DepositWithdraw = styled.div<{ hide: boolean }>`
     margin-top: 1rem;
     justify-content: space-between;
-    display: ${(props) => (props.hide ? 'none' : 'flex')};
+    display: ${(props: any) => (props.hide ? 'none' : 'flex')};
 `;
 
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
@@ -201,9 +199,7 @@ const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     min-height: 80px;
 `;
 
-const Title = styled.h2<{
-    hide: boolean;
-}>`
+const Title = styled.h2<{ hide: boolean }>`
     font-size: var(--font-size-small-heading);
     font-weight: bold;
     letter-spacing: -0.4px;
@@ -211,15 +207,7 @@ const Title = styled.h2<{
     margin-bottom: 0.5rem;
     white-space: nowrap;
     display: ${(props: any) => (props.hide ? 'none' : 'flex')};
-`;
-
-const SButton = styled(Button)`
-    height: var(--height-small-button);
-`;
-
-const CalculatorButton = styled(SButton)`
-    margin-left: auto;
-    margin-right: 0;
+    justify-content: space-between;
 `;
 
 const SubText = styled.div`

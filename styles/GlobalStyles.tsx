@@ -27,6 +27,7 @@ export default createGlobalStyle`
 
         --height-extra-small-container: 40px;
         --height-small-container: 60px;
+
         --height-medium-button: 32px;
         --height-small-button: 28px;
         --height-extra-small-button: 22px;

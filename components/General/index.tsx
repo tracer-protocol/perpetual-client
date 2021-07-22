@@ -23,7 +23,7 @@ export const Box = styled.div`
     padding: 12px;
 `;
 
-export const Button = styled.button`
+export const Button = styled.button<{ height?: 'medium' | 'small' | 'extra-small' }>`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -33,6 +33,7 @@ export const Button = styled.button`
     color: var(--color-primary);
     border: 1px solid var(--color-primary);
     border-radius: 20px;
+    height: var(--height-${(props: any) => props.height as string}-button);
 
     &:hover {
         cursor: pointer;
