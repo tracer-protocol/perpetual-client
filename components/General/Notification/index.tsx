@@ -82,7 +82,7 @@ const IconWrap = styled.span`
     line-height: 20px;
     border-right: 1px solid var(--color-accent);
 
-    span[role="img"] {
+    span[role='img'] {
         width: 73px;
         height: auto;
 
@@ -110,7 +110,7 @@ const Close = styled.button`
     background-repeat: no-repeat;
     transition: background-color 0.5s ease;
     backface-visibility: hidden;
-    
+
     &:hover {
         cursor: pointer;
         background-color: var(--color-primary);
@@ -128,7 +128,7 @@ const Header: React.FC<any> = ({ appearance: onDismiss, title }) => {
                 width: '100%',
                 display: 'flex',
                 padding: '16px 16px 8px',
-                borderBottom: '1px solid var(--color-accent)'
+                borderBottom: '1px solid var(--color-accent)',
             }}
         >
             <span>{title}</span>

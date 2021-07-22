@@ -22,7 +22,7 @@ module.exports = {
         curly: 2, // enforce brace style for control statements
         'default-case': 2, // require default in switch
         'default-case-last': 2,
-        "quotes": [2, "single", { "allowTemplateLiterals": true, "avoidEscape": true }],
+        quotes: [2, 'single', { allowTemplateLiterals: true, avoidEscape: true }],
         eqeqeq: 2,
         'react/prop-types': 0,
         '@typescript-eslint/no-unused-vars': [1, { varsIgnorePattern: '^_', argsIgnorePattern: '^_' }],

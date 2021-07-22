@@ -1,10 +1,10 @@
 name: Actions
 
-on: 
-  pull_request:
-    branches:
-      - master
-      - develop
+on:
+    pull_request:
+        branches:
+            - master
+            - develop
 jobs:
     build:
         name: Run build
@@ -13,9 +13,9 @@ jobs:
             - uses: actions/checkout@v2
 
             - name: Install dependencies
-              run: yarn 
+              run: yarn
 
-            - name: Static build 
+            - name: Static build
               run: yarn build
     lint:
         name: Run lints
