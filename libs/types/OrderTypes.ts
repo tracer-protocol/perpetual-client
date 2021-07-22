@@ -1,5 +1,21 @@
 import { BigNumber } from 'bignumber.js';
 
+
+// Position types
+export const LONG = 0;
+export const SHORT = 1;
+export type Position = typeof LONG | typeof SHORT;
+
+// Adjust types
+export const ADJUST = 0;
+export const CLOSE = 1;
+export type AdjustType = typeof ADJUST | typeof CLOSE;
+
+// Order types
+export const MARKET = 0;
+export const LIMIT = 1;
+export type OrderType = typeof MARKET | typeof LIMIT;
+
 /**
  * Individual open order
  */

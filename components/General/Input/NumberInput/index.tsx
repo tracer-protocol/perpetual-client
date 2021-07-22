@@ -31,7 +31,7 @@ export const Dec = styled.div`
     }
 `;
 
-export const NumberInput: React.FC<any> = styled((props: any) => {
+export const NumberInput = styled((props) => {
     return (
         <>
             <input {...props} />
@@ -39,7 +39,7 @@ export const NumberInput: React.FC<any> = styled((props: any) => {
             <Dec onClick={() => props.onChange({ target: { value: props.value - 1 } })} />
         </>
     );
-})`
+})<any>`
     position: relative;
     color: var(--color-text);
 
@@ -54,4 +54,4 @@ export const NumberInput: React.FC<any> = styled((props: any) => {
     & input[type='number'] {
         -moz-appearance: textfield;
     }
-`;
+`

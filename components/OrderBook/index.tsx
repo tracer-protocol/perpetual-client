@@ -11,7 +11,8 @@ import FogOverlay from '@components/Overlay/FogOverlay';
 import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
-import { LIMIT, OrderContext, SHORT, LONG } from '@context/OrderContext';
+import { OrderContext } from '@context/OrderContext';
+import { LIMIT, SHORT, LONG } from '@libs/types/OrderTypes';
 
 const decimalKeyMap: Record<number, number> = {
     1: 0.01,

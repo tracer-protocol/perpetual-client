@@ -22,7 +22,7 @@ import { defaults } from '@libs/Tracer';
 import { InfoCircleOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { toApproxCurrency } from '@libs/utils';
 import { CalculatorTip } from '@components/Tooltips';
-import { LONG } from '@context/OrderContext';
+import { LONG } from '@libs/types/OrderTypes';
 import { Options } from '@context/TransactionContext';
 
 type CalculatorModalProps = {

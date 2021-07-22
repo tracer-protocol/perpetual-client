@@ -4,21 +4,11 @@ import { Children, OpenOrder, UserBalance } from 'libs/types';
 import { calcMinimumMargin, calcTotalMargin, calcSlippage } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
-import { OMEOrder } from 'libs/types/OrderTypes';
+import { ADJUST, CLOSE, LIMIT, LONG, MARKET, OMEOrder, OrderType, Position, SHORT } from 'libs/types/OrderTypes';
 import { FlatOrder } from '@tracer-protocol/tracer-utils/dist/Types/accounting';
 import { defaults as tracerDefaults } from '@libs/Tracer';
 import { ErrorKey } from '@components/General/Error';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
-
-// Position types
-export const LONG = 0;
-export const SHORT = 1;
-// Adjust types
-export const ADJUST = 0;
-export const CLOSE = 1;
-// Order types
-export const MARKET = 0;
-export const LIMIT = 1;
 
 /**
  * Returns the Error ID relating to the mapping above
@@ -109,9 +99,9 @@ export const orderDefaults = {
         // Implemented this way to avoid complications with the exposure input and bignumbers
         exposureBN: new BigNumber(0),
         leverage: NaN, // defaults 0 leverage
-        position: LONG, // long or short, 1 long, 0 is short
+        position: LONG as Position, // long or short, 1 long, 0 is short
         price: NaN, // price of the market asset in relation to the collateral asset
-        orderType: MARKET, // orderType
+        orderType: MARKET as OrderType, // orderType
         adjustType: ADJUST,
         nextPosition: {
             quote: new BigNumber(0),
@@ -134,7 +124,7 @@ export type OrderState = {
     exposure: number;
     exposureBN: BigNumber;
     leverage: number; // value used for when adjusting leverage
-    position: number; // long or short, 0 is short, 1 is long
+    position: typeof LONG | typeof SHORT; // long or short, 0 is short, 1 is long
     price: number; // price of the market asset in relation to the collateral asset
     orderType: number; // for basic this will always be 0 (market order), 1 is limit and 2 is spot
     adjustType: number; // selection for adjust order 0 (adjust), 1 (close)
@@ -184,10 +174,10 @@ export type OrderAction =
     | { type: 'setMarketTradePrice'; value: BigNumber }
     | { type: 'setLeverage'; value: number }
     | { type: 'setLeverage'; value: number }
-    | { type: 'setPosition'; value: number }
+    | { type: 'setPosition'; value: Position }
     | { type: 'setNextPosition' }
     | { type: 'setPrice'; value: number }
-    | { type: 'setOrderType'; value: number }
+    | { type: 'setOrderType'; value: OrderType }
     | { type: 'setAdjustType'; value: number }
     | { type: 'setError'; value: ErrorKey }
     | { type: 'setWallet'; value: number }
