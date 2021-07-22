@@ -38,7 +38,7 @@ const Trade: React.FC = styled(({ className }) => {
     color: var(--color-text);
 
     .container {
-        max-width: 100%!important;
+        max-width: 100% !important;
     }
 
     ${NavBar} {
@@ -46,7 +46,7 @@ const Trade: React.FC = styled(({ className }) => {
     }
 
     ${AccountDropdown} {
-        right: -0.5rem!important;
+        right: -0.5rem !important;
     }
 
     ${Footer} {
