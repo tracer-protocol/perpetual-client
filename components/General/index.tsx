@@ -30,28 +30,16 @@ export const Button = styled.button<{ height?: 'medium' | 'small' | 'extra-small
     text-align: center;
     transition: 0.3s;
     width: 160px;
-    font-size: var(--font-size-small);
     color: var(--color-primary);
     border: 1px solid var(--color-primary);
     border-radius: 20px;
     height: var(--height-${(props: any) => props.height as string}-button);
-
-    font-size: inherit;
-    font-family: inherit;
     user-select: none;
     cursor: pointer;
-    letter-spacing: -0.32px;
 
     &:hover {
         background: var(--color-primary);
         color: var(--color-text);
-    }
-
-    &:focus,
-    &:active {
-        outline: none;
-        border: 1px solid var(--color-primary);
-        border-radius: 20px;
     }
 
     &.primary {

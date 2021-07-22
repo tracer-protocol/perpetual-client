@@ -90,7 +90,7 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
     return (
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title hide={!!order?.exposureBN.toNumber() ?? false}>
-                Margin Account
+                <span>Margin Account</span>
                 <Button onClick={() => showCalculator(true)}>Calculator</Button>
             </Title>
             <Item>
@@ -200,15 +200,18 @@ const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
     min-height: 80px;
 `;
 
-const Title = styled.h2<{ hide: boolean }>`
-    font-size: var(--font-size-small-heading);
-    font-weight: bold;
-    letter-spacing: -0.4px;
-    color: var(--color-text);
+const Title = styled.div<{ hide: boolean }>`
     margin-bottom: 0.5rem;
     white-space: nowrap;
     display: ${(props: any) => (props.hide ? 'none' : 'flex')};
     justify-content: space-between;
+
+    > span {
+        font-size: var(--font-size-small-heading);
+        font-weight: bold;
+        letter-spacing: -0.4px;
+        color: var(--color-text);
+    }
 `;
 
 const SubText = styled.div`
