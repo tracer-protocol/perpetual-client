@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Button } from '@components/General';
 
 export const LeftPanel = styled.div`
     width: 20%;
@@ -18,32 +19,11 @@ export const RightPanel = styled.div`
     border-bottom: 1px solid #0c3586;
 `;
 
-export const LargeButton = styled.button`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.5s ease;
-    color: var(--color-primary);
+export const LargeButton = styled(Button)`
     line-height: 1rem;
-    letter-spacing: -0.32px;
-    border: 1px solid var(--color-primary);
-    border-radius: 20px;
-    text-align: center;
     padding: 10px 0;
     height: 32px;
     width: 170px;
-    font-size: inherit;
-    font-family: inherit;
-    user-select: none;
-    cursor: pointer;
-
-    &:hover {
-        color: #fff;
-        background: var(--color-primary);
-    }
-    &:focus {
-        border: 1px solid var(--color-primary);
-    }
 
     &.filled {
         background: var(--color-primary);

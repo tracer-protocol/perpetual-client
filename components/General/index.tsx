@@ -27,6 +27,7 @@ export const Button = styled.button<{ height?: 'medium' | 'small' | 'extra-small
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     transition: 0.3s;
     width: 160px;
     font-size: var(--font-size-small);
@@ -35,8 +36,13 @@ export const Button = styled.button<{ height?: 'medium' | 'small' | 'extra-small
     border-radius: 20px;
     height: var(--height-${(props: any) => props.height as string}-button);
 
+    font-size: inherit;
+    font-family: inherit;
+    user-select: none;
+    cursor: pointer;
+    letter-spacing: -0.32px;
+
     &:hover {
-        cursor: pointer;
         background: var(--color-primary);
         color: var(--color-text);
     }
