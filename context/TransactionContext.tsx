@@ -1,4 +1,4 @@
-import React, { createContext, useRef } from 'react';
+import React, { createContext, useEffect, useRef } from 'react';
 import { AppearanceTypes, useToasts } from 'react-toast-notifications';
 import { Children, Result } from 'libs/types';
 import PromiEvent from 'web3/promiEvent';
@@ -57,6 +57,16 @@ export const TransactionContext = createContext<{
 export const TransactionStore: React.FC = ({ children }: Children) => {
     const { addToast, updateToast } = useToasts();
     const pendingRef = useRef('');
+
+    useEffect(() => {
+        addToast(
+            ['Pending Transaction', 'Big long notification message'],
+            {
+                appearance: 'loading' as AppearanceTypes,
+                autoDismiss: false,
+            },
+        );
+    }, [])
 
     /** Specifically handles transactions */
     const handleTransaction: HandleTransactionType = async (callMethod, params, options) => {

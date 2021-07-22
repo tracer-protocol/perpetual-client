@@ -214,9 +214,4 @@ export default createGlobalStyle`
         top: 65px !important;
         z-index: 100001;
     }
-
-    /** Show close button on hover*/
-    .toast-notification:hover button.close-notification {
-        opacity: 1;
-    }
 `;

@@ -107,7 +107,7 @@ const Header: React.FC<any> = ({ appearance: onDismiss, title }) => {
             }}
         >
             <span>{title}</span>
-            <Close onClick={onDismiss} className="close-notification"/>
+            <Close onClick={onDismiss} />
         </div>
     );
 };
@@ -190,6 +190,7 @@ const Close = styled.button`
         cursor: pointer;
         background-color: var(--color-primary);
         background-image: url('/img/general/close-white.svg');
+        opacity: 1;
     }
 `;
 
@@ -212,13 +213,8 @@ const Hashie: React.FC<HProps | any> = ({
     const appearance = appearances[appearance_] ?? appearances['info']; //default info
     let children_ = React.Children.toArray(children);
     return (
-        <div
-            className="rounded-md mb-2 flex toast-notification"
+        <ToastWrapper
             style={{
-                position: 'relative',
-                display: 'flex',
-                backgroundColor: '#00156C',
-                boxShadow: '0 3px 8px rgba(0, 0, 0, 0.175)',
                 color: appearance.text,
                 transition: `transform ${transitionDuration}ms cubic-bezier(0.2, 0, 0, 1), opacity ${transitionDuration}ms`,
                 width: toastWidth,
@@ -239,7 +235,7 @@ const Hashie: React.FC<HProps | any> = ({
                 <Content>{children_[1]}</Content>
             </ContentWrapper>
             <Countdown display={autoDismiss} autoDismissTimeout={autoDismissTimeout} />
-        </div>
+        </ToastWrapper>
     );
 };
 
@@ -250,6 +246,19 @@ Hashie.defaultProps = {
     placement: 'top-right',
     autoDismissTimeout: 5000,
 };
+
+const ToastWrapper = styled.div`
+    position: relative;
+    display: flex;
+    background-color: #00156C;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.175);
+    margin-bottom: 0.5rem;
+    border-radius: 0.375rem;
+
+    &:hover ${Close} {
+        opacity: 1;
+    }
+`
 
 export const NotificationsContainer = styled.div`
     position: absolute;
