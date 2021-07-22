@@ -44,7 +44,7 @@ const Trade: React.FC = styled(({ className }) => {
     ${NavBar}, ${Footer} {
         padding: 0 16px;
     }
-    
+
     ${AccountDropdown} {
         right: -0.5rem !important;
     }
