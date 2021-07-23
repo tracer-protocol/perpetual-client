@@ -86,7 +86,6 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
     })
         .then((res) => res.json())
         .then((res) => {
-            
             if (res?.data?.status === 404) {
                 return {
                     status: 'error',

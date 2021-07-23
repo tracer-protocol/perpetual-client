@@ -158,7 +158,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 setPending
                     ? setPending(res.data.status)
                     : console.error('Partial or full match but setPending function is not defined');
-            } 
+            }
             return {
                 status: 'success',
                 message: res.message,
