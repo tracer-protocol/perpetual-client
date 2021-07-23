@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import TradingView from './RightPanel';
 import { MARKET } from '@libs/types/OrderTypes';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
+import { AppearanceTypes, useToasts } from 'react-toast-notifications';
 
 const TradingPanel = styled.div`
     width: 25%;
@@ -47,6 +48,15 @@ const Advanced: React.FC = styled(({ className }) => {
     const { selectedTracer } = useContext(TracerContext);
     const { order, orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
     const [isAdjust] = useState(false);
+    const { addToast, updateToast } = useToasts();
+
+    
+    useEffect(() => {
+        addToast(['Transaction Successful', "Transaction submitted, verasdsaadshjhjhjhjhjdsahdsahdsahdsajdsadsajdsahdsa"], {
+            appearance: 'success' as AppearanceTypes,
+            autoDismiss: true,
+        });     
+    }, [])
 
     useEffect(() => {
         if (orderDispatch) {
