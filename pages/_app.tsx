@@ -1,4 +1,6 @@
 // prevent creating full trace
+import { SelectedTracerStore } from '@context/TracerContext';
+
 process.traceDeprecation = true;
 
 import React, { useEffect } from 'react';
@@ -14,6 +16,9 @@ import { FactoryStore } from '@context/FactoryContext';
 import GlobalStyles from 'styles/GlobalStyles';
 import styled from 'styled-components';
 import { Web3Store } from '@context/Web3Context/Web3Context';
+import { OMEStore } from '@context/OMEContext';
+import { InsuranceStore } from '@context/InsuranceContext';
+import { OrderStore } from '@context/OrderContext';
 
 const USERSNAP_GLOBAL_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_GLOBAL_API_KEY;
 const USERSNAP_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_API_KEY;
@@ -78,7 +83,6 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
             <GlobalStyles />
             <Desktop>
                 <ToastProvider components={{ Toast: Notification }}>
-                    {/* <ThemeProvider theme={theme}> */}
                     <Web3Store
                         networkIds={[42, 421611]}
                         onboardConfig={{
@@ -95,12 +99,19 @@ const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
                         <GraphProvider>
                             <FactoryStore>
                                 <TransactionStore>
-                                    <Component {...pageProps} />
+                                    <SelectedTracerStore>
+                                        <OMEStore>
+                                            <InsuranceStore>
+                                                <OrderStore>
+                                                    <Component {...pageProps} />
+                                                </OrderStore>
+                                            </InsuranceStore>
+                                        </OMEStore>
+                                    </SelectedTracerStore>
                                 </TransactionStore>
                             </FactoryStore>
                         </GraphProvider>
                     </Web3Store>
-                    {/* </ThemeProvider> */}
                 </ToastProvider>
             </Desktop>
             <Mobile>
