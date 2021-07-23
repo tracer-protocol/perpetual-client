@@ -4,8 +4,8 @@ import { InsuranceStore } from '@context/InsuranceContext';
 import { SelectedTracerStore } from '@context/TracerContext';
 import Pools from '@components/Insurance/Pools';
 import styled from 'styled-components';
-import { Button } from '@components/Portfolio';
 import Footer from '@components/Footer';
+import { Button } from '@components/General';
 
 const InsurancePoolsContent = styled.div`
     width: 100%;
@@ -38,13 +38,6 @@ const InsurancePoolsFooter = styled.div`
 `;
 
 const Insurance: React.FC = styled(({ className }) => {
-    const ButtonTheme = {
-        width: '150px',
-        hoverFG: '#fff',
-        hoverBG: 'var(--color-primary)',
-        hoverCursor: 'pointer',
-    };
-
     return (
         <div className={`${className} page`}>
             <NavBar />
@@ -63,7 +56,7 @@ const Insurance: React.FC = styled(({ className }) => {
                                 rel="noreferrer"
                                 className="learn-more"
                             >
-                                <Button theme={ButtonTheme}>Learn More</Button>
+                                <Button height="medium">Learn More</Button>
                             </a>
                         </InsurancePoolsFooter>
                     </InsuranceStore>

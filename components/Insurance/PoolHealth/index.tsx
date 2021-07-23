@@ -105,7 +105,7 @@ const Section = styled(({ className, title, percentage, value, target, tooltip }
     );
 })<SProps>`
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: var(--color-text);
     transition: 0.3s;
     min-width: 100px;
@@ -151,7 +151,7 @@ const Label: React.FC<LProps> = styled(({ title, value, tooltip, className }: LP
     }
     > .value {
         font-size: var(--font-size-medium);
-        letter-spacing: -0.4px;
+        letter-spacing: var(--letter-spacing-extra-small);
         color: var(--color-text);
     }
 `;

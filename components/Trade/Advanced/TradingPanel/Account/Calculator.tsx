@@ -261,7 +261,7 @@ const InfoBox = styled(InfoCircleOutlined)`
 const StyledHiddenExpand = styled(HiddenExpand)`
     background: var(--color-accent);
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: var(--color-primary);
     margin-top: 1rem;
     p.title {
@@ -282,8 +282,6 @@ const CalcSlideSelect = styled(SlideSelect)`
 
 const SButton = styled(Button)`
     height: var(--height-small-button);
-    line-height: 28px;
-    padding: 0;
 `;
 
 const CalcButtons = styled.div`

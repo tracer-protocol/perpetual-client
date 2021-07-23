@@ -60,6 +60,7 @@ const HealthCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
 })``;
 
 const ButtonContainer = styled.div`
+    display: flex;
     margin-top: 5rem;
 `;
 
@@ -127,7 +128,7 @@ const Collapsible = styled.div`
 
     .selected &,
     &.show {
-        height: 16rem;
+        height: 280px;
     }
 `;
 
@@ -204,7 +205,6 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                             key={`insurance-row-${i}`}
                             className={show ? 'selected' : ''}
                             onClick={(e) => onClick(e, i)}
-                            theme={expanded ? '' : {}}
                         >
                             <TableCell>
                                 <Collapsible>

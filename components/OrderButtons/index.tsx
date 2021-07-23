@@ -27,7 +27,9 @@ const ParentDisable = styled(Button)`
 export const AdvancedOrderButton: React.FC = styled(({ className, children }) => (
     <div className={className}>
         <PlaceOrderButton>
-            <ParentDisable className="m-auto primary">{children}</ParentDisable>
+            <ParentDisable className="m-auto primary" height="medium">
+                {children}
+            </ParentDisable>
         </PlaceOrderButton>
     </div>
 ))`
@@ -108,7 +110,6 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
 
 const CloseOrder = styled(Button)`
     height: var(--height-extra-small-button);
-    padding: 0;
     width: 130px;
 `;
 

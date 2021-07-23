@@ -10,10 +10,20 @@ const NavBar: React.FC = styled(({ className }) => {
         </div>
     );
 })`
-    background-image: url('/img/nav-bg.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative;
+    background: #f15025;
+    color: var(--color-text);
+    height: 40px;
+    line-height: 40px;
+    font-size: var(--font-size-medium);
+    width: 100%;
+    position: absolute;
+    left: 0;
+    text-align: center;
+    bottom: ${(props) => (props.display ? '-40px' : '0px')};
+    opacity: ${(props) => (props.display ? '1' : '0')};
+    z-index: ${(props) => (props.display ? '2' : '-1')};
+    transition: ${(props) =>
+        props.display ? 'bottom 0.3s, opacity 0.3s 0.1s' : 'bottom 0.3s 0.15s, opacity 0.3s, z-index 0.3s 0.3s'};
 `;
 
 export const NavBarContent = styled(({ className }) => {
@@ -91,7 +101,6 @@ export const NavBarContent = styled(({ className }) => {
         margin-left: auto;
         margin-bottom: 0;
         font-size: 14px;
-        letter-spacing: -0.28px;
     }
 
     > ul li {

@@ -15,7 +15,7 @@ import { Options } from '@context/TransactionContext';
 
 const SSlideSelect = styled(SlideSelect)`
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: #ffffff;
     width: 300px;
     height: 40px;

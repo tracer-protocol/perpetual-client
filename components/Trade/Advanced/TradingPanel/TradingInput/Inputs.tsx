@@ -196,7 +196,7 @@ export const Leverage: React.FC<LProps> = styled(({ orderDispatch, leverage, cla
     > .label {
         margin: 5px auto 35px 0;
         font-size: var(--font-size-small);
-        letter-spacing: -0.32px;
+        letter-spacing: var(--letter-spacing-small);
         color: var(--color-primary);
     }
 `;

@@ -18,97 +18,9 @@ export const RightPanel = styled.div`
     border-bottom: 1px solid #0c3586;
 `;
 
-export const Button = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.5s;
-    color: var(--color-primary);
-    font-size: ${(props: any) => (props.theme.fontSize ? (props.theme.fontSize as string) : 'var(--font-size-small)')};
-    line-height: 1rem;
-    letter-spacing: -0.32px;
-    border: 1px solid var(--color-primary);
-    border-radius: 20px;
-    text-align: center;
-    padding: 10px 0;
-    width: ${(props: any) => props.theme.width as string};
-    height: ${(props: any) => props.theme.height as string};
-
-    &:hover {
-        color: ${(props: any) => props.theme.hoverFG as string};
-        background: ${(props: any) => props.theme.hoverBG as string};
-        cursor: ${(props: any) => props.theme.hoverCursor as string};
-    }
-
-    &.primary {
-        background: var(--color-primary);
-        color: var(--color-text);
-    }
-
-    &.primary:hover {
-        background: var(--color-background);
-        color: var(--color-primary);
-    }
-
-    &.disabled {
-        opacity: 0.8;
-    }
-
-    &.disabled:hover {
-        cursor: not-allowed;
-    }
-`;
-
-Button.defaultProps = {
-    theme: {
-        width: '100px',
-        hoverFG: '#fff',
-        hoverBG: 'var(--color-primary)',
-        hoverCursor: 'pointer',
-    },
-};
-
-export const LargeButton = styled.button`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.5s ease;
-    color: var(--color-primary);
-    line-height: 1rem;
-    letter-spacing: -0.32px;
-    border: 1px solid var(--color-primary);
-    border-radius: 20px;
-    text-align: center;
-    padding: 10px 0;
-    height: 32px;
-    width: 170px;
-    font-size: inherit;
-    font-family: inherit;
-    user-select: none;
-    cursor: pointer;
-
-    &:hover {
-        color: #fff;
-        background: var(--color-primary);
-    }
-    &:focus {
-        border: 1px solid var(--color-primary);
-    }
-
-    &.filled {
-        background: var(--color-primary);
-        color: #fff;
-
-        &:hover {
-            color: var(--color-primary);
-            background: transparent;
-        }
-    }
-`;
-
 export const SmallTitle = styled.h2`
     font-size: var(--font-size-medium);
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: var(--color-text);
     flex-basis: 100%;
     width: fit-content;
@@ -144,6 +56,13 @@ export const TableRow = styled.tr`
         background: var(--color-accent);
         cursor: pointer;
     }
+
+    &.selected {
+        &:hover {
+            background: none;
+            cursor: auto;
+        }
+    }
 `;
 
 export const TableCell = styled.td`
@@ -162,8 +81,10 @@ export const SecondaryCell = styled.div`
     font-size: var(--font-size-small);
 `;
 
-export const StatusIndicator = styled.div`
-    color: ${(props: any) => props.color as string};
+export const StatusIndicator = styled.div<{
+    color: string;
+}>`
+    color: ${(props) => props.color};
 `;
 
 export function getStatusColour(status: string): string {

@@ -82,7 +82,7 @@ const IconWrap = styled.span`
     line-height: 20px;
     border-right: 1px solid var(--color-accent);
 
-    span[role="img"] {
+    span[role='img'] {
         width: 73px;
         height: auto;
 
@@ -128,7 +128,8 @@ const Header: React.FC<{ onDismiss: (e: any) => any, title: React.ReactNode }> =
                 letterSpacing: '-0.38px',
                 width: '100%',
                 display: 'flex',
-                padding: '16px 16px 0px',
+                padding: '16px 16px 0',
+                borderBottom: '1px solid var(--color-accent)',
             }}
         >
             <span>{title}</span>

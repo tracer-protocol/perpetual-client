@@ -231,7 +231,7 @@ export default OrderBook;
 const OrderBookTitle = styled.div`
     font-size: var(--font-size-small-heading);
     font-weight: bold;
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: #ffffff;
     text-transform: capitalize;
     margin: 0 0.8rem 0.5rem;
@@ -294,7 +294,7 @@ const BookRow = styled.div`
     font-size: var(--font-size-small);
     line-height: var(--font-size-small);
     padding: 1px 0;
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     transition: 0.1s;
 
     &:hover {

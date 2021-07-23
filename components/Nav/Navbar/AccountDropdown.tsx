@@ -44,14 +44,14 @@ export default (({ account, onboard, ensName, logout, handleConnect, tokenBalanc
             </MainButton>
 
             <StyledMenu>
-                <MenuItem></MenuItem>
+                <MenuItem />
                 <MenuItem>
                     <Section className="p-0" label="Balance">
                         {`${parseFloat(tokenBalance.toFixed(5))} ETH`}
                     </Section>
                     <Section label="Network">{networkName(network)}</Section>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem className="button-container">
                     <StyledButton onClick={() => onboard?.walletSelect()}>Switch Wallets</StyledButton>
                     <StyledButton
                         onClick={() => {

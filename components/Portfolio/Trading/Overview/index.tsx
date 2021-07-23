@@ -22,7 +22,7 @@ const HeadingRow = styled.div<HRowProps>`
     padding: 0 16px;
     height: 60px;
     width: 100%;
-    background: ${(props: any) => (props.background ? (props.background as string) : 'transparent')};
+    background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
     border-bottom: ${(props) => (props.border ? '1px solid var(--table-lightborder)' : 'none')};
 `;
 
@@ -61,7 +61,7 @@ const HPanel = styled.div<HPanelProps>`
 
 const Title = styled.h1`
     font-size: var(--font-size-large);
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: var(--color-text);
     margin-right: 2rem;
     padding: 0;
@@ -96,12 +96,6 @@ const Counter = styled.div`
     width: 52px;
     height: 32px;
     font-size: var(--font-size-small);
-`;
-
-const PortfolioDropdownButton = styled(Button)`
-    height: var(--height-medium-button);
-    padding: 0;
-    min-width: 170px;
 `;
 
 const VScrollContainer = styled.div`
@@ -149,10 +143,10 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
     };
     return (
         <Dropdown className={className} overlay={menu} placement="bottomCenter" onVisibleChange={handleVisibleChange}>
-            <PortfolioDropdownButton>
+            <Button height="medium">
                 {keyMap[option]}
                 <StyledTriangleDown className={rotated ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
-            </PortfolioDropdownButton>
+            </Button>
         </Dropdown>
     );
 })`
@@ -246,7 +240,7 @@ const Overview: FC = () => {
                     {!account ? (
                         <ConnectOverlay />
                     ) : fetchedTracers[0]?.getBalance()?.quote.eq(0) ? (
-                        <PositionOverlay tracers={fetchedTracers} />
+                        <PositionOverlay tracers={fetchedTracers} showMarketPreview={true} />
                     ) : null}
                 </HScrollContainer>
             </VScrollContainer>
