@@ -77,6 +77,7 @@ const IconWrap = styled.span`
     align-items: center;
     justify-content: center;
     width: 120px;
+    min-width: 120px;
     height: auto;
     font-size: var(--font-size-medium);
     line-height: 20px;
@@ -155,9 +156,7 @@ const Countdown: React.FC<{
     display: boolean;
 }> = ({ autoDismissTimeout, display }) =>
     display ? (
-        <div className="w-full">
-            <STimer autoDismissTimeout={Math.floor(autoDismissTimeout / 1000)} />
-        </div>
+        <STimer autoDismissTimeout={Math.floor(autoDismissTimeout / 1000)} />
     ) : null;
 
 const Content = styled((props: any) => (
@@ -246,6 +245,7 @@ const ToastWrapper = styled.div`
     position: relative;
     display: flex;
     background-color: #00156C;
+    overflow: hidden;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.175);
     margin-bottom: 0.5rem;
     border-radius: 0.375rem;
