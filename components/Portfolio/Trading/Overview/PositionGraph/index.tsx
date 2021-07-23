@@ -1,9 +1,8 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 import Graph from '../Graph';
 import { UserBalance } from '@libs/types/TracerTypes';
 import { BigNumber } from 'bignumber.js';
-import { OrderContext, orderDefaults } from '@context/OrderContext';
 import {
     PGContainer,
     TableBody,
@@ -15,9 +14,6 @@ import {
     StatusDot,
     BorderlessCell,
 } from './PositionElements';
-import Exposure from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Exposure';
-import Leverage from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Leverage';
-import { AvailableMargin } from '@components/Trade/Advanced/TradingPanel/Account';
 import { useLines } from '@libs/Graph/hooks/Tracer';
 import { toApproxCurrency } from '@libs/utils';
 import { calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
@@ -44,18 +40,7 @@ interface PGProps {
     quoteTicker: string;
 }
 const PositionGraph: FC<PGProps> = styled(
-    ({
-        selectedTracerAddress,
-        className,
-        positionType,
-        balances,
-        fairPrice,
-        quoteTicker,
-        baseTicker,
-        maxLeverage,
-    }: PGProps) => {
-        const [currency] = useState(0); // 0 quoted in base
-        const { order } = useContext(OrderContext);
+    ({ selectedTracerAddress, className, positionType, balances, fairPrice, maxLeverage }: PGProps) => {
         const { lines } = useLines(selectedTracerAddress);
 
         // TODO: Need to define positions in context
@@ -76,42 +61,15 @@ const PositionGraph: FC<PGProps> = styled(
                         </Row>
                         <Row>
                             <InfoCell>
-                                <Amount>
-                                    <Exposure
-                                        balances={balances}
-                                        fairPrice={fairPrice}
-                                        currency={currency}
-                                        order={order ?? orderDefaults.order}
-                                        quoteTicker={quoteTicker}
-                                        baseTicker={baseTicker}
-                                    />
-                                </Amount>
+                                <Amount>-</Amount>
                                 <CellTitle>Exposure</CellTitle>
                             </InfoCell>
                             <InfoCell>
-                                <Amount>
-                                    <Leverage
-                                        balances={balances}
-                                        nextPosition={
-                                            order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }
-                                        }
-                                        tradePrice={order?.price ?? 0}
-                                        fairPrice={fairPrice}
-                                        orderType={order?.orderType ?? 0}
-                                        exposure={order?.exposure ?? 0}
-                                    />
-                                </Amount>
+                                <Amount>-</Amount>
                                 <CellTitle>Leverage</CellTitle>
                             </InfoCell>
                             <InfoCell inner>
-                                <Amount>
-                                    <AvailableMargin
-                                        order={order}
-                                        balances={balances}
-                                        maxLeverage={maxLeverage}
-                                        fairPrice={fairPrice}
-                                    />
-                                </Amount>
+                                <Amount>-</Amount>
                                 <CellTitle>Available Margin</CellTitle>
                             </InfoCell>
                         </Row>
