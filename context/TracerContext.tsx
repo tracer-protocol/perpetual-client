@@ -153,10 +153,10 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             console.info('Placing OME order', omeOrder);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
-            if (res.message === 'PartialMatch' || res.message === 'FullMatch') {
+            if (res.data === 'matched_partial' || res.data === 'matched') {
                 // if there is a partial or full match add a toaster
                 setPending
-                    ? setPending(res.message)
+                    ? setPending(res.data)
                     : console.error('Partial or full match but setPending function is not defined');
             } else if (res.message === 'Add') {
                 return {
