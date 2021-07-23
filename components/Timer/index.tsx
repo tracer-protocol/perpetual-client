@@ -15,7 +15,11 @@ const Timer: React.FC = styled(({ className }) => {
     background: var(--color-primary);
 
     @keyframes countdown-width {
-        from { width: 100%; } to { width: 0% }
+        from { 
+            width: 100%; 
+        } to { 
+            width: 0% 
+        }
     }
 
     #refetchLoader {
