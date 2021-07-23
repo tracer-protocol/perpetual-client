@@ -89,7 +89,7 @@
         "next-plugin-antd-less": "^0.3.0",
         "postcss": "^8.3.0",
         "postcss-preset-env": "^6.7.0",
-        "prettier": "^2.1.2",
+        "prettier": "^2.3.2",
         "react-scripts": "^4.0.3",
         "redux-devtools-extension": "^2.13.8",
         "style-loader": "^2.0.0",
