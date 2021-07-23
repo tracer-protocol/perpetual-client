@@ -7,7 +7,7 @@ import Onboard from '@tracer-protocol/onboard';
 import { API as OnboardApi, Wallet, Initialization } from '@tracer-protocol/onboard/dist/src/interfaces';
 import { formatEther } from '@ethersproject/units';
 import { Network, networkConfig } from './Web3Context.Config';
-import ApproveConnectionModal from '@components/Legal/ApproveConnectionModal'
+import ApproveConnectionModal from '@components/Legal/ApproveConnectionModal';
 import Web3 from 'web3';
 import Cookies from 'universal-cookie';
 
