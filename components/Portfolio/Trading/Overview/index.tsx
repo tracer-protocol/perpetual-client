@@ -2,15 +2,15 @@ import React, { FC, useContext, useEffect, useState } from 'react';
 import Graph from './Graph';
 import PositionGraph from './PositionGraph';
 import Equity from './Equity';
-import Tracer, { defaults } from '@libs/Tracer';
+import { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import Dropdown from 'antd/lib/dropdown';
-import { OMEContext } from '@context/OMEContext';
 import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
 import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
+import PositionOverlay from '@components/Overlay/PositionOverlay';
 
 interface HRowProps {
     background?: string;
@@ -61,7 +61,7 @@ const HPanel = styled.div<HPanelProps>`
 
 const Title = styled.h1`
     font-size: var(--font-size-large);
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: var(--color-text);
     margin-right: 2rem;
     padding: 0;
@@ -98,21 +98,17 @@ const Counter = styled.div`
     font-size: var(--font-size-small);
 `;
 
-const PortfolioDropdownButton = styled(Button)`
-    height: var(--height-medium-button);
-    padding: 0;
-    min-width: 170px;
-`;
-
 const VScrollContainer = styled.div`
     height: auto;
     overflow: hidden auto;
 `;
 
 const HScrollContainer = styled.div`
+    position: relative;
     display: flex;
     width: auto;
     height: auto;
+    min-height: 30vh;
     overflow: auto hidden;
     padding: 16px 8px;
     box-sizing: unset;
@@ -124,7 +120,6 @@ type PDProps = {
     keyMap: Record<number, string>;
     className?: string;
 };
-
 const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, option, keyMap }: PDProps) => {
     const [rotated, setRotated] = useState(false);
     const menu = (
@@ -148,10 +143,10 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
     };
     return (
         <Dropdown className={className} overlay={menu} placement="bottomCenter" onVisibleChange={handleVisibleChange}>
-            <PortfolioDropdownButton>
+            <Button height="medium">
                 {keyMap[option]}
                 <StyledTriangleDown className={rotated ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
-            </PortfolioDropdownButton>
+            </Button>
         </Dropdown>
     );
 })`
@@ -164,31 +159,20 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
     }
 `;
 
-const Overview: FC<{
-    selectedTracer?: Tracer | undefined;
-}> = ({ selectedTracer }) => {
+const Overview: FC = () => {
     const { account } = useWeb3();
     const [currentPortfolio, setCurrentPortfolio] = useState(1);
     const [currentPNL, setCurrentPNL] = useState(1);
     const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
-    const [tracersAddress, setTracersAddress] = useState<string[]>([]);
-    const balances = selectedTracer?.getBalance() ?? defaults.balances;
-    const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
-    const {
-        // omeState,
-        // omeDispatch = () => {
-        //     console.error('OME dispatch is undefined');
-        // },
-        filledOrders,
-    } = useContext(OMEContext);
+    const [fetchedTracers, setFetchedTracers] = useState<any>([]);
 
     const fetchTracers = setTimeout(async function getInfo() {
-        const temp: string[] = [];
+        const tempTracers = [];
         for (const key of Object.keys(tracers)) {
-            temp.push(tracers[key].address);
+            tempTracers.push(tracers[key]);
         }
-        setTracersAddress(temp);
-    }, 100);
+        setFetchedTracers(tempTracers);
+    }, 1000);
 
     useEffect(() => {
         fetchTracers;
@@ -209,7 +193,7 @@ const Overview: FC<{
     return (
         <>
             <VScrollContainer>
-                <HeadingRow background={`#00125D`}>
+                <HeadingRow background={'#00125D'}>
                     <Title>Equity Breakdown</Title>
                     <div className="flex justify-content-between">
                         <PortfolioDropdown
@@ -220,62 +204,44 @@ const Overview: FC<{
                         <PortfolioDropdown setOptions={setCurrentPNL} option={currentPNL} keyMap={pnlKeyMap} />
                     </div>
                 </HeadingRow>
-                <HPanel background={`#00125D`}>
+                <HPanel background={'#00125D'}>
                     <Equity
                         className="equityStats"
-                        balances={balances}
-                        fairPrice={fairPrice}
-                        baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                        quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
-                        filledOrders={filledOrders ?? []}
+                        balances={fetchedTracers[0]?.getBalance() ?? defaults.balances}
+                        fairPrice={fetchedTracers[0]?.getFairPrice() ?? defaults.fairPrice}
+                        baseTicker={fetchedTracers[0]?.baseTicker ?? defaults.baseTicker}
+                        quoteTicker={fetchedTracers[0]?.quoteTicker ?? defaults.quoteTicker}
                     />
-                    {!tracersAddress || !tracersAddress[0] ? (
-                        <Graph className="pnlGraph" title="Profit and Loss" background selectedTracerAddress={``} />
-                    ) : (
-                        <Graph
-                            className="pnlGraph"
-                            title="Profit and Loss"
-                            background
-                            selectedTracerAddress={tracersAddress[0] ?? ''}
-                        />
-                    )}
-                    {account === '' ? <ConnectOverlay /> : null}
+                    <Graph
+                        className="pnlGraph"
+                        title="Profit and Loss"
+                        background
+                        selectedTracerAddress={fetchedTracers[0]?.address ?? ''}
+                    />
+                    {!account ? <ConnectOverlay /> : null}
                 </HPanel>
                 <HeadingRow border={true}>
                     <Title>Open Positions</Title>
-                    <Counter>4</Counter>
+                    <Counter>{fetchedTracers?.length}</Counter>
                 </HeadingRow>
                 <HScrollContainer>
-                    {!tracersAddress || !tracersAddress[0] ? null : (
+                    {fetchedTracers.map((tracer: any, i: number) => (
                         <PositionGraph
-                            selectedTracerAddress={tracersAddress[0]}
-                            positionType={1}
-                            balances={balances}
-                            fairPrice={fairPrice}
-                            baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                            quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
+                            key={`position-graph-${i}`}
+                            selectedTracerAddress={tracer?.address ?? ''}
+                            positionType={i}
+                            balances={tracer?.getBalance() ?? defaults.balances}
+                            fairPrice={tracer?.getFairPrice() ?? defaults.fairPrice}
+                            baseTicker={tracer?.baseTicker ?? defaults.baseTicker}
+                            quoteTicker={tracer?.quoteTicker ?? defaults.quoteTicker}
+                            maxLeverage={tracer?.getMaxLeverage() ?? defaults.maxLeverage}
                         />
-                    )}
-                    {!tracersAddress || !tracersAddress[0] ? null : (
-                        <PositionGraph
-                            selectedTracerAddress={tracersAddress[0]}
-                            positionType={2}
-                            balances={balances}
-                            fairPrice={fairPrice}
-                            baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                            quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
-                        />
-                    )}
-                    {!tracersAddress || !tracersAddress[0] ? null : (
-                        <PositionGraph
-                            selectedTracerAddress={tracersAddress[0]}
-                            positionType={1}
-                            balances={balances}
-                            fairPrice={fairPrice}
-                            baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
-                            quoteTicker={selectedTracer?.quoteTicker ?? defaults.quoteTicker}
-                        />
-                    )}
+                    ))}
+                    {!account ? (
+                        <ConnectOverlay />
+                    ) : fetchedTracers[0]?.getBalance()?.quote.eq(0) ? (
+                        <PositionOverlay tracers={fetchedTracers} showMarketPreview={true} />
+                    ) : null}
                 </HScrollContainer>
             </VScrollContainer>
         </>

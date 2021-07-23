@@ -126,10 +126,10 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
             account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
         ) {
-            console.log(res.returnValues)
+            console.log(res.returnValues);
             closePending ? closePending(false) : console.error('Close pending is undefined');
         }
-    }
+    };
 
     const placeOrder: (order: OrderState) => Promise<Result> = async (order) => {
         const { exposureBN, price, position } = order;
@@ -153,19 +153,14 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             console.info('Placing OME order', omeOrder);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
-            if (res.message === 'PartialMatch' || res.message === 'FullMatch') {
+            if (res.data?.status === 'matched_partial' || res.data?.status === 'matched') {
                 // if there is a partial or full match add a toaster
                 setPending
-                    ? setPending(res.message)
+                    ? setPending(res.data.status)
                     : console.error('Partial or full match but setPending function is not defined');
-            } else if (res.message === 'Add') {
-                return {
-                    status: res.status,
-                    message: `Successfully created order`,
-                };
             }
             return {
-                status: res.status,
+                status: 'success',
                 message: res.message,
             };
         } catch (err) {
@@ -195,7 +190,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 },
             });
         } else {
-            console.error(`Failed to approve: handleTransaction is undefined `);
+            console.error('Failed to approve: handleTransaction is undefined ');
         }
     };
 
@@ -230,7 +225,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 },
             });
         } else {
-            console.error(`Failed to deposit: handleTransaction is undefined `);
+            console.error('Failed to deposit: handleTransaction is undefined ');
         }
     };
     const withdraw = async (amount: number, options: Options) => {
@@ -251,7 +246,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
                 },
             });
         } else {
-            console.error(`Failed to widthdraw handleTransaction is undefined `);
+            console.error('Failed to widthdraw handleTransaction is undefined ');
         }
     };
 

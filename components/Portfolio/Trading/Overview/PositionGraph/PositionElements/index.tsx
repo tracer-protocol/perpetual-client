@@ -45,8 +45,11 @@ export const Amount = styled.span<AmountProps>`
     align-items: flex-start;
     flex-basis: auto;
     font-size: ${(props) => (props.small ? 'var(--font-size-medium)' : 'var(--font-size-large)')};
-    line-height: ${(props) => (props.small ? 'var(--font-size-medium)' : 'var(--font-size-large)')};
     white-space: nowrap;
+
+    span {
+        font-size: var(--font-size-small);
+    }
 `;
 
 export const CellTitle = styled.span`

@@ -1,11 +1,8 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
-import { LargeButton, SmallTitle } from '@components/Portfolio';
+import { SmallTitle } from '@components/Portfolio';
 import { UserBalance } from '@libs/types/TracerTypes';
 import { BigNumber } from 'bignumber.js';
-import { FilledOrder } from '@libs/types/OrderTypes';
-import { toApproxCurrency } from '@libs/utils';
-import { calcUnrealised } from '@tracer-protocol/tracer-utils';
 import {
     EqTableRow,
     EqTableCell,
@@ -23,6 +20,7 @@ import {
     CellTitle,
     CellDesc,
 } from './EqTable';
+import { Button } from '@components/General';
 
 const ToggleTable = () => {
     const tableEl = document.querySelector<HTMLElement>('.equityStats');
@@ -34,14 +32,12 @@ const ToggleTable = () => {
 interface EqProps {
     className?: string;
     balances: UserBalance;
-    filledOrders: FilledOrder[];
     fairPrice: BigNumber;
     baseTicker: string;
     quoteTicker: string;
 }
-const Equity: FC<EqProps> = styled(({ className, balances, fairPrice, filledOrders }: EqProps) => {
+const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
     const [show, setShow] = useState(false);
-    const { base } = balances;
     const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         setShow(!show);
@@ -52,7 +48,7 @@ const Equity: FC<EqProps> = styled(({ className, balances, fairPrice, filledOrde
         <div className={className}>
             <div className="flex justify-content-between heading-row">
                 <SmallTitle>Equity</SmallTitle>
-                <LargeButton onClick={(e: any) => onClick(e)}>{show ? 'Hide Breakdown' : 'Show Breakdown'}</LargeButton>
+                <Button onClick={(e: any) => onClick(e)}>{show ? 'Hide Breakdown' : 'Show Breakdown'}</Button>
             </div>
             <EqTable>
                 <EqTableBody>
@@ -81,11 +77,7 @@ const Equity: FC<EqProps> = styled(({ className, balances, fairPrice, filledOrde
                             </Text>
                         </EqTableCell>
                         <EqTableCell>
-                            <Amount>
-                                {!balances.quote.eq(0)
-                                    ? toApproxCurrency(calcUnrealised(base, fairPrice, filledOrders), 3)
-                                    : `-`}
-                            </Amount>
+                            <Amount>-</Amount>
                             <Text>
                                 <CellTitle>Unrealised PnL</CellTitle>
                             </Text>

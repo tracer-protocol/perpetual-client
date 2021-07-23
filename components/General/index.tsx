@@ -1,4 +1,3 @@
-import { CloseOutlined } from '@ant-design/icons';
 import { Children } from 'libs/types';
 import React from 'react';
 import styled from 'styled-components';
@@ -24,30 +23,29 @@ export const Box = styled.div`
     padding: 12px;
 `;
 
-export const Button = styled.button`
-    transition: 0.3s;
-    color: var(--color-primary);
-    font-size: var(--font-size-small);
-    line-height: 1rem;
-    letter-spacing: -0.32px;
-    border: 1px solid var(--color-primary);
-    border-radius: 20px;
-    text-align: center;
-    padding: 0.5rem 0;
+export const Button = styled.button<{ height?: 'medium' | 'small' | 'extra-small' }>`
     width: 160px;
-    margin: auto;
+    border-radius: 20px;
+    transition: 0.3s;
+    border: 1px solid var(--color-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: var(--color-primary);
+    height: var(--height-${(props) => props.height as string}-button);
+    cursor: pointer;
+
+    &:hover {
+        background: var(--color-primary);
+        color: var(--color-text);
+    }
 
     &:focus,
     &:active {
-        border: 1px solid var(--color-text);
-        outline: 0;
-        box-shadow: none;
-    }
-
-    &:hover {
-        cursor: pointer;
-        background: var(--color-primary);
-        color: var(--color-text);
+        outline: none;
+        border: 1px solid var(--color-primary);
+        border-radius: 20px;
     }
 
     &.primary {
@@ -81,7 +79,7 @@ export const Card = styled.div`
 
     h1 {
         font-size: var(--font-size-medium);
-        letter-spacing: -0.4px;
+        letter-spacing: var(--letter-spacing-extra-small);
         color: #ffffff;
     }
 `;
@@ -97,9 +95,9 @@ export const Section: React.FC<SProps> = styled(({ className, children, label, t
             {tooltip ? (
                 <TooltipSelector tooltip={tooltip}>{label}</TooltipSelector>
             ) : (
-                <div className={`label`}>{label}</div>
+                <div className={'label'}>{label}</div>
             )}
-            <span className={`content`}>{children}</span>
+            <span className={'content'}>{children}</span>
         </div>
     );
 })`
@@ -177,27 +175,28 @@ export const After = styled.span`
     }
 `;
 
-export const Close = styled(CloseOutlined)`
-    background: var(--color-accent);
-    border-radius: 20px;
-    width: 58px;
-    height: 40px;
-    transition: 0.3s;
+export const Close = styled.button`
+    position: absolute;
+    top: 16px;
+    right: 16px;
     display: flex;
-    top: 0;
-    right: 20px;
-
-    > svg {
-        transition: 0.3s;
-        margin: auto;
-        height: 20px;
-        width: 20px;
-        color: var(--color-text);
-    }
+    justify-content: center;
+    align-items: center;
+    width: 56px;
+    height: 28px;
+    border: 1px solid var(--color-primary);
+    border-radius: 50px;
+    background-image: url('/img/general/close.svg');
+    background-position: center center;
+    background-size: 17px 17px;
+    background-repeat: no-repeat;
+    transition: background-color 0.5s ease;
+    backface-visibility: hidden;
 
     &:hover {
         cursor: pointer;
-        background: var(--color-primary);
+        background-color: var(--color-primary);
+        background-image: url('/img/general/close-white.svg');
     }
 `;
 
@@ -229,7 +228,7 @@ export const ProgressBar = styled(({ percent, className }: IProps) => {
     }
 
     > .label {
-        letter-spacing: -0.32px;
+        letter-spacing: var(--letter-spacing-small);
         font-size: var(--font-size-small);
         position: absolute;
         height: fit-content;

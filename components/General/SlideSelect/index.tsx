@@ -49,7 +49,7 @@ const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, clas
     margin: auto;
     border: 1px solid var(--color-primary);
     border-radius: 20px;
-    height: 40px;
+    height: 32px;
     position: relative;
 `;
 

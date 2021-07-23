@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { OrderContext } from 'context';
-import { LIMIT, MARKET, orderDefaults } from '@context/OrderContext';
+import { orderDefaults } from '@context/OrderContext';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import { Box } from '@components/General';
@@ -11,6 +11,7 @@ import { MarketTradeDetails, LimitTradeDetails } from './PostTradeDetails';
 import { OrderTypeSelect, PositionSelect } from './Selects';
 import DoubleSidedSlider from './DoubleSidedSlider';
 import Divider from '@components/General/Divider';
+import { LIMIT, LONG, MARKET } from '@libs/types/OrderTypes';
 
 const Section = styled.div`
     margin: 12px 0;
@@ -96,6 +97,7 @@ export default (({ selectedTracer, account }: TIProps) => {
                                 orderDispatch={orderDispatch}
                                 selectedTracer={selectedTracer}
                                 leverage={order?.leverage ?? 0}
+                                position={order?.position ?? LONG}
                             />
                             <DoubleSidedSlider
                                 className="px-8"
@@ -116,7 +118,7 @@ export default (({ selectedTracer, account }: TIProps) => {
 
                 {/* Place Order */}
                 {order?.error === 'NO_ERROR' ? (
-                    <div className={`m-2`}>
+                    <div className={'m-2'}>
                         <AdvancedOrderButton>Place Order</AdvancedOrderButton>
                     </div>
                 ) : null}

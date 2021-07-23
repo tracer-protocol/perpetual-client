@@ -54,7 +54,6 @@ export default styled(({ className, value, min, max, orderDispatch }: DSProps) =
         display: none;
     }
     .rc-slider-rail {
-        letter-spacing: -0.16px;
         font-size: 8px;
         line-height: 14px;
         color: var(--color-accent);
@@ -80,12 +79,12 @@ const Label = styled(({ className, val }: { className?: string; val: number; lon
     text-align: ${(props) => (props.long ? 'right' : 'left')};
     font-size: var(--font-size-small);
     line-height: var(--font-size-small);
-    margin-top: 0.5rem;
+    margin-top: 0.8rem;
     color: var(--color-secondary);
 `;
 
 const middleMark = {
-    marginTop: 'calc(0.5rem + var(--font-size-small))',
+    marginTop: '0.8rem',
     color: 'var(--color-secondary)',
     fontSize: 'var(--font-size-small)',
     lineHeight: 'var(--font-size-small',
@@ -119,7 +118,7 @@ const handleStyle = {
     background: 'var(--color-accent)',
     borderColor: 'var(--color-accent)',
     borderRadius: '20px',
-    marginTop: '-11px',
+    marginTop: '-8px',
 };
 
 const { Handle } = Slider;

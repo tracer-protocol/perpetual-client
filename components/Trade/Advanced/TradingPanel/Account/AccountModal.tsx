@@ -35,13 +35,19 @@ const SHiddenExpand = styled(HiddenExpand)`
     background: var(--color-accent);
     margin-top: 1rem;
     margin-bottom: 1rem;
+
+    .summary {
+        font-size: var(--font-size-small);
+        font-weight: bold;
+        padding: 8px 16px;
+        border-bottom: 1px solid var(--table-darkborder);
+    }
 `;
 
 const ModalButton = styled(Button)`
     width: 80%;
     margin: auto;
     height: 40px;
-    border: 1px solid #ffffff;
     color: var(--color-text);
 
     &:disabled {
@@ -53,16 +59,13 @@ const ModalButton = styled(Button)`
 
 const SSlideSelect = styled(SlideSelect)`
     max-width: 250px;
-    margin-left: 0;
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin: 8px 0 16px;
 `;
 
 const ApproveButton = styled(Button)`
     width: 80%;
     margin: 1rem auto;
     height: 40px;
-    border: 1px solid #ffffff;
     color: var(--color-text);
 `;
 
@@ -160,18 +163,18 @@ export default styled(
                     setAmount={(amount: number) => dispatch({ type: 'setAmount', amount: amount })}
                 />
                 <SHiddenExpand defaultHeight={0} open={!!state.amount}>
-                    <p className="mb-3">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
+                    <p className="summary">{isDeposit ? 'Deposit' : 'Withdraw'} Summary</p>
                     <Section label={`Equity`}>
                         <Previous>{`${toApproxCurrency(balances.totalMargin)}`}</Previous>
                         {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, fairPrice))}`}
                     </Section>
-                    <Section label={`Buying Power`}>
+                    <Section label={'Buying Power'}>
                         <Previous>{`${toApproxCurrency(
                             calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
                         )}`}</Previous>
                         {`${toApproxCurrency(calcBuyingPower(newBalance, balances.base, fairPrice, maxLeverage))}`}
                     </Section>
-                    <Section label={`Available Margin`}>
+                    <Section label={'Available Margin'}>
                         <Previous>{`${calcAvailableMarginPercent(
                             balances.quote,
                             balances.base,

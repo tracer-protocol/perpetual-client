@@ -25,9 +25,9 @@ export const parseOrders: (res: any) => Orders = (res) => {
         const sections = Object.values(orders);
         const flattenedOrders = sections.map((orders: any) =>
             orders.reduce(
-                (prev: any, order: { amount_left: number; price: number }) => ({
+                (prev: any, order: { remaining: number; price: number }) => ({
                     price: parseFloat(Web3.utils.fromWei(order.price.toString())), // price remains the same,
-                    quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.amount_left.toString())),
+                    quantity: prev.quantity + parseFloat(Web3.utils.fromWei(order.remaining.toString())),
                 }),
                 {
                     quantity: 0,

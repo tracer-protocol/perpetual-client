@@ -36,7 +36,7 @@ type HandleAsyncType =
 export const TransactionContext = createContext<{
     handleTransaction: HandleTransactionType;
     handleAsync: HandleAsyncType;
-    setPending: ((status: 'PartialMatch' | 'FullMatch') => void) | undefined;
+    setPending: ((status: 'matched_partial' | 'matched') => void) | undefined;
     closePending: ((success: boolean) => void) | undefined;
 }>({
     handleTransaction: undefined,
@@ -141,10 +141,10 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     };
 
     /** Adds a pending toaster with id set to an object ref if the order is Partially or Fully Matched */
-    const setPending = (status: 'PartialMatch' | 'FullMatch') => {
+    const setPending = (status: 'matched_partial' | 'matched') => {
         const toastId = addToast(
             [
-                status === 'PartialMatch' ? 'Partially matched order' : 'Fully matched order',
+                status === 'matched_partial' ? 'Partially matched order' : 'Fully matched order',
                 'Order is being matched on chain',
             ],
             {

@@ -14,7 +14,7 @@ import { MaxButton } from '../BasicInterface1';
 const SLabel = styled.h3`
     display: flex;
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: var(--color-primary);
     margin-right: auto;
 

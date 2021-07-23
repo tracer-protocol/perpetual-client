@@ -34,7 +34,7 @@ const CustomSubNav: React.FC<CSNProps> = ({ setTab, selected, fills, orders }: C
     <StyledSubNavContainer>
         <SubNavItem
             className={`${0 === selected ? 'selected' : ''} flex`}
-            key={`sub-nav-positions`}
+            key={'sub-nav-positions'}
             onClick={(e) => {
                 e.preventDefault();
                 setTab(0);
@@ -44,7 +44,7 @@ const CustomSubNav: React.FC<CSNProps> = ({ setTab, selected, fills, orders }: C
         </SubNavItem>
         <SubNavItem
             className={`${1 === selected ? 'selected' : ''} flex`}
-            key={`sub-nav-orders`}
+            key={'sub-nav-orders'}
             onClick={(e) => {
                 e.preventDefault();
                 setTab(1);
@@ -57,7 +57,7 @@ const CustomSubNav: React.FC<CSNProps> = ({ setTab, selected, fills, orders }: C
         </SubNavItem>
         <SubNavItem
             className={`${2 === selected ? 'selected' : ''} flex`}
-            key={`sub-nav-fills`}
+            key={'sub-nav-fills'}
             onClick={(e) => {
                 e.preventDefault();
                 setTab(2);

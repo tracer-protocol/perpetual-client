@@ -5,7 +5,6 @@ import { Box, Logo } from '@components/General';
 import styled from 'styled-components';
 import { initialFactoryState } from '@context/FactoryContext';
 import { toApproxCurrency } from '@libs/utils';
-// import MarketChange from '@components/General/MarketChange';
 
 const SLogo = styled(Logo)`
     margin-top: 0;
@@ -38,12 +37,6 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
                             <div className="my-auto">{tracer.marketId}</div>
                         </MarketContainer>
                         <div className="info">
-                            {/* <MarketChange
-                                className="mr-2"
-                                size={'lg'}
-                                before={false}
-                                amount={240}
-                            /> */}
                             <div>{toApproxCurrency(tracer.getOraclePrice())}</div>
                         </div>
                     </Box>
@@ -79,8 +72,7 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     }
 
     > ${Box} .info {
-        margin: auto;
-        margin-right: 0;
+        margin: auto 0 auto auto;
         display: flex;
         justify-content: space-between;
         font-size: var(--font-size-small);
@@ -92,7 +84,6 @@ type MarketSelectDropdownButtonProps = {
     className?: string;
     arrowUp?: boolean;
 };
-
 const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = styled(
     ({ className, arrowUp }: MarketSelectDropdownButtonProps) => {
         return (
@@ -102,18 +93,29 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
             </div>
         );
     },
-)`
-    position: relative;
+)<MarketSelectDropdownButtonProps>`
     display: flex;
+    justify-content: space-between;
+    align-items: center;
     color: var(--color-primary);
     font-size: var(--font-size-small);
     border: 1px solid var(--color-primary);
     border-radius: 20px;
-    width: 147px;
-    padding-right: 10px;
+    width: 150px;
+    padding: 0 10px 0 15px;
     height: var(--height-small-button);
-    text-align: center;
     margin: auto 0;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    > .down-arrow {
+        width: 15px;
+        height: 15px;
+        transition: 0.3s;
+        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-4px)' : 'translateY(-2px)')};
+    }
 
     @media (max-width: 1279px) {
         width: 120px;
@@ -123,48 +125,31 @@ const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = st
     @media (max-width: 1600px) {
         height: 22px;
     }
-
-    &:hover {
-        cursor: pointer;
-    }
-
-    > span {
-        margin-left: auto;
-    }
-
-    > .down-arrow {
-        margin: auto 0 auto auto;
-        width: 1em;
-        height: 1em;
-        display: inline-block;
-        transition: 0.3s;
-        transform: ${(props) => (props.arrowUp ? 'rotate(180deg) translateY(-2px)' : 'translateY(-1px)')};
-    }
 `;
 
 const MarketContainer = styled.div`
     font-size: var(--font-size-medium);
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     display: flex;
     height: var(--height-small-container);
 `;
 
-const SBox = styled(Box)<{
-    $display: boolean;
-}>`
+const SBox = styled(Box)<{ $display: boolean; color: string }>`
     background-color: ${(props) => props.color as string}!important;
     position: relative;
     z-index: ${(props) => (props.$display ? 4 : 1)};
     height: var(--height-small-container);
     border-bottom: 1px solid var(--color-accent);
-    padding: 0 12px;
+    padding: 0 16px;
+    @media (min-width: 1800px) {
+        padding: 0 12px;
+    }
 `;
 
 type MSProps = {
     className?: string;
     account: string;
 };
-
 export default styled(({ className }: MSProps) => {
     const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const { selectedTracer, setTracerId } = useContext(TracerContext);

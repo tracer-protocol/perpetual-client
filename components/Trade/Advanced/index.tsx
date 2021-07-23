@@ -4,7 +4,7 @@ import { MarketSelect, AccountPanel } from './TradingPanel';
 import { PlaceOrder } from './TradingPanel/TradingInput';
 import styled from 'styled-components';
 import TradingView from './RightPanel';
-import { MARKET } from '@context/OrderContext';
+import { MARKET } from '@libs/types/OrderTypes';
 import dynamic from 'next/dynamic';
 import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
 import Cookies from 'universal-cookie';

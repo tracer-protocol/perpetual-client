@@ -7,7 +7,7 @@ import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/Tool
 const Max = styled.a`
     transition: 0.3s;
     margin: auto 0 auto 20px;
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     font-size: var(--font-size-small);
     color: var(--color-primary);
     text-decoration: underline;
@@ -23,7 +23,7 @@ const Max = styled.a`
 `;
 
 const Unit = styled.div`
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: var(--color-secondary);
     font-size: var(--font-size-medium);
     line-height: var(--font-size-medium);
@@ -63,29 +63,32 @@ type SIProps = {
 } & Children;
 
 const SmallInput: React.FC<SIProps> = styled(
-    ({ title, amount, onChange, unit, setMax, maxText, tooltip, className }: SIProps) => (
-        <div className={className}>
-            {tooltip ? (
-                <TooltipSelector tooltip={tooltip}>{title}</TooltipSelector>
-            ) : (
-                <span className="label">{title}</span>
-            )}
-            <InputContainer>
-                <Max className={`${!setMax ? 'hide' : ''}`} onClick={setMax}>
-                    {maxText}
-                </Max>
-                <NumberInput
-                    id="margin"
-                    type="number"
-                    placeholder="0.0"
-                    min={0}
-                    onChange={onChange}
-                    value={!Number.isNaN(amount) ? amount : ''}
-                />
-                {unit ? <Unit>{unit}</Unit> : null}
-            </InputContainer>
-        </div>
-    ),
+    ({ title, amount, onChange, unit, setMax, maxText, tooltip, className }: SIProps) => {
+        return (
+            <div className={className}>
+                {tooltip ? (
+                    <TooltipSelector tooltip={tooltip}>{title}</TooltipSelector>
+                ) : (
+                    <span className="label">{title}</span>
+                )}
+                <InputContainer>
+                    <Max className={`${!setMax ? 'hide' : ''}`} onClick={setMax}>
+                        {maxText}
+                    </Max>
+                    <NumberInput
+                        id="margin"
+                        type="number"
+                        placeholder="0.0"
+                        min={0}
+                        onChange={onChange}
+                        // This always displays a positive value. It also effects the onChange
+                        value={!Number.isNaN(amount) ? Math.abs(amount ?? 0) : ''}
+                    />
+                    {unit ? <Unit>{unit}</Unit> : null}
+                </InputContainer>
+            </div>
+        );
+    },
 )`
     display: flex;
     width: 100%;
@@ -94,7 +97,7 @@ const SmallInput: React.FC<SIProps> = styled(
     height: 32px;
 
     > .label {
-        letter-spacing: -0.32px;
+        letter-spacing: var(--letter-spacing-small);
         font-size: var(--font-size-small);
         color: var(--color-primary);
         margin: auto 0;

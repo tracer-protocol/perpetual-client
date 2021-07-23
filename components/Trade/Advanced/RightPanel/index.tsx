@@ -27,24 +27,20 @@ const TitledBox = styled(({ className, title, children }) => {
     );
 })`
     border-right: 1px solid var(--color-accent);
-    padding: 0 0.5rem;
     display: flex;
     justify-content: center;
     flex-direction: column;
     margin: auto;
     width: 100%;
-    height: 100%;
     color: var(--color-text);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     font-size: var(--font-size-small);
-    display: flex;
-    padding: 0px 16px;
+    padding: 0 16px;
     height: var(--height-small-container);
 
     > p {
         color: var(--color-secondary);
         font-size: var(--font-size-extra-small);
-        letter-spacing: -0.24px;
     }
 `;
 
@@ -144,13 +140,20 @@ const TradingView: FC<{
 
 export default TradingView;
 
-const TradesAndBook: React.FC<{
+interface TBProps {
     askOrders: OMEOrder[] | undefined;
     bidOrders: OMEOrder[] | undefined;
     marketUp: boolean;
     lastTradePrice: BigNumber;
     mostRecentTrades: FilledOrder[];
-}> = ({ askOrders, bidOrders, marketUp, lastTradePrice, mostRecentTrades }) => {
+}
+const TradesAndBook: React.FC<TBProps> = ({
+    askOrders,
+    bidOrders,
+    marketUp,
+    lastTradePrice,
+    mostRecentTrades,
+}: TBProps) => {
     const [decimals, setDecimals] = useState(1);
     const [selected, setSelected] = useState(SHOW_BOOK);
     return (

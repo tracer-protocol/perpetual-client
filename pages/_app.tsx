@@ -37,7 +37,6 @@ const Mobile = styled.div`
     }
     > h1 {
         font-size: 55px;
-        letter-spacing: -1.1px;
         font-weight: lighter;
     }
 `;
