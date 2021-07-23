@@ -1,6 +1,6 @@
 import React, { useContext, useReducer } from 'react';
 import { Children } from 'libs/types';
-import { LONG, SHORT } from 'context/OrderContext';
+import { LONG, SHORT } from 'libs/types/OrderTypes';
 import {
     calcFromExposureAndLeverage,
     calcFromExposureAndLiquidation,

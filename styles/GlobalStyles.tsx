@@ -25,8 +25,12 @@ export default createGlobalStyle`
         --font-size-large: 20px;
         --font-size-xlarge: 36px;
 
+        --letter-spacing-small: -0.32px;
+        --letter-spacing-extra-small: -0.4px;
+
         --height-extra-small-container: 40px;
         --height-small-container: 60px;
+
         --height-medium-button: 32px;
         --height-small-button: 28px;
         --height-extra-small-button: 22px;
@@ -117,14 +121,6 @@ export default createGlobalStyle`
         justify-content: space-between;
     }
 
-    /** BNC-Onboarding styles */
-    .bn-onboard-modal-content {
-        background: var(--color-background-secondary)!important;
-        color: var(--color-text)!important;
-        font-weight: lighter!important;
-        width: 422px;
-        padding: 1rem 0!important;
-    }
     .bn-onboard-custom.bn-onboard-modal { 
         z-index: 99;
     }

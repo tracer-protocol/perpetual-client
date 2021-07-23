@@ -1,11 +1,13 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import { NavBarContent } from '@components/Nav/Navbar';
 import NavBar from '@components/Nav';
 import { Advanced } from '@components/Trade';
 import { OrderStore, SelectedTracerStore } from 'context';
 import { InsuranceStore } from '@context/InsuranceContext';
 import styled from 'styled-components';
 import { OMEStore } from '@context/OMEContext';
+import { StyledMenu as AccountDropdown } from '@components/Nav/Navbar/AccountDropdown';
 import Footer from '@components/Footer';
 
 const Trade: React.FC = styled(({ className }) => {
@@ -35,6 +37,24 @@ const Trade: React.FC = styled(({ className }) => {
     flex-direction: column;
     background-color: var(--color-background);
     color: var(--color-text);
+
+    .container {
+        max-width: 100% !important;
+    }
+
+    ${NavBarContent}, ${Footer} {
+        padding: 0 16px;
+    }
+
+    ${AccountDropdown} {
+        right: -0.5rem !important;
+    }
+
+    @media (min-width: 1800px) {
+        ${NavBarContent}, ${Footer} {
+            padding: 0 5rem;
+        }
+    }
 `;
 
 export default Trade;

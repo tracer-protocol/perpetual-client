@@ -11,11 +11,11 @@ import Web3 from 'web3';
  */
 export const toPercent: (value: number) => string = (value) => {
     if (Number.isNaN(value) || !value) {
-        return `0.00%`;
+        return '0.00%';
     }
     const percentage = value * 100;
     if (percentage < 0.001) {
-        return `< 0.001%`;
+        return '< 0.001%';
     }
     return `${percentage.toFixed(2)}%`;
 };

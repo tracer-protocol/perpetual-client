@@ -82,7 +82,7 @@ const IconWrap = styled.span`
     line-height: 20px;
     border-right: 1px solid var(--color-accent);
 
-    span[role="img"] {
+    span[role='img'] {
         width: 73px;
         height: auto;
 
@@ -93,7 +93,7 @@ const IconWrap = styled.span`
         }
     }
 `;
-const Close = styled.button`
+const Close = styled.div`
     position: absolute;
     top: 16px;
     right: 16px;
@@ -108,16 +108,17 @@ const Close = styled.button`
     background-position: center center;
     background-size: 17px 17px;
     background-repeat: no-repeat;
-    transition: background-color 0.5s ease;
+    transition: background-color 0.5s ease, opacity 0.5s ease;
     backface-visibility: hidden;
-    
+    opacity: 0;
+
     &:hover {
         cursor: pointer;
         background-color: var(--color-primary);
         background-image: url('/img/general/close-white.svg');
-    }
+    } 
 `;
-const Header: React.FC<any> = ({ appearance: onDismiss, title }) => {
+const Header: React.FC<{ onDismiss: (e: any) => any, title: React.ReactNode }> = ({ onDismiss, title }) => {
     return (
         <div
             style={{
@@ -127,8 +128,8 @@ const Header: React.FC<any> = ({ appearance: onDismiss, title }) => {
                 letterSpacing: '-0.38px',
                 width: '100%',
                 display: 'flex',
-                padding: '16px 16px 8px',
-                borderBottom: '1px solid var(--color-accent)'
+                padding: '16px 16px 0',
+                borderBottom: '1px solid var(--color-accent)',
             }}
         >
             <span>{title}</span>
@@ -136,7 +137,6 @@ const Header: React.FC<any> = ({ appearance: onDismiss, title }) => {
         </div>
     );
 };
-
 const STimer = styled<any>(Timer)`
     #refetchLoader {
         animation: countdown-width ${(props) => props.autoDismissTimeout}s linear;
@@ -206,19 +206,14 @@ const Hashie: React.FC<HProps | any> = ({
     appearance: appearance_,
     placement,
     autoDismissTimeout,
-    isRunning,
+    // isRunning,
     children,
 }: HProps) => {
     const appearance = appearances[appearance_] ?? appearances['info']; //default info
     let children_ = React.Children.toArray(children);
     return (
-        <div
-            className="rounded-md mb-2 flex"
+        <ToastWrapper
             style={{
-                position: 'relative',
-                display: 'flex',
-                backgroundColor: '#00156C',
-                boxShadow: '0 3px 8px rgba(0, 0, 0, 0.175)',
                 color: appearance.text,
                 transition: `transform ${transitionDuration}ms cubic-bezier(0.2, 0, 0, 1), opacity ${transitionDuration}ms`,
                 width: toastWidth,
@@ -229,17 +224,13 @@ const Hashie: React.FC<HProps | any> = ({
             <IconWrap>{appearance.icon}</IconWrap>
             <ContentWrapper>
                 <Header
-                    appearance={appearance_}
-                    autoDismiss={autoDismiss}
-                    autoDismissTimeout={autoDismissTimeout}
-                    isRunning={isRunning}
                     onDismiss={onDismiss}
                     title={children_[0]}
                 />
                 <Content>{children_[1]}</Content>
             </ContentWrapper>
             <Countdown display={autoDismiss} autoDismissTimeout={autoDismissTimeout} />
-        </div>
+        </ToastWrapper>
     );
 };
 
@@ -250,6 +241,19 @@ Hashie.defaultProps = {
     placement: 'top-right',
     autoDismissTimeout: 5000,
 };
+
+const ToastWrapper = styled.div`
+    position: relative;
+    display: flex;
+    background-color: #00156C;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.175);
+    margin-bottom: 0.5rem;
+    border-radius: 0.375rem;
+
+    &:hover ${Close} {
+        opacity: 1;
+    }
+`
 
 export const NotificationsContainer = styled.div`
     position: absolute;

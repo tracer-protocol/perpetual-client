@@ -15,7 +15,7 @@ import { Options } from '@context/TransactionContext';
 
 const SSlideSelect = styled(SlideSelect)`
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: #ffffff;
     width: 300px;
     height: 40px;
@@ -231,17 +231,17 @@ export const InsuranceModal: React.FC<BProps> = ({
             />
             <SHiddenExpand defaultHeight={0} open={!!amount}>
                 {isDeposit ? (
-                    <SSection className={`title`} label={`Deposit Summary`} />
+                    <SSection className={'title'} label={'Deposit Summary'} />
                 ) : (
-                    <SSection className={`title`} label={`Withdrawal Summary`} />
+                    <SSection className={'title'} label={'Withdrawal Summary'} />
                 )}
                 {!isDeposit && amount > balance.toNumber() ? (
-                    <PoolOwnershipInsufficient label={`Pool Ownership`}>
+                    <PoolOwnershipInsufficient label={'Pool Ownership'}>
                         <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </PoolOwnershipInsufficient>
                 ) : (
-                    <SSection label={`Pool Ownership`}>
+                    <SSection label={'Pool Ownership'}>
                         <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>

@@ -3,6 +3,150 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 
+const NavBar: React.FC = styled(({ className }) => {
+    return (
+        <div className={className}>
+            <NavBarContent />
+        </div>
+    );
+})`
+    background: #f15025;
+    color: var(--color-text);
+    height: 40px;
+    line-height: 40px;
+    font-size: var(--font-size-medium);
+    width: 100%;
+    position: absolute;
+    left: 0;
+    text-align: center;
+    bottom: ${(props) => (props.display ? '-40px' : '0px')};
+    opacity: ${(props) => (props.display ? '1' : '0')};
+    z-index: ${(props) => (props.display ? '2' : '-1')};
+    transition: ${(props) =>
+        props.display ? 'bottom 0.3s, opacity 0.3s 0.1s' : 'bottom 0.3s 0.15s, opacity 0.3s, z-index 0.3s 0.3s'};
+`;
+
+export const NavBarContent = styled(({ className }) => {
+    const routes = useRouter().asPath.split('/');
+    const route = routes[1];
+    const { account, onboard, network, resetOnboard, ethBalance, handleConnect } = useWeb3();
+    const ensName = useEnsName(account ?? '');
+
+    const linkStyles = 'mx-2 py-2';
+
+    return (
+        <nav className={`${className} container`}>
+            <HeaderSiteSwitcher />
+            <ul>
+                <li className={linkStyles + (route === 'trade' ? ' selected' : '')}>
+                    {/*TODO: Add back basic/advanced trading toggle (change the file name and path config too)*/}
+                    {/*<span className="trade-toggle">*/}
+                    {/*    <Link href="/trade/basic">*/}
+                    {/*        <div className={`${secondaryRoute === 'basic' ? 'selected' : ''}`}>Basic</div>*/}
+                    {/*    </Link>*/}
+                    {/*    <Link href="/trade/advanced">*/}
+                    {/*        <div className={`${secondaryRoute === 'advanced' ? 'selected' : ''}`}>Advanced</div>*/}
+                    {/*    </Link>*/}
+                    {/*</span>*/}
+                    {/*<Link href="/trade/basic">*/}
+                    {/*    <a className="m-auto">Trade</a>*/}
+                    {/*</Link>*/}
+                    <Link href="/">
+                        <a className="m-auto">Trade</a>
+                    </Link>
+                </li>
+                {/*<li className={linkStyles + (route === 'insurance' ? ' selected' : '')}>*/}
+                {/*    <Link href="/insurance/pools">*/}
+                {/*        <a className="m-auto ">Insurance</a>*/}
+                {/*    </Link>*/}
+                {/*</li>*/}
+                <li className={linkStyles + (route === 'insurance' ? ' selected' : '')}>
+                    <Link href="/insurance">
+                        <a className="m-auto ">Insurance</a>
+                    </Link>
+                </li>
+                <li className={linkStyles + (route === 'portfolio' ? ' selected' : '')}>
+                    <Link href="/portfolio">
+                        <a className="m-auto">Portfolio</a>
+                    </Link>
+                </li>
+            </ul>
+            <AccountDropdown
+                onboard={onboard}
+                account={account}
+                ensName={ensName}
+                network={network ?? 0}
+                tokenBalance={ethBalance ?? 0}
+                logout={resetOnboard}
+                handleConnect={handleConnect}
+            />
+
+            {/** TODO this will need to change to Arbritrum network id */}
+            {process.env.NEXT_PUBLIC_DEPLOYMENT !== 'DEVELOPMENT' ? (
+                <UnknownNetwork display={network !== 421611 && !!network} />
+            ) : null}
+        </nav>
+    );
+})`
+    display: flex;
+    color: var(--color-text);
+    height: 60px;
+
+    background-image: url('/img/nav-bg.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+
+    > ul {
+        display: flex;
+        margin-left: auto;
+        margin-bottom: 0;
+        font-size: 14px;
+    }
+
+    > ul li {
+        display: flex;
+        transition: 0.2s;
+        padding: 0 20px;
+    }
+
+    > ul li.selected {
+        color: #37b1f6;
+    }
+
+    > ul li:hover {
+        color: #37b1f6;
+    }
+
+    > ul li .trade-toggle {
+        display: none;
+    }
+
+    > ul li.selected .trade-toggle {
+        display: flex;
+        margin: auto 20px;
+        border: 1px solid var(--color-primary);
+        border-radius: 20px;
+    }
+
+    > ul li.selected .trade-toggle div {
+        width: 100px;
+        text-align: center;
+        transition: 0.2s;
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    > ul li.selected .trade-toggle div.selected {
+        color: var(--color-background);
+        background-color: var(--color-primary);
+        border-radius: 20px;
+    }
+`;
+
+export default NavBar;
+
 // @ts-ignore
 import ENS, { getEnsAddress } from '@ensdomains/ensjs';
 import HeaderSiteSwitcher from './HeaderSiteSwitcher';
@@ -107,134 +251,3 @@ const useEnsName = (account: string) => {
 
     return ensName;
 };
-
-const NavBar: React.FC = styled(({ className }) => {
-    return (
-        <div className={className}>
-            <NavBarContent />
-        </div>
-    );
-})`
-    background-image: url('/img/nav-bg.png');
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: relative;
-`;
-
-const NavBarContent: React.FC = styled(({ className }) => {
-    const routes = useRouter().asPath.split('/');
-    const route = routes[1];
-    const { account, onboard, network, resetOnboard, ethBalance, handleConnect } = useWeb3();
-    const ensName = useEnsName(account ?? '');
-
-    const linkStyles = 'mx-2 py-2';
-
-    return (
-        <nav className={`${className} container`}>
-            <HeaderSiteSwitcher />
-            <ul>
-                <li className={linkStyles + (route === 'trade' ? ' selected' : '')}>
-                    {/*TODO: Add back basic/advanced trading toggle (change the file name and path config too)*/}
-                    {/*<span className="trade-toggle">*/}
-                    {/*    <Link href="/trade/basic">*/}
-                    {/*        <div className={`${secondaryRoute === 'basic' ? 'selected' : ''}`}>Basic</div>*/}
-                    {/*    </Link>*/}
-                    {/*    <Link href="/trade/advanced">*/}
-                    {/*        <div className={`${secondaryRoute === 'advanced' ? 'selected' : ''}`}>Advanced</div>*/}
-                    {/*    </Link>*/}
-                    {/*</span>*/}
-                    {/*<Link href="/trade/basic">*/}
-                    {/*    <a className="m-auto">Trade</a>*/}
-                    {/*</Link>*/}
-                    <Link href="/">
-                        <a className="m-auto">Trade</a>
-                    </Link>
-                </li>
-                {/*<li className={linkStyles + (route === 'insurance' ? ' selected' : '')}>*/}
-                {/*    <Link href="/insurance/pools">*/}
-                {/*        <a className="m-auto ">Insurance</a>*/}
-                {/*    </Link>*/}
-                {/*</li>*/}
-                <li className={linkStyles + (route === 'insurance' ? ' selected' : '')}>
-                    <Link href="/insurance">
-                        <a className="m-auto ">Insurance</a>
-                    </Link>
-                </li>
-                <li className={linkStyles + (route === 'portfolio' ? ' selected' : '')}>
-                    <Link href="/portfolio">
-                        <a className="m-auto">Portfolio</a>
-                    </Link>
-                </li>
-            </ul>
-            <AccountDropdown
-                onboard={onboard}
-                account={account}
-                ensName={ensName}
-                network={network ?? 0}
-                tokenBalance={ethBalance ?? 0}
-                logout={resetOnboard}
-                handleConnect={handleConnect}
-            />
-
-            {/** TODO this will need to change to Arbritrum network id */}
-            {process.env.NEXT_PUBLIC_DEPLOYMENT !== 'DEVELOPMENT' ? (
-                <UnknownNetwork display={network !== 421611 && !!network} />
-            ) : null}
-        </nav>
-    );
-})`
-    display: flex;
-    color: var(--color-text);
-    height: 60px;
-
-    > ul {
-        display: flex;
-        margin-left: auto;
-        margin-bottom: 0;
-        font-size: 14px;
-        letter-spacing: -0.28px;
-    }
-
-    > ul li {
-        display: flex;
-        transition: 0.2s;
-        padding: 0 20px;
-    }
-
-    > ul li.selected {
-        color: #37b1f6;
-    }
-
-    > ul li:hover {
-        color: #37b1f6;
-    }
-
-    > ul li .trade-toggle {
-        display: none;
-    }
-
-    > ul li.selected .trade-toggle {
-        display: flex;
-        margin: auto 20px;
-        border: 1px solid var(--color-primary);
-        border-radius: 20px;
-    }
-
-    > ul li.selected .trade-toggle div {
-        width: 100px;
-        text-align: center;
-        transition: 0.2s;
-
-        &:hover {
-            cursor: pointer;
-        }
-    }
-
-    > ul li.selected .trade-toggle div.selected {
-        color: var(--color-background);
-        background-color: var(--color-primary);
-        border-radius: 20px;
-    }
-`;
-
-export default NavBar;

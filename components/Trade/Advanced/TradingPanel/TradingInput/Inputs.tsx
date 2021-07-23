@@ -1,13 +1,14 @@
 import React from 'react';
 import SmallInput, { InputContainer } from '@components/General/Input/SmallInput';
 import Tracer from 'libs/Tracer';
-import { MARKET, OrderAction, OrderState } from '@context/OrderContext';
+import { OrderAction, OrderState } from '@context/OrderContext';
 import DefaultSlider from '@components/General/Slider';
 import styled from 'styled-components';
 import BigNumber from 'bignumber.js';
 import { defaults } from '@libs/Tracer';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import { Inc, Dec } from '@components/General/Input/NumberInput';
+import { MARKET, LONG, SHORT } from '@libs/types/OrderTypes';
 
 export const Exposure: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
@@ -100,10 +101,11 @@ const StyledSmallInput = styled(SmallInput)`
 
 export const LeverageInput: React.FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
+    position: typeof LONG | typeof SHORT;
     selectedTracer: Tracer | undefined;
     leverage: number;
     className?: string;
-}> = ({ selectedTracer, orderDispatch, leverage, className }) => {
+}> = ({ selectedTracer, orderDispatch, position, leverage, className }) => {
     return (
         <StyledSmallInput
             title={'Leverage'}
@@ -111,7 +113,8 @@ export const LeverageInput: React.FC<{
             className={className ?? ''}
             onChange={(e) => {
                 if (orderDispatch) {
-                    const leverage = parseFloat(e.target.value);
+                    const leverage = parseFloat(e.target.value) * (position === LONG ? 1 : -1);
+
                     if (Number.isNaN(leverage)) {
                         orderDispatch({ type: 'setLeverage', value: leverage });
                         orderDispatch({ type: 'setExposure', value: NaN });
@@ -193,7 +196,7 @@ export const Leverage: React.FC<LProps> = styled(({ orderDispatch, leverage, cla
     > .label {
         margin: 5px auto 35px 0;
         font-size: var(--font-size-small);
-        letter-spacing: -0.32px;
+        letter-spacing: var(--letter-spacing-small);
         color: var(--color-primary);
     }
 `;

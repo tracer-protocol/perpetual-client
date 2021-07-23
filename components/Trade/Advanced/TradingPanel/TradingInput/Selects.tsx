@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import SlideSelect from '@components/General/SlideSelect';
 import { Option } from '@components/General/SlideSelect';
 import { OrderContext } from 'context';
-import { LIMIT, MARKET } from '@context/OrderContext';
+import { LIMIT, MARKET, OrderType, Position } from '@libs/types/OrderTypes';
 
 type SProps = {
     selected: number;
@@ -22,7 +22,7 @@ export const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
             onClick={(index, _e) => {
                 // when we go back to market order we need to ensure the price is locked
                 if (orderDispatch) {
-                    orderDispatch({ type: 'setPosition', value: index });
+                    orderDispatch({ type: 'setPosition', value: index as Position });
                     if (order?.orderType === MARKET) {
                         orderDispatch({ type: 'setLeverageFromExposure', amount: order?.exposure });
                     }
@@ -48,7 +48,7 @@ export const OrderTypeSelect: React.FC<SProps> = styled(({ selected, className }
             className={className}
             onClick={(index, _e) => {
                 if (orderDispatch) {
-                    orderDispatch({ type: 'setOrderType', value: index });
+                    orderDispatch({ type: 'setOrderType', value: index as OrderType });
                     if (index === LIMIT) {
                         // resetting the price if its a limit order
                         orderDispatch({ type: 'setPrice', value: NaN });

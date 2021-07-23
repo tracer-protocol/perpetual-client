@@ -64,14 +64,14 @@ interface TProps {
 export const Title = styled.h3`
     text-align: left;
     font-size: var(--font-size-medium);
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: #ffffff;
 `;
 
 export const SubTitle = styled.p`
     text-align: left;
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: var(--color-primary);
     margin: 1rem 0;
     padding-bottom: 1rem;
@@ -137,7 +137,7 @@ const TracerModal: React.FC<TProps> = styled((props: TProps) => {
         <>
             <div className={`${props.className} ${props.show ? 'show' : ''} model`} id={props.id}>
                 {/*content*/}
-                <div className={`content`} ref={ref}>
+                <div className={'content'} ref={ref}>
                     {/*header*/}
                     <Header>
                         <Title>{props.title}</Title>

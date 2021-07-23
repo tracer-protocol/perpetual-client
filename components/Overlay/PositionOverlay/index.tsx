@@ -7,15 +7,11 @@ import { Button, Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 import MarketChange from '@components/General/MarketChange';
 
-const StyledOverlay = styled(Overlay)`
-    font-size: var(--font-size-medium);
-    background-color: var(--color-background-secondary);
-`;
-
 interface POProps {
     tracers?: any;
+    showMarketPreview: boolean;
 }
-const PositionOverlay: FC<POProps> = ({ tracers }: POProps) => {
+const PositionOverlay: FC<POProps> = ({ tracers, showMarketPreview }: POProps) => {
     const [currentMarket, setCurrentMarket] = useState(-1);
 
     const marketKeyMap: Record<number, string> = {};
@@ -26,9 +22,11 @@ const PositionOverlay: FC<POProps> = ({ tracers }: POProps) => {
 
     return (
         <StyledOverlay>
-            No Open Position.
-            <SelectMarketDropdown setOptions={setCurrentMarket} option={currentMarket} keyMap={marketKeyMap} />
-            {currentMarket !== -1 ? (
+            <OverlayTitle>No Open Position.</OverlayTitle>
+            {showMarketPreview ? (
+                <SelectMarketDropdown setOptions={setCurrentMarket} option={currentMarket} keyMap={marketKeyMap} />
+            ) : null}
+            {currentMarket !== -1 && showMarketPreview ? (
                 <MarketPreviewContainer>
                     <InfoCol>
                         <div className="title">Market</div>
@@ -126,10 +124,10 @@ const SelectMarketDropdown: React.FC<PDProps> = styled(({ className, setOptions,
     };
     return (
         <Dropdown className={className} overlay={menu} placement="bottomCenter" onVisibleChange={handleVisibleChange}>
-            <PortfolioDropdownButton>
-                {selected ? keyMap[option] : <div>Select Market</div>}
+            <Button>
+                {selected ? keyMap[option] : 'Select Market'}
                 <StyledTriangleDown className={rotated ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
-            </PortfolioDropdownButton>
+            </Button>
         </Dropdown>
     );
 })`
@@ -141,12 +139,6 @@ const SelectMarketDropdown: React.FC<PDProps> = styled(({ className, setOptions,
         background: none;
         color: var(--color-primary);
     }
-`;
-
-const PortfolioDropdownButton = styled(Button)`
-    height: var(--height-medium-button);
-    padding: 0;
-    min-width: 170px;
 `;
 
 const StyledTriangleDown = styled.img`
@@ -162,4 +154,12 @@ const StyledTriangleDown = styled.img`
         transform: rotate(180deg);
         margin-top: -4px;
     }
+`;
+
+const StyledOverlay = styled(Overlay)`
+    background-color: var(--color-background-secondary);
+`;
+
+const OverlayTitle = styled.div`
+    font-size: var(--font-size-medium);
 `;

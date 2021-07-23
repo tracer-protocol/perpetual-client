@@ -87,12 +87,12 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = 
             if (res?.status === 404) {
                 return {
                     status: 'error',
-                    message: `Failed to create order 404 not found`,
+                    message: 'Failed to create order 404 not found',
                 } as Result;
             } else if (res?.status === 400) {
                 return {
                     status: 'error',
-                    message: `Failed to create order 400 bad request`,
+                    message: 'Failed to create order 400 bad request',
                 } as Result;
             } else {
                 return {
@@ -144,12 +144,12 @@ export const cancelOrder: (market: string, orderId: string) => Promise<Result> =
             if (res?.status === 404) {
                 return {
                     status: 'error',
-                    message: `Failed to delete order 404 not found`,
+                    message: 'Failed to delete order 404 not found',
                 } as Result;
             } else if (res?.status === 400) {
                 return {
                     status: 'error',
-                    message: `Failed to delete order 400 bad request`,
+                    message: 'Failed to delete order 400 bad request',
                 } as Result;
             } else {
                 return {

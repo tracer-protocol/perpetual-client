@@ -15,7 +15,7 @@ import { defaults } from '@libs/Tracer';
 const SLabel = styled.h3`
     display: flex;
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: var(--color-primary);
     margin-right: auto;
 
@@ -43,7 +43,7 @@ export const MaxButton: any = styled(Button)`
 
 const Balance = styled.p`
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: var(--color-primary);
     text-transform: capitalize;
     margin: 0 10px auto 10px;
@@ -93,7 +93,7 @@ interface WSProps {
 
 const SSlideSelect = styled(SlideSelect)`
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: #ffffff;
     width: 200px;
     height: 30px;
