@@ -156,6 +156,7 @@ export default createGlobalStyle`
         max-width: 420px;
     }
     #legal-modal #checkbox-container {
+        display: flex;
         margin-top: 16px;
     }
 

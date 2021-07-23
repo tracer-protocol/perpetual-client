@@ -38,8 +38,11 @@ export const BasicInputContainer = styled.div`
     padding-bottom: 0.2rem;
 `;
 
-export const CheckboxContainer = styled.div`
-    display: flex;
+interface CBCProps {
+    display?: boolean;
+}
+export const CheckboxContainer = styled.div<CBCProps>`
+    display: ${(props) => (props.display ? 'flex' : 'none')};
     cursor: pointer;
     width: fit-content;
 `;
