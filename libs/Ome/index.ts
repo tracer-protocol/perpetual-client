@@ -22,7 +22,7 @@ export const getOrders: (market: string) => Promise<Response> = async (market) =
     })
         .then((res) => res.json())
         .then((res) => {
-            console.debug("Fetched all orders", res?.data)
+            console.debug('Fetched all orders', res?.data);
             return res?.data ?? [];
         })
         .catch((err) => {
@@ -53,7 +53,7 @@ export const getUsersOrders: (market: string, account: string) => Promise<OMEOrd
                 console.error('Failed to fetch user orders', res);
                 return [];
             }
-            console.debug("Fetched user orders", res?.data)
+            console.debug('Fetched user orders', res?.data);
             return res?.data ?? [];
         })
         .catch((err) => {
@@ -61,7 +61,6 @@ export const getUsersOrders: (market: string, account: string) => Promise<OMEOrd
             return [];
         });
 };
-
 
 /**
  * Creates an order within a market.
@@ -89,21 +88,21 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
         .then((res) => {
             if (res?.status === 404) {
                 return {
-                    status: 'error' as 'error',
+                    status: 'error' as const,
                     message: 'Failed to create order 404 not found',
-		            data: 'Failed to create order 400 bad request',
+                    data: 'Failed to create order 400 bad request',
                 };
             } else if (res?.status === 400) {
                 return {
-                    status: 'error' as 'error',
+                    status: 'error' as const,
                     message: 'Failed to create order 400 bad request',
                     data: 'Failed to create order 400 bad request',
                 };
             } else {
                 return {
-                    status: 'success' as 'success',
+                    status: 'success' as const,
                     message: res.message,
-                    data: res.data
+                    data: res.data,
                 };
             }
         })
@@ -111,7 +110,7 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
             return {
                 status: 'error',
                 message: `${err}`,
-                data: err
+                data: err,
             };
         });
 };
@@ -173,4 +172,3 @@ export const cancelOrder: (market: string, orderId: string) => Promise<Result> =
             } as Result;
         });
 };
-

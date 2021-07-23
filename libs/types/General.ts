@@ -16,9 +16,8 @@ export type Result = {
     error?: string;
 };
 
-
 export type APIResult = {
     status: 'error' | 'success';
     message: string;
-    data: any
-}
+    data: any;
+};
