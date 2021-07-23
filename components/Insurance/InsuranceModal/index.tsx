@@ -4,7 +4,17 @@ import { Children } from 'libs/types';
 import { toApproxCurrency } from '@libs/utils';
 import SlideSelect from '@components/General/SlideSelect';
 import { Option } from '@components/General/SlideSelect/Options';
-import { Button, Checkbox, CheckboxContainer, CheckboxTitle, Dropdown, HiddenExpand, Previous, NumberSelect, Section } from '@components/General';
+import {
+    Button,
+    Checkbox,
+    CheckboxContainer,
+    CheckboxTitle,
+    Dropdown,
+    HiddenExpand,
+    Previous,
+    NumberSelect,
+    Section,
+} from '@components/General';
 import TracerModal from '@components/General/TracerModal';
 import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';

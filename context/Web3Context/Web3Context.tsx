@@ -149,7 +149,7 @@ const Web3Store: React.FC<Web3ContextProps> = ({
 
     useEffect(() => {
         const cookies = new Cookies();
-        if(acceptedTerms){
+        if (acceptedTerms) {
             cookies.set('acceptedTerms', 'true', { path: '/' });
             handleConnect();
             setShowTerms(false);
@@ -173,10 +173,9 @@ const Web3Store: React.FC<Web3ContextProps> = ({
 
     const acceptLegalTerms = () => {
         const cookies = new Cookies();
-        if(cookies.get('acceptedTerms') != 'true'){
+        if (cookies.get('acceptedTerms') !== 'true') {
             setShowTerms(true);
-        }
-        else {
+        } else {
             setShowTerms(false);
             acceptTerms(true);
         }
@@ -187,7 +186,7 @@ const Web3Store: React.FC<Web3ContextProps> = ({
         if (onboard) {
             try {
                 const accepted = acceptLegalTerms();
-                if(accepted){
+                if (accepted) {
                     await onboard?.walletSelect();
                     await checkIsReady();
                 }
@@ -230,18 +229,20 @@ const Web3Store: React.FC<Web3ContextProps> = ({
             >
                 <Terms>
                     <p>
-                        By connecting your wallet, you accept Tracer’s Terms of Use 
-                        and represent and warrant that you are not a resident of any 
-                        of the following countries:
+                        By connecting your wallet, you accept Tracer’s Terms of Use and represent and warrant that you
+                        are not a resident of any of the following countries:
                     </p>
                     <p>
-                        China, the United States, Antigua and Barbuda, Algeria, Bangladesh, 
-                        Bolivia, Belarus, Burundi, Myanmar (Burma), Cote D’Ivoire (Ivory Coast), 
-                        Crimea and Sevastopol, Cuba, Democratic Republic of Congo, Ecuador, 
-                        Iran, Iraq, Liberia, Libya, Magnitsky, Mali, Morocco, Nepal, North Korea, 
+                        China, the United States, Antigua and Barbuda, Algeria, Bangladesh, Bolivia, Belarus, Burundi,
+                        Myanmar (Burma), Cote D’Ivoire (Ivory Coast), Crimea and Sevastopol, Cuba, Democratic Republic
+                        of Congo, Ecuador, Iran, Iraq, Liberia, Libya, Magnitsky, Mali, Morocco, Nepal, North Korea,
                         Somalia, Sudan, Syria, Venezuela, Yemen or Zimbabwe.
                     </p>
-                    <Link href="/terms-of-use"><a target="_blank" rel="noreferrer">Read More</a></Link>
+                    <Link href="/terms-of-use">
+                        <a target="_blank" rel="noreferrer">
+                            Read More
+                        </a>
+                    </Link>
                 </Terms>
                 <CheckboxContainer
                     onClick={(e: any) => {
