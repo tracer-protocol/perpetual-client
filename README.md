@@ -39,7 +39,7 @@ Create a .env.local in your root directory and set the following variables
 ```
 NEXT_PUBLIC_TRADER_ADDRESS="address from truffle migrate"
 NEXT_PUBLIC_GRAPH_URI=http://localhost:8000/subgraphs/name/{your-local-name}/{your-deployed-graph-name}
-NEXT_PUBLIC_OME_BASE_URL=http://localhost:8989
+NEXT_PUBLIC_API_URL=http://localhost:8989
 NEXT_PUBLIC_DEPLOYMENT=DEVELOPMENT
 
 ```
@@ -49,7 +49,7 @@ If you are not making changes to the graph or the OME, you can run off the deplo
 ```
 NEXT_PUBLIC_TRADER_ADDRESS="0x98D801b0cB3576c048CB74e095187DF5E7025D61"
 NEXT_PUBLIC_GRAPH_URI=https://api.thegraph.com/subgraphs/name/tracer-protocol/tracer-kovan
-NEXT_PUBLIC_OME_BASE_URL=https://order.tracer.finance
+NEXT_PUBLIC_API_URL=https://order.tracer.finance
 NEXT_PUBLIC_DEPLOYMENT=DEVELOPMENT
 ```
 
