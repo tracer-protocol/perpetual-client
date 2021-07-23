@@ -86,13 +86,14 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
     })
         .then((res) => res.json())
         .then((res) => {
-            if (res?.status === 404) {
+            
+            if (res?.data?.status === 404) {
                 return {
                     status: 'error',
                     message: 'Failed to create order 404 not found',
                     data: 'Failed to create order 400 bad request',
                 } as APIResult;
-            } else if (res?.status === 400) {
+            } else if (res?.data?.status === 400) {
                 return {
                     status: 'error',
                     message: 'Failed to create order 400 bad request',
@@ -101,7 +102,7 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
             } else {
                 return {
                     status: 'success',
-                    message: res.message,
+                    message: res?.message,
                     data: res.data,
                 } as APIResult;
             }
