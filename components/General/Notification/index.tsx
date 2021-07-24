@@ -127,7 +127,7 @@ const Header: React.FC<{ onDismiss: (e: any) => any, title: React.ReactNode }> =
                 fontWeight: 'bold',
                 fontSize: '19px',
                 letterSpacing: '-0.38px',
-                width: '100%',
+                width: 'calc(100% - 60px)',
                 display: 'flex',
                 padding: '16px 16px 0',
                 borderBottom: '1px solid var(--color-accent)',
