@@ -130,5 +130,6 @@ export default createGlobalStyle`
         top: 65px !important;
         z-index: 100001 !important;
         max-width: 400px !important;
+        min-width: 400px !important;
     }
 `;
