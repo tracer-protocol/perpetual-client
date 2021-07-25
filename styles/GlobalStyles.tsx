@@ -125,8 +125,6 @@ export default createGlobalStyle`
         z-index: 99;
     }
 
-   
-
     // React toast notifications
     .react-toast-notifications__container {
         top: 65px !important;
