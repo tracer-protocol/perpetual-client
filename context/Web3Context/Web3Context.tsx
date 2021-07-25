@@ -7,7 +7,9 @@ import Onboard from '@tracer-protocol/onboard';
 import { API as OnboardApi, Wallet, Initialization } from '@tracer-protocol/onboard/dist/src/interfaces';
 import { formatEther } from '@ethersproject/units';
 import { Network, networkConfig } from './Web3Context.Config';
+import ApproveConnectionModal from '@components/Legal/ApproveConnectionModal';
 import Web3 from 'web3';
+import Cookies from 'universal-cookie';
 
 export type OnboardConfig = Partial<Omit<Initialization, 'networkId'>>;
 
@@ -54,6 +56,8 @@ const Web3Store: React.FC<Web3ContextProps> = ({
     const [onboard, setOnboard] = useState<OnboardApi | undefined>(undefined);
     const [isReady, setIsReady] = useState<boolean>(false);
     const [config, setConfig] = useState<Network>(networkConfig[0]);
+    const [showTerms, setShowTerms] = useState<boolean>(false);
+    const [acceptedTerms, acceptTerms] = useState(false);
 
     // Initialize OnboardJS
     useEffect(() => {
@@ -122,6 +126,15 @@ const Web3Store: React.FC<Web3ContextProps> = ({
         initializeOnboard();
     }, []);
 
+    useEffect(() => {
+        const cookies = new Cookies();
+        if (acceptedTerms) {
+            cookies.set('acceptedTerms', 'true', { path: '/' });
+            handleConnect();
+            setShowTerms(false);
+        }
+    }, [acceptedTerms]);
+
     const checkIsReady = async () => {
         const isReady = await onboard?.walletCheck();
         setIsReady(!!isReady);
@@ -137,11 +150,25 @@ const Web3Store: React.FC<Web3ContextProps> = ({
         await onboard?.walletReset();
     };
 
+    const acceptLegalTerms = () => {
+        const cookies = new Cookies();
+        if (cookies.get('acceptedTerms') !== 'true') {
+            setShowTerms(true);
+        } else {
+            setShowTerms(false);
+            acceptTerms(true);
+        }
+        return acceptedTerms;
+    };
+
     const handleConnect = async () => {
         if (onboard) {
             try {
-                await onboard?.walletSelect();
-                await checkIsReady();
+                const accepted = acceptLegalTerms();
+                if (accepted) {
+                    await onboard?.walletSelect();
+                    await checkIsReady();
+                }
             } catch (err) {
                 console.error(err);
             }
@@ -149,26 +176,33 @@ const Web3Store: React.FC<Web3ContextProps> = ({
     };
 
     const onboardState = onboard?.getState();
-
     return (
-        <Web3Context.Provider
-            value={{
-                account: account,
-                network: network,
-                ethBalance: ethBalance,
-                web3: web3,
-                wallet: wallet,
-                onboard: onboard,
-                isReady: isReady,
-                checkIsReady,
-                resetOnboard,
-                handleConnect,
-                config,
-                isMobile: !!onboardState?.mobileDevice,
-            }}
-        >
-            {children}
-        </Web3Context.Provider>
+        <>
+            <Web3Context.Provider
+                value={{
+                    account: account,
+                    network: network,
+                    ethBalance: ethBalance,
+                    web3: web3,
+                    wallet: wallet,
+                    onboard: onboard,
+                    isReady: isReady,
+                    checkIsReady,
+                    resetOnboard,
+                    handleConnect,
+                    config,
+                    isMobile: !!onboardState?.mobileDevice,
+                }}
+            >
+                {children}
+            </Web3Context.Provider>
+            <ApproveConnectionModal
+                acceptedTerms={acceptedTerms}
+                show={showTerms}
+                setShow={setShowTerms}
+                acceptTerms={acceptTerms}
+            />
+        </>
     );
 };
 
