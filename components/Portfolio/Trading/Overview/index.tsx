@@ -239,7 +239,7 @@ const Overview: FC = () => {
                     ))}
                     {!account ? (
                         <ConnectOverlay />
-                    ) : fetchedTracers[0]?.getBalance()?.quote.eq(0) ? (
+                    ) : fetchedTracers.length === 0 ? (
                         <PositionOverlay tracers={fetchedTracers} showMarketPreview={true} />
                     ) : null}
                 </HScrollContainer>

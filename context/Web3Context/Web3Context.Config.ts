@@ -36,7 +36,7 @@ export const networkConfig: Record<string, Network> = {
         previewUrl: 'https://rinkeby-explorer.arbitrum.io/#',
         contracts: {
             trader: {
-                address: '0x5A36DA9Ef7C090269F716791ea2CEE623A00dcaF',
+                address: '0xb6fEb22261c7cf27B7cc031f78575eCEE0778E48',
                 abi: traderJSON as AbiItem[],
             },
         },
@@ -46,7 +46,7 @@ export const networkConfig: Record<string, Network> = {
         previewUrl: 'https://kovan.etherscan.io',
         contracts: {
             trader: {
-                address: '0x98D801b0cB3576c048CB74e095187DF5E7025D61',
+                address: '0x9858A4D87dd7a6D07DF9BB152d638ACBA2f99193',
                 abi: traderJSON as AbiItem[],
             },
         },
