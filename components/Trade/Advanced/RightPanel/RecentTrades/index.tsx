@@ -84,7 +84,7 @@ const RecentTradesTitle = styled.div`
     letter-spacing: var(--letter-spacing-extra-small);
     color: #ffffff;
     text-transform: capitalize;
-    padding: 10px 0 0 10px;
+    padding: 16px 0 0 16px;
 `;
 
 const RecentTradesContainer = styled.div<{ displayTrades: boolean }>`
@@ -94,7 +94,7 @@ const RecentTradesContainer = styled.div<{ displayTrades: boolean }>`
     flex-direction: column;
     border-top: 1px solid var(--color-accent);
     display: flex;
-    @media (max-width: 1600px) {
+    @media (max-height: 1080px) {
         display: ${(props) => (props.displayTrades ? 'flex' : 'none')};
         ${RecentTradesTitle} {
             display: none;

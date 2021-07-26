@@ -150,7 +150,7 @@ const OrderBook: FC<OProps> = styled(
         return (
             <div className={className}>
                 <OrderBookContainer>
-                    <Filter>Filter</Filter>
+                    <OrderBookSubHeading>Filter</OrderBookSubHeading>
                     <OrderBookTitle>Order Book</OrderBookTitle>
                     <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
                     {showOrderBook ? (
@@ -229,16 +229,16 @@ const OrderBook: FC<OProps> = styled(
 
 export default OrderBook;
 
-const Filter = styled.div`
+const OrderBookSubHeading = styled.div`
     display: none;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 10px;
     width: 100%;
     min-height: var(--height-extra-small-container);
     border-bottom: 1px solid var(--color-accent);
     margin-bottom: 0.6rem;
 
-    @media (max-width: 1600px) {
+    @media (max-height: 1080px) {
         display: flex;
     }
 `;
@@ -249,7 +249,7 @@ const OrderBookTitle = styled.div`
     letter-spacing: var(--letter-spacing-extra-small);
     color: #ffffff;
     text-transform: capitalize;
-    margin: 0 0.8rem 0.5rem;
+    margin: 8px 0.8rem;
 `;
 
 const StyledToggle = styled.img`
@@ -278,7 +278,11 @@ const OrderBookToggle = styled(({ className, showOrderBook, onClick }: OBTProps)
 })<OBTProps>`
     position: absolute;
     right: 1rem;
-    top: 52px;
+    top: 10px;
+    
+    @media (max-height: 1080px) {
+        top: 52px;
+    }
 
     &:hover {
         cursor: pointer;
@@ -404,12 +408,13 @@ const StyledTriangleDown = styled.img`
 `;
 
 const PrecisionDropdownButton = styled(Button)`
-    height: var(--height-extra-small-button);
+    height: var(--height-small-button);
     padding: 0;
     max-width: 5rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: var(--font-size-small);
 `;
 
 type PDProps = {
@@ -456,6 +461,12 @@ export const PrecisionDropdown = styled(({ className, decimals, setDecimals }: P
         background: none;
         color: var(--color-primary);
     }
+
+    @media (max-height: 1080px) {
+        top: 6px;
+        right: unset;
+        left: 70px;
+    }
 `;
 
 const OrderBookContainer = styled.div`
@@ -465,7 +476,7 @@ const OrderBookContainer = styled.div`
     position: relative;
     padding: 0 0 0.6rem;
     @media (max-height: 850px) {
-        ${OrderBookTitle}, ${OrderBookToggle}, ${PrecisionDropdown} {
+        ${OrderBookTitle}, ${OrderBookToggle} {
             display: none;
         }
     }
