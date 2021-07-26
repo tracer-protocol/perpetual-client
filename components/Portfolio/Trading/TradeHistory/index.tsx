@@ -1,96 +1,49 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Logo } from '@components/General';
-import { toApproxCurrency } from '@libs/utils';
-import { TableHeading, TableRow, TableCell } from '@components/Portfolio';
-import { DateAndTime } from '@components/General';
+import { TableHeading, TableRow, TableCell, Table } from '@components/Portfolio';
+import { OMEContext } from '@context/OMEContext';
+import { timeAgo, toApproxCurrency } from '@libs/utils';
 
 const TradeHistory: React.FC = () => {
-    const headings = ['Date', 'Market', 'Position', 'Exposure / Price', 'Slippage', 'Fees', 'Total Cost', 'Order Type'];
-
-    const tracers = [
-        {
-            date: '24/04/2021',
-            time: '04:31pm',
-            name: 'TSLA',
-            market: 'TSLA-USDC',
-            position: 'long',
-            exposure: 4.5,
-            slippage: 3.23,
-            fees: 2.23,
-            cost: 453.23,
-            type: 'Market',
-        },
-        {
-            date: '24/04/2021',
-            time: '04:31pm',
-            name: 'TSLA',
-            market: 'TSLA-USDC',
-            position: 'long',
-            exposure: 4.5,
-            slippage: 3.23,
-            fees: 2.23,
-            cost: 453.23,
-            type: 'Market',
-        },
-        {
-            date: '24/04/2021',
-            time: '04:31pm',
-            name: 'TSLA',
-            market: 'TSLA-USDC',
-            position: 'long',
-            exposure: 4.5,
-            slippage: 3.23,
-            fees: 2.23,
-            cost: 453.23,
-            type: 'Market',
-        },
-    ];
-
-    const TableHeadEndTheme = {
-        minWidth: '200px',
-        borderBottom: '1px solid var(--color-accent)',
-    };
+    const { filledOrders } = useContext(OMEContext);
+    filledOrders?.sort((order1, order2) => (order1.timestamp < order2.timestamp && 1) || -1);
 
     return (
         <>
-            <table>
+            <Table>
                 <thead>
                     <tr>
-                        {headings.map((heading, i) =>
-                            i === 7 ? (
-                                <TableHeading theme={TableHeadEndTheme} key={i}>
-                                    {heading}
-                                </TableHeading>
-                            ) : (
+                        {['Date', 'Market', 'Position', 'Exposure', 'Slippage', 'Fees', 'Total Cost', 'Order Type'].map(
+                            (heading: string, i: number) => (
                                 <TableHeading key={i}>{heading}</TableHeading>
                             ),
                         )}
                     </tr>
                 </thead>
                 <tbody>
-                    {tracers.map((tracer, i) => (
+                    {filledOrders?.map((order, i) => (
                         <TableRow key={`table-row-${i}`}>
-                            <TableCell>
-                                <DateAndTime date={tracer.date} time={tracer.time} />
-                            </TableCell>
+                            <TableCell>{timeAgo(Date.now(), parseInt(order.timestamp) * 1000)}</TableCell>
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
-                                        <Logo ticker={tracer.name} />
+                                        <Logo ticker="ETH" />
                                     </div>
-                                    <div className="my-auto ml-2">{tracer.market}</div>
+                                    <div className="my-auto ml-2">ETH/USDC</div>
                                 </div>
                             </TableCell>
-                            <TableCell>{tracer.position.toUpperCase()}</TableCell>
-                            <TableCell>{toApproxCurrency(tracer.exposure)}</TableCell>
-                            <TableCell>{toApproxCurrency(tracer.slippage)}</TableCell>
-                            <TableCell>{toApproxCurrency(tracer.fees)}</TableCell>
-                            <TableCell>{toApproxCurrency(tracer.cost)}</TableCell>
-                            <TableCell>{tracer.type}</TableCell>
+                            <TableCell className={order.position ? 'red' : 'green'}>
+                                {order.position ? 'Short' : 'Long'}
+                            </TableCell>
+                            <TableCell>{order.amount.toFixed(2)}</TableCell>
+                            <TableCell>-</TableCell>
+                            <TableCell>-</TableCell>
+                            <TableCell>{toApproxCurrency(order.price)}</TableCell>
+                            <TableCell>-</TableCell>
                         </TableRow>
                     ))}
                 </tbody>
-            </table>
+            </Table>
         </>
     );
 };

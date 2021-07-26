@@ -6,7 +6,6 @@ import { Advanced } from '@components/Trade';
 import { OrderStore, SelectedTracerStore } from 'context';
 import { InsuranceStore } from '@context/InsuranceContext';
 import styled from 'styled-components';
-import { OMEStore } from '@context/OMEContext';
 import { StyledMenu as AccountDropdown } from '@components/Nav/Navbar/AccountDropdown';
 import Footer from '@components/Footer';
 
@@ -18,15 +17,13 @@ const Trade: React.FC = styled(({ className }) => {
         <div className={className}>
             <NavBar />
             <SelectedTracerStore tracer={query.tracer as string}>
-                <OMEStore>
-                    <InsuranceStore>
-                        {/*TODO: Enable basic trading*/}
-                        {/* <OrderStore>{advanced ? <Advanced /> : <Basic />}</OrderStore> */}
-                        <OrderStore>
-                            <Advanced />
-                        </OrderStore>
-                    </InsuranceStore>
-                </OMEStore>
+                <InsuranceStore>
+                    {/*TODO: Enable basic trading*/}
+                    {/* <OrderStore>{advanced ? <Advanced /> : <Basic />}</OrderStore> */}
+                    <OrderStore>
+                        <Advanced />
+                    </OrderStore>
+                </InsuranceStore>
             </SelectedTracerStore>
             <Footer />
         </div>

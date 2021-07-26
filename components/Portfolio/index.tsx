@@ -27,8 +27,6 @@ export const SmallTitle = styled.h2`
     white-space: nowrap;
 `;
 
-export const Table = styled.table``;
-
 export const TableHeader = styled.thead``;
 
 export const TableHeading = styled.th`
@@ -44,6 +42,8 @@ export const TableHeading = styled.th`
 export const TableLastHeading = styled(TableHeading)`
     border-right: none;
 `;
+
+export const Table = styled.table``;
 
 export const TableBody = styled.tbody``;
 

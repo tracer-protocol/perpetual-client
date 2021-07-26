@@ -11,6 +11,7 @@ import GraphProvider from '@libs/Graph';
 import { Notification } from '@components/General/Notification';
 import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
+import { OMEStore } from '@context/OMEContext';
 import GlobalStyles from 'styles/GlobalStyles';
 import styled from 'styled-components';
 import { Web3Store } from '@context/Web3Context/Web3Context';
@@ -96,7 +97,9 @@ const App = ({ Component, pageProps }: AppProps) => {
                         <GraphProvider>
                             <FactoryStore>
                                 <TransactionStore>
-                                    <Component {...pageProps} />
+                                    <OMEStore>
+                                        <Component {...pageProps} />
+                                    </OMEStore>
                                 </TransactionStore>
                             </FactoryStore>
                         </GraphProvider>
