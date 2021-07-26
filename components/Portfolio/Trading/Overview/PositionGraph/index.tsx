@@ -54,7 +54,7 @@ const PositionGraph: FC<PGProps> = styled(
                             <HeadingCell>{market}</HeadingCell>
                             <HeadingCell className={base.lt(0) ? 'green' : 'red'}>
                                 {base.lt(0) && 'SHORT'}
-                                {base.lt(0) && 'LONG'}
+                                {base.gt(0) && 'LONG'}
                             </HeadingCell>
                         </Row>
                         <Row>
