@@ -55,9 +55,11 @@ const Advanced: React.FC = styled(({ className }) => {
     const { order, orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
     const [isAdjust] = useState(false);
     const { addToast } = useToasts();
+    const [tourCompleted, setTutorialCompleted] = useState<boolean>(false);
     const [isTourOpen, setTourOpen] = useState<boolean>(false);
 
     useEffect(() => {
+        checkTutorialComplete();
         if (orderDispatch) {
             orderDispatch({ type: 'setLock', value: true });
             orderDispatch({ type: 'setAdvanced', value: true });
@@ -111,6 +113,13 @@ const Advanced: React.FC = styled(({ className }) => {
         closeButton.addEventListener('click', function () {
             setTutorialComplete();
         });
+    };
+
+    const checkTutorialComplete = () => {
+        const cookies = new Cookies();
+        if(cookies.get('tutorialCompleted') == 'true'){
+            setTutorialCompleted(true);
+        }
     };
 
     const setTutorialComplete = () => {
@@ -183,19 +192,21 @@ const Advanced: React.FC = styled(({ className }) => {
                 </RightPanel>
                 <Overlay id="trading-overlay" />
             </div>
-            <Tour
-                onRequestClose={closeTour}
-                steps={tourConfig as Array<any>}
-                maskSpace={0}
-                isOpen={isTourOpen}
-                maskClassName="mask"
-                className="helper"
-                rounded={5}
-                showNumber={false}
-                updateDelay={0}
-                onAfterOpen={(e) => highlightDots(e)}
-                onBeforeClose={(e) => enableBodyScroll(e)}
-            />
+            {!tourCompleted && 
+                <Tour
+                    onRequestClose={closeTour}
+                    steps={tourConfig as Array<any>}
+                    maskSpace={0}
+                    isOpen={isTourOpen}
+                    maskClassName="mask"
+                    className="helper"
+                    rounded={5}
+                    showNumber={false}
+                    updateDelay={0}
+                    onAfterOpen={(e) => highlightDots(e)}
+                    onBeforeClose={(e) => enableBodyScroll(e)}
+                />
+            }
         </>
     );
 })`
