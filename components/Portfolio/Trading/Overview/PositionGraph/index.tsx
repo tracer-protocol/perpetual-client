@@ -32,15 +32,14 @@ const GraphContainer = styled.div`
 interface PGProps {
     className?: string;
     selectedTracerAddress: string;
-    positionType: number;
+    base: BigNumber;
     balances: UserBalance;
-    baseTicker: string;
+    market: string;
     fairPrice: BigNumber;
     maxLeverage: BigNumber;
-    quoteTicker: string;
 }
 const PositionGraph: FC<PGProps> = styled(
-    ({ selectedTracerAddress, className, positionType, balances, fairPrice, maxLeverage }: PGProps) => {
+    ({ selectedTracerAddress, className, base, balances, market, fairPrice, maxLeverage }: PGProps) => {
         const { lines } = useLines(selectedTracerAddress);
 
         // TODO: Need to define positions in context
@@ -53,10 +52,10 @@ const PositionGraph: FC<PGProps> = styled(
                 <PGContainer>
                     <TableBody>
                         <Row>
-                            <HeadingCell>ETH-USDC</HeadingCell>
-                            <HeadingCell className={positionType === 1 ? 'green' : 'red'}>
-                                {positionType === 1 && 'SHORT'}
-                                {positionType === 2 && 'LONG'}
+                            <HeadingCell>{market}</HeadingCell>
+                            <HeadingCell className={base.lt(0) ? 'green' : 'red'}>
+                                {base.lt(0) && 'SHORT'}
+                                {base.lt(0) && 'LONG'}
                             </HeadingCell>
                         </Row>
                         <Row>
@@ -86,9 +85,16 @@ const PositionGraph: FC<PGProps> = styled(
                         <Row>
                             <InfoCell>
                                 <Amount>
-                                    {toApproxCurrency(
-                                        calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage),
-                                    )}
+                                    {!base.eq(0)
+                                        ? toApproxCurrency(
+                                              calcLiquidationPrice(
+                                                  balances.quote,
+                                                  balances.base,
+                                                  fairPrice,
+                                                  maxLeverage,
+                                              ),
+                                          )
+                                        : '-'}
                                 </Amount>
                                 <CellTitle>
                                     <StatusDot type="status-orange" />
@@ -103,7 +109,9 @@ const PositionGraph: FC<PGProps> = styled(
                                 </CellTitle>
                             </InfoCell>
                             <InfoCell inner>
-                                <Amount>{toApproxCurrency(lines[lines.length - 1]?.value)}</Amount>
+                                <Amount>
+                                    {lines.length !== 0 ? toApproxCurrency(lines[lines.length - 1]?.value) : '-'}
+                                </Amount>
                                 <CellTitle>
                                     <StatusDot type="status-white" />
                                     Last Price
