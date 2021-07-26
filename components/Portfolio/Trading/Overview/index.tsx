@@ -228,8 +228,8 @@ const Overview: FC = () => {
                         <PositionGraph
                             key={`position-graph-${i}`}
                             selectedTracerAddress={tracer?.address ?? ''}
-                            balances={tracer?.getBalance() ?? defaults.balances}
                             base={tracer?.getBalance().base ?? defaults.base}
+                            quote={tracer?.getBalance().quote ?? defaults.quote}
                             market={tracer?.marketId}
                             fairPrice={tracer?.getFairPrice() ?? defaults.fairPrice}
                             maxLeverage={tracer?.getMaxLeverage() ?? defaults.maxLeverage}
