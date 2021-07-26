@@ -8,7 +8,7 @@ const HelperTitle = styled.span`
     display: flex;
     align-items: center;
     height: 57px;
-    padding: 0px 16px;
+    padding: 0 16px;
     font-size: var(--font-size-large);
     border-bottom: 1px solid var(--color-background-secondary);
     pointer-events: none;
@@ -32,7 +32,7 @@ const HelperText = styled.p<HTextProps>`
 const HelperList = styled.ul`
     font-size: var(--font-size-small);
     list-style: inherit;
-    padding: 0px 16px 16px 32px;
+    padding: 0 16px 16px 32px;
     pointer-events: none;
 `;
 
@@ -40,6 +40,7 @@ export const tourConfig = [
     // Wallet button
     {
         selector: '#account-dropdown',
+        // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (
                 <Prompt>
@@ -48,6 +49,7 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         action: () => {
             const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
             const marginModalEl = document.getElementById('account-modal') as HTMLElement;
@@ -72,6 +74,7 @@ export const tourConfig = [
     // Calculator modal
     {
         selector: '#calculator-modal .content',
+        // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (
                 <Prompt>
@@ -83,6 +86,7 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         action: () => {
             const calcButton = document.getElementById('calc-button') as HTMLElement;
             calcButton?.click();
@@ -104,6 +108,7 @@ export const tourConfig = [
     // Margin modal
     {
         selector: '#account-modal .content',
+        // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (
                 <Prompt>
@@ -116,6 +121,7 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         action: () => {
             const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
             const marginModalEl = document.getElementById('account-modal') as HTMLElement;
@@ -137,6 +143,7 @@ export const tourConfig = [
     // Market panel
     {
         selector: '#adjustment-container',
+        // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (
                 <Prompt>
@@ -156,10 +163,11 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         action: () => {
             // Hide the margin modal after reaching next stage of tutorial
             const marginModalCloseButton = document.querySelector(
-                '#account-modal span[class*="General__Close"',
+                '#account-modal span[class*="General__Close"]',
             ) as HTMLElement;
             marginModalCloseButton?.click();
         },
@@ -171,6 +179,7 @@ export const tourConfig = [
     // Position panel
     {
         selector: '#position-panel',
+        // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (
                 <Prompt>
@@ -188,6 +197,7 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         action: () => {
             // Hide the 'No Position Open' overlay
             const positionOverlay = document.getElementById('position-overlay') as HTMLElement;
@@ -204,6 +214,7 @@ export const tourConfig = [
     // Adjust position panel
     {
         selector: '#order-panel',
+        // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (
                 <Prompt>
@@ -230,6 +241,7 @@ export const tourConfig = [
     // Close position button
     {
         selector: '#close-order-button',
+        // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (
                 <Prompt>
@@ -242,6 +254,7 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         action: () => {
             // Enable the close order button
             const closeOrderButton = document.getElementById('position-close-container') as HTMLButtonElement;
