@@ -142,7 +142,7 @@ const PositionTab: FC<PTProps> = styled(
                     </LegendsContainer>
                 </PositionInfo>
 
-                <CloseOrderContainer>
+                <CloseOrderContainer id="position-close-container"> {/* Required for ReactTour */}
                     <CloseOrderButton />
                 </CloseOrderContainer>
 

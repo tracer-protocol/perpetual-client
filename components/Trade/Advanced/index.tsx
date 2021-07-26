@@ -57,6 +57,7 @@ const Advanced: React.FC = styled(({ className }) => {
     const { addToast } = useToasts();
     const [tourCompleted, setTutorialCompleted] = useState<boolean>(false);
     const [isTourOpen, setTourOpen] = useState<boolean>(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
         checkTutorialComplete();
@@ -89,7 +90,7 @@ const Advanced: React.FC = styled(({ className }) => {
         // If cookie with flag does not exist,
         // start tutorial
         const cookies = new Cookies();
-        if (cookies.get('tutorialCompleted') != 'true') {
+        if (cookies.get('tutorialCompleted') !== 'true') {
             addToast(['Trading with Tracer', `Click here to learn how to trade with Tracer`], {
                 appearance: 'info',
                 autoDismiss: false,
@@ -117,14 +118,14 @@ const Advanced: React.FC = styled(({ className }) => {
 
     const checkTutorialComplete = () => {
         const cookies = new Cookies();
-        if (cookies.get('tutorialCompleted') == 'true') {
+        if (cookies.get('tutorialCompleted') === 'true') {
             setTutorialCompleted(true);
         }
     };
 
     const setTutorialComplete = () => {
         const cookies = new Cookies();
-        if (cookies.get('tutorialCompleted') != 'true') {
+        if (cookies.get('tutorialCompleted') !== 'true') {
             cookies.set('tutorialCompleted', 'true', { path: '/' });
         }
     };
@@ -134,6 +135,11 @@ const Advanced: React.FC = styled(({ className }) => {
 
         // Reset the elements affected by the tour
 
+        // Reset navbar z-index
+        const navbar = document.getElementById('nav') as HTMLElement;
+        if (navbar) {
+            navbar.removeAttribute('style');
+        }
         // Show the 'No Position Open' again
         const positionOverlay = document.getElementById('position-overlay') as HTMLElement;
         if (positionOverlay) {
@@ -164,12 +170,11 @@ const Advanced: React.FC = styled(({ className }) => {
             const navDots: Array<any> = Array.from(
                 document.querySelectorAll('nav[data-tour-elem="navigation"] button'),
             );
-            var currentIndex = 0;
             // Wait for Reactour to apply styling
             setTimeout(function () {
                 navDots.map((dot, i) => {
                     if (dot.classList.contains('reactour__dot--is-active')) {
-                        currentIndex = i;
+                        setCurrentIndex(i);
                     }
                 });
                 navDots.slice(0, currentIndex).map((dot) => {
@@ -199,19 +204,21 @@ const Advanced: React.FC = styled(({ className }) => {
                 <Overlay id="trading-overlay" />
             </div>
             {!tourCompleted && (
-                <Tour
-                    onRequestClose={closeTour}
-                    steps={tourConfig as Array<any>}
-                    maskSpace={0}
-                    isOpen={isTourOpen}
-                    maskClassName="mask"
-                    className="helper"
-                    rounded={5}
-                    showNumber={false}
-                    updateDelay={0}
-                    onAfterOpen={(e) => highlightDots(e)}
-                    onBeforeClose={(e) => enableBodyScroll(e)}
-                />
+                <>
+                    <Tour
+                        onRequestClose={closeTour}
+                        steps={tourConfig as Array<any>}
+                        maskSpace={0}
+                        isOpen={isTourOpen}
+                        maskClassName="mask"
+                        className="helper"
+                        rounded={5}
+                        showNumber={false}
+                        updateDelay={0}
+                        onAfterOpen={(e) => highlightDots(e)}
+                        onBeforeClose={(e) => enableBodyScroll(e)}
+                    />
+                </>
             )}
         </>
     );

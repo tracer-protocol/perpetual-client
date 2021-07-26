@@ -49,11 +49,16 @@ export const tourConfig = [
         action: () => {
             const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
             const marginModalEl = document.getElementById('account-modal') as HTMLElement;
+            const navbar = document.getElementById('nav') as HTMLElement;
+
             if (calculatorEl) {
                 calculatorEl.style.display = 'block';
             }
             if (marginModalEl) {
                 marginModalEl.style.display = 'block';
+            }
+            if (navbar) {
+                calculatorEl.style.zIndex = '1000000';
             }
         },
         position: 'bottom',
@@ -225,7 +230,7 @@ export const tourConfig = [
         ),
         action: () => {
             // Enable the close order button
-            const closeOrderButton = document.getElementById('close-order-button') as HTMLButtonElement;
+            const closeOrderButton = document.getElementById('position-close-container') as HTMLButtonElement;
             if (closeOrderButton) {
                 closeOrderButton.disabled = false;
             }
