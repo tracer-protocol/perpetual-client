@@ -43,7 +43,6 @@ interface OProps {
 const OrderBook: FC<OProps> = styled(
     ({ askOrders, bidOrders, lastTradePrice, marketUp, decimals, setDecimals, className }: OProps) => {
         const { orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
-        const [showOrderBook, setShowOrderBook] = useState(true);
         const [showOverlay, setOverlay] = useState(true);
 
         const sumQuantities = (orders: OMEOrder[]) => {
@@ -150,10 +149,9 @@ const OrderBook: FC<OProps> = styled(
         return (
             <div className={className}>
                 <OrderBookContainer>
-                    <OrderBookSubText>Filter</OrderBookSubText>
                     <OrderBookTitle>Order Book</OrderBookTitle>
-                    {showOrderBook ? (
-                        askOrders?.length || bidOrders?.length ? (
+                    {askOrders?.length ||
+                        (bidOrders?.length && (
                             <>
                                 <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
                                 <BookRow className="header">
@@ -209,10 +207,7 @@ const OrderBook: FC<OProps> = styled(
                                 </MarketRow>
                                 {renderOrders(true, bidOrdersCopy)}
                             </>
-                        ) : (
-                            <Icon component={TracerLoading} className="tracer-loading" />
-                        )
-                    ) : null}
+                        ))}
                 </OrderBookContainer>
                 {showOverlay ? <FogOverlay buttonName="Show Order Book" onClick={() => setOverlay(false)} /> : null}
             </div>
@@ -220,7 +215,7 @@ const OrderBook: FC<OProps> = styled(
     },
 )`
     position: relative;
-    @media (max-height: 1080px) {
+    @media (max-height: 850px) {
         display: ${(props) => (props.displayBook ? 'block' : 'none')};
         overflow: auto;
     }
@@ -228,39 +223,53 @@ const OrderBook: FC<OProps> = styled(
 
 export default OrderBook;
 
-const OrderBookSubText = styled.div`
-    display: none;
-    align-items: center;
-    padding: 0 0.8rem;
-    width: 100%;
-    min-height: var(--height-extra-small-container);
-    font-size: var(--font-size-small);
-    border-bottom: 1px solid var(--color-accent);
-    margin-bottom: 0.6rem;
-
-    @media (max-height: 1080px) {
-        display: flex;
-    }
-`;
-
 const OrderBookTitle = styled.div`
-    display: flex;
-    align-items: center;
     font-size: var(--font-size-small-heading);
     font-weight: bold;
     letter-spacing: var(--letter-spacing-extra-small);
     color: #ffffff;
     text-transform: capitalize;
-    padding: 0px 0.8rem;
-    margin-bottom: 8px;
-    height: var(--height-extra-small-container);
-    border-bottom: 1px solid var(--color-accent);
+    margin: 0 0.8rem 0.5rem;
+`;
+
+const StyledToggle = styled.img`
+    height: 0.8rem;
+    transition: all 400ms ease-in-out;
+    display: inline;
+    margin-top: -0.2rem;
+    margin-left: 0.2rem;
+
+    &.rotate {
+        transform: rotate(180deg);
+        margin-top: -4px;
+    }
+`;
+interface OBTProps {
+    className?: string;
+    showOrderBook: boolean;
+    onClick: () => void;
+}
+const OrderBookToggle = styled(({ className, showOrderBook, onClick }: OBTProps) => {
+    return (
+        <div className={className} onClick={onClick}>
+            <StyledToggle className={showOrderBook ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
+        </div>
+    );
+})<OBTProps>`
+    position: absolute;
+    right: 1rem;
+    top: 0.7rem;
+
+    &:hover {
+        cursor: pointer;
+    }
 `;
 
 const Item = styled.div`
     width: 100%;
     white-space: nowrap;
     margin: 0 0.8rem;
+    // border-radius: 2px;
 
     &.cumulative {
         text-align: right;
@@ -309,8 +318,7 @@ const BookRow = styled.div`
 
 const MarketRow = styled(BookRow)`
     background: var(--color-background-secondary);
-    padding: 8px 0;
-    margin: 8px 0;
+    padding: 0.5rem 0;
     &:hover {
         opacity: 1;
     }
@@ -377,13 +385,12 @@ const StyledTriangleDown = styled.img`
 `;
 
 const PrecisionDropdownButton = styled(Button)`
-    height: var(--height-small-button);
+    height: var(--height-extra-small-button);
     padding: 0;
     max-width: 5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: var(--font-size-small);
 `;
 
 type PDProps = {
@@ -423,18 +430,12 @@ export const PrecisionDropdown = styled(({ className, decimals, setDecimals }: P
     );
 })<PDProps>`
     position: absolute;
-    right: 0.8rem;
-    top: 6px;
+    right: 2.5rem;
+    top: 0.7rem;
 
     &:hover {
         background: none;
         color: var(--color-primary);
-    }
-
-    @media (max-height: 1080px) {
-        top: 6px;
-        right: unset;
-        left: 70px;
     }
 `;
 
@@ -443,9 +444,9 @@ const OrderBookContainer = styled.div`
     display: flex;
     flex-direction: column;
     position: relative;
-    padding: 0 0 0.6rem;
-    @media (max-height: 1080px) {
-        ${OrderBookTitle} {
+    padding: 0.6rem 0;
+    @media (max-height: 850px) {
+        ${OrderBookTitle}, ${OrderBookToggle}, ${PrecisionDropdown} {
             display: none;
         }
     }
