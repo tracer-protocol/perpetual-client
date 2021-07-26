@@ -1,7 +1,7 @@
 import React from 'react';
 import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHeading, TableRow, TableCell } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell } from '@components/Table';
 import { DateAndTime } from '@components/General';
 
 const DepositHistory: React.FC = () => {

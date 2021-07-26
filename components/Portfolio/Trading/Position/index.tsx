@@ -6,14 +6,12 @@ import {
     TableLastHeading,
     TableRow,
     TableCell,
-    SecondaryCell,
-    StatusIndicator,
-    getStatusColour,
     TableHeader,
     Table,
     TableBody,
     TableLastCell,
-} from '@components/Portfolio';
+} from '@components/Table';
+import { SecondaryCell, StatusIndicator, getStatusColour } from '@components/Portfolio';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'libs/types/OrderTypes';
 import { LabelledTracers } from 'libs/types/TracerTypes';

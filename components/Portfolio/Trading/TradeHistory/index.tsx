@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { Logo } from '@components/General';
-import { TableHeading, TableRow, TableCell, Table } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell, Table } from '@components/Table';
 import { OMEContext } from '@context/OMEContext';
 import { timeAgo, toApproxCurrency } from '@libs/utils';
 

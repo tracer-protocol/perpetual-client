@@ -1,6 +1,7 @@
 import React from 'react';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHeading, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell } from '@components/Table';
+import { SecondaryCell } from '@components/Portfolio';
 import { DateAndTime } from '@components/General';
 
 const Transfers: React.FC = () => {

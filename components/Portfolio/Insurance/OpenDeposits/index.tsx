@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHeading, TableRow, TableCell } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell } from '@components/Table';
 
 const OpenDeposits: React.FC = () => {
     const headings = [
