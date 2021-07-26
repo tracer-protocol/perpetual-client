@@ -150,7 +150,7 @@ const OrderBook: FC<OProps> = styled(
         return (
             <div className={className}>
                 <OrderBookContainer>
-                    <OrderBookSubHeading>Filter</OrderBookSubHeading>
+                    <OrderBookSubText>Filter</OrderBookSubText>
                     <OrderBookTitle>Order Book</OrderBookTitle>
                     <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
                     {showOrderBook ? (
@@ -229,12 +229,13 @@ const OrderBook: FC<OProps> = styled(
 
 export default OrderBook;
 
-const OrderBookSubHeading = styled.div`
+const OrderBookSubText = styled.div`
     display: none;
     align-items: center;
     padding: 0 10px;
     width: 100%;
     min-height: var(--height-extra-small-container);
+    font-size: var(--font-size-small);
     border-bottom: 1px solid var(--color-accent);
     margin-bottom: 0.6rem;
 
