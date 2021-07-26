@@ -159,16 +159,13 @@ const TradesAndBook: React.FC<TBProps> = ({
     const [selected, setSelected] = useState(SHOW_BOOK);
     return (
         <>
-            <SlideSelectContainer>
-                <StyledSlideSelect onClick={(index, _e) => setSelected(index)} value={selected}>
-                    <Option>
-                        Order Book
-                        <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
-                    </Option>
-                    <Option>Recent Trades</Option>
-                </StyledSlideSelect>
-                <FilterText>Filter</FilterText>
-            </SlideSelectContainer>
+            <StyledSlideSelect onClick={(index, _e) => setSelected(index)} value={selected}>
+                <Option>
+                    Order Book
+                    <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
+                </Option>
+                <Option>Recent Trades</Option>
+            </StyledSlideSelect>
             <OrderBook
                 askOrders={askOrders}
                 decimals={decimals}
@@ -182,27 +179,6 @@ const TradesAndBook: React.FC<TBProps> = ({
         </>
     );
 };
-
-const FilterText = styled.span`
-    display: none;
-    align-items: center;
-    padding: 0 16px;
-    width: fit-content;
-
-    @media (max-width: 1600px) {
-        display: flex;
-        height: var(--height-extra-small-container);
-    }
-`;
-
-const SlideSelectContainer = styled.div`
-    position: relative;
-    min-height: var(--height-extra-small-container);
-
-    @media (max-width: 1600px) {
-        min-height: 80px;
-    }
-`;
 
 const StyledSlideSelect = styled(SlideSelect)`
     border-radius: 0;
@@ -220,14 +196,14 @@ const StyledSlideSelect = styled(SlideSelect)`
     > .selected {
         font-weight: bold;
         color: #fff;
+
+        ${Option} ${PrecisionDropdown} {
+            display: flex;
+        }
     }
 
     @media (max-height: 1080px) {
         display: flex;
-    }
-
-    @media (max-width: 1600px) {
-        border-bottom: 1px solid var(--color-accent);
     }
 
     ${SlideOption} {
@@ -254,6 +230,7 @@ const StyledSlideSelect = styled(SlideSelect)`
         max-width: 4rem;
         height: 24px;
         margin-left: 8px;
+        display: none;
         @media (max-width: 1600px) {
             position: absolute;
             bottom: -80px;

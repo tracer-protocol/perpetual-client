@@ -149,6 +149,7 @@ const OrderBook: FC<OProps> = styled(
         return (
             <div className={className}>
                 <OrderBookContainer>
+                    <Filter>Filter</Filter>
                     <OrderBookTitle>Order Book</OrderBookTitle>
                     <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
                     {showOrderBook ? (
@@ -227,6 +228,20 @@ const OrderBook: FC<OProps> = styled(
 
 export default OrderBook;
 
+const Filter = styled.div`
+    display: none;
+    align-items: center;
+    padding: 0 16px;
+    width: 100%;
+    min-height: var(--height-extra-small-container);
+    border-bottom: 1px solid var(--color-accent);
+    margin-bottom: 0.6rem;
+
+    @media (max-width: 1600px) {
+        display: flex;
+    }
+`;
+
 const OrderBookTitle = styled.div`
     font-size: var(--font-size-small-heading);
     font-weight: bold;
@@ -262,7 +277,7 @@ const OrderBookToggle = styled(({ className, showOrderBook, onClick }: OBTProps)
 })<OBTProps>`
     position: absolute;
     right: 1rem;
-    top: 0.7rem;
+    top: 52px;
 
     &:hover {
         cursor: pointer;
@@ -273,7 +288,6 @@ const Item = styled.div`
     width: 100%;
     white-space: nowrap;
     margin: 0 0.8rem;
-    // border-radius: 2px;
 
     &.cumulative {
         text-align: right;
@@ -448,7 +462,7 @@ const OrderBookContainer = styled.div`
     display: flex;
     flex-direction: column;
     position: relative;
-    padding: 0.6rem 0;
+    padding: 0 0 0.6rem;
     @media (max-height: 850px) {
         ${OrderBookTitle}, ${OrderBookToggle}, ${PrecisionDropdown} {
             display: none;
