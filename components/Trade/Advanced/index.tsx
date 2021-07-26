@@ -8,9 +8,9 @@ import { MARKET } from '@libs/types/OrderTypes';
 import dynamic from 'next/dynamic';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import Cookies from 'universal-cookie';
-import { useToasts } from 'react-toast-notifications';
 import { tourConfig } from './TourSteps';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
+import { useToasts } from 'react-toast-notifications';
 
 const Tour = dynamic(import('reactour'), { ssr: false });
 
@@ -54,11 +54,11 @@ const Advanced: React.FC = styled(({ className }) => {
     const { selectedTracer } = useContext(TracerContext);
     const { order, orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
     const [isAdjust] = useState(false);
-    const { addToast } = useToasts();
     const [tourCompleted, setTutorialCompleted] = useState<boolean>(false);
     const [isTourOpen, setTourOpen] = useState<boolean>(false);
     const [currentIndex, setCurrentIndex] = useState(0);
-
+    const { addToast } = useToasts();
+    
     useEffect(() => {
         checkTutorialComplete();
         if (orderDispatch) {
@@ -98,10 +98,15 @@ const Advanced: React.FC = styled(({ className }) => {
             // Get the toast notification element
             setTimeout(function () {
                 const toast = document.querySelector('.notification-content') as HTMLDivElement;
-                toast.addEventListener('click', function () {
-                    const closeButton = document.querySelector('.toast-close') as HTMLButtonElement;
-                    closeButton.click();
-                    setTourOpen(true);
+                toast.addEventListener('click', function (e) {
+                    const target = e.target as HTMLElement;
+                    // If the target is the close button, do not run
+                    if(!target.classList.contains('toast-close')){
+                        console.log(e);
+                        const closeButton = document.querySelector('.toast-close') as HTMLButtonElement;
+                        closeButton.click();
+                        setTourOpen(true);
+                    }
                 });
                 listenForDismiss();
             }, 10);
