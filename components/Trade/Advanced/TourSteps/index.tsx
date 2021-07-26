@@ -40,6 +40,7 @@ export const tourConfig = [
     // Wallet button
     {
         selector: '#account-dropdown',
+        // eslint-disable-line
         content: () => {
             return (
                 <Prompt>
@@ -48,6 +49,7 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-line
         action: () => {
             const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
             const marginModalEl = document.getElementById('account-modal') as HTMLElement;
@@ -72,6 +74,7 @@ export const tourConfig = [
     // Calculator modal
     {
         selector: '#calculator-modal .content',
+        // eslint-disable-line
         content: () => {
             return (
                 <Prompt>
@@ -83,6 +86,7 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-line
         action: () => {
             const calcButton = document.getElementById('calc-button') as HTMLElement;
             calcButton?.click();
@@ -104,6 +108,7 @@ export const tourConfig = [
     // Margin modal
     {
         selector: '#account-modal .content',
+        // eslint-disable-line
         content: () => {
             return (
                 <Prompt>
@@ -116,6 +121,7 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-line
         action: () => {
             const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
             const marginModalEl = document.getElementById('account-modal') as HTMLElement;
@@ -137,6 +143,7 @@ export const tourConfig = [
     // Market panel
     {
         selector: '#adjustment-container',
+        // eslint-disable-line
         content: () => {
             return (
                 <Prompt>
@@ -156,6 +163,7 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-line
         action: () => {
             // Hide the margin modal after reaching next stage of tutorial
             const marginModalCloseButton = document.querySelector(
@@ -171,6 +179,7 @@ export const tourConfig = [
     // Position panel
     {
         selector: '#position-panel',
+        // eslint-disable-line
         content: () => {
             return (
                 <Prompt>
@@ -188,6 +197,7 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-line
         action: () => {
             // Hide the 'No Position Open' overlay
             const positionOverlay = document.getElementById('position-overlay') as HTMLElement;
@@ -204,6 +214,7 @@ export const tourConfig = [
     // Adjust position panel
     {
         selector: '#order-panel',
+        // eslint-disable-line
         content: () => {
             return (
                 <Prompt>
@@ -230,6 +241,7 @@ export const tourConfig = [
     // Close position button
     {
         selector: '#close-order-button',
+        // eslint-disable-line
         content: () => {
             return (
                 <Prompt>
@@ -242,6 +254,7 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-line
         action: () => {
             // Enable the close order button
             const closeOrderButton = document.getElementById('position-close-container') as HTMLButtonElement;
