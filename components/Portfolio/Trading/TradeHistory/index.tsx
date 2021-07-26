@@ -1,27 +1,12 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import { Logo } from '@components/General';
 import { TableHeading, TableRow, TableCell, Table } from '@components/Table';
 import { timeAgo, toApproxCurrency } from '@libs/utils';
-import { LabelledOrders } from '@libs/types/OrderTypes';
 
 interface THProps {
-    fetchedTracers: any;
-    allFilledOrders: LabelledOrders;
+    allFilledOrders: any;
 }
-const TradeHistory: FC<THProps> = ({ fetchedTracers, allFilledOrders }: THProps) => {
-    const [orderHistory, setOrderHistory] = useState<any>([]);
-
-    useEffect(() => {
-        const tempOrders: any[] = [];
-        fetchedTracers.map((tracer: any) => {
-            if (allFilledOrders[tracer.address] !== []) {
-                tempOrders.push(allFilledOrders[tracer.address]);
-            }
-        });
-        tempOrders.sort((order1, order2) => (order1.timestamp < order2.timestamp && 1) || -1);
-        setOrderHistory(tempOrders);
-    }, [fetchedTracers]);
-
+const TradeHistory: FC<THProps> = ({ allFilledOrders }: THProps) => {
     return (
         <>
             <Table>
@@ -35,7 +20,7 @@ const TradeHistory: FC<THProps> = ({ fetchedTracers, allFilledOrders }: THProps)
                     </tr>
                 </thead>
                 <tbody>
-                    {orderHistory?.map((order: any, i: number) => (
+                    {allFilledOrders?.map((order: any, i: number) => (
                         <TableRow key={`table-row-${i}`}>
                             <TableCell>{timeAgo(Date.now(), parseInt(order?.timestamp) * 1000)}</TableCell>
                             <TableCell>

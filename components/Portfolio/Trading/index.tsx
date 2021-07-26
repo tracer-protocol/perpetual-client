@@ -34,7 +34,7 @@ const TradingPortfolio: FC = () => {
             case 2:
                 return <MarginAccounts />;
             case 3:
-                return <TradeHistory fetchedTracers={fetchedTracers} allFilledOrders={allFilledOrders ?? {}} />;
+                return <TradeHistory allFilledOrders={allFilledOrders ?? {}} />;
             case 4:
                 return <Transfers />;
             default:
