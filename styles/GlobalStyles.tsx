@@ -154,9 +154,9 @@ export default createGlobalStyle`
         border: 1px solid var(--color-primary) !important;
         border-radius: 50px;
         background-image: url('/img/general/close.svg') !important;
-        background-position: center center;
-        background-size: 17px 17px;
-        background-repeat: no-repeat;
+        background-position: center center !important;
+        background-size: 17px 17px !important;
+        background-repeat: no-repeat !important;
         transition: background-color 0.5s ease;
         backface-visibility: hidden;
     }
@@ -200,7 +200,7 @@ export default createGlobalStyle`
     .helper [data-tour-elem="left-arrow"] {
         left: 16px;
         background-image: url('/img/reactour/arrow-left.svg') !important;
-        background-position: 20px 50%;
+        background-position: 20px 50% !important;
     }
     .helper [data-tour-elem="left-arrow"]:hover {
         background-color: var(--color-primary) !important;
@@ -211,7 +211,7 @@ export default createGlobalStyle`
     .helper [data-tour-elem="right-arrow"] {
         right: 16px;
         background-image: url('/img/reactour/arrow-right.svg') !important;
-        background-position: 60% 50%;
+        background-position: 60% 50% !important;
     }
     .helper [data-tour-elem="right-arrow"]:hover {
         background-color: var(--color-primary) !important;
