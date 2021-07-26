@@ -58,7 +58,7 @@ const Advanced: React.FC = styled(({ className }) => {
     const [isTourOpen, setTourOpen] = useState<boolean>(false);
     const [currentIndex, setCurrentIndex] = useState(0);
     const { addToast } = useToasts();
-    
+
     useEffect(() => {
         checkTutorialComplete();
         if (orderDispatch) {
@@ -101,7 +101,7 @@ const Advanced: React.FC = styled(({ className }) => {
                 toast.addEventListener('click', function (e) {
                     const target = e.target as HTMLElement;
                     // If the target is the close button, do not run
-                    if(!target.classList.contains('toast-close')){
+                    if (!target.classList.contains('toast-close')) {
                         console.log(e);
                         const closeButton = document.querySelector('.toast-close') as HTMLButtonElement;
                         closeButton.click();
