@@ -279,7 +279,7 @@ const OrderBookToggle = styled(({ className, showOrderBook, onClick }: OBTProps)
     position: absolute;
     right: 1rem;
     top: 10px;
-    
+
     @media (max-height: 1080px) {
         top: 52px;
     }

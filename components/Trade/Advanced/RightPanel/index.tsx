@@ -159,9 +159,7 @@ const TradesAndBook: React.FC<TBProps> = ({
     return (
         <>
             <StyledSlideSelect onClick={(index, _e) => setSelected(index)} value={selected}>
-                <Option>
-                    Order Book
-                </Option>
+                <Option>Order Book</Option>
                 <Option>Recent Trades</Option>
             </StyledSlideSelect>
             <OrderBook
