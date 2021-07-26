@@ -152,7 +152,7 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
         </div>
     );
 })`
-    max-height: 120px;
+    max-height: 130px;
     width: 100%;
     overflow: hidden;
     border-radius: 7px;

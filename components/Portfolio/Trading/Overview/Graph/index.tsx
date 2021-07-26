@@ -38,7 +38,7 @@ const Graph: FC<GProps> = styled(({ className, title, positionGraph, setPosition
     );
 })`
     width: 100%;
-    height: ${(props) => (props.positionGraph ? '100%' : 'auto')};
+    height: ${(props: GProps) => (props.positionGraph ? '100%' : 'auto')};
     overflow: hidden;
     border-radius: 7px;
     padding: ${(props) => (props.positionGraph ? '0' : '16px')};
