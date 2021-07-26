@@ -281,10 +281,6 @@ const OrderBookToggle = styled(({ className, showOrderBook, onClick }: OBTProps)
     right: 1rem;
     top: 10px;
 
-    @media (max-height: 1080px) {
-        top: 52px;
-    }
-
     &:hover {
         cursor: pointer;
     }
@@ -476,7 +472,7 @@ const OrderBookContainer = styled.div`
     flex-direction: column;
     position: relative;
     padding: 0 0 0.6rem;
-    @media (max-height: 850px) {
+    @media (max-height: 1080px) {
         ${OrderBookTitle}, ${OrderBookToggle} {
             display: none;
         }
