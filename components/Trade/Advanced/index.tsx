@@ -209,21 +209,19 @@ const Advanced: React.FC = styled(({ className }) => {
                 <Overlay id="trading-overlay" />
             </div>
             {!tourCompleted && (
-                <>
-                    <Tour
-                        onRequestClose={closeTour}
-                        steps={tourConfig as Array<any>}
-                        maskSpace={0}
-                        isOpen={isTourOpen}
-                        maskClassName="mask"
-                        className="helper"
-                        rounded={5}
-                        showNumber={false}
-                        updateDelay={0}
-                        onAfterOpen={(e) => highlightDots(e)}
-                        onBeforeClose={(e) => enableBodyScroll(e)}
-                    />
-                </>
+                <Tour
+                    onRequestClose={closeTour}
+                    steps={tourConfig as Array<any>}
+                    maskSpace={0}
+                    isOpen={isTourOpen}
+                    maskClassName="mask"
+                    className="helper"
+                    rounded={5}
+                    showNumber={false}
+                    updateDelay={0}
+                    onAfterOpen={(e) => highlightDots(e)}
+                    onBeforeClose={(e) => enableBodyScroll(e)}
+                />
             )}
         </>
     );
