@@ -1,12 +1,26 @@
-import React, { useContext } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Logo } from '@components/General';
 import { TableHeading, TableRow, TableCell, Table } from '@components/Table';
-import { OMEContext } from '@context/OMEContext';
 import { timeAgo, toApproxCurrency } from '@libs/utils';
+import { LabelledOrders } from '@libs/types/OrderTypes';
 
-const TradeHistory: React.FC = () => {
-    const { filledOrders } = useContext(OMEContext);
-    filledOrders?.sort((order1, order2) => (order1.timestamp < order2.timestamp && 1) || -1);
+interface THProps {
+    fetchedTracers: any;
+    allFilledOrders: LabelledOrders;
+}
+const TradeHistory: FC<THProps> = ({ fetchedTracers, allFilledOrders }: THProps) => {
+    const [orderHistory, setOrderHistory] = useState<any>([]);
+
+    useEffect(() => {
+        const tempOrders: any[] = [];
+        fetchedTracers.map((tracer: any) => {
+            if (allFilledOrders[tracer.address] !== []) {
+                tempOrders.push(allFilledOrders[tracer.address]);
+            }
+        });
+        tempOrders.sort((order1, order2) => (order1.timestamp < order2.timestamp && 1) || -1);
+        setOrderHistory(tempOrders);
+    }, [fetchedTracers]);
 
     return (
         <>
@@ -21,9 +35,9 @@ const TradeHistory: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {filledOrders?.map((order, i) => (
+                    {orderHistory?.map((order: any, i: number) => (
                         <TableRow key={`table-row-${i}`}>
-                            <TableCell>{timeAgo(Date.now(), parseInt(order.timestamp) * 1000)}</TableCell>
+                            <TableCell>{timeAgo(Date.now(), parseInt(order?.timestamp) * 1000)}</TableCell>
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
@@ -32,13 +46,13 @@ const TradeHistory: React.FC = () => {
                                     <div className="my-auto ml-2">ETH/USDC</div>
                                 </div>
                             </TableCell>
-                            <TableCell className={order.position ? 'red' : 'green'}>
-                                {order.position ? 'Short' : 'Long'}
+                            <TableCell className={order?.position ? 'red' : 'green'}>
+                                {order?.position ? 'Short' : 'Long'}
                             </TableCell>
-                            <TableCell>{order.amount.toFixed(2)}</TableCell>
+                            <TableCell>{order?.amount.toFixed(2)}</TableCell>
                             <TableCell>-</TableCell>
                             <TableCell>-</TableCell>
-                            <TableCell>{toApproxCurrency(order.price)}</TableCell>
+                            <TableCell>{toApproxCurrency(order?.price)}</TableCell>
                             <TableCell>-</TableCell>
                         </TableRow>
                     ))}
