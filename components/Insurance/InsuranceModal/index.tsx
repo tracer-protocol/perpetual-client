@@ -4,7 +4,17 @@ import { Children } from 'libs/types';
 import { toApproxCurrency } from '@libs/utils';
 import SlideSelect from '@components/General/SlideSelect';
 import { Option } from '@components/General/SlideSelect/Options';
-import { Button, Checkbox, Dropdown, HiddenExpand, Previous, NumberSelect, Section } from '@components/General';
+import {
+    Button,
+    Checkbox,
+    CheckboxContainer,
+    CheckboxTitle,
+    Dropdown,
+    HiddenExpand,
+    Previous,
+    NumberSelect,
+    Section,
+} from '@components/General';
 import TracerModal from '@components/General/TracerModal';
 import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';
@@ -98,18 +108,6 @@ const SSection = styled(Section)`
     &.title > .label {
         color: white;
     }
-`;
-
-const CheckboxContainer = styled.div`
-    display: flex;
-    cursor: pointer;
-    width: fit-content;
-`;
-
-const CheckboxTitle = styled.span`
-    margin-left: 0.5rem;
-    margin-top: -0.2rem;
-    font-size: var(--font-size-small);
 `;
 
 const WithdrawalNote = styled.div`

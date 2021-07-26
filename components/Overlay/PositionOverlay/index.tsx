@@ -26,6 +26,32 @@ const PositionOverlay: FC<POProps> = ({ tracers, showMarketPreview }: POProps) =
             {showMarketPreview ? (
                 <SelectMarketDropdown setOptions={setCurrentMarket} option={currentMarket} keyMap={marketKeyMap} />
             ) : null}
+
+            {currentMarket === -1 && showMarketPreview ? (
+                <MarketPreviewContainer>
+                    <InfoCol>
+                        <div className="title">Market</div>
+                        <div className="row">
+                            <SLogo ticker={tracers[currentMarket]?.baseTicker} /> BTC/USDC
+                        </div>
+                    </InfoCol>
+                    <InfoCol>
+                        <div className="title">Last Price</div>
+                        {tracers !== undefined ? <div className="row">$59,853.00</div> : null}
+                    </InfoCol>
+                    <InfoCol>
+                        <div className="title">24h</div>
+                        <div className="row">
+                            <MarketChange amount={0.93} />
+                        </div>
+                    </InfoCol>
+                    <InfoCol>
+                        <div className="title">Max Leverage</div>
+                        {tracers !== undefined ? <div className="row">12.5x</div> : null}
+                    </InfoCol>
+                </MarketPreviewContainer>
+            ) : null}
+
             {currentMarket !== -1 && showMarketPreview ? (
                 <MarketPreviewContainer>
                     <InfoCol>
@@ -62,10 +88,18 @@ const PositionOverlay: FC<POProps> = ({ tracers, showMarketPreview }: POProps) =
 
 export default PositionOverlay;
 
+const StyledOverlay = styled(Overlay)`
+    background-color: var(--color-background-secondary);
+`;
+
+const OverlayTitle = styled.div`
+    font-size: var(--font-size-medium);
+`;
+
 const MarketPreviewContainer = styled.div`
     display: flex;
     background-color: var(--color-accent);
-    width: 600px;
+    width: 700px;
     padding: 10px 20px;
     border-radius: 7px;
     margin-top: 10px;
@@ -73,7 +107,6 @@ const MarketPreviewContainer = styled.div`
     .title {
         height: 20px;
         color: var(--color-secondary);
-        font-size: var(--font-size-small);
         display: flex;
         align-items: center;
     }
@@ -82,15 +115,16 @@ const MarketPreviewContainer = styled.div`
         height: 40px;
         display: flex;
         align-items: center;
+        font-size: var(--font-size-medium);
     }
-`;
-
-const SLogo = styled(Logo)`
-    margin-right: 5px;
 `;
 
 const InfoCol = styled.div`
     width: 25%;
+`;
+
+const SLogo = styled(Logo)`
+    margin-right: 5px;
 `;
 
 interface PDProps {
@@ -124,7 +158,7 @@ const SelectMarketDropdown: React.FC<PDProps> = styled(({ className, setOptions,
     };
     return (
         <Dropdown className={className} overlay={menu} placement="bottomCenter" onVisibleChange={handleVisibleChange}>
-            <Button>
+            <Button height="medium">
                 {selected ? keyMap[option] : 'Select Market'}
                 <StyledTriangleDown className={rotated ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
             </Button>
@@ -154,12 +188,4 @@ const StyledTriangleDown = styled.img`
         transform: rotate(180deg);
         margin-top: -4px;
     }
-`;
-
-const StyledOverlay = styled(Overlay)`
-    background-color: var(--color-background-secondary);
-`;
-
-const OverlayTitle = styled.div`
-    font-size: var(--font-size-medium);
 `;
