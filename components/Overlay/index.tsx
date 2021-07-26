@@ -7,7 +7,11 @@ interface OProps {
     id?: string;
 }
 const Overlay: FC<OProps> = styled(({ className, children, id }: OProps) => {
-    return <div className={className} id={id}>{children}</div>;
+    return (
+        <div className={className} id={id}>
+            {children}
+        </div>
+    );
 })`
     display: flex;
     background-color: var(--color-background);

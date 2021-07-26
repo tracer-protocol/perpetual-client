@@ -6,10 +6,10 @@ import styled from 'styled-components';
 import TradingView from './RightPanel';
 import { MARKET } from '@libs/types/OrderTypes';
 import dynamic from 'next/dynamic';
-import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import Cookies from 'universal-cookie';
 import { useToasts } from 'react-toast-notifications';
-import { tourConfig } from './TourSteps'
+import { tourConfig } from './TourSteps';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 const Tour = dynamic(import('reactour'), { ssr: false });
@@ -80,7 +80,7 @@ const Advanced: React.FC = styled(({ className }) => {
 
     // Reactour
     useEffect(() => {
-        if(account){
+        if (account) {
             triggerTutorial();
         }
     }, [account]);
@@ -89,13 +89,13 @@ const Advanced: React.FC = styled(({ className }) => {
         // If cookie with flag does not exist,
         // start tutorial
         const cookies = new Cookies();
-        if(cookies.get('tutorialCompleted') != 'true'){
+        if (cookies.get('tutorialCompleted') != 'true') {
             addToast(['Trading with Tracer', `Click here to learn how to trade with Tracer`], {
                 appearance: 'info',
                 autoDismiss: false,
             });
             // Get the toast notification element
-            setTimeout(function(){
+            setTimeout(function () {
                 const toast = document.querySelector('.notification-content') as HTMLDivElement;
                 toast.addEventListener('click', function () {
                     const closeButton = document.querySelector('.toast-close') as HTMLButtonElement;
@@ -117,14 +117,14 @@ const Advanced: React.FC = styled(({ className }) => {
 
     const checkTutorialComplete = () => {
         const cookies = new Cookies();
-        if(cookies.get('tutorialCompleted') == 'true'){
+        if (cookies.get('tutorialCompleted') == 'true') {
             setTutorialCompleted(true);
         }
     };
 
     const setTutorialComplete = () => {
         const cookies = new Cookies();
-        if(cookies.get('tutorialCompleted') != 'true'){
+        if (cookies.get('tutorialCompleted') != 'true') {
             cookies.set('tutorialCompleted', 'true', { path: '/' });
         }
     };
@@ -149,7 +149,7 @@ const Advanced: React.FC = styled(({ className }) => {
         // Reset Calculator and Margin modal Z-indexes
         const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
         const marginModalEl = document.getElementById('account-modal') as HTMLElement;
-        if(calculatorEl){
+        if (calculatorEl) {
             calculatorEl.removeAttribute('style');
         }
         if (marginModalEl) {
@@ -161,12 +161,14 @@ const Advanced: React.FC = styled(({ className }) => {
 
     const highlightDots = (e: HTMLDivElement) => {
         e.addEventListener('click', function () {
-            const navDots: Array<any> = Array.from(document.querySelectorAll('nav[data-tour-elem="navigation"] button'));
+            const navDots: Array<any> = Array.from(
+                document.querySelectorAll('nav[data-tour-elem="navigation"] button'),
+            );
             var currentIndex = 0;
             // Wait for Reactour to apply styling
-            setTimeout(function(){
-                navDots.map((dot, i) => { 
-                    if(dot.classList.contains('reactour__dot--is-active')){
+            setTimeout(function () {
+                navDots.map((dot, i) => {
+                    if (dot.classList.contains('reactour__dot--is-active')) {
                         currentIndex = i;
                     }
                 });
@@ -184,7 +186,11 @@ const Advanced: React.FC = styled(({ className }) => {
             <div className={`container ${className}`}>
                 <TradingPanel>
                     <MarketSelect account={account ?? ''} />
-                    <PlaceOrder data-tour-id="placeorder-panel" selectedTracer={selectedTracer} account={account ?? ''} />
+                    <PlaceOrder
+                        data-tour-id="placeorder-panel"
+                        selectedTracer={selectedTracer}
+                        account={account ?? ''}
+                    />
                     <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} order={order} />
                 </TradingPanel>
                 <RightPanel>
@@ -192,7 +198,7 @@ const Advanced: React.FC = styled(({ className }) => {
                 </RightPanel>
                 <Overlay id="trading-overlay" />
             </div>
-            {!tourCompleted && 
+            {!tourCompleted && (
                 <Tour
                     onRequestClose={closeTour}
                     steps={tourConfig as Array<any>}
@@ -206,7 +212,7 @@ const Advanced: React.FC = styled(({ className }) => {
                     onAfterOpen={(e) => highlightDots(e)}
                     onBeforeClose={(e) => enableBodyScroll(e)}
                 />
-            }
+            )}
         </>
     );
 })`
