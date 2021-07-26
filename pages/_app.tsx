@@ -41,7 +41,8 @@ const Mobile = styled.div`
     }
 `;
 
-const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const App = ({ Component, pageProps }: AppProps) => {
     useEffect(() => {
         // @ts-ignore
         window.onUsersnapCXLoad = function (api) {

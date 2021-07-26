@@ -21,7 +21,7 @@ const PositionOverlay: FC<POProps> = ({ tracers, showMarketPreview }: POProps) =
     });
 
     return (
-        <StyledOverlay>
+        <StyledOverlay id="position-overlay">
             <OverlayTitle>No Open Position.</OverlayTitle>
             {showMarketPreview ? (
                 <SelectMarketDropdown setOptions={setCurrentMarket} option={currentMarket} keyMap={marketKeyMap} />

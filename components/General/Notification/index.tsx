@@ -133,7 +133,7 @@ const Header: React.FC<{ onDismiss: (e: any) => any; title: React.ReactNode }> =
             }}
         >
             <span>{title}</span>
-            <Close onClick={onDismiss} />
+            <Close className="toast-close" onClick={onDismiss} />
         </div>
     );
 };
@@ -218,7 +218,9 @@ const Hashie: React.FC<HProps | any> = ({
             }}
         >
             <IconWrap>{appearance.icon}</IconWrap>
-            <ContentWrapper>
+            <ContentWrapper className="notification-content">
+                {' '}
+                {/*Necessary for ReactTour to select element*/}
                 <Header onDismiss={onDismiss} title={children_[0]} />
                 <Content>{children_[1]}</Content>
             </ContentWrapper>

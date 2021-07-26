@@ -21,7 +21,7 @@ export default createGlobalStyle`
         --font-size-extra-small: 12px;
         --font-size-small: 16px;
         --font-size-small-heading: 16px;
-        --font-size-medium: 20px;
+        --font-size-medium: 18px;
         --font-size-large: 20px;
         --font-size-xlarge: 36px;
 
@@ -130,5 +130,111 @@ export default createGlobalStyle`
         top: 65px !important;
         z-index: 100001 !important;
         width: 400px !important;
+    }
+    
+    // Override Reactour styles
+    .helper {
+        width: 390px;
+        max-width: 390px !important;
+        top: 50px;
+        background-color: var(--color-accent) !important;
+        color: white !important;
+        padding: 0px !important;
+        overflow: hidden;
+        transition: all 0.5s ease !important;
+    }
+    .reactour__close,
+    .helper [data-tour-elem="left-arrow"],
+    .helper [data-tour-elem="right-arrow"] {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 56px;
+        height: 28px;
+        border: 1px solid var(--color-primary) !important;
+        border-radius: 50px;
+        background-image: url('/img/general/close.svg') !important;
+        background-position: center center;
+        background-size: 17px 17px;
+        background-repeat: no-repeat;
+        transition: background-color 0.5s ease;
+        backface-visibility: hidden;
+    }
+
+    .reactour__close {
+        top: 16px !important;
+        right: 16px !important;
+        width: 56px !important;
+        height: 28px !important;
+    }
+
+    .reactour__close svg,
+    .helper [data-tour-elem="left-arrow"] svg,
+    .helper [data-tour-elem="right-arrow"] svg {
+        display: none;
+    }
+
+    .reactour__close:hover {
+        background-color: var(--color-primary) !important;
+        background-image: url('/img/general/close-white.svg') !important;
+    }
+    
+    // Change the background overlay colour 
+    // to semi transparent dark blue
+    #___reactour > div:first-of-type svg rect {
+        fill: var(--color-background);
+        opacity: 0.87;
+    }
+
+    // Helper arrows 
+    .helper [data-tour-elem="left-arrow"],
+    .helper [data-tour-elem="right-arrow"] {
+        position: absolute;
+        width: 65px;
+        height: 32px;
+        flex: 0 0 65px;
+        background-size: 17px 15px;
+    }
+
+    // Left arrow
+    .helper [data-tour-elem="left-arrow"] {
+        left: 16px;
+        background-image: url('/img/reactour/arrow-left.svg') !important;
+        background-position: 20px 50%;
+    }
+    .helper [data-tour-elem="left-arrow"]:hover {
+        background-color: var(--color-primary) !important;
+        background-image: url('/img/reactour/arrow-left-white.svg') !important;
+    }
+
+    // Right arrow
+    .helper [data-tour-elem="right-arrow"] {
+        right: 16px;
+        background-image: url('/img/reactour/arrow-right.svg') !important;
+        background-position: 60% 50%;
+    }
+    .helper [data-tour-elem="right-arrow"]:hover {
+        background-color: var(--color-primary) !important;
+        background-image: url('/img/reactour/arrow-right-white.svg') !important;
+    }
+
+    // Controls
+    .helper [data-tour-elem="controls"] {
+        margin-bottom: 16px;
+        margin-top: 0;
+        height: 32px;
+    }
+
+    .helper [data-tour-elem="dot"] {
+        width: 14px;
+        height: 14px;
+        transform: unset;
+        background: var(--color-background-secondary) !important;
+        border: unset;
+    }
+
+    // Active dot
+    .helper button.reactour__dot--is-active {
+        background: var(--color-primary) !important; 
     }
 `;

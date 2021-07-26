@@ -91,7 +91,9 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title hide={!!order?.exposureBN.toNumber() ?? false}>
                 <span>Margin Account</span>
-                <Button onClick={() => showCalculator(true)}>Calculator</Button>
+                <Button id="calc-button" onClick={() => showCalculator(true)}>
+                    Calculator
+                </Button>
             </Title>
             <Item>
                 <h3>
@@ -128,10 +130,13 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
                 <Button
                     className={balances.quote.eq(0) ? 'primary' : ''}
                     onClick={(_e: any) => handleClick(true, true)}
+                    id="deposit-button"
                 >
                     Deposit
                 </Button>
-                <Button onClick={(_e: any) => handleClick(true, false)}>Withdraw</Button>
+                <Button onClick={(_e: any) => handleClick(true, false)} id="withdraw-button">
+                    Withdraw
+                </Button>
             </DepositWithdraw>
             <AccountModal
                 display={popup}

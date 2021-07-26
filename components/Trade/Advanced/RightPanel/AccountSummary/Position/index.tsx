@@ -40,7 +40,7 @@ const PositionTab: FC<PTProps> = styled(
         const liquidationPrice = calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage);
 
         return (
-            <div className={className}>
+            <div className={className} id="position-panel">
                 <PositionInfo>
                     <PositionDetails>
                         <DetailsRow>
@@ -142,7 +142,8 @@ const PositionTab: FC<PTProps> = styled(
                     </LegendsContainer>
                 </PositionInfo>
 
-                <CloseOrderContainer>
+                <CloseOrderContainer id="position-close-container">
+                    {/* Required for ReactTour */}
                     <CloseOrderButton />
                 </CloseOrderContainer>
 
