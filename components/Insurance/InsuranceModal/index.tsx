@@ -4,7 +4,17 @@ import { Children } from 'libs/types';
 import { toApproxCurrency } from '@libs/utils';
 import SlideSelect from '@components/General/SlideSelect';
 import { Option } from '@components/General/SlideSelect/Options';
-import { Button, Checkbox, Dropdown, HiddenExpand, Previous, NumberSelect, Section } from '@components/General';
+import {
+    Button,
+    Checkbox,
+    CheckboxContainer,
+    CheckboxTitle,
+    Dropdown,
+    HiddenExpand,
+    Previous,
+    NumberSelect,
+    Section,
+} from '@components/General';
 import TracerModal from '@components/General/TracerModal';
 import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';
@@ -15,7 +25,7 @@ import { Options } from '@context/TransactionContext';
 
 const SSlideSelect = styled(SlideSelect)`
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: #ffffff;
     width: 300px;
     height: 40px;
@@ -98,18 +108,6 @@ const SSection = styled(Section)`
     &.title > .label {
         color: white;
     }
-`;
-
-const CheckboxContainer = styled.div`
-    display: flex;
-    cursor: pointer;
-    width: fit-content;
-`;
-
-const CheckboxTitle = styled.span`
-    margin-left: 0.5rem;
-    margin-top: -0.2rem;
-    font-size: var(--font-size-small);
 `;
 
 const WithdrawalNote = styled.div`
@@ -243,17 +241,17 @@ export const InsuranceModal: React.FC<BProps> = ({
             />
             <SHiddenExpand defaultHeight={0} open={!!amount}>
                 {isDeposit ? (
-                    <SSection className={`title`} label={`Deposit Summary`} />
+                    <SSection className={'title'} label={'Deposit Summary'} />
                 ) : (
-                    <SSection className={`title`} label={`Withdrawal Summary`} />
+                    <SSection className={'title'} label={'Withdrawal Summary'} />
                 )}
                 {!isDeposit && amount > balance.toNumber() ? (
-                    <PoolOwnershipInsufficient label={`Pool Ownership`}>
+                    <PoolOwnershipInsufficient label={'Pool Ownership'}>
                         <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </PoolOwnershipInsufficient>
                 ) : (
-                    <SSection label={`Pool Ownership`}>
+                    <SSection label={'Pool Ownership'}>
                         <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>

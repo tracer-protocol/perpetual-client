@@ -28,7 +28,7 @@ const InsuranceInfo: FC<IIProps> = styled(({ className, fundingRate }: IIProps) 
                 <Section
                     label="Pool Holdings"
                     tooltip={{
-                        key: `pool-holdings`,
+                        key: 'pool-holdings',
                         props: {
                             baseTicker: poolInfo?.market?.split('/')[0],
                         },
@@ -39,7 +39,7 @@ const InsuranceInfo: FC<IIProps> = styled(({ className, fundingRate }: IIProps) 
                 <Section
                     label="Pool Target"
                     tooltip={{
-                        key: `pool-target`,
+                        key: 'pool-target',
                         props: {
                             baseTicker: poolInfo?.market?.split('/')[0],
                         },
@@ -50,7 +50,7 @@ const InsuranceInfo: FC<IIProps> = styled(({ className, fundingRate }: IIProps) 
                 <Section
                     label="Insurance Funding Rate"
                     tooltip={{
-                        key: `insurance-funding-rate`,
+                        key: 'insurance-funding-rate',
                         props: {
                             baseTicker: poolInfo?.market?.split('/')[0],
                         },
@@ -84,7 +84,7 @@ const InfoContent = styled.div`
 const InfoTitle = styled.div`
     font-size: var(--font-size-small-heading);
     font-weight: bold;
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: #ffffff;
     text-transform: capitalize;
 `;

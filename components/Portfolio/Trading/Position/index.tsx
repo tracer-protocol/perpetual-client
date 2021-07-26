@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Logo } from '@components/General';
+import { Button, Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 import {
     TableHeading,
@@ -7,7 +7,6 @@ import {
     TableRow,
     TableCell,
     SecondaryCell,
-    Button,
     StatusIndicator,
     getStatusColour,
     TableHeader,
@@ -43,24 +42,6 @@ const Position: React.FC<{
     const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
         setShow(!show);
-    };
-
-    const activeButton = {
-        width: '100px',
-        hoverFG: '#fff',
-        hoverBG: 'var(--color-primary)',
-        hoverCursor: 'pointer',
-    };
-
-    const inactiveButton = {
-        width: '100px',
-    };
-
-    const largeButton = {
-        width: '250px',
-        hoverFG: '#fff',
-        hoverBG: 'var(--color-primary)',
-        hoverCursor: 'pointer',
     };
 
     const openRow = {
@@ -163,9 +144,7 @@ const Position: React.FC<{
                                             </StatusIndicator>
                                             <div className="mx-2 my-auto">{status}</div>
                                             <div className="my-auto ml-auto">
-                                                <Button theme={status !== 'Closed' ? activeButton : inactiveButton}>
-                                                    Close
-                                                </Button>
+                                                <Button>Close</Button>
                                             </div>
                                         </div>
                                     </TableCell>
@@ -176,7 +155,7 @@ const Position: React.FC<{
                 </TableBody>
             </Table>
             <div className="flex mt-8 justify-center">
-                <Button theme={largeButton} onClick={(e) => onClick(e)}>
+                <Button onClick={(e: any) => onClick(e)}>
                     {show ? 'Hide Closed Positions' : 'Show Closed Positions'}
                 </Button>
             </div>

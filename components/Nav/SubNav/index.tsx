@@ -10,7 +10,6 @@ export interface SNBProps {
 }
 
 export const SubNavContainer = styled.div`
-    letter-spacing: -0.36px;
     border-bottom: 1px solid #0c3586;
     display: flex;
 `;

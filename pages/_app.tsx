@@ -37,13 +37,12 @@ const Mobile = styled.div`
     }
     > h1 {
         font-size: 55px;
-        letter-spacing: -1.1px;
         font-weight: lighter;
     }
 `;
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const App = ({ Component, pageProps }: AppProps) => {
-    // eslint-disable-line
     useEffect(() => {
         // @ts-ignore
         window.onUsersnapCXLoad = function (api) {

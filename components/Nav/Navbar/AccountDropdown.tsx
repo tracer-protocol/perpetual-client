@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
-import { API as OnboardApi } from 'bnc-onboard/dist/src/interfaces';
+import { API as OnboardApi } from '@tracer-protocol/onboard/dist/src/interfaces';
 import { Button, Section } from '@components/General';
 import { Menu, MenuItem } from './HeaderDropdown';
 
@@ -44,14 +44,14 @@ export default (({ account, onboard, ensName, logout, handleConnect, tokenBalanc
             </MainButton>
 
             <StyledMenu>
-                <MenuItem></MenuItem>
+                <MenuItem />
                 <MenuItem>
                     <Section className="p-0" label="Balance">
                         {`${parseFloat(tokenBalance.toFixed(5))} ETH`}
                     </Section>
                     <Section label="Network">{networkName(network)}</Section>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem className="button-container">
                     <StyledButton onClick={() => onboard?.walletSelect()}>Switch Wallets</StyledButton>
                     <StyledButton
                         onClick={() => {
@@ -138,7 +138,7 @@ const MainButton = styled.div`
     z-index: 11;
 `;
 
-const StyledMenu = styled(Menu)`
+export const StyledMenu = styled(Menu)`
     text-align: center;
     padding: 1rem !important;
     right: -2rem !important;

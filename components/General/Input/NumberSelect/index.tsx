@@ -9,7 +9,6 @@ import { After } from '@components/General';
 const Unit = styled.span`
     font-size: var(--font-size-medium);
     line-height: var(--font-size-medium);
-    letter-spacing: 0;
     color: var(--color-primary);
     margin-top: auto;
     margin-bottom: 0.2rem;
@@ -18,7 +17,7 @@ const Unit = styled.span`
 
 export const NumberSelectHeader = styled.h3`
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: var(--color-primary);
     display: flex;
     justify-content: space-between;

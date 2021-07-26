@@ -15,7 +15,7 @@ const SubNavBar: React.FC<SNBProps> = (props: SNBProps) => {
     const selected = 'border-b-4 border-blue-100 font-bold';
     return (
         <div className={`h-screen/3 w-full flex ${background} ${position}`}>
-            <div className={`h-full flex flex-row`}>
+            <div className={'h-full flex flex-row'}>
                 {props.tabs.map((tab, index) => {
                     return (
                         <div

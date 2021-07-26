@@ -10,7 +10,7 @@ export const TradingTable = styled.table`
 
     thead tr th {
         font-size: var(--font-size-small);
-        letter-spacing: -0.32px;
+        letter-spacing: var(--letter-spacing-small);
         color: #ffffff;
         text-transform: capitalize;
         text-align: left;

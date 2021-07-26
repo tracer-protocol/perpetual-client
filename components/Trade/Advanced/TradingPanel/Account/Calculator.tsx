@@ -22,7 +22,7 @@ import { defaults } from '@libs/Tracer';
 import { InfoCircleOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { toApproxCurrency } from '@libs/utils';
 import { CalculatorTip } from '@components/Tooltips';
-import { LONG } from '@context/OrderContext';
+import { LIMIT, LONG } from '@libs/types/OrderTypes';
 import { Options } from '@context/TransactionContext';
 
 type CalculatorModalProps = {
@@ -74,8 +74,10 @@ export default styled(
             });
             calculatorDispatch({ type: 'reset' });
             close();
+            orderDispatch({ type: 'setOrderType', value: LIMIT });
             orderDispatch({ type: 'setExposure', value: exposure });
             orderDispatch({ type: 'setPosition', value: position });
+            orderDispatch({ type: 'setPrice', value: parseFloat(fairPrice.toFixed(2)) });
             orderDispatch({ type: 'setLeverageFromExposure', amount: exposure });
         };
         const isLocked = (locked: number[], value: number) => locked[0] === value || locked[1] === value;
@@ -94,6 +96,7 @@ export default styled(
                 }
                 subTitle={modalState.subTitle}
                 onClose={close}
+                id="calculator-modal"
             >
                 <CalcSelectContainer>
                     <CalcSlideSelect
@@ -192,7 +195,7 @@ export default styled(
                     }
                     header={
                         <NumberSelectHeader>
-                            {`Liquidation Price`}
+                            {'Liquidation Price'}
                             <FairPrice>Fair Price: {toApproxCurrency(fairPrice)}</FairPrice>
                         </NumberSelectHeader>
                     }
@@ -209,7 +212,7 @@ export default styled(
                                 exposure.toFixed(2),
                             )} ${baseTicker} to achieve account leverage of ${leverage}x. 
                             This position will be liquidated at ${toApproxCurrency(liquidationPrice)}.`
-                            : `Invalid calculated position. Try increasing your margin or decreasing your exposure`}
+                            : 'Invalid calculated position. Try increasing your margin or decreasing your exposure'}
                     </p>
                     <DepositButtons
                         tracerApproved={selectedTracer?.getTracerApproved() ?? false}
@@ -259,7 +262,7 @@ const InfoBox = styled(InfoCircleOutlined)`
 const StyledHiddenExpand = styled(HiddenExpand)`
     background: var(--color-accent);
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: var(--color-primary);
     margin-top: 1rem;
     p.title {
@@ -280,8 +283,6 @@ const CalcSlideSelect = styled(SlideSelect)`
 
 const SButton = styled(Button)`
     height: var(--height-small-button);
-    line-height: 28px;
-    padding: 0;
 `;
 
 const CalcButtons = styled.div`

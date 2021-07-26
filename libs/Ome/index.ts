@@ -1,11 +1,12 @@
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
-import { Result } from 'libs/types/General';
+import { APIResult, Result } from 'libs/types/General';
 /** Book API's */
 
 // url of the OME. NOTE: THIS DOES NOT CHANGE WITH THE NETWORK
 // TODO if we want multiple networks with actual trading we'd need multiple OME's
 //  or the OME architecture needs to change
-const BASE_URL = process.env.NEXT_PUBLIC_OME_BASE_URL || 'http://localhost:8989';
+const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8989';
+const omefy: (str: string) => string = (str: string) => str.slice(2).toLowerCase();
 
 /**
  * Gets the orders related to a specific book
@@ -21,7 +22,8 @@ export const getOrders: (market: string) => Promise<Response> = async (market) =
     })
         .then((res) => res.json())
         .then((res) => {
-            return res;
+            console.debug('Fetched all orders', res?.data);
+            return res?.data ?? [];
         })
         .catch((err) => {
             console.error(err);
@@ -51,15 +53,14 @@ export const getUsersOrders: (market: string, account: string) => Promise<OMEOrd
                 console.error('Failed to fetch user orders', res);
                 return [];
             }
-            return res;
+            console.debug('Fetched user orders', res?.data);
+            return res?.data ?? [];
         })
         .catch((err) => {
             console.error('Failed to fetch user orders', err);
             return [];
         });
 };
-
-const omefy: (str: string) => string = (str: string) => str.slice(2).toLowerCase();
 
 /**
  * Creates an order within a market.
@@ -68,11 +69,12 @@ const omefy: (str: string) => string = (str: string) => str.slice(2).toLowerCase
  * @param market the market the order belongs to
  * @param data order data payload. An example of this request
  */
-export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = async (market, data) => {
+export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult> = async (market, data) => {
     if (!market) {
         return {
             status: 'error',
             message: 'Failed to create order: Market is invalid',
+            data: 'Failed to create order: Market is invalid',
         };
     }
     return fetch(`${BASE_URL}/book/${omefy(market)}/order`, {
@@ -84,28 +86,32 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<Result> = 
     })
         .then((res) => res.json())
         .then((res) => {
-            if (res?.status === 404) {
+            if (res?.data?.status === 404) {
                 return {
                     status: 'error',
-                    message: `Failed to create order 404 not found`,
-                } as Result;
-            } else if (res?.status === 400) {
+                    message: 'Failed to create order 404 not found',
+                    data: 'Failed to create order 400 bad request',
+                } as APIResult;
+            } else if (res?.data?.status === 400) {
                 return {
                     status: 'error',
-                    message: `Failed to create order 400 bad request`,
-                } as Result;
+                    message: 'Failed to create order 400 bad request',
+                    data: 'Failed to create order 400 bad request',
+                } as APIResult;
             } else {
                 return {
                     status: 'success',
                     message: res?.message,
-                } as Result;
+                    data: res.data,
+                } as APIResult;
             }
         })
         .catch((err) => {
             return {
                 status: 'error',
                 message: `${err}`,
-            } as Result;
+                data: err,
+            };
         });
 };
 
@@ -144,12 +150,12 @@ export const cancelOrder: (market: string, orderId: string) => Promise<Result> =
             if (res?.status === 404) {
                 return {
                     status: 'error',
-                    message: `Failed to delete order 404 not found`,
+                    message: 'Failed to delete order 404 not found',
                 } as Result;
             } else if (res?.status === 400) {
                 return {
                     status: 'error',
-                    message: `Failed to delete order 400 bad request`,
+                    message: 'Failed to delete order 400 bad request',
                 } as Result;
             } else {
                 return {

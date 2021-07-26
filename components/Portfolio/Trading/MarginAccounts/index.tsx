@@ -1,7 +1,7 @@
 import React from 'react';
-import { Logo } from '@components/General';
+import { Button, Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHeading, TableRow, TableCell, Button, StatusIndicator, getStatusColour } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell, StatusIndicator, getStatusColour } from '@components/Portfolio';
 import Tooltip from 'antd/lib/tooltip';
 
 const NoLeverageTip = <p>You have no leveraged trades open in this market.</p>;

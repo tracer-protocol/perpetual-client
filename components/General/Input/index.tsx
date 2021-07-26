@@ -5,7 +5,6 @@ export const Input = styled.input`
     font-size: 42px;
     height: 40px;
     line-height: 40px;
-    letter-spacing: 0;
     color: #fff;
     width: 100%;
 
@@ -39,12 +38,27 @@ export const BasicInputContainer = styled.div`
     padding-bottom: 0.2rem;
 `;
 
-type CProps = {
+interface CBCProps {
+    display?: boolean;
+}
+export const CheckboxContainer = styled.div<CBCProps>`
+    display: ${(props) => (props.display ? 'flex' : 'none')};
+    cursor: pointer;
+    width: fit-content;
+`;
+
+export const CheckboxTitle = styled.span`
+    margin-left: 0.5rem;
+    margin-top: -0.2rem;
+    font-size: var(--font-size-small);
+`;
+
+type CBProps = {
     className?: string;
     checked?: boolean;
     onClick?: any;
 };
-export const Checkbox: React.FC<CProps> = styled(({ className, checked, onClick }: CProps) => {
+export const Checkbox: React.FC<CBProps> = styled(({ className, checked, onClick }: CBProps) => {
     return (
         <span className={className} onClick={onClick}>
             <input type="checkbox" checked={checked} readOnly />

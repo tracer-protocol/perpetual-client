@@ -146,6 +146,7 @@ export default styled(
                 title={state.title}
                 subTitle={state.subTitle}
                 onClose={() => handleClose()}
+                id="account-modal"
             >
                 <SSlideSelect value={isDeposit ? 0 : 1} onClick={(val) => setDeposit(val === 0)}>
                     <Option>Deposit</Option>
@@ -167,13 +168,13 @@ export default styled(
                         <Previous>{`${toApproxCurrency(balances.totalMargin)}`}</Previous>
                         {`${toApproxCurrency(calcTotalMargin(newBalance, balances.base, fairPrice))}`}
                     </Section>
-                    <Section label={`Buying Power`}>
+                    <Section label={'Buying Power'}>
                         <Previous>{`${toApproxCurrency(
                             calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
                         )}`}</Previous>
                         {`${toApproxCurrency(calcBuyingPower(newBalance, balances.base, fairPrice, maxLeverage))}`}
                     </Section>
-                    <Section label={`Available Margin`}>
+                    <Section label={'Available Margin'}>
                         <Previous>{`${calcAvailableMarginPercent(
                             balances.quote,
                             balances.base,

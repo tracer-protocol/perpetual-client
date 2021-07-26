@@ -11,7 +11,8 @@ import FogOverlay from '@components/Overlay/FogOverlay';
 import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
-import { LIMIT, OrderContext, SHORT, LONG } from '@context/OrderContext';
+import { OrderContext } from '@context/OrderContext';
+import { LIMIT, SHORT, LONG } from '@libs/types/OrderTypes';
 
 const decimalKeyMap: Record<number, number> = {
     1: 0.01,
@@ -177,7 +178,7 @@ const OrderBook: FC<OProps> = styled(
                                         >
                                             {toApproxCurrency(askOrdersCopy[0]?.price)}
                                         </span>
-                                        {` / `}
+                                        {' / '}
                                         <span
                                             className="bid px-1"
                                             onClick={(_e) =>
@@ -192,7 +193,7 @@ const OrderBook: FC<OProps> = styled(
                                         </span>
                                     </Item>
                                     <Item className="no-width">
-                                        {`Last`}
+                                        {'Last'}
                                         <span
                                             className={`${marketUp ? 'bid' : 'ask'} pl-1`}
                                             onClick={(_e) =>
@@ -245,7 +246,7 @@ const Filter = styled.div`
 const OrderBookTitle = styled.div`
     font-size: var(--font-size-small-heading);
     font-weight: bold;
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: #ffffff;
     text-transform: capitalize;
     margin: 0 0.8rem 0.5rem;
@@ -307,7 +308,7 @@ const BookRow = styled.div`
     font-size: var(--font-size-small);
     line-height: var(--font-size-small);
     padding: 1px 0;
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     transition: 0.1s;
 
     &:hover {
@@ -376,7 +377,7 @@ const Order: React.FC<BProps> = ({ className, cumulative, quantity, price, maxCu
     return (
         <BookRow className={className} onClick={onClick}>
             <Item className={`${bid ? 'bid' : 'ask'} price`}>{toApproxCurrency(price)}</Item>
-            <Item className={`quantity`}>{quantity.toFixed(2)}</Item>
+            <Item className={'quantity'}>{quantity.toFixed(2)}</Item>
             <Item
                 className={`fill-${bid ? 'bid' : 'ask'} cumulative`}
                 style={{

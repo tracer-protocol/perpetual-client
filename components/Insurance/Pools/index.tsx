@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { TracerContext, InsuranceContext } from 'context';
+import { TracerContext } from '@context/TracerContext';
+import { InsuranceContext } from '@context/InsuranceContext';
 import { defaults } from 'libs/Tracer/Insurance';
 import { useRouter } from 'next/router';
 import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 'libs/types';
@@ -59,6 +60,7 @@ const HealthCell: React.FC<CProps> = styled(({ pool, className }: CProps) => {
 })``;
 
 const ButtonContainer = styled.div`
+    display: flex;
     margin-top: 5rem;
 `;
 
@@ -126,7 +128,7 @@ const Collapsible = styled.div`
 
     .selected &,
     &.show {
-        height: 16rem;
+        height: 260px;
     }
 `;
 
@@ -203,7 +205,6 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                             key={`insurance-row-${i}`}
                             className={show ? 'selected' : ''}
                             onClick={(e) => onClick(e, i)}
-                            theme={expanded ? '' : {}}
                         >
                             <TableCell>
                                 <Collapsible>

@@ -1,6 +1,6 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
-import { LargeButton, SmallTitle } from '@components/Portfolio';
+import { SmallTitle } from '@components/Portfolio';
 import { UserBalance } from '@libs/types/TracerTypes';
 import { BigNumber } from 'bignumber.js';
 import {
@@ -20,6 +20,7 @@ import {
     CellTitle,
     CellDesc,
 } from './EqTable';
+import { Button } from '@components/General';
 
 const ToggleTable = () => {
     const tableEl = document.querySelector<HTMLElement>('.equityStats');
@@ -47,7 +48,7 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
         <div className={className}>
             <div className="flex justify-content-between heading-row">
                 <SmallTitle>Equity</SmallTitle>
-                <LargeButton onClick={(e: any) => onClick(e)}>{show ? 'Hide Breakdown' : 'Show Breakdown'}</LargeButton>
+                <Button onClick={(e: any) => onClick(e)}>{show ? 'Hide Breakdown' : 'Show Breakdown'}</Button>
             </div>
             <EqTable>
                 <EqTableBody>
@@ -151,7 +152,7 @@ const Equity: FC<EqProps> = styled(({ className }: EqProps) => {
         </div>
     );
 })`
-    max-height: 120px;
+    max-height: 130px;
     width: 100%;
     overflow: hidden;
     border-radius: 7px;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { BigNumber } from 'bignumber.js';
 import { calcLeverage } from '@tracer-protocol/tracer-utils';
-import { LIMIT } from '@context/OrderContext';
+import { LIMIT } from '@libs/types/OrderTypes';
 import { Content, SPrevious } from '@components/Trade/Advanced/RightPanel/AccountSummary/Position';
 import { UserBalance } from '@libs/types';
 

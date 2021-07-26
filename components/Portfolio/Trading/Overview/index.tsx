@@ -22,7 +22,7 @@ const HeadingRow = styled.div<HRowProps>`
     padding: 0 16px;
     height: 60px;
     width: 100%;
-    background: ${(props: any) => (props.background ? (props.background as string) : 'transparent')};
+    background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
     border-bottom: ${(props) => (props.border ? '1px solid var(--table-lightborder)' : 'none')};
 `;
 
@@ -41,8 +41,7 @@ const HPanel = styled.div<HPanelProps>`
     .equityStats {
         flex-basis: calc(60% - 8px);
         &.show {
-            height: fit-content;
-            max-height: 400px;
+            max-height: 420px;
             tr:nth-child(2) td,
             tr:nth-child(3) td,
             tr:nth-child(4) td,
@@ -61,7 +60,7 @@ const HPanel = styled.div<HPanelProps>`
 
 const Title = styled.h1`
     font-size: var(--font-size-large);
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: var(--color-text);
     margin-right: 2rem;
     padding: 0;
@@ -96,12 +95,6 @@ const Counter = styled.div`
     width: 52px;
     height: 32px;
     font-size: var(--font-size-small);
-`;
-
-const PortfolioDropdownButton = styled(Button)`
-    height: var(--height-medium-button);
-    padding: 0;
-    min-width: 170px;
 `;
 
 const VScrollContainer = styled.div`
@@ -149,10 +142,10 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
     };
     return (
         <Dropdown className={className} overlay={menu} placement="bottomCenter" onVisibleChange={handleVisibleChange}>
-            <PortfolioDropdownButton>
+            <Button height="medium">
                 {keyMap[option]}
                 <StyledTriangleDown className={rotated ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
-            </PortfolioDropdownButton>
+            </Button>
         </Dropdown>
     );
 })`
@@ -199,7 +192,7 @@ const Overview: FC = () => {
     return (
         <>
             <VScrollContainer>
-                <HeadingRow background={`#00125D`}>
+                <HeadingRow background={'#00125D'}>
                     <Title>Equity Breakdown</Title>
                     <div className="flex justify-content-between">
                         <PortfolioDropdown
@@ -210,7 +203,7 @@ const Overview: FC = () => {
                         <PortfolioDropdown setOptions={setCurrentPNL} option={currentPNL} keyMap={pnlKeyMap} />
                     </div>
                 </HeadingRow>
-                <HPanel background={`#00125D`}>
+                <HPanel background={'#00125D'}>
                     <Equity
                         className="equityStats"
                         balances={fetchedTracers[0]?.getBalance() ?? defaults.balances}
@@ -235,18 +228,17 @@ const Overview: FC = () => {
                         <PositionGraph
                             key={`position-graph-${i}`}
                             selectedTracerAddress={tracer?.address ?? ''}
-                            positionType={i}
-                            balances={tracer?.getBalance() ?? defaults.balances}
+                            base={tracer?.getBalance().base ?? defaults.base}
+                            quote={tracer?.getBalance().quote ?? defaults.quote}
+                            market={tracer?.marketId}
                             fairPrice={tracer?.getFairPrice() ?? defaults.fairPrice}
-                            baseTicker={tracer?.baseTicker ?? defaults.baseTicker}
-                            quoteTicker={tracer?.quoteTicker ?? defaults.quoteTicker}
                             maxLeverage={tracer?.getMaxLeverage() ?? defaults.maxLeverage}
                         />
                     ))}
                     {!account ? (
                         <ConnectOverlay />
-                    ) : fetchedTracers[0]?.getBalance()?.quote.eq(0) ? (
-                        <PositionOverlay tracers={fetchedTracers} />
+                    ) : fetchedTracers.length === 0 ? (
+                        <PositionOverlay tracers={fetchedTracers} showMarketPreview={true} />
                     ) : null}
                 </HScrollContainer>
             </VScrollContainer>

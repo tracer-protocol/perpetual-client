@@ -40,7 +40,7 @@ const PositionTab: FC<PTProps> = styled(
         const liquidationPrice = calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage);
 
         return (
-            <div className={className}>
+            <div className={className} id="position-panel">
                 <PositionInfo>
                     <PositionDetails>
                         <DetailsRow>
@@ -57,14 +57,14 @@ const PositionTab: FC<PTProps> = styled(
                             <DetailsSection
                                 label="Unrealised PnL"
                                 className="w-1/2"
-                                tooltip={{ key: `unrealised-pnl`, props: { baseTicker: baseTicker } }}
+                                tooltip={{ key: 'unrealised-pnl', props: { baseTicker: baseTicker } }}
                             >
                                 {!balances.quote.eq(0) ? (
                                     <Content>
                                         {toApproxCurrency(calcUnrealised(base, fairPrice, filledOrders), 3)}
                                     </Content>
                                 ) : (
-                                    `-`
+                                    '-'
                                 )}
                             </DetailsSection>
                         </DetailsRow>
@@ -85,7 +85,7 @@ const PositionTab: FC<PTProps> = styled(
                             <DetailsSection
                                 label="Realised PnL"
                                 className="w-1/2"
-                                tooltip={{ key: `realised-pnl`, props: { baseTicker: baseTicker } }}
+                                tooltip={{ key: 'realised-pnl', props: { baseTicker: baseTicker } }}
                             >
                                 -
                             </DetailsSection>
@@ -127,7 +127,7 @@ const PositionTab: FC<PTProps> = styled(
                         Legend
                         <Legend>
                             <LegendTitle>
-                                <LegendsIndicator colour={`var(--color-text)`} />
+                                <LegendsIndicator colour={'var(--color-text)'} />
                                 Last Price
                             </LegendTitle>
                             <LegendPrice>{toApproxCurrency(lines[lines.length - 1]?.value)}</LegendPrice>
@@ -142,11 +142,16 @@ const PositionTab: FC<PTProps> = styled(
                     </LegendsContainer>
                 </PositionInfo>
 
-                <CloseOrderContainer>
+                <CloseOrderContainer id="position-close-container">
+                    {/* Required for ReactTour */}
                     <CloseOrderButton />
                 </CloseOrderContainer>
 
-                {!account ? <ConnectOverlay /> : balances.quote.eq(0) ? <PositionOverlay /> : null}
+                {!account ? (
+                    <ConnectOverlay />
+                ) : balances.quote.eq(0) ? (
+                    <PositionOverlay showMarketPreview={false} />
+                ) : null}
             </div>
         );
     },

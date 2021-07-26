@@ -81,7 +81,7 @@ export default RecentTrades;
 const RecentTradesTitle = styled.div`
     font-size: var(--font-size-small-heading);
     font-weight: bold;
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: #ffffff;
     text-transform: capitalize;
     padding: 10px 0 0 10px;

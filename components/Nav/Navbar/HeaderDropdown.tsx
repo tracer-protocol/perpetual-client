@@ -46,4 +46,9 @@ export const MenuItem = styled.div`
         padding: 0.5rem 2rem 0 2rem;
         border-bottom: none;
     }
+
+    &.button-container {
+        display: flex;
+        justify-content: space-between;
+    }
 `;

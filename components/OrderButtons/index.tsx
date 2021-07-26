@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useToasts } from 'react-toast-notifications';
-import { LIMIT, LONG, MARKET, OrderState, SHORT } from '@context/OrderContext';
+import { OrderState } from '@context/OrderContext';
+import { LIMIT, MARKET, SHORT, LONG } from '@libs/types/OrderTypes';
 import { OrderContext, TracerContext, TransactionContext } from 'context';
 import { Children } from 'libs/types';
 import Tooltip from 'antd/lib/tooltip';
@@ -26,7 +27,9 @@ const ParentDisable = styled(Button)`
 export const AdvancedOrderButton: React.FC = styled(({ className, children }) => (
     <div className={className}>
         <PlaceOrderButton>
-            <ParentDisable className="m-auto primary">{children}</ParentDisable>
+            <ParentDisable className="m-auto primary" height="medium">
+                {children}
+            </ParentDisable>
         </PlaceOrderButton>
     </div>
 ))`
@@ -74,7 +77,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
                     autoDismiss: true,
                 });
             } else {
-                addToast(['Transaction Failed', `Invalid order: An unhandled error occured`], {
+                addToast(['Transaction Failed', 'Invalid order: An unhandled error occured'], {
                     appearance: 'error',
                     autoDismiss: true,
                 });
@@ -106,8 +109,6 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
 };
 
 const CloseOrder = styled(Button)`
-    height: var(--height-extra-small-button);
-    padding: 0;
     width: 130px;
 `;
 
@@ -149,15 +150,13 @@ export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) =>
     };
 
     if (!balances.base.eq(0) && orderState?.error !== 'NO_ORDERS') {
-        return (
-            <CloseOrder className={`${className} primary`} onClick={closeOrder}>
-                Close Order
-            </CloseOrder>
-        );
+        return <CloseOrder disabled={true}>Close Order</CloseOrder>;
     } else {
         return (
             <Tooltip title={OrderErrors[orderState?.error ?? -1]?.message}>
-                <CloseOrder disabled={true}>Close Order</CloseOrder>
+                <CloseOrder className={`${className} primary`} onClick={closeOrder}>
+                    Close Order
+                </CloseOrder>
             </Tooltip>
         );
     }

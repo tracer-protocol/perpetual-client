@@ -1,10 +1,7 @@
-import React, { FC, useContext, useState } from 'react';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 import Graph from '../Graph';
-import { LargeButton } from '@components/Portfolio';
-import { UserBalance } from '@libs/types/TracerTypes';
 import { BigNumber } from 'bignumber.js';
-import { OrderContext, orderDefaults } from '@context/OrderContext';
 import {
     PGContainer,
     TableBody,
@@ -16,12 +13,10 @@ import {
     StatusDot,
     BorderlessCell,
 } from './PositionElements';
-import Exposure from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Exposure';
-import Leverage from '@components/Trade/Advanced/RightPanel/AccountSummary/Position/Leverage';
-import { AvailableMargin } from '@components/Trade/Advanced/TradingPanel/Account';
 import { useLines } from '@libs/Graph/hooks/Tracer';
 import { toApproxCurrency } from '@libs/utils';
-import { calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
+import { calcAvailableMarginPercent, calcLeverage, calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
+import { Button } from '@components/General';
 
 const GraphContainer = styled.div`
     height: 150px;
@@ -36,26 +31,14 @@ const GraphContainer = styled.div`
 interface PGProps {
     className?: string;
     selectedTracerAddress: string;
-    positionType: number;
-    balances: UserBalance;
-    baseTicker: string;
+    base: BigNumber;
+    quote: BigNumber;
+    market: string;
     fairPrice: BigNumber;
     maxLeverage: BigNumber;
-    quoteTicker: string;
 }
 const PositionGraph: FC<PGProps> = styled(
-    ({
-        selectedTracerAddress,
-        className,
-        positionType,
-        balances,
-        fairPrice,
-        quoteTicker,
-        baseTicker,
-        maxLeverage,
-    }: PGProps) => {
-        const [currency] = useState(0); // 0 quoted in base
-        const { order } = useContext(OrderContext);
+    ({ selectedTracerAddress, className, base, quote, market, fairPrice, maxLeverage }: PGProps) => {
         const { lines } = useLines(selectedTracerAddress);
 
         // TODO: Need to define positions in context
@@ -68,49 +51,30 @@ const PositionGraph: FC<PGProps> = styled(
                 <PGContainer>
                     <TableBody>
                         <Row>
-                            <HeadingCell>ETH-USDC</HeadingCell>
-                            <HeadingCell className={positionType === 1 ? 'green' : 'red'}>
-                                {positionType === 1 && 'SHORT'}
-                                {positionType === 2 && 'LONG'}
+                            <HeadingCell>{market}</HeadingCell>
+                            <HeadingCell className={base.lt(0) ? 'green' : 'red'}>
+                                {base.lt(0) && 'SHORT'}
+                                {base.gt(0) && 'LONG'}
                             </HeadingCell>
                         </Row>
                         <Row>
                             <InfoCell>
-                                <Amount>
-                                    <Exposure
-                                        balances={balances}
-                                        fairPrice={fairPrice}
-                                        currency={currency}
-                                        order={order ?? orderDefaults.order}
-                                        quoteTicker={quoteTicker}
-                                        baseTicker={baseTicker}
-                                    />
-                                </Amount>
+                                <Amount>{!quote.eq(0) ? base.abs().toFixed(2) : '-'}</Amount>
                                 <CellTitle>Exposure</CellTitle>
                             </InfoCell>
                             <InfoCell>
                                 <Amount>
-                                    <Leverage
-                                        balances={balances}
-                                        nextPosition={
-                                            order?.nextPosition ?? { base: new BigNumber(0), quote: new BigNumber(0) }
-                                        }
-                                        tradePrice={order?.price ?? 0}
-                                        fairPrice={fairPrice}
-                                        orderType={order?.orderType ?? 0}
-                                        exposure={order?.exposure ?? 0}
-                                    />
+                                    {!quote.eq(0) ? `${calcLeverage(quote, base, fairPrice).toFixed(2)}x` : '-'}
                                 </Amount>
                                 <CellTitle>Leverage</CellTitle>
                             </InfoCell>
                             <InfoCell inner>
                                 <Amount>
-                                    <AvailableMargin
-                                        order={order}
-                                        balances={balances}
-                                        maxLeverage={maxLeverage}
-                                        fairPrice={fairPrice}
-                                    />
+                                    {!quote.eq(0)
+                                        ? `${calcAvailableMarginPercent(quote, base, fairPrice, maxLeverage).toFixed(
+                                              2,
+                                          )}%`
+                                        : '-'}
                                 </Amount>
                                 <CellTitle>Available Margin</CellTitle>
                             </InfoCell>
@@ -128,9 +92,9 @@ const PositionGraph: FC<PGProps> = styled(
                         <Row>
                             <InfoCell>
                                 <Amount>
-                                    {toApproxCurrency(
-                                        calcLiquidationPrice(balances.quote, balances.base, fairPrice, maxLeverage),
-                                    )}
+                                    {!quote.eq(0)
+                                        ? toApproxCurrency(calcLiquidationPrice(quote, base, fairPrice, maxLeverage))
+                                        : '-'}
                                 </Amount>
                                 <CellTitle>
                                     <StatusDot type="status-orange" />
@@ -145,7 +109,9 @@ const PositionGraph: FC<PGProps> = styled(
                                 </CellTitle>
                             </InfoCell>
                             <InfoCell inner>
-                                <Amount>{toApproxCurrency(lines[lines.length - 1]?.value)}</Amount>
+                                <Amount>
+                                    {lines.length !== 0 ? toApproxCurrency(lines[lines.length - 1]?.value) : '-'}
+                                </Amount>
                                 <CellTitle>
                                     <StatusDot type="status-white" />
                                     Last Price
@@ -154,12 +120,12 @@ const PositionGraph: FC<PGProps> = styled(
                         </Row>
                         <Row>
                             <BorderlessCell>
-                                <LargeButton className="primary filled" onClick={closePosition}>
+                                <Button className="primary" onClick={closePosition}>
                                     Close Position
-                                </LargeButton>
+                                </Button>
                             </BorderlessCell>
                             <BorderlessCell inner>
-                                <LargeButton className="primary">Adjust Position</LargeButton>
+                                <Button className="primary">Adjust Position</Button>
                             </BorderlessCell>
                         </Row>
                     </TableBody>

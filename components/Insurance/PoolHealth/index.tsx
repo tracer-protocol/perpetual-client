@@ -105,7 +105,7 @@ const Section = styled(({ className, title, percentage, value, target, tooltip }
     );
 })<SProps>`
     font-size: var(--font-size-small);
-    letter-spacing: -0.32px;
+    letter-spacing: var(--letter-spacing-small);
     color: var(--color-text);
     transition: 0.3s;
     min-width: 100px;
@@ -151,7 +151,7 @@ const Label: React.FC<LProps> = styled(({ title, value, tooltip, className }: LP
     }
     > .value {
         font-size: var(--font-size-medium);
-        letter-spacing: -0.4px;
+        letter-spacing: var(--letter-spacing-extra-small);
         color: var(--color-text);
     }
 `;
@@ -163,12 +163,12 @@ const Breakdown: React.FC<BProps> = styled(
                     <Label
                         title="Holdings"
                         value={parseFloat(liquidity.toFixed(2))}
-                        tooltip={{ key: `pool-holdings`, props: { baseTicker: baseTicker } }}
+                        tooltip={{ key: 'pool-holdings', props: { baseTicker: baseTicker } }}
                     />
                     <Label
                         title="Target"
                         value={parseFloat(target.toFixed(2))}
-                        tooltip={{ key: `pool-target`, props: { baseTicker: baseTicker } }}
+                        tooltip={{ key: 'pool-target', props: { baseTicker: baseTicker } }}
                     />
                 </div>
                 <BreakdownBar

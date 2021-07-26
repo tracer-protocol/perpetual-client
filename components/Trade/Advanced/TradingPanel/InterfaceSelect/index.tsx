@@ -7,7 +7,6 @@ const SButton = styled(Button)`
     height: var(--height-extra-small-button);
     background: var(--color-accent);
     font-size: var(--font-size-extra-small);
-    letter-spacing: -0.24px;
     padding: 0;
     margin-right: 0;
     border: none;
@@ -50,7 +49,7 @@ export default styled(({ className, isAdjust, setAdjust }: ISProps) => {
     );
 })`
     font-size: var(--font-size-medium);
-    letter-spacing: -0.4px;
+    letter-spacing: var(--letter-spacing-extra-small);
     color: var(--color-text);
     display: ${(props) => (props.account === '' ? 'none' : 'flex')};
     justify-content: space-between;
