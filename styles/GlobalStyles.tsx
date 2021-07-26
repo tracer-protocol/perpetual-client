@@ -129,7 +129,7 @@ export default createGlobalStyle`
     .react-toast-notifications__container {
         top: 65px !important;
         z-index: 100001 !important;
-        max-width: 400px !important;
+        width: 400px !important;
     }
     
     // Override Reactour styles
