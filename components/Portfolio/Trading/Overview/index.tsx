@@ -41,8 +41,7 @@ const HPanel = styled.div<HPanelProps>`
     .equityStats {
         flex-basis: calc(60% - 8px);
         &.show {
-            height: fit-content;
-            max-height: 400px;
+            max-height: 420px;
             tr:nth-child(2) td,
             tr:nth-child(3) td,
             tr:nth-child(4) td,
@@ -229,11 +228,10 @@ const Overview: FC = () => {
                         <PositionGraph
                             key={`position-graph-${i}`}
                             selectedTracerAddress={tracer?.address ?? ''}
-                            positionType={i}
-                            balances={tracer?.getBalance() ?? defaults.balances}
+                            base={tracer?.getBalance().base ?? defaults.base}
+                            quote={tracer?.getBalance().quote ?? defaults.quote}
+                            market={tracer?.marketId}
                             fairPrice={tracer?.getFairPrice() ?? defaults.fairPrice}
-                            baseTicker={tracer?.baseTicker ?? defaults.baseTicker}
-                            quoteTicker={tracer?.quoteTicker ?? defaults.quoteTicker}
                             maxLeverage={tracer?.getMaxLeverage() ?? defaults.maxLeverage}
                         />
                     ))}
