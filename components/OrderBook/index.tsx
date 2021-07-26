@@ -152,7 +152,6 @@ const OrderBook: FC<OProps> = styled(
                 <OrderBookContainer>
                     <OrderBookSubText>Filter</OrderBookSubText>
                     <OrderBookTitle>Order Book</OrderBookTitle>
-                    <OrderBookToggle showOrderBook={showOrderBook} onClick={() => setShowOrderBook(!showOrderBook)} />
                     {showOrderBook ? (
                         askOrders?.length || bidOrders?.length ? (
                             <>
@@ -232,7 +231,7 @@ export default OrderBook;
 const OrderBookSubText = styled.div`
     display: none;
     align-items: center;
-    padding: 0 10px;
+    padding: 0 0.8rem;
     width: 100%;
     min-height: var(--height-extra-small-container);
     font-size: var(--font-size-small);
@@ -245,45 +244,17 @@ const OrderBookSubText = styled.div`
 `;
 
 const OrderBookTitle = styled.div`
+    display: flex;
+    align-items: center;
     font-size: var(--font-size-small-heading);
     font-weight: bold;
     letter-spacing: var(--letter-spacing-extra-small);
     color: #ffffff;
     text-transform: capitalize;
-    margin: 8px 0.8rem;
-`;
-
-const StyledToggle = styled.img`
-    height: 0.8rem;
-    transition: all 400ms ease-in-out;
-    display: inline;
-    margin-top: -0.2rem;
-    margin-left: 0.2rem;
-
-    &.rotate {
-        transform: rotate(180deg);
-        margin-top: -4px;
-    }
-`;
-interface OBTProps {
-    className?: string;
-    showOrderBook: boolean;
-    onClick: () => void;
-}
-const OrderBookToggle = styled(({ className, showOrderBook, onClick }: OBTProps) => {
-    return (
-        <div className={className} onClick={onClick}>
-            <StyledToggle className={showOrderBook ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
-        </div>
-    );
-})<OBTProps>`
-    position: absolute;
-    right: 1rem;
-    top: 10px;
-
-    &:hover {
-        cursor: pointer;
-    }
+    padding: 0px 0.8rem;
+    margin-bottom: 8px;
+    height: var(--height-extra-small-container);
+    border-bottom: 1px solid var(--color-accent);
 `;
 
 const Item = styled.div`
@@ -338,7 +309,8 @@ const BookRow = styled.div`
 
 const MarketRow = styled(BookRow)`
     background: var(--color-background-secondary);
-    padding: 0.5rem 0;
+    padding: 8px 0;
+    margin: 8px 0;
     &:hover {
         opacity: 1;
     }
@@ -451,8 +423,8 @@ export const PrecisionDropdown = styled(({ className, decimals, setDecimals }: P
     );
 })<PDProps>`
     position: absolute;
-    right: 2.5rem;
-    top: 0.7rem;
+    right: 0.8rem;
+    top: 6px;
 
     &:hover {
         background: none;
@@ -473,7 +445,7 @@ const OrderBookContainer = styled.div`
     position: relative;
     padding: 0 0 0.6rem;
     @media (max-height: 1080px) {
-        ${OrderBookTitle}, ${OrderBookToggle} {
+        ${OrderBookTitle} {
             display: none;
         }
     }
