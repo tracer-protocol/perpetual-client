@@ -40,6 +40,8 @@ export const tourConfig = [
     // Wallet button
     {
         selector: '#account-dropdown',
+        // @ts-ignore
+        // @ts-nocheck
         content: () => {
             return (
                 <Prompt>
@@ -48,6 +50,8 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // @ts-ignore
+        // @ts-nocheck
         action: () => {
             const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
             const marginModalEl = document.getElementById('account-modal') as HTMLElement;
@@ -72,17 +76,21 @@ export const tourConfig = [
     // Calculator modal
     {
         selector: '#calculator-modal .content',
+        // @ts-ignore
+        // @ts-nocheck
         content: () => {
             return (
                 <Prompt>
                     <HelperTitle>Calculate Margin Required</HelperTitle>
                     <HelperText>
                         Use the calculator to see how much exposure and leverage you can get with your margin, and the
-                        price you’d be liquidated at. Once you've finished playing around, click ‘Deposit’.
+                        price you’d be liquidated at. Once you’ve finished playing around, click ‘Deposit’.
                     </HelperText>
                 </Prompt>
             );
         },
+        // @ts-ignore
+        // @ts-nocheck
         action: () => {
             const calcButton = document.getElementById('calc-button') as HTMLElement;
             calcButton?.click();
@@ -104,6 +112,8 @@ export const tourConfig = [
     // Margin modal
     {
         selector: '#account-modal .content',
+        // @ts-ignore
+        // @ts-nocheck
         content: () => {
             return (
                 <Prompt>
@@ -116,6 +126,8 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // @ts-ignore
+        // @ts-nocheck
         action: () => {
             const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
             const marginModalEl = document.getElementById('account-modal') as HTMLElement;
@@ -137,12 +149,14 @@ export const tourConfig = [
     // Market panel
     {
         selector: '#adjustment-container',
+        // @ts-ignore
+        // @ts-nocheck
         content: () => {
             return (
                 <Prompt>
                     <HelperTitle>Open a Position</HelperTitle>
                     <HelperText noPadding>
-                        <span>Once you've deposited margin, it’s time to open a position by placing an order.</span>
+                        <span>Once you’ve deposited margin, it’s time to open a position by placing an order.</span>
                         <span>
                             You can get a position at the current best price (market order) or at a custom price (limit
                             order).
@@ -156,6 +170,8 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // @ts-ignore
+        // @ts-nocheck
         action: () => {
             // Hide the margin modal after reaching next stage of tutorial
             const marginModalCloseButton = document.querySelector(
@@ -171,6 +187,8 @@ export const tourConfig = [
     // Position panel
     {
         selector: '#position-panel',
+        // @ts-ignore
+        // @ts-nocheck
         content: () => {
             return (
                 <Prompt>
@@ -188,6 +206,8 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // @ts-ignore
+        // @ts-nocheck
         action: () => {
             // Hide the 'No Position Open' overlay
             const positionOverlay = document.getElementById('position-overlay') as HTMLElement;
@@ -204,6 +224,8 @@ export const tourConfig = [
     // Adjust position panel
     {
         selector: '#order-panel',
+        // @ts-ignore
+        // @ts-nocheck
         content: () => {
             return (
                 <Prompt>
@@ -230,6 +252,8 @@ export const tourConfig = [
     // Close position button
     {
         selector: '#close-order-button',
+        // @ts-ignore
+        // @ts-nocheck
         content: () => {
             return (
                 <Prompt>
@@ -242,6 +266,8 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // @ts-ignore
+        // @ts-nocheck
         action: () => {
             // Enable the close order button
             const closeOrderButton = document.getElementById('position-close-container') as HTMLButtonElement;
