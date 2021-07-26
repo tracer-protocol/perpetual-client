@@ -5,8 +5,8 @@ import NavBar from '@components/Nav';
 import { Advanced } from '@components/Trade';
 import { OrderStore, SelectedTracerStore } from 'context';
 import { InsuranceStore } from '@context/InsuranceContext';
-import styled from 'styled-components';
 import { OMEStore } from '@context/OMEContext';
+import styled from 'styled-components';
 import { StyledMenu as AccountDropdown } from '@components/Nav/Navbar/AccountDropdown';
 import Footer from '@components/Footer';
 

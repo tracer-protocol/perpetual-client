@@ -1,4 +1,4 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useState } from 'react';
 import Graph from './Graph';
 import PositionGraph from './PositionGraph';
 import Equity from './Equity';
@@ -7,7 +7,6 @@ import styled from 'styled-components';
 import Dropdown from 'antd/lib/dropdown';
 import { Button } from '@components/General';
 import { Menu, MenuItem } from '@components/General/Menu';
-import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
 import PositionOverlay from '@components/Overlay/PositionOverlay';
@@ -158,24 +157,13 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
     }
 `;
 
-const Overview: FC = () => {
+interface OProps {
+    fetchedTracers: any;
+}
+const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
     const { account } = useWeb3();
     const [currentPortfolio, setCurrentPortfolio] = useState(1);
     const [currentPNL, setCurrentPNL] = useState(1);
-    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
-    const [fetchedTracers, setFetchedTracers] = useState<any>([]);
-
-    const fetchTracers = setTimeout(async function getInfo() {
-        const tempTracers = [];
-        for (const key of Object.keys(tracers)) {
-            tempTracers.push(tracers[key]);
-        }
-        setFetchedTracers(tempTracers);
-    }, 1000);
-
-    useEffect(() => {
-        fetchTracers;
-    });
 
     const portfolioKeyMap: Record<number, string> = {
         1: 'Entire Portfolio',

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Logo } from '@components/General';
-import { TableHeading, TableRow, TableCell } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell } from '@components/Table';
 import { DateAndTime } from '@components/General';
 
 const WithdrawalHistory: React.FC = () => {
