@@ -15,7 +15,7 @@ import BigNumber from 'bignumber.js';
 import AccountSummary from './AccountSummary';
 import InsuranceInfo from './InsuranceInfo';
 import Graphs from './Graph';
-import SlideSelect, { Option } from '@components/General/SlideSelect';
+import SlideSelect, { Option, SlideOption } from '@components/General/SlideSelect';
 import { FilledOrder, OMEOrder } from '@libs/types/OrderTypes';
 
 const TitledBox = styled(({ className, title, children }) => {
@@ -159,13 +159,16 @@ const TradesAndBook: React.FC<TBProps> = ({
     const [selected, setSelected] = useState(SHOW_BOOK);
     return (
         <>
-            <StyledSlideSelect onClick={(index, _e) => setSelected(index)} value={selected}>
-                <Option>
-                    Order Book
-                    <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
-                </Option>
-                <Option>Recent Trades</Option>
-            </StyledSlideSelect>
+            <SlideSelectContainer>
+                <StyledSlideSelect onClick={(index, _e) => setSelected(index)} value={selected}>
+                    <Option>
+                        Order Book
+                        <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
+                    </Option>
+                    <Option>Recent Trades</Option>
+                </StyledSlideSelect>
+                <FilterText>Filter</FilterText>
+            </SlideSelectContainer>
             <OrderBook
                 askOrders={askOrders}
                 decimals={decimals}
@@ -180,6 +183,27 @@ const TradesAndBook: React.FC<TBProps> = ({
     );
 };
 
+const FilterText = styled.span`
+    display: none;
+    align-items: center;
+    padding: 0 16px;
+    width: fit-content;
+
+    @media (max-width: 1600px) {
+        display: flex;
+        height: var(--height-extra-small-container);
+    }
+`;
+
+const SlideSelectContainer = styled.div`
+    position: relative;
+    min-height: var(--height-extra-small-container);
+
+    @media (max-width: 1600px) {
+        min-height: 80px;
+    }
+`;
+
 const StyledSlideSelect = styled(SlideSelect)`
     border-radius: 0;
     border-top: 1px solid var(--color-accent);
@@ -190,8 +214,8 @@ const StyledSlideSelect = styled(SlideSelect)`
     width: 100%;
     white-space: nowrap;
     border-left: 0;
-    height: var(--height-extra-small-container);
     color: var(--color-secondary);
+    min-height: var(--height-extra-small-container);
 
     > .selected {
         font-weight: bold;
@@ -202,21 +226,39 @@ const StyledSlideSelect = styled(SlideSelect)`
         display: flex;
     }
 
+    @media (max-width: 1600px) {
+        border-bottom: 1px solid var(--color-accent);
+    }
+
+    ${SlideOption} {
+        padding: 0px 16px;
+        @media (max-width: 1600px) {
+            text-align: left;
+        }
+    }
+
     ${Option} {
         font-size: var(--font-size-small);
         display: flex;
         align-items: center;
+        @media (max-width: 1600px) {
+            margin: unset;
+        }
     }
 
     ${Option} ${PrecisionDropdown} {
         position: relative;
         top: 0;
         right: 0;
-        width: 100px;
         font-size: var(--font-size-small);
-        width: 80px;
-        height: 28px;
+        max-width: 4rem;
+        height: 24px;
         margin-left: 8px;
+        @media (max-width: 1600px) {
+            position: absolute;
+            bottom: -80px;
+            left: 70px;
+        }
     }
     > .bg-slider {
         background: var(--color-accent);
