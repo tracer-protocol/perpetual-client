@@ -117,9 +117,9 @@ const Close = styled.div`
         cursor: pointer;
         background-color: var(--color-primary);
         background-image: url('/img/general/close-white.svg');
-    } 
+    }
 `;
-const Header: React.FC<{ onDismiss: (e: any) => any, title: React.ReactNode }> = ({ onDismiss, title }) => {
+const Header: React.FC<{ onDismiss: (e: any) => any; title: React.ReactNode }> = ({ onDismiss, title }) => {
     return (
         <div
             style={{
@@ -127,7 +127,7 @@ const Header: React.FC<{ onDismiss: (e: any) => any, title: React.ReactNode }> =
                 fontWeight: 'bold',
                 fontSize: '19px',
                 letterSpacing: '-0.38px',
-                width: '100%',
+                width: 'calc(100% - 60px)',
                 display: 'flex',
                 padding: '16px 16px 0',
                 borderBottom: '1px solid var(--color-accent)',
@@ -155,9 +155,7 @@ const Countdown: React.FC<{
     autoDismissTimeout: number;
     display: boolean;
 }> = ({ autoDismissTimeout, display }) =>
-    display ? (
-        <STimer autoDismissTimeout={Math.floor(autoDismissTimeout / 1000)} />
-    ) : null;
+    display ? <STimer autoDismissTimeout={Math.floor(autoDismissTimeout / 1000)} /> : null;
 
 const Content = styled((props: any) => (
     <div className={`react-toast-notifications__toast__content w-full p-2 ${props.className}`} {...props}>
@@ -222,10 +220,7 @@ const Hashie: React.FC<HProps | any> = ({
         >
             <IconWrap>{appearance.icon}</IconWrap>
             <ContentWrapper>
-                <Header
-                    onDismiss={onDismiss}
-                    title={children_[0]}
-                />
+                <Header onDismiss={onDismiss} title={children_[0]} />
                 <Content>{children_[1]}</Content>
             </ContentWrapper>
             <Countdown display={autoDismiss} autoDismissTimeout={autoDismissTimeout} />
@@ -244,7 +239,7 @@ Hashie.defaultProps = {
 const ToastWrapper = styled.div`
     position: relative;
     display: flex;
-    background-color: #00156C;
+    background-color: #00156c;
     overflow: hidden;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.175);
     margin-bottom: 0.5rem;
@@ -253,7 +248,7 @@ const ToastWrapper = styled.div`
     &:hover ${Close} {
         opacity: 1;
     }
-`
+`;
 
 export const NotificationsContainer = styled.div`
     position: absolute;
