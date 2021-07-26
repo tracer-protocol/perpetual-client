@@ -218,7 +218,9 @@ const Hashie: React.FC<HProps | any> = ({
             }}
         >
             <IconWrap>{appearance.icon}</IconWrap>
-            <ContentWrapper className="notification-content"> {/*Necessary for ReactTour to select element*/}
+            <ContentWrapper className="notification-content">
+                {' '}
+                {/*Necessary for ReactTour to select element*/}
                 <Header onDismiss={onDismiss} title={children_[0]} />
                 <Content>{children_[1]}</Content>
             </ContentWrapper>

@@ -41,7 +41,8 @@ const Mobile = styled.div`
     }
 `;
 
-const App = ({ Component, pageProps }: AppProps) => { // eslint-disable-line
+const App = ({ Component, pageProps }: AppProps) => {
+    // eslint-disable-line
     useEffect(() => {
         // @ts-ignore
         window.onUsersnapCXLoad = function (api) {
