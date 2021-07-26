@@ -130,7 +130,6 @@ const Header: React.FC<{ onDismiss: (e: any) => any; title: React.ReactNode }> =
                 width: 'calc(100% - 60px)',
                 display: 'flex',
                 padding: '16px 16px 0',
-                borderBottom: '1px solid var(--color-accent)',
             }}
         >
             <span>{title}</span>
