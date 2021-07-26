@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 const NavBar: React.FC = styled(({ className }) => {
     return (
-        <div className={className}>
+        <div className={className} id="nav">
             <NavBarContent />
         </div>
     );

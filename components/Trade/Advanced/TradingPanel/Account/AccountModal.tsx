@@ -146,6 +146,7 @@ export default styled(
                 title={state.title}
                 subTitle={state.subTitle}
                 onClose={() => handleClose()}
+                id="account-modal"
             >
                 <SSlideSelect value={isDeposit ? 0 : 1} onClick={(val) => setDeposit(val === 0)}>
                     <Option>Deposit</Option>
