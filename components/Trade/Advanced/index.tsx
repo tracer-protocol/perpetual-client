@@ -60,6 +60,20 @@ const Advanced: React.FC = styled(({ className }) => {
     const { addToast, updateToast } = useToasts();
 
     useEffect(() => {
+        let toastId = addToast(['Pending Transaction', 'Approve transaction with provider'], {
+            appearance: 'loading' as AppearanceTypes,
+            autoDismiss: true,
+        });
+        setTimeout(function () {
+            updateToast(toastId as unknown as string, {
+                content: ['Transaction submitted', `Transaction submitted`],
+                appearance: 'success' as AppearanceTypes,
+                autoDismiss: false,
+            });
+        }, 5000);
+    }, []);
+
+    useEffect(() => {
         checkTutorialComplete();
         if (orderDispatch) {
             orderDispatch({ type: 'setLock', value: true });

@@ -7,6 +7,12 @@ import TracerLoading from 'public/img/toast/tracer-loading.gif';
 // @ts-ignore
 import TickApproved from 'public/img/toast/tick-approved.gif';
 // @ts-ignore
+import Error from 'public/img/toast/error.gif';
+// @ts-ignore
+import Warning from 'public/img/toast/warning.gif';
+// @ts-ignore
+import Cancel from 'public/img/toast/cancel.gif';
+// @ts-ignore
 import Tick from 'public/img/toast/tick.gif';
 
 type PlacementType = 'bottom-left' | 'bottom-center' | 'bottom-right' | 'top-left' | 'top-center' | 'top-right';
@@ -45,10 +51,10 @@ const appearances: Record<
         icon: <Icon image={Tick} />,
     },
     error: {
-        icon: <Icon image={Tick} />,
+        icon: <Icon image={Error} />,
     },
     warning: {
-        icon: <Icon image={Tick} />,
+        icon: <Icon image={Warning} />,
     },
     info: {
         icon: <Icon image={TracerLoading} />,
