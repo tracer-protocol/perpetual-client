@@ -25,7 +25,7 @@ const MarginAccounts: React.FC = () => {
             tMargin: 4242,
             mMargin: 2121,
             aMargin: 2121,
-            status: 'Eligible for Liquidation',
+            status: 'Eligible',
         },
         {
             name: 'ETH',
@@ -33,7 +33,7 @@ const MarginAccounts: React.FC = () => {
             tMargin: 4242,
             mMargin: 2121,
             aMargin: 2121,
-            status: 'Approaching Liquidation',
+            status: 'Approaching',
         },
     ];
 
