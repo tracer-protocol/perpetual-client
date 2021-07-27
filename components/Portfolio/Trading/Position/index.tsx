@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 import { Table, TableBody, TableHeader, TableHeading, TableLastHeading, TableRow, TableCell } from '@components/Table';
-import { SecondaryCell, StatusIndicator, getStatusColour } from '@components/Portfolio';
+import { StatusIndicator, getStatusColour } from '@components/Portfolio';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'libs/types/OrderTypes';
 import { LabelledTracers } from 'libs/types/TracerTypes';
@@ -95,13 +95,6 @@ const Position: React.FC<{
                                     </div>
                                 </TableCell>
                                 <TableCell>{base.eq(0) ? 'NO POSITION' : base.lt(0) ? 'SHORT' : 'LONG'}</TableCell>
-                                <TableCell color={unrealisedPNL.toNumber() < 0 ? '#F15025' : '#21DD53'}>
-                                    {toApproxCurrency(unrealisedPNL)}
-                                </TableCell>
-                                <TableCell color={realisedPNL < 0 ? '#F15025' : '#21DD53'}>
-                                    {toApproxCurrency(realisedPNL)}
-                                </TableCell>
-                                <TableCell>{toApproxCurrency(totalMargin)}</TableCell>
                                 <TableCell>
                                     {base.abs().toNumber()} {name}
                                 </TableCell>
@@ -109,7 +102,14 @@ const Position: React.FC<{
                                     {toApproxCurrency(
                                         calcLiquidationPrice(quote, base, tracer.oraclePrice, tracer.maxLeverage),
                                     )}
-                                    <SecondaryCell>{toApproxCurrency(tracer.oraclePrice)}</SecondaryCell>
+                                    <span className="secondary"> / {toApproxCurrency(tracer.oraclePrice)}</span>
+                                </TableCell>
+                                <TableCell>{toApproxCurrency(totalMargin)}</TableCell>
+                                <TableCell color={unrealisedPNL.toNumber() < 0 ? '#F15025' : '#21DD53'}>
+                                    {toApproxCurrency(unrealisedPNL)}
+                                </TableCell>
+                                <TableCell color={realisedPNL < 0 ? '#F15025' : '#21DD53'}>
+                                    {toApproxCurrency(realisedPNL)}
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex flex-row">
