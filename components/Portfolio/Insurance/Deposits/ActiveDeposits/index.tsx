@@ -1,7 +1,11 @@
 import React, { FC } from 'react';
 
 const ActiveDeposits: FC = () => {
-    return <>Active Deposits</>;
+    return (
+        <>
+            <div>Active Deposits</div>
+        </>
+    );
 };
 
 export default ActiveDeposits;
