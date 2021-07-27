@@ -1,5 +1,7 @@
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { APIResult, Result } from 'libs/types/General';
+import Web3 from 'web3';
+
 /** Book API's */
 
 // url of the OME. NOTE: THIS DOES NOT CHANGE WITH THE NETWORK
@@ -53,8 +55,8 @@ export const getUsersOrders: (market: string, account: string) => Promise<OMEOrd
                 console.error('Failed to fetch user orders', res);
                 return [];
             }
-            console.debug('Fetched user orders', res?.data);
-            return res?.data ?? [];
+            console.debug('Fetched user orders', res);
+            return res ?? [];
         })
         .catch((err) => {
             console.error('Failed to fetch user orders', err);
@@ -138,9 +140,22 @@ export const getOrder: (market: string, orderId: string) => Promise<Response> = 
  * @param market the market the order belongs to
  * @param orderId of the order being updated
  */
-export const cancelOrder: (market: string, orderId: string) => Promise<Result> = async (market, orderId) => {
-    return fetch(`${BASE_URL}/book/${omefy(market)}/order/${omefy(orderId)}`, {
-        method: 'DELETE',
+export const cancelOrder: (web3: Web3, account: string, market: string, orderId: string) => Promise<Result> = async (
+    web3,
+    account,
+    market,
+    orderId,
+) => {
+    // @ts-ignore
+    const signature = await web3.eth.personal.sign(`cancel:${orderId}`, account);
+    const data = {
+        marketId: market,
+        orderId: orderId,
+        signature: signature,
+    };
+    return fetch(`${BASE_URL}/book/${market}/order/${orderId}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
     })
         .then((res) => {
             return res.json();

@@ -120,8 +120,10 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         );
 
         const res = callMethod(...params);
+        console.log(res, 'res');
         Promise.resolve(res).then((res) => {
             if (res.status === 'error') {
+                console.log('Error, erararra');
                 updateToast(toastId as unknown as string, {
                     // confirmed this is a string
                     content: statusMessages?.error ?? `Transaction cancelled. ${res.message}`,
