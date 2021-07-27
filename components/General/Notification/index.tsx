@@ -73,7 +73,6 @@ const IconWrap = styled.span`
     height: auto;
     font-size: var(--font-size-medium);
     line-height: 20px;
-    border-right: 1px solid var(--color-accent);
     background: #000240;
 `;
 const Close = styled.div`
@@ -115,7 +114,7 @@ const Header: React.FC<{ onDismiss: (e: any) => any; title: React.ReactNode }> =
             }}
         >
             <span>{title}</span>
-            <Close className="toast-close" onClick={onDismiss} />
+            <Close className="toast-close" onClick={e => animateDismiss(onDismiss, e.target as HTMLElement)} />
         </div>
     );
 };
@@ -176,6 +175,15 @@ const ContentWrapper = styled.div`
     flex-direction: column;
 `;
 
+const animateDismiss = (onDismiss: (e: HTMLElement) => any, e: HTMLElement) => {  // animate dismissing the toast
+    const toastContainer = e?.parentNode?.parentNode?.parentNode as HTMLDivElement;
+    console.log(toastContainer);
+    toastContainer.classList.add('slide-right');
+    setTimeout(function() {
+        onDismiss(e);
+    }, 400);
+}
+
 const Hashie: React.FC<HProps | any> = ({
     transitionDuration,
     transitionState,
@@ -201,7 +209,6 @@ const Hashie: React.FC<HProps | any> = ({
         >
             <IconWrap>{appearance.icon}</IconWrap>
             <ContentWrapper className="notification-content">
-                {/*Necessary for ReactTour to select element*/}
                 <Header onDismiss={onDismiss} title={children_[0]} />
                 <Content>{children_[1]}</Content>
             </ContentWrapper>
@@ -221,17 +228,19 @@ Hashie.defaultProps = {
 const ToastWrapper = styled.div`
     position: relative;
     display: flex;
-    background-color: #00156c;
+    background-color: #011772;
     overflow: hidden;
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.175);
     margin-bottom: 0.5rem;
     border-radius: 0.375rem;
+    transition: transform 0.5s ease !important;
 
     &:hover ${Close} {
         opacity: 1;
     }
 
     &.dismiss {
+        background: var(--color-accent);
         picture {
             animation: fade-out 0.5s linear forwards;
             animation-delay: 4.3s;
@@ -244,6 +253,10 @@ const ToastWrapper = styled.div`
                 }
             }
         }
+    }
+
+    &.slide-right {
+        transform: translateX(500px) !important;
     }
 `;
 

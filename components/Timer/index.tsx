@@ -9,26 +9,26 @@ const Timer: React.FC = styled(({ className }) => {
     );
 })`
     height: 100%;
-    width: 100%;
+    width: calc(100% - 120px);
     position: absolute;
-    left: 0px;
+    left: 120px;
     z-index: -1;
 
     @keyframes countdown-width {
         from {
-            width: 100%;
+            width: 0%;
         }
         to {
-            width: 0%;
+            width: 100%;
         }
     }
 
     #refetchLoader {
         animation: countdown-width 5s linear infinite;
-        background: var(--color-accent);
+        background: #011772;
         position: absolute;
         height: 0.25rem;
-        right: 0;
+        left: 0;
     }
 `;
 

@@ -59,18 +59,47 @@ const Advanced: React.FC = styled(({ className }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const { addToast, updateToast } = useToasts();
 
+
     useEffect(() => {
-        let toastId = addToast(['Pending Transaction', 'Approve transaction with provider'], {
-            appearance: 'loading' as AppearanceTypes,
-            autoDismiss: true,
+        // let toastId = addToast(['I will update', 'In five seconds'], {
+        //     appearance: 'loading' as AppearanceTypes,
+        //     autoDismiss: true,
+        // });
+        // setTimeout(function () {
+        //     updateToast(toastId as unknown as string, {
+        //         content: ['Updated', `I have updated`],
+        //         appearance: 'success' as AppearanceTypes,
+        //         autoDismiss: false,
+        //     });
+        // }, 5000);
+        addToast(['Hi', 'Dismiss me'], {
+            appearance: 'success' as AppearanceTypes,
+            autoDismiss: false,
         });
-        setTimeout(function () {
-            updateToast(toastId as unknown as string, {
-                content: ['Transaction submitted', `Transaction submitted`],
-                appearance: 'success' as AppearanceTypes,
-                autoDismiss: false,
-            });
-        }, 5000);
+        // setTimeout(function () {
+        //     addToast(['Error', 'This is an error'], {
+        //         appearance: 'error' as AppearanceTypes,
+        //         autoDismiss: false,
+        //     });
+        //     addToast(['Warning', 'This is a warning'], {
+        //         appearance: 'warning' as AppearanceTypes,
+        //         autoDismiss: false,
+        //     });
+        //     addToast(['Info', 'This is some information'], {
+        //         appearance: 'info' as AppearanceTypes,
+        //         autoDismiss: false,
+        //     });
+        //     addToast(['Success', 'Yes'], {
+        //         appearance: 'success' as AppearanceTypes,
+        //         autoDismiss: false,
+        //     });
+        //     addToast(['Loading', 'I am loading...'], {
+        //         appearance: 'loading' as AppearanceTypes,
+        //         autoDismiss: false,
+        //     });
+        // }, 3000);
+        
+        
     }, []);
 
     useEffect(() => {
