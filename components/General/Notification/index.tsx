@@ -1,9 +1,13 @@
 import React from 'react';
-import Icon, { InfoCircleFilled, WarningOutlined, CloseCircleTwoTone, CheckCircleTwoTone } from '@ant-design/icons';
 import styled from 'styled-components';
 import Timer from '@components/Timer';
+import Icon from './Icon';
 // @ts-ignore
-import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
+import TracerLoading from 'public/img/toast/tracer-loading.gif';
+// @ts-ignore
+import TickApproved from 'public/img/toast/tick-approved.gif';
+// @ts-ignore
+import Tick from 'public/img/toast/tick.gif';
 
 type PlacementType = 'bottom-left' | 'bottom-center' | 'bottom-right' | 'top-left' | 'top-center' | 'top-right';
 type AppearanceTypes = 'success' | 'error' | 'warning' | 'info' | 'loading';
@@ -35,40 +39,22 @@ const appearances: Record<
     string,
     {
         icon: any;
-        text: string;
-        fg: string;
-        bg: string;
     }
 > = {
     success: {
-        icon: <CheckCircleTwoTone twoToneColor={'#05CB3A'} />,
-        text: '#05CB3A',
-        fg: '#36B37E',
-        bg: '#E3FCEF',
+        icon: <Icon image={Tick} />,
     },
     error: {
-        icon: <CloseCircleTwoTone twoToneColor={'#F15025'} />,
-        text: '#F15025',
-        fg: '#FF5630',
-        bg: '#FFEBE6',
+        icon: <Icon image={Tick} />,
     },
     warning: {
-        icon: <WarningOutlined />,
-        text: '#FF8B00',
-        fg: '#FFAB00',
-        bg: '#FFFAE6',
+        icon: <Icon image={Tick} />,
     },
     info: {
-        icon: <InfoCircleFilled />,
-        text: '#505F79',
-        fg: '#2684FF',
-        bg: '#00156C',
+        icon: <Icon image={TracerLoading} />,
     },
     loading: {
-        icon: <Icon component={TracerLoading} />,
-        text: '#fff',
-        fg: '#2684FF',
-        bg: '#00156C',
+        icon: <Icon image={TracerLoading} />,
     },
 };
 
@@ -82,17 +68,7 @@ const IconWrap = styled.span`
     font-size: var(--font-size-medium);
     line-height: 20px;
     border-right: 1px solid var(--color-accent);
-
-    span[role='img'] {
-        width: 73px;
-        height: auto;
-
-        svg {
-            width: 100%;
-            height: auto;
-            fill: #fff;
-        }
-    }
+    background: #000240;
 `;
 const Close = styled.div`
     position: absolute;
@@ -210,16 +186,15 @@ const Hashie: React.FC<HProps | any> = ({
     return (
         <ToastWrapper
             style={{
-                color: appearance.text,
                 transition: `transform ${transitionDuration}ms cubic-bezier(0.2, 0, 0, 1), opacity ${transitionDuration}ms`,
                 width: toastWidth,
                 cursor: 'default',
                 ...hashieStates(placement)[transitionState],
             }}
+            className={autoDismiss ? 'dismiss' : ''}
         >
             <IconWrap>{appearance.icon}</IconWrap>
             <ContentWrapper className="notification-content">
-                {' '}
                 {/*Necessary for ReactTour to select element*/}
                 <Header onDismiss={onDismiss} title={children_[0]} />
                 <Content>{children_[1]}</Content>
@@ -248,6 +223,21 @@ const ToastWrapper = styled.div`
 
     &:hover ${Close} {
         opacity: 1;
+    }
+
+    &.dismiss {
+        picture {
+            animation: fade-out 0.5s linear forwards;
+            animation-delay: 4.3s;
+            @keyframes fade-out {
+                0% {
+                    opacity: 1;
+                }
+                100% {
+                    opacity: 0;
+                }
+            }
+        }
     }
 `;
 
