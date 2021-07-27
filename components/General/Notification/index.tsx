@@ -122,10 +122,10 @@ const Header: React.FC<{ onDismiss: (e: any) => any; title: React.ReactNode }> =
 const STimer = styled<any>(Timer)`
     #refetchLoader {
         animation: countdown-width ${(props) => props.autoDismissTimeout}s linear;
-        background: var(--color-accent);
         position: absolute;
-        height: 0.25rem;
+        height: 100%;
         right: 0;
+        z-index: -1;
     }
 `;
 STimer.defaultProps = {

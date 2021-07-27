@@ -43,6 +43,10 @@ export const TableCell = styled.td`
     padding: 0 10px;
     border-right: 1px solid var(--color-accent);
     border-bottom: 1px solid var(--color-accent);
+
+    .secondary {
+        color: var(--color-secondary);
+    }
 `;
 
 // Last cell on a row
