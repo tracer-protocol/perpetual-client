@@ -1,17 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Counter } from '@components/Portfolio';
 
 export interface SNBProps {
+    tabs: any[];
     selected: number;
-    tabs: string[];
     setTab: (id: number) => void;
-    background?: string;
-    position?: 'end' | 'start';
+    children?: React.ReactNode;
 }
 
 export const SubNavContainer = styled.div`
-    border-bottom: 1px solid #0c3586;
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #0c3586;
+    padding-right: 15px;
 `;
 
 export const SubNavItem = styled.div`
@@ -29,6 +32,11 @@ export const SubNavItem = styled.div`
     &.selected {
         background: var(--color-accent);
         color: var(--color-text);
+
+        ${Counter} {
+            background-color: var(--color-primary);
+            color: var(--color-accent);
+        }
     }
 
     &:hover {
@@ -36,22 +44,28 @@ export const SubNavItem = styled.div`
     }
 `;
 
-const SubNav: React.FC<SNBProps> = (props: SNBProps) => {
-    const { tabs, selected, setTab } = props;
+const ItemGroup = styled.div`
+    display: flex;
+`;
+
+const SubNav: React.FC<SNBProps> = ({ tabs, selected, setTab, children }: SNBProps) => {
     return (
         <SubNavContainer>
-            {tabs.map((tab_, index) => (
-                <SubNavItem
-                    className={index === selected ? 'selected' : ''}
-                    key={`sub-nav-${index}`}
-                    onClick={(e) => {
-                        e.preventDefault();
-                        setTab(index);
-                    }}
-                >
-                    {tab_}
-                </SubNavItem>
-            ))}
+            <ItemGroup>
+                {tabs.map((tab, index: number) => (
+                    <SubNavItem
+                        className={index === selected ? 'selected' : ''}
+                        key={`sub-nav-${index}`}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setTab(index);
+                        }}
+                    >
+                        {tab}
+                    </SubNavItem>
+                ))}
+            </ItemGroup>
+            <div>{children ? children : null}</div>
         </SubNavContainer>
     );
 };

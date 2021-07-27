@@ -42,7 +42,6 @@ export const Title = styled.div`
     color: var(--color-text);
     white-space: nowrap;
     letter-spacing: var(--letter-spacing-extra-small);
-    margin-right: 30px;
 `;
 
 export const SmallTitle = styled.div`
@@ -57,7 +56,7 @@ interface SHProps {
 export const SectionHeader = styled.div<SHProps>`
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 15px;
     height: 60px;
     width: 100%;
     background: ${(props: SHProps) => (props.background ? (props.background as string) : 'transparent')};
@@ -128,13 +127,13 @@ export const Counter = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: -10px;
     border-radius: 20px;
     border: 1px solid var(--color-primary);
     color: var(--color-primary);
     width: 52px;
     height: 32px;
     font-size: var(--font-size-small);
+    margin-left: 20px;
 `;
 
 interface HPProps {

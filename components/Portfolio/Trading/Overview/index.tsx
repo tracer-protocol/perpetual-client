@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import styled from "styled-components";
 import Graph from './Graph';
 import PositionGraph from './PositionGraph';
 import Equity from './Equity';
@@ -40,14 +41,14 @@ const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
         <VScrollContainer>
             <SectionHeader background={`var(--color-background-secondary)`}>
                 <Title>Equity Breakdown</Title>
-                <div className="flex justify-content-between">
+                <DropdownContainer>
                     <PortfolioDropdown
                         setOptions={setCurrentPortfolio}
                         option={currentPortfolio}
                         keyMap={portfolioKeyMap}
                     />
                     <PortfolioDropdown setOptions={setCurrentPNL} option={currentPNL} keyMap={pnlKeyMap} />
-                </div>
+                </DropdownContainer>
             </SectionHeader>
             <HPanel background={`var(--color-background-secondary)`}>
                 <Equity
@@ -92,3 +93,10 @@ const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
 };
 
 export default Overview;
+
+const DropdownContainer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    margin-left: 20px;
+`;
