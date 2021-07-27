@@ -30,7 +30,7 @@ const TradingPortfolio: FC = () => {
             case 0:
                 return <Overview fetchedTracers={fetchedTracers} />;
             case 1:
-                return <Position tracers={tracers} allFilledOrders={allFilledOrders ?? {}} />;
+                return <Position tracers={fetchedTracers} allFilledOrders={allFilledOrders ?? {}} />;
             case 2:
                 return <MarginAccounts />;
             case 3:

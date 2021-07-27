@@ -26,16 +26,16 @@ const Position: React.FC<{
     const [show, setShow] = useState(false);
     const headings = [
         'Market',
-        'Position',
+        'Side',
+        'Exposure',
+        'Liquidation / Last Price',
+        'Break Even Price',
         'Unrealised P&L',
         'Realised P&L',
-        'Margin Used',
-        'Exposure',
-        'Liquidation Price / Last Price',
         'Status',
     ];
 
-    const _status = ['Open', 'Eligible for Liquidation', 'Approaching Liquidation', 'Closed'];
+    const _status = ['Open', 'Eligible', 'Approaching', 'Closed'];
 
     const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
@@ -153,7 +153,7 @@ const Position: React.FC<{
                 </TableBody>
             </Table>
             <div className="flex mt-8 justify-center">
-                <Button onClick={(e: any) => onClick(e)}>
+                <Button height="medium" onClick={(e: any) => onClick(e)}>
                     {show ? 'Hide Closed Positions' : 'Show Closed Positions'}
                 </Button>
             </div>
