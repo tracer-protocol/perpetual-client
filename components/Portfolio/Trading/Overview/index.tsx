@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import styled from "styled-components";
+import styled from 'styled-components';
 import Graph from './Graph';
 import PositionGraph from './PositionGraph';
 import Equity from './Equity';
