@@ -102,7 +102,6 @@ const Advanced: React.FC = styled(({ className }) => {
                     const target = e.target as HTMLElement;
                     // If the target is the close button, do not run
                     if (!target.classList.contains('toast-close')) {
-                        console.log(e);
                         const closeButton = document.querySelector('.toast-close') as HTMLButtonElement;
                         closeButton.click();
                         setTourOpen(true);
@@ -209,21 +208,19 @@ const Advanced: React.FC = styled(({ className }) => {
                 <Overlay id="trading-overlay" />
             </div>
             {!tourCompleted && (
-                <>
-                    <Tour
-                        onRequestClose={closeTour}
-                        steps={tourConfig as Array<any>}
-                        maskSpace={0}
-                        isOpen={isTourOpen}
-                        maskClassName="mask"
-                        className="helper"
-                        rounded={5}
-                        showNumber={false}
-                        updateDelay={0}
-                        onAfterOpen={(e) => highlightDots(e)}
-                        onBeforeClose={(e) => enableBodyScroll(e)}
-                    />
-                </>
+                <Tour
+                    onRequestClose={closeTour}
+                    steps={tourConfig as Array<any>}
+                    maskSpace={0}
+                    isOpen={isTourOpen}
+                    maskClassName="mask"
+                    className="helper"
+                    rounded={5}
+                    showNumber={false}
+                    updateDelay={0}
+                    onAfterOpen={(e) => highlightDots(e)}
+                    onBeforeClose={(e) => enableBodyScroll(e)}
+                />
             )}
         </>
     );

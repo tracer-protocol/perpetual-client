@@ -62,7 +62,7 @@ export const tourConfig = [
                 marginModalEl.style.display = 'block';
             }
             if (navbar) {
-                calculatorEl.style.zIndex = '1000000';
+                navbar.style.zIndex = '1000000';
             }
         },
         position: 'bottom',
@@ -238,9 +238,9 @@ export const tourConfig = [
             left: '30px',
         },
     },
-    // Close position button
+    // Close position container
     {
-        selector: '#close-order-button',
+        selector: '#position-close-container',
         // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (
