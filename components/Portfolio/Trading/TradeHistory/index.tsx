@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { Logo } from '@components/General';
-import { TableHeading, TableRow, TableCell, Table, TableHeader } from '@components/Table';
-import { timeAgo, toApproxCurrency } from '@libs/utils';
+import { Table, TableHeader, TableBody, TableHeading, TableRow, TableCell } from '@components/Table';
+import { toApproxCurrency } from '@libs/utils';
 import { LabelledOrders } from '@libs/types/OrderTypes';
 
 interface THProps {
@@ -32,10 +32,10 @@ const TradeHistory: FC<THProps> = ({ fetchedTracers, allFilledOrders }: THProps)
                         ),
                     )}
                 </TableHeader>
-                <tbody>
+                <TableBody>
                     {orderHistory?.map((order: any, i: number) => (
                         <TableRow key={`table-row-${i}`}>
-                            <TableCell>{timeAgo(Date.now(), parseInt(order?.timestamp) * 1000)}</TableCell>
+                            <TableCell>{String(new Date(parseInt(order?.timestamp)))}</TableCell>
                             <TableCell>
                                 <div className="flex flex-row">
                                     <div className="my-auto">
@@ -45,7 +45,7 @@ const TradeHistory: FC<THProps> = ({ fetchedTracers, allFilledOrders }: THProps)
                                 </div>
                             </TableCell>
                             <TableCell className={order?.position ? 'red' : 'green'}>
-                                {order?.position ? 'Short' : 'Long'}
+                                {order?.position ? 'SHORT' : 'LONG'}
                             </TableCell>
                             <TableCell>{order?.amount.toFixed(2)}</TableCell>
                             <TableCell>-</TableCell>
@@ -54,7 +54,7 @@ const TradeHistory: FC<THProps> = ({ fetchedTracers, allFilledOrders }: THProps)
                             <TableCell>-</TableCell>
                         </TableRow>
                     ))}
-                </tbody>
+                </TableBody>
             </Table>
         </>
     );
