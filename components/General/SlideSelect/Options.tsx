@@ -12,5 +12,6 @@ export const MatchingEngine: React.FC<{ title: string; subTitle: string }> = ({ 
 );
 
 export const Option = styled.a`
-    margin: auto;
+    margin: auto 0;
+    width: 100%;
 `;

@@ -82,7 +82,18 @@ const IconWrap = styled.span`
     font-size: var(--font-size-medium);
     line-height: 20px;
     border-right: 1px solid var(--color-accent);
+    opacity: 0;
+    animation: fade-in 0.7s linear forwards;
+    animation-delay: 0.3s;
 
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
     span[role='img'] {
         width: 73px;
         height: auto;
@@ -140,10 +151,10 @@ const Header: React.FC<{ onDismiss: (e: any) => any; title: React.ReactNode }> =
 const STimer = styled<any>(Timer)`
     #refetchLoader {
         animation: countdown-width ${(props) => props.autoDismissTimeout}s linear;
-        background: var(--color-accent);
         position: absolute;
-        height: 0.25rem;
+        height: 100%;
         right: 0;
+        z-index: -1;
     }
 `;
 STimer.defaultProps = {
@@ -219,7 +230,6 @@ const Hashie: React.FC<HProps | any> = ({
         >
             <IconWrap>{appearance.icon}</IconWrap>
             <ContentWrapper className="notification-content">
-                {' '}
                 {/*Necessary for ReactTour to select element*/}
                 <Header onDismiss={onDismiss} title={children_[0]} />
                 <Content>{children_[1]}</Content>
