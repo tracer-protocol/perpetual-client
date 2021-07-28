@@ -24,7 +24,7 @@ const OrdersTab: React.FC<{
             ? handleAsync(cancelOrder, [web3, account, market, orderId], {
                   statusMessages: {
                       waiting: `Cancelling order`,
-                      error: 'Failed to cancel order'
+                      error: 'Failed to cancel order',
                   },
                   onSuccess: () => refetch(),
               })

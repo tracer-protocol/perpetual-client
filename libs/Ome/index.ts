@@ -1,7 +1,7 @@
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { APIResult, Result } from 'libs/types/General';
 import Web3 from 'web3';
-import { errors, ok} from './messageMap';
+import { errors, ok } from './messageMap';
 
 /** Book API's */
 
@@ -89,18 +89,18 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
         .then((res) => res.json())
         .then((res) => {
             const { message, data } = res?.data;
-            console.debug(`Created order: ${message}`)
+            console.debug(`Created order: ${message}`);
             if (errors[message]) {
                 return {
                     status: 'error',
                     message: `${errors[message]}`,
-                    data: data
+                    data: data,
                 } as APIResult;
             } else if (ok[message]) {
                 return {
                     status: 'success',
                     message: `${ok[message]}`,
-                    data: data
+                    data: data,
                 } as APIResult;
             } else {
                 return {
@@ -158,7 +158,7 @@ export const cancelOrder: (web3: Web3, account: string, market: string, orderId:
     return fetch(`${BASE_URL}/book/${omefy(market)}/order/${omefy(orderId)}`, {
         method: 'PATCH',
         headers: {
-            "Content-Type": 'application/json'
+            'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
     })
@@ -167,18 +167,18 @@ export const cancelOrder: (web3: Web3, account: string, market: string, orderId:
         })
         .then((res) => {
             const { message, data } = res?.data;
-            console.debug(`Cancelling order: ${message}`)
+            console.debug(`Cancelling order: ${message}`);
             if (errors[message]) {
                 return {
                     status: 'error',
                     message: `${errors[message]}`,
-                    data: data
+                    data: data,
                 } as APIResult;
             } else if (ok[message]) {
                 return {
                     status: 'success',
                     message: `${ok[message]}`,
-                    data: data
+                    data: data,
                 } as APIResult;
             } else {
                 return {
@@ -189,7 +189,7 @@ export const cancelOrder: (web3: Web3, account: string, market: string, orderId:
             }
         })
         .catch((err) => {
-            console.error("Failed to cancel order", err);
+            console.error('Failed to cancel order', err);
             return {
                 status: 'error',
                 message: `${err}`,
