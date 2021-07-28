@@ -6,15 +6,16 @@ import MarginAccounts from '@components/Portfolio/Trading/MarginAccounts';
 import TradeHistory from '@components/Portfolio/Trading/TradeHistory';
 import Transfers from '@components/Portfolio/Trading/Transfers';
 import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
+import Tracer from '@libs/Tracer';
 
 const TradingPortfolio: FC = () => {
     const { allFilledOrders, factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const [tab, setTab] = useState(0);
-    const [fetchedTracers, setFetchedTracers] = useState<any>([]);
-    console.log(tracers)
+    const [fetchedTracers, setFetchedTracers] = useState<Tracer[]>([]);
+
     useEffect(() => {
-        setFetchedTracers(Object.values(tracers))
-    }, [tracers])
+        setFetchedTracers(Object.values(tracers));
+    }, [tracers]);
 
     const tabs = ['Overview', 'Positions', 'Margin Accounts', 'Trade History', 'Transfers'];
     const content = () => {
