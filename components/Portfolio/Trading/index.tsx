@@ -21,7 +21,7 @@ const TradingPortfolio: FC = () => {
     const content = () => {
         switch (tab) {
             case 0:
-                return <Overview fetchedTracers={fetchedTracers} />;
+                return <Overview tracers={tracers} />;
             case 1:
                 return <Position tracers={tracers} allFilledOrders={allFilledOrders ?? {}} />;
             case 2:
