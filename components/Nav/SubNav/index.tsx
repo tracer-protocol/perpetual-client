@@ -10,7 +10,7 @@ export interface SNBProps {
 }
 
 interface SNCProps {
-    hasChildren: boolean;
+    hasChildren?: boolean;
 }
 export const SubNavContainer = styled.div<SNCProps>`
     display: flex;

@@ -1,10 +1,13 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import SubNav from '@components/Nav/SubNav';
 import { Counter, PortfolioDropdown } from '@components/Portfolio';
 import ActiveWithdrawals from '@components/Portfolio/Insurance/Withdrawals/ActiveWithdrawals';
 import WithdrawalsHistory from '@components/Portfolio/Insurance/Withdrawals/WithdrawalsHistory';
 
-const Withdrawals: FC = () => {
+interface WProps {
+    parentHeight: number;
+}
+const Withdrawals: FC<WProps> = ({ parentHeight }: WProps) => {
     const [tab, setTab] = useState(0);
     const tabs = [
         <>
@@ -12,12 +15,20 @@ const Withdrawals: FC = () => {
         </>,
         <>History</>,
     ];
+
+    const subNav = useRef(null);
+    const [subNavHeight, setSubNavHeight] = useState(0);
+    useEffect(() => {
+        // @ts-ignore
+        setSubNavHeight(subNav?.current?.clientHeight);
+    }, [subNav]);
+
     const content = () => {
         switch (tab) {
             case 0:
-                return <ActiveWithdrawals />;
+                return <ActiveWithdrawals parentHeight={parentHeight - subNavHeight} />;
             case 1:
-                return <WithdrawalsHistory />;
+                return <WithdrawalsHistory parentHeight={parentHeight - subNavHeight} />;
             default:
                 return;
         }
@@ -31,13 +42,15 @@ const Withdrawals: FC = () => {
     };
     return (
         <>
-            <SubNav tabs={tabs} setTab={setTab} selected={tab}>
-                <PortfolioDropdown
-                    setOptions={setCurrentPortfolio}
-                    option={currentPortfolio}
-                    keyMap={portfolioKeyMap}
-                />
-            </SubNav>
+            <div ref={subNav}>
+                <SubNav tabs={tabs} setTab={setTab} selected={tab}>
+                    <PortfolioDropdown
+                        setOptions={setCurrentPortfolio}
+                        option={currentPortfolio}
+                        keyMap={portfolioKeyMap}
+                    />
+                </SubNav>
+            </div>
             {content()}
         </>
     );
