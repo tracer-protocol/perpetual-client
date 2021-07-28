@@ -53,3 +53,26 @@ export const TableCell = styled.td`
 export const TableLastCell = styled(TableCell)`
     border-right: none;
 `;
+
+interface STProps {
+    bodyHeight: string;
+}
+export const ScrollableTable = styled.table<STProps>`
+    ${TableBody} {
+        display: block;
+        max-height: ${(props) => `${props.bodyHeight}`};
+        overflow-y: scroll;
+    }
+
+    ${TableHeader} {
+        display: table;
+        width: calc(100% - 7px);
+        table-layout: fixed;
+    }
+
+    ${TableRow} {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+`;

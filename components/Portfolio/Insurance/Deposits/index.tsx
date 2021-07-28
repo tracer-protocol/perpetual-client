@@ -1,10 +1,13 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import SubNav from '@components/Nav/SubNav';
 import ActiveDeposits from '@components/Portfolio/Insurance/Deposits/ActiveDeposits';
 import DepositsHistory from '@components/Portfolio/Insurance/Deposits/DepositsHistory';
 import { Counter, PortfolioDropdown } from '@components/Portfolio';
 
-const Deposits: FC = () => {
+interface DProps {
+    parentHeight: number;
+}
+const Deposits: FC<DProps> = ({ parentHeight }: DProps) => {
     const [tab, setTab] = useState(0);
     const tabs = [
         <>
@@ -12,10 +15,18 @@ const Deposits: FC = () => {
         </>,
         <>History</>,
     ];
+
+    const subNav = useRef(null);
+    const [subNavHeight, setSubNavHeight] = useState(0);
+    useEffect(() => {
+        // @ts-ignore
+        setSubNavHeight(subNav?.current?.clientHeight);
+    }, [subNav]);
+
     const content = () => {
         switch (tab) {
             case 0:
-                return <ActiveDeposits />;
+                return <ActiveDeposits parentHeight={parentHeight - subNavHeight} />;
             case 1:
                 return <DepositsHistory />;
             default:
@@ -31,13 +42,15 @@ const Deposits: FC = () => {
     };
     return (
         <>
-            <SubNav tabs={tabs} setTab={setTab} selected={tab}>
-                <PortfolioDropdown
-                    setOptions={setCurrentPortfolio}
-                    option={currentPortfolio}
-                    keyMap={portfolioKeyMap}
-                />
-            </SubNav>
+            <div ref={subNav}>
+                <SubNav tabs={tabs} setTab={setTab} selected={tab}>
+                    <PortfolioDropdown
+                        setOptions={setCurrentPortfolio}
+                        option={currentPortfolio}
+                        keyMap={portfolioKeyMap}
+                    />
+                </SubNav>
+            </div>
             {content()}
         </>
     );
