@@ -14,17 +14,20 @@ interface ContextProps {
 export type FactoryState = {
     tracers: LabelledTracers;
     hasSetTracers: boolean;
+    loading: boolean;
 };
 export const initialFactoryState: FactoryState = {
     tracers: {},
     hasSetTracers: false,
+    loading: true,
 };
 export type FactoryAction =
     | { type: 'setLoaded'; marketId: string }
     | { type: 'setTracers'; tracers: LabelledTracers }
     | { type: 'clearTracers' }
     | { type: 'HAS_SET_TRACERS'; value: boolean }
-    | { type: 'setMarket'; value: string };
+    | { type: 'setMarket'; value: string }
+    | { type: 'setLoading'; tracer: string; value: boolean };
 
 export const FactoryContext = React.createContext<Partial<ContextProps>>({});
 
@@ -69,6 +72,24 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
                     hasSetTracers: false,
                 };
             }
+            case 'setLoading': {
+                const currentTracer = state.tracers[action.tracer];
+                if (!currentTracer) {
+                    return {
+                        ...state,
+                    };
+                }
+                return {
+                    ...state,
+                    tracers: {
+                        ...state.tracers,
+                        [action.tracer]: {
+                            ...currentTracer,
+                            loading: action.value,
+                        },
+                    },
+                };
+            }
             default:
                 throw new Error('Unexpected action');
         }
@@ -89,7 +110,7 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
                         ...o,
                         [t.marketId]: {
                             ...new Tracer(web3, t.id, t.marketId),
-                            loading: true,
+                            loading: false,
                         },
                     }),
                     {},
@@ -115,6 +136,33 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
             });
         }
     }, [web3, tracers]);
+
+    /** Fetches all tracer user tracer data */
+    const fetchAllUserData = () => {
+        Object.values(factoryState.tracers).map((tracer) => fetchUserData(tracer));
+    };
+
+    /** Fetches and sets individual tracer data */
+    const fetchUserData = async (tracer: Tracer) => {
+        factoryDispatch({
+            type: 'setLoading',
+            tracer: tracer.marketId,
+            value: true,
+        });
+        const userBalance = await tracer?.updateUserBalance(account);
+        console.debug(`${tracer.marketId} user balance`, userBalance);
+        factoryDispatch({
+            type: 'setLoading',
+            tracer: tracer.marketId,
+            value: false,
+        });
+    };
+
+    useEffect(() => {
+        if (account && factoryState.hasSetTracers) {
+            fetchAllUserData();
+        }
+    }, [account, factoryState.hasSetTracers]);
 
     return (
         <FactoryContext.Provider

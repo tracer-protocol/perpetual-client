@@ -250,13 +250,6 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
     };
 
     useEffect(() => {
-        const fetch = async () => {
-            fetchUserData();
-        };
-        fetch();
-    }, [account]);
-
-    useEffect(() => {
         if (selectedTracer) {
             fetchUserData();
             selectedTracer?.updateFeeRate();
