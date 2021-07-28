@@ -8,21 +8,26 @@ import { calcStatus, toApproxCurrency } from '@libs/utils';
 import { STable } from '@components/Trade/Advanced/RightPanel/AccountSummary';
 import styled from 'styled-components';
 import { Button } from '@components/General';
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 const OrdersTab: React.FC<{
     userOrders: OMEOrder[];
     baseTicker: string;
     refetch: () => void;
 }> = memo(({ userOrders, baseTicker, refetch }) => {
+    const { web3, account } = useWeb3();
     const { handleAsync } = useContext(TransactionContext);
+
     const _cancelOrder = (market: string, orderId: string) => {
-        console.info(`Attempting to cancel order: ${orderId} on market: ${market}`);
+        console.debug(`Attempting to cancel order: ${orderId} on market: ${market}`);
         handleAsync
-            ? handleAsync(cancelOrder, [market, orderId], {
+            ? handleAsync(cancelOrder, [web3, account, market, orderId], {
                   statusMessages: {
-                      waiting: `Cancelling order: ${orderId} on market ${market} `,
+                      waiting: `Cancelling order`,
+                      error: 'Failed to cancel order',
                   },
                   onSuccess: () => refetch(),
+                  onError: () => refetch(),
               })
             : console.error('Failed to cancel order: Handle transaction not defined');
     };
