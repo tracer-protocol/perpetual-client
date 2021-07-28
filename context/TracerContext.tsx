@@ -126,7 +126,6 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
             account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
         ) {
-            console.log(res.returnValues);
             closePending ? closePending(false) : console.error('Close pending is undefined');
         }
     };

@@ -1,6 +1,7 @@
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { APIResult, Result } from 'libs/types/General';
 import Web3 from 'web3';
+import { errors, ok} from './messageMap';
 
 /** Book API's */
 
@@ -56,7 +57,7 @@ export const getUsersOrders: (market: string, account: string) => Promise<OMEOrd
                 return [];
             }
             console.debug('Fetched user orders', res);
-            return res ?? [];
+            return res?.data ?? [];
         })
         .catch((err) => {
             console.error('Failed to fetch user orders', err);
@@ -88,23 +89,25 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
     })
         .then((res) => res.json())
         .then((res) => {
-            if (res?.data?.status === 404) {
+            const { message, data } = res?.data;
+            console.debug(`Created order: ${message}`)
+            if (errors[message]) {
                 return {
                     status: 'error',
-                    message: 'Failed to create order 404 not found',
-                    data: 'Failed to create order 400 bad request',
+                    message: `${errors[message]}`,
+                    data: data
                 } as APIResult;
-            } else if (res?.data?.status === 400) {
+            } else if (ok[message]) {
                 return {
-                    status: 'error',
-                    message: 'Failed to create order 400 bad request',
-                    data: 'Failed to create order 400 bad request',
+                    status: 'success',
+                    message: `${ok[message]}`,
+                    data: data
                 } as APIResult;
             } else {
                 return {
-                    status: 'success',
-                    message: res?.message,
-                    data: res.data,
+                    status: 'error',
+                    message: `Unhandled error: ${message}`,
+                    data: data,
                 } as APIResult;
             }
         })
@@ -161,29 +164,33 @@ export const cancelOrder: (web3: Web3, account: string, market: string, orderId:
             return res.json();
         })
         .then((res) => {
-            console.info('Successfully cancelled order', res);
-            if (res?.status === 404) {
+            const { message, data } = res?.data;
+            console.debug(`Cancelling order: ${message}`)
+            if (errors[message]) {
                 return {
                     status: 'error',
-                    message: 'Failed to delete order 404 not found',
-                } as Result;
-            } else if (res?.status === 400) {
-                return {
-                    status: 'error',
-                    message: 'Failed to delete order 400 bad request',
-                } as Result;
-            } else {
+                    message: `${errors[message]}`,
+                    data: data
+                } as APIResult;
+            } else if (ok[message]) {
                 return {
                     status: 'success',
-                    message: `${res?.message}: ${orderId}`,
-                } as Result;
+                    message: `${ok[message]}`,
+                    data: data
+                } as APIResult;
+            } else {
+                return {
+                    status: 'error',
+                    message: `Unhandled error: ${message}`,
+                    data: res.data,
+                } as APIResult;
             }
         })
         .catch((err) => {
             console.error(err);
             return {
                 status: 'error',
-                message: `Failed to cancel order: ${err}`,
+                message: `${err}`,
             } as Result;
         });
 };

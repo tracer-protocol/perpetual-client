@@ -120,13 +120,11 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         );
 
         const res = callMethod(...params);
-        console.log(res, 'res');
         Promise.resolve(res).then((res) => {
             if (res.status === 'error') {
-                console.log('Error, erararra');
                 updateToast(toastId as unknown as string, {
                     // confirmed this is a string
-                    content: statusMessages?.error ?? `Transaction cancelled. ${res.message}`,
+                    content: statusMessages?.error ?? `${res.message}`,
                     appearance: 'error',
                     autoDismiss: true,
                 });
@@ -139,6 +137,13 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
                 });
                 onSuccess ? onSuccess(res) : null;
             }
+        }).catch((err) => {
+            console.debug("Failed to handle async", err)
+            updateToast(toastId as unknown as string, {
+                content: statusMessages?.error ?? `Unknown error`,
+                appearance: 'error',
+                autoDismiss: true,
+            });
         });
     };
 

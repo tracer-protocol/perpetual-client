@@ -19,11 +19,12 @@ const OrdersTab: React.FC<{
     const { handleAsync } = useContext(TransactionContext);
 
     const _cancelOrder = (market: string, orderId: string) => {
-        console.info(`Attempting to cancel order: ${orderId} on market: ${market}`);
+        console.debug(`Attempting to cancel order: ${orderId} on market: ${market}`);
         handleAsync
             ? handleAsync(cancelOrder, [web3, account, market, orderId], {
                   statusMessages: {
-                      waiting: `Cancelling order: ${orderId} on market ${market} `,
+                      waiting: `Cancelling order`,
+                      error: 'Failed to cancel order'
                   },
                   onSuccess: () => refetch(),
               })
