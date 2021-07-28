@@ -27,6 +27,7 @@ const OrdersTab: React.FC<{
                       error: 'Failed to cancel order',
                   },
                   onSuccess: () => refetch(),
+                  onError: () => refetch(),
               })
             : console.error('Failed to cancel order: Handle transaction not defined');
     };

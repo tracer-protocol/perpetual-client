@@ -150,17 +150,11 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
     };
 
     /** Adds a pending toaster with id set to an object ref if the order is Partially or Fully Matched */
-    const setPending = (status: 'matched_partial' | 'matched') => {
-        const toastId = addToast(
-            [
-                status === 'matched_partial' ? 'Partially matched order' : 'Fully matched order',
-                'Order is being matched on chain',
-            ],
-            {
-                appearance: 'loading' as AppearanceTypes,
-                autoDismiss: false,
-            },
-        );
+    const setPending = () => {
+        const toastId = addToast(['Order is being matched on chain', ''], {
+            appearance: 'loading' as AppearanceTypes,
+            autoDismiss: false,
+        });
         pendingRef.current = toastId as unknown as string;
     };
 

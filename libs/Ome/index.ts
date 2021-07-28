@@ -25,6 +25,7 @@ export const getOrders: (market: string) => Promise<Response> = async (market) =
     })
         .then((res) => res.json())
         .then((res) => {
+            console.log('orders', res?.data);
             return res?.data ?? [];
         })
         .catch((err) => {
@@ -88,7 +89,7 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
     })
         .then((res) => res.json())
         .then((res) => {
-            const { message, data } = res?.data;
+            const { message, data } = res;
             console.debug(`Created order: ${message}`);
             if (errors[message]) {
                 return {
@@ -166,7 +167,7 @@ export const cancelOrder: (web3: Web3, account: string, market: string, orderId:
             return res.json();
         })
         .then((res) => {
-            const { message, data } = res?.data;
+            const { message, data } = res;
             console.debug(`Cancelling order: ${message}`);
             if (errors[message]) {
                 return {
