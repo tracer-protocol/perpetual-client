@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/Table';
-import { tracers } from '@components/Portfolio';
+import { activeDeposits } from '@components/Portfolio';
 
 interface ADProps {
     parentHeight: number;
@@ -29,7 +29,7 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight }: ADProps) => {
                     ))}
                 </TableHeader>
                 <TableBody>
-                    {Object.values(tracers).map((tracer, i) => {
+                    {Object.values(activeDeposits).map((tracer, i) => {
                         return (
                             <TableRow key={`table-row-${i}`}>
                                 <TableCell>{tracer.market}</TableCell>

@@ -28,7 +28,7 @@ const Deposits: FC<DProps> = ({ parentHeight }: DProps) => {
             case 0:
                 return <ActiveDeposits parentHeight={parentHeight - subNavHeight} />;
             case 1:
-                return <DepositsHistory />;
+                return <DepositsHistory parentHeight={parentHeight - subNavHeight} />;
             default:
                 return;
         }
