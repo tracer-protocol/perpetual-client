@@ -25,7 +25,6 @@ export const getOrders: (market: string) => Promise<Response> = async (market) =
     })
         .then((res) => res.json())
         .then((res) => {
-            console.debug('Fetched all orders', res?.data);
             return res?.data ?? [];
         })
         .catch((err) => {
@@ -156,8 +155,11 @@ export const cancelOrder: (web3: Web3, account: string, market: string, orderId:
         orderId: orderId,
         signature: signature,
     };
-    return fetch(`${BASE_URL}/book/${market}/order/${orderId}`, {
+    return fetch(`${BASE_URL}/book/${omefy(market)}/order/${omefy(orderId)}`, {
         method: 'PATCH',
+        headers: {
+            "Content-Type": 'application/json'
+        },
         body: JSON.stringify(data),
     })
         .then((res) => {
@@ -187,7 +189,7 @@ export const cancelOrder: (web3: Web3, account: string, market: string, orderId:
             }
         })
         .catch((err) => {
-            console.error(err);
+            console.error("Failed to cancel order", err);
             return {
                 status: 'error',
                 message: `${err}`,
