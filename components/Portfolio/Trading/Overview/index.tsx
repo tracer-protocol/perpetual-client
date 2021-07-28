@@ -1,9 +1,12 @@
 import React, { FC, useState } from 'react';
-import styled from 'styled-components';
 import Graph from './Graph';
 import PositionGraph from './PositionGraph';
 import Equity from './Equity';
-import { defaults } from '@libs/Tracer';
+import Tracer, { defaults } from '@libs/Tracer';
+import styled from 'styled-components';
+import Dropdown from 'antd/lib/dropdown';
+import {Button, Section} from '@components/General';
+import { Menu, MenuItem } from '@components/General/Menu';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
 import PositionOverlay from '@components/Overlay/PositionOverlay';
@@ -18,7 +21,7 @@ import {
 } from '@components/Portfolio';
 
 interface OProps {
-    fetchedTracers: any;
+    fetchedTracers: Tracer[];
 }
 const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
     const { account } = useWeb3();
@@ -66,7 +69,7 @@ const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
                 />
                 {!account ? <ConnectOverlay /> : null}
             </HPanel>
-            <SectionHeader border={true}>
+            <SectionHeader border>
                 <Title>Withdrawals</Title>
                 <Counter>{fetchedTracers?.length}</Counter>
             </SectionHeader>
@@ -85,7 +88,7 @@ const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
                 {!account ? (
                     <ConnectOverlay />
                 ) : fetchedTracers.length === 0 ? (
-                    <PositionOverlay tracers={fetchedTracers} showMarketPreview={true} />
+                    <PositionOverlay tracers={fetchedTracers} showMarketPreview />
                 ) : null}
             </HScrollContainer>
         </VScrollContainer>
