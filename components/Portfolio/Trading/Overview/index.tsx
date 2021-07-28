@@ -2,7 +2,7 @@ import React, { FC, useState } from 'react';
 import Graph from './Graph';
 import PositionGraph from './PositionGraph';
 import Equity from './Equity';
-import { defaults } from '@libs/Tracer';
+import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import Dropdown from 'antd/lib/dropdown';
 import { Button } from '@components/General';
@@ -158,7 +158,7 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
 `;
 
 interface OProps {
-    fetchedTracers: any;
+    fetchedTracers: Tracer[];
 }
 const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
     const { account } = useWeb3();
@@ -178,59 +178,57 @@ const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
     };
 
     return (
-        <>
-            <VScrollContainer>
-                <HeadingRow background={'#00125D'}>
-                    <Title>Equity Breakdown</Title>
-                    <div className="flex justify-content-between">
-                        <PortfolioDropdown
-                            setOptions={setCurrentPortfolio}
-                            option={currentPortfolio}
-                            keyMap={portfolioKeyMap}
-                        />
-                        <PortfolioDropdown setOptions={setCurrentPNL} option={currentPNL} keyMap={pnlKeyMap} />
-                    </div>
-                </HeadingRow>
-                <HPanel background={'#00125D'}>
-                    <Equity
-                        className="equityStats"
-                        balances={fetchedTracers[0]?.getBalance() ?? defaults.balances}
-                        fairPrice={fetchedTracers[0]?.getFairPrice() ?? defaults.fairPrice}
-                        baseTicker={fetchedTracers[0]?.baseTicker ?? defaults.baseTicker}
-                        quoteTicker={fetchedTracers[0]?.quoteTicker ?? defaults.quoteTicker}
+        <VScrollContainer>
+            <HeadingRow background={'#00125D'}>
+                <Title>Equity Breakdown</Title>
+                <div className="flex justify-content-between">
+                    <PortfolioDropdown
+                        setOptions={setCurrentPortfolio}
+                        option={currentPortfolio}
+                        keyMap={portfolioKeyMap}
                     />
-                    <Graph
-                        className="pnlGraph"
-                        title="Profit and Loss"
-                        background
-                        selectedTracerAddress={fetchedTracers[0]?.address ?? ''}
+                    <PortfolioDropdown setOptions={setCurrentPNL} option={currentPNL} keyMap={pnlKeyMap} />
+                </div>
+            </HeadingRow>
+            <HPanel background={'#00125D'}>
+                <Equity
+                    className="equityStats"
+                    balances={fetchedTracers[0]?.getBalance() ?? defaults.balances}
+                    fairPrice={fetchedTracers[0]?.getFairPrice() ?? defaults.fairPrice}
+                    baseTicker={fetchedTracers[0]?.baseTicker ?? defaults.baseTicker}
+                    quoteTicker={fetchedTracers[0]?.quoteTicker ?? defaults.quoteTicker}
+                />
+                <Graph
+                    className="pnlGraph"
+                    title="Profit and Loss"
+                    background
+                    selectedTracerAddress={fetchedTracers[0]?.address ?? ''}
+                />
+                {!account ? <ConnectOverlay /> : null}
+            </HPanel>
+            <HeadingRow border={true}>
+                <Title>Open Positions</Title>
+                <Counter>{fetchedTracers?.length}</Counter>
+            </HeadingRow>
+            <HScrollContainer>
+                {fetchedTracers.map((tracer: any, i: number) => (
+                    <PositionGraph
+                        key={`position-graph-${i}`}
+                        selectedTracerAddress={tracer?.address ?? ''}
+                        base={tracer?.getBalance().base ?? defaults.base}
+                        quote={tracer?.getBalance().quote ?? defaults.quote}
+                        market={tracer?.marketId}
+                        fairPrice={tracer?.getFairPrice() ?? defaults.fairPrice}
+                        maxLeverage={tracer?.getMaxLeverage() ?? defaults.maxLeverage}
                     />
-                    {!account ? <ConnectOverlay /> : null}
-                </HPanel>
-                <HeadingRow border={true}>
-                    <Title>Open Positions</Title>
-                    <Counter>{fetchedTracers?.length}</Counter>
-                </HeadingRow>
-                <HScrollContainer>
-                    {fetchedTracers.map((tracer: any, i: number) => (
-                        <PositionGraph
-                            key={`position-graph-${i}`}
-                            selectedTracerAddress={tracer?.address ?? ''}
-                            base={tracer?.getBalance().base ?? defaults.base}
-                            quote={tracer?.getBalance().quote ?? defaults.quote}
-                            market={tracer?.marketId}
-                            fairPrice={tracer?.getFairPrice() ?? defaults.fairPrice}
-                            maxLeverage={tracer?.getMaxLeverage() ?? defaults.maxLeverage}
-                        />
-                    ))}
-                    {!account ? (
-                        <ConnectOverlay />
-                    ) : fetchedTracers.length === 0 ? (
-                        <PositionOverlay tracers={fetchedTracers} showMarketPreview={true} />
-                    ) : null}
-                </HScrollContainer>
-            </VScrollContainer>
-        </>
+                ))}
+                {!account ? (
+                    <ConnectOverlay />
+                ) : fetchedTracers.length === 0 ? (
+                    <PositionOverlay tracers={fetchedTracers} showMarketPreview={true} />
+                ) : null}
+            </HScrollContainer>
+        </VScrollContainer>
     );
 };
 
