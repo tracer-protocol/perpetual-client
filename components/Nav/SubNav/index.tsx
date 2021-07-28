@@ -9,9 +9,12 @@ export interface SNBProps {
     children?: React.ReactNode;
 }
 
-export const SubNavContainer = styled.div`
+interface SNCProps {
+    hasChildren: boolean;
+}
+export const SubNavContainer = styled.div<SNCProps>`
     display: flex;
-    justify-content: space-between;
+    justify-content: ${(props: SNCProps) => (props.hasChildren ? 'space-between' : '')};
     align-items: center;
     border-bottom: 1px solid #0c3586;
     padding-right: 15px;
@@ -50,7 +53,7 @@ const ItemGroup = styled.div`
 
 const SubNav: React.FC<SNBProps> = ({ tabs, selected, setTab, children }: SNBProps) => {
     return (
-        <SubNavContainer>
+        <SubNavContainer hasChildren={!!children}>
             <ItemGroup>
                 {tabs.map((tab, index: number) => (
                     <SubNavItem
@@ -65,7 +68,7 @@ const SubNav: React.FC<SNBProps> = ({ tabs, selected, setTab, children }: SNBPro
                     </SubNavItem>
                 ))}
             </ItemGroup>
-            <div>{children ? children : null}</div>
+            {children ? children : null}
         </SubNavContainer>
     );
 };
