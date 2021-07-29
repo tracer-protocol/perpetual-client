@@ -1,4 +1,4 @@
-import React, { useContext, useReducer } from 'react';
+import React, { FC, useContext, useReducer } from 'react';
 import styled from 'styled-components';
 import { OrderContext, TracerContext } from 'context';
 import { BigNumber } from 'bignumber.js';
@@ -321,17 +321,17 @@ const FairPrice = styled.span`
     margin-left: auto;
 `;
 
-type LProps = {
+interface LProps {
     className?: string;
     value: number;
     maxLeverage: BigNumber;
     isLocked: boolean;
     calculatorDispatch: React.Dispatch<CalculatorAction>;
-};
-const Leverage: React.FC<LProps> = styled(({ className, value, maxLeverage, isLocked, calculatorDispatch }: LProps) => {
+}
+const Leverage: FC<LProps> = styled(({ className, value, maxLeverage, isLocked, calculatorDispatch }: LProps) => {
     return (
         <div className={className}>
-            <h3>Leverage</h3>
+            <div className="title">Leverage</div>
             <LockContainer>
                 {isLocked ? (
                     <LockOutlined
@@ -348,7 +348,7 @@ const Leverage: React.FC<LProps> = styled(({ className, value, maxLeverage, isLo
                 )}
             </LockContainer>
             <DefaultSlider
-                className="px-5"
+                className="slider"
                 value={value}
                 handleChange={(val) => {
                     calculatorDispatch({ type: val === 0 ? 'unlockValue' : 'lockValue', value: LOCK_LEVERAGE });
@@ -368,7 +368,6 @@ const Leverage: React.FC<LProps> = styled(({ className, value, maxLeverage, isLo
     margin-top: 2rem;
     margin-bottom: 4rem;
     position: relative;
-
     opacity: ${(props) => (!props.isLocked ? 0.5 : 1)};
 
     ${LockContainer} {
@@ -377,10 +376,14 @@ const Leverage: React.FC<LProps> = styled(({ className, value, maxLeverage, isLo
         top: 15%;
     }
 
-    > h3 {
+    > .title {
         font-size: var(--font-size-small);
         color: var(--color-primary);
         margin-bottom: 1rem;
+    }
+
+    > .slider {
+        padding: 0 30px;
     }
 `;
 
