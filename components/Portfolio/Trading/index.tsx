@@ -8,6 +8,7 @@ import Transfers from '@components/Portfolio/Trading/Transfers';
 import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
+import { Table } from '@components/General/Table';
 
 const TradingPortfolio: FC = () => {
     const { allFilledOrders, factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
@@ -65,4 +66,7 @@ export default TradingPortfolio;
 const Content = styled.div`
     overflow: auto;
     height: 100%;
+    ${Table} {
+        width: 100%;
+    }
 `;

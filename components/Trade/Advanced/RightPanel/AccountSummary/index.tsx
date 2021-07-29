@@ -1,7 +1,6 @@
-import React, { FC, useState, useContext } from 'react';
+import React, { FC, useState, useContext, useRef, useEffect } from 'react';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
-import { Table } from '@components/General/Table/AccountTable';
 import { OMEContext } from '@context/OMEContext';
 import CustomSubNav from './CustomSubNav';
 import PositionTab from '@components/Trade/Advanced/RightPanel/AccountSummary/Position';
@@ -24,6 +23,20 @@ const AccountSummary: FC<ASProps> = styled(({ selectedTracer, className }: ASPro
         filledOrders,
     } = useContext(OMEContext);
 
+    const accountSummary = useRef(null);
+    const [accountSummaryHeight, setAccountSummaryHeight] = useState(0);
+    useEffect(() => {
+        // @ts-ignore
+        setAccountSummaryHeight(accountSummary?.current?.clientHeight);
+    });
+
+    const subNav = useRef(null);
+    const [subNavHeight, setSubNavHeight] = useState(0);
+    useEffect(() => {
+        // @ts-ignore
+        setSubNavHeight(subNav?.current?.clientHeight);
+    }, [subNav]);
+
     const content = () => {
         switch (tab) {
             case 0:
@@ -43,22 +56,27 @@ const AccountSummary: FC<ASProps> = styled(({ selectedTracer, className }: ASPro
                         userOrders={omeState?.userOrders ?? []}
                         baseTicker={selectedTracer?.baseTicker ?? defaults.baseTicker}
                         refetch={() => omeDispatch({ type: 'refetchUserOrders' })}
+                        parentHeight={accountSummaryHeight - subNavHeight}
                     />
                 );
             case 2:
-                return <FillsTab filledOrders={filledOrders ?? []} />;
+                return (
+                    <FillsTab filledOrders={filledOrders ?? []} parentHeight={accountSummaryHeight - subNavHeight} />
+                );
             default:
                 return;
         }
     };
     return (
-        <div className={className}>
-            <CustomSubNav
-                selected={tab}
-                setTab={setTab}
-                fills={filledOrders?.length ?? 0}
-                orders={omeState?.userOrders?.length ?? 0}
-            />
+        <div className={className} ref={accountSummary}>
+            <div ref={subNav}>
+                <CustomSubNav
+                    selected={tab}
+                    setTab={setTab}
+                    fills={filledOrders?.length ?? 0}
+                    orders={omeState?.userOrders?.length ?? 0}
+                />
+            </div>
             {content()}
         </div>
     );
@@ -69,22 +87,3 @@ const AccountSummary: FC<ASProps> = styled(({ selectedTracer, className }: ASPro
 `;
 
 export default AccountSummary;
-
-export const STable = styled(Table)`
-    > tbody {
-        display: block;
-        max-height: 15vh;
-        overflow-y: scroll;
-    }
-    > thead {
-        display: table;
-        table-layout: fixed; /* even columns width , fix width of table too*/
-        width: calc(100% - 5px) !important; /* scrollbar is 5px */
-    }
-    > tbody tr {
-        display: table;
-        width: 100%;
-        table-layout: fixed; /* even columns width , fix width of table too*/
-        overflow: auto;
-    }
-`;
