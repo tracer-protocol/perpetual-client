@@ -38,12 +38,32 @@ export const StatusIndicator = styled.div<{
     color: ${(props) => props.color};
 `;
 
-export function getStatusColour(status: string): string {
-    let colour = '#fff';
-    if (status === 'Eligible for Liquidation') {
-        colour = '#F15025';
-    } else if (status === 'Approaching Liquidation') {
-        colour = '#F4AB57';
+export const calcStatus: (
+    quote: number,
+    availableMarginPercent: number,
+) => {
+    text: string;
+    color: string;
+} = (base, availableMarginPercent) => {
+    if (availableMarginPercent === 0 || base === 0 || availableMarginPercent >= 1) {
+        return {
+            text: 'Closed',
+            color: '#fff',
+        };
+    } else if (availableMarginPercent > 0.1) {
+        return {
+            text: 'Open',
+            color: '#05CB3A',
+        };
+    } else if (availableMarginPercent > 0) {
+        return {
+            text: 'Approaching Liquidation',
+            color: '#F4AB57',
+        };
+    } else {
+        return {
+            text: 'Eligible for Liquidation',
+            color: '#F15025',
+        };
     }
-    return colour;
-}
+};

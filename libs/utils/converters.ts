@@ -6,14 +6,14 @@ import Web3 from 'web3';
  * Simple func to convert a number to a percentage by multiplying
  *  it by 100 and returning the string
  * Fixes the return to two decimal places.
- * @param
+ * @param noMultiply prevents multiplying by 100
  * @returns 0.00% if the number is NaN < 0.001 for very small percentages and the percentage otherwise
  */
-export const toPercent: (value: number) => string = (value) => {
+export const toPercent: (value: number, noMultiply?: boolean) => string = (value, noMultiply) => {
     if (Number.isNaN(value) || !value) {
         return '0.00%';
     }
-    const percentage = value * 100;
+    const percentage = value * (noMultiply ? 1 : 100);
     if (percentage < 0.001) {
         return '< 0.001%';
     }

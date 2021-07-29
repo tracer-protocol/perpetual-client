@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
 import Graph from './Graph';
 import PositionGraph from './PositionGraph';
-import Equity from './Equity';
+import EquityTable from './EqTable';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import Dropdown from 'antd/lib/dropdown';
@@ -37,21 +37,12 @@ const HPanel = styled.div<HPanelProps>`
     width: 100%;
     padding: 0 15px 16px;
     background: ${(props) => (props.background ? (props.background as string) : 'transparent')};
-    .equityStats {
+
+    ${EquityTable} {
         flex-basis: calc(60% - 8px);
-        &.show {
-            max-height: 420px;
-            tr:nth-child(2) td,
-            tr:nth-child(3) td,
-            tr:nth-child(4) td,
-            tr:nth-child(5) td {
-                opacity: 1;
-                border-color: var(--table-darkborder);
-            }
-        }
     }
 
-    .pnlGraph {
+    ${Graph} {
         flex-basis: calc(40% - 8px);
         min-height: 342px;
     }
@@ -158,9 +149,10 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
 `;
 
 interface OProps {
-    fetchedTracers: Tracer[];
+    positions: Tracer[];
+    holdings: Tracer[];
 }
-const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
+const Overview: FC<OProps> = ({ positions, holdings }: OProps) => {
     const { account } = useWeb3();
     const [currentPortfolio, setCurrentPortfolio] = useState(1);
     const [currentPNL, setCurrentPNL] = useState(1);
@@ -191,27 +183,21 @@ const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
                 </div>
             </HeadingRow>
             <HPanel background={'#00125D'}>
-                <Equity
-                    className="equityStats"
-                    balances={fetchedTracers[0]?.getBalance() ?? defaults.balances}
-                    fairPrice={fetchedTracers[0]?.getFairPrice() ?? defaults.fairPrice}
-                    baseTicker={fetchedTracers[0]?.baseTicker ?? defaults.baseTicker}
-                    quoteTicker={fetchedTracers[0]?.quoteTicker ?? defaults.quoteTicker}
+                <EquityTable
+                    balances={holdings[0]?.getBalance() ?? defaults.balances}
+                    fairPrice={holdings[0]?.getFairPrice() ?? defaults.fairPrice}
+                    baseTicker={holdings[0]?.baseTicker ?? defaults.baseTicker}
+                    quoteTicker={holdings[0]?.quoteTicker ?? defaults.quoteTicker}
                 />
-                <Graph
-                    className="pnlGraph"
-                    title="Profit and Loss"
-                    background
-                    selectedTracerAddress={fetchedTracers[0]?.address ?? ''}
-                />
+                <Graph title="Profit and Loss" background selectedTracerAddress={positions[0]?.address ?? ''} />
                 {!account ? <ConnectOverlay /> : null}
             </HPanel>
             <HeadingRow border={true}>
                 <Title>Open Positions</Title>
-                <Counter>{fetchedTracers?.length}</Counter>
+                <Counter>{positions?.length}</Counter>
             </HeadingRow>
             <HScrollContainer>
-                {fetchedTracers.map((tracer: any, i: number) => (
+                {positions.map((tracer: any, i: number) => (
                     <PositionGraph
                         key={`position-graph-${i}`}
                         selectedTracerAddress={tracer?.address ?? ''}
@@ -224,8 +210,8 @@ const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
                 ))}
                 {!account ? (
                     <ConnectOverlay />
-                ) : fetchedTracers.length === 0 ? (
-                    <PositionOverlay tracers={fetchedTracers} showMarketPreview={true} />
+                ) : positions.length === 0 ? (
+                    <PositionOverlay tracers={positions} showMarketPreview={true} />
                 ) : null}
             </HScrollContainer>
         </VScrollContainer>

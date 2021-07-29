@@ -22,7 +22,12 @@ import { checkAllowance } from '../web3/utils';
 import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
 import { TransactionReceipt } from 'web3/types';
-import { calcLeverage, calcTotalMargin } from '@tracer-protocol/tracer-utils';
+import {
+    calcAvailableMarginPercent,
+    calcLeverage,
+    calcMinimumMargin,
+    calcTotalMargin,
+} from '@tracer-protocol/tracer-utils';
 // @ts-ignore
 import { Callback } from 'web3/types';
 import Insurance from './Insurance';
@@ -37,6 +42,8 @@ export const defaults: Record<string, any> = {
         lastUpdatedGasPrice: 0,
         leverage: new BigNumber(0),
         totalMargin: new BigNumber(0),
+        minimumMargin: new BigNumber(0),
+        availableMarginPercent: new BigNumber(0),
     },
     leveragedNotionalValue: new BigNumber(0),
     maxLeverage: new BigNumber(25),
@@ -229,11 +236,19 @@ export default class Tracer {
             const { quote, base } = parsedBalances;
             const leverage = calcLeverage(quote, base, this.fairPrice);
             const totalMargin = calcTotalMargin(quote, base, this.fairPrice);
+            const minimumMargin = calcMinimumMargin(quote, base, this.fairPrice, this.maxLeverage);
+            const availableMarginPercent = calcAvailableMarginPercent(quote, base, this.fairPrice, this.maxLeverage);
             console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
             this.balances = {
                 ...parsedBalances,
                 leverage: !leverage.eq(0) && leverage ? leverage : defaults.balances.leverage,
-                totalMargin: !totalMargin.eq(0) && totalMargin ? totalMargin : defaults.balances.totalMargin,
+                totalMargin: !totalMargin.eq(0) && totalMargin.toNumber() ? totalMargin : defaults.balances.totalMargin,
+                minimumMargin:
+                    !minimumMargin.eq(0) && minimumMargin.toNumber() ? minimumMargin : defaults.balances.minimumMargin,
+                availableMarginPercent:
+                    !availableMarginPercent.eq(0) && availableMarginPercent.toNumber()
+                        ? availableMarginPercent
+                        : defaults.balances.availableMarginPercent,
             };
             return parsedBalances;
         } catch (error) {
