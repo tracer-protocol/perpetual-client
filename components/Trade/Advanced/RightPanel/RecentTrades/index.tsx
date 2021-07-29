@@ -35,7 +35,7 @@ const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => 
                             return (
                                 <TableRow key={`row-${index}`}>
                                     <TableCell>{toApproxCurrency(parseFloat(trade.price.toFixed(2)))}</TableCell>
-                                    <TableCell>trade.amount.toFixed(2)</TableCell>
+                                    <TableCell>{trade.amount.toFixed(2)}</TableCell>
                                     <TableCell>
                                         {d.getHours()}:{d.getMinutes()}
                                     </TableCell>

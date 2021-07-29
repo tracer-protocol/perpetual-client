@@ -34,7 +34,7 @@ const FillsTab: React.FC<{
                                 {!!order.position ? 'Short' : 'Long'}
                             </TableCell>
                             <TableCell>{toApproxCurrency(order.price)}</TableCell>
-                            <TableCell>order.amount.toFixed(2)</TableCell>
+                            <TableCell>{order.amount.toFixed(2)}</TableCell>
                         </TableRow>
                     );
                 })}
