@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { Menu, MenuItem } from '@components/General/Menu';
 import Dropdown from 'antd/lib/dropdown';
 import { Button } from '@components/General';
+import EquityTable from '@components/Portfolio/Trading/Overview/EqTable';
+import Graph from '@components/Portfolio/Trading/Overview/Graph';
 
 export const LeftPanel = styled.div`
     width: 20%;
@@ -147,21 +149,11 @@ export const HPanel = styled.div<HPProps>`
     width: 100%;
     padding: 0 15px 16px;
     background: ${(props: HPProps) => (props.background ? (props.background as string) : 'transparent')};
-    .equityStats {
-        flex-basis: calc(60% - 8px);
-        &.show {
-            max-height: 420px;
-            tr:nth-child(2) td,
-            tr:nth-child(3) td,
-            tr:nth-child(4) td,
-            tr:nth-child(5) td {
-                opacity: 1;
-                border-color: var(--table-darkborder);
-            }
-        }
-    }
 
-    .pnlGraph {
+    ${EquityTable} {
+        flex-basis: calc(60% - 8px);
+    }
+    ${Graph} {
         flex-basis: calc(40% - 8px);
         min-height: 342px;
     }

@@ -65,7 +65,6 @@ const Overview: FC<OProps> = ({ positions, holdings }: OProps) => {
                 <Title>Open Positions</Title>
                 <Counter>{positions?.length}</Counter>
             </SectionHeader>
-            <Counter>{positions?.length}</Counter>
             <HScrollContainer>
                 {positions.map((tracer: any, i: number) => (
                     <PositionGraph
