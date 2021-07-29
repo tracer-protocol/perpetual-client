@@ -1,6 +1,6 @@
 import React from 'react';
 import { toApproxCurrency } from '@libs/utils';
-import { TableHeading, TableRow, TableCell } from '@components/Table';
+import { Table, TableHeading, TableRow, TableCell, TableBody, TableHeader } from '@components/Table';
 import { SecondaryCell } from '@components/Portfolio';
 import { DateAndTime } from '@components/General';
 
@@ -43,38 +43,36 @@ const Transfers: React.FC = () => {
     };
 
     return (
-        <>
-            <table>
-                <thead>
-                    <tr>
-                        {headings.map((heading, i) =>
-                            i === 3 ? (
-                                <TableHeading theme={TableHeadEndTheme} key={i}>
-                                    {heading}
-                                </TableHeading>
-                            ) : (
-                                <TableHeading key={i}>{heading}</TableHeading>
-                            ),
-                        )}
-                    </tr>
-                </thead>
-                <tbody>
-                    {tracers.map((tracer, i) => (
-                        <TableRow key={`table-row-${i}`}>
-                            <TableCell>
-                                <DateAndTime date={tracer.date} time={tracer.time} />
-                            </TableCell>
-                            <TableCell>{tracer.type}</TableCell>
-                            <TableCell>
-                                {toApproxCurrency(tracer.amount)}
-                                <SecondaryCell>{tracer.currency}</SecondaryCell>
-                            </TableCell>
-                            <TableCell>{tracer.details}</TableCell>
-                        </TableRow>
-                    ))}
-                </tbody>
-            </table>
-        </>
+        <Table>
+            <TableHeader>
+                <tr>
+                    {headings.map((heading, i) =>
+                        i === 3 ? (
+                            <TableHeading theme={TableHeadEndTheme} key={i}>
+                                {heading}
+                            </TableHeading>
+                        ) : (
+                            <TableHeading key={i}>{heading}</TableHeading>
+                        ),
+                    )}
+                </tr>
+            </TableHeader>
+            <TableBody>
+                {tracers.map((tracer, i) => (
+                    <TableRow key={`table-row-${i}`}>
+                        <TableCell>
+                            <DateAndTime timestamp={Date.now() / 1000} />
+                        </TableCell>
+                        <TableCell>{tracer.type}</TableCell>
+                        <TableCell>
+                            {toApproxCurrency(tracer.amount)}
+                            <SecondaryCell>{tracer.currency}</SecondaryCell>
+                        </TableCell>
+                        <TableCell>{tracer.details}</TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
     );
 };
 

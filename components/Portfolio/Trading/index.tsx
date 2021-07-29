@@ -7,6 +7,7 @@ import TradeHistory from '@components/Portfolio/Trading/TradeHistory';
 import Transfers from '@components/Portfolio/Trading/Transfers';
 import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
 import Tracer, { defaults } from '@libs/Tracer';
+import styled from 'styled-components';
 
 const TradingPortfolio: FC = () => {
     const { allFilledOrders, factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
@@ -54,9 +55,13 @@ const TradingPortfolio: FC = () => {
     return (
         <>
             <SubNav tabs={tabs} setTab={setTab} selected={tab} />
-            {content()}
+            <Content>{content()}</Content>
         </>
     );
 };
 
 export default TradingPortfolio;
+
+const Content = styled.div`
+    overflow: auto;
+`;
