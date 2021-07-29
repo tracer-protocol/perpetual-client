@@ -65,7 +65,7 @@ const SubNav: React.FC<SNBProps> = ({ tabs, selected, setTab, children }: SNBPro
                     </SubNavItem>
                 ))}
             </ItemGroup>
-            {children ? children : null}
+{children}
         </SubNavContainer>
     );
 };
