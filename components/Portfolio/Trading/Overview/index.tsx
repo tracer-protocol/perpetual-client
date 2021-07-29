@@ -67,7 +67,7 @@ const Overview: FC<OProps> = ({ fetchedTracers }: OProps) => {
                 {!account ? <ConnectOverlay /> : null}
             </HPanel>
             <SectionHeader border>
-                <Title>Withdrawals</Title>
+                <Title>Open Positions</Title>
                 <Counter>{fetchedTracers?.length}</Counter>
             </SectionHeader>
             <HScrollContainer>
