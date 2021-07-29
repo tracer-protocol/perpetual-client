@@ -53,7 +53,7 @@ const ItemGroup = styled.div`
 
 const SubNav: React.FC<SNBProps> = ({ tabs, selected, setTab, children }: SNBProps) => {
     return (
-        <SubNavContainer hasChildren={!!children}>
+        <SubNavContainer>
             <ItemGroup>
                 {tabs.map((tab, index: number) => (
                     <SubNavItem
