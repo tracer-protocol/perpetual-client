@@ -14,7 +14,7 @@ interface SNCProps {
 }
 export const SubNavContainer = styled.div<SNCProps>`
     display: flex;
-    justify-content: ${(props: SNCProps) => (props.hasChildren ? 'space-between' : '')};
+    justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #0c3586;
     padding-right: 15px;
