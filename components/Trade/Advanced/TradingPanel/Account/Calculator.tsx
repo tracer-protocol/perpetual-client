@@ -356,8 +356,8 @@ const Leverage: FC<LProps> = styled(({ className, value, maxLeverage, isLocked, 
                     calculatorDispatch({ type: 'calculate' });
                 }}
                 step={0.1}
-                min={0}
-                defaultValue={0}
+                min={1}
+                defaultValue={1}
                 max={maxLeverage.toNumber()}
             />
         </div>
