@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 import { Table, TableBody, TableHeader, TableHeading, TableLastHeading, TableRow, TableCell } from '@components/Table';
-import { StatusIndicator, getStatusColour } from '@components/Portfolio';
+import { StatusIndicator, calcStatus } from '@components/Portfolio';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'libs/types/OrderTypes';
 import { LabelledTracers } from 'libs/types/TracerTypes';
@@ -22,8 +22,6 @@ const Position: React.FC<{
         'Realised P&L',
         'Status',
     ];
-
-    const _status = ['Open', 'Eligible', 'Approaching', 'Closed'];
 
     const onClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         e.preventDefault();
@@ -74,8 +72,9 @@ const Position: React.FC<{
                 </TableHeader>
                 <TableBody>
                     {Object.values(tracers).map((tracer, i) => {
-                        const name = tracer.marketId.split('/')[0];
-                        const status = _status[i];
+                        const balances = tracer.getBalance();
+                        const name = tracer.baseTicker;
+                        const status = calcStatus(balances.base.toNumber(), balances.availableMarginPercent.toNumber());
                         const { quote, base, totalMargin } = tracer.balances;
                         // TODO: calculate realisedPNL
                         const realisedPNL = 0;
@@ -85,7 +84,7 @@ const Position: React.FC<{
                             allFilledOrders[tracer.address] ?? [],
                         );
                         return (
-                            <TableRow key={`table-row-${i}`} theme={getRowStatus(status[i], show)}>
+                            <TableRow key={`table-row-${i}`} theme={getRowStatus(status.text, show)}>
                                 <TableCell>
                                     <div className="flex flex-row">
                                         <div className="my-auto">
@@ -113,10 +112,10 @@ const Position: React.FC<{
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex flex-row">
-                                        <StatusIndicator color={getStatusColour(status)} className="text-2xl my-auto">
+                                        <StatusIndicator color={status.color} className="text-2xl my-auto">
                                             &bull;
                                         </StatusIndicator>
-                                        <div className="mx-2 my-auto">{status}</div>
+                                        <div className="mx-2 my-auto">{status.text}</div>
                                         <div className="my-auto ml-auto">
                                             <Button>Close</Button>
                                         </div>

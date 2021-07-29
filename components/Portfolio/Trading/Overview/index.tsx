@@ -10,8 +10,6 @@ import { Menu, MenuItem } from '@components/General/Menu';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
 import PositionOverlay from '@components/Overlay/PositionOverlay';
-import { useEffect } from 'react';
-import { LabelledTracers } from '@libs/types/TracerTypes';
 
 interface HRowProps {
     background?: string;
@@ -151,33 +149,13 @@ const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, op
 `;
 
 interface OProps {
-    tracers: LabelledTracers;
+    positions: Tracer[];
+    holdings: Tracer[];
 }
-const Overview: FC<OProps> = ({ tracers }: OProps) => {
+const Overview: FC<OProps> = ({ positions, holdings }: OProps) => {
     const { account } = useWeb3();
     const [currentPortfolio, setCurrentPortfolio] = useState(1);
     const [currentPNL, setCurrentPNL] = useState(1);
-    const [positions, setPositions] = useState<Tracer[]>([]);
-    const [holdings, setHoldings] = useState<Tracer[]>([]);
-
-    // fetch all tracers where the user has an open position
-    useEffect(() => {
-        const positions: Tracer[] = [];
-        const holdings: Tracer[] = [];
-        Object.values(tracers).map((tracer) => {
-            const balance = tracer?.getBalance() ?? defaults.balances;
-            if (!balance.quote.eq(0)) {
-                // if the user has deposited
-                holdings.push(tracer);
-            }
-            if (!balance.base.eq(0)) {
-                // if the user has a position
-                positions.push(tracer);
-            }
-        });
-        setPositions(positions);
-        setHoldings(holdings);
-    }, [tracers]);
 
     const portfolioKeyMap: Record<number, string> = {
         1: 'Entire Portfolio',
