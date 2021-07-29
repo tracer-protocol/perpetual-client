@@ -14,6 +14,8 @@ const OrdersTab: React.FC<{
     baseTicker: string;
     refetch: () => void;
 }> = memo(({ userOrders, baseTicker, refetch }) => {
+    console.log(userOrders)
+    
     const { handleAsync } = useContext(TransactionContext);
     const _cancelOrder = (market: string, orderId: string) => {
         console.info(`Attempting to cancel order: ${orderId} on market: ${market}`);

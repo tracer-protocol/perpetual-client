@@ -54,7 +54,7 @@ export const useAccountData: (user: string | undefined) => any = (user) => {
 
 const USER_TRACER_TRADES = gql`
     query Tracer_Trades($account: String, $tracer: String) {
-        trades(where: { trader: $account, tracer: $tracer }) {
+        trades(where: { trader: $account, tracer: $tracer }, orderBy: timestamp, orderDirection: desc) {
             position
             amount
             price
@@ -162,7 +162,7 @@ export const useAllUsersMatched: (account: string) => {
 
 const USER_MARGIN_TRANSACTIONS = gql`
     query Margin_Transactions($account: String) {
-        marginTransactions(where: { trader: $account }) {
+        marginTransactions(where: { trader: $account }, orderBy: timestamp, orderDirection: desc) {
             id
             timestamp
             amount

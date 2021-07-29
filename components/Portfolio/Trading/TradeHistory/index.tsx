@@ -8,9 +8,10 @@ interface THProps {
     allFilledOrders: LabelledOrders;
 }
 const TradeHistory: FC<THProps> = ({ allFilledOrders }: THProps) => {
-    const [orderHistory, setOrderHistory] = useState<any>([]);
+    const [orderHistory, setOrderHistory] = useState<FilledOrder[]>([]);
 
     useEffect(() => {
+        // re-flattens all orders
         const tempOrders: FilledOrder[] = Object.values(allFilledOrders).reduce(
             (previous, current) => previous.concat(current),
             [],
