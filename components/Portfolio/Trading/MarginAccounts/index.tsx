@@ -1,7 +1,16 @@
 import React from 'react';
 import { Button, Logo } from '@components/General';
 import { toApproxCurrency, toPercent } from '@libs/utils';
-import { TableHeading, TableRow, TableCell, TableLastHeading, TableLastCell, Table, TableBody, TableHeader } from '@components/General/Table';
+import {
+    TableHeading,
+    TableRow,
+    TableCell,
+    TableLastHeading,
+    TableLastCell,
+    Table,
+    TableBody,
+    TableHeader,
+} from '@components/General/Table';
 import { StatusIndicator, calcStatus } from '@components/Portfolio';
 import Tooltip from 'antd/lib/tooltip';
 import Tracer from '@libs/Tracer';
