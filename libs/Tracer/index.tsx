@@ -127,7 +127,7 @@ export default class Tracer {
         const oracleAddress = this._instance.methods.gasPriceOracle().call();
         const tokenAddr = this._instance.methods.tracerQuoteToken().call();
         const quoteTokenDecimals = this._instance.methods.quoteTokenDecimals().call();
-        const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
+        const liquidationGasCost = this._instance.methods.liquidationGasCost().call();
         const maxLeverage = this._instance.methods.trueMaxLeverage().call();
         const fundingRateSensitivity = this._instance.methods.fundingRateSensitivity().call();
         const leveragedNotionalValue = this._instance.methods.leveragedNotionalValue().call();
