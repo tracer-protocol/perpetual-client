@@ -9,12 +9,16 @@ export interface SNBProps {
     children?: React.ReactNode;
 }
 
-export const SubNavContainer = styled.div<SNCProps>`
+export const SubNavContainer = styled.div`
+    position: relative;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #0c3586;
-    padding-right: 15px;
+
+    .dropdown {
+        position: absolute;
+        right: 15px;
+    }
 `;
 
 export const SubNavItem = styled.div`
@@ -44,28 +48,22 @@ export const SubNavItem = styled.div`
     }
 `;
 
-const ItemGroup = styled.div`
-    display: flex;
-`;
-
 const SubNav: React.FC<SNBProps> = ({ tabs, selected, setTab, children }: SNBProps) => {
     return (
         <SubNavContainer>
-            <ItemGroup>
-                {tabs.map((tab, index: number) => (
-                    <SubNavItem
-                        className={index === selected ? 'selected' : ''}
-                        key={`sub-nav-${index}`}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setTab(index);
-                        }}
-                    >
-                        {tab}
-                    </SubNavItem>
-                ))}
-            </ItemGroup>
-{children}
+            {tabs.map((tab, index: number) => (
+                <SubNavItem
+                    className={index === selected ? 'selected' : ''}
+                    key={`sub-nav-${index}`}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setTab(index);
+                    }}
+                >
+                    {tab}
+                </SubNavItem>
+            ))}
+            <div className="dropdown">{children}</div>
         </SubNavContainer>
     );
 };
