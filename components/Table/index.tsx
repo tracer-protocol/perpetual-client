@@ -40,7 +40,7 @@ export const TableRow = styled.tr`
 `;
 
 export const TableCell = styled.td`
-    padding: 0 10px;
+    padding: 10px;
     border-right: 1px solid var(--color-accent);
     border-bottom: 1px solid var(--color-accent);
 
@@ -52,4 +52,27 @@ export const TableCell = styled.td`
 // Last cell on a row
 export const TableLastCell = styled(TableCell)`
     border-right: none;
+`;
+
+interface STProps {
+    bodyHeight: string;
+}
+export const ScrollableTable = styled.table<STProps>`
+    ${TableBody} {
+        display: block;
+        max-height: ${(props) => `${props.bodyHeight}`};
+        overflow-y: scroll;
+    }
+
+    ${TableHeader} {
+        display: table;
+        width: calc(100% - 7px);
+        table-layout: fixed;
+    }
+
+    ${TableRow} {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
 `;

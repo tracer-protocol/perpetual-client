@@ -248,7 +248,7 @@ const OrderBookTitle = styled.div`
     letter-spacing: var(--letter-spacing-extra-small);
     color: #ffffff;
     text-transform: capitalize;
-    padding: 0px 0.8rem;
+    padding: 0 0.8rem;
     margin-bottom: 8px;
     height: var(--height-extra-small-container);
     border-bottom: 1px solid var(--color-accent);

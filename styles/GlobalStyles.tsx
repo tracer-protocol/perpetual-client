@@ -11,6 +11,7 @@ export default createGlobalStyle`
 
         --font-size-ultra-small: 11px;
         --status-lightblue: #3da8f5;
+        --status-yellow: #F4AB57;
         --status-orange: #F15025;
         --status-white: #fff;
 

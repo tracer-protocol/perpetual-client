@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Logo } from '@components/General';
 import { toApproxCurrency, toPercent } from '@libs/utils';
-import { TableHeading, TableRow, TableCell } from '@components/Table';
+import { TableHeading, TableRow, TableCell, TableLastHeading, TableLastCell } from '@components/Table';
 import { StatusIndicator, calcStatus } from '@components/Portfolio';
 import Tooltip from 'antd/lib/tooltip';
 import Tracer from '@libs/Tracer';
@@ -19,7 +19,11 @@ const MarginAccounts: React.FC<{
                 <thead>
                     <tr>
                         {headings.map((heading, i) =>
-                            i === 4 ? <TableHeading>{heading}</TableHeading> : <TableHeading>{heading}</TableHeading>,
+                            i !== 4 ? (
+                                <TableHeading>{heading}</TableHeading>
+                            ) : (
+                                <TableLastHeading>{heading}</TableLastHeading>
+                            ),
                         )}
                     </tr>
                 </thead>
@@ -42,7 +46,7 @@ const MarginAccounts: React.FC<{
                                 <TableCell>{toApproxCurrency(balances.totalMargin)}</TableCell>
                                 <TableCell>{toApproxCurrency(balances.minimumMargin)}</TableCell>
                                 <TableCell>{toPercent(balances.availableMarginPercent.toNumber(), true)}</TableCell>
-                                <TableCell>
+                                <TableLastCell>
                                     <div className="flex flex-row">
                                         <StatusIndicator color={status.color} className="text-2xl my-auto">
                                             &bull;
@@ -53,7 +57,7 @@ const MarginAccounts: React.FC<{
                                             <Button>Withdraw</Button>
                                         </div>
                                     </div>
-                                </TableCell>
+                                </TableLastCell>
                             </TableRow>
                         );
                     })}

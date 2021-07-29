@@ -1,8 +1,17 @@
 import React, { useState } from 'react';
 import { Button, Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { Table, TableBody, TableHeader, TableHeading, TableLastHeading, TableRow, TableCell } from '@components/Table';
 import { StatusIndicator, calcStatus } from '@components/Portfolio';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeading,
+    TableLastHeading,
+    TableRow,
+    TableCell,
+    TableLastCell,
+} from '@components/Table';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'libs/types/OrderTypes';
 import { LabelledTracers } from 'libs/types/TracerTypes';
@@ -110,7 +119,7 @@ const Position: React.FC<{
                                 <TableCell color={realisedPNL < 0 ? '#F15025' : '#21DD53'}>
                                     {toApproxCurrency(realisedPNL)}
                                 </TableCell>
-                                <TableCell>
+                                <TableLastCell>
                                     <div className="flex flex-row">
                                         <StatusIndicator color={status.color} className="text-2xl my-auto">
                                             &bull;
@@ -120,7 +129,7 @@ const Position: React.FC<{
                                             <Button>Close</Button>
                                         </div>
                                     </div>
-                                </TableCell>
+                                </TableLastCell>
                             </TableRow>
                         );
                     })}

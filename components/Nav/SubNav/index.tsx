@@ -1,17 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Counter } from '@components/Portfolio';
 
 export interface SNBProps {
+    tabs: any[];
     selected: number;
-    tabs: string[];
     setTab: (id: number) => void;
-    background?: string;
-    position?: 'end' | 'start';
+    children?: React.ReactNode;
 }
 
 export const SubNavContainer = styled.div`
-    border-bottom: 1px solid #0c3586;
+    position: relative;
     display: flex;
+    align-items: center;
+    border-bottom: 1px solid #0c3586;
+
+    .dropdown {
+        position: absolute;
+        right: 15px;
+    }
 `;
 
 export const SubNavItem = styled.div`
@@ -29,6 +36,11 @@ export const SubNavItem = styled.div`
     &.selected {
         background: var(--color-accent);
         color: var(--color-text);
+
+        ${Counter} {
+            background-color: var(--color-primary);
+            color: var(--color-accent);
+        }
     }
 
     &:hover {
@@ -36,11 +48,10 @@ export const SubNavItem = styled.div`
     }
 `;
 
-const SubNav: React.FC<SNBProps> = (props: SNBProps) => {
-    const { tabs, selected, setTab } = props;
+const SubNav: React.FC<SNBProps> = ({ tabs, selected, setTab, children }: SNBProps) => {
     return (
         <SubNavContainer>
-            {tabs.map((tab_, index) => (
+            {tabs.map((tab, index: number) => (
                 <SubNavItem
                     className={index === selected ? 'selected' : ''}
                     key={`sub-nav-${index}`}
@@ -49,9 +60,10 @@ const SubNav: React.FC<SNBProps> = (props: SNBProps) => {
                         setTab(index);
                     }}
                 >
-                    {tab_}
+                    {tab}
                 </SubNavItem>
             ))}
+            <div className="dropdown">{children}</div>
         </SubNavContainer>
     );
 };
