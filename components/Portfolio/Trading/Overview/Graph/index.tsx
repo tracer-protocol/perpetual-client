@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { LineData } from 'libs/types/TracerTypes';
 import LightWeightChart from '@components/Charts/LightWeightLineChart';
@@ -20,7 +20,7 @@ interface GProps {
     setPosition?: string;
     positionGraph?: boolean;
 }
-const Graph: FC<GProps> = styled(({ className, title, positionGraph, setPosition, selectedTracerAddress }: GProps) => {
+const Graph = styled(({ className, title, positionGraph, setPosition, selectedTracerAddress }: GProps) => {
     const { lines } = useLines(selectedTracerAddress);
 
     return (
@@ -36,7 +36,7 @@ const Graph: FC<GProps> = styled(({ className, title, positionGraph, setPosition
             </GraphContent>
         </figure>
     );
-})`
+})<GProps>`
     width: 100%;
     height: ${(props: GProps) => (props.positionGraph ? '100%' : 'auto')};
     overflow: hidden;

@@ -171,15 +171,35 @@ export const StatusIndicator = styled.div<{ color: string }>`
     color: ${(props) => props.color};
 `;
 
-export function getStatusColour(status: string): string {
-    let colour = 'var(--status-white)';
-    if (status === 'Eligible') {
-        colour = 'var(--status-orange)';
-    } else if (status === 'Approaching') {
-        colour = 'var(--status-yellow)';
+export const calcStatus: (
+    quote: number,
+    availableMarginPercent: number,
+) => {
+    text: string;
+    color: string;
+} = (base, availableMarginPercent) => {
+    if (availableMarginPercent === 0 || base === 0 || availableMarginPercent >= 1) {
+        return {
+            text: 'Closed',
+            color: '#fff',
+        };
+    } else if (availableMarginPercent > 0.1) {
+        return {
+            text: 'Open',
+            color: '#05CB3A',
+        };
+    } else if (availableMarginPercent > 0) {
+        return {
+            text: 'Approaching Liquidation',
+            color: '#F4AB57',
+        };
+    } else {
+        return {
+            text: 'Eligible for Liquidation',
+            color: '#F15025',
+        };
     }
-    return colour;
-}
+};
 
 export const SecondaryCell = styled.div`
     color: var(--color-secondary);

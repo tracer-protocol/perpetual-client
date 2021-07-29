@@ -12,6 +12,8 @@ export type UserBalance = {
     tokenBalance: BigNumber;
     leverage: BigNumber; // the users current leverage
     totalMargin: BigNumber; // the users current totalMargin
+    minimumMargin: BigNumber; // the users current minimumMargin
+    availableMarginPercent: BigNumber; // the users current minimumMargin
 };
 
 /**

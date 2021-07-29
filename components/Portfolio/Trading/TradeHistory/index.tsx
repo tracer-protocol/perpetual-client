@@ -2,25 +2,22 @@ import React, { FC, useEffect, useState } from 'react';
 import { Logo } from '@components/General';
 import { Table, TableHeader, TableBody, TableHeading, TableRow, TableCell } from '@components/Table';
 import { toApproxCurrency } from '@libs/utils';
-import { LabelledOrders } from '@libs/types/OrderTypes';
+import { LabelledOrders, FilledOrder } from '@libs/types/OrderTypes';
 
 interface THProps {
-    fetchedTracers: any;
     allFilledOrders: LabelledOrders;
 }
-const TradeHistory: FC<THProps> = ({ fetchedTracers, allFilledOrders }: THProps) => {
+const TradeHistory: FC<THProps> = ({ allFilledOrders }: THProps) => {
     const [orderHistory, setOrderHistory] = useState<any>([]);
 
     useEffect(() => {
-        const tempOrders: any[] = [];
-        fetchedTracers.map((tracer: any) => {
-            if (allFilledOrders[tracer.address] !== []) {
-                tempOrders.push(allFilledOrders[tracer.address]);
-            }
-        });
+        const tempOrders: FilledOrder[] = Object.values(allFilledOrders).reduce(
+            (previous, current) => previous.concat(current),
+            [],
+        );
         tempOrders.sort((order1, order2) => (order1.timestamp < order2.timestamp && 1) || -1);
         setOrderHistory(tempOrders);
-    }, [fetchedTracers]);
+    }, [allFilledOrders]);
 
     return (
         <>
