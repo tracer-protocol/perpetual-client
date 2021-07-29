@@ -40,7 +40,7 @@ export const TableRow = styled.tr`
 `;
 
 export const TableCell = styled.td`
-    padding: 0 10px;
+    padding: 10px;
     border-right: 1px solid var(--color-accent);
     border-bottom: 1px solid var(--color-accent);
 
