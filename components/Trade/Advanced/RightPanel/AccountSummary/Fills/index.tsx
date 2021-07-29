@@ -1,30 +1,45 @@
-import React, { memo } from 'react';
+import React, { memo, useEffect, useRef, useState } from 'react';
 import { FilledOrder } from '@libs/types/OrderTypes';
-import { TData, TRow } from '@components/General/Table/AccountTable';
 import { timeAgo, toApproxCurrency } from '@libs/utils';
-import { STable } from '@components/Trade/Advanced/RightPanel/AccountSummary';
+import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/Table';
 
 const FillsTab: React.FC<{
     filledOrders: FilledOrder[];
-}> = memo(({ filledOrders }) => {
+    parentHeight: number;
+}> = memo(({ filledOrders, parentHeight }) => {
     filledOrders.sort((order1, order2) => (order1.timestamp < order2.timestamp && 1) || -1);
+
+    const tableHeader = useRef(null);
+    const [tableHeaderHeight, setTableHeaderHeight] = useState(0);
+    useEffect(() => {
+        // @ts-ignore
+        setTableHeaderHeight(tableHeader?.current?.clientHeight);
+    }, [tableHeader]);
+
+    const headings = ['Time', 'Side', 'Price', 'Amount'];
+
     return (
-        <STable headings={['Time', 'Side', 'Price', 'Amount']}>
-            <tbody>
+        <ScrollableTable bodyHeight={`${parentHeight - tableHeaderHeight}px`}>
+            <TableHeader ref={tableHeader}>
+                {headings.map((heading, i) => (
+                    <TableHeading key={i}>{heading}</TableHeading>
+                ))}
+            </TableHeader>
+            <TableBody>
                 {filledOrders.map((order, index) => {
                     return (
-                        <TRow key={`filled-order-${index}`}>
-                            <TData>{timeAgo(Date.now(), parseInt(order.timestamp) * 1000)}</TData>
-                            <TData className={!!order.position ? 'ask' : 'bid'}>
+                        <TableRow key={`filled-order-${index}`}>
+                            <TableCell>{timeAgo(Date.now(), parseInt(order.timestamp) * 1000)}</TableCell>
+                            <TableCell className={!!order.position ? 'ask' : 'bid'}>
                                 {!!order.position ? 'Short' : 'Long'}
-                            </TData>
-                            <TData>{toApproxCurrency(order.price)}</TData>
-                            <TData>{parseFloat(order.amount.toFixed(2))}</TData>
-                        </TRow>
+                            </TableCell>
+                            <TableCell>{toApproxCurrency(order.price)}</TableCell>
+                            <TableCell>order.amount.toFixed(2)</TableCell>
+                        </TableRow>
                     );
                 })}
-            </tbody>
-        </STable>
+            </TableBody>
+        </ScrollableTable>
     );
 });
 FillsTab.displayName = 'Fills';

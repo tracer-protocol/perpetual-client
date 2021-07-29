@@ -1,20 +1,20 @@
-import React, { memo, useContext } from 'react';
+import React, { memo, useContext, useEffect, useRef, useState } from 'react';
 import { OMEOrder } from '@tracer-protocol/tracer-utils';
 import { TransactionContext } from '@context/TransactionContext';
 import { cancelOrder } from '@libs/Ome';
 import Web3 from 'web3';
-import { TData, TRow } from '@components/General/Table/AccountTable';
 import { calcStatus, toApproxCurrency } from '@libs/utils';
-import { STable } from '@components/Trade/Advanced/RightPanel/AccountSummary';
 import styled from 'styled-components';
 import { Button } from '@components/General';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
+import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/Table';
 
 const OrdersTab: React.FC<{
     userOrders: OMEOrder[];
     baseTicker: string;
     refetch: () => void;
-}> = memo(({ userOrders, baseTicker, refetch }) => {
+    parentHeight: number;
+}> = memo(({ userOrders, baseTicker, refetch, parentHeight }) => {
     const { web3, account } = useWeb3();
     const { handleAsync } = useContext(TransactionContext);
 
@@ -31,37 +31,55 @@ const OrdersTab: React.FC<{
               })
             : console.error('Failed to cancel order: Handle transaction not defined');
     };
+
+    const tableHeader = useRef(null);
+    const [tableHeaderHeight, setTableHeaderHeight] = useState(0);
+    useEffect(() => {
+        // @ts-ignore
+        setTableHeaderHeight(tableHeader?.current?.clientHeight);
+    }, [tableHeader]);
+
+    const headings = ['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', ''];
     return (
-        <STable headings={['Status', 'Side', 'Price', 'Amount', 'Filled', 'Remaining', '']}>
-            <tbody>
+        <ScrollableTable bodyHeight={`${parentHeight - tableHeaderHeight}px`}>
+            <TableHeader ref={tableHeader}>
+                {headings.map((heading, i) => (
+                    <TableHeading key={i}>{heading}</TableHeading>
+                ))}
+            </TableHeader>
+            <TableBody>
                 {userOrders?.map((order, index) => {
                     const amount = parseFloat(Web3.utils.fromWei(order?.amount?.toString() ?? '0')),
                         amountLeft = parseFloat(Web3.utils.fromWei(order?.amount_left?.toString() ?? '0')),
                         filled = amount - amountLeft;
                     return (
-                        <TRow key={`open-order-${index}`}>
-                            <TData>{calcStatus(filled)}</TData>
-                            <TData className={order.side.toLowerCase() /** This will be the global .bid or .ask */}>
+                        <TableRow key={`open-order-${index}`}>
+                            <TableCell>{calcStatus(filled)}</TableCell>
+                            <TableCell className={order.side.toLowerCase()}>
                                 {order.side === 'Bid' ? 'Long' : 'Short'}
-                            </TData>
-                            <TData>{toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}</TData>
-                            <TData>
-                                {parseFloat(amount.toFixed(2))} {baseTicker}
-                            </TData>
-                            <TData>
-                                {parseFloat(filled.toFixed(2))} {baseTicker}
-                            </TData>
-                            <TData>
-                                {parseFloat(amountLeft.toFixed(2))} {baseTicker}
-                            </TData>
-                            <TData>
-                                <Cancel onClick={(_e) => _cancelOrder(order.target_tracer, order.id)}>Cancel</Cancel>
-                            </TData>
-                        </TRow>
+                            </TableCell>
+                            <TableCell>
+                                {toApproxCurrency(parseFloat(Web3.utils.fromWei(order.price.toString())))}
+                            </TableCell>
+                            <TableCell>
+                                {amount.toFixed(2)} {baseTicker}
+                            </TableCell>
+                            <TableCell>
+                                {filled.toFixed(2)} {baseTicker}
+                            </TableCell>
+                            <TableCell>
+                                {amountLeft.toFixed(2)} {baseTicker}
+                            </TableCell>
+                            <TableCell>
+                                <Cancel onClick={(_e: any) => _cancelOrder(order.target_tracer, order.id)}>
+                                    Cancel
+                                </Cancel>
+                            </TableCell>
+                        </TableRow>
                     );
                 })}
-            </tbody>
-        </STable>
+            </TableBody>
+        </ScrollableTable>
     );
 });
 OrdersTab.displayName = 'OpenOrders';
