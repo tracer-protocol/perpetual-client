@@ -9,9 +9,6 @@ export interface SNBProps {
     children?: React.ReactNode;
 }
 
-interface SNCProps {
-    hasChildren?: boolean;
-}
 export const SubNavContainer = styled.div<SNCProps>`
     display: flex;
     justify-content: space-between;
