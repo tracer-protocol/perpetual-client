@@ -1,41 +1,19 @@
 import React from 'react';
 import { toApproxCurrency } from '@libs/utils';
-import { Table, TableHeading, TableRow, TableCell, TableBody, TableHeader } from '@components/Table';
+import { Table, TableHeading, TableRow, TableCell, TableBody, TableHeader } from '@components/General/Table';
 import { SecondaryCell } from '@components/Portfolio';
 import { DateAndTime } from '@components/General';
+import { useAllMarginTransactions } from '@libs/Graph/hooks/Account';
+import { useWeb3 } from '@context/Web3Context/Web3Context';
+import BigNumber from 'bignumber.js';
+import Web3 from 'web3';
+import styled from 'styled-components';
 
 const Transfers: React.FC = () => {
-    const headings = ['Date', 'Type', 'Amount / Currency', 'Transaction Details'];
+    const { account, config } = useWeb3();
+    const { marginTransactions } = useAllMarginTransactions(account ?? '');
 
-    const tracers = [
-        {
-            date: '24/04/2021',
-            time: '04:31pm',
-            name: 'TSLA',
-            type: 'Deposit',
-            amount: 4562,
-            currency: 'DAI',
-            details: '0x75...423',
-        },
-        {
-            date: '24/04/2021',
-            time: '04:31pm',
-            name: 'TSLA',
-            type: 'Deposit',
-            amount: 4562,
-            currency: 'DAI',
-            details: '0x75...423',
-        },
-        {
-            date: '24/04/2021',
-            time: '04:31pm',
-            name: 'TSLA',
-            type: 'Deposit',
-            amount: 4562,
-            currency: 'DAI',
-            details: '0x75...423',
-        },
-    ];
+    const headings = ['Date', 'Type', 'Amount / Currency', 'Transaction Details'];
 
     const TableHeadEndTheme = {
         minWidth: '700px',
@@ -58,17 +36,25 @@ const Transfers: React.FC = () => {
                 </tr>
             </TableHeader>
             <TableBody>
-                {tracers.map((tracer, i) => (
-                    <TableRow key={`table-row-${i}`}>
+                {marginTransactions.map((transaction, i) => (
+                    <TableRow key={`transaction-row-${i}`}>
                         <TableCell>
-                            <DateAndTime timestamp={Date.now() / 1000} />
+                            <DateAndTime timestamp={parseInt(transaction.timestamp)} />
                         </TableCell>
-                        <TableCell>{tracer.type}</TableCell>
+                        <TableCell>{transaction.transactionType}</TableCell>
                         <TableCell>
-                            {toApproxCurrency(tracer.amount)}
-                            <SecondaryCell>{tracer.currency}</SecondaryCell>
+                            {toApproxCurrency(new BigNumber(Web3.utils.fromWei(transaction.amount)))}
+                            <SecondaryCell>{transaction.tracer.marketId.split('/')[1]}</SecondaryCell>
                         </TableCell>
-                        <TableCell>{tracer.details}</TableCell>
+                        <TableCell>
+                            <EtherscanLink
+                                href={`${config?.previewUrl}/tx/${transaction.id}`}
+                                target="_blank"
+                                rel="noreferrer noopener"
+                            >
+                                {transaction.id.slice(0, 10)}...{transaction.id.slice(-10)}
+                            </EtherscanLink>
+                        </TableCell>
                     </TableRow>
                 ))}
             </TableBody>
@@ -77,3 +63,9 @@ const Transfers: React.FC = () => {
 };
 
 export default Transfers;
+
+const EtherscanLink = styled.a`
+    &:hover {
+        text-decoration: underline;
+    }
+`;

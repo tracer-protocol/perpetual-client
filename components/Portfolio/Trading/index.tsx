@@ -64,4 +64,5 @@ export default TradingPortfolio;
 
 const Content = styled.div`
     overflow: auto;
+    height: 100%;
 `;

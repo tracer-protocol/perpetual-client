@@ -96,6 +96,7 @@ export default styled(
             approve = () => console.error('Approve is not defined'),
             selectedTracer,
         } = useContext(TracerContext);
+
         const [state, dispatch] = useReducer(modalReducer, initialState);
 
         const available = isDeposit

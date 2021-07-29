@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { Button, Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
-import { Table, TableBody, TableHeader, TableHeading, TableLastHeading, TableRow, TableCell } from '@components/Table';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeading,
+    TableLastHeading,
+    TableRow,
+    TableCell,
+} from '@components/General/Table';
 import { StatusIndicator, calcStatus } from '@components/Portfolio';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'libs/types/OrderTypes';

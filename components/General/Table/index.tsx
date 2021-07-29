@@ -1,21 +1,8 @@
 import styled from 'styled-components';
 
-export const Table = styled.table``;
-
-export const TableHeader = styled.thead``;
-
-export const TableHeading = styled.th`
-    text-align: left;
-    color: var(--color-primary);
-    height: 40px;
-    font-size: var(--font-size-extra-small);
-    padding-left: 10px;
-    border-right: 1px solid var(--color-accent);
-    border-bottom: 1px solid var(--color-accent);
-`;
-
-export const TableLastHeading = styled(TableHeading)`
-    border-right: none;
+export const Table = styled.table`
+    padding-bottom: 0.5rem;
+    width: calc(100% - 1px);
 `;
 
 export const TableBody = styled.tbody``;
@@ -29,15 +16,43 @@ export const TableRow = styled.tr`
         background: var(--color-accent);
         cursor: pointer;
     }
+
+    &.selected {
+        &:hover {
+            background: none;
+            cursor: auto;
+        }
+    }
+`;
+
+export const TableHeader = styled.thead``;
+
+export const TableHeading = styled.th`
+    text-align: left;
+    color: var(--color-primary);
+    height: 40px;
+    font-size: var(--font-size-extra-small);
+    padding-left: 10px;
+    border-right: 1px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
+`;
+
+// Last heading on a row
+export const TableLastHeading = styled(TableHeading)`
+    border-right: none;
 `;
 
 export const TableCell = styled.td`
     padding: 0 10px;
     border-right: 1px solid var(--color-accent);
     border-bottom: 1px solid var(--color-accent);
+
+    .secondary {
+        color: var(--color-secondary);
+    }
 `;
 
-// Last cell on a table row
+// Last cell on a row
 export const TableLastCell = styled(TableCell)`
     border-right: none;
 `;

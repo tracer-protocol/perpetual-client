@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from 'react';
 import { DateAndTime, Logo } from '@components/General';
-import { Table, TableHeader, TableBody, TableHeading, TableRow, TableCell } from '@components/Table';
+import { Table, TableHeader, TableBody, TableHeading, TableRow, TableCell } from '@components/General/Table';
 import { toApproxCurrency } from '@libs/utils';
 import { LabelledOrders, FilledOrder } from '@libs/types/OrderTypes';
 

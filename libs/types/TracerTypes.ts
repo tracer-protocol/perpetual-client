@@ -48,3 +48,15 @@ export type HistoryData = {
 }[];
 
 export type LabelledTracers = Record<string, Tracer & { loading: boolean }>;
+
+/** Graph tracer types */
+
+export type MarginTransaction = {
+    id: string;
+    amount: string;
+    timestamp: string;
+    transactionType: 'DEPOSIT' | 'WITHDRAW';
+    tracer: {
+        marketId: string;
+    };
+};

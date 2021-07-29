@@ -1,4 +1,4 @@
-import { TradingTable } from '@components/Table/TradingTable';
+import { TradingTable } from '@components/General/Table/TradingTable';
 import { toApproxCurrency } from '@libs/utils';
 import { FilledOrder } from 'libs/types/OrderTypes';
 import React, { useState } from 'react';

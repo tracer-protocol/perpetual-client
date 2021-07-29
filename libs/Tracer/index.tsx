@@ -127,7 +127,7 @@ export default class Tracer {
         const oracleAddress = this._instance.methods.gasPriceOracle().call();
         const tokenAddr = this._instance.methods.tracerQuoteToken().call();
         const quoteTokenDecimals = this._instance.methods.quoteTokenDecimals().call();
-        const liquidationGasCost = this._instance.methods.LIQUIDATION_GAS_COST().call();
+        const liquidationGasCost = this._instance.methods.liquidationGasCost().call();
         const maxLeverage = this._instance.methods.trueMaxLeverage().call();
         const fundingRateSensitivity = this._instance.methods.fundingRateSensitivity().call();
         const leveragedNotionalValue = this._instance.methods.leveragedNotionalValue().call();
@@ -223,6 +223,7 @@ export default class Tracer {
             await this.initialised;
             // if accounts is undefined the catch should get it
             const balance = await this._instance.methods.getBalance(account).call();
+            console.log(this.token);
             const walletBalance = await this.token?.methods.balanceOf(account).call();
             const parsedBalances = {
                 quote: new BigNumber(Web3.utils.fromWei(balance[0][0])),
@@ -233,6 +234,7 @@ export default class Tracer {
                     ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
                     : new BigNumber(0),
             };
+            console.log(parsedBalances.tokenBalance, 'wooo');
             const { quote, base } = parsedBalances;
             const leverage = calcLeverage(quote, base, this.fairPrice);
             const totalMargin = calcTotalMargin(quote, base, this.fairPrice);

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, Logo } from '@components/General';
 import { toApproxCurrency, toPercent } from '@libs/utils';
-import { TableHeading, TableRow, TableCell } from '@components/Table';
+import { TableHeading, TableRow, TableCell, TableBody, TableHeader, Table } from '@components/General/Table';
 import { StatusIndicator, calcStatus } from '@components/Portfolio';
 import Tooltip from 'antd/lib/tooltip';
 import Tracer from '@libs/Tracer';
@@ -14,52 +14,50 @@ const MarginAccounts: React.FC<{
     const headings = ['Market', 'Equity', 'Maintenance Margin', 'Available Margin', 'Status of Position'];
 
     return (
-        <>
-            <table>
-                <thead>
-                    <tr>
-                        {headings.map((heading, i) =>
-                            i === 4 ? <TableHeading>{heading}</TableHeading> : <TableHeading>{heading}</TableHeading>,
-                        )}
-                    </tr>
-                </thead>
-                <tbody>
-                    {tracers.map((tracer, i) => {
-                        const balances = tracer.getBalance();
-                        const status = calcStatus(balances.base.toNumber(), balances.availableMarginPercent.toNumber());
-                        return (
-                            <TableRow key={`table-row-${i}`}>
-                                <TableCell>
-                                    <Tooltip title={NoLeverageTip}>
-                                        <div className="flex flex-row">
-                                            <div className="my-auto">
-                                                <Logo ticker={tracer.baseTicker} />
-                                            </div>
-                                            <div className="my-auto ml-2">{tracer.marketId}</div>
-                                        </div>
-                                    </Tooltip>
-                                </TableCell>
-                                <TableCell>{toApproxCurrency(balances.totalMargin)}</TableCell>
-                                <TableCell>{toApproxCurrency(balances.minimumMargin)}</TableCell>
-                                <TableCell>{toPercent(balances.availableMarginPercent.toNumber(), true)}</TableCell>
-                                <TableCell>
+        <Table>
+            <TableHeader>
+                <tr>
+                    {headings.map((heading, i) =>
+                        i === 4 ? <TableHeading>{heading}</TableHeading> : <TableHeading>{heading}</TableHeading>,
+                    )}
+                </tr>
+            </TableHeader>
+            <TableBody>
+                {tracers.map((tracer, i) => {
+                    const balances = tracer.getBalance();
+                    const status = calcStatus(balances.base.toNumber(), balances.availableMarginPercent.toNumber());
+                    return (
+                        <TableRow key={`table-row-${i}`}>
+                            <TableCell>
+                                <Tooltip title={NoLeverageTip}>
                                     <div className="flex flex-row">
-                                        <StatusIndicator color={status.color} className="text-2xl my-auto">
-                                            &bull;
-                                        </StatusIndicator>
-                                        <div className="mx-2 my-auto">{status.text}</div>
-                                        <div className="flex flex-row my-auto ml-auto mr-4">
-                                            <Button className="mr-2">Deposit</Button>
-                                            <Button>Withdraw</Button>
+                                        <div className="my-auto">
+                                            <Logo ticker={tracer.baseTicker} />
                                         </div>
+                                        <div className="my-auto ml-2">{tracer.marketId}</div>
                                     </div>
-                                </TableCell>
-                            </TableRow>
-                        );
-                    })}
-                </tbody>
-            </table>
-        </>
+                                </Tooltip>
+                            </TableCell>
+                            <TableCell>{toApproxCurrency(balances.totalMargin)}</TableCell>
+                            <TableCell>{toApproxCurrency(balances.minimumMargin)}</TableCell>
+                            <TableCell>{toPercent(balances.availableMarginPercent.toNumber(), true)}</TableCell>
+                            <TableCell>
+                                <div className="flex flex-row">
+                                    <StatusIndicator color={status.color} className="text-2xl my-auto">
+                                        &bull;
+                                    </StatusIndicator>
+                                    <div className="mx-2 my-auto">{status.text}</div>
+                                    <div className="flex flex-row my-auto ml-auto mr-4">
+                                        <Button className="mr-2">Deposit</Button>
+                                        <Button>Withdraw</Button>
+                                    </div>
+                                </div>
+                            </TableCell>
+                        </TableRow>
+                    );
+                })}
+            </TableBody>
+        </Table>
     );
 };
 
