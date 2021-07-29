@@ -1,4 +1,3 @@
-import { TradingTable } from '@components/Table/TradingTable';
 import { toApproxCurrency } from '@libs/utils';
 import { FilledOrder } from 'libs/types/OrderTypes';
 import React, { useState } from 'react';
@@ -7,29 +6,8 @@ import FogOverlay from '@components/Overlay/FogOverlay';
 // @ts-ignore
 import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
 import Icon from '@ant-design/icons';
+import { Table, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/Table';
 
-const STradingTable = styled(TradingTable)`
-    tbody {
-        max-height: 100%;
-        margin: 0;
-        padding-right: 0;
-    }
-
-    thead {
-        text-align: left;
-        margin-bottom: 5px;
-    }
-
-    .time-header {
-        text-align: right;
-        padding-right: 15px;
-    }
-
-    .time-cell {
-        text-align: right;
-        padding-right: 10px;
-    }
-`;
 interface RTProps {
     trades: FilledOrder[];
     displayTrades: boolean;
@@ -41,33 +19,31 @@ const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => 
         <RecentTradesContainer displayTrades={displayTrades}>
             <RecentTradesTitle>Recent Trades</RecentTradesTitle>
             {trades?.length ? (
-                <TableContainer>
-                    <STradingTable>
-                        <thead>
-                            <th>Price</th>
-                            <th>Amount</th>
-                            <th className="time-header">Time</th>
-                        </thead>
-                        <tbody>
-                            {trades.map((trade, index) => {
-                                // remove duplicate as for every long there is a short;
-                                if (trade.position) {
-                                    return;
-                                }
-                                const d = new Date(parseInt(trade.timestamp) * 1000);
-                                return (
-                                    <tr key={`row-${index}`}>
-                                        <td>{toApproxCurrency(parseFloat(trade.price.toFixed(2)))}</td>
-                                        <td>{parseFloat(trade.amount.toFixed(2))}</td>
-                                        <td className="time-cell">
-                                            {d.getHours()}:{d.getMinutes()}
-                                        </td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </STradingTable>
-                </TableContainer>
+                <Table>
+                    <TableHeader>
+                        <TableHeading>Price</TableHeading>
+                        <TableHeading>Amount</TableHeading>
+                        <TableHeading>Time</TableHeading>
+                    </TableHeader>
+                    <TableBody>
+                        {trades.map((trade, index) => {
+                            // remove duplicate as for every long there is a short;
+                            if (trade.position) {
+                                return;
+                            }
+                            const d = new Date(parseInt(trade.timestamp) * 1000);
+                            return (
+                                <TableRow key={`row-${index}`}>
+                                    <TableCell>{toApproxCurrency(parseFloat(trade.price.toFixed(2)))}</TableCell>
+                                    <TableCell>trade.amount.toFixed(2)</TableCell>
+                                    <TableCell>
+                                        {d.getHours()}:{d.getMinutes()}
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
             ) : (
                 <Icon component={TracerLoading} className="tracer-loading" />
             )}
@@ -100,9 +76,4 @@ const RecentTradesContainer = styled.div<{ displayTrades: boolean }>`
             display: none;
         }
     }
-`;
-
-const TableContainer = styled.div`
-    height: 100%;
-    padding: 10px 0 10px 10px;
 `;
