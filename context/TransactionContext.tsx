@@ -120,38 +120,41 @@ export const TransactionStore: React.FC = ({ children }: Children) => {
         );
 
         const res = callMethod(...params);
-        Promise.resolve(res).then((res) => {
-            if (res.status === 'error') {
+        Promise.resolve(res)
+            .then((res) => {
+                if (res.status === 'error') {
+                    updateToast(toastId as unknown as string, {
+                        // confirmed this is a string
+                        content: statusMessages?.error ?? `${res.message}`,
+                        appearance: 'error',
+                        autoDismiss: true,
+                    });
+                    onError ? onError(res) : null;
+                } else {
+                    updateToast(toastId as unknown as string, {
+                        content: statusMessages?.success ?? `${res.message}`,
+                        appearance: 'success',
+                        autoDismiss: true,
+                    });
+                    onSuccess ? onSuccess(res) : null;
+                }
+            })
+            .catch((err) => {
+                console.debug('Failed to handle async', err);
                 updateToast(toastId as unknown as string, {
-                    // confirmed this is a string
-                    content: statusMessages?.error ?? `Transaction cancelled. ${res.message}`,
+                    content: statusMessages?.error ?? `Unknown error`,
                     appearance: 'error',
                     autoDismiss: true,
                 });
-                onError ? onError(res) : null;
-            } else {
-                updateToast(toastId as unknown as string, {
-                    content: statusMessages?.success ?? `${res.message}`,
-                    appearance: 'success',
-                    autoDismiss: true,
-                });
-                onSuccess ? onSuccess(res) : null;
-            }
-        });
+            });
     };
 
     /** Adds a pending toaster with id set to an object ref if the order is Partially or Fully Matched */
-    const setPending = (status: 'matched_partial' | 'matched') => {
-        const toastId = addToast(
-            [
-                status === 'matched_partial' ? 'Partially matched order' : 'Fully matched order',
-                'Order is being matched on chain',
-            ],
-            {
-                appearance: 'loading' as AppearanceTypes,
-                autoDismiss: false,
-            },
-        );
+    const setPending = () => {
+        const toastId = addToast(['Order is being matched on chain', ''], {
+            appearance: 'loading' as AppearanceTypes,
+            autoDismiss: false,
+        });
         pendingRef.current = toastId as unknown as string;
     };
 
