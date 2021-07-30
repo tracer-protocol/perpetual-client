@@ -149,7 +149,7 @@ export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) =>
         }
     };
 
-    if (!balances.base.eq(0) && orderState?.error !== 'NO_ORDERS') {
+    if (!balances.base.eq(0) || orderState?.error !== 'NO_ORDERS') {
         return <CloseOrder disabled={true}>Close Order</CloseOrder>;
     } else {
         return (
