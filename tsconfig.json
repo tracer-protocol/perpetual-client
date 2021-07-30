@@ -31,5 +31,5 @@
         }
     },
     "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "next.config.js"],
-    "exclude": ["node_modules", "components/**/*.stories.tsx"]
+    "exclude": ["node_modules", "components/**/*.stories.tsx", "public/static/*"]
 }

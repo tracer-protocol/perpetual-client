@@ -12,6 +12,11 @@ module.exports = withAntdLess({
     // cssLoaderOptions: {},
     trailingSlash: true,
 
+    // for charting library
+    future: {
+        webpack5: false,
+    },
+
     exportPathMap: () => {
         return {
             '/': { page: '/' },

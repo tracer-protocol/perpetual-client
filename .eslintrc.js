@@ -7,7 +7,7 @@ module.exports = {
             jsx: true, // Allows for the parsing of JSX
         },
     },
-    ignorePatterns: ['**/*.stories.tsx'],
+    ignorePatterns: ['**/*.stories.tsx', 'public/static/*'],
     settings: {
         react: {
             version: 'detect', // Tells eslint-plugin-react to automatically detect the version of React to use
