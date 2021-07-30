@@ -17,7 +17,7 @@ interface GProps {
 }
 const Graph: FC<GProps> = styled(({ selectedTracerAddress, className }: GProps) => {
     // const { candles } = useCandles(selectedTracerAddress);
-    console.log(selectedTracerAddress)
+    console.log(selectedTracerAddress);
     const [showOverlay, setOverlay] = useState(true);
     return (
         <div className={className}>
