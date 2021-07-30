@@ -6,7 +6,14 @@ import FogOverlay from '@components/Overlay/FogOverlay';
 // @ts-ignore
 import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
 import Icon from '@ant-design/icons';
-import { Table, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
+import {
+    RecentTradesTable,
+    TableBody,
+    TableCell,
+    TableHeader,
+    TableHeading,
+    TableRow,
+} from '@components/General/Table';
 
 interface RTProps {
     trades: FilledOrder[];
@@ -19,9 +26,9 @@ const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => 
         <RecentTradesContainer displayTrades={displayTrades}>
             <RecentTradesTitle>Recent Trades</RecentTradesTitle>
             {trades?.length ? (
-                <Table>
+                <RecentTradesTable>
                     <TableHeader>
-                        <TableHeading>Price</TableHeading>
+                        <TableHeading>Price (USDC)</TableHeading>
                         <TableHeading>Amount</TableHeading>
                         <TableHeading>Time</TableHeading>
                     </TableHeader>
@@ -43,7 +50,7 @@ const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => 
                             );
                         })}
                     </TableBody>
-                </Table>
+                </RecentTradesTable>
             ) : (
                 <Icon component={TracerLoading} className="tracer-loading" />
             )}

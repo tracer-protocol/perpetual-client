@@ -203,7 +203,7 @@ const StyledSlideSelect = styled(SlideSelect)`
     }
 
     ${SlideOption} {
-        padding: 0px 0.8rem;
+        padding: 0 0.8rem;
         @media (max-width: 1600px) {
             text-align: left;
         }

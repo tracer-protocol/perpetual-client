@@ -76,3 +76,15 @@ export const ScrollableTable = styled.table<STProps>`
         table-layout: fixed;
     }
 `;
+
+export const RecentTradesTable = styled.table`
+    ${TableHeading} {
+        border: none;
+        color: var(--color-text);
+        font-size: var(--font-size-small);
+    }
+
+    ${TableCell} {
+        border: none;
+    }
+`;
