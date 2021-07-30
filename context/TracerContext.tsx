@@ -152,7 +152,6 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             console.info('Placing OME order', omeOrder);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
-            console.log(res.data);
             if (res.data?.status === 'submitted') {
                 setPending ? setPending(res.data.status) : console.error('SetPending function is not defined');
             }

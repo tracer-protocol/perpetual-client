@@ -132,6 +132,7 @@ const Advanced: React.FC = styled(({ className }) => {
         if (cookies.get('tutorialCompleted') !== 'true') {
             cookies.set('tutorialCompleted', 'true', { path: '/' });
         }
+        closeTour();
     };
 
     const closeTour = () => {
