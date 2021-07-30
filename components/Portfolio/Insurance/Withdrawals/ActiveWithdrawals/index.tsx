@@ -1,6 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
 import { activeWithdrawals } from '@components/Portfolio';
+import { Button } from '@components/General';
 
 interface AWProps {
     parentHeight: number;
@@ -29,7 +30,9 @@ const ActiveWithdrawals: FC<AWProps> = ({ parentHeight }: AWProps) => {
                                 <TableCell>{tracer.unrealisedValue}</TableCell>
                                 <TableCell>{tracer.status}</TableCell>
                                 <TableCell>{tracer.daysRemaining}</TableCell>
-                                <TableCell />
+                                <TableCell>
+                                    <Button>Claim</Button>
+                                </TableCell>
                             </TableRow>
                         );
                     })}
