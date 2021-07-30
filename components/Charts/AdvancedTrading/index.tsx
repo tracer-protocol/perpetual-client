@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 
-const TVChartContainer = dynamic(
+const TVChartContainer: any = dynamic(
     // @ts-ignore
     import('./TVChartContainer'),
     {
