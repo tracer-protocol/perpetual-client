@@ -40,6 +40,10 @@ export const Button = styled.button<{ height?: 'medium' | 'small' | 'extra-small
     height: var(--height-${(props) => props.height as string}-button);
     cursor: pointer;
 
+    &.hide {
+        display: none;
+    }
+
     &:hover {
         background: var(--color-primary);
         color: var(--color-text);
