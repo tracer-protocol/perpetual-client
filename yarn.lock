@@ -3333,10 +3333,10 @@
     memory-cache "^0.2.0"
     web3-utils "^1.4.0"
 
-"@tracer-protocol/contracts@^0.2.8":
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/@tracer-protocol/contracts/-/contracts-0.2.8.tgz#1d93fa98c1349ee044d454a2f3f5687681ee6ad2"
-  integrity sha512-58W7IzjG/V34gid+p3+BT9w26epg3M/36gMIxRwqNtGGvmtfXQy2ihLKvPhOwcrrcGmwdh2XiLt5vc3OP8bMlw==
+"@tracer-protocol/contracts@^0.2.9":
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/@tracer-protocol/contracts/-/contracts-0.2.9.tgz#47feb854e1ba5d30926c019e8b56204b6be1a744"
+  integrity sha512-De+7WRFjB8KoBf+17uhCpeSan4Pn8faP+QmNu5Q5WAuPWc7ZtODxJDloYOJ/NzXoUcIjlI5KjdduoTUEYWZ6vg==
   dependencies:
     "@eth-optimism/smock" "0.0.0-20215180366"
     "@nomiclabs/hardhat-ethers" "^2.0.2"
@@ -3346,6 +3346,7 @@
     "@openzeppelin/contracts-upgradeable" "^4.0.0"
     "@openzeppelin/truffle-upgrades" "^1.5.2"
     "@tracer-protocol/tracer-utils" "^0.1.2"
+    commander "^8.0.0"
     dotenv "^8.2.0"
     eth-sig-util "^2.5.3"
     ethereum-waffle "^3.3.0"
@@ -7412,6 +7413,11 @@ commander@^6.0.0, commander@^6.2.0:
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/commander/-/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
   integrity sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
+
+commander@^8.0.0:
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-8.1.0.tgz#db36e3e66edf24ff591d639862c6ab2c52664362"
+  integrity sha512-mf45ldcuHSYShkplHHGKWb4TrmwQadxOn7v4WuhDJy0ZVoY5JFajaRDKD0PNe5qXzBX0rhovjTnP6Kz9LETcuA==
 
 common-tags@^1.8.0:
   version "1.8.0"

@@ -2,6 +2,7 @@ import { gql, useQuery } from '@apollo/client';
 import BigNumber from 'bignumber.js';
 import { useCallback, useRef } from 'react';
 import { FilledOrder, LabelledOrders } from 'libs/types/OrderTypes';
+import { MarginTransaction } from 'libs/types/TracerTypes';
 import Web3 from 'web3';
 import { toBigNumbers } from 'libs/utils/converters';
 
@@ -53,7 +54,7 @@ export const useAccountData: (user: string | undefined) => any = (user) => {
 
 const USER_TRACER_TRADES = gql`
     query Tracer_Trades($account: String, $tracer: String) {
-        trades(where: { trader: $account, tracer: $tracer }) {
+        trades(where: { trader: $account, tracer: $tracer }, orderBy: timestamp, orderDirection: desc) {
             position
             amount
             price
@@ -156,5 +157,50 @@ export const useAllUsersMatched: (account: string) => {
         error,
         loading,
         refetch,
+    };
+};
+
+const USER_MARGIN_TRANSACTIONS = gql`
+    query Margin_Transactions($account: String) {
+        marginTransactions(where: { trader: $account }, orderBy: timestamp, orderDirection: desc) {
+            id
+            timestamp
+            amount
+            transactionType
+            tracer {
+                marketId
+            }
+        }
+    }
+`;
+
+/**
+ * Fetches a list of matched orders for a given user and Tracer
+ * @param tracer market
+ * @param account target user
+ * @returns a list of orders that the user has made and have been matched on chain
+ */
+export const useAllMarginTransactions: (account: string) => {
+    marginTransactions: MarginTransaction[];
+    error: any;
+    loading: any;
+    refetchTransactions: (...args: any) => any;
+} = (account) => {
+    const ref = useRef<MarginTransaction[]>([]);
+    const { data, error, loading, refetch } = useQuery(USER_MARGIN_TRANSACTIONS, {
+        variables: { account: account?.toLowerCase() },
+        errorPolicy: 'all',
+        onError: ({ graphQLErrors }) => {
+            if (graphQLErrors.length) {
+                graphQLErrors.map((err) => console.error(`Failed to fetch account transactions: ${err}`));
+            }
+        },
+    });
+
+    return {
+        marginTransactions: data?.marginTransactions ? data?.marginTransactions : ref.current,
+        error,
+        loading,
+        refetchTransactions: refetch,
     };
 };

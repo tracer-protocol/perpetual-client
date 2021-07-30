@@ -6,7 +6,7 @@ import FogOverlay from '@components/Overlay/FogOverlay';
 // @ts-ignore
 import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
 import Icon from '@ant-design/icons';
-import { Table, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/Table';
+import { Table, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
 
 interface RTProps {
     trades: FilledOrder[];

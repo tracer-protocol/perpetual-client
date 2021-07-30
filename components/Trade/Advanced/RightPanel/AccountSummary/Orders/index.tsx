@@ -7,7 +7,7 @@ import { calcStatus, toApproxCurrency } from '@libs/utils';
 import styled from 'styled-components';
 import { Button } from '@components/General';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
-import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/Table';
+import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
 
 const OrdersTab: React.FC<{
     userOrders: OMEOrder[];

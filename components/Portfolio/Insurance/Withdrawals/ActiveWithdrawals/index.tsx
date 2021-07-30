@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
-import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/Table';
+import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
 import { activeWithdrawals } from '@components/Portfolio';
 
 interface AWProps {

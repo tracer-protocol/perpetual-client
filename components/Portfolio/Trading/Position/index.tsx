@@ -11,7 +11,7 @@ import {
     TableRow,
     TableCell,
     TableLastCell,
-} from '@components/Table';
+} from '@components/General/Table';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'libs/types/OrderTypes';
 import { LabelledTracers } from 'libs/types/TracerTypes';

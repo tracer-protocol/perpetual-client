@@ -157,3 +157,15 @@ export const toBigNumbers: (
         amount: new BigNumber(Web3.utils.fromWei(order.amount)),
         price: new BigNumber(Web3.utils.fromWei(order.price)),
     }));
+
+export const toDate: (timestamp: number) => string = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const day = date.toLocaleDateString(undefined, { day: '2-digit' });
+    const month = date.toLocaleDateString(undefined, { month: 'short' });
+    const year = date.toLocaleDateString(undefined, { year: 'numeric' });
+    return day + ' ' + month + ' ' + year;
+};
+
+export const toTime: (timestamp: number) => string = (timestamp) => {
+    return new Date(timestamp * 1000).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+};

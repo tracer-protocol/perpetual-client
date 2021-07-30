@@ -2,19 +2,23 @@ import { Children } from 'libs/types';
 import React from 'react';
 import styled from 'styled-components';
 import TooltipSelector, { TooltipSelectorProps } from '@components/Tooltips/TooltipSelector';
+import { toDate, toTime } from '@libs/utils';
 
-export const DateAndTime = styled(({ className, date, time }) => {
+export const DateAndTime = styled(({ className, timestamp }) => {
+    const date = toDate(timestamp);
+    const time = toTime(timestamp);
     return (
         <div className={className}>
             {date}
-            <div className="secondary">{time}</div>
+            <span className="secondary">{time}</span>
         </div>
     );
-})`
+})<{ timestamp: number }>`
     font-size: var(--font-size-small);
 
     .secondary {
         color: var(--color-secondary);
+        margin-left: 0.5rem;
     }
 `;
 

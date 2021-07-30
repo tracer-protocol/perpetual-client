@@ -1,7 +1,7 @@
 import React, { memo, useEffect, useRef, useState } from 'react';
 import { FilledOrder } from '@libs/types/OrderTypes';
 import { timeAgo, toApproxCurrency } from '@libs/utils';
-import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/Table';
+import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
 
 const FillsTab: React.FC<{
     filledOrders: FilledOrder[];

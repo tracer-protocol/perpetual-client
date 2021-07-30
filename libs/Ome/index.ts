@@ -25,7 +25,10 @@ export const getOrders: (market: string) => Promise<Response> = async (market) =
     })
         .then((res) => res.json())
         .then((res) => {
-            console.log('orders', res?.data);
+            if (res.data === 'book_not_found') {
+                return [];
+            }
+            console.debug('Fetched all orders', res?.data);
             return res?.data ?? [];
         })
         .catch((err) => {
@@ -52,7 +55,9 @@ export const getUsersOrders: (market: string, account: string) => Promise<OMEOrd
     })
         .then((res) => res.json())
         .then((res) => {
-            if (res.status === 404) {
+            if (res.data === 'book_not_found') {
+                return [];
+            } else if (res.status === 404) {
                 console.error('Failed to fetch user orders', res);
                 return [];
             }
