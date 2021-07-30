@@ -62,7 +62,7 @@ type StoreProps = {
 const defaultState: CalculatorState = {
     exposure: NaN,
     margin: NaN,
-    leverage: 0,
+    leverage: 1,
     liquidationPrice: NaN,
     position: LONG,
     displayLocks: true,
@@ -76,7 +76,7 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
     const initialState: CalculatorState = {
         exposure: NaN,
         margin: NaN,
-        leverage: 0,
+        leverage: 1,
         liquidationPrice: NaN,
         position: LONG,
         displayLocks: true,

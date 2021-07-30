@@ -268,6 +268,12 @@ const StyledHiddenExpand = styled(HiddenExpand)`
     p.title {
         color: #fff;
     }
+    p:first-child {
+        padding: 0.5rem 0.5rem 0 0.5rem;
+    }
+    p {
+        padding: 0 0.5rem;
+    }
 `;
 
 const CalcSelectContainer = styled.div`
@@ -356,8 +362,8 @@ const Leverage: FC<LProps> = styled(({ className, value, maxLeverage, isLocked, 
                     calculatorDispatch({ type: 'calculate' });
                 }}
                 step={0.1}
-                min={0}
-                defaultValue={0}
+                min={1}
+                defaultValue={1}
                 max={maxLeverage.toNumber()}
             />
         </div>
@@ -387,7 +393,7 @@ const Leverage: FC<LProps> = styled(({ className, value, maxLeverage, isLocked, 
     }
 `;
 
-type DepositButtons = {
+type DepositButtonsProps = {
     tracerApproved: boolean;
     tracerAddress: string;
     quoteTicker: string;
@@ -399,69 +405,78 @@ type DepositButtons = {
     dispatch: React.Dispatch<ModalAction>;
 };
 
-const DepositButtons: React.FC<DepositButtons> = ({
-    tracerApproved,
-    error,
-    deposit,
-    approve,
-    tracerAddress,
-    depositAmount,
-    handleClose,
-    dispatch,
-    quoteTicker,
-}) => {
-    const closeLoading = () => {
-        dispatch({ type: 'setLoading', loading: false });
-        dispatch({
-            type: 'setSubTitle',
-            subTitle: '',
-        });
-    };
-    return (
-        <div className="text-center">
-            {!tracerApproved ? (
+const DepositButtons = styled(
+    ({
+        tracerApproved,
+        error,
+        deposit,
+        approve,
+        tracerAddress,
+        depositAmount,
+        handleClose,
+        dispatch,
+        quoteTicker,
+        className,
+    }) => {
+        const closeLoading = () => {
+            dispatch({ type: 'setLoading', loading: false });
+            dispatch({
+                type: 'setSubTitle',
+                subTitle: '',
+            });
+        };
+        return (
+            <div className={className}>
+                {!tracerApproved ? (
+                    <SButton
+                        className="primary mr-2"
+                        disabled={tracerApproved}
+                        onClick={() => {
+                            dispatch({ type: 'setLoading', loading: true });
+                            dispatch({
+                                type: 'setSubTitle',
+                                subTitle: `Confirm the transaction in your wallet to unlock ${quoteTicker}`,
+                            });
+                            approve(tracerAddress, {
+                                afterConfirmation: () => {
+                                    dispatch({ type: 'setLoading', loading: false });
+                                    dispatch({
+                                        type: 'setSubTitle',
+                                        subTitle: '',
+                                    });
+                                },
+                                onError: closeLoading,
+                                onSuccess: closeLoading,
+                            });
+                        }}
+                    >
+                        Approve {quoteTicker}
+                    </SButton>
+                ) : null}
                 <SButton
-                    className="primary mr-2"
-                    disabled={tracerApproved}
+                    className={`${error === 'NO_ERROR' || CalculatorErrors[error].severity ? 'primary' : ''}`}
+                    disabled={error !== 'NO_ERROR' && !CalculatorErrors[error].severity}
                     onClick={() => {
                         dispatch({ type: 'setLoading', loading: true });
                         dispatch({
                             type: 'setSubTitle',
-                            subTitle: `Confirm the transaction in your wallet to unlock ${quoteTicker}`,
+                            subTitle: `Confirm the transaction in your wallet to deposit ${quoteTicker}`,
                         });
-                        approve(tracerAddress, {
-                            afterConfirmation: () => {
-                                dispatch({ type: 'setLoading', loading: false });
-                                dispatch({
-                                    type: 'setSubTitle',
-                                    subTitle: '',
-                                });
-                            },
+                        deposit(depositAmount, {
+                            onSuccess: handleClose,
                             onError: closeLoading,
-                            onSuccess: closeLoading,
                         });
                     }}
                 >
-                    Approve {quoteTicker}
+                    Deposit Margin
                 </SButton>
-            ) : null}
-            <SButton
-                className={`${error === 'NO_ERROR' || CalculatorErrors[error].severity ? 'primary' : ''} mt-1`}
-                disabled={error !== 'NO_ERROR' && !CalculatorErrors[error].severity}
-                onClick={() => {
-                    dispatch({ type: 'setLoading', loading: true });
-                    dispatch({
-                        type: 'setSubTitle',
-                        subTitle: `Confirm the transaction in your wallet to deposit ${quoteTicker}`,
-                    });
-                    deposit(depositAmount, {
-                        onSuccess: handleClose,
-                        onError: closeLoading,
-                    });
-                }}
-            >
-                Deposit Margin
-            </SButton>
-        </div>
-    );
-};
+            </div>
+        );
+    },
+)<DepositButtonsProps>`
+    text-align: center;
+    padding: 0 0.5rem 0.5rem 0.5rem;
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+` as React.FC<DepositButtonsProps>;
