@@ -1,12 +1,20 @@
 import { toApproxCurrency } from '@libs/utils';
 import { FilledOrder } from 'libs/types/OrderTypes';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import FogOverlay from '@components/Overlay/FogOverlay';
 // @ts-ignore
 import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
 import Icon from '@ant-design/icons';
-import { Table, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
+import {
+    RecentTradesTable,
+    TableBody,
+    TableCell,
+    TableHeader,
+    TableHeading,
+    TableRow,
+} from '@components/General/Table';
+import { TracerContext } from '@context/TracerContext';
 
 interface RTProps {
     trades: FilledOrder[];
@@ -14,14 +22,15 @@ interface RTProps {
 }
 const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => {
     const [showOverlay, setOverlay] = useState(true);
+    const { selectedTracer } = useContext(TracerContext);
 
     return (
         <RecentTradesContainer displayTrades={displayTrades}>
             <RecentTradesTitle>Recent Trades</RecentTradesTitle>
             {trades?.length ? (
-                <Table>
+                <RecentTradesTable>
                     <TableHeader>
-                        <TableHeading>Price</TableHeading>
+                        <TableHeading>Price {selectedTracer?.baseTicker}</TableHeading>
                         <TableHeading>Amount</TableHeading>
                         <TableHeading>Time</TableHeading>
                     </TableHeader>
@@ -43,7 +52,7 @@ const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => 
                             );
                         })}
                     </TableBody>
-                </Table>
+                </RecentTradesTable>
             ) : (
                 <Icon component={TracerLoading} className="tracer-loading" />
             )}
