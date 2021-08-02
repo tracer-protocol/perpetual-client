@@ -5,13 +5,13 @@ import React, { useEffect } from 'react';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
 import 'antd/dist/antd.css';
-import '../styles/index.css';
+import '../public/styles/index.css';
 import { ToastProvider } from 'react-toast-notifications';
 import GraphProvider from '@libs/Graph';
 import { Notification } from '@components/General/Notification';
 import { TransactionStore } from '@context/TransactionContext';
 import { FactoryStore } from '@context/FactoryContext';
-import GlobalStyles from 'styles/GlobalStyles';
+import GlobalStyles from '@public/styles/GlobalStyles';
 import styled from 'styled-components';
 import { Web3Store } from '@context/Web3Context/Web3Context';
 

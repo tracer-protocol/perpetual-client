@@ -1,30 +1,42 @@
-import React, { FC, useState } from 'react';
-import SubNav from '@components/Nav/SubNav';
-import OpenDeposits from '@components/Portfolio/Insurance/OpenDeposits';
-import DepositHistory from '@components/Portfolio/Insurance/DepositHistory';
-import WithdrawalHistory from '@components/Portfolio/Insurance/WithdrawalHistory';
+import React, { FC, useEffect, useRef, useState } from 'react';
+import styled from 'styled-components';
+import Deposits from '@components/Portfolio/Insurance/Deposits';
+import Withdrawals from '@components/Portfolio/Insurance/Withdrawals';
+import { SectionHeader, Title } from '@components/Portfolio';
 
 const InsurancePortfolio: FC = () => {
-    const [tab, setTab] = useState(0);
-    const tabs = ['Open Deposits', 'Deposit History', 'Withdrawal History'];
-    const content = () => {
-        switch (tab) {
-            case 0:
-                return <OpenDeposits />;
-            case 1:
-                return <DepositHistory />;
-            case 2:
-                return <WithdrawalHistory />;
-            default:
-                return;
-        }
-    };
+    const section = useRef(null);
+    const sectionHeader = useRef(null);
+    const [sectionHeight, setSectionHeight] = useState(0);
+    const [sectionHeaderHeight, setSectionHeaderHeight] = useState(0);
+    useEffect(() => {
+        // @ts-ignore
+        setSectionHeight(section?.current?.clientHeight);
+    }, [section]);
+    useEffect(() => {
+        // @ts-ignore
+        setSectionHeaderHeight(sectionHeader?.current?.clientHeight);
+    }, [sectionHeader]);
     return (
         <>
-            <SubNav tabs={tabs} setTab={setTab} selected={tab} />
-            {content()}
+            <Section ref={section}>
+                <SectionHeader border ref={sectionHeader}>
+                    <Title>Deposits</Title>
+                </SectionHeader>
+                <Deposits parentHeight={sectionHeight - sectionHeaderHeight} />
+            </Section>
+            <Section ref={section}>
+                <SectionHeader border ref={sectionHeader}>
+                    <Title>Withdrawals</Title>
+                </SectionHeader>
+                <Withdrawals parentHeight={sectionHeight - sectionHeaderHeight} />
+            </Section>
         </>
     );
 };
 
 export default InsurancePortfolio;
+
+const Section = styled.div`
+    height: 50%;
+`;

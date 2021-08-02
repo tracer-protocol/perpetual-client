@@ -15,7 +15,7 @@ import BigNumber from 'bignumber.js';
 import AccountSummary from './AccountSummary';
 import InsuranceInfo from './InsuranceInfo';
 import Graphs from './Graph';
-import SlideSelect, { Option } from '@components/General/SlideSelect';
+import SlideSelect, { Option, SlideOption } from '@components/General/SlideSelect';
 import { FilledOrder, OMEOrder } from '@libs/types/OrderTypes';
 
 const TitledBox = styled(({ className, title, children }) => {
@@ -121,7 +121,7 @@ const TradingView: FC<{
                     // tradingVolume={243512}
                     maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
                 />
-                <Graphs selectedTracerAddress={selectedTracer?.address ?? ''} />
+                <Graphs />
                 <AccountSummary selectedTracer={selectedTracer} />
             </SBox>
             <SBox className="sidePanel">
@@ -159,10 +159,7 @@ const TradesAndBook: React.FC<TBProps> = ({
     return (
         <>
             <StyledSlideSelect onClick={(index, _e) => setSelected(index)} value={selected}>
-                <Option>
-                    Order Book
-                    <PrecisionDropdown setDecimals={setDecimals} decimals={decimals} />
-                </Option>
+                <Option>Order Book</Option>
                 <Option>Recent Trades</Option>
             </StyledSlideSelect>
             <OrderBook
@@ -187,33 +184,55 @@ const StyledSlideSelect = styled(SlideSelect)`
     margin: 0;
     display: none;
     width: 100%;
+    white-space: nowrap;
     border-left: 0;
-    height: var(--height-extra-small-container);
     color: var(--color-secondary);
+    min-height: var(--height-extra-small-container);
 
     > .selected {
         font-weight: bold;
         color: #fff;
+
+        ${Option} ${PrecisionDropdown} {
+            display: flex;
+        }
     }
 
-    @media (max-height: 850px) {
+    @media (max-height: 1080px) {
         display: flex;
+    }
+
+    ${SlideOption} {
+        padding: 0 0.8rem;
+        @media (max-width: 1600px) {
+            text-align: left;
+        }
     }
 
     ${Option} {
         font-size: var(--font-size-small);
+        display: flex;
+        align-items: center;
+        @media (max-width: 1600px) {
+            margin: unset;
+        }
     }
 
     ${Option} ${PrecisionDropdown} {
         position: relative;
         top: 0;
         right: 0;
-        width: 100px;
-        font-size: var(--font-size-extra-small);
-        line-height: var(--font-size-extra-small);
-        height: 1rem;
-        max-width: 3rem;
-        margin-left: 0.2rem;
+        font-size: var(--font-size-small);
+        max-width: 4rem;
+        height: 24px;
+        margin-left: 8px;
+        display: none;
+        @media (max-height: 1080px) {
+            position: absolute;
+            bottom: -80px;
+            top: unset;
+            left: 70px;
+        }
     }
     > .bg-slider {
         background: var(--color-accent);

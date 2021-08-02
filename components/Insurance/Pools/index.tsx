@@ -10,7 +10,8 @@ import { Button, Logo } from '@components/General';
 import { CaretDownFilled, LinkOutlined } from '@ant-design/icons';
 import Breakdown from '../PoolHealth';
 import { InsuranceModal } from '../InsuranceModal';
-import { TableHeading, TableRow, TableCell, SecondaryCell } from '@components/Portfolio';
+import { TableHeading, TableRow, TableCell } from '@components/General/Table';
+import { SecondaryCell } from '@components/Portfolio';
 import { toPercent } from '@libs/utils';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import Icon from '@ant-design/icons';
@@ -204,7 +205,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                         <TableRow
                             key={`insurance-row-${i}`}
                             className={show ? 'selected' : ''}
-                            onClick={(e) => onClick(e, i)}
+                            onClick={(e: any) => onClick(e, i)}
                         >
                             <TableCell>
                                 <Collapsible>

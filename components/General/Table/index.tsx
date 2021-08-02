@@ -2,6 +2,8 @@ import styled from 'styled-components';
 
 export const Table = styled.table``;
 
+export const TableBody = styled.tbody``;
+
 export const TableHeader = styled.thead``;
 
 export const TableHeading = styled.th`
@@ -14,11 +16,10 @@ export const TableHeading = styled.th`
     border-bottom: 1px solid var(--color-accent);
 `;
 
+// Last heading on a row
 export const TableLastHeading = styled(TableHeading)`
     border-right: none;
 `;
-
-export const TableBody = styled.tbody``;
 
 export const TableRow = styled.tr`
     transition: 0.5s;
@@ -29,15 +30,61 @@ export const TableRow = styled.tr`
         background: var(--color-accent);
         cursor: pointer;
     }
+
+    &.selected {
+        &:hover {
+            background: none;
+            cursor: auto;
+        }
+    }
 `;
 
 export const TableCell = styled.td`
-    padding: 0 10px;
+    padding: 10px;
     border-right: 1px solid var(--color-accent);
     border-bottom: 1px solid var(--color-accent);
+
+    .secondary {
+        color: var(--color-secondary);
+    }
 `;
 
-// Last cell on a table row
+// Last cell on a row
 export const TableLastCell = styled(TableCell)`
     border-right: none;
+`;
+
+interface STProps {
+    bodyHeight: string;
+}
+export const ScrollableTable = styled.table<STProps>`
+    ${TableBody} {
+        display: block;
+        max-height: ${(props) => `${props.bodyHeight}`};
+        overflow-y: scroll;
+    }
+
+    ${TableHeader} {
+        display: table;
+        width: calc(100% - 7px);
+        table-layout: fixed;
+    }
+
+    ${TableRow} {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+`;
+
+export const RecentTradesTable = styled.table`
+    ${TableHeading} {
+        border: none;
+        color: var(--color-text);
+        font-size: var(--font-size-small);
+    }
+
+    ${TableCell} {
+        border: none;
+    }
 `;

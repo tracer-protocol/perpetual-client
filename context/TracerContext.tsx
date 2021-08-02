@@ -126,7 +126,6 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
             account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
         ) {
-            console.log(res.returnValues);
             closePending ? closePending(false) : console.error('Close pending is undefined');
         }
     };
@@ -153,11 +152,8 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             console.info('Placing OME order', omeOrder);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
-            if (res.data?.status === 'matched_partial' || res.data?.status === 'matched') {
-                // if there is a partial or full match add a toaster
-                setPending
-                    ? setPending(res.data.status)
-                    : console.error('Partial or full match but setPending function is not defined');
+            if (res.data?.status === 'submitted') {
+                setPending ? setPending(res.data.status) : console.error('SetPending function is not defined');
             }
             return {
                 status: 'success',
@@ -249,13 +245,6 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             console.error('Failed to widthdraw handleTransaction is undefined ');
         }
     };
-
-    useEffect(() => {
-        const fetch = async () => {
-            fetchUserData();
-        };
-        fetch();
-    }, [account]);
 
     useEffect(() => {
         if (selectedTracer) {

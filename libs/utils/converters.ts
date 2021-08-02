@@ -6,14 +6,14 @@ import Web3 from 'web3';
  * Simple func to convert a number to a percentage by multiplying
  *  it by 100 and returning the string
  * Fixes the return to two decimal places.
- * @param
+ * @param noMultiply prevents multiplying by 100
  * @returns 0.00% if the number is NaN < 0.001 for very small percentages and the percentage otherwise
  */
-export const toPercent: (value: number) => string = (value) => {
+export const toPercent: (value: number, noMultiply?: boolean) => string = (value, noMultiply) => {
     if (Number.isNaN(value) || !value) {
         return '0.00%';
     }
-    const percentage = value * 100;
+    const percentage = value * (noMultiply ? 1 : 100);
     if (percentage < 0.001) {
         return '< 0.001%';
     }
@@ -157,3 +157,15 @@ export const toBigNumbers: (
         amount: new BigNumber(Web3.utils.fromWei(order.amount)),
         price: new BigNumber(Web3.utils.fromWei(order.price)),
     }));
+
+export const toDate: (timestamp: number) => string = (timestamp) => {
+    const date = new Date(timestamp * 1000);
+    const day = date.toLocaleDateString(undefined, { day: '2-digit' });
+    const month = date.toLocaleDateString(undefined, { month: 'short' });
+    const year = date.toLocaleDateString(undefined, { year: 'numeric' });
+    return day + ' ' + month + ' ' + year;
+};
+
+export const toTime: (timestamp: number) => string = (timestamp) => {
+    return new Date(timestamp * 1000).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+};
