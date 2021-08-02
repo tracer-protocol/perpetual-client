@@ -11,6 +11,7 @@ import Cookies from 'universal-cookie';
 import { tourConfig } from './TourSteps';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
 import { useToasts } from 'react-toast-notifications';
+import { Button } from '@components/General';
 
 const Tour = dynamic(import('reactour'), { ssr: false });
 
@@ -18,7 +19,6 @@ const Advanced: React.FC = styled(({ className }) => {
     const cookies = new Cookies();
     const { addToast } = useToasts();
     const [isTourOpen, setTourOpen] = useState(false);
-    const [currentIndex, setCurrentIndex] = useState(0);
     const [tourCompleted, setTutorialCompleted] = useState(false);
     const [isAdjust] = useState(false);
     const { account } = useWeb3();
@@ -138,25 +138,40 @@ const Advanced: React.FC = styled(({ className }) => {
         setCookies();
     };
 
-    const highlightDots = (e: HTMLDivElement) => {
-        e.addEventListener('click', function () {
-            const navDots: Array<any> = Array.from(
-                document.querySelectorAll('nav[data-tour-elem="navigation"] button'),
-            );
-            // Wait for Reactour to apply styling
-            setTimeout(function () {
-                navDots.map((dot, i) => {
-                    if (dot.classList.contains('reactour__dot--is-active')) {
-                        setCurrentIndex(i);
-                    }
-                });
-                navDots.slice(0, currentIndex).map((dot) => {
-                    dot.classList.add('reactour__dot--is-active');
-                });
-            }, 10);
-        });
-        // Also prevent body scrolling when tour open
-        disableBodyScroll(e);
+    const highlightDots = (e: HTMLElement) => {
+        // Wait for Reactour to apply class
+        setTimeout(function () {
+            const reactour = document.querySelector('.reactour__helper') as HTMLElement;
+            reactour.addEventListener('click', function () {
+                const navDots: Array<any> = Array.from(
+                    document.querySelectorAll('nav[data-tour-elem="navigation"] button'),
+                );
+                const controls = document.querySelector('.helper [data-tour-elem="navigation"]') as HTMLDivElement;
+                const rightButton = document.querySelector('.helper [data-tour-elem="right-arrow"]') as HTMLDivElement;
+
+                // Wait for Reactour to apply styling
+                setTimeout(function () {
+                    navDots.map((dot, i) => {
+                        const isActive = dot.classList.contains('reactour__dot--is-active');
+                        // Fill in the previous dots with colour
+                        if (isActive) {
+                            navDots.slice(0, i).map((dot) => {
+                                dot.classList.add('reactour__dot--is-active');
+                            });
+                        }
+                        if (i === navDots.length - 1 && isActive) {
+                            controls.classList.add('hide');
+                            rightButton.classList.add('hide');
+                        } else {
+                            controls.classList.remove('hide');
+                            rightButton.classList.remove('hide');
+                        }
+                    });
+                }, 10);
+            });
+            // Also prevent body scrolling when tour open
+            disableBodyScroll(e);
+        }, 10);
     };
 
     return (
@@ -189,6 +204,7 @@ const Advanced: React.FC = styled(({ className }) => {
                     updateDelay={0}
                     onAfterOpen={(e) => highlightDots(e)}
                     onBeforeClose={(e) => enableBodyScroll(e)}
+                    lastStepNextButton={<FinishButton>Finish Tutorial</FinishButton>}
                 />
             )}
         </>
@@ -240,4 +256,11 @@ const ClickHere = styled.div`
         cursor: pointer;
         text-decoration: underline;
     }
+`;
+
+const FinishButton = styled(Button)`
+    height: 32px;
+    width: 153px;
+    background: var(--color-accent);
+    margin-left: -200px;
 `;
