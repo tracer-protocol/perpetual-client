@@ -240,7 +240,7 @@ export const tourConfig = [
     },
     // Close position button
     {
-        selector: '#close-order-button',
+        selector: '#position-close-container',
         // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (

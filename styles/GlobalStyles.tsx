@@ -218,11 +218,27 @@ export default createGlobalStyle`
         background-image: url('/img/reactour/arrow-right-white.svg') !important;
     }
 
+    // Hide right button after tutorial finished
+    .helper [data-tour-elem="right-arrow"].hide {
+        border: 0 !important;
+        background-image: unset !important;
+    }
+    .helper [data-tour-elem="right-arrow"].hide:hover {
+        background-image: unset !important;
+        background-color: unset !important;
+    }
+
     // Controls
     .helper [data-tour-elem="controls"] {
         margin-bottom: 16px;
         margin-top: 0;
         height: 32px;
+    }
+
+    // Nav dots
+    // Hide nav dots after tutorial finished
+    .helper [data-tour-elem="navigation"].hide {
+        display: none;
     }
 
     .helper [data-tour-elem="dot"] {

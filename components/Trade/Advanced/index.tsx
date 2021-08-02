@@ -10,6 +10,7 @@ import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
 import Cookies from 'universal-cookie';
 import { useToasts } from 'react-toast-notifications';
 import { tourConfig } from './TourSteps';
+import { Button } from '@components/General';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 const Tour = dynamic(import('reactour'), { ssr: false });
@@ -49,6 +50,13 @@ const Overlay = styled.div`
     }
 `;
 
+const FinishButton = styled(Button)`
+    height: 32px;
+    width: 153px;
+    background: var(--color-accent);
+    margin-left: -200px;
+`;
+
 const Advanced: React.FC = styled(({ className }) => {
     const { account } = useWeb3();
     const { selectedTracer } = useContext(TracerContext);
@@ -57,7 +65,6 @@ const Advanced: React.FC = styled(({ className }) => {
     const { addToast } = useToasts();
     const [tourCompleted, setTutorialCompleted] = useState<boolean>(false);
     const [isTourOpen, setTourOpen] = useState<boolean>(false);
-    const [currentIndex, setCurrentIndex] = useState(0);
 
     useEffect(() => {
         checkTutorialComplete();
@@ -130,10 +137,9 @@ const Advanced: React.FC = styled(({ className }) => {
         }
     };
 
+    // Reset the elements affected by the tour
     const closeTour = () => {
         setTourOpen(false);
-
-        // Reset the elements affected by the tour
 
         // Reset navbar z-index
         const navbar = document.getElementById('nav') as HTMLElement;
@@ -165,25 +171,40 @@ const Advanced: React.FC = styled(({ className }) => {
         setTutorialComplete();
     };
 
-    const highlightDots = (e: HTMLDivElement) => {
-        e.addEventListener('click', function () {
-            const navDots: Array<any> = Array.from(
-                document.querySelectorAll('nav[data-tour-elem="navigation"] button'),
-            );
-            // Wait for Reactour to apply styling
-            setTimeout(function () {
-                navDots.map((dot, i) => {
-                    if (dot.classList.contains('reactour__dot--is-active')) {
-                        setCurrentIndex(i);
-                    }
-                });
-                navDots.slice(0, currentIndex).map((dot) => {
-                    dot.classList.add('reactour__dot--is-active');
-                });
-            }, 10);
-        });
-        // Also prevent body scrolling when tour open
-        disableBodyScroll(e);
+    const highlightDots = (e: HTMLElement) => {
+        // Wait for Reactour to apply class
+        setTimeout(function () {
+            const reactour = document.querySelector('.reactour__helper') as HTMLElement;
+            reactour.addEventListener('click', function () {
+                const navDots: Array<any> = Array.from(
+                    document.querySelectorAll('nav[data-tour-elem="navigation"] button'),
+                );
+                const controls = document.querySelector('.helper [data-tour-elem="navigation"]') as HTMLDivElement;
+                const rightButton = document.querySelector('.helper [data-tour-elem="right-arrow"]') as HTMLDivElement;
+
+                // Wait for Reactour to apply styling
+                setTimeout(function () {
+                    navDots.map((dot, i) => {
+                        const isActive = dot.classList.contains('reactour__dot--is-active');
+                        // Fill in the previous dots with colour
+                        if (isActive) {
+                            navDots.slice(0, i).map((dot) => {
+                                dot.classList.add('reactour__dot--is-active');
+                            });
+                        }
+                        if (i === navDots.length - 1 && isActive) {
+                            controls.classList.add('hide');
+                            rightButton.classList.add('hide');
+                        } else {
+                            controls.classList.remove('hide');
+                            rightButton.classList.remove('hide');
+                        }
+                    });
+                }, 10);
+            });
+            // Also prevent body scrolling when tour open
+            disableBodyScroll(e);
+        }, 10);
     };
 
     return (
@@ -217,6 +238,7 @@ const Advanced: React.FC = styled(({ className }) => {
                         updateDelay={0}
                         onAfterOpen={(e) => highlightDots(e)}
                         onBeforeClose={(e) => enableBodyScroll(e)}
+                        lastStepNextButton={<FinishButton>Finish Tutorial</FinishButton>}
                     />
                 </>
             )}
