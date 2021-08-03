@@ -23,13 +23,14 @@ interface OProps {
 }
 const Overview: FC<OProps> = ({ positions, holdings }: OProps) => {
     const { account } = useWeb3();
-    const [currentPortfolio, setCurrentPortfolio] = useState(1);
+    const [currentPortfolio, setCurrentPortfolio] = useState(0);
     const [currentPNL, setCurrentPNL] = useState(1);
 
-    const portfolioKeyMap: Record<number, string> = {
-        1: 'Entire Portfolio',
-        2: 'ETH-USDC Market',
-    };
+    const portfolioKeyMap: Record<number, string> = {};
+
+    holdings?.map((holding: any, i: number) => {
+        portfolioKeyMap[i] = holding.marketId;
+    });
 
     const pnlKeyMap: Record<number, string> = {
         1: 'All Time',
@@ -53,10 +54,10 @@ const Overview: FC<OProps> = ({ positions, holdings }: OProps) => {
             </SectionHeader>
             <HPanel background={`var(--color-background-secondary)`}>
                 <EquityTable
-                    balances={holdings[0]?.getBalance() ?? defaults.balances}
-                    fairPrice={holdings[0]?.getFairPrice() ?? defaults.fairPrice}
-                    baseTicker={holdings[0]?.baseTicker ?? defaults.baseTicker}
-                    quoteTicker={holdings[0]?.quoteTicker ?? defaults.quoteTicker}
+                    balances={holdings[currentPortfolio]?.getBalance() ?? defaults.balances}
+                    fairPrice={holdings[currentPortfolio]?.getFairPrice() ?? defaults.fairPrice}
+                    baseTicker={holdings[currentPortfolio]?.baseTicker ?? defaults.baseTicker}
+                    quoteTicker={holdings[currentPortfolio]?.quoteTicker ?? defaults.quoteTicker}
                 />
                 <Graph title="Profit and Loss" background selectedTracerAddress={positions[0]?.address ?? ''} />
                 {!account ? <ConnectOverlay /> : null}
