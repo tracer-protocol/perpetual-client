@@ -80,7 +80,7 @@ export const NavBarContent = styled(({ className }) => {
 })`
     display: flex;
     color: var(--color-text);
-    height: 60px;
+    height: 5vh;
 
     background-image: url('/img/nav-bg.png');
     background-repeat: no-repeat;
