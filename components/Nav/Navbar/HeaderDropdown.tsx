@@ -25,11 +25,11 @@ export const MenuItem = styled.div`
         padding-left: 2rem;
     }
     &:first-child {
-        height: 5vh;
+        height: var(--height-header);
         opacity: 0;
     }
     > a {
-        height: 5vh;
+        height: var(--height-header);
         display: flex;
         align-items: center;
         padding-left: 2rem;

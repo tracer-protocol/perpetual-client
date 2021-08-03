@@ -29,6 +29,10 @@ export default createGlobalStyle`
         --letter-spacing-small: -0.32px;
         --letter-spacing-extra-small: -0.4px;
 
+        --height-header: 60px;
+        --height-footer: 40px;
+        --height-content: calc(100vh - var(--height-footer) - var(--height-header));
+
         --height-extra-small-container: 40px;
         --height-small-container: 60px;
 

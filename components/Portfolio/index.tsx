@@ -10,7 +10,7 @@ export const LeftPanel = styled.div`
     width: 20%;
     display: flex;
     flex-direction: column;
-    height: 90vh;
+    height: var(--height-content);
     border: 1px solid #0c3586;
 `;
 
@@ -18,7 +18,7 @@ export const RightPanel = styled.div`
     width: 80%;
     display: flex;
     flex-direction: column;
-    height: 90vh;
+    height: var(--height-content);
     border-top: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
     border-bottom: 1px solid #0c3586;

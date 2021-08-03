@@ -220,7 +220,7 @@ const TradingPanel = styled.div`
     width: 25%;
     display: flex;
     flex-direction: column;
-    height: 90vh;
+    height: var(--height-content);
     position: relative;
     border-left: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
@@ -230,7 +230,7 @@ const TradingPanel = styled.div`
 const RightPanel = styled.div`
     width: 75%;
     display: flex;
-    height: 90vh;
+    height: var(--height-content);
     border-bottom: 1px solid #0c3586;
 `;
 

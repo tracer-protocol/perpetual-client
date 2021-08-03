@@ -47,7 +47,7 @@ const Footer = styled(({ className }) => {
     display: flex;
     align-items: center;
     position: fixed;
-    max-height: 5vh;
+    height: var(--height-footer);
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
