@@ -74,7 +74,7 @@ export const Button = styled.button<{ height?: 'medium' | 'small' | 'extra-small
 
         &:hover {
             background: none;
-            color: var(--color-text);
+            color: var(--color-primary);
         }
     }
 `;

@@ -52,15 +52,15 @@ export default (({ account, onboard, ensName, logout, handleConnect, tokenBalanc
                     <Section label="Network">{networkName(network)}</Section>
                 </MenuItem>
                 <MenuItem className="button-container">
-                    <StyledButton onClick={() => onboard?.walletSelect()}>Switch Wallets</StyledButton>
-                    <StyledButton
+                    <Button onClick={() => onboard?.walletSelect()}>Switch Wallets</Button>
+                    <Button
                         onClick={() => {
                             setOpen(false);
                             logout();
                         }}
                     >
                         Logout
-                    </StyledButton>
+                    </Button>
                 </MenuItem>
             </StyledMenu>
         </StyledDropdown>
@@ -150,6 +150,33 @@ const StyledDropdown = styled.div`
     display: flex;
     align-items: center;
 
+    ${MenuItem} {
+        &:nth-child(2) {
+            transition: all 400ms ease 300ms;
+            padding-top: 0.2rem;
+            padding-bottom: 0.2rem;
+        }
+        &:last-child {
+            transition: all 400ms ease 450ms;
+            display: flex;
+            padding: 1rem 0 0 0 !important;
+        }
+        ${Button} {
+            height: var(--height-extra-small-button);
+            line-height: var(--height-extra-small-button);
+            font-size: var(--font-size-extra-small);
+            padding: 0;
+        }
+
+        ${Button}:nth-child(1) {
+            width: 50%;
+        }
+
+        ${Button}:nth-child(2) {
+            width: 40%;
+        }
+    }
+
     &.open {
         ${StyledMenu} {
             opacity: 1;
@@ -158,27 +185,6 @@ const StyledDropdown = styled.div`
         ${MenuItem} {
             opacity: 1;
             padding-left: 0;
-
-            &:nth-child(2) {
-                transition: all 400ms ease 300ms;
-                padding-top: 0.2rem;
-                padding-bottom: 0.2rem;
-            }
-            &:nth-child(3) {
-                transition: all 400ms ease 450ms;
-            }
-            &:last-child {
-                display: flex;
-                padding: 1rem 0 0 0 !important;
-            }
         }
     }
-`;
-
-const StyledButton = styled(Button)`
-    width: 45%;
-    height: var(--height-extra-small-button);
-    line-height: var(--height-extra-small-button);
-    font-size: var(--font-size-extra-small);
-    padding: 0;
 `;
