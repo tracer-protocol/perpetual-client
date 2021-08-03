@@ -45,10 +45,12 @@ const Footer = styled(({ className }) => {
     );
 })`
     display: flex;
+    align-items: center;
     position: fixed;
+    height: 5vh;
     bottom: 0;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
 `;
 
 const FooterContent = styled.div`
