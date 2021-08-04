@@ -190,7 +190,7 @@ export type OrderAction =
  */
 export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const { account } = useWeb3();
-    const { setTracerId, tracerId, selectedTracer } = useContext(TracerContext);
+    const { tracerId, selectedTracer } = useContext(TracerContext);
     const { omeState } = useContext(OMEContext);
 
     useEffect(() => {
@@ -450,11 +450,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             }
         }
     }, [order.exposure, order.oppositeOrders]);
-
-    useEffect(() => {
-        // Handles setting the selected tracer Id on a market or collateral change
-        setTracerId ? setTracerId(`${order.market}/${order.collateral}`) : console.error('Error setting tracerId');
-    }, [order.market, order.collateral]);
 
     useEffect(() => {
         // sets the next position when exposire, price or the users base balance changes

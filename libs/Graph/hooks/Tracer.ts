@@ -7,7 +7,7 @@ import { toBigNumbers } from '@libs/utils';
 
 const ALL_TRACERS = gql`
     query {
-        tracers {
+        tracers(first: 2, orderBy: timestamp, orderDirection: desc) {
             id
             marketId
         }
@@ -37,6 +37,8 @@ export const useAllTracers: () => Tracers = () => {
             }
         },
     });
+
+    console.log(data?.tracers);
 
     return {
         tracers: data?.tracers ?? ref.current,

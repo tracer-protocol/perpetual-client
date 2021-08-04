@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { TracerContext } from '@context/TracerContext';
 import { InsuranceContext } from '@context/InsuranceContext';
 import { defaults } from 'libs/Tracer/Insurance';
-import { useRouter } from 'next/router';
 import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from 'libs/types';
 import styled from 'styled-components';
 import { ProgressBar } from '@components/General';
@@ -148,7 +146,6 @@ const StyledIcon = styled(Icon)`
     border-right: 1px solid var(--color-accent);
 `;
 interface IPTProps {
-    handleClick: (tracerId: string) => void;
     pools: Record<string, InsurancePoolInfoType>;
     className?: string;
 }
@@ -249,32 +246,11 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
  *
  */
 const Insurance: React.FC = () => {
-    const { setTracerId } = useContext(TracerContext);
     const { pools } = useContext(InsuranceContext);
-
-    const router = useRouter();
-    const query = router.query;
-
-    const handleClick = (tracerId: string) => {
-        router.push({
-            pathname: '/insurance',
-            query: { tracer: tracerId.split('/').join('-') },
-        });
-    };
-
-    useEffect(() => {
-        if (query.tracer) {
-            setTracerId
-                ? setTracerId(query.tracer.toString().split('-').join('/'))
-                : console.error('setTracerId not set');
-        } else {
-            setTracerId ? setTracerId('') : console.error('setTracerId not set');
-        }
-    }, [query]);
 
     return (
         <div className="h-full w-full flex flex-col">
-            <InsurancePoolsTable pools={pools ?? {}} handleClick={handleClick} />
+            <InsurancePoolsTable pools={pools ?? {}} />
         </div>
     );
 };
