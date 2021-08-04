@@ -38,8 +38,6 @@ export const useAllTracers: () => Tracers = () => {
         },
     });
 
-    console.log(data?.tracers);
-
     return {
         tracers: data?.tracers ?? ref.current,
         error,
