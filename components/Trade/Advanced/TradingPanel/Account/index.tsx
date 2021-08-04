@@ -126,7 +126,7 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
                 </h3>
                 <AvailableMargin order={order} balances={balances} maxLeverage={maxLeverage} fairPrice={fairPrice} />
             </Item>
-            <DepositWithdraw hide={!!order?.exposureBN?.toNumber() ?? false}>
+            <DepositWithdraw>
                 <Button
                     className={balances.quote.eq(0) ? 'primary' : ''}
                     onClick={(_e: any) => handleClick(true, true)}
@@ -191,10 +191,10 @@ const Item = styled.div`
     }
 `;
 
-const DepositWithdraw = styled.div<{ hide: boolean }>`
+const DepositWithdraw = styled.div`
+    display: flex;
     margin-top: 1rem;
     justify-content: space-between;
-    display: ${(props) => (props.hide ? 'none' : 'flex')};
 `;
 
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
