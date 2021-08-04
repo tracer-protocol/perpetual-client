@@ -30,7 +30,7 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
                     <Box
                         className="market"
                         key={`tracer-market-${tracer.marketId}`}
-                        onClick={() => onMarketSelect(tracer.marketId)}
+                        onClick={() => onMarketSelect(tracer.address)}
                     >
                         <MarketContainer className="w-1/4">
                             <SLogo ticker={tracer.baseTicker} />
