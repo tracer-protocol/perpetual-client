@@ -108,7 +108,7 @@ export const FactoryStore: React.FC<Children> = ({ children }: Children) => {
                 const _labelledTracers: LabelledTracers = tracers.reduce(
                     (o: any, t: { marketId: string; id: string }) => ({
                         ...o,
-                        [t.marketId]: {
+                        [t.id.toLowerCase()]: {
                             ...new Tracer(web3, t.id, t.marketId),
                             loading: false,
                         },
