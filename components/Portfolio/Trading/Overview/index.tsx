@@ -16,12 +16,14 @@ import {
     SectionHeader,
     HPanel,
 } from '@components/Portfolio';
+import { LabelledOrders } from '@libs/types/OrderTypes';
 
 interface OProps {
     positions: Tracer[];
     holdings: Tracer[];
+    allFilledOrders: LabelledOrders;
 }
-const Overview: FC<OProps> = ({ positions, holdings }: OProps) => {
+const Overview: FC<OProps> = ({ positions, holdings, allFilledOrders }: OProps) => {
     const { account } = useWeb3();
     const [currentPortfolio, setCurrentPortfolio] = useState(0);
     const [currentPNL, setCurrentPNL] = useState(1);
@@ -53,7 +55,11 @@ const Overview: FC<OProps> = ({ positions, holdings }: OProps) => {
                 </DropdownContainer>
             </SectionHeader>
             <HPanel background={`var(--color-background-secondary)`}>
-                <EquityTable holdings={holdings} currentPortfolio={currentPortfolio} />
+                <EquityTable
+                    holdings={holdings}
+                    currentPortfolio={currentPortfolio}
+                    allFilledOrders={allFilledOrders}
+                />
                 <Graph title="Profit and Loss" background selectedTracerAddress={positions[0]?.address ?? ''} />
                 {!account ? <ConnectOverlay /> : null}
             </HPanel>

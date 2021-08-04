@@ -5,14 +5,16 @@ import { Button } from '@components/General';
 import Tracer, { defaults } from '@libs/Tracer';
 import { toApproxCurrency } from '@libs/utils';
 import { BigNumber } from 'bignumber.js';
-import { calcBuyingPower } from '@tracer-protocol/tracer-utils';
+import { calcBuyingPower, calcUnrealised } from '@tracer-protocol/tracer-utils';
+import { LabelledOrders } from '@libs/types/OrderTypes';
 
 interface ETProps {
     className?: string;
     holdings: Tracer[];
     currentPortfolio: number;
+    allFilledOrders: LabelledOrders;
 }
-const EquityTable = styled(({ className, holdings, currentPortfolio }: ETProps) => {
+const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOrders }: ETProps) => {
     const [show, setShow] = useState(false);
     const ref = useRef<HTMLDivElement | null>(null);
     const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -64,13 +66,23 @@ const EquityTable = styled(({ className, holdings, currentPortfolio }: ETProps) 
                             </Text>
                         </EqTableCell>
                         <EqTableCell>
-                            <Amount>-</Amount>
+                            <Amount>
+                                {balances.quote.eq(0)
+                                    ? '-'
+                                    : `${toApproxCurrency(
+                                          calcUnrealised(
+                                              balances.base,
+                                              holdings[currentPortfolio].oraclePrice,
+                                              allFilledOrders[holdings[currentPortfolio].address] ?? [],
+                                          ),
+                                      )}`}
+                            </Amount>
                             <Text>
                                 <CellTitle>Unrealised PnL</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount>-</Amount>
+                            <Amount>{balances.quote.eq(0) ? '-' : `${toApproxCurrency(0)}`}</Amount>
                             <Text>
                                 <CellTitle>Realised PnL</CellTitle>
                             </Text>
@@ -81,13 +93,21 @@ const EquityTable = styled(({ className, holdings, currentPortfolio }: ETProps) 
                         <EqTableCellLargeEmpty />
                         <EqTableCellEmpty />
                         <EqTableCell>
-                            <Amount small>-</Amount>
+                            <Amount small>
+                                {balances.quote.eq(0)
+                                    ? '-'
+                                    : `${toApproxCurrency(holdings[currentPortfolio].twentyFourHourChange)}`}
+                            </Amount>
                             <Text>
                                 <CellTitle>Price Changes</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount small>-</Amount>
+                            <Amount small>
+                                {balances.quote.eq(0)
+                                    ? '-'
+                                    : `${toApproxCurrency(holdings[currentPortfolio].twentyFourHourChange)}`}
+                            </Amount>
                             <Text>
                                 <CellTitle>Price Changes</CellTitle>
                             </Text>
@@ -98,13 +118,21 @@ const EquityTable = styled(({ className, holdings, currentPortfolio }: ETProps) 
                         <EqTableCellLargeEmpty />
                         <EqTableCellEmpty />
                         <EqTableCell>
-                            <Amount small>-</Amount>
+                            <Amount small>
+                                {balances.quote.eq(0)
+                                    ? '-'
+                                    : `${toApproxCurrency(holdings[currentPortfolio].fundingRate)}`}
+                            </Amount>
                             <Text>
                                 <CellTitle>Funding Rate</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount small>-</Amount>
+                            <Amount small>
+                                {balances.quote.eq(0)
+                                    ? '-'
+                                    : `${toApproxCurrency(holdings[currentPortfolio].fundingRate)}`}
+                            </Amount>
                             <Text>
                                 <CellTitle>Funding Rate</CellTitle>
                             </Text>
@@ -116,7 +144,9 @@ const EquityTable = styled(({ className, holdings, currentPortfolio }: ETProps) 
                         <EqTableCellEmpty />
                         <EqTableCellEmpty border />
                         <EqTableCellLast>
-                            <Amount small>-</Amount>
+                            <Amount small>
+                                {balances.quote.eq(0) ? '-' : `${toApproxCurrency(holdings[currentPortfolio].feeRate)}`}
+                            </Amount>
                             <Text>
                                 <CellTitle>Trading Fee</CellTitle>
                             </Text>
@@ -128,7 +158,11 @@ const EquityTable = styled(({ className, holdings, currentPortfolio }: ETProps) 
                         <EqTableCellEmpty />
                         <EqTableCellEmpty border />
                         <EqTableCellLast>
-                            <Amount small>-</Amount>
+                            <Amount small>
+                                {balances.quote.eq(0)
+                                    ? '-'
+                                    : `${toApproxCurrency(holdings[currentPortfolio].insuranceFundingRate)}`}
+                            </Amount>
                             <Text>
                                 <CellTitle>Insurance Funding Rate</CellTitle>
                             </Text>
