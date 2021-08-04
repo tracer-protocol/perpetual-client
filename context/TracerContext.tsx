@@ -258,7 +258,7 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
         }
     }, [selectedTracer]);
 
-    const tracerId = selectedTracer?.marketId;
+    const tracerId = selectedTracer?.id;
 
     return (
         <TracerContext.Provider
