@@ -4,6 +4,8 @@ import { SmallTitle } from '@components/Portfolio';
 import { Button } from '@components/General';
 import Tracer, { defaults } from '@libs/Tracer';
 import { toApproxCurrency } from '@libs/utils';
+import { BigNumber } from 'bignumber.js';
+import { calcBuyingPower } from '@tracer-protocol/tracer-utils';
 
 interface ETProps {
     className?: string;
@@ -20,6 +22,8 @@ const EquityTable = styled(({ className, holdings, currentPortfolio }: ETProps) 
     };
 
     const balances = holdings[currentPortfolio]?.getBalance() ?? defaults.balances;
+    const fairPrice = holdings[currentPortfolio]?.getFairPrice() ?? defaults.fairPrice;
+    const maxLeverage = holdings[currentPortfolio]?.getMaxLeverage() ?? new BigNumber(1);
 
     return (
         <div ref={ref} className={className}>
@@ -34,7 +38,7 @@ const EquityTable = styled(({ className, holdings, currentPortfolio }: ETProps) 
                         <EqTableCellLarge>
                             <Amount color="#21DD53">
                                 {balances.quote.eq(0) ? '-' : `${toApproxCurrency(balances.totalMargin)}`}
-                                <ProfitArrow direction="none" />
+                                {/*<ProfitArrow direction="none" />*/}
                             </Amount>
                             <Profit>
                                 <ProfitAmount color="#21DD53">
@@ -43,12 +47,18 @@ const EquityTable = styled(({ className, holdings, currentPortfolio }: ETProps) 
                                 {/*<Text>All time</Text>*/}
                             </Profit>
                             <Text>
-                                {/*<CellTitle>Equity</CellTitle>*/}
+                                <CellTitle>Equity</CellTitle>
                                 {/*<CellDesc>Over {holdings.length} open positions</CellDesc>*/}
                             </Text>
                         </EqTableCellLarge>
                         <EqTableCell>
-                            <Amount>-</Amount>
+                            <Amount>
+                                {balances.quote.eq(0)
+                                    ? '-'
+                                    : `${toApproxCurrency(
+                                          calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
+                                      )}`}
+                            </Amount>
                             <Text>
                                 <CellTitle>Deposited Margin</CellTitle>
                             </Text>
