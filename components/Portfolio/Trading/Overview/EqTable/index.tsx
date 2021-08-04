@@ -27,6 +27,28 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
     const fairPrice = holdings[currentPortfolio]?.getFairPrice() ?? defaults.fairPrice;
     const maxLeverage = holdings[currentPortfolio]?.getMaxLeverage() ?? new BigNumber(1);
 
+    // const array = [
+    //     {
+    //         balances: {
+    //             base: 1,
+    //         },
+    //     },
+    //     {
+    //         balances: {
+    //             base: 2,
+    //         },
+    //     },
+    //     {
+    //         balances: {
+    //             base: 3,
+    //         },
+    //     },
+    // ];
+
+    console.log(
+        holdings.map((holding) => holding.balances.base).reduce((prev, next) => prev.plus(next), new BigNumber(0)),
+    );
+
     return (
         <div ref={ref} className={className}>
             <div className="flex justify-content-between heading-row">
