@@ -23,31 +23,52 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
         ref.current?.classList.toggle('show');
     };
 
-    const balances = holdings[currentPortfolio]?.getBalance() ?? defaults.balances;
+    const balances = holdings[currentPortfolio]?.getBalance() ?? defaults.balances ?? defaults.balances;
     const fairPrice = holdings[currentPortfolio]?.getFairPrice() ?? defaults.fairPrice;
     const maxLeverage = holdings[currentPortfolio]?.getMaxLeverage() ?? new BigNumber(1);
 
-    // const array = [
-    //     {
-    //         balances: {
-    //             base: 1,
-    //         },
-    //     },
-    //     {
-    //         balances: {
-    //             base: 2,
-    //         },
-    //     },
-    //     {
-    //         balances: {
-    //             base: 3,
-    //         },
-    //     },
-    // ];
+    const equitySum = holdings
+        .map((holding) => holding.balances.totalMargin)
+        .reduce((a, b) => a.plus(b), new BigNumber(0));
 
-    console.log(
-        holdings.map((holding) => holding.balances.base).reduce((prev, next) => prev.plus(next), new BigNumber(0)),
-    );
+    const buyingPowerSum = () => {
+        let sum = new BigNumber(0);
+        for (let i = 0; i < holdings.length; i++) {
+            sum = sum.plus(
+                calcBuyingPower(
+                    holdings[i]?.getBalance().quote,
+                    holdings[i]?.getBalance().base,
+                    holdings[i]?.getFairPrice(),
+                    holdings[i]?.getMaxLeverage(),
+                ),
+            );
+        }
+        return sum;
+    };
+
+    const unrealisedPnLSum = () => {
+        let sum = new BigNumber(0);
+        for (let i = 0; i < holdings.length; i++) {
+            sum = sum.plus(
+                calcUnrealised(
+                    holdings[i]?.getBalance().base,
+                    holdings[i]?.oraclePrice,
+                    allFilledOrders[holdings[i]?.address] ?? [],
+                ),
+            );
+        }
+        return sum;
+    };
+
+    const priceChangesSum = holdings.map((holding) => holding.twentyFourHourChange).reduce((a, b) => a + b, 0);
+
+    const fundingRateSum = holdings.map((holding) => holding.fundingRate).reduce((a, b) => a.plus(b), new BigNumber(0));
+
+    const feeRateSum = holdings.map((holding) => holding.feeRate).reduce((a, b) => a.plus(b), new BigNumber(0));
+
+    const insuranceFundingRateSum = holdings
+        .map((holding) => holding.insuranceFundingRate)
+        .reduce((a, b) => a.plus(b), new BigNumber(0));
 
     return (
         <div ref={ref} className={className}>
@@ -61,7 +82,11 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                     <EqTableRow>
                         <EqTableCellLarge>
                             <Amount color="#21DD53">
-                                {balances.quote.eq(0) ? '-' : `${toApproxCurrency(balances.totalMargin)}`}
+                                {balances.quote.eq(0)
+                                    ? '-'
+                                    : currentPortfolio === 0
+                                    ? equitySum
+                                    : toApproxCurrency(balances.totalMargin)}
                                 {/*<ProfitArrow direction="none" />*/}
                             </Amount>
                             <Profit>
@@ -79,9 +104,11 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount>
                                 {balances.quote.eq(0)
                                     ? '-'
-                                    : `${toApproxCurrency(
+                                    : currentPortfolio === 0
+                                    ? toApproxCurrency(buyingPowerSum())
+                                    : toApproxCurrency(
                                           calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
-                                      )}`}
+                                      )}
                             </Amount>
                             <Text>
                                 <CellTitle>Deposited Margin</CellTitle>
@@ -91,20 +118,22 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount>
                                 {balances.quote.eq(0)
                                     ? '-'
-                                    : `${toApproxCurrency(
+                                    : currentPortfolio === 0
+                                    ? toApproxCurrency(unrealisedPnLSum())
+                                    : toApproxCurrency(
                                           calcUnrealised(
                                               balances.base,
                                               holdings[currentPortfolio].oraclePrice,
                                               allFilledOrders[holdings[currentPortfolio].address] ?? [],
                                           ),
-                                      )}`}
+                                      )}
                             </Amount>
                             <Text>
                                 <CellTitle>Unrealised PnL</CellTitle>
                             </Text>
                         </EqTableCell>
                         <EqTableCellLast>
-                            <Amount>{balances.quote.eq(0) ? '-' : `${toApproxCurrency(0)}`}</Amount>
+                            <Amount>-</Amount>
                             <Text>
                                 <CellTitle>Realised PnL</CellTitle>
                             </Text>
@@ -118,7 +147,9 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount small>
                                 {balances.quote.eq(0)
                                     ? '-'
-                                    : `${toApproxCurrency(holdings[currentPortfolio].twentyFourHourChange)}`}
+                                    : currentPortfolio === 0
+                                    ? toApproxCurrency(priceChangesSum)
+                                    : toApproxCurrency(holdings[currentPortfolio].twentyFourHourChange)}
                             </Amount>
                             <Text>
                                 <CellTitle>Price Changes</CellTitle>
@@ -128,7 +159,9 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount small>
                                 {balances.quote.eq(0)
                                     ? '-'
-                                    : `${toApproxCurrency(holdings[currentPortfolio].twentyFourHourChange)}`}
+                                    : currentPortfolio === 0
+                                    ? toApproxCurrency(priceChangesSum)
+                                    : toApproxCurrency(holdings[currentPortfolio].twentyFourHourChange)}
                             </Amount>
                             <Text>
                                 <CellTitle>Price Changes</CellTitle>
@@ -143,7 +176,9 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount small>
                                 {balances.quote.eq(0)
                                     ? '-'
-                                    : `${toApproxCurrency(holdings[currentPortfolio].fundingRate)}`}
+                                    : currentPortfolio === 0
+                                    ? toApproxCurrency(fundingRateSum)
+                                    : toApproxCurrency(holdings[currentPortfolio].fundingRate)}
                             </Amount>
                             <Text>
                                 <CellTitle>Funding Rate</CellTitle>
@@ -153,7 +188,9 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount small>
                                 {balances.quote.eq(0)
                                     ? '-'
-                                    : `${toApproxCurrency(holdings[currentPortfolio].fundingRate)}`}
+                                    : currentPortfolio === 0
+                                    ? toApproxCurrency(fundingRateSum)
+                                    : toApproxCurrency(holdings[currentPortfolio].fundingRate)}
                             </Amount>
                             <Text>
                                 <CellTitle>Funding Rate</CellTitle>
@@ -167,7 +204,11 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                         <EqTableCellEmpty border />
                         <EqTableCellLast>
                             <Amount small>
-                                {balances.quote.eq(0) ? '-' : `${toApproxCurrency(holdings[currentPortfolio].feeRate)}`}
+                                {balances.quote.eq(0)
+                                    ? '-'
+                                    : currentPortfolio === 0
+                                    ? toApproxCurrency(feeRateSum)
+                                    : toApproxCurrency(holdings[currentPortfolio].feeRate)}
                             </Amount>
                             <Text>
                                 <CellTitle>Trading Fee</CellTitle>
@@ -183,7 +224,9 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount small>
                                 {balances.quote.eq(0)
                                     ? '-'
-                                    : `${toApproxCurrency(holdings[currentPortfolio].insuranceFundingRate)}`}
+                                    : currentPortfolio === 0
+                                    ? toApproxCurrency(insuranceFundingRateSum)
+                                    : toApproxCurrency(holdings[currentPortfolio].insuranceFundingRate)}
                             </Amount>
                             <Text>
                                 <CellTitle>Insurance Funding Rate</CellTitle>

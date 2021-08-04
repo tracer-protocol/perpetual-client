@@ -25,11 +25,11 @@ interface OProps {
 }
 const Overview: FC<OProps> = ({ positions, holdings, allFilledOrders }: OProps) => {
     const { account } = useWeb3();
-    const [currentPortfolio, setCurrentPortfolio] = useState(0);
+    const [currentPortfolio, setCurrentPortfolio] = useState(-1);
     const [currentPNL, setCurrentPNL] = useState(1);
 
     const portfolioKeyMap: Record<number, string> = {};
-
+    portfolioKeyMap[-1] = 'Entire Portfolio';
     holdings?.map((holding: any, i: number) => {
         portfolioKeyMap[i] = holding.marketId;
     });
