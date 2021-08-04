@@ -1,18 +1,16 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { SmallTitle } from '@components/Portfolio';
-import { UserBalance } from '@libs/types/TracerTypes';
-import { BigNumber } from 'bignumber.js';
 import { Button } from '@components/General';
+import Tracer, { defaults } from '@libs/Tracer';
+import { toApproxCurrency } from '@libs/utils';
 
-interface EqProps {
+interface ETProps {
     className?: string;
-    balances: UserBalance;
-    fairPrice: BigNumber;
-    baseTicker: string;
-    quoteTicker: string;
+    holdings: Tracer[];
+    currentPortfolio: number;
 }
-const EquityTable = styled(({ className }: EqProps) => {
+const EquityTable = styled(({ className, holdings, currentPortfolio }: ETProps) => {
     const [show, setShow] = useState(false);
     const ref = useRef<HTMLDivElement | null>(null);
     const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -20,6 +18,8 @@ const EquityTable = styled(({ className }: EqProps) => {
         setShow(!show);
         ref.current?.classList.toggle('show');
     };
+
+    const balances = holdings[currentPortfolio]?.getBalance() ?? defaults.balances;
 
     return (
         <div ref={ref} className={className}>
@@ -33,18 +33,18 @@ const EquityTable = styled(({ className }: EqProps) => {
                     <EqTableRow>
                         <EqTableCellLarge>
                             <Amount color="#21DD53">
-                                -
+                                {balances.quote.eq(0) ? '-' : `${toApproxCurrency(balances.totalMargin)}`}
                                 <ProfitArrow direction="none" />
                             </Amount>
                             <Profit>
                                 <ProfitAmount color="#21DD53">
                                     <span>$0</span> (0%)
                                 </ProfitAmount>
-                                <Text>All time</Text>
+                                {/*<Text>All time</Text>*/}
                             </Profit>
                             <Text>
-                                <CellTitle>Equity</CellTitle>
-                                <CellDesc>Over 0 open positions</CellDesc>
+                                {/*<CellTitle>Equity</CellTitle>*/}
+                                {/*<CellDesc>Over {holdings.length} open positions</CellDesc>*/}
                             </Text>
                         </EqTableCellLarge>
                         <EqTableCell>
@@ -128,7 +128,7 @@ const EquityTable = styled(({ className }: EqProps) => {
             </EqTable>
         </div>
     );
-})<EqProps>`
+})`
     max-height: 130px;
     width: 100%;
     overflow: hidden;

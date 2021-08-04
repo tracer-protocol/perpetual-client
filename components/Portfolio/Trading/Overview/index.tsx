@@ -53,12 +53,7 @@ const Overview: FC<OProps> = ({ positions, holdings }: OProps) => {
                 </DropdownContainer>
             </SectionHeader>
             <HPanel background={`var(--color-background-secondary)`}>
-                <EquityTable
-                    balances={holdings[currentPortfolio]?.getBalance() ?? defaults.balances}
-                    fairPrice={holdings[currentPortfolio]?.getFairPrice() ?? defaults.fairPrice}
-                    baseTicker={holdings[currentPortfolio]?.baseTicker ?? defaults.baseTicker}
-                    quoteTicker={holdings[currentPortfolio]?.quoteTicker ?? defaults.quoteTicker}
-                />
+                <EquityTable holdings={holdings} currentPortfolio={currentPortfolio} />
                 <Graph title="Profit and Loss" background selectedTracerAddress={positions[0]?.address ?? ''} />
                 {!account ? <ConnectOverlay /> : null}
             </HPanel>
