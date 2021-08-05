@@ -84,6 +84,8 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount color="#21DD53">
                                 {currentPortfolio === -1
                                     ? `${toApproxCurrency(equitySum)}`
+                                    : balances.quote.eq(0)
+                                    ? '-'
                                     : `${toApproxCurrency(balances.totalMargin)}`}
                                 {/*<ProfitArrow direction="none" />*/}
                             </Amount>
@@ -102,6 +104,8 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount>
                                 {currentPortfolio === -1
                                     ? `${toApproxCurrency(buyingPowerSum())}`
+                                    : balances.quote.eq(0)
+                                    ? '-'
                                     : `${toApproxCurrency(
                                           calcBuyingPower(balances.quote, balances.base, fairPrice, maxLeverage),
                                       )}`}
@@ -114,6 +118,8 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount>
                                 {currentPortfolio === -1
                                     ? `${toApproxCurrency(unrealisedPnLSum())}`
+                                    : balances.quote.eq(0)
+                                    ? '-'
                                     : `${toApproxCurrency(
                                           calcUnrealised(
                                               balances.base,
@@ -141,6 +147,8 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount small>
                                 {currentPortfolio === -1
                                     ? `${toApproxCurrency(priceChangesSum)}`
+                                    : balances.quote.eq(0)
+                                    ? '-'
                                     : `${toApproxCurrency(holdings[currentPortfolio].twentyFourHourChange)}`}
                             </Amount>
                             <Text>
@@ -151,6 +159,8 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount small>
                                 {currentPortfolio === -1
                                     ? `${toApproxCurrency(priceChangesSum)}`
+                                    : balances.quote.eq(0)
+                                    ? '-'
                                     : `${toApproxCurrency(holdings[currentPortfolio].twentyFourHourChange)}`}
                             </Amount>
                             <Text>
@@ -166,6 +176,8 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount small>
                                 {currentPortfolio === -1
                                     ? `${toApproxCurrency(fundingRateSum)}`
+                                    : balances.quote.eq(0)
+                                    ? '-'
                                     : `${toApproxCurrency(holdings[currentPortfolio].fundingRate)}`}
                             </Amount>
                             <Text>
@@ -176,6 +188,8 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount small>
                                 {currentPortfolio === -1
                                     ? `${toApproxCurrency(fundingRateSum)}`
+                                    : balances.quote.eq(0)
+                                    ? '-'
                                     : `${toApproxCurrency(holdings[currentPortfolio].fundingRate)}`}
                             </Amount>
                             <Text>
@@ -192,6 +206,8 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount small>
                                 {currentPortfolio === -1
                                     ? `${toApproxCurrency(feeRateSum)}`
+                                    : balances.quote.eq(0)
+                                    ? '-'
                                     : `${toApproxCurrency(holdings[currentPortfolio].feeRate)}`}
                             </Amount>
                             <Text>
@@ -208,6 +224,8 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
                             <Amount small>
                                 {currentPortfolio === -1
                                     ? `${toApproxCurrency(insuranceFundingRateSum)}`
+                                    : balances.quote.eq(0)
+                                    ? '-'
                                     : `${toApproxCurrency(holdings[currentPortfolio].insuranceFundingRate)}`}
                             </Amount>
                             <Text>
