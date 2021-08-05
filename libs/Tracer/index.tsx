@@ -71,7 +71,7 @@ export default class Tracer {
     _gasOracle: Oracle | undefined; // gasOracle contract instance
     _oracle: Oracle | undefined; // price oracle contract instance
     _pricing: Pricing | undefined; // pricing contract instance
-    public token: Erc20Type | undefined; // quote tocken contract instance
+    public token: Erc20Type | undefined; // quote token contract instance
     public insuranceContract: Insurance | undefined; // insuranceContract instance
     public address: string; // Tracer address
     public marketId: string; // market ticket in the form of ETH/USDC
