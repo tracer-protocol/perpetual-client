@@ -193,11 +193,6 @@ export const calcStatus: (
     }
 };
 
-export const SecondaryCell = styled.div`
-    color: var(--color-secondary);
-    font-size: var(--font-size-small);
-`;
-
 // dummy data
 export const activeDeposits = [
     {

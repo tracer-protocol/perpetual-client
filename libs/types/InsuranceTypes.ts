@@ -20,7 +20,9 @@ export type InsurancePoolInfo = {
 
 export interface InsuranceTransaction {
     id: string;
-    tracer: Tracer;
+    tracer: {
+        marketId: string;
+    };
     transactionType: string;
     amount: number;
     timestamp: string;

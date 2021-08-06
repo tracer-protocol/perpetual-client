@@ -9,7 +9,6 @@ import { CaretDownFilled, LinkOutlined } from '@ant-design/icons';
 import Breakdown from '../PoolHealth';
 import { InsuranceModal } from '../InsuranceModal';
 import { TableHeading, TableRow, TableCell } from '@components/General/Table';
-import { SecondaryCell } from '@components/Portfolio';
 import { toPercent } from '@libs/utils';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import Icon from '@ant-design/icons';
@@ -80,6 +79,10 @@ const StyledLinkOutlined = styled(LinkOutlined)`
     margin-left: 0.5rem;
 `;
 
+const Secondary = styled.div`
+    color: var(--color-secondary);
+`;
+
 const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
     const [show, setShow] = useState(false);
     const [type, setType] = useState('Deposit');
@@ -96,7 +99,7 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
             <TooltipSelector tooltip={{ key: 'etherscan-link' }}>
                 <StyledLinkOutlined onClick={() => window.open(pool.iPoolTokenURL, '_blank', 'noopener')} />
             </TooltipSelector>
-            <SecondaryCell>{toPercent(pool.userBalance.div(pool.liquidity).toNumber())}</SecondaryCell>
+            <Secondary>{toPercent(pool.userBalance.div(pool.liquidity).toNumber())}</Secondary>
             <Hidden>
                 <ButtonContainer>
                     <Button className="primary mr-3" onClick={(_e: any) => openModal('Deposit')}>
