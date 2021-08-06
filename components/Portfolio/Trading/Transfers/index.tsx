@@ -1,11 +1,8 @@
 import React from 'react';
-import { toApproxCurrency } from '@libs/utils';
 import { Table, TableHeading, TableRow, TableCell, TableBody, TableHeader } from '@components/General/Table';
-import { SecondaryCell } from '@components/Portfolio';
 import { DateAndTime } from '@components/General';
 import { useAllMarginTransactions } from '@libs/Graph/hooks/Account';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
-import BigNumber from 'bignumber.js';
 import Web3 from 'web3';
 import styled from 'styled-components';
 
@@ -43,8 +40,8 @@ const Transfers: React.FC = () => {
                         </TableCell>
                         <TableCell>{transaction.transactionType}</TableCell>
                         <TableCell>
-                            {toApproxCurrency(new BigNumber(Web3.utils.fromWei(transaction.amount)))}
-                            <SecondaryCell>{transaction.tracer.marketId.split('/')[1]}</SecondaryCell>
+                            {Web3.utils.fromWei(transaction.amount)}{' '}
+                            <span>{transaction.tracer.marketId.split('/')[1]}</span>
                         </TableCell>
                         <TableCell>
                             <EtherscanLink

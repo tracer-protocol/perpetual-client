@@ -224,7 +224,9 @@ const ALL_INSURANCE_TRANSACTIONS = gql`
     query {
         insuranceTransactions(orderBy: timestamp, orderDirection: desc) {
             id
-            tracer
+            tracer {
+                marketId
+            }
             transactionType
             amount
             timestamp
