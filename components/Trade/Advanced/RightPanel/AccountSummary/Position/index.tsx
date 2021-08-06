@@ -249,7 +249,7 @@ export const SPrevious = styled(Previous)`
 const SSlideSelect = styled(SlideSelect)`
     color: var(--color-text);
     height: var(--height-extra-small-button);
-    width: 8rem;
+    width: 160px;
     margin: 0.2rem 0 0.2rem 0;
 `;
 
