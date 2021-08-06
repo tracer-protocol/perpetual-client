@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import Deposits from '@components/Portfolio/Insurance/Deposits';
 import Withdrawals from '@components/Portfolio/Insurance/Withdrawals';
 import { SectionHeader, Title } from '@components/Portfolio';
+import { useAllInsuranceTransactions } from '@libs/Graph/hooks/Tracer';
+import { InsuranceTransaction } from '@libs/types/InsuranceTypes';
 
 const InsurancePortfolio: FC = () => {
     const section = useRef(null);
@@ -17,19 +19,41 @@ const InsurancePortfolio: FC = () => {
         // @ts-ignore
         setSectionHeaderHeight(sectionHeader?.current?.clientHeight);
     }, [sectionHeader]);
+
+    const { insuranceTransactions } = useAllInsuranceTransactions();
+    const [depositHistory, setDepositHistory] = useState<InsuranceTransaction[]>([]);
+    const [withdrawalHistory, setWithdrawalHistory] = useState<InsuranceTransaction[]>([]);
+
+    useEffect(() => {
+        const depositHistory: InsuranceTransaction[] = [];
+        const withdrawalHistory: InsuranceTransaction[] = [];
+
+        Object.values(insuranceTransactions).map((insuranceTransaction) => {
+            if (insuranceTransaction.transactionType === 'DEPOSIT') {
+                depositHistory.push(insuranceTransaction);
+            }
+            if (insuranceTransaction.transactionType === 'WITHDRAW') {
+                withdrawalHistory.push(insuranceTransaction);
+            }
+        });
+
+        setDepositHistory(depositHistory);
+        setWithdrawalHistory(withdrawalHistory);
+    }, [insuranceTransactions]);
+
     return (
         <>
             <Section ref={section}>
                 <SectionHeader border ref={sectionHeader}>
                     <Title>Deposits</Title>
                 </SectionHeader>
-                <Deposits parentHeight={sectionHeight - sectionHeaderHeight} />
+                <Deposits parentHeight={sectionHeight - sectionHeaderHeight} depositHistory={depositHistory} />
             </Section>
             <Section ref={section}>
                 <SectionHeader border ref={sectionHeader}>
                     <Title>Withdrawals</Title>
                 </SectionHeader>
-                <Withdrawals parentHeight={sectionHeight - sectionHeaderHeight} />
+                <Withdrawals parentHeight={sectionHeight - sectionHeaderHeight} withdrawalHistory={withdrawalHistory} />
             </Section>
         </>
     );

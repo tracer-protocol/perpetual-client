@@ -1,11 +1,14 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
-import { withdrawalsHistory } from '@components/Portfolio';
+import { InsuranceTransaction } from '@libs/types/InsuranceTypes';
+import { DateAndTime } from '@components/General';
+import Web3 from 'web3';
 
 interface ADProps {
     parentHeight: number;
+    withdrawalHistory: InsuranceTransaction[];
 }
-const WithdrawalsHistory: FC<ADProps> = ({ parentHeight }: ADProps) => {
+const WithdrawalsHistory: FC<ADProps> = ({ parentHeight, withdrawalHistory }: ADProps) => {
     const headings = ['Date', 'Market', 'Type', 'Amount', 'Fees', 'Transaction Details'];
     const tableHeader = useRef(null);
     const [tableHeaderHeight, setTableHeaderHeight] = useState(0);
@@ -22,15 +25,19 @@ const WithdrawalsHistory: FC<ADProps> = ({ parentHeight }: ADProps) => {
                     ))}
                 </TableHeader>
                 <TableBody>
-                    {Object.values(withdrawalsHistory).map((tracer, i) => {
+                    {Object.values(withdrawalHistory).map((transaction, i) => {
                         return (
                             <TableRow key={`table-row-${i}`}>
-                                <TableCell>{tracer.date}</TableCell>
-                                <TableCell>{tracer.market}</TableCell>
-                                <TableCell>{tracer.type}</TableCell>
-                                <TableCell>{tracer.amount}</TableCell>
-                                <TableCell>{tracer.fees}</TableCell>
-                                <TableCell>{tracer.details}</TableCell>
+                                <TableCell>
+                                    <DateAndTime timestamp={parseFloat(transaction.timestamp)} />
+                                </TableCell>
+                                <TableCell>{transaction.tracer.marketId}</TableCell>
+                                <TableCell>-</TableCell>
+                                <TableCell>{Web3.utils.fromWei(transaction.amount.toString())}</TableCell>
+                                <TableCell>-</TableCell>
+                                <TableCell>
+                                    {transaction.id.slice(0, 8) + '...' + transaction.id.slice(-6, -1)}
+                                </TableCell>
                             </TableRow>
                         );
                     })}

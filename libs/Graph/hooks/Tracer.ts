@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import Web3 from 'web3';
 import { CandleData, LineData } from 'libs/types/TracerTypes';
 import { toBigNumbers } from '@libs/utils';
+import { InsuranceTransactions } from '@libs/types/InsuranceTypes';
 
 const ALL_TRACERS = gql`
     query {
@@ -213,6 +214,35 @@ export const useLines: (tracer: string) => {
 
     return {
         lines: ref.current,
+        error,
+        loading,
+        refetch,
+    };
+};
+
+const ALL_INSURANCE_TRANSACTIONS = gql`
+    query {
+        insuranceTransactions(orderBy: timestamp, orderDirection: desc) {
+            id
+            tracer
+            transactionType
+            amount
+            timestamp
+        }
+    }
+`;
+export const useAllInsuranceTransactions: () => InsuranceTransactions = () => {
+    const ref = useRef([]);
+    const { data, error, loading, refetch } = useQuery(ALL_INSURANCE_TRANSACTIONS, {
+        onError: ({ graphQLErrors }) => {
+            if (graphQLErrors?.length) {
+                graphQLErrors.map((err) => console.error(`Failed to fetch transaction data: ${err}`));
+            }
+        },
+    });
+
+    return {
+        insuranceTransactions: data?.insuranceTransactions ?? ref.current,
         error,
         loading,
         refetch,
