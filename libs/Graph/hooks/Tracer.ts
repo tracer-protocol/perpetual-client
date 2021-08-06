@@ -25,7 +25,7 @@ type Tracers = {
 };
 
 /**
- * Hook to fetch a list of Tracer adresses deployed by the factory
+ * Hook to fetch a list of Tracer addresses deployed by the factory
  * @returns a list of Tracer objects containing the marketId and id (tracerAddress)
  */
 export const useAllTracers: () => Tracers = () => {
@@ -214,6 +214,45 @@ export const useLines: (tracer: string) => {
 
     return {
         lines: ref.current,
+        error,
+        loading,
+        refetch,
+    };
+};
+
+const ALL_INSURANCE_TRANSACTIONS = gql`
+    query {
+        insuranceTransactions(orderBy: timestamp, orderDirection: desc) {
+            id
+            transactionType
+            amount
+            timestamp
+        }
+    }
+`;
+type InsuranceTransactions = {
+    insuranceTransactions: {
+        id: string;
+        transactionType: string;
+        amount: number;
+        timestamp: string;
+    }[];
+    error: any;
+    loading: any;
+    refetch: any;
+};
+export const useAllInsuranceTransactions: () => InsuranceTransactions = () => {
+    const ref = useRef([]);
+    const { data, error, loading, refetch } = useQuery(ALL_INSURANCE_TRANSACTIONS, {
+        onError: ({ graphQLErrors }) => {
+            if (graphQLErrors?.length) {
+                graphQLErrors.map((err) => console.error(`Failed to fetch transaction data: ${err}`));
+            }
+        },
+    });
+
+    return {
+        insuranceTransactions: data?.insuranceTransactions ?? ref.current,
         error,
         loading,
         refetch,
