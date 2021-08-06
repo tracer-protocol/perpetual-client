@@ -289,7 +289,7 @@ export const InsuranceModal: React.FC<BProps> = ({
             <div className="flex items-center justify-center px-6 pt-6 rounded-b" id="insurance-submit">
                 {isDeposit && !tracer?.getInsuranceApproved() ? (
                     <Button
-                        className="primary"
+                        className="primary mr-8"
                         disabled={tracer?.getInsuranceApproved()}
                         onClick={() => {
                             approve(tracer);

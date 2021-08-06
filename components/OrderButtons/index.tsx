@@ -108,10 +108,6 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
     }
 };
 
-const CloseOrder = styled(Button)`
-    width: 130px;
-`;
-
 export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) => {
     const { placeOrder, selectedTracer } = useContext(TracerContext);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
@@ -150,13 +146,13 @@ export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) =>
     };
 
     if (!balances.base.eq(0) || orderState?.error !== 'NO_ORDERS') {
-        return <CloseOrder disabled={true}>Close Order</CloseOrder>;
+        return <Button disabled={true}>Close Order</Button>;
     } else {
         return (
             <Tooltip title={OrderErrors[orderState?.error ?? -1]?.message}>
-                <CloseOrder className={`${className} primary`} onClick={closeOrder}>
+                <Button className={`${className} primary`} onClick={closeOrder}>
                     Close Order
-                </CloseOrder>
+                </Button>
             </Tooltip>
         );
     }

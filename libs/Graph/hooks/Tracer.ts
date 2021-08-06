@@ -23,9 +23,8 @@ type Tracers = {
     loading: any;
     refetch: any;
 };
-
 /**
- * Hook to fetch a list of Tracer adresses deployed by the factory
+ * Hook to fetch a list of Tracer addresses deployed by the factory
  * @returns a list of Tracer objects containing the marketId and id (tracerAddress)
  */
 export const useAllTracers: () => Tracers = () => {
