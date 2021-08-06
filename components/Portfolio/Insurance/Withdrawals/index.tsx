@@ -3,11 +3,13 @@ import SubNav from '@components/Nav/SubNav';
 import { Counter, PortfolioDropdown } from '@components/Portfolio';
 import ActiveWithdrawals from '@components/Portfolio/Insurance/Withdrawals/ActiveWithdrawals';
 import WithdrawalsHistory from '@components/Portfolio/Insurance/Withdrawals/WithdrawalsHistory';
+import { InsuranceTransaction } from '@libs/types/InsuranceTypes';
 
 interface WProps {
     parentHeight: number;
+    withdrawalHistory: InsuranceTransaction[];
 }
-const Withdrawals: FC<WProps> = ({ parentHeight }: WProps) => {
+const Withdrawals: FC<WProps> = ({ parentHeight, withdrawalHistory }: WProps) => {
     const [tab, setTab] = useState(0);
     const tabs = [
         <>
@@ -28,7 +30,12 @@ const Withdrawals: FC<WProps> = ({ parentHeight }: WProps) => {
             case 0:
                 return <ActiveWithdrawals parentHeight={parentHeight - subNavHeight} />;
             case 1:
-                return <WithdrawalsHistory parentHeight={parentHeight - subNavHeight} />;
+                return (
+                    <WithdrawalsHistory
+                        parentHeight={parentHeight - subNavHeight}
+                        withdrawalHistory={withdrawalHistory}
+                    />
+                );
             default:
                 return;
         }

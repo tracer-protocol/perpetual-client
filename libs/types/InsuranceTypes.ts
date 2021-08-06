@@ -17,3 +17,18 @@ export type InsurancePoolInfo = {
     iPoolTokenURL: string;
     iPoolTokenName: string;
 };
+
+export interface InsuranceTransaction {
+    id: string;
+    tracer: Tracer;
+    transactionType: string;
+    amount: number;
+    timestamp: string;
+}
+
+export interface InsuranceTransactions {
+    insuranceTransactions: InsuranceTransaction[];
+    error: any;
+    loading: any;
+    refetch: any;
+}

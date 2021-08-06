@@ -1,11 +1,14 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
-import { depositsHistory } from '@components/Portfolio';
+import { InsuranceTransaction } from '@libs/types/InsuranceTypes';
+import Web3 from 'web3';
+import { DateAndTime } from '@components/General';
 
 interface ADProps {
     parentHeight: number;
+    depositHistory: InsuranceTransaction[];
 }
-const DepositsHistory: FC<ADProps> = ({ parentHeight }: ADProps) => {
+const DepositsHistory: FC<ADProps> = ({ parentHeight, depositHistory }: ADProps) => {
     const headings = ['Date', 'Market', 'Amount', 'iTokens Minted', 'Transaction Details'];
     const tableHeader = useRef(null);
     const [tableHeaderHeight, setTableHeaderHeight] = useState(0);
@@ -22,14 +25,18 @@ const DepositsHistory: FC<ADProps> = ({ parentHeight }: ADProps) => {
                     ))}
                 </TableHeader>
                 <TableBody>
-                    {Object.values(depositsHistory).map((tracer, i) => {
+                    {Object.values(depositHistory).map((transaction, i) => {
                         return (
                             <TableRow key={`table-row-${i}`}>
-                                <TableCell>{tracer.date}</TableCell>
-                                <TableCell>{tracer.market}</TableCell>
-                                <TableCell>{tracer.amount}</TableCell>
-                                <TableCell>{tracer.minted}</TableCell>
-                                <TableCell>{tracer.details}</TableCell>
+                                <TableCell>
+                                    <DateAndTime timestamp={parseFloat(transaction.timestamp)} />
+                                </TableCell>
+                                <TableCell>{transaction.tracer.marketId}</TableCell>
+                                <TableCell>{Web3.utils.fromWei(transaction.amount.toString())}</TableCell>
+                                <TableCell>-</TableCell>
+                                <TableCell>
+                                    {transaction.id.slice(0, 8) + '...' + transaction.id.slice(-6, -1)}
+                                </TableCell>
                             </TableRow>
                         );
                     })}

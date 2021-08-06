@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import Web3 from 'web3';
 import { CandleData, LineData } from 'libs/types/TracerTypes';
 import { toBigNumbers } from '@libs/utils';
+import { InsuranceTransactions } from '@libs/types/InsuranceTypes';
 
 const ALL_TRACERS = gql`
     query {
@@ -223,23 +224,13 @@ const ALL_INSURANCE_TRANSACTIONS = gql`
     query {
         insuranceTransactions(orderBy: timestamp, orderDirection: desc) {
             id
+            tracer
             transactionType
             amount
             timestamp
         }
     }
 `;
-type InsuranceTransactions = {
-    insuranceTransactions: {
-        id: string;
-        transactionType: string;
-        amount: number;
-        timestamp: string;
-    }[];
-    error: any;
-    loading: any;
-    refetch: any;
-};
 export const useAllInsuranceTransactions: () => InsuranceTransactions = () => {
     const ref = useRef([]);
     const { data, error, loading, refetch } = useQuery(ALL_INSURANCE_TRANSACTIONS, {
