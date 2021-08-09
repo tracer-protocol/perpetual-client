@@ -38,7 +38,7 @@ export default createGlobalStyle`
 
         --height-medium-button: 32px;
         --height-small-button: 28px;
-        --height-extra-small-button: 22px;
+        --height-extra-small-button: 20px;
 
         @media (max-width: 1600px) { 
             --font-size-extra-small: 12px;

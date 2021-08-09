@@ -1,12 +1,14 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
-import { activeDeposits } from '@components/Portfolio';
 import { Button } from '@components/General';
+import Insurance from '@libs/Tracer/Insurance';
+import { toPercent } from '@libs/utils';
 
 interface ADProps {
     parentHeight: number;
+    insuranceContracts: Insurance[];
 }
-const ActiveDeposits: FC<ADProps> = ({ parentHeight }: ADProps) => {
+const ActiveDeposits: FC<ADProps> = ({ parentHeight, insuranceContracts }: ADProps) => {
     const headings = [
         'Market',
         'Realised APY',
@@ -32,7 +34,7 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight }: ADProps) => {
                     ))}
                 </TableHeader>
                 <TableBody>
-                    {Object.values(activeDeposits).map((tracer, i) => {
+                    {Object.values(insuranceContracts).map((insuranceContract, i) => {
                         const show = showButton === i;
                         return (
                             <TableRow
@@ -40,18 +42,24 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight }: ADProps) => {
                                 onMouseEnter={() => setShowButton(i)}
                                 onMouseLeave={() => setShowButton(-1)}
                             >
-                                <TableCell>{tracer.market}</TableCell>
-                                <TableCell>{tracer.realisedAPY}</TableCell>
-                                <TableCell>{tracer.ownership}</TableCell>
-                                <TableCell>{tracer.unrealisedValue}</TableCell>
+                                <TableCell>{insuranceContract.market}</TableCell>
+                                <TableCell>{toPercent(insuranceContract.apy.toNumber())}</TableCell>
+                                <TableCell>-</TableCell>
+                                <TableCell>-</TableCell>
                                 <TableCell>
                                     <div className="flex">
-                                        {tracer.instant} <Button className={show ? 'ml-5' : 'hide'}>Withdraw</Button>
+                                        -{' '}
+                                        <Button height="extra-small" className={show ? 'ml-5' : 'hide'}>
+                                            Withdraw
+                                        </Button>
                                     </div>
                                 </TableCell>
                                 <TableCell>
                                     <div className="flex">
-                                        {tracer.delayed} <Button className={show ? 'ml-5' : 'hide'}>Withdraw</Button>
+                                        -{' '}
+                                        <Button height="extra-small" className={show ? 'ml-5' : 'hide'}>
+                                            Withdraw
+                                        </Button>
                                     </div>
                                 </TableCell>
                             </TableRow>

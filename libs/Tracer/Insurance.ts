@@ -16,7 +16,7 @@ export const defaults: Record<string, any> = {
 };
 
 /**
- * Insurance class to seperate some of the functionality from the Tracer class
+ * Insurance class to separate some of the functionality from the Tracer class
  */
 export default class Insurance {
     instance: InsuranceType; // contract instance
