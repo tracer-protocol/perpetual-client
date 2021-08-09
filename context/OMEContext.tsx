@@ -167,9 +167,8 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
                         maxAsk: maxAsk,
                     },
                 });
-                // This is essentially a fromWei
-                // TODO make sure the API does not convert the result from ome into scientific notation
-                const ltp = new BigNumber((res?.LTP ?? 0) * 10e-19);
+                // precision here isnt that necessary to fixing it to 20 is ok
+                const ltp = new BigNumber(Web3.utils.fromWei((res?.LTP ?? 0).toLocaleString('fullwide', {useGrouping:false})));
                 omeDispatch({
                     type: 'setMarketUp',
                     value: ltp.gt(omeState.lastTradePrice),
