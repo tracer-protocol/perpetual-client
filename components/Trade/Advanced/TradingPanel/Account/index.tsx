@@ -91,7 +91,7 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title hide={!!order?.exposureBN.toNumber() ?? false}>
                 <span>Margin Account</span>
-                <Button id="calc-button" onClick={() => showCalculator(true)}>
+                <Button id="calculator-button" onClick={() => showCalculator(true)}>
                     Calculator
                 </Button>
             </Title>

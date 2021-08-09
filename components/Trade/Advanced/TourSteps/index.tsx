@@ -53,16 +53,19 @@ export const tourConfig = [
         action: () => {
             const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
             const marginModalEl = document.getElementById('account-modal') as HTMLElement;
-            const navbar = document.getElementById('nav') as HTMLElement;
-
             if (calculatorEl) {
                 calculatorEl.style.display = 'block';
             }
             if (marginModalEl) {
                 marginModalEl.style.display = 'block';
             }
-            if (navbar) {
-                navbar.style.zIndex = '1000000';
+            const calculatorButton = document.getElementById('calculator-button') as HTMLElement;
+            if (calculatorButton) {
+                calculatorButton.style.zIndex = '0';
+            }
+            const depositButton = document.getElementById('deposit-button') as HTMLElement;
+            if (depositButton) {
+                depositButton.style.zIndex = '0';
             }
         },
         position: 'bottom',
@@ -88,15 +91,14 @@ export const tourConfig = [
         },
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         action: () => {
-            const calcButton = document.getElementById('calc-button') as HTMLElement;
-            calcButton?.click();
-            const marginModalEl = document.getElementById('account-modal') as HTMLElement;
-            const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
-            if (calculatorEl) {
-                calculatorEl.style.zIndex = '100001';
+            const calculatorButton = document.getElementById('calculator-button') as HTMLElement;
+            calculatorButton.click();
+            if (calculatorButton) {
+                calculatorButton.style.zIndex = '1000000';
             }
-            if (marginModalEl) {
-                marginModalEl.style.zIndex = '100000';
+            const depositButton = document.getElementById('deposit-button') as HTMLElement;
+            if (depositButton) {
+                depositButton.style.zIndex = '0';
             }
         },
         position: 'left',
@@ -123,15 +125,14 @@ export const tourConfig = [
         },
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         action: () => {
-            const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
-            const marginModalEl = document.getElementById('account-modal') as HTMLElement;
+            const calculatorButton = document.getElementById('calculator-button') as HTMLElement;
+            if (calculatorButton) {
+                calculatorButton.style.zIndex = '0';
+            }
             const depositButton = document.getElementById('deposit-button') as HTMLElement;
             depositButton?.click();
-            if (calculatorEl) {
-                calculatorEl.style.zIndex = '100000';
-            }
-            if (marginModalEl) {
-                marginModalEl.style.zIndex = '100001';
+            if (depositButton) {
+                depositButton.style.zIndex = '1000000';
             }
         },
         position: 'left',
@@ -170,6 +171,14 @@ export const tourConfig = [
                 '#account-modal span[class*="General__Close"]',
             ) as HTMLElement;
             marginModalCloseButton?.click();
+            const calculatorButton = document.getElementById('calculator-button') as HTMLElement;
+            if (calculatorButton) {
+                calculatorButton.style.zIndex = '0';
+            }
+            const depositButton = document.getElementById('deposit-button') as HTMLElement;
+            if (depositButton) {
+                depositButton.style.zIndex = '0';
+            }
         },
         position: 'right',
         style: {
@@ -178,7 +187,7 @@ export const tourConfig = [
     },
     // Position panel
     {
-        selector: '#position-panel',
+        selector: '#account-summary-panel',
         // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (
@@ -203,6 +212,14 @@ export const tourConfig = [
             const positionOverlay = document.getElementById('position-overlay') as HTMLElement;
             if (positionOverlay) {
                 positionOverlay.style.display = 'none';
+            }
+            const calculatorButton = document.getElementById('calculator-button') as HTMLElement;
+            if (calculatorButton) {
+                calculatorButton.style.zIndex = '0';
+            }
+            const depositButton = document.getElementById('deposit-button') as HTMLElement;
+            if (depositButton) {
+                depositButton.style.zIndex = '0';
             }
         },
         position: 'top',
@@ -232,6 +249,17 @@ export const tourConfig = [
                 </Prompt>
             );
         },
+        // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+        action: () => {
+            const calculatorButton = document.getElementById('calculator-button') as HTMLElement;
+            if (calculatorButton) {
+                calculatorButton.style.zIndex = '0';
+            }
+            const depositButton = document.getElementById('deposit-button') as HTMLElement;
+            if (depositButton) {
+                depositButton.style.zIndex = '0';
+            }
+        },
         position: 'right',
         style: {
             top: '-50px',
@@ -256,10 +284,13 @@ export const tourConfig = [
         },
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         action: () => {
-            // Enable the close order button
-            const closeOrderButton = document.getElementById('position-close-container') as HTMLButtonElement;
-            if (closeOrderButton) {
-                closeOrderButton.disabled = false;
+            const calculatorButton = document.getElementById('calculator-button') as HTMLElement;
+            if (calculatorButton) {
+                calculatorButton.style.zIndex = '0';
+            }
+            const depositButton = document.getElementById('deposit-button') as HTMLElement;
+            if (depositButton) {
+                depositButton.style.zIndex = '0';
             }
         },
         position: 'top',
