@@ -16,7 +16,14 @@ const omefy: (str: string) => string = (str: string) => str.slice(2).toLowerCase
  * @param market Tracer market
  * @returns a full list of currently open orders for a given Tracer
  */
-export const getOrders: (market: string) => Promise<Response> = async (market) => {
+export const getOrders: (market: string) => Promise<{
+    bids: any, 
+    asks: any,
+    LTP: number,
+    market: string,
+    crossed: boolean,
+    spread: number
+}> = async (market) => {
     return fetch(`${BASE_URL}/book/${omefy(market)}`, {
         method: 'GET',
         headers: {
@@ -25,11 +32,11 @@ export const getOrders: (market: string) => Promise<Response> = async (market) =
     })
         .then((res) => res.json())
         .then((res) => {
-            if (res.data === 'book_not_found') {
-                return [];
+            if (res?.message === 'book_not_found') {
+                return {};
             }
             console.debug('Fetched all orders', res?.data);
-            return res?.data ?? [];
+            return res?.data ?? {};
         })
         .catch((err) => {
             console.error(err);
