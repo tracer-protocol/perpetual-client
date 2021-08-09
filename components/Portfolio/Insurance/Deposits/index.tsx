@@ -15,7 +15,7 @@ const Deposits: FC<DProps> = ({ parentHeight, insuranceContracts, depositHistory
     const [tab, setTab] = useState(0);
     const tabs = [
         <>
-            Active <Counter>0</Counter>
+            Active <Counter>{depositHistory.length}</Counter>
         </>,
         <>History</>,
     ];
