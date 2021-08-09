@@ -44,7 +44,7 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, insuranceContracts }: ADPro
                             >
                                 <TableCell>{insuranceContract.market}</TableCell>
                                 <TableCell>{toPercent(insuranceContract.apy.toNumber())}</TableCell>
-                                <TableCell>-</TableCell>
+                                <TableCell>{insuranceContract.liquidity.toNumber()}</TableCell>
                                 <TableCell>-</TableCell>
                                 <TableCell>
                                     <div className="flex">

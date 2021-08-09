@@ -34,6 +34,8 @@ const InsurancePortfolio: FC<IPProps> = ({ tracers }: IPProps) => {
         setInsuranceContracts(insuranceContracts);
     }, [tracers]);
 
+    console.log(insuranceContracts)
+
     const { insuranceTransactions } = useAllInsuranceTransactions();
     const [depositHistory, setDepositHistory] = useState<InsuranceTransaction[]>([]);
     const [withdrawalHistory, setWithdrawalHistory] = useState<InsuranceTransaction[]>([]);
