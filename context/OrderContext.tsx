@@ -283,6 +283,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                     addedExposure = base.abs();
                 } else {
                     // for long
+                    // set constant x to simply equation
+                    // full working https://www.notion.so/tracerdao/New-position-incorrectly-updating-91d0c68a116b40b3a5d7944421ebc86f
                     const x = fairPrice.div(targetLeverage).minus(fairPrice);
                     addedExposure = quote.minus(base.times(x)).div(x.plus(state.marketTradePrice));
 
