@@ -341,20 +341,12 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                         ),
                     };
                 } else {
-                    console.log(
-                        'calcing new balance',
-                        state.exposureBN.toNumber(),
-                        state.marketTradePrice.toNumber(),
-                        state.position,
-                    );
                     const nextPosition = calcNewBalance(
                         state.exposureBN,
                         state.marketTradePrice,
                         state.position,
                         selectedTracer?.getBalance() ?? tracerDefaults.balances,
                     );
-                    console.log(nextPosition.base.toNumber(), nextPosition.quote.toNumber(), 'Next position');
-                    console.log(calcLeverage(nextPosition.quote, nextPosition.base, fairPrice).toNumber(), 'Leverage');
                     return {
                         ...state,
                         nextPosition: calcNewBalance(
