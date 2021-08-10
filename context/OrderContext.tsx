@@ -1,7 +1,7 @@
 import React, { useEffect, useContext, useReducer, useMemo } from 'react';
 import { TracerContext } from './';
 import { Children, OpenOrder, UserBalance } from 'libs/types';
-import { calcMinimumMargin, calcTotalMargin, calcSlippage, calcLeverage } from '@tracer-protocol/tracer-utils';
+import { calcMinimumMargin, calcTotalMargin, calcSlippage } from '@tracer-protocol/tracer-utils';
 import { BigNumber } from 'bignumber.js';
 import { OMEContext } from './OMEContext';
 import { ADJUST, CLOSE, LIMIT, LONG, MARKET, OMEOrder, OrderType, Position, SHORT } from 'libs/types/OrderTypes';
@@ -341,12 +341,6 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                         ),
                     };
                 } else {
-                    const nextPosition = calcNewBalance(
-                        state.exposureBN,
-                        state.marketTradePrice,
-                        state.position,
-                        selectedTracer?.getBalance() ?? tracerDefaults.balances,
-                    );
                     return {
                         ...state,
                         nextPosition: calcNewBalance(
