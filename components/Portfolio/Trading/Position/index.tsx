@@ -14,10 +14,10 @@ import {
 } from '@components/General/Table';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'libs/types/OrderTypes';
-import { LabelledTracers } from 'libs/types/TracerTypes';
+import Tracer from '@libs/Tracer';
 
 const Position: React.FC<{
-    tracers: LabelledTracers;
+    tracers: Tracer[];
     allFilledOrders: LabelledOrders;
 }> = ({ tracers, allFilledOrders }) => {
     const [show, setShow] = useState(false);

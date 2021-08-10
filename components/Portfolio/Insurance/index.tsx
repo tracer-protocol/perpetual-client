@@ -5,11 +5,11 @@ import Withdrawals from '@components/Portfolio/Insurance/Withdrawals';
 import { SectionHeader, Title } from '@components/Portfolio';
 import { useAllInsuranceTransactions } from '@libs/Graph/hooks/Tracer';
 import { InsuranceTransaction } from '@libs/types/InsuranceTypes';
-import { LabelledTracers } from '@libs/types/TracerTypes';
 import Insurance from '@libs/Tracer/Insurance';
+import Tracer from '@libs/Tracer';
 
 interface IPProps {
-    tracers: LabelledTracers;
+    tracers: Tracer[];
 }
 const InsurancePortfolio: FC<IPProps> = ({ tracers }: IPProps) => {
     const section = useRef(null);

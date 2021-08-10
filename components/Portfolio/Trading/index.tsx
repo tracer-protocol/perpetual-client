@@ -9,11 +9,10 @@ import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import { Table } from '@components/General/Table';
 import { LabelledOrders } from '@libs/types/OrderTypes';
-import { LabelledTracers } from '@libs/types/TracerTypes';
 
 interface TPProps {
     allFilledOrders: LabelledOrders;
-    tracers: LabelledTracers;
+    tracers: Tracer[];
 }
 const TradingPortfolio: FC<TPProps> = ({ allFilledOrders, tracers }: TPProps) => {
     const [tab, setTab] = useState(0);
@@ -46,11 +45,11 @@ const TradingPortfolio: FC<TPProps> = ({ allFilledOrders, tracers }: TPProps) =>
             case 0:
                 return <Overview positions={positions} holdings={holdings} allFilledOrders={allFilledOrders} />;
             case 1:
-                return <Position tracers={tracers} allFilledOrders={allFilledOrders ?? {}} />;
+                return <Position tracers={tracers} allFilledOrders={allFilledOrders} />;
             case 2:
-                return <MarginAccounts tracers={Object.values(tracers)} />;
+                return <MarginAccounts tracers={tracers} />;
             case 3:
-                return <TradeHistory allFilledOrders={allFilledOrders ?? {}} />;
+                return <TradeHistory allFilledOrders={allFilledOrders} />;
             case 4:
                 return <Transfers />;
             default:

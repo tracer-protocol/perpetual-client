@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import NavBar from '@components/Nav/Navbar';
 import styled from 'styled-components';
 import SideNav from '@components/Nav/SideNav';
@@ -7,21 +7,29 @@ import InsurancePortfolio from '@components/Portfolio/Insurance';
 import { LeftPanel, RightPanel } from '@components/Portfolio';
 import Footer from '@components/Footer';
 import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
+import Tracer from '@libs/Tracer';
 
 export default styled(({ className }) => {
     const [tab, setTab] = useState(0);
     const tabs = ['Trading Portfolio', 'Insurance Portfolio'];
     const { allFilledOrders, factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
+    const [fetchedTracers, setFetchedTracers] = useState<Tracer[]>([]);
+
+    useEffect(() => {
+        setFetchedTracers(Object.values(tracers));
+    });
+
     const content = () => {
         switch (tab) {
             case 0:
-                return <TradingPortfolio allFilledOrders={allFilledOrders ?? {}} tracers={tracers} />;
+                return <TradingPortfolio allFilledOrders={allFilledOrders ?? {}} tracers={fetchedTracers} />;
             case 1:
-                return <InsurancePortfolio tracers={tracers} />;
+                return <InsurancePortfolio tracers={fetchedTracers} />;
             default:
                 return;
         }
     };
+
     return (
         <div className={className}>
             <NavBar />
