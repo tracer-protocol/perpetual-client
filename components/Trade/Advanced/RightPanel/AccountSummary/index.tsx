@@ -68,7 +68,7 @@ const AccountSummary: FC<ASProps> = styled(({ selectedTracer, className }: ASPro
         }
     };
     return (
-        <div className={className} ref={accountSummary}>
+        <div id="account-summary-panel" className={className} ref={accountSummary}>
             <div ref={subNav}>
                 <CustomSubNav
                     selected={tab}
