@@ -16,7 +16,7 @@ export const defaults: Record<string, any> = {
 };
 
 /**
- * Insurance class to seperate some of the functionality from the Tracer class
+ * Insurance class to separate some of the functionality from the Tracer class
  */
 export default class Insurance {
     instance: InsuranceType; // contract instance
@@ -52,8 +52,7 @@ export default class Insurance {
     /** Initialises this class. Sets the pools balances and iTokenAddress */
     init: () => Promise<boolean> = async () => {
         try {
-            const iTokenAddress = await this.instance?.methods.token().call();
-            this.iTokenAddress = iTokenAddress;
+            this.iTokenAddress = await this.instance?.methods.token().call();
             await this.getPoolBalances();
             return true;
         } catch (err) {
@@ -70,6 +69,7 @@ export default class Insurance {
     getUserBalance: (account: string) => Promise<BigNumber> = async (account) => {
         if (account) {
             const userBalance_ = await this.instance?.methods.getPoolUserBalance(account as string).call();
+            this.userBalance = new BigNumber(Web3.utils.fromWei(userBalance_));
             return userBalance_ ? new BigNumber(Web3.utils.fromWei(userBalance_)) : defaults.userBalance;
         } else {
             return defaults.userBalance;

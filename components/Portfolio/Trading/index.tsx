@@ -1,17 +1,21 @@
-import React, { FC, useContext, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import SubNav from '@components/Nav/SubNav';
 import Overview from '@components/Portfolio/Trading/Overview';
 import Position from '@components/Portfolio/Trading/Position';
 import MarginAccounts from '@components/Portfolio/Trading/MarginAccounts';
 import TradeHistory from '@components/Portfolio/Trading/TradeHistory';
 import Transfers from '@components/Portfolio/Trading/Transfers';
-import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
 import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import { Table } from '@components/General/Table';
+import { LabelledOrders } from '@libs/types/OrderTypes';
+import { LabelledTracers } from '@libs/types/TracerTypes';
 
-const TradingPortfolio: FC = () => {
-    const { allFilledOrders, factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
+interface TPProps {
+    allFilledOrders: LabelledOrders;
+    tracers: LabelledTracers;
+}
+const TradingPortfolio: FC<TPProps> = ({ allFilledOrders, tracers }: TPProps) => {
     const [tab, setTab] = useState(0);
     const [positions, setPositions] = useState<Tracer[]>([]);
     const [holdings, setHoldings] = useState<Tracer[]>([]);
@@ -40,7 +44,7 @@ const TradingPortfolio: FC = () => {
     const content = () => {
         switch (tab) {
             case 0:
-                return <Overview positions={positions} holdings={holdings} allFilledOrders={allFilledOrders ?? {}} />;
+                return <Overview positions={positions} holdings={holdings} allFilledOrders={allFilledOrders} />;
             case 1:
                 return <Position tracers={tracers} allFilledOrders={allFilledOrders ?? {}} />;
             case 2:
