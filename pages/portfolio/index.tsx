@@ -16,8 +16,10 @@ export default styled(({ className }) => {
     const [fetchedTracers, setFetchedTracers] = useState<Tracer[]>([]);
 
     useEffect(() => {
-        setFetchedTracers(Object.values(tracers));
-    });
+        setTimeout(() => {
+            setFetchedTracers(Object.values(tracers));
+        }, 1000);
+    }, [tracers]);
 
     const content = () => {
         switch (tab) {
