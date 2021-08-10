@@ -137,7 +137,7 @@ export type OrderState = {
     wallet: number; // ID of corresponding wallet in use 0 -> web3, 1 -> TCR margin
     // boolean to tell if the amount to buy or amount to pay inputs are locked. eg
     //  by changing the amount to pay field it should update the amount to buy and vice versa.
-    //  The lock helps avoiding infinite loops0.18473143662549937 when setting these values
+    //  The lock helps avoiding infinite loops when setting these values
     lockAmountToPay: boolean;
     advanced: boolean; // boolean to check if on basic or advanced page
     slippage: number;
