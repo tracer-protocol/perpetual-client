@@ -87,9 +87,9 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
     }
     return fetch(`${BASE_URL}/book/${omefy(market)}/order`, {
         method: 'POST',
-        // headers: {
-        //     'Content-Type': 'application/json',
-        // },
+        headers: {
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify(data),
     })
         .then((res) => res.json())
