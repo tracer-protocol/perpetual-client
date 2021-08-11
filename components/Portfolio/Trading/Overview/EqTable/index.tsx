@@ -247,7 +247,7 @@ const EquityTable = styled(({ className, holdings, currentPortfolio, allFilledOr
     transition: max-height 0.5s ease;
 
     .heading-row {
-        padding: 8px 16px 8px;
+        padding: 8px 16px 5px;
     }
 
     // Remove borders from last row of td elements
