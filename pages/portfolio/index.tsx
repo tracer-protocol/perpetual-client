@@ -8,6 +8,7 @@ import { LeftPanel, RightPanel } from '@components/Portfolio';
 import Footer from '@components/Footer';
 import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
 import Tracer from '@libs/Tracer';
+import { InsuranceStore } from '@context/InsuranceContext';
 
 export default styled(({ className }) => {
     const [tab, setTab] = useState(0);
@@ -36,10 +37,12 @@ export default styled(({ className }) => {
         <div className={className}>
             <NavBar />
             <div className="container flex">
-                <LeftPanel>
-                    <SideNav tabs={tabs} setTab={setTab} selected={tab} />
-                </LeftPanel>
-                <RightPanel>{content()}</RightPanel>
+                <InsuranceStore>
+                    <LeftPanel>
+                        <SideNav tabs={tabs} setTab={setTab} selected={tab} />
+                    </LeftPanel>
+                    <RightPanel>{content()}</RightPanel>
+                </InsuranceStore>
             </div>
             <Footer />
         </div>
