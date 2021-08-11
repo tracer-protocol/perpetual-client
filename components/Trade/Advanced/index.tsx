@@ -153,12 +153,6 @@ const Advanced: React.FC = styled(({ className }) => {
                 setTimeout(function () {
                     navDots.map((dot, i) => {
                         const isActive = dot.classList.contains('reactour__dot--is-active');
-                        // Fill in the previous dots with colour
-                        if (isActive) {
-                            navDots.slice(0, i).map((dot) => {
-                                dot.classList.add('reactour__dot--is-active');
-                            });
-                        }
                         if (i === navDots.length - 1 && isActive) {
                             controls.classList.add('hide');
                             rightButton.classList.add('hide');

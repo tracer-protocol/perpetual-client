@@ -42,7 +42,7 @@ interface CBCProps {
     display?: boolean;
 }
 export const CheckboxContainer = styled.div<CBCProps>`
-    display: ${(props) => (props.display ? 'flex' : 'none')};
+    display: flex;
     cursor: pointer;
     width: fit-content;
 `;

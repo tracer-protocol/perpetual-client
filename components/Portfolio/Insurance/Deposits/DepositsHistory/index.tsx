@@ -35,7 +35,7 @@ const DepositsHistory: FC<ADProps> = ({ parentHeight, depositHistory }: ADProps)
                                 <TableCell>{Web3.utils.fromWei(transaction.amount.toString())}</TableCell>
                                 <TableCell>-</TableCell>
                                 <TableCell>
-                                    {transaction.id.slice(0, 8) + '...' + transaction.id.slice(-6, -1)}
+                                    {transaction.id.slice(0, 7) + '...' + transaction.id.slice(-6, -1)}
                                 </TableCell>
                             </TableRow>
                         );

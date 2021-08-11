@@ -370,7 +370,7 @@ export default class Tracer {
 
     checkApproved: (account: string) => void = async (account) => {
         await this.initialised;
-        // insuranceContract should not be falsey after waitig on initialised
+        // insuranceContract should not be false after waiting on initialised
         Promise.all([
             checkAllowance(this.token, account, this.address),
             checkAllowance(this.token, account, this.insuranceContract?.address),

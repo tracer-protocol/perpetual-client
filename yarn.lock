@@ -3333,10 +3333,10 @@
     memory-cache "^0.2.0"
     web3-utils "^1.4.0"
 
-"@tracer-protocol/contracts@^0.2.11":
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/@tracer-protocol/contracts/-/contracts-0.2.11.tgz#dd8b32ae72c1cff1b01c039eb4e47384c137f631"
-  integrity sha512-9gobX90QK9+A2XZKGS8xdSI3HVsBNryowufQ+M4yMAubQJuQB1rgo7QH5ySwQnpvL/82DCRsOt8wgLVdgH39Uw==
+"@tracer-protocol/contracts@^0.2.12":
+  version "0.2.12"
+  resolved "https://registry.yarnpkg.com/@tracer-protocol/contracts/-/contracts-0.2.12.tgz#e27ec2a18a57221d5c2a9fc55c78578ca127550f"
+  integrity sha512-FmqtABJfduHCfcg7b+d9YTjf+zHsB79jBsiSFcd8cpT/e/ONhVpWzruTLsbvQpHcLEpzAZureSml9deduRHAgw==
   dependencies:
     "@eth-optimism/smock" "0.0.0-20215180366"
     "@nomiclabs/hardhat-ethers" "^2.0.2"
