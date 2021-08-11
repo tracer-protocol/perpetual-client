@@ -4,17 +4,6 @@ import { Children } from 'libs/types';
 import { toApproxCurrency } from '@libs/utils';
 import SlideSelect from '@components/General/SlideSelect';
 import { Option } from '@components/General/SlideSelect/Options';
-import {
-    Button,
-    Checkbox,
-    CheckboxContainer,
-    CheckboxTitle,
-    Dropdown,
-    HiddenExpand,
-    Previous,
-    NumberSelect,
-    Section,
-} from '@components/General';
 import TracerModal from '@components/General/TracerModal';
 import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';
@@ -22,6 +11,17 @@ import ErrorComponent from '@components/General/Error';
 import Tracer from '@libs/Tracer';
 import BigNumber from 'bignumber.js';
 import { Options } from '@context/TransactionContext';
+import {
+    Button,
+    Checkbox,
+    CheckboxContainer,
+    CheckboxTitle,
+    Dropdown,
+    HiddenExpand,
+    NumberSelect,
+    Previous,
+    Section,
+} from '@components/General';
 
 const SSlideSelect = styled(SlideSelect)`
     font-size: var(--font-size-small);
