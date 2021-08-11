@@ -48,13 +48,6 @@ const ModalButton = styled(Button)`
     width: 80%;
     margin: auto;
     height: 40px;
-    color: var(--color-text);
-
-    &:disabled {
-        &:hover {
-            background: none;
-        }
-    }
 `;
 
 const SSlideSelect = styled(SlideSelect)`
