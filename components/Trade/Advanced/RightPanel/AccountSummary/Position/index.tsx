@@ -4,8 +4,6 @@ import { BigNumber } from 'bignumber.js';
 import { toApproxCurrency } from '@libs/utils';
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { CloseOrderButton } from '@components/OrderButtons';
-import ConnectOverlay from '@components/Overlay/ConnectOverlay';
-import PositionOverlay from '@components/Overlay/PositionOverlay';
 import { LineData, UserBalance } from '@libs/types/TracerTypes';
 import { FilledOrder } from '@libs/types/OrderTypes';
 import styled from 'styled-components';
@@ -18,6 +16,8 @@ import LightWeightChart from '@components/Charts/LightWeightLineChart';
 import { useLines } from '@libs/Graph/hooks/Tracer';
 import { TracerContext } from '@context/TracerContext';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
+import ConnectOverlay from '@components/Overlay/ConnectOverlay';
+import PositionOverlay from '@components/Overlay/PositionOverlay';
 
 interface PTProps {
     className?: string;
@@ -142,16 +142,12 @@ const PositionTab: FC<PTProps> = styled(
                     </LegendsContainer>
                 </PositionInfo>
 
+                {/* ID required for ReactTour */}
                 <CloseOrderContainer id="position-close-container">
-                    {/* Required for ReactTour */}
                     <CloseOrderButton />
                 </CloseOrderContainer>
 
-                {!account ? (
-                    <ConnectOverlay />
-                ) : balances.quote.eq(0) ? (
-                    <PositionOverlay showMarketPreview={false} />
-                ) : null}
+                {!account ? <ConnectOverlay /> : balances.quote.eq(0) ? <PositionOverlay /> : null}
             </div>
         );
     },
