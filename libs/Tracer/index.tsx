@@ -11,6 +11,7 @@ import { Oracle } from '@tracer-protocol/contracts/types/Oracle';
 import { Pricing } from '@tracer-protocol/contracts/types/Pricing';
 import { ERC20 as Erc20Type } from '@tracer-protocol/contracts/types/ERC20';
 import {
+    FailedOrders,
     MatchedOrders,
     TracerPerpetualSwaps as TracerType,
 } from '@tracer-protocol/contracts/types/TracerPerpetualSwaps';
@@ -196,7 +197,7 @@ export default class Tracer {
      * Sets a subscription on the failedOrders event for this Tracer instance
      * @param callback function to be called when the event is triggered
      */
-    subscribeToFailedOrders: (callback: Callback<MatchedOrders>) => void = (callback) => {
+    subscribeToFailedOrders: (callback: Callback<FailedOrders>) => void = (callback) => {
         this._instance.events.FailedOrders(callback);
     };
 
