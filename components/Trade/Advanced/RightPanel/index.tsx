@@ -17,7 +17,6 @@ import InsuranceInfo from './InsuranceInfo';
 import Graphs from './Graph';
 import SlideSelect, { Option, SlideOption } from '@components/General/SlideSelect';
 import { FilledOrder, OMEOrder } from '@libs/types/OrderTypes';
-import {FactoryContext, initialFactoryState} from "@context/FactoryContext";
 
 const TitledBox = styled(({ className, title, children }) => {
     return (
@@ -109,9 +108,6 @@ const TradingView: FC<{
 }> = ({ selectedTracer }) => {
     const { omeState } = useContext(OMEContext);
     const { mostRecentTrades } = useMostRecentMatched(selectedTracer?.address ?? '');
-
-    const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
-    console.log(tracers);
 
     return (
         <>
