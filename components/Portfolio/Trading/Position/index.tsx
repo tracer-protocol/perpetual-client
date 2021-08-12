@@ -15,6 +15,7 @@ import {
 import { calcLiquidationPrice, calcUnrealised } from '@tracer-protocol/tracer-utils';
 import { LabelledOrders } from 'libs/types/OrderTypes';
 import { LabelledTracers } from 'libs/types/TracerTypes';
+import { CloseOrderButton } from '@components/OrderButtons';
 
 const Position: React.FC<{
     tracers: LabelledTracers;
@@ -126,7 +127,7 @@ const Position: React.FC<{
                                         </StatusIndicator>
                                         <div className="mx-2 my-auto">{status.text}</div>
                                         <div className="my-auto ml-auto">
-                                            <Button>Close</Button>
+                                            <CloseOrderButton />
                                         </div>
                                     </div>
                                 </TableLastCell>
