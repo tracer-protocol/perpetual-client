@@ -437,6 +437,19 @@ export default class Tracer {
         }
     };
 
+    removeApproved: (address: string) => void = (address) => {
+        switch (address) {
+            case this.address:
+                this.tracerApproved = false;
+                return;
+            case this.insuranceContract?.address:
+                this.insuranceApproved = false;
+                return;
+            default:
+                return;
+        }
+    };
+
     getFundingRate: () => BigNumber = () => {
         return this.fundingRate;
     };
