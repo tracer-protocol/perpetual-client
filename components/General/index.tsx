@@ -148,14 +148,13 @@ const logos: Record<string, string> = {
 
 interface LProps {
     className?: string;
-    ticker: string | undefined;
+    ticker: 'TSLA' | 'ETH' | 'LINK' | undefined;
     clear?: boolean; // true then display outlined image
 }
-
 export const Logo: React.FC<LProps> = styled(({ className, ticker, clear }: LProps) => {
     return (
         <>
-            {(ticker === 'TSLA' || 'ETH' || 'LINK') && ticker !== undefined ? (
+            {ticker !== undefined ? (
                 <img className={className} src={clear ? clearLogos[ticker] : logos[ticker]} alt="logo" />
             ) : null}
         </>
