@@ -277,7 +277,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                         position: action.leverage < 0 ? SHORT : action.leverage > 0 ? LONG : state.position,
                     };
                 }
-                let targetLeverage = new BigNumber(!Number.isNaN(action.leverage) ? action.leverage : 0);
+                const targetLeverage = new BigNumber(!Number.isNaN(action.leverage) ? action.leverage : 0);
                 let addedExposure;
                 if (targetLeverage.eq(0)) {
                     addedExposure = base.abs();
