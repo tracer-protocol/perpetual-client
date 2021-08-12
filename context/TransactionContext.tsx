@@ -36,7 +36,7 @@ type HandleAsyncType =
 export const TransactionContext = createContext<{
     handleTransaction: HandleTransactionType;
     handleAsync: HandleAsyncType;
-    setPending: ((status: 'matched_partial' | 'matched') => void) | undefined;
+    setPending: (() => void) | undefined;
     closePending: ((success: boolean) => void) | undefined;
 }>({
     handleTransaction: undefined,

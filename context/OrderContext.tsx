@@ -209,7 +209,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
     const initialState: OrderState = orderDefaults.order;
 
     const reducer = (state: any, action: OrderAction) => {
-        const { quote, base, totalMargin, leverage } = selectedTracer?.getBalance() ?? tracerDefaults.balances;
+        const { quote, base, leverage } = selectedTracer?.getBalance() ?? tracerDefaults.balances;
         const fairPrice = selectedTracer?.getFairPrice() ?? tracerDefaults.fairPrice;
         switch (action.type) {
             case 'setMarket':
@@ -250,28 +250,25 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 }
                 return { ...state, adjustType: action.value };
             case 'setExposureFromLeverage': {
-                let position, deleverage;
+                let position;
                 // issue here is action.leverage is negative for short values
                 // but leverage is always positive no matter if short or long
                 if (base.lt(0)) {
                     if (action.leverage > leverage.negated().toNumber()) {
                         // deleverage short bosition
                         position = LONG;
-                        deleverage = true;
                     } else {
                         position = SHORT;
                     }
-                    // } else if (base.gt(0)) {
                 } else if (base.gt(0)) {
                     if (action.leverage < leverage.toNumber()) {
                         // deleverage
                         position = SHORT;
-                        deleverage = true;
                     } else {
                         position = LONG;
                     }
                 } else if (base.eq(0)) {
-                    // if base is 0 let leverage determing position
+                    // if base is 0 let leverage determine position
                     position = action.leverage < 0 ? SHORT : action.leverage > 0 ? LONG : state.position;
                 } else if (quote.eq(0)) {
                     // if quote is 0 then dont change anything
@@ -280,22 +277,26 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                         position: action.leverage < 0 ? SHORT : action.leverage > 0 ? LONG : state.position,
                     };
                 }
-                const notional = totalMargin.times(Math.abs(action.leverage));
-                let targetExposure = notional.div(fairPrice);
-                let difference = targetExposure.minus(base.abs()).abs();
-                if (deleverage) {
-                    if (
-                        (base.gt(0) && action.leverage < 0) || // long and shorting
-                        (base.lt(0) && action.leverage > 0) // short and longing
-                    ) {
-                        targetExposure = notional.div(fairPrice);
-                        difference = targetExposure.abs().plus(base.abs());
+                const targetLeverage = new BigNumber(action.leverage);
+                let addedExposure;
+                if (targetLeverage.eq(0)) {
+                    addedExposure = base.abs();
+                } else {
+                    // for long
+                    // set constant x to simply equation
+                    // full working https://www.notion.so/tracerdao/New-position-incorrectly-updating-91d0c68a116b40b3a5d7944421ebc86f
+                    const x = fairPrice.div(targetLeverage).minus(fairPrice);
+                    addedExposure = quote.minus(base.times(x)).div(x.plus(state.marketTradePrice));
+
+                    // for short
+                    if (position === SHORT) {
+                        addedExposure = base.times(x).minus(quote).div(state.marketTradePrice.plus(x));
                     }
                 }
                 return {
                     ...state,
-                    exposure: difference.toNumber(),
-                    exposureBN: difference,
+                    exposure: addedExposure.toNumber(),
+                    exposureBN: addedExposure,
                     position: position,
                 };
             }

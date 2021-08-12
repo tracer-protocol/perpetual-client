@@ -126,6 +126,9 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             account?.toLocaleLowerCase() === res.returnValues.long.toLowerCase() ||
             account?.toLocaleLowerCase() === res.returnValues.short.toLowerCase()
         ) {
+            console.debug(
+                `Found failed order longID: ${res.returnValues.longOrderId}, shortID: ${res.returnValues.shortOrderId} `,
+            );
             closePending ? closePending(false) : console.error('Close pending is undefined');
         }
     };
@@ -152,8 +155,9 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
             const omeOrder = orderToOMEOrder(web3, await signedMakes[0]);
             console.info('Placing OME order', omeOrder);
             const res = await createOrder(selectedTracer?.address as string, omeOrder);
-            if (res.data?.status === 'submitted') {
-                setPending ? setPending(res.data.status) : console.error('SetPending function is not defined');
+            // bad doing full match on string but only unique piece of data received from create Order
+            if (res.messageCode === 'order_partially_matched' || res.messageCode === 'order_fully_matched') {
+                setPending ? setPending() : console.error('SetPending function is not defined');
             }
             return {
                 status: 'success',

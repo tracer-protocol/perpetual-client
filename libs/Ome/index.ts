@@ -89,6 +89,7 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
         return {
             status: 'error',
             message: 'Failed to create order: Market is invalid',
+            messageCode: 'book_not_found',
             data: 'Failed to create order: Market is invalid',
         };
     }
@@ -107,18 +108,21 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
                 return {
                     status: 'error',
                     message: `${errors[message]}`,
+                    messageCode: message,
                     data: data,
                 } as APIResult;
             } else if (ok[message]) {
                 return {
                     status: 'success',
                     message: `${ok[message]}`,
+                    messageCode: message,
                     data: data,
                 } as APIResult;
             } else {
                 return {
                     status: 'error',
                     message: `Unhandled error: ${message}`,
+                    messageCode: message,
                     data: data,
                 } as APIResult;
             }
@@ -127,6 +131,7 @@ export const createOrder: (market: string, data: OMEOrder) => Promise<APIResult>
             return {
                 status: 'error',
                 message: `${err}`,
+                messageCode: 'error',
                 data: err,
             };
         });

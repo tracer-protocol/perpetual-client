@@ -234,12 +234,12 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
     }, [selectedTracer?.address, account]);
 
     useEffect(() => {
-        // fetches orders every 5 seconds
+        // fetches orders every 6 seconds
         // TODO update this as it triggers a re-render for all using the OMEStore
         let id: any;
         if (!!selectedTracer) {
             fetchOrders();
-            id = setInterval(() => fetchOrders(), 5000);
+            id = setInterval(() => fetchOrders(), 6000);
         }
         return () => {
             clearInterval(id);

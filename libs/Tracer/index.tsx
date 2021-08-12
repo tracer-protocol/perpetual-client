@@ -286,7 +286,7 @@ export default class Tracer {
      */
     updateFeeRate: () => Promise<void> = async () => {
         const feeRate = await this._instance.methods.feeRate().call();
-        const set = new BigNumber(Web3.utils.fromWei(feeRate));
+        const set = new BigNumber(Web3.utils.fromWei(feeRate ?? '0'));
         this.feeRate = set;
     };
 
