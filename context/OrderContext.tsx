@@ -277,7 +277,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                         position: action.leverage < 0 ? SHORT : action.leverage > 0 ? LONG : state.position,
                     };
                 }
-                const targetLeverage = new BigNumber(action.leverage);
+                let targetLeverage = new BigNumber(!Number.isNaN(action.leverage) ? action.leverage : 0);
                 let addedExposure;
                 if (targetLeverage.eq(0)) {
                     addedExposure = base.abs();
@@ -435,12 +435,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
         // calculate the exposure based on the opposite orders
         if (order.orderType === MARKET && order.oppositeOrders.length) {
             // convert orders
-            const { slippage, tradePrice } = calcSlippage(
-                order.exposureBN,
-                // TODO remove this, its because we used to factor in leverage per trade ie 2x would double exposure
-                new BigNumber(1),
-                order.oppositeOrders,
-            );
+            const { slippage, tradePrice } = calcSlippage(order.exposureBN, order.oppositeOrders);
             if (!slippage.eq(0)) {
                 orderDispatch({ type: 'setSlippage', value: slippage.toNumber() });
             } else {
