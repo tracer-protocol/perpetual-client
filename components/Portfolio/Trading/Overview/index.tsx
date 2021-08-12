@@ -84,7 +84,7 @@ const Overview: FC<OProps> = ({ tracers, positions, holdings, allFilledOrders }:
                 {!account ? (
                     <ConnectOverlay />
                 ) : positions.length === 0 ? (
-                    <PositionMarketOverlay tracers={tracers ?? {}} showMarketPreview />
+                    <PositionMarketOverlay tracers={tracers} showMarketPreview />
                 ) : null}
             </HScrollContainer>
         </VScrollContainer>

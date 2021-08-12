@@ -1,12 +1,11 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Overlay from '@components/Overlay';
-import { Menu, MenuItem } from '@components/General/Menu';
-import Dropdown from 'antd/lib/dropdown';
-import { Button, Logo } from '@components/General';
+import { Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 import MarketChange from '@components/General/MarketChange';
 import { LabelledTracers } from '@libs/types/TracerTypes';
+import { PortfolioDropdown } from '@components/Portfolio';
 
 interface POProps {
     tracers: LabelledTracers;
@@ -28,7 +27,12 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers, showMarketPreview }: POPr
         <StyledOverlay id="position-overlay">
             <OverlayTitle>No Open Position.</OverlayTitle>
             {showMarketPreview ? (
-                <SelectMarketDropdown setOptions={setCurrentMarket} option={currentMarket} keyMap={marketKeyMap} />
+                <PortfolioDropdown
+                    setOptions={setCurrentMarket}
+                    option={currentMarket}
+                    keyMap={marketKeyMap}
+                    defaultValue="Select Market"
+                />
             ) : null}
 
             {currentMarket === -1 ? (
@@ -127,67 +131,4 @@ const InfoCol = styled.div`
 
 const SLogo = styled(Logo)`
     margin-right: 5px;
-`;
-
-interface PDProps {
-    setOptions: (val: number) => void;
-    option: number;
-    keyMap: Record<number, string>;
-    className?: string;
-}
-const SelectMarketDropdown: React.FC<PDProps> = styled(({ className, setOptions, option, keyMap }: PDProps) => {
-    const [rotated, setRotated] = useState(false);
-    const [selected, setSelected] = useState(false);
-    const menu = (
-        <Menu
-            onClick={({ key }: any) => {
-                setOptions(parseInt(key));
-                setRotated(false);
-                setSelected(true);
-            }}
-        >
-            {Object.keys(keyMap).map((key) => {
-                return (
-                    <MenuItem key={key}>
-                        <span>{keyMap[parseInt(key)]}</span>
-                    </MenuItem>
-                );
-            })}
-        </Menu>
-    );
-    const handleVisibleChange = (visible: boolean) => {
-        setRotated(visible);
-    };
-    return (
-        <Dropdown className={className} overlay={menu} placement="bottomCenter" onVisibleChange={handleVisibleChange}>
-            <Button height="medium">
-                {selected ? keyMap[option] : 'Select Market'}
-                <StyledTriangleDown className={rotated ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
-            </Button>
-        </Dropdown>
-    );
-})`
-    position: relative;
-    padding-right: 8px;
-    margin: unset;
-
-    &:hover {
-        background: none;
-        color: var(--color-primary);
-    }
-`;
-
-const StyledTriangleDown = styled.img`
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translate(0%, -50%);
-    height: 0.5rem;
-    transition: all 400ms ease-in-out;
-    display: inline;
-
-    &.rotate {
-        transform: rotate(180deg);
-        margin-top: -4px;
-    }
 `;
