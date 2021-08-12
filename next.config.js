@@ -17,6 +17,10 @@ module.exports = withAntdLess({
         webpack5: false,
     },
 
+    watchOptions: {
+        ignored: ['**/node_modules', '**/public/static' ],
+    },
+
     exportPathMap: () => {
         return {
             '/': { page: '/' },
