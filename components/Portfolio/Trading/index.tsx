@@ -44,7 +44,14 @@ const TradingPortfolio: FC<TPProps> = ({ allFilledOrders, tracers }: TPProps) =>
     const content = () => {
         switch (tab) {
             case 0:
-                return <Overview positions={positions} holdings={holdings} allFilledOrders={allFilledOrders} />;
+                return (
+                    <Overview
+                        tracers={tracers}
+                        positions={positions}
+                        holdings={holdings}
+                        allFilledOrders={allFilledOrders}
+                    />
+                );
             case 1:
                 return <Position tracers={tracers} allFilledOrders={allFilledOrders ?? {}} />;
             case 2:

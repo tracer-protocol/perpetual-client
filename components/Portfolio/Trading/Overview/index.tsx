@@ -6,7 +6,7 @@ import Tracer, { defaults } from '@libs/Tracer';
 import styled from 'styled-components';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
-import PositionOverlay from '@components/Overlay/PositionOverlay';
+import PositionMarketOverlay from '@components/Overlay/PositionMarketOverlay';
 import {
     VScrollContainer,
     PortfolioDropdown,
@@ -17,13 +17,15 @@ import {
     HPanel,
 } from '@components/Portfolio';
 import { LabelledOrders } from '@libs/types/OrderTypes';
+import { LabelledTracers } from '@libs/types/TracerTypes';
 
 interface OProps {
+    tracers: LabelledTracers;
     positions: Tracer[];
     holdings: Tracer[];
     allFilledOrders: LabelledOrders;
 }
-const Overview: FC<OProps> = ({ positions, holdings, allFilledOrders }: OProps) => {
+const Overview: FC<OProps> = ({ tracers, positions, holdings, allFilledOrders }: OProps) => {
     const { account } = useWeb3();
     const [currentPortfolio, setCurrentPortfolio] = useState(-1);
     const [currentPNL, setCurrentPNL] = useState(1);
@@ -47,11 +49,15 @@ const Overview: FC<OProps> = ({ positions, holdings, allFilledOrders }: OProps) 
                 <Title>Equity Breakdown</Title>
                 <DropdownContainer>
                     <PortfolioDropdown
-                        setOptions={setCurrentPortfolio}
-                        option={currentPortfolio}
+                        setOptions={(num) => setCurrentPortfolio(num as number)}
+                        selectedOption={currentPortfolio}
                         keyMap={portfolioKeyMap}
                     />
-                    <PortfolioDropdown setOptions={setCurrentPNL} option={currentPNL} keyMap={pnlKeyMap} />
+                    <PortfolioDropdown
+                        setOptions={(num) => setCurrentPNL(num as number)}
+                        selectedOption={currentPNL}
+                        keyMap={pnlKeyMap}
+                    />
                 </DropdownContainer>
             </SectionHeader>
             <HPanel background={`var(--color-background-secondary)`}>
@@ -82,7 +88,7 @@ const Overview: FC<OProps> = ({ positions, holdings, allFilledOrders }: OProps) 
                 {!account ? (
                     <ConnectOverlay />
                 ) : positions.length === 0 ? (
-                    <PositionOverlay tracers={positions} showMarketPreview />
+                    <PositionMarketOverlay tracers={tracers} />
                 ) : null}
             </HScrollContainer>
         </VScrollContainer>

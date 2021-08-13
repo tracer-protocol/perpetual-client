@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useState } from 'react';
+import React, { FC, useState } from 'react';
 import { Menu, MenuItem } from '@components/General/Menu';
 import Dropdown from 'antd/lib/dropdown';
 import { Button } from '@components/General';
@@ -65,45 +65,65 @@ export const SectionHeader = styled.div<SHProps>`
     border-bottom: ${(props: SHProps) => (props.border ? '1px solid var(--table-lightborder)' : 'none')};
 `;
 
+type KeyType = number | string;
 interface PDProps {
-    setOptions: (val: number) => void;
-    option: number;
-    keyMap: Record<number, string>;
     className?: string;
+    setOptions: (val: KeyType) => void;
+    selectedOption: KeyType;
+    keyMap: Record<KeyType, string>;
+    placeHolder?: string;
 }
-export const PortfolioDropdown: React.FC<PDProps> = styled(({ className, setOptions, option, keyMap }: PDProps) => {
-    const [rotated, setRotated] = useState(false);
-    const menu = (
-        <Menu
-            onClick={({ key }: any) => {
-                setOptions(parseInt(key));
-                setRotated(false);
-            }}
-        >
-            {Object.keys(keyMap).map((key) => {
-                return (
-                    <MenuItem key={key}>
-                        <span>{keyMap[parseInt(key)]}</span>
-                    </MenuItem>
-                );
-            })}
-        </Menu>
-    );
-    const handleVisibleChange = (visible: boolean) => {
-        setRotated(visible);
-    };
-    return (
-        <Dropdown className={className} overlay={menu} placement="bottomCenter" onVisibleChange={handleVisibleChange}>
-            <Button height="medium">
-                {keyMap[option]}
-                <StyledTriangleDown className={rotated ? 'rotate' : ''} src="/img/general/triangle_down_cropped.svg" />
-            </Button>
-        </Dropdown>
-    );
-})`
+
+export const PortfolioDropdown: FC<PDProps> = styled(
+    ({ className, setOptions, selectedOption, keyMap, placeHolder }: PDProps) => {
+        const [rotated, setRotated] = useState(false);
+        const [hasSelected, setHasSelected] = useState(false);
+        const menu = (
+            <Menu
+                onClick={({ key }) => {
+                    setOptions(key);
+                    setRotated(false);
+                    setHasSelected(true);
+                }}
+            >
+                {Object.keys(keyMap).map((key) => {
+                    return (
+                        <MenuItem key={key}>
+                            <span>{keyMap[key]}</span>
+                        </MenuItem>
+                    );
+                })}
+            </Menu>
+        );
+        const handleVisibleChange = (visible: boolean) => {
+            setRotated(visible);
+        };
+        return (
+            <Dropdown
+                className={className}
+                overlay={menu}
+                placement="bottomCenter"
+                onVisibleChange={handleVisibleChange}
+            >
+                <Button height="medium">
+                    {/* 
+                        If the user has not selected an option and has chosen a place holder 
+                        then display the placeholder
+                    */}
+                    {!hasSelected && placeHolder ? placeHolder : keyMap[selectedOption]}
+                    <StyledTriangleDown
+                        className={rotated ? 'rotate' : ''}
+                        src="/img/general/triangle_down_cropped.svg"
+                    />
+                </Button>
+            </Dropdown>
+        );
+    },
+)`
     position: relative;
     padding-right: 8px;
     margin: unset;
+
     &:hover {
         background: none;
         color: var(--color-primary);
