@@ -71,11 +71,11 @@ interface PDProps {
     setOptions: (val: KeyType) => void;
     selectedOption: KeyType;
     keyMap: Record<KeyType, string>;
-    defaultValue: string;
+    placeHolder?: string;
 }
 
 export const PortfolioDropdown: FC<PDProps> = styled(
-    ({ className, setOptions, selectedOption, keyMap, defaultValue }: PDProps) => {
+    ({ className, setOptions, selectedOption, keyMap, placeHolder }: PDProps) => {
         const [rotated, setRotated] = useState(false);
         const [hasSelected, setHasSelected] = useState(false);
         const menu = (
@@ -106,7 +106,11 @@ export const PortfolioDropdown: FC<PDProps> = styled(
                 onVisibleChange={handleVisibleChange}
             >
                 <Button height="medium">
-                    {hasSelected ? keyMap[selectedOption] : defaultValue}
+                    {/* 
+                        If the user has not selected an option and has chosen a place holder 
+                        then display the placeholder
+                    */}
+                    {!hasSelected && placeHolder ? placeHolder : keyMap[selectedOption]}
                     <StyledTriangleDown
                         className={rotated ? 'rotate' : ''}
                         src="/img/general/triangle_down_cropped.svg"

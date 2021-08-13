@@ -52,13 +52,11 @@ const Overview: FC<OProps> = ({ tracers, positions, holdings, allFilledOrders }:
                         setOptions={(num) => setCurrentPortfolio(num as number)}
                         selectedOption={currentPortfolio}
                         keyMap={portfolioKeyMap}
-                        defaultValue="Entire Portfolio"
                     />
                     <PortfolioDropdown
                         setOptions={(num) => setCurrentPNL(num as number)}
                         selectedOption={currentPNL}
                         keyMap={pnlKeyMap}
-                        defaultValue="All Time"
                     />
                 </DropdownContainer>
             </SectionHeader>

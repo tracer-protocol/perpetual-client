@@ -57,7 +57,6 @@ const Deposits: FC<DProps> = ({ parentHeight, insuranceContracts, depositHistory
                         setOptions={(num) => setCurrentPortfolio(num as number)}
                         selectedOption={currentPortfolio}
                         keyMap={portfolioKeyMap}
-                        defaultValue="All Time"
                     />
                 </SubNav>
             </div>

@@ -33,7 +33,7 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
                         setOptions={(market) => setCurrentMarket(market as string)}
                         selectedOption={currentMarket}
                         keyMap={marketKeyMap}
-                        defaultValue="Select Market"
+                        placeHolder="Select Market"
                     />
                     <MarketPreviewContainer>
                         <InfoCol>

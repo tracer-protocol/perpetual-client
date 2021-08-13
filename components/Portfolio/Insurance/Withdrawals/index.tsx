@@ -55,7 +55,6 @@ const Withdrawals: FC<WProps> = ({ parentHeight, withdrawalHistory }: WProps) =>
                         setOptions={(num) => setCurrentPortfolio(num as number)}
                         selectedOption={currentPortfolio}
                         keyMap={portfolioKeyMap}
-                        defaultValue="All Time"
                     />
                 </SubNav>
             </div>
