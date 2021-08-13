@@ -146,15 +146,18 @@ const logos: Record<string, string> = {
     LINK: '/img/logos/currencies/link.svg',
 };
 
+const tickerTypes = ['TSLA', 'ETH', 'LINK'];
+type TickerType = typeof tickerTypes[number];
+const isOfTickerType = (ticker: any): ticker is TickerType => tickerTypes.includes(ticker);
 interface LProps {
     className?: string;
-    ticker: 'TSLA' | 'ETH' | 'LINK' | undefined;
+    ticker: string | undefined;
     clear?: boolean; // true then display outlined image
 }
 export const Logo: React.FC<LProps> = styled(({ className, ticker, clear }: LProps) => {
     return (
         <>
-            {ticker !== undefined ? (
+            {isOfTickerType(ticker) && ticker !== undefined ? (
                 <img className={className} src={clear ? clearLogos[ticker] : logos[ticker]} alt="logo" />
             ) : null}
         </>

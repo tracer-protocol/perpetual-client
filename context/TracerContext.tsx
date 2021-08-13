@@ -69,14 +69,12 @@ export const SelectedTracerStore: React.FC<StoreProps> = ({ tracer, children }: 
 
     const [tracerState, tracerDispatch] = useReducer(reducer, initialState);
 
-    // Reset approval state on account change
-    const resetApproval = async () => {
-        selectedTracer?.removeApproved(selectedTracer.address);
+    // Recheck approval state on account change
+    const recheckApproval = async () => {
         await selectedTracer?.checkApproved(account);
-        selectedTracer?.setApproved(selectedTracer.address);
     };
     useEffect(() => {
-        resetApproval();
+        recheckApproval();
     }, [account]);
 
     useEffect(() => {
