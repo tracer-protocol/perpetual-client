@@ -146,7 +146,7 @@ const logos: Record<string, string> = {
     LINK: '/img/logos/currencies/link.svg',
 };
 
-const tickerTypes = ['TSLA', 'ETH', 'LINK'];
+const tickerTypes: string[] = ['TSLA', 'ETH', 'LINK'];
 const isOfTickerType = (ticker: string) => tickerTypes.includes(ticker);
 interface LProps {
     className?: string;
