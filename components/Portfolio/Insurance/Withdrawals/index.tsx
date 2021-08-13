@@ -52,8 +52,8 @@ const Withdrawals: FC<WProps> = ({ parentHeight, withdrawalHistory }: WProps) =>
             <div ref={subNav}>
                 <SubNav tabs={tabs} setTab={setTab} selected={tab}>
                     <PortfolioDropdown
-                        setOptions={setCurrentPortfolio}
-                        option={currentPortfolio}
+                        setOptions={(num) => setCurrentPortfolio(num as number)}
+                        selectedOption={currentPortfolio}
                         keyMap={portfolioKeyMap}
                     />
                 </SubNav>
