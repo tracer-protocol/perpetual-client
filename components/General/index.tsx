@@ -156,7 +156,7 @@ interface LProps {
 export const Logo: React.FC<LProps> = styled(({ className, ticker, clear }: LProps) => {
     return (
         <>
-            { ticker !== undefined && isOfTickerType(ticker) ? (
+            {ticker !== undefined && isOfTickerType(ticker) ? (
                 <img className={className} src={clear ? clearLogos[ticker] : logos[ticker]} alt="logo" />
             ) : null}
         </>
