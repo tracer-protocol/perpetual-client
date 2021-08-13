@@ -65,29 +65,31 @@ export const SectionHeader = styled.div<SHProps>`
     border-bottom: ${(props: SHProps) => (props.border ? '1px solid var(--table-lightborder)' : 'none')};
 `;
 
+type KeyType = number | string;
 interface PDProps {
     className?: string;
-    setOptions: (val: number) => void;
-    option: number;
-    keyMap: Record<number, string>;
-    defaultValue?: string;
+    setOptions: (val: KeyType) => void;
+    selectedOption: KeyType;
+    keyMap: Record<KeyType, string>;
+    defaultValue: string;
 }
+
 export const PortfolioDropdown: FC<PDProps> = styled(
-    ({ className, setOptions, option, keyMap, defaultValue }: PDProps) => {
+    ({ className, setOptions, selectedOption, keyMap, defaultValue }: PDProps) => {
         const [rotated, setRotated] = useState(false);
-        const [selected, setSelected] = useState(false);
+        const [hasSelected, setHasSelected] = useState(false);
         const menu = (
             <Menu
-                onClick={({ key }: any) => {
-                    setOptions(parseInt(key));
+                onClick={({ key }) => {
+                    setOptions(key);
                     setRotated(false);
-                    setSelected(true);
+                    setHasSelected(true);
                 }}
             >
                 {Object.keys(keyMap).map((key) => {
                     return (
                         <MenuItem key={key}>
-                            <span>{keyMap[parseInt(key)]}</span>
+                            <span>{keyMap[key]}</span>
                         </MenuItem>
                     );
                 })}
@@ -104,7 +106,7 @@ export const PortfolioDropdown: FC<PDProps> = styled(
                 onVisibleChange={handleVisibleChange}
             >
                 <Button height="medium">
-                    {defaultValue ? (selected ? keyMap[option] : defaultValue) : keyMap[option]}
+                    {hasSelected ? keyMap[selectedOption] : defaultValue}
                     <StyledTriangleDown
                         className={rotated ? 'rotate' : ''}
                         src="/img/general/triangle_down_cropped.svg"

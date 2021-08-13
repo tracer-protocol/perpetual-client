@@ -6,88 +6,59 @@ import { toApproxCurrency } from '@libs/utils';
 import MarketChange from '@components/General/MarketChange';
 import { LabelledTracers } from '@libs/types/TracerTypes';
 import { PortfolioDropdown } from '@components/Portfolio';
+import Tracer from '@libs/Tracer';
 
 interface POProps {
     tracers: LabelledTracers;
-    showMarketPreview: boolean;
 }
-const PositionMarketOverlay: FC<POProps> = ({ tracers, showMarketPreview }: POProps) => {
-    const [currentMarket, setCurrentMarket] = useState(-1);
-    const [marketKeyMap, setMarketKeyMap] = useState({});
+const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
+    const [currentMarket, setCurrentMarket] = useState('');
+    const [marketKeyMap, setMarketKeyMap] = useState<Record<string, string>>({});
 
     useEffect(() => {
-        const marketKeyMap: Record<number, string> = {};
-        Object.values(tracers).map((tracer: any, i: number) => {
-            marketKeyMap[i] = tracer.marketId;
+        const marketKeyMap: Record<string, string> = {};
+        Object.values(tracers).map((tracer: Tracer) => {
+            marketKeyMap[tracer.address] = tracer.marketId;
         });
         setMarketKeyMap(marketKeyMap);
+        setCurrentMarket(Object.keys(marketKeyMap)[0]);
     }, [tracers]);
 
     return (
         <StyledOverlay id="position-overlay">
             <OverlayTitle>No Open Position.</OverlayTitle>
-            {showMarketPreview ? (
-                <PortfolioDropdown
-                    setOptions={setCurrentMarket}
-                    option={currentMarket}
-                    keyMap={marketKeyMap}
-                    defaultValue="Select Market"
-                />
+            {Object.keys(marketKeyMap).length ? (
+                <>
+                    <PortfolioDropdown
+                        setOptions={(market) => setCurrentMarket(market as string)}
+                        selectedOption={currentMarket}
+                        keyMap={marketKeyMap}
+                        defaultValue="Select Market"
+                    />
+                    <MarketPreviewContainer>
+                        <InfoCol>
+                            <div className="title">Market</div>
+                            <div className="row">
+                                <SLogo ticker={tracers[currentMarket]?.baseTicker} /> {tracers[currentMarket]?.marketId}
+                            </div>
+                        </InfoCol>
+                        <InfoCol>
+                            <div className="title">Last Price</div>
+                            <div className="row">{toApproxCurrency(tracers[currentMarket]?.getOraclePrice())}</div>
+                        </InfoCol>
+                        <InfoCol>
+                            <div className="title">24h</div>
+                            <div className="row">
+                                <MarketChange amount={tracers[currentMarket]?.get24HourChange()} />
+                            </div>
+                        </InfoCol>
+                        <InfoCol>
+                            <div className="title">Max Leverage</div>
+                            <div className="row">{`${tracers[currentMarket]?.getMaxLeverage()}x`}</div>
+                        </InfoCol>
+                    </MarketPreviewContainer>
+                </>
             ) : null}
-
-            {currentMarket === -1 ? (
-                <MarketPreviewContainer>
-                    <InfoCol>
-                        <div className="title">Market</div>
-                        <div className="row">
-                            <SLogo ticker={tracers[Object.keys(tracers)[0]]?.baseTicker} />{' '}
-                            {tracers[Object.keys(tracers)[0]]?.marketId}
-                        </div>
-                    </InfoCol>
-                    <InfoCol>
-                        <div className="title">Last Price</div>
-                        <div className="row">
-                            {toApproxCurrency(tracers[Object.keys(tracers)[0]]?.getOraclePrice())}
-                        </div>
-                    </InfoCol>
-                    <InfoCol>
-                        <div className="title">24h</div>
-                        <div className="row">
-                            <MarketChange amount={tracers[Object.keys(tracers)[0]]?.get24HourChange()} />
-                        </div>
-                    </InfoCol>
-                    <InfoCol>
-                        <div className="title">Max Leverage</div>
-                        <div className="row">{`${tracers[Object.keys(tracers)[0]]?.getMaxLeverage()}x`}</div>
-                    </InfoCol>
-                </MarketPreviewContainer>
-            ) : (
-                <MarketPreviewContainer>
-                    <InfoCol>
-                        <div className="title">Market</div>
-                        <div className="row">
-                            <SLogo ticker={tracers[Object.keys(tracers)[currentMarket]].baseTicker} />{' '}
-                            {tracers[Object.keys(tracers)[currentMarket]].marketId}
-                        </div>
-                    </InfoCol>
-                    <InfoCol>
-                        <div className="title">Last Price</div>
-                        <div className="row">
-                            {toApproxCurrency(tracers[Object.keys(tracers)[currentMarket]].getOraclePrice())}
-                        </div>
-                    </InfoCol>
-                    <InfoCol>
-                        <div className="title">24h</div>
-                        <div className="row">
-                            <MarketChange amount={tracers[Object.keys(tracers)[currentMarket]].get24HourChange()} />
-                        </div>
-                    </InfoCol>
-                    <InfoCol>
-                        <div className="title">Max Leverage</div>
-                        <div className="row">{`${tracers[Object.keys(tracers)[currentMarket]].getMaxLeverage()}x`}</div>
-                    </InfoCol>
-                </MarketPreviewContainer>
-            )}
         </StyledOverlay>
     );
 };

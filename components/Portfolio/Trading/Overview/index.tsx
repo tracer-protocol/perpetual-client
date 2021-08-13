@@ -49,11 +49,17 @@ const Overview: FC<OProps> = ({ tracers, positions, holdings, allFilledOrders }:
                 <Title>Equity Breakdown</Title>
                 <DropdownContainer>
                     <PortfolioDropdown
-                        setOptions={setCurrentPortfolio}
-                        option={currentPortfolio}
+                        setOptions={(num) => setCurrentPortfolio(num as number)}
+                        selectedOption={currentPortfolio}
                         keyMap={portfolioKeyMap}
+                        defaultValue="Entire Portfolio"
                     />
-                    <PortfolioDropdown setOptions={setCurrentPNL} option={currentPNL} keyMap={pnlKeyMap} />
+                    <PortfolioDropdown
+                        setOptions={(num) => setCurrentPNL(num as number)}
+                        selectedOption={currentPNL}
+                        keyMap={pnlKeyMap}
+                        defaultValue="All Time"
+                    />
                 </DropdownContainer>
             </SectionHeader>
             <HPanel background={`var(--color-background-secondary)`}>
@@ -84,7 +90,7 @@ const Overview: FC<OProps> = ({ tracers, positions, holdings, allFilledOrders }:
                 {!account ? (
                     <ConnectOverlay />
                 ) : positions.length === 0 ? (
-                    <PositionMarketOverlay tracers={tracers} showMarketPreview />
+                    <PositionMarketOverlay tracers={tracers} />
                 ) : null}
             </HScrollContainer>
         </VScrollContainer>
