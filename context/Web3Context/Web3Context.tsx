@@ -37,7 +37,7 @@ type Web3Context = {
 };
 
 const Web3Context = React.createContext<Web3Context | undefined>(undefined);
-
+const DEFAULT_RPC = process.env.NEXT_PUBLIC_DEFAULT_RPC;
 /**
  * Handles connection through BlockNative Onboard library
  */
@@ -49,7 +49,7 @@ const Web3Store: React.FC<Web3ContextProps> = ({
     checkNetwork = (networkIds && networkIds.length > 0) || false,
 }) => {
     const [account, setAccount] = useState<string | undefined>(undefined);
-    const [web3, setWeb3] = useState<Web3 | undefined>(undefined);
+    const [web3, setWeb3] = useState<Web3 | undefined>(DEFAULT_RPC ? new Web3(DEFAULT_RPC) : undefined);
     const [network, setNetwork] = useState<number | undefined>(undefined);
     const [ethBalance, setEthBalance] = useState<number | undefined>(undefined);
     const [wallet, setWallet] = useState<Wallet | undefined>(undefined);
