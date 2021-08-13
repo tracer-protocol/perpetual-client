@@ -147,8 +147,7 @@ const logos: Record<string, string> = {
 };
 
 const tickerTypes = ['TSLA', 'ETH', 'LINK'];
-type TickerType = typeof tickerTypes[number];
-const isOfTickerType = (ticker: any): ticker is TickerType => tickerTypes.includes(ticker);
+const isOfTickerType = (ticker: string) => tickerTypes.includes(ticker);
 interface LProps {
     className?: string;
     ticker: string | undefined;
