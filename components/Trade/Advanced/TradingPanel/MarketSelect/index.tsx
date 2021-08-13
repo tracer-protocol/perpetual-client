@@ -166,7 +166,7 @@ export default styled(({ className }: MSProps) => {
         <div className={`${className}`}>
             <SBox color={popup ? '#011772' : '#000240'} $display={popup} onMouseLeave={() => setPopup(false)}>
                 <MarketContainer>
-                    <SLogo ticker={selectedTracer?.baseTicker ?? 'ETH'} />
+                    <SLogo ticker={selectedTracer?.baseTicker} />
                     <div className="my-auto">{selectedTracer?.marketId}</div>
                 </MarketContainer>
                 <div className="ml-auto flex" onMouseEnter={() => setPopup(true)}>
