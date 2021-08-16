@@ -180,7 +180,7 @@ export const HPanel = styled.div<HPProps>`
 `;
 
 export const StatusIndicator = styled.div<{ color: string }>`
-    color: ${(props) => props.color};
+    color: ${(props: { color: string }) => props.color};
 `;
 
 export const calcStatus: (

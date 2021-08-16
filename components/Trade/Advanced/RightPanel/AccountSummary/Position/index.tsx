@@ -147,7 +147,7 @@ const PositionTab: FC<PTProps> = styled(
                     <CloseOrderButton />
                 </CloseOrderContainer>
 
-                {!account ? <ConnectOverlay /> : balances.quote.eq(0) ? <PositionOverlay /> : null}
+                {!account ? <ConnectOverlay /> : balances.base.eq(0) ? <PositionOverlay /> : null}
             </div>
         );
     },
