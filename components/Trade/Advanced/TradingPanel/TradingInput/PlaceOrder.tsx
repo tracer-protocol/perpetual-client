@@ -36,7 +36,7 @@ export default (({ selectedTracer, account }: TIProps) => {
     const { order, orderDispatch } = useContext(OrderContext);
     return (
         <>
-            <StyledBox id="placeorder-panel">
+            <StyledBox id="open-position">
                 {/* Order type select */}
                 <OrderTypeSelect selected={order?.orderType ?? 0} />
 
@@ -57,72 +57,64 @@ export default (({ selectedTracer, account }: TIProps) => {
                         order={order ?? orderDefaults.order}
                     />
                 </Section>
-                {/* <Details>
-                    {order?.leverage !== 1 && exposure && price ? (
-                        <span>{`Leveraged at ${order?.leverage}x`}</span>
-                    ) : null}
-                    {exposure && price ? <Approx>{toApproxCurrency(exposure * price * leverage)}</Approx> : null}
-                </Details> */}
 
                 {/*Dont display price select if it is a market order*/}
-                <div id="adjustment-container">
-                    {order?.orderType === LIMIT ? (
-                        <>
-                            {/* LIMIT ORDER */}
-                            <Price
+                {order?.orderType === LIMIT ? (
+                    <>
+                        {/* LIMIT ORDER */}
+                        <Price
+                            className="px-8"
+                            orderDispatch={orderDispatch}
+                            selectedTracer={selectedTracer}
+                            price={order?.price ?? defaults.price}
+                        />
+                        <LimitTradeDetails
+                            fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
+                            balances={selectedTracer?.getBalance() ?? defaults.balances}
+                            exposure={order?.exposureBN ?? defaults.exposure}
+                            nextPosition={order?.nextPosition ?? defaults.balances}
+                            orderPrice={order?.price ?? 0}
+                            maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
+                        />
+                    </>
+                ) : (
+                    <>
+                        {/* MARKET ORDER */}
+                        <div id="adjust-position">
+                            <Divider
+                                text={'Adjust Position'}
+                                tooltip={{ key: 'adjust-position', props: { baseTicker: order?.market } }}
+                            />
+                            <LeverageInput
                                 className="px-8"
                                 orderDispatch={orderDispatch}
                                 selectedTracer={selectedTracer}
-                                price={order?.price ?? defaults.price}
+                                leverage={order?.leverage ?? 0}
+                                position={order?.position ?? LONG}
                             />
-                            <LimitTradeDetails
+                            <DoubleSidedSlider
+                                className="px-8"
+                                min={selectedTracer?.getMaxLeverage().negated().toNumber()}
+                                max={selectedTracer?.getMaxLeverage().toNumber()}
+                                value={order?.leverage ?? 0}
+                                orderDispatch={orderDispatch}
+                            />
+                            <MarketTradeDetails
                                 fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
                                 balances={selectedTracer?.getBalance() ?? defaults.balances}
-                                exposure={order?.exposureBN ?? defaults.exposure}
-                                nextPosition={order?.nextPosition ?? defaults.balances}
-                                orderPrice={order?.price ?? 0}
+                                order={order ?? orderDefaults.order}
                                 maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
                             />
-                        </>
-                    ) : (
-                        <>
-                            {/* MARKET ORDER */}
-                            <div id="order-panel">
-                                <Divider
-                                    text={'Adjust Position'}
-                                    tooltip={{ key: 'adjust-position', props: { baseTicker: order?.market } }}
-                                />
-                                <LeverageInput
-                                    className="px-8"
-                                    orderDispatch={orderDispatch}
-                                    selectedTracer={selectedTracer}
-                                    leverage={order?.leverage ?? 0}
-                                    position={order?.position ?? LONG}
-                                />
-                                <DoubleSidedSlider
-                                    className="px-8"
-                                    min={selectedTracer?.getMaxLeverage().negated().toNumber()}
-                                    max={selectedTracer?.getMaxLeverage().toNumber()}
-                                    value={order?.leverage ?? 0}
-                                    orderDispatch={orderDispatch}
-                                />
-                                <MarketTradeDetails
-                                    fairPrice={selectedTracer?.oraclePrice ?? defaults.oraclePrice}
-                                    balances={selectedTracer?.getBalance() ?? defaults.balances}
-                                    order={order ?? orderDefaults.order}
-                                    maxLeverage={selectedTracer?.maxLeverage ?? defaults.maxLeverage}
-                                />
-                            </div>
-                        </>
-                    )}
-
-                    {/* Place Order */}
-                    {order?.error === 'NO_ERROR' ? (
-                        <div className={'m-2'}>
-                            <AdvancedOrderButton>Place Order</AdvancedOrderButton>
                         </div>
-                    ) : null}
-                </div>
+                    </>
+                )}
+
+                {/* Place Order */}
+                {order?.error === 'NO_ERROR' ? (
+                    <div className={'m-2'}>
+                        <AdvancedOrderButton>Place Order</AdvancedOrderButton>
+                    </div>
+                ) : null}
             </StyledBox>
             <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
         </>
@@ -130,13 +122,11 @@ export default (({ selectedTracer, account }: TIProps) => {
 }) as React.FC<TIProps>;
 
 const StyledBox = styled(Box)`
-    transition: opacity 0.3s 0.1s, height: 0.3s 0.1s, padding 0.1s;
     position: relative;
     border-bottom: none;
     overflow: auto;
     display: block;
-    padding: 0;
+    padding: 0 0 8px;
     z-index: 1;
     background: var(--color-background-secondary);
-    padding-bottom: 8px;
 `;
