@@ -14,8 +14,6 @@ import {
 import { StatusIndicator, calcStatus } from '@components/Portfolio';
 import Tracer, { defaults } from '@libs/Tracer';
 import AccountModal from '@components/General/TracerModal/AccountModal';
-import { UserBalance } from '@libs/types';
-import BigNumber from 'bignumber.js';
 
 // const NoLeverageTip = <p>You have no leveraged trades open in this market.</p>;
 
@@ -24,25 +22,12 @@ const MarginAccounts: React.FC<{
 }> = ({ tracers }) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
-    const [unit, setUnit] = useState('NO_ID');
-    const [balances, setBalances] = useState(defaults.balances);
-    const [maxLeverage, setMaxLeverage] = useState(defaults.maxLeverage);
-    const [fairPrice, setFairPrice] = useState(defaults.fairPrice);
+    const [tracer, setTracer] = useState<Tracer>();
 
-    const handleClick = (
-        popup: boolean,
-        deposit: boolean,
-        unit: string,
-        balances: UserBalance,
-        maxLeverage: BigNumber,
-        fairPrice: BigNumber,
-    ) => {
+    const handleClick = (popup: boolean, deposit: boolean, tracer: Tracer) => {
         setPopup(popup);
         setDeposit(deposit);
-        setUnit(unit);
-        setBalances(balances);
-        setMaxLeverage(maxLeverage);
-        setFairPrice(fairPrice);
+        setTracer(tracer);
     };
 
     const headings = ['Market', 'Equity', 'Maintenance Margin', 'Available Margin', 'Status of Position'];
@@ -89,31 +74,11 @@ const MarginAccounts: React.FC<{
                                         <div className="flex flex-row my-auto ml-auto mr-4">
                                             <Button
                                                 className="mr-2"
-                                                onClick={(_e: any) =>
-                                                    handleClick(
-                                                        true,
-                                                        true,
-                                                        tracer.marketId?.split('/')[1],
-                                                        tracer.getBalance(),
-                                                        tracer.getMaxLeverage(),
-                                                        tracer.getFairPrice(),
-                                                    )
-                                                }
+                                                onClick={(_e: any) => handleClick(true, true, tracer)}
                                             >
                                                 Deposit
                                             </Button>
-                                            <Button
-                                                onClick={(_e: any) =>
-                                                    handleClick(
-                                                        true,
-                                                        false,
-                                                        tracer.marketId?.split('/')[1],
-                                                        tracer.getBalance(),
-                                                        tracer.getMaxLeverage(),
-                                                        tracer.getFairPrice(),
-                                                    )
-                                                }
-                                            >
+                                            <Button onClick={(_e: any) => handleClick(true, false, tracer)}>
                                                 Withdraw
                                             </Button>
                                         </div>
@@ -129,10 +94,10 @@ const MarginAccounts: React.FC<{
                 close={() => setPopup(false)}
                 isDeposit={deposit}
                 setDeposit={setDeposit}
-                unit={unit}
-                balances={balances}
-                maxLeverage={maxLeverage}
-                fairPrice={fairPrice}
+                unit={tracer?.marketId?.split('/')[1] ?? 'NO_ID'}
+                balances={tracer?.getBalance() ?? defaults.balances}
+                maxLeverage={tracer?.getMaxLeverage() ?? defaults.maxLeverage}
+                fairPrice={tracer?.getFairPrice() ?? defaults.fairPrice}
             />
         </>
     );
