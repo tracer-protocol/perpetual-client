@@ -25,7 +25,7 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
     }, [tracers]);
 
     return (
-        <StyledOverlay id="position-overlay">
+        <StyledOverlay>
             <OverlayTitle>No Open Position.</OverlayTitle>
             {Object.keys(marketKeyMap).length ? (
                 <>
@@ -66,7 +66,7 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
 export default PositionMarketOverlay;
 
 const StyledOverlay = styled(Overlay)`
-    background-color: var(--color-background-secondary);
+    background-color: var(--color-background-secondary) !important;
 `;
 
 const OverlayTitle = styled.div`

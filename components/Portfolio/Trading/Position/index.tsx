@@ -38,36 +38,6 @@ const Position: React.FC<{
         setShow(!show);
     };
 
-    const openRow = {
-        display: 'normal',
-        color: '#fff',
-        opacity: 1,
-        hoverBG: 'var(--color-accent)',
-        hoverCursor: 'pointer',
-    };
-
-    const showClosedRow = {
-        display: 'normal',
-        color: '##00000029',
-        opacity: 0.5,
-    };
-
-    const hideClosedRow = {
-        display: 'none',
-    };
-
-    const getRowStatus = (status: string, show: boolean) => {
-        if (status !== 'Closed') {
-            return openRow;
-        } else {
-            if (show) {
-                return showClosedRow;
-            } else {
-                return hideClosedRow;
-            }
-        }
-    };
-
     return (
         <>
             <Table>
@@ -94,7 +64,10 @@ const Position: React.FC<{
                             allFilledOrders[tracer.address] ?? [],
                         );
                         return (
-                            <TableRow key={`table-row-${i}`} theme={getRowStatus(status.text, show)}>
+                            <TableRow
+                                key={`table-row-${i}`}
+                                className={status.text === 'Closed' && !show ? 'hide' : ''}
+                            >
                                 <TableCell>
                                     <div className="flex flex-row">
                                         <div className="my-auto">

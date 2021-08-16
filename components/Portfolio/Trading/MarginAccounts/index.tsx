@@ -53,14 +53,12 @@ const MarginAccounts: React.FC<{
                         return (
                             <TableRow key={`table-row-${i}`}>
                                 <TableCell>
-                                    {/*<Tooltip title={NoLeverageTip}>*/}
                                     <div className="flex flex-row">
                                         <div className="my-auto">
                                             <Logo ticker={tracer.baseTicker} />
                                         </div>
                                         <div className="my-auto ml-2">{tracer.marketId}</div>
                                     </div>
-                                    {/*</Tooltip>*/}
                                 </TableCell>
                                 <TableCell>{toApproxCurrency(balances.totalMargin)}</TableCell>
                                 <TableCell>{toApproxCurrency(balances.minimumMargin)}</TableCell>

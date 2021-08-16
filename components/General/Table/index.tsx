@@ -21,10 +21,29 @@ export const TableLastHeading = styled(TableHeading)`
     border-right: none;
 `;
 
+export const TableCell = styled.td`
+    padding: 10px;
+    border-right: 1px solid var(--color-accent);
+    border-bottom: 1px solid var(--color-accent);
+
+    .secondary {
+        color: var(--color-secondary);
+    }
+`;
+
 export const TableRow = styled.tr`
-    transition: 0.5s;
-    color: white;
     opacity: 1;
+    transition: 1300ms;
+
+    &.hide {
+        opacity: 0;
+        visibility: collapse;
+        transition: 300ms;
+
+        ${TableCell} {
+            border: none;
+        }
+    }
 
     &:hover {
         background: var(--color-accent);
@@ -36,16 +55,6 @@ export const TableRow = styled.tr`
             background: none;
             cursor: auto;
         }
-    }
-`;
-
-export const TableCell = styled.td`
-    padding: 10px;
-    border-right: 1px solid var(--color-accent);
-    border-bottom: 1px solid var(--color-accent);
-
-    .secondary {
-        color: var(--color-secondary);
     }
 `;
 
