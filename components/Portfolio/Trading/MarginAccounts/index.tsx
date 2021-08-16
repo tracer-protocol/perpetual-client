@@ -12,13 +12,12 @@ import {
     TableHeader,
 } from '@components/General/Table';
 import { StatusIndicator, calcStatus } from '@components/Portfolio';
-import Tooltip from 'antd/lib/tooltip';
 import Tracer, { defaults } from '@libs/Tracer';
-import AccountModal from '@components/Trade/Advanced/TradingPanel/Account/AccountModal';
+import AccountModal from '@components/General/TracerModal/AccountModal';
 import { UserBalance } from '@libs/types';
 import BigNumber from 'bignumber.js';
 
-const NoLeverageTip = <p>You have no leveraged trades open in this market.</p>;
+// const NoLeverageTip = <p>You have no leveraged trades open in this market.</p>;
 
 const MarginAccounts: React.FC<{
     tracers: Tracer[];
@@ -69,14 +68,14 @@ const MarginAccounts: React.FC<{
                         return (
                             <TableRow key={`table-row-${i}`}>
                                 <TableCell>
-                                    <Tooltip title={NoLeverageTip}>
-                                        <div className="flex flex-row">
-                                            <div className="my-auto">
-                                                <Logo ticker={tracer.baseTicker} />
-                                            </div>
-                                            <div className="my-auto ml-2">{tracer.marketId}</div>
+                                    {/*<Tooltip title={NoLeverageTip}>*/}
+                                    <div className="flex flex-row">
+                                        <div className="my-auto">
+                                            <Logo ticker={tracer.baseTicker} />
                                         </div>
-                                    </Tooltip>
+                                        <div className="my-auto ml-2">{tracer.marketId}</div>
+                                    </div>
+                                    {/*</Tooltip>*/}
                                 </TableCell>
                                 <TableCell>{toApproxCurrency(balances.totalMargin)}</TableCell>
                                 <TableCell>{toApproxCurrency(balances.minimumMargin)}</TableCell>

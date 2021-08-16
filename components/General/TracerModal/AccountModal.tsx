@@ -2,13 +2,13 @@ import React, { useContext, useCallback, useReducer, useMemo } from 'react';
 import styled from 'styled-components';
 import { NumberSelect, Section } from '@components/General';
 import { Max } from '@components/General/Input/NumberSelect';
-import { UserBalance } from 'libs/types';
+import { UserBalance } from '@libs/types';
 import ErrorComponent from '@components/General/Error';
-import TracerModal, { modalReducer, ModalState } from '@components/General/TracerModal';
+import TracerModal, { modalReducer, ModalState } from '@components/General/TracerModal/index';
 import SlideSelect from '@components/General/SlideSelect';
 import { Option } from '@components/General/SlideSelect';
 import { Button, HiddenExpand, Previous } from '@components/General';
-import { TracerContext } from 'context';
+import { TracerContext } from '@context/index';
 import { BigNumber } from 'bignumber.js';
 import {
     calcTotalMargin,

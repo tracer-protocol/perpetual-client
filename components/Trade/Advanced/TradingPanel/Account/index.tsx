@@ -5,7 +5,7 @@ import { calcTotalMargin, calcBuyingPower, calcAvailableMarginPercent } from '@t
 import { Box, Button, Previous } from '@components/General';
 import { BigNumber } from 'bignumber.js';
 import Tracer, { defaults } from '@libs/Tracer';
-import AccountModal from './AccountModal';
+import AccountModal from '../../../../General/TracerModal/AccountModal';
 import { OrderState } from '@context/OrderContext';
 import { LIMIT } from '@libs/types/OrderTypes';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
