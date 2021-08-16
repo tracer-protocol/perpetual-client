@@ -18,7 +18,7 @@ interface HTextProps {
     noPadding?: boolean;
 }
 const HelperText = styled.p<HTextProps>`
-    padding: ${(props) => (props.noPadding ? '16px 16px 0px' : '16px 16px')};
+    padding: ${(props) => (props.noPadding ? '16px 16px 0' : '16px 16px')};
     font-size: var(--font-size-small);
     pointer-events: none;
     margin-bottom: 8px;
@@ -141,9 +141,9 @@ export const tourConfig = [
             left: '-30px',
         },
     },
-    // Market panel
+    // Open position
     {
-        selector: '#adjustment-container',
+        selector: '#open-position',
         // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (
@@ -185,7 +185,7 @@ export const tourConfig = [
             left: '30px',
         },
     },
-    // Position panel
+    // Monitor position
     {
         selector: '#account-summary-panel',
         // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
@@ -228,9 +228,9 @@ export const tourConfig = [
             left: '100px',
         },
     },
-    // Adjust position panel
+    // Adjust position
     {
-        selector: '#order-panel',
+        selector: '#adjust-position',
         // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
         content: () => {
             return (
@@ -266,7 +266,7 @@ export const tourConfig = [
             left: '30px',
         },
     },
-    // Close position container
+    // Close position
     {
         selector: '#position-close-container',
         // eslint-disable-next-line react/display-name,@typescript-eslint/explicit-module-boundary-types
