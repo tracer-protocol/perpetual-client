@@ -173,11 +173,7 @@ const Advanced: React.FC = styled(({ className }) => {
             <div className={`container ${className}`}>
                 <TradingPanel>
                     <MarketSelect account={account ?? ''} />
-                    <PlaceOrder
-                        data-tour-id="placeorder-panel"
-                        selectedTracer={selectedTracer}
-                        account={account ?? ''}
-                    />
+                    <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
                     <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} order={order} />
                 </TradingPanel>
                 <RightPanel>
