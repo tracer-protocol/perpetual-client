@@ -108,11 +108,6 @@ const Advanced: React.FC = styled(({ className }) => {
 
         // Reset the elements affected by the tour
 
-        // Reset navbar z-index
-        const navbar = document.getElementById('nav') as HTMLElement;
-        if (navbar) {
-            navbar.removeAttribute('style');
-        }
         // Show the 'No Position Open' again
         const positionOverlay = document.getElementById('position-overlay') as HTMLElement;
         if (positionOverlay) {

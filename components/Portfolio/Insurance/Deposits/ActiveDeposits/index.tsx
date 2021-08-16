@@ -42,9 +42,9 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, insuranceContracts }: ADPro
                                 onMouseEnter={() => setShowButton(i)}
                                 onMouseLeave={() => setShowButton(-1)}
                             >
-                                <TableCell>{insuranceContract.market}</TableCell>
-                                <TableCell>{toPercent(insuranceContract.apy.toNumber())}</TableCell>
-                                <TableCell>{insuranceContract.userBalance.toNumber()}</TableCell>
+                                <TableCell>{insuranceContract?.market}</TableCell>
+                                <TableCell>{toPercent(insuranceContract?.apy?.toNumber())}</TableCell>
+                                <TableCell>{insuranceContract?.userBalance?.toNumber()}</TableCell>
                                 <TableCell>-</TableCell>
                                 <TableCell>
                                     <div className="flex">
