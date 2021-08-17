@@ -17,14 +17,14 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
     const [marketKeyMap, setMarketKeyMap] = useState<Record<string, string>>({});
     const [count, setCount] = useState(0);
 
-    const [show, setShow] = useState(NaN);
+    const [show, setShow] = useState(false);
     const updateTimer = React.useRef(null);
 
     function setUpdate() {
-        setShow(0);
+        setShow(false);
         // @ts-ignore
         updateTimer.current = setTimeout(() => {
-            setShow(1);
+            setShow(true);
             updateTimer.current = null;
         }, 100);
     }
