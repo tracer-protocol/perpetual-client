@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useRef } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Overlay from '@components/Overlay';
 import { Button, Logo } from '@components/General';
@@ -15,49 +15,34 @@ interface POProps {
 const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
     const [currentMarket, setCurrentMarket] = useState('');
     const [marketKeyMap, setMarketKeyMap] = useState<Record<string, string>>({});
-    const [count, setCount] = useState(0);
-
+    const count = useRef<number>(0);
     const [show, setShow] = useState(false);
-    const updateTimer = useRef(null);
-
-    function setUpdate() {
-        setShow(false);
-        // @ts-ignore
-        updateTimer.current = setTimeout(() => {
-            setShow(true);
-            updateTimer.current = null;
-        }, 100);
-    }
-
-    useEffect(() => {
-        if (!updateTimer.current) {
-            setUpdate();
-        }
-    }, [count]);
-
-    useEffect(() => {
-        return () => {
-            if (updateTimer.current) {
-                // @ts-ignore
-                clearTimeout(updateTimer.current);
-            }
-        };
-    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
             // Increment count every 6 seconds
-            if (count === Object.keys(marketKeyMap).length - 1) {
-                setCount(0);
+            // hide element
+            setShow(false);
+
+            // increment count
+            if (count.current === Object.keys(marketKeyMap).length - 1) {
+                count.current = 0;
             } else {
-                setCount(count + 1);
+                count.current = count.current + 1;
             }
+            setTimeout(() => {
+                // display elements after 0.3 seconds
+                setShow(true);
+            }, 300);
         }, 6000);
-        setCurrentMarket(Object.keys(marketKeyMap)[count]);
         return () => {
             clearInterval(interval);
         };
-    }, [count]);
+    }, []);
+
+    useEffect(() => {
+        setCurrentMarket(Object.keys(marketKeyMap)[count.current]);
+    }, [count.current]);
 
     useEffect(() => {
         const marketKeyMap: Record<string, string> = {};
@@ -142,10 +127,11 @@ const MarketPreviewContainer = styled.div`
         align-items: center;
         font-size: var(--font-size-medium);
         opacity: 0;
-
+        transition: 0.3s;
+        padding-bottom: 0.5rem;
         &.show {
             opacity: 1;
-            transition: 1.5s;
+            padding-bottom: 0;
         }
     }
 `;
