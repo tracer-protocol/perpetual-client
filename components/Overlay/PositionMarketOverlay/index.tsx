@@ -17,6 +17,33 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
     const [marketKeyMap, setMarketKeyMap] = useState<Record<string, string>>({});
     const [count, setCount] = useState(0);
 
+    const [show, setShow] = useState(NaN);
+    const updateTimer = React.useRef(null);
+
+    function setUpdate() {
+        setShow(0);
+        // @ts-ignore
+        updateTimer.current = setTimeout(() => {
+            setShow(1);
+            updateTimer.current = null;
+        }, 100);
+    }
+
+    useEffect(() => {
+        if (!updateTimer.current) {
+            setUpdate();
+        }
+    }, [count]);
+
+    useEffect(() => {
+        return () => {
+            if (updateTimer.current) {
+                // @ts-ignore
+                clearTimeout(updateTimer.current);
+            }
+        };
+    }, []);
+
     useEffect(() => {
         const interval = setInterval(() => {
             if (count === Object.keys(marketKeyMap).length - 1) {
@@ -24,8 +51,7 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
             } else {
                 setCount(count + 1);
             }
-        }, 3000);
-
+        }, 6000);
         return () => {
             clearInterval(interval);
         };
@@ -57,13 +83,15 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
                     <MarketPreviewContainer>
                         <InfoCol>
                             <div className="title">Market</div>
-                            <div className="row">
+                            <div className={`${show ? 'show' : ''} row`}>
                                 <SLogo ticker={tracers[currentMarket]?.baseTicker} /> {tracers[currentMarket]?.marketId}
                             </div>
                         </InfoCol>
                         <InfoCol>
                             <div className="title">Last Price</div>
-                            <div className="row">{toApproxCurrency(tracers[currentMarket]?.getOraclePrice())}</div>
+                            <div className={`${show ? 'show' : ''} row`}>
+                                {toApproxCurrency(tracers[currentMarket]?.getOraclePrice())}
+                            </div>
                         </InfoCol>
                         <InfoCol>
                             <div className="title">24h</div>
@@ -73,7 +101,9 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
                         </InfoCol>
                         <InfoCol>
                             <div className="title">Max Leverage</div>
-                            <div className="row">{`${tracers[currentMarket]?.getMaxLeverage()}x`}</div>
+                            <div className={`${show ? 'show' : ''} row`}>{`${tracers[
+                                currentMarket
+                            ]?.getMaxLeverage()}x`}</div>
                         </InfoCol>
                     </MarketPreviewContainer>
                 </>
@@ -113,15 +143,11 @@ const MarketPreviewContainer = styled.div`
         display: flex;
         align-items: center;
         font-size: var(--font-size-medium);
-        animation: fadeIn 2s;
+        opacity: 0;
 
-        @keyframes fadeIn {
-            0% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
+        &.show {
+            opacity: 1;
+            transition: 1.5s;
         }
     }
 `;
