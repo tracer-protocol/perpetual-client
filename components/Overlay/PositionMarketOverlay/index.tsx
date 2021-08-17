@@ -46,19 +46,17 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
 
     useEffect(() => {
         const interval = setInterval(() => {
+            // Increment count every 6 seconds
             if (count === Object.keys(marketKeyMap).length - 1) {
                 setCount(0);
             } else {
                 setCount(count + 1);
             }
         }, 6000);
+        setCurrentMarket(Object.keys(marketKeyMap)[count]);
         return () => {
             clearInterval(interval);
         };
-    }, [count]);
-
-    useEffect(() => {
-        setCurrentMarket(Object.keys(marketKeyMap)[count]);
     }, [count]);
 
     useEffect(() => {
