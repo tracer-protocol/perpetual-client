@@ -1,12 +1,13 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Overlay from '@components/Overlay';
-import { Logo } from '@components/General';
+import { Button, Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 import MarketChange from '@components/General/MarketChange';
 import { LabelledTracers } from '@libs/types/TracerTypes';
 import { PortfolioDropdown } from '@components/Portfolio';
 import Tracer from '@libs/Tracer';
+import Link from 'next/link';
 
 interface POProps {
     tracers: LabelledTracers;
@@ -58,6 +59,11 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
                     </MarketPreviewContainer>
                 </>
             ) : null}
+            <OpenPositionWrapper>
+                <Link href="/">
+                    <Button height="medium">Open Position</Button>
+                </Link>
+            </OpenPositionWrapper>
         </StyledOverlay>
     );
 };
@@ -97,4 +103,8 @@ const InfoCol = styled.div`
 
 const SLogo = styled(Logo)`
     margin-right: 5px;
+`;
+
+const OpenPositionWrapper = styled.div`
+    padding: 10px;
 `;
