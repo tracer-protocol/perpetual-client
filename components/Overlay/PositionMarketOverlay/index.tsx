@@ -15,6 +15,25 @@ interface POProps {
 const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
     const [currentMarket, setCurrentMarket] = useState('');
     const [marketKeyMap, setMarketKeyMap] = useState<Record<string, string>>({});
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (count === Object.keys(marketKeyMap).length - 1) {
+                setCount(0);
+            } else {
+                setCount(count + 1);
+            }
+        }, 3000);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, [count]);
+
+    useEffect(() => {
+        setCurrentMarket(Object.keys(marketKeyMap)[count]);
+    }, [count]);
 
     useEffect(() => {
         const marketKeyMap: Record<string, string> = {};
@@ -22,7 +41,7 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
             marketKeyMap[tracer.address] = tracer.marketId;
         });
         setMarketKeyMap(marketKeyMap);
-        setCurrentMarket(Object.keys(marketKeyMap)[0]);
+        setCurrentMarket(Object.keys(marketKeyMap)[count]);
     }, [tracers]);
 
     return (
@@ -94,6 +113,16 @@ const MarketPreviewContainer = styled.div`
         display: flex;
         align-items: center;
         font-size: var(--font-size-medium);
+        animation: fadeIn 2s;
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
     }
 `;
 
