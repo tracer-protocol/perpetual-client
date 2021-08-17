@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import Overlay from '@components/Overlay';
 import { Button, Logo } from '@components/General';
@@ -18,7 +18,7 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
     const [count, setCount] = useState(0);
 
     const [show, setShow] = useState(false);
-    const updateTimer = React.useRef(null);
+    const updateTimer = useRef(null);
 
     function setUpdate() {
         setShow(false);
