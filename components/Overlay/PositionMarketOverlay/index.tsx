@@ -116,28 +116,32 @@ const useCurrentMarket = (tracers: LabelledTracers) => {
     const [marketKeyMap, setMarketKeyMap] = useState<Record<string, string>>({});
     const [count, setCount] = useState<number>(0);
     const [show, setShow] = useState(false);
+    const [scroll, setScroll] = useState(false);
 
     useEffect(() => {
         // if it is currently showing then wait 6 seconds and update
-        if (show) {
+        if (show && scroll) {
             setTimeout(() => {
                 // increment count
                 if (count >= Object.keys(marketKeyMap).length - 1) {
                     setCount(0);
-                    console.log('setting count');
                 } else {
                     setCount(count + 1);
-                    console.log('incrementing count');
                 }
                 setShow(false);
-                // wait 0.3 seconds then display
-                setTimeout(() => {
-                    setCurrentMarket(Object.keys(marketKeyMap)[count]);
+                const newMarket = Object.keys(marketKeyMap)[count];
+                if (currentMarket !== newMarket) {
+                    // wait 0.3 seconds then display
+                    setTimeout(() => {
+                        setCurrentMarket(newMarket);
+                        setShow(true);
+                    }, 300);
+                } else {
                     setShow(true);
-                }, 300);
+                }
             }, 6000);
         }
-    }, [show]);
+    }, [show, scroll]);
 
     // set market key map which tracers change
     useEffect(() => {
@@ -148,6 +152,9 @@ const useCurrentMarket = (tracers: LabelledTracers) => {
         });
         setMarketKeyMap(marketKeyMap);
         setCurrentMarket(Object.keys(marketKeyMap)[count]);
+        if (Object.keys(marketKeyMap).length > 1) {
+            setScroll(true);
+        }
         setShow(true);
     }, [tracers]);
 
