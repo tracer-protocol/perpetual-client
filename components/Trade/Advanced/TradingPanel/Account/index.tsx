@@ -9,10 +9,12 @@ import AccountModal from '../../../../General/TracerModal/AccountModal';
 import { OrderState } from '@context/OrderContext';
 import { LIMIT } from '@libs/types/OrderTypes';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
-import CalculatorModal from './Calculator';
-import { CalculatorStore } from '@context/CalculatorContext';
 import { UserBalance } from 'libs/types';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
+import { CalculatorStore1 } from '@context/CalculatorContext1';
+import { CalculatorStore2 } from '@context/CalculatorContext2';
+import CalculatorModal1 from './CalculatorModal1';
+import CalculatorModal2 from '@components/Trade/Advanced/TradingPanel/Account/CalculatorModal2';
 
 type InfoProps = {
     order: OrderState | undefined;
@@ -77,10 +79,11 @@ interface APProps {
 const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
-    const [calculator, showCalculator] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
+    const [showCalculator1, setShowCalculator1] = useState(false);
+    const [showCalculator2, setShowCalculator2] = useState(false);
 
     const handleClick = (popup: boolean, deposit: boolean) => {
         setPopup(popup);
@@ -91,9 +94,9 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title hide={!!order?.exposureBN.toNumber() ?? false}>
                 <span>Margin Account</span>
-                <Button id="calculator-button" onClick={() => showCalculator(true)}>
-                    Calculator
-                </Button>
+                {/*TODO: Add ID calculator-button*/}
+                <Button onClick={() => setShowCalculator1(true)}>Calculator</Button>
+                <Button onClick={() => setShowCalculator2(true)}>Calculator</Button>
             </Title>
             <Item>
                 <h3>
@@ -148,16 +151,26 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
                 maxLeverage={maxLeverage}
                 fairPrice={fairPrice}
             />
-            <CalculatorStore>
-                <CalculatorModal
-                    display={calculator}
-                    close={() => showCalculator(false)}
+            <CalculatorStore1>
+                <CalculatorModal1
+                    display={showCalculator1}
+                    close={() => setShowCalculator1(false)}
                     baseTicker={selectedTracer?.baseTicker ?? 'NO_ID'}
                     quoteTicker={selectedTracer?.quoteTicker ?? 'NO_ID'}
                     balances={balances}
                     fairPrice={fairPrice}
                 />
-            </CalculatorStore>
+            </CalculatorStore1>
+            <CalculatorStore2>
+                <CalculatorModal2
+                    display={showCalculator2}
+                    close={() => setShowCalculator2(false)}
+                    baseTicker={selectedTracer?.baseTicker ?? 'NO_ID'}
+                    quoteTicker={selectedTracer?.quoteTicker ?? 'NO_ID'}
+                    balances={balances}
+                    fairPrice={fairPrice}
+                />
+            </CalculatorStore2>
             {!account ? <ConnectOverlay /> : null}
         </AccountInfo>
     );
