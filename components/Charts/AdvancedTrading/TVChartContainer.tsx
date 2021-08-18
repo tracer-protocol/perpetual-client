@@ -17,8 +17,6 @@ export interface ChartContainerProps {
     symbol: ChartingLibraryWidgetOptions['symbol'];
     interval: ChartingLibraryWidgetOptions['interval'];
 
-    // BEWARE: no trailing slash is expected in feed URL
-    datafeedUrl: string;
     libraryPath: ChartingLibraryWidgetOptions['library_path'];
     chartsStorageUrl: ChartingLibraryWidgetOptions['charts_storage_url'];
     chartsStorageApiVersion: ChartingLibraryWidgetOptions['charts_storage_api_version'];
@@ -28,10 +26,16 @@ export interface ChartContainerProps {
     autosize: ChartingLibraryWidgetOptions['autosize'];
     studiesOverrides: ChartingLibraryWidgetOptions['studies_overrides'];
     containerId: ChartingLibraryWidgetOptions['container_id'];
+    selectedTracer: {
+        address: string;
+        marketId: string;
+    };
 }
 
 export interface ChartContainerState {
     showChart: boolean;
+    address: string;
+    marketId: string;
 }
 
 function getLanguageFromURL(): LanguageCode | null {
@@ -42,12 +46,16 @@ function getLanguageFromURL(): LanguageCode | null {
 
 export default class TVChartContainer extends React.PureComponent<Partial<ChartContainerProps>, ChartContainerState> {
     public static defaultProps: ChartContainerProps = {
-        symbol: 'Coinbase:BTC/USD',
-        interval: '5D' as ResolutionString,
+        symbol: 'ETH/USD',
+        selectedTracer: {
+            address: '',
+            marketId: '',
+        },
+        interval: '1D' as ResolutionString,
         containerId: 'tv_chart_container',
-        datafeedUrl: 'https://demo_feed.tradingview.com',
         libraryPath: '/static/charting_library/',
-        chartsStorageUrl: 'https://saveload.tradingview.com',
+        chartsStorageUrl: '',
+        // chartsStorageUrl: 'https://saveload.tradingview.com',
         chartsStorageApiVersion: '1.1',
         clientId: 'tradingview.com',
         userId: 'public_user_id',
@@ -57,7 +65,11 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
     };
     constructor(props: ChartContainerProps) {
         super(props);
-        this.state = { showChart: false };
+        this.state = {
+            showChart: false,
+            address: '',
+            marketId: 'ETH/USD',
+        };
         this.setShowChart = this.setShowChart.bind(this);
     }
 
@@ -68,7 +80,7 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
     private tvWidget: IChartingLibraryWidget | null = null;
 
     public componentDidMount(): void {
-        console.log(this.props.interval)
+        console.log(this.props.interval);
         // @ts-ignore
         const widgetOptions: ChartingLibraryWidgetOptions = {
             debug: false,
@@ -80,11 +92,11 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
             library_path: this.props.libraryPath as string,
             locale: getLanguageFromURL() || 'en',
             disabled_features: [
-                'use_localstorage_for_settings', 
-                'save_chart_properties_to_local_storage', 
+                'use_localstorage_for_settings',
+                'save_chart_properties_to_local_storage',
                 'header_symbol_search',
                 'timeframes_toolbar',
-                'go_to_date'
+                'go_to_date',
             ],
             enabled_features: [],
             charts_storage_url: this.props.chartsStorageUrl,
@@ -125,17 +137,30 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
                         title: 'Notification',
                         body: 'TradingView Charting Library API works correctly',
                         callback: () => {
-                            console.log('Noticed!');
+                            console.debug('Noticed TVChart');
                         },
                     }),
                 );
                 button.innerHTML = 'Check API';
             });
-            tvWidget.activeChart().setVisibleRange(
-                { from: Date.now() - 60000, to: Date.now() },
-            ).then(() => console.log('New visible range is applied'));
             this.setShowChart();
         });
+    }
+
+    public componentDidUpdate(prevProps: any) {
+        if (prevProps.selectedTracer.address !== this.props?.selectedTracer?.address) {
+            console.log('Tracer has changed, new tracer', this.props.selectedTracer);
+            this.setState({ showChart: false });
+            if (this.props?.selectedTracer?.marketId === 'ETH/USD') {
+                this.tvWidget?.setSymbol('ETH/USD', '1D' as ChartingLibraryWidgetOptions['interval'], () => {
+                    this.setState({ showChart: true });
+                });
+            } else {
+                this.tvWidget?.setSymbol('BTC/USD', '1D' as ChartingLibraryWidgetOptions['interval'], () => {
+                    this.setState({ showChart: true });
+                });
+            }
+        }
     }
 
     public componentWillUnmount(): void {
@@ -146,11 +171,10 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
     }
 
     public render(): JSX.Element {
-        console.log(this.state);
         return (
             <>
                 <div id={this.props.containerId} className={styles.TVChartContainer} />
-                {/* {!this.state.showChart ? <Loading component={TracerLoading} className="tracer-loading" /> : null} */}
+                {!this.state.showChart ? <Loading component={TracerLoading} className="tracer-loading" /> : null}
             </>
         );
     }
