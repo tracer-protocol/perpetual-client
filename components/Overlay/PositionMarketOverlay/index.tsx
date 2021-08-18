@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Overlay from '@components/Overlay';
 import { Button, Logo } from '@components/General';
@@ -12,46 +12,9 @@ import Link from 'next/link';
 interface POProps {
     tracers: LabelledTracers;
 }
+
 const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
-    const [currentMarket, setCurrentMarket] = useState('');
-    const [marketKeyMap, setMarketKeyMap] = useState<Record<string, string>>({});
-    const count = useRef<number>(0);
-    const [show, setShow] = useState(false);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            // Increment count every 6 seconds
-            // hide element
-            setShow(false);
-
-            // increment count
-            if (count.current === Object.keys(marketKeyMap).length - 1) {
-                count.current = 0;
-            } else {
-                count.current = count.current + 1;
-            }
-            setTimeout(() => {
-                // display elements after 0.3 seconds
-                setShow(true);
-            }, 300);
-        }, 6000);
-        return () => {
-            clearInterval(interval);
-        };
-    }, []);
-
-    useEffect(() => {
-        setCurrentMarket(Object.keys(marketKeyMap)[count.current]);
-    }, [count.current]);
-
-    useEffect(() => {
-        const marketKeyMap: Record<string, string> = {};
-        Object.values(tracers).map((tracer: Tracer) => {
-            marketKeyMap[tracer.address] = tracer.marketId;
-        });
-        setMarketKeyMap(marketKeyMap);
-        setCurrentMarket(Object.keys(marketKeyMap)[count.current]);
-    }, [tracers]);
+    const { show, currentMarket, marketKeyMap, setCurrentMarket } = useCurrentMarket(tracers);
 
     return (
         <StyledOverlay>
@@ -147,3 +110,52 @@ const SLogo = styled(Logo)`
 const OpenPositionWrapper = styled.div`
     padding: 10px;
 `;
+
+const useCurrentMarket = (tracers: LabelledTracers) => {
+    const [currentMarket, setCurrentMarket] = useState('');
+    const [marketKeyMap, setMarketKeyMap] = useState<Record<string, string>>({});
+    const [count, setCount] = useState<number>(0);
+    const [show, setShow] = useState(false);
+
+    // set new current market whenever count changes
+    useEffect(() => {
+        // if it is currently showing then wait 6 seconds and update
+        if (show) {
+            setTimeout(() => {
+                // increment count
+                if (count >= Object.keys(marketKeyMap).length - 1) {
+                    setCount(0);
+                    console.log('setting count');
+                } else {
+                    setCount(count + 1);
+                    console.log('incrementing count');
+                }
+                setShow(false);
+                // wait 0.3 seconds then display
+                setTimeout(() => {
+                    setCurrentMarket(Object.keys(marketKeyMap)[count]);
+                    setShow(true);
+                }, 300);
+            }, 6000);
+        }
+    }, [show]);
+
+    // set market key map which tracers change
+    useEffect(() => {
+        setShow(false);
+        const marketKeyMap: Record<string, string> = {};
+        Object.values(tracers).map((tracer: Tracer) => {
+            marketKeyMap[tracer.address] = tracer.marketId;
+        });
+        setMarketKeyMap(marketKeyMap);
+        setCurrentMarket(Object.keys(marketKeyMap)[count]);
+        setShow(true);
+    }, [tracers]);
+
+    return {
+        show,
+        marketKeyMap,
+        currentMarket,
+        setCurrentMarket,
+    };
+};
