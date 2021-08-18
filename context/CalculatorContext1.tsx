@@ -20,7 +20,7 @@ export interface ContextProps {
     calculatorDispatch: React.Dispatch<CalculatorAction>;
 }
 
-export const CalculatorContext = React.createContext<Partial<ContextProps>>({} as ContextProps);
+export const CalculatorContext1 = React.createContext<Partial<ContextProps>>({} as ContextProps);
 
 // Implemented like this as addition of any two of these values is unique
 //  this makes it easier when calculating and keeping track of which inputs are locked
@@ -70,7 +70,7 @@ const defaultState: CalculatorState = {
     locked: [],
     error: 'NO_ERROR',
 };
-export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) => {
+export const CalculatorStore1: React.FC<StoreProps> = ({ children }: StoreProps) => {
     const { selectedTracer } = useContext(TracerContext);
 
     const initialState: CalculatorState = {
@@ -186,14 +186,14 @@ export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) 
     const [calculatorState, calculatorDispatch] = useReducer(reducer, initialState);
 
     return (
-        <CalculatorContext.Provider
+        <CalculatorContext1.Provider
             value={{
                 calculatorState,
                 calculatorDispatch,
             }}
         >
             {children}
-        </CalculatorContext.Provider>
+        </CalculatorContext1.Provider>
     );
 };
 

@@ -10,14 +10,14 @@ import { Button, HiddenExpand, LockContainer, NumberSelect } from '@components/G
 import ErrorComponent, { CalculatorErrors, ErrorKey } from '@components/General/Error';
 import { NumberSelectHeader } from '@components/General/Input/NumberSelect';
 import {
-    CalculatorContext,
+    CalculatorContext2,
     ContextProps,
     LOCK_EXPOSURE,
     LOCK_MARGIN,
     LOCK_LEVERAGE,
     LOCK_LIQUIDATION,
     CalculatorAction,
-} from '@context/CalculatorContext';
+} from '@context/CalculatorContext2';
 import { defaults } from '@libs/Tracer';
 import { InfoCircleOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { toApproxCurrency } from '@libs/utils';
@@ -25,7 +25,13 @@ import { CalculatorTip } from '@components/Tooltips';
 import { LIMIT, LONG } from '@libs/types/OrderTypes';
 import { Options } from '@context/TransactionContext';
 
-type CalculatorModalProps = {
+const initialState: ModalState = {
+    amount: NaN,
+    loading: false,
+    title: 'Calculator',
+    subTitle: '',
+};
+interface CMProps {
     className?: string;
     close: () => any;
     display: boolean;
@@ -33,17 +39,9 @@ type CalculatorModalProps = {
     baseTicker: string;
     balances: UserBalance;
     fairPrice: BigNumber;
-};
-
-const initialState: ModalState = {
-    amount: NaN,
-    loading: false,
-    title: 'Calculator',
-    subTitle: '',
-};
-
-export default styled(
-    ({ className, close, baseTicker, quoteTicker, balances, display, fairPrice }: CalculatorModalProps) => {
+}
+const CalculatorModal2: FC<CMProps> = styled(
+    ({ className, close, baseTicker, quoteTicker, balances, display, fairPrice }: CMProps) => {
         const {
             selectedTracer,
             deposit = () => console.error('Deposit is not defined'),
@@ -62,7 +60,7 @@ export default styled(
                 locked,
             },
             calculatorDispatch,
-        } = useContext(CalculatorContext) as ContextProps;
+        } = useContext(CalculatorContext2) as ContextProps;
         const { orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
         const [modalState, modalDispatch] = useReducer(modalReducer, initialState);
 
@@ -251,7 +249,9 @@ export default styled(
     },
 )`
     max-width: 434px !important;
-` as React.FC<CalculatorModalProps>;
+`;
+
+export default CalculatorModal2;
 
 const InfoBox = styled(InfoCircleOutlined)`
     vertical-align: 0.125rem;

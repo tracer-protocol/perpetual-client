@@ -90,6 +90,10 @@ export const CalculatorErrors: Record<string, ErrorBox> = {
         name: 'Invalid Inputs',
         message: 'You must provide two inputs',
     },
+    INVALID_INPUTS_2: {
+        name: 'Invalid Inputs',
+        message: 'Please provide two inputs',
+    },
     DANGEROUS_POSITION: {
         name: 'Dangerous Position',
         message: 'Liquidation price is within 1.5% of current fair price',
@@ -182,7 +186,7 @@ const Error: React.FC<EProps> = styled(({ className, error, message, context }: 
 
     .message {
         transition: all 0.4s;
-        margin: 0px;
+        margin: 0;
     }
 
     &.show .message {
