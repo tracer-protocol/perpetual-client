@@ -50,7 +50,7 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
             marketKeyMap[tracer.address] = tracer.marketId;
         });
         setMarketKeyMap(marketKeyMap);
-        setCurrentMarket(Object.keys(marketKeyMap)[count]);
+        setCurrentMarket(Object.keys(marketKeyMap)[count.current]);
     }, [tracers]);
 
     return (
