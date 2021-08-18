@@ -117,7 +117,6 @@ const useCurrentMarket = (tracers: LabelledTracers) => {
     const [count, setCount] = useState<number>(0);
     const [show, setShow] = useState(false);
 
-    // set new current market whenever count changes
     useEffect(() => {
         // if it is currently showing then wait 6 seconds and update
         if (show) {
