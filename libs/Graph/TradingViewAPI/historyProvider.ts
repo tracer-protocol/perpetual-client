@@ -1,5 +1,5 @@
 // import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
-import { LibrarySymbolInfo, ResolutionString } from '@public/static/charting_library/charting_library';
+import { Bar, LibrarySymbolInfo, ResolutionString } from '@public/static/charting_library/charting_library';
 // import Web3 from 'web3';
 
 // const API_URL = "http://localhost:8000/subgraphs/name/dospore/tracer-graph";
@@ -36,7 +36,8 @@ export default {
         _from: number,
         first: boolean,
     ) => {
-        const split_symbol = symbolInfo.name.split('/');
+        console.debug('Fetching candles for', symbolInfo);
+        const splitSymbol = symbolInfo.name.split('/');
         const url = new URL(
             `${API_URL}${
                 resolution === 'D'
@@ -49,8 +50,8 @@ export default {
 
         const qs: Record<string, any> = {
             e: 'Coinbase',
-            fsym: split_symbol[0],
-            tsym: split_symbol[1],
+            fsym: splitSymbol[0],
+            tsym: splitSymbol[1],
             toTs: to ? to : '',
             allData: true,
             limit: 2000,
@@ -124,4 +125,13 @@ export default {
         // 		}
         // 	})
     },
+} as {
+    history: any;
+    getBars: (
+        symbolInfo: LibrarySymbolInfo,
+        resolution: ResolutionString,
+        to: number,
+        _from: number,
+        first: boolean,
+    ) => Promise<Bar[]>;
 };

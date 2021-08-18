@@ -26,15 +26,16 @@ const dataFeed: IBasicDataFeed = {
     resolveSymbol: (symbolName, onSymbolResolvedCallback, _onResolveErrorCallback) => {
         console.debug('======resolveSymbol running');
         console.debug('resolveSymbol:', { symbolName });
-        const symbol_stub = {
-            name: symbolName,
+        const marketId = symbolName.split(':')[1];
+        const symbolStub = {
+            name: marketId,
             full_name: symbolName,
-            description: '',
+            description: marketId,
             type: 'crypto',
             session: '24x7',
             timezone: 'Etc/UTC' as Timezone,
             format: 'price' as SeriesFormat,
-            ticker: symbolName,
+            ticker: marketId,
             exchange: '',
             listed_exchange: '',
             minmov: 1,
@@ -43,12 +44,12 @@ const dataFeed: IBasicDataFeed = {
             supported_resolutions: supportedResolutions,
         };
 
-        if (symbolName.split('/')[1].match(/USD|EUR|JPY|AUD|GBP|KRW|CNY/)) {
-            symbol_stub.pricescale = 100;
+        if (marketId.split('/')[1].match(/USD|EUR|JPY|AUD|GBP|KRW|CNY/)) {
+            symbolStub.pricescale = 100;
         }
         setTimeout(function () {
-            onSymbolResolvedCallback(symbol_stub);
-            console.debug('Resolving that symbol....', symbol_stub);
+            onSymbolResolvedCallback(symbolStub);
+            console.debug('Resolving that symbol....', symbolStub);
         }, 0);
     },
 

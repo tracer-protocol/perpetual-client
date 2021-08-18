@@ -34,8 +34,7 @@ export interface ChartContainerProps {
 
 export interface ChartContainerState {
     showChart: boolean;
-    address: string;
-    marketId: string;
+    tvWidgetReady: boolean;
 }
 
 function getLanguageFromURL(): LanguageCode | null {
@@ -46,7 +45,7 @@ function getLanguageFromURL(): LanguageCode | null {
 
 export default class TVChartContainer extends React.PureComponent<Partial<ChartContainerProps>, ChartContainerState> {
     public static defaultProps: ChartContainerProps = {
-        symbol: 'ETH/USD',
+        symbol: '0x00000:ETH/USD',
         selectedTracer: {
             address: '',
             marketId: '',
@@ -67,14 +66,13 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
         super(props);
         this.state = {
             showChart: false,
-            address: '',
-            marketId: 'ETH/USD',
+            tvWidgetReady: false,
         };
         this.setShowChart = this.setShowChart.bind(this);
     }
 
     public setShowChart(): void {
-        this.setState({ showChart: true });
+        this.setState({ showChart: true, tvWidgetReady: true });
     }
 
     private tvWidget: IChartingLibraryWidget | null = null;
@@ -147,18 +145,32 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
         });
     }
 
-    public componentDidUpdate(prevProps: any) {
+    public componentDidUpdate(prevProps: ChartContainerProps): void {
         if (prevProps.selectedTracer.address !== this.props?.selectedTracer?.address) {
             console.log('Tracer has changed, new tracer', this.props.selectedTracer);
             this.setState({ showChart: false });
-            if (this.props?.selectedTracer?.marketId === 'ETH/USD') {
-                this.tvWidget?.setSymbol('ETH/USD', '1D' as ChartingLibraryWidgetOptions['interval'], () => {
-                    this.setState({ showChart: true });
-                });
-            } else {
-                this.tvWidget?.setSymbol('BTC/USD', '1D' as ChartingLibraryWidgetOptions['interval'], () => {
-                    this.setState({ showChart: true });
-                });
+            const { address, marketId } = this.props?.selectedTracer ?? {
+                address: '',
+                marketId: 'ETH/USD',
+            };
+            if (this.state.tvWidgetReady) {
+                if (marketId === 'ETH/USD') {
+                    this.tvWidget?.setSymbol(
+                        `${address}:${marketId}`,
+                        '1D' as ChartingLibraryWidgetOptions['interval'],
+                        () => {
+                            this.setState({ showChart: true });
+                        },
+                    );
+                } else {
+                    this.tvWidget?.setSymbol(
+                        `${address}:BTC/USD`,
+                        '1D' as ChartingLibraryWidgetOptions['interval'],
+                        () => {
+                            this.setState({ showChart: true });
+                        },
+                    );
+                }
             }
         }
     }
