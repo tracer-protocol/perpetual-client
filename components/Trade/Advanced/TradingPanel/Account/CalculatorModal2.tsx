@@ -48,17 +48,7 @@ const CalculatorModal2: FC<CMProps> = styled(
             approve = () => console.error('Approve is not defined'),
         } = useContext(TracerContext);
         const {
-            calculatorState: {
-                exposure,
-                margin,
-                liquidationPrice,
-                leverage,
-                position,
-                displayLocks,
-                showResult,
-                error,
-                locked,
-            },
+            calculatorState: { exposure, margin, liquidationPrice, leverage, position, displayLocks, error, locked },
             calculatorDispatch,
         } = useContext(CalculatorContext2) as ContextProps;
         const { orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
@@ -198,7 +188,7 @@ const CalculatorModal2: FC<CMProps> = styled(
                         </NumberSelectHeader>
                     }
                 />
-                <StyledHiddenExpand defaultHeight={0} open={showResult}>
+                <StyledHiddenExpand defaultHeight={0} open={locked.length >= 2}>
                     <p className="title">Calculator Summary</p>
                     <p>
                         {error === 'NO_ERROR' || CalculatorErrors[error].severity
@@ -225,15 +215,6 @@ const CalculatorModal2: FC<CMProps> = styled(
                     />
                 </StyledHiddenExpand>
                 <CalcButtons>
-                    <SButton
-                        onClick={(e) => {
-                            e.preventDefault();
-                            calculatorDispatch({ type: 'setShowResult', value: true });
-                            calculatorDispatch({ type: 'calculate' });
-                        }}
-                    >
-                        Calculate
-                    </SButton>
                     <SButton
                         onClick={(e) => {
                             e.preventDefault();

@@ -93,6 +93,7 @@ export const CalculatorErrors: Record<string, ErrorBox> = {
     INVALID_INPUTS_2: {
         name: 'Invalid Inputs',
         message: 'Please provide two inputs',
+        severity: 'warning',
     },
     DANGEROUS_POSITION: {
         name: 'Dangerous Position',
