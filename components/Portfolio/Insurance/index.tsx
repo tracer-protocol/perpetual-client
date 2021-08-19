@@ -49,7 +49,11 @@ const InsurancePortfolio: FC = () => {
                 <SectionHeader border ref={sectionHeader}>
                     <Title>Deposits</Title>
                 </SectionHeader>
-                <Deposits parentHeight={sectionHeight - sectionHeaderHeight} depositHistory={depositHistory} />
+                <Deposits
+                    parentHeight={sectionHeight - sectionHeaderHeight}
+                    pools={pools ?? {}}
+                    depositHistory={depositHistory}
+                />
             </Section>
             <Section ref={section}>
                 <SectionHeader border ref={sectionHeader}>

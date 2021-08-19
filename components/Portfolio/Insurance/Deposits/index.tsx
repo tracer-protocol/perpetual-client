@@ -3,13 +3,14 @@ import SubNav from '@components/Nav/SubNav';
 import ActiveDeposits from '@components/Portfolio/Insurance/Deposits/ActiveDeposits';
 import DepositsHistory from '@components/Portfolio/Insurance/Deposits/DepositsHistory';
 import { Counter, PortfolioDropdown } from '@components/Portfolio';
-import { InsuranceTransaction } from '@libs/types/InsuranceTypes';
+import { InsurancePoolInfo as InsurancePoolInfoType, InsuranceTransaction } from '@libs/types/InsuranceTypes';
 
 interface DProps {
     parentHeight: number;
+    pools: Record<string, InsurancePoolInfoType>;
     depositHistory: InsuranceTransaction[];
 }
-const Deposits: FC<DProps> = ({ parentHeight, depositHistory }: DProps) => {
+const Deposits: FC<DProps> = ({ parentHeight, pools, depositHistory }: DProps) => {
     const [tab, setTab] = useState(0);
     const tabs = [
         <>
@@ -28,7 +29,7 @@ const Deposits: FC<DProps> = ({ parentHeight, depositHistory }: DProps) => {
     const content = () => {
         switch (tab) {
             case 0:
-                return <ActiveDeposits parentHeight={parentHeight - subNavHeight} />;
+                return <ActiveDeposits parentHeight={parentHeight - subNavHeight} pools={pools} />;
             case 1:
                 return <DepositsHistory parentHeight={parentHeight - subNavHeight} depositHistory={depositHistory} />;
             default:
