@@ -1,17 +1,13 @@
-import React, { FC, useEffect, useRef, useState } from 'react';
+import React, { FC, useContext, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import Deposits from '@components/Portfolio/Insurance/Deposits';
 import Withdrawals from '@components/Portfolio/Insurance/Withdrawals';
 import { SectionHeader, Title } from '@components/Portfolio';
 import { useAllInsuranceTransactions } from '@libs/Graph/hooks/Tracer';
 import { InsuranceTransaction } from '@libs/types/InsuranceTypes';
-import { LabelledTracers } from '@libs/types/TracerTypes';
-import Insurance from '@libs/Tracer/Insurance';
+import { InsuranceContext } from '@context/InsuranceContext';
 
-interface IPProps {
-    tracers: LabelledTracers;
-}
-const InsurancePortfolio: FC<IPProps> = ({ tracers }: IPProps) => {
+const InsurancePortfolio: FC = () => {
     const section = useRef(null);
     const sectionHeader = useRef(null);
     const [sectionHeight, setSectionHeight] = useState(0);
@@ -25,14 +21,7 @@ const InsurancePortfolio: FC<IPProps> = ({ tracers }: IPProps) => {
         setSectionHeaderHeight(sectionHeader?.current?.clientHeight);
     }, [sectionHeader]);
 
-    const [insuranceContracts, setInsuranceContracts] = useState<Insurance[]>([]);
-    useEffect(() => {
-        const insuranceContracts: Insurance[] = [];
-        Object.values(tracers).map((tracer) => {
-            insuranceContracts.push(tracer.getInsuranceContract() as Insurance);
-        });
-        setInsuranceContracts(insuranceContracts);
-    }, [tracers]);
+    const { pools } = useContext(InsuranceContext);
 
     const { insuranceTransactions } = useAllInsuranceTransactions();
     const [depositHistory, setDepositHistory] = useState<InsuranceTransaction[]>([]);
@@ -60,11 +49,7 @@ const InsurancePortfolio: FC<IPProps> = ({ tracers }: IPProps) => {
                 <SectionHeader border ref={sectionHeader}>
                     <Title>Deposits</Title>
                 </SectionHeader>
-                <Deposits
-                    parentHeight={sectionHeight - sectionHeaderHeight}
-                    insuranceContracts={insuranceContracts}
-                    depositHistory={depositHistory}
-                />
+                <Deposits parentHeight={sectionHeight - sectionHeaderHeight} depositHistory={depositHistory} />
             </Section>
             <Section ref={section}>
                 <SectionHeader border ref={sectionHeader}>

@@ -18,7 +18,7 @@ export default styled(({ className }) => {
             case 0:
                 return <TradingPortfolio allFilledOrders={allFilledOrders ?? {}} tracers={tracers} />;
             case 1:
-                return <InsurancePortfolio tracers={tracers} />;
+                return <InsurancePortfolio />;
             default:
                 return;
         }
