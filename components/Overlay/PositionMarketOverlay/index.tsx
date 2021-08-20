@@ -1,32 +1,23 @@
 import React, { FC, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Overlay from '@components/Overlay';
-import { Logo } from '@components/General';
+import { Button, Logo } from '@components/General';
 import { toApproxCurrency } from '@libs/utils';
 import MarketChange from '@components/General/MarketChange';
 import { LabelledTracers } from '@libs/types/TracerTypes';
 import { PortfolioDropdown } from '@components/Portfolio';
 import Tracer from '@libs/Tracer';
+import Link from 'next/link';
 
 interface POProps {
     tracers: LabelledTracers;
 }
-const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
-    const [currentMarket, setCurrentMarket] = useState('');
-    const [marketKeyMap, setMarketKeyMap] = useState<Record<string, string>>({});
 
-    useEffect(() => {
-        const marketKeyMap: Record<string, string> = {};
-        Object.values(tracers).map((tracer: Tracer) => {
-            marketKeyMap[tracer.address] = tracer.marketId;
-        });
-        setMarketKeyMap(marketKeyMap);
-        setCurrentMarket(Object.keys(marketKeyMap)[0]);
-    }, [tracers]);
+const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
+    const { show, currentMarket, marketKeyMap, setCurrentMarket } = useCurrentMarket(tracers);
 
     return (
         <StyledOverlay>
-            <OverlayTitle>No Open Position.</OverlayTitle>
             {Object.keys(marketKeyMap).length ? (
                 <>
                     <PortfolioDropdown
@@ -38,13 +29,15 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
                     <MarketPreviewContainer>
                         <InfoCol>
                             <div className="title">Market</div>
-                            <div className="row">
+                            <div className={`${show ? 'show' : ''} row`}>
                                 <SLogo ticker={tracers[currentMarket]?.baseTicker} /> {tracers[currentMarket]?.marketId}
                             </div>
                         </InfoCol>
                         <InfoCol>
                             <div className="title">Last Price</div>
-                            <div className="row">{toApproxCurrency(tracers[currentMarket]?.getOraclePrice())}</div>
+                            <div className={`${show ? 'show' : ''} row`}>
+                                {toApproxCurrency(tracers[currentMarket]?.getOraclePrice())}
+                            </div>
                         </InfoCol>
                         <InfoCol>
                             <div className="title">24h</div>
@@ -54,11 +47,18 @@ const PositionMarketOverlay: FC<POProps> = ({ tracers }: POProps) => {
                         </InfoCol>
                         <InfoCol>
                             <div className="title">Max Leverage</div>
-                            <div className="row">{`${tracers[currentMarket]?.getMaxLeverage()}x`}</div>
+                            <div className={`${show ? 'show' : ''} row`}>{`${tracers[
+                                currentMarket
+                            ]?.getMaxLeverage()}x`}</div>
                         </InfoCol>
                     </MarketPreviewContainer>
                 </>
             ) : null}
+            <OpenPositionWrapper>
+                <Link href="/">
+                    <Button height="medium">Open Position</Button>
+                </Link>
+            </OpenPositionWrapper>
         </StyledOverlay>
     );
 };
@@ -67,10 +67,6 @@ export default PositionMarketOverlay;
 
 const StyledOverlay = styled(Overlay)`
     background-color: var(--color-background-secondary) !important;
-`;
-
-const OverlayTitle = styled.div`
-    font-size: var(--font-size-medium);
 `;
 
 const MarketPreviewContainer = styled.div`
@@ -93,6 +89,13 @@ const MarketPreviewContainer = styled.div`
         display: flex;
         align-items: center;
         font-size: var(--font-size-medium);
+        opacity: 0;
+        transition: 0.3s;
+        padding-bottom: 0.5rem;
+        &.show {
+            opacity: 1;
+            padding-bottom: 0;
+        }
     }
 `;
 
@@ -103,3 +106,62 @@ const InfoCol = styled.div`
 const SLogo = styled(Logo)`
     margin-right: 5px;
 `;
+
+const OpenPositionWrapper = styled.div`
+    padding: 10px;
+`;
+
+const useCurrentMarket = (tracers: LabelledTracers) => {
+    const [currentMarket, setCurrentMarket] = useState('');
+    const [marketKeyMap, setMarketKeyMap] = useState<Record<string, string>>({});
+    const [count, setCount] = useState<number>(0);
+    const [show, setShow] = useState(false);
+    const [scroll, setScroll] = useState(false);
+
+    useEffect(() => {
+        // if it is currently showing then wait 6 seconds and update
+        if (show && scroll) {
+            setTimeout(() => {
+                // increment count
+                if (count >= Object.keys(marketKeyMap).length - 1) {
+                    setCount(0);
+                } else {
+                    setCount(count + 1);
+                }
+                setShow(false);
+                const newMarket = Object.keys(marketKeyMap)[count];
+                if (currentMarket !== newMarket) {
+                    // wait 0.3 seconds then display
+                    setTimeout(() => {
+                        setCurrentMarket(newMarket);
+                        setShow(true);
+                    }, 300);
+                } else {
+                    setShow(true);
+                }
+            }, 6000);
+        }
+    }, [show, scroll]);
+
+    // set market key map which tracers change
+    useEffect(() => {
+        setShow(false);
+        const marketKeyMap: Record<string, string> = {};
+        Object.values(tracers).map((tracer: Tracer) => {
+            marketKeyMap[tracer.address] = tracer.marketId;
+        });
+        setMarketKeyMap(marketKeyMap);
+        setCurrentMarket(Object.keys(marketKeyMap)[count]);
+        if (Object.keys(marketKeyMap).length > 1) {
+            setScroll(true);
+        }
+        setShow(true);
+    }, [tracers]);
+
+    return {
+        show,
+        marketKeyMap,
+        currentMarket,
+        setCurrentMarket,
+    };
+};
