@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
-import { Children } from 'libs/types';
+import { Children } from '@libs/types';
 import { toApproxCurrency } from '@libs/utils';
 import SlideSelect from '@components/General/SlideSelect';
 import { Option } from '@components/General/SlideSelect/Options';
@@ -15,7 +15,7 @@ import {
     NumberSelect,
     Section,
 } from '@components/General';
-import TracerModal from '@components/General/TracerModal';
+import TracerModal from '@components/General/TracerModal/index';
 import styled from 'styled-components';
 import { CaretDownFilled } from '@ant-design/icons';
 import ErrorComponent from '@components/General/Error';
@@ -130,7 +130,7 @@ type BProps = {
     type: 'Deposit' | 'Withdraw';
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
-    tracer: Tracer;
+    tracer: Tracer | undefined;
     belowTarget: boolean;
     poolUserBalance: BigNumber;
 } & Children;
@@ -149,7 +149,7 @@ export const InsuranceModal: React.FC<BProps> = ({
     } = useContext(InsuranceContext);
     const [isDeposit, setIsDeposit] = useState(true);
     const poolBalance = poolUserBalance ?? defaults.userBalance;
-    const balance = isDeposit ? tracer?.getBalance().tokenBalance : poolBalance;
+    const balance = isDeposit ? tracer?.getBalance()?.tokenBalance?.toNumber() ?? 0 : poolBalance.toNumber();
     const [valid, setValid] = useState(false);
     const [amount, setAmount] = useState(NaN); // The amount within the input
     const [acceptedTerms, acceptTerms] = useState(false);
@@ -161,7 +161,7 @@ export const InsuranceModal: React.FC<BProps> = ({
     const newBalance = isDeposit ? poolBalance.plus(amount_) : poolBalance.minus(amount_);
 
     useEffect(() => {
-        const amountValid = amount > 0 && amount <= (balance?.toNumber() ?? 0);
+        const amountValid = amount > 0 && amount <= (balance ?? 0);
         if (isDeposit) {
             setValid(amountValid && acceptedTerms);
         } else {
@@ -177,7 +177,7 @@ export const InsuranceModal: React.FC<BProps> = ({
             const options: Options = {
                 onSuccess: callback,
             };
-            if (!!deposit && !!withdraw) {
+            if (tracer && !!deposit && !!withdraw) {
                 isDeposit ? deposit(tracer, amount, options) : withdraw(tracer, amount, options);
             }
         } catch (err) {
@@ -196,7 +196,7 @@ export const InsuranceModal: React.FC<BProps> = ({
                 setShow(false);
                 setAmount(NaN);
             }}
-            title={`${tracer.marketId} Insurance Pool`}
+            title={`${tracer?.marketId} Insurance Pool`}
         >
             <SSlideSelect
                 onClick={(index: number, _e: any) => {
@@ -230,12 +230,12 @@ export const InsuranceModal: React.FC<BProps> = ({
                 />
             ) : null}
             <NumberSelect
-                unit={`i${tracer.marketId?.replace('/', '-')}` ?? 'NO_ID'}
+                unit={`i${tracer?.marketId?.replace('/', '-')}` ?? 'NO_ID'}
                 title={'Amount'}
                 amount={amount}
-                balance={balance?.toNumber() ?? 0}
+                balance={balance ?? 0}
                 setMax={(_e) => {
-                    setAmount(balance?.toNumber() ?? 0);
+                    setAmount(balance ?? 0);
                 }}
                 setAmount={setAmount}
             />
@@ -245,7 +245,7 @@ export const InsuranceModal: React.FC<BProps> = ({
                 ) : (
                     <SSection className={'title'} label={'Withdrawal Summary'} />
                 )}
-                {!isDeposit && amount > balance.toNumber() ? (
+                {!isDeposit && amount > balance ? (
                     <PoolOwnershipInsufficient label={'Pool Ownership'}>
                         <Previous>{`${toApproxCurrency(poolBalance)}`}</Previous>
                         {`${toApproxCurrency(newBalance)}`}
@@ -256,7 +256,7 @@ export const InsuranceModal: React.FC<BProps> = ({
                         {`${toApproxCurrency(newBalance)}`}
                     </SSection>
                 )}
-                {isDeposit || amount > balance.toNumber() ? null : (
+                {isDeposit || amount > balance ? null : (
                     <>
                         <WithdrawalFee label="Withdrawal Fee (Without Gas)">{`${toApproxCurrency(fee)}`}</WithdrawalFee>
                         <SSection
@@ -287,7 +287,7 @@ export const InsuranceModal: React.FC<BProps> = ({
                 </CheckboxContainer>
             ) : null}
             <div className="flex items-center justify-center px-6 pt-6 rounded-b" id="insurance-submit">
-                {isDeposit && !tracer?.getInsuranceApproved() ? (
+                {tracer && isDeposit && !tracer?.getInsuranceApproved() ? (
                     <Button
                         className="primary mr-8"
                         disabled={tracer?.getInsuranceApproved()}
@@ -302,7 +302,7 @@ export const InsuranceModal: React.FC<BProps> = ({
                     {isDeposit ? 'Deposit' : 'Withdraw'}
                 </Button>
             </div>
-            <ErrorComponent context="margin" error={amount > balance.toNumber() ? 'INSUFFICIENT_FUNDS' : 'NO_ERROR'} />
+            <ErrorComponent context="margin" error={amount > balance ? 'INSUFFICIENT_FUNDS' : 'NO_ERROR'} />
         </TracerModal>
     );
 };

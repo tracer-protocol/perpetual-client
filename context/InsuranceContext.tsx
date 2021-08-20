@@ -120,10 +120,6 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
-    /**
-     *
-     * @param amount the amount to deposit
-     */
     const deposit = async (tracer: Tracer, amount: number, options: Options) => {
         if (!tracer?.address) {
             console.error('Failed to withdraw: Selected tracer address is undefined');
@@ -155,7 +151,7 @@ export const InsuranceStore: React.FC<Children> = ({ children }: Children) => {
                     },
                 });
             } else {
-                console.error('Failed to withdraw from insuracnce pool: Inusurance contract undefined');
+                console.error('Failed to withdraw from insurance pool: Insurance contract undefined');
             }
         } else {
             console.error('Failed to withdraw from insurance pool: No deposit function found');
