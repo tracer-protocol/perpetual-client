@@ -7,7 +7,7 @@ import { ProgressBar } from '@components/General';
 import { Button, Logo } from '@components/General';
 import { CaretDownFilled, LinkOutlined } from '@ant-design/icons';
 import Breakdown from '../PoolHealth';
-import { InsuranceModal } from '../InsuranceModal';
+import { InsuranceModal } from '../../General/TracerModal/InsuranceModal';
 import { TableHeading, TableRow, TableCell } from '@components/General/Table';
 import { toPercent } from '@libs/utils';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
