@@ -95,8 +95,8 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
             <Title hide={!!order?.exposureBN.toNumber() ?? false}>
                 <span>Margin Account</span>
                 {/*TODO: Add ID calculator-button*/}
-                <Button onClick={() => setShowCalculator1(true)}>Calculator</Button>
-                <Button onClick={() => setShowCalculator2(true)}>Calculator</Button>
+                <Button onClick={() => setShowCalculator1(true)}>CalculatorA</Button>
+                <Button onClick={() => setShowCalculator2(true)}>CalculatorB</Button>
             </Title>
             <Item>
                 <h3>
