@@ -1,9 +1,9 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
 import { Button } from '@components/General';
-import {InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType} from '@libs/types';
-import {defaults} from "@libs/Tracer/Insurance";
-import {InsuranceModal} from "@components/General/TracerModal/InsuranceModal";
+import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from '@libs/types';
+import { defaults } from '@libs/Tracer/Insurance';
+import { InsuranceModal } from '@components/General/TracerModal/InsuranceModal';
 
 interface AWProps {
     parentHeight: number;
