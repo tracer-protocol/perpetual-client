@@ -167,10 +167,9 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
                         maxAsk: maxAsk,
                     },
                 });
-                // precision here isnt that necessary to fixing it to 20 is ok
-                const ltp = new BigNumber(
-                    Web3.utils.fromWei((res?.LTP ?? 0).toLocaleString('fullwide', { useGrouping: false })),
-                );
+                // Precision here isn't that necessary
+                // Fixing it to 20 is ok
+                const ltp = new BigNumber(Web3.utils.fromWei(res?.ltp ?? 0));
                 omeDispatch({
                     type: 'setMarketUp',
                     value: ltp.gt(omeState.lastTradePrice),

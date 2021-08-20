@@ -19,7 +19,7 @@ const omefy: (str: string) => string = (str: string) => str.slice(2).toLowerCase
 export const getOrders: (market: string) => Promise<{
     bids: any;
     asks: any;
-    LTP: number;
+    ltp: string;
     market: string;
     crossed: boolean;
     spread: number;
