@@ -167,8 +167,6 @@ export const OMEStore: React.FC<Children> = ({ children }: Children) => {
                         maxAsk: maxAsk,
                     },
                 });
-                // Precision here isn't that necessary
-                // Fixing it to 20 is ok
                 const ltp = new BigNumber(Web3.utils.fromWei(res?.ltp ?? '0'));
                 omeDispatch({
                     type: 'setMarketUp',
