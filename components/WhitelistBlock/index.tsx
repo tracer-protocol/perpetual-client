@@ -200,4 +200,5 @@ const whitelist = [
     '0x110af92ba116fd7868216aa794a7e4da3b9d7d11',
     '0x55ea772a66db39a90004b12628884fd89ec9449b',
     '0xa83fde98c89c74b6b92ce24e2fc6b914b88d0d1c',
+    '0xfdaae0c5a7a56c8265b9f86cf8cd934a494e3733',
 ];
