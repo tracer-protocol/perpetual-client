@@ -295,7 +295,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 }
                 return {
                     ...state,
-                    exposure: addedExposure.toNumber().abs(),
+                    exposure: addedExposure.abs().toNumber(),
                     exposureBN: addedExposure.abs(),
                     position: position,
                 };
