@@ -77,7 +77,7 @@ export const PlaceOrderButton: React.FC<POBProps> = ({ className, children }: PO
                     autoDismiss: true,
                 });
             } else {
-                addToast(['Transaction Failed', 'Invalid order: An unhandled error occured'], {
+                addToast(['Transaction Failed', 'Invalid order: An unhandled error occurred'], {
                     appearance: 'error',
                     autoDismiss: true,
                 });
@@ -116,7 +116,7 @@ export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) =>
         useContext(OrderContext);
     const { handleAsync } = useContext(TransactionContext);
 
-    const closeOrder = async (_e: any) => {
+    const closePosition = async (_e: any) => {
         if (placeOrder) {
             if (handleAsync) {
                 const position = balances.base.lt(0) ? LONG : SHORT;
@@ -145,15 +145,17 @@ export const CloseOrderButton: React.FC<POBProps> = ({ className }: POBProps) =>
         }
     };
 
-    if (!balances.base.eq(0) || orderState?.error !== 'NO_ORDERS') {
-        return <Button disabled={true}>Close Order</Button>;
-    } else {
+    if (balances.base.eq(0) || orderState?.error === 'NO_ORDERS') {
         return (
             <Tooltip title={OrderErrors[orderState?.error ?? -1]?.message}>
-                <Button className={`${className} primary`} onClick={closeOrder}>
-                    Close Order
-                </Button>
+                <Button disabled={true}>Close Position</Button>
             </Tooltip>
+        );
+    } else {
+        return (
+            <Button className={`${className} primary`} onClick={closePosition}>
+                Close Position
+            </Button>
         );
     }
 };
