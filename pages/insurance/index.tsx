@@ -1,7 +1,6 @@
 import React from 'react';
 import NavBar from '@components/Nav/Navbar';
 import { InsuranceStore } from '@context/InsuranceContext';
-import { SelectedTracerStore } from '@context/TracerContext';
 import Pools from '@components/Insurance/Pools';
 import styled from 'styled-components';
 import Footer from '@components/Footer';
@@ -42,25 +41,23 @@ const Insurance: React.FC = styled(({ className }) => {
         <div className={`${className} page`}>
             <NavBar />
             <div className="container">
-                <SelectedTracerStore>
-                    <InsuranceStore>
-                        <InsurancePoolsHeader>Insurance Pools</InsurancePoolsHeader>
-                        <InsurancePoolsContent>
-                            <Pools />
-                        </InsurancePoolsContent>
-                        <InsurancePoolsFooter>
-                            New to insurance pools?{' '}
-                            <a
-                                href="https://docs.tracer.finance/products/perpetual-swaps/insurance"
-                                target="_blank"
-                                rel="noreferrer"
-                                className="learn-more"
-                            >
-                                <Button height="medium">Learn More</Button>
-                            </a>
-                        </InsurancePoolsFooter>
-                    </InsuranceStore>
-                </SelectedTracerStore>
+                <InsuranceStore>
+                    <InsurancePoolsHeader>Insurance Pools</InsurancePoolsHeader>
+                    <InsurancePoolsContent>
+                        <Pools />
+                    </InsurancePoolsContent>
+                    <InsurancePoolsFooter>
+                        New to insurance pools?{' '}
+                        <a
+                            href="https://docs.tracer.finance/products/perpetual-swaps/insurance"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="learn-more"
+                        >
+                            <Button height="medium">Learn More</Button>
+                        </a>
+                    </InsurancePoolsFooter>
+                </InsuranceStore>
             </div>
             <Footer />
         </div>
