@@ -22,7 +22,6 @@ import { UserBalance } from 'libs/types';
 import { checkAllowance } from '../web3/utils';
 import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
-// @ts-ignore
 import { Callback, TransactionReceipt } from 'web3/types';
 import {
     calcAvailableMarginPercent,
