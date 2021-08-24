@@ -22,15 +22,13 @@ import { UserBalance } from 'libs/types';
 import { checkAllowance } from '../web3/utils';
 import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
-import { TransactionReceipt } from 'web3/types';
+import { Callback, TransactionReceipt } from 'web3/types';
 import {
     calcAvailableMarginPercent,
     calcLeverage,
     calcMinimumMargin,
     calcTotalMargin,
 } from '@tracer-protocol/tracer-utils';
-// @ts-ignore
-import { Callback } from 'web3/types';
 import Insurance from './Insurance';
 
 // Default values
@@ -210,7 +208,7 @@ export default class Tracer {
 
     /**
      * Updates the user balances for a given tracer.
-     * Fetches the Tracer balance as well as the quoteTocken balance.
+     * Fetches the Tracer balance as well as the quoteToken balance.
      * Sets the balances public var as well as returns the balances
      * @param account target user
      * @returns the balances for the given user
@@ -287,8 +285,7 @@ export default class Tracer {
      */
     updateFeeRate: () => Promise<void> = async () => {
         const feeRate = await this._instance.methods.feeRate().call();
-        const set = new BigNumber(Web3.utils.fromWei(feeRate ?? '0'));
-        this.feeRate = set;
+        this.feeRate = new BigNumber(Web3.utils.fromWei(feeRate ?? '0'));
     };
 
     /**
@@ -351,8 +348,9 @@ export default class Tracer {
 
     /**
      * Checks is an account has approved a contract.
-     *  True case is if the approved amount is above 420
+     * True case is if the approved amount is above 420
      * @param account account to check
+     * @param contract
      * @returns 0 if not approved 1 if approved and -1 if something went wrong
      */
     checkAllowance: (account: string, contract: string) => Promise<0 | 1 | -1> = async (account, contract) => {

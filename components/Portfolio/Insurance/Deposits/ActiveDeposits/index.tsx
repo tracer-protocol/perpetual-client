@@ -53,7 +53,7 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, pools }: ADProps) => {
                                 onMouseLeave={() => setShowButton(-1)}
                             >
                                 <TableCell>{pool.market}</TableCell>
-                                <TableCell>{toPercent(pool.apy.toNumber())}</TableCell>
+                                <TableCell>{toPercent(pool.apy?.toNumber())}</TableCell>
                                 <TableCell>{pool.userBalance.toNumber()}</TableCell>
                                 <TableCell>-</TableCell>
                                 <TableCell>

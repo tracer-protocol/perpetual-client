@@ -14,7 +14,7 @@ const Withdrawals: FC<WProps> = ({ parentHeight, pools, withdrawalHistory }: WPr
     const [tab, setTab] = useState(0);
     const tabs = [
         <>
-            Active <Counter>0</Counter>
+            Active <Counter>{Object.keys(pools).length}</Counter>
         </>,
         <>History</>,
     ];

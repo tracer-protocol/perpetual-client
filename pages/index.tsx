@@ -1,27 +1,24 @@
-import React from 'react';
-import { useRouter } from 'next/router';
+import React, { FC } from 'react';
 import { NavBarContent } from '@components/Nav/Navbar';
 import NavBar from '@components/Nav';
-import { Advanced } from '@components/Trade';
-import { OrderStore, SelectedTracerStore } from 'context';
-import { InsuranceStore } from '@context/InsuranceContext';
-import { OMEStore } from '@context/OMEContext';
 import styled from 'styled-components';
 import { StyledMenu as AccountDropdown } from '@components/Nav/Navbar/AccountDropdown';
 import Footer from '@components/Footer';
+import Advanced from '@components/Trade';
+import { OrderStore, SelectedTracerStore } from 'context';
+import { InsuranceStore } from '@context/InsuranceContext';
+import { OMEStore } from '@context/OMEContext';
+import { useRouter } from 'next/router';
 
-const Trade: React.FC = styled(({ className }) => {
+const Trade: FC = styled(({ className }) => {
     const router = useRouter();
     const { query } = router;
-    // const advanced = query.interface === 'advanced';
     return (
         <div className={className}>
             <NavBar />
             <SelectedTracerStore tracer={query.tracer as string}>
                 <OMEStore>
                     <InsuranceStore>
-                        {/*TODO: Enable basic trading*/}
-                        {/* <OrderStore>{advanced ? <Advanced /> : <Basic />}</OrderStore> */}
                         <OrderStore>
                             <Advanced />
                         </OrderStore>

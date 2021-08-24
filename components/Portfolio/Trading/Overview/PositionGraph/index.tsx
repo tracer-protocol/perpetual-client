@@ -17,6 +17,7 @@ import { useLines } from '@libs/Graph/hooks/Tracer';
 import { toApproxCurrency } from '@libs/utils';
 import { calcAvailableMarginPercent, calcLeverage, calcLiquidationPrice } from '@tracer-protocol/tracer-utils';
 import { Button } from '@components/General';
+import Link from 'next/link';
 
 const GraphContainer = styled.div`
     height: 150px;
@@ -120,12 +121,12 @@ const PositionGraph: FC<PGProps> = styled(
                         </Row>
                         <Row>
                             <BorderlessCell>
-                                <Button className="primary" onClick={closePosition}>
-                                    Close Position
-                                </Button>
+                                <Button onClick={closePosition}>Close Position</Button>
                             </BorderlessCell>
                             <BorderlessCell inner>
-                                <Button className="primary">Adjust Position</Button>
+                                <Link href="/">
+                                    <Button>Adjust Position</Button>
+                                </Link>
                             </BorderlessCell>
                         </Row>
                     </TableBody>
