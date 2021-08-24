@@ -5,7 +5,6 @@ import { toPercent } from '@libs/utils';
 import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from '@libs/types';
 import { InsuranceModal } from '@components/General/TracerModal/InsuranceModal';
 import { defaults } from '@libs/Tracer/Insurance';
-import BigNumber from 'bignumber.js';
 
 interface ADProps {
     parentHeight: number;
@@ -54,7 +53,7 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, pools }: ADProps) => {
                                 onMouseLeave={() => setShowButton(-1)}
                             >
                                 <TableCell>{pool.market}</TableCell>
-                                <TableCell>{toPercent((pool.apy ?? new BigNumber(0)).toNumber())}</TableCell>
+                                <TableCell>{toPercent(pool.apy?.toNumber())}</TableCell>
                                 <TableCell>{pool.userBalance.toNumber()}</TableCell>
                                 <TableCell>-</TableCell>
                                 <TableCell>

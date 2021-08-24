@@ -14,7 +14,6 @@ import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import Icon from '@ant-design/icons';
 // @ts-ignore
 import TracerLoading from 'public/img/logos/tracer/tracer_loading.svg';
-import BigNumber from 'bignumber.js';
 
 const Hidden = styled.div`
     color: var(--color-primary);
@@ -222,7 +221,7 @@ const InsurancePoolsTable: React.FC<IPTProps> = styled(({ pools, className }: IP
                                 </Collapsible>
                             </TableCell>
                             <TableCell className="pt-4">
-                                <Collapsible>{toPercent((pool?.apy ?? new BigNumber(0)).toNumber())}</Collapsible>
+                                <Collapsible>{toPercent(pool.apy?.toNumber())}</Collapsible>
                             </TableCell>
                             <TableCell className="pt-2">
                                 <Collapsible>
