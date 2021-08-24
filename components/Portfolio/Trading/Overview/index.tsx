@@ -21,17 +21,19 @@ import { LabelledTracers } from '@libs/types/TracerTypes';
 
 interface OProps {
     tracers: LabelledTracers;
-    positions: Tracer[];
-    holdings: Tracer[];
+    fetchedTracers: Tracer[];
     allFilledOrders: LabelledOrders;
 }
-const Overview: FC<OProps> = ({ tracers, positions, holdings, allFilledOrders }: OProps) => {
+const Overview: FC<OProps> = ({ tracers, fetchedTracers, allFilledOrders }: OProps) => {
     const { account } = useWeb3();
     const [currentPortfolio, setCurrentPortfolio] = useState(-1);
     const [currentPNL, setCurrentPNL] = useState(1);
 
     const portfolioKeyMap: Record<number, string> = {};
     portfolioKeyMap[-1] = 'Entire Portfolio';
+
+    const positions: Tracer[] = fetchedTracers?.filter((tracer) => !tracer.getBalance().base.eq(0));
+    const holdings: Tracer[] = fetchedTracers?.filter((tracer) => !tracer.getBalance().quote.eq(0));
     holdings?.map((holding: any, i: number) => {
         portfolioKeyMap[i] = holding.marketId;
     });
@@ -66,12 +68,12 @@ const Overview: FC<OProps> = ({ tracers, positions, holdings, allFilledOrders }:
                     currentPortfolio={currentPortfolio}
                     allFilledOrders={allFilledOrders}
                 />
-                <Graph title="Profit and Loss" background selectedTracerAddress={positions[0]?.address ?? ''} />
+                <Graph title="Profit and Loss" background selectedTracerAddress={fetchedTracers[0]?.address ?? ''} />
                 {!account ? <ConnectOverlay /> : null}
             </HPanel>
             <SectionHeader border>
                 <Title>Open Positions</Title>
-                <Counter>{positions?.length}</Counter>
+                <Counter>{fetchedTracers?.filter((tracer) => !tracer.getBalance().base.eq(0)).length}</Counter>
             </SectionHeader>
             <HScrollContainer>
                 {positions.map((tracer: any, i: number) => (

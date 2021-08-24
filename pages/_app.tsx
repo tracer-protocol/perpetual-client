@@ -1,6 +1,5 @@
 // prevent creating full trace
 process.traceDeprecation = true;
-
 import React, { useEffect } from 'react';
 import { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -79,7 +78,6 @@ const App = ({ Component, pageProps }: AppProps) => {
             <GlobalStyles />
             <Desktop>
                 <ToastProvider components={{ Toast: Notification }}>
-                    {/* <ThemeProvider theme={theme}> */}
                     <Web3Store
                         networkIds={[42, 421611]}
                         onboardConfig={{
@@ -101,7 +99,6 @@ const App = ({ Component, pageProps }: AppProps) => {
                             </FactoryStore>
                         </GraphProvider>
                     </Web3Store>
-                    {/* </ThemeProvider> */}
                 </ToastProvider>
             </Desktop>
             <Mobile>

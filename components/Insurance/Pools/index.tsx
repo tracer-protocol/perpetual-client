@@ -102,10 +102,15 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
             <Secondary>{toPercent(pool.userBalance.div(pool.liquidity).toNumber())}</Secondary>
             <Hidden>
                 <ButtonContainer>
-                    <Button className="primary mr-3" onClick={(_e: any) => openModal('Deposit')}>
+                    <Button
+                        className={pool.userBalance.eq(0) ? 'primary' : ''}
+                        onClick={(_e: any) => openModal('Deposit')}
+                    >
                         Deposit
                     </Button>
-                    <Button onClick={(_e: any) => openModal('Withdraw')}>Withdraw</Button>
+                    <Button className="ml-3" onClick={(_e: any) => openModal('Withdraw')}>
+                        Withdraw
+                    </Button>
                     <InsuranceModal
                         tracer={pool.tracer}
                         poolUserBalance={pool.userBalance}

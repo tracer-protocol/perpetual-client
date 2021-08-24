@@ -14,7 +14,7 @@ const Deposits: FC<DProps> = ({ parentHeight, pools, depositHistory }: DProps) =
     const [tab, setTab] = useState(0);
     const tabs = [
         <>
-            Active <Counter>{depositHistory.length}</Counter>
+            Active <Counter>{Object.keys(pools).length}</Counter>
         </>,
         <>History</>,
     ];

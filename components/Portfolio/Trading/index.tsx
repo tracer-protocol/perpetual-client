@@ -1,43 +1,26 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import SubNav from '@components/Nav/SubNav';
 import Overview from '@components/Portfolio/Trading/Overview';
 import Position from '@components/Portfolio/Trading/Position';
 import MarginAccounts from '@components/Portfolio/Trading/MarginAccounts';
 import TradeHistory from '@components/Portfolio/Trading/TradeHistory';
 import Transfers from '@components/Portfolio/Trading/Transfers';
-import Tracer, { defaults } from '@libs/Tracer';
+import Tracer from '@libs/Tracer';
 import styled from 'styled-components';
 import { Table } from '@components/General/Table';
-import { LabelledOrders } from '@libs/types/OrderTypes';
-import { LabelledTracers } from '@libs/types/TracerTypes';
+import { FactoryContext, initialFactoryState } from '@context/FactoryContext';
 
-interface TPProps {
-    allFilledOrders: LabelledOrders;
-    tracers: LabelledTracers;
-}
-const TradingPortfolio: FC<TPProps> = ({ allFilledOrders, tracers }: TPProps) => {
+const TradingPortfolio: FC = () => {
+    const { allFilledOrders, factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const [tab, setTab] = useState(0);
-    const [positions, setPositions] = useState<Tracer[]>([]);
-    const [holdings, setHoldings] = useState<Tracer[]>([]);
+    const [fetchedTracers, setFetchedTracers] = useState<Tracer[]>([]);
 
-    // fetch all tracers where the user has an open position
     useEffect(() => {
-        const positions: Tracer[] = [];
-        const holdings: Tracer[] = [];
-
+        const temp: Tracer[] = [];
         Object.values(tracers).map((tracer) => {
-            const balance = tracer?.getBalance() ?? defaults.balances;
-            if (!balance.quote.eq(0)) {
-                // if the user has deposited
-                holdings.push(tracer);
-            }
-            if (!balance.base.eq(0)) {
-                // if the user has a position
-                positions.push(tracer);
-            }
+            temp.push(tracer);
         });
-        setPositions(positions);
-        setHoldings(holdings);
+        setFetchedTracers(temp);
     }, [tracers]);
 
     const tabs = ['Overview', 'Positions', 'Margin Accounts', 'Trade History', 'Transfers'];
@@ -47,9 +30,8 @@ const TradingPortfolio: FC<TPProps> = ({ allFilledOrders, tracers }: TPProps) =>
                 return (
                     <Overview
                         tracers={tracers}
-                        positions={positions}
-                        holdings={holdings}
-                        allFilledOrders={allFilledOrders}
+                        fetchedTracers={fetchedTracers}
+                        allFilledOrders={allFilledOrders ?? {}}
                     />
                 );
             case 1:
