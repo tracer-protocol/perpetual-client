@@ -73,7 +73,7 @@ const Overview: FC<OProps> = ({ tracers, fetchedTracers, allFilledOrders }: OPro
             </HPanel>
             <SectionHeader border>
                 <Title>Open Positions</Title>
-                <Counter>{fetchedTracers?.filter((tracer) => !tracer.getBalance().base.eq(0)).length}</Counter>
+                <Counter>{positions.length}</Counter>
             </SectionHeader>
             <HScrollContainer>
                 {positions.map((tracer: any, i: number) => (
