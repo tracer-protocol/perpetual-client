@@ -103,10 +103,6 @@ const App = ({ Component, pageProps }: AppProps) => {
             </Desktop>
             <Mobile>
                 <h1>Mobile coming soon.</h1>
-                <p>
-                    Alpha testing is available on desktop only. <br />
-                    Switch to desktop to conduct testing.
-                </p>
             </Mobile>
         </div>
     );
