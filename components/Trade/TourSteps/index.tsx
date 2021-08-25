@@ -51,18 +51,26 @@ export const tourConfig = [
         },
         // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
         action: () => {
+            const accountDropdownButton = document.getElementById('account-dropdown-button');
+            if (accountDropdownButton) {
+                accountDropdownButton.style.pointerEvents = 'none';
+            }
+
             const calculatorEl = document.getElementById('calculator-modal') as HTMLElement;
-            const marginModalEl = document.getElementById('account-modal') as HTMLElement;
             if (calculatorEl) {
                 calculatorEl.style.display = 'block';
             }
+
+            const marginModalEl = document.getElementById('account-modal') as HTMLElement;
             if (marginModalEl) {
                 marginModalEl.style.display = 'block';
             }
+
             const calculatorButton = document.getElementById('calculator-button') as HTMLElement;
             if (calculatorButton) {
                 calculatorButton.style.zIndex = '0';
             }
+
             const depositButton = document.getElementById('deposit-button') as HTMLElement;
             if (depositButton) {
                 depositButton.style.zIndex = '0';
