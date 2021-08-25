@@ -234,7 +234,7 @@ export default class Tracer {
                 base: new BigNumber(Web3.utils.fromWei(balance.position[1])),
                 totalLeveragedValue: new BigNumber(Web3.utils.fromWei(balance.totalLeveragedValue)),
                 lastUpdatedGasPrice: new BigNumber(Web3.utils.fromWei(balance.lastUpdatedGasPrice)),
-                lastUpdatedIndex: new BigNumber(Web3.utils.fromWei(balance.lastUpdatedIndex)),
+                lastUpdatedIndex: new BigNumber(balance.lastUpdatedIndex),
                 tokenBalance: walletBalance
                     ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
                     : new BigNumber(0),
@@ -314,11 +314,12 @@ export default class Tracer {
                     .insuranceFundingRates(currentFundingIndex)
                     .call();
 
-                const fundingRate = new BigNumber(Web3.utils.fromWei(fundingRates?.fundingRate.toString() ?? '0'));
-                const oneHundred = new BigNumber(100);
+                // const fundingRate = new BigNumber(Web3.utils.fromWei(fundingRates?.fundingRate.toString() ?? '0'));
+                // const oneHundred = new BigNumber(100);
+                // fundingRate: fundingRate.div(fairPrice).multipliedBy(oneHundred),
 
                 this.fundingRate = {
-                    fundingRate: fundingRate.div(fairPrice).multipliedBy(oneHundred),
+                    fundingRate: new BigNumber(Web3.utils.fromWei(fundingRates?.fundingRate ?? '0')),
                     cumulativeFundingRate: new BigNumber(
                         Web3.utils.fromWei(fundingRates?.cumulativeFundingRate ?? '0'),
                     ),
