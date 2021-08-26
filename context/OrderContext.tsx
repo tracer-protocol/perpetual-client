@@ -295,8 +295,8 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
                 }
                 return {
                     ...state,
-                    exposure: addedExposure.toNumber(),
-                    exposureBN: addedExposure,
+                    exposure: addedExposure.abs().toNumber(),
+                    exposureBN: addedExposure.abs(),
                     position: position,
                 };
             }
@@ -328,7 +328,7 @@ export const OrderStore: React.FC<Children> = ({ children }: Children) => {
             case 'setOppositeOrders':
                 return { ...state, oppositeOrders: action.orders };
             case 'setExposure':
-                return { ...state, exposure: action.value, exposureBN: new BigNumber(action.value ?? 0) };
+                return { ...state, exposure: action.value, exposureBN: new BigNumber(action.value ?? 0).abs() };
             case 'setNextPosition':
                 if (state.orderType === LIMIT) {
                     return {

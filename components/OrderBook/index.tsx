@@ -364,7 +364,6 @@ const StyledTriangleDown = styled.img`
     height: 0.5em;
     transition: all 400ms ease-in-out;
     display: inline;
-    margin-top: -0.2em;
     margin-left: 10%;
 
     &.rotate {

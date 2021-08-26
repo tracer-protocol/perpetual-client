@@ -1,14 +1,16 @@
 import React, { FC, useEffect, useRef, useState } from 'react';
 import { ScrollableTable, TableBody, TableCell, TableHeader, TableHeading, TableRow } from '@components/General/Table';
 import { Button } from '@components/General';
-import Insurance from '@libs/Tracer/Insurance';
 import { toPercent } from '@libs/utils';
+import { InsurancePoolInfo, InsurancePoolInfo as InsurancePoolInfoType } from '@libs/types';
+import { InsuranceModal } from '@components/General/TracerModal/InsuranceModal';
+import { defaults } from '@libs/Tracer/Insurance';
 
 interface ADProps {
     parentHeight: number;
-    insuranceContracts: Insurance[];
+    pools: Record<string, InsurancePoolInfoType>;
 }
-const ActiveDeposits: FC<ADProps> = ({ parentHeight, insuranceContracts }: ADProps) => {
+const ActiveDeposits: FC<ADProps> = ({ parentHeight, pools }: ADProps) => {
     const headings = [
         'Market',
         'Realised APY',
@@ -25,6 +27,14 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, insuranceContracts }: ADPro
     }, [tableHeader]);
 
     const [showButton, setShowButton] = useState(-1);
+    const [showModal, setShowModal] = useState(false);
+    const [pool, setPool] = useState<InsurancePoolInfo>();
+
+    const handleClick = (popup: boolean, pool: InsurancePoolInfo) => {
+        setShowModal(popup);
+        setPool(pool);
+    };
+
     return (
         <>
             <ScrollableTable bodyHeight={`${parentHeight - tableHeaderHeight}px`}>
@@ -34,7 +44,7 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, insuranceContracts }: ADPro
                     ))}
                 </TableHeader>
                 <TableBody>
-                    {Object.values(insuranceContracts).map((insuranceContract, i) => {
+                    {Object.values(pools).map((pool, i) => {
                         const show = showButton === i;
                         return (
                             <TableRow
@@ -42,14 +52,18 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, insuranceContracts }: ADPro
                                 onMouseEnter={() => setShowButton(i)}
                                 onMouseLeave={() => setShowButton(-1)}
                             >
-                                <TableCell>{insuranceContract?.market}</TableCell>
-                                <TableCell>{toPercent(insuranceContract?.apy?.toNumber())}</TableCell>
-                                <TableCell>{insuranceContract?.userBalance?.toNumber()}</TableCell>
+                                <TableCell>{pool.market}</TableCell>
+                                <TableCell>{toPercent(pool.apy?.toNumber())}</TableCell>
+                                <TableCell>{pool.userBalance.toNumber()}</TableCell>
                                 <TableCell>-</TableCell>
                                 <TableCell>
                                     <div className="flex">
                                         -{' '}
-                                        <Button height="extra-small" className={show ? 'ml-5' : 'hide'}>
+                                        <Button
+                                            height="extra-small"
+                                            className={show ? 'ml-5' : 'hide'}
+                                            onClick={() => handleClick(true, pool)}
+                                        >
                                             Withdraw
                                         </Button>
                                     </div>
@@ -57,7 +71,11 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, insuranceContracts }: ADPro
                                 <TableCell>
                                     <div className="flex">
                                         -{' '}
-                                        <Button height="extra-small" className={show ? 'ml-5' : 'hide'}>
+                                        <Button
+                                            height="extra-small"
+                                            className={show ? 'ml-5' : 'hide'}
+                                            onClick={() => handleClick(true, pool)}
+                                        >
                                             Withdraw
                                         </Button>
                                     </div>
@@ -67,6 +85,14 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, insuranceContracts }: ADPro
                     })}
                 </TableBody>
             </ScrollableTable>
+            <InsuranceModal
+                tracer={pool?.tracer}
+                poolUserBalance={pool?.userBalance ?? defaults.userBalance}
+                show={showModal}
+                belowTarget={pool?.liquidity && pool?.target ? pool?.liquidity < pool?.target : false}
+                setShow={setShowModal}
+                type="Withdraw"
+            />
         </>
     );
 };
