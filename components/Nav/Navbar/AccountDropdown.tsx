@@ -26,6 +26,7 @@ export default (({ account, onboard, ensName, logout, handleConnect, tokenBalanc
         <StyledDropdown className={open ? 'open' : ''} id="account-dropdown">
             <MainButton>
                 <AccountDropdown
+                    id="account-dropdown-button"
                     className={!open ? 'show-hover' : ''}
                     onClick={async () => {
                         if (!!account) {
