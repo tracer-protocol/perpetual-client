@@ -108,6 +108,12 @@ const Advanced: React.FC = styled(({ className }) => {
 
         // Reset the elements affected by the tour
 
+        // Reset account dropdown button pointer events
+        const accountDropdownButton = document.getElementById('account-dropdown-button');
+        if (accountDropdownButton) {
+            accountDropdownButton.style.pointerEvents = 'auto';
+        }
+
         // Show the 'No Position Open' again
         const positionOverlay = document.getElementById('position-overlay') as HTMLElement;
         if (positionOverlay) {
