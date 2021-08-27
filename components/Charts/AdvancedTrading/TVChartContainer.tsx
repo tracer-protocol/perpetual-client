@@ -45,7 +45,7 @@ function getLanguageFromURL(): LanguageCode | null {
 
 export default class TVChartContainer extends React.PureComponent<Partial<ChartContainerProps>, ChartContainerState> {
     public static defaultProps: ChartContainerProps = {
-        symbol: '0x00000:ETH/USD',
+        symbol: '0x00000:default/market',
         selectedTracer: {
             address: '',
             marketId: '',
@@ -78,7 +78,6 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
     private tvWidget: IChartingLibraryWidget | null = null;
 
     public componentDidMount(): void {
-        console.log(this.props.interval);
         // @ts-ignore
         const widgetOptions: ChartingLibraryWidgetOptions = {
             debug: false,
@@ -102,7 +101,7 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
             client_id: this.props.clientId,
             user_id: this.props.userId,
             fullscreen: this.props.fullscreen,
-            timeframe: '1M',
+            timeframe: '14D',
             overrides: {
                 'paneProperties.backgroundType': 'solid',
                 'paneProperties.background': '#000240',
@@ -126,6 +125,7 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
         this.tvWidget = tvWidget;
 
         tvWidget.onChartReady(() => {
+            console.debug('Chart ready');
             tvWidget.headerReady().then(() => {
                 const button = tvWidget.createButton();
                 button.setAttribute('title', 'Click to show a notification popup');
@@ -145,32 +145,25 @@ export default class TVChartContainer extends React.PureComponent<Partial<ChartC
         });
     }
 
-    public componentDidUpdate(prevProps: ChartContainerProps): void {
-        if (prevProps.selectedTracer.address !== this.props?.selectedTracer?.address) {
-            console.log('Tracer has changed, new tracer', this.props.selectedTracer);
+    public componentDidUpdate(prevProps: ChartContainerProps, prevState: ChartContainerState): void {
+        if (
+            prevState.tvWidgetReady !== this.state.tvWidgetReady ||
+            prevProps.selectedTracer.address !== this.props?.selectedTracer?.address
+        ) {
+            console.debug('Tracer has changed, new tracer', this.props.selectedTracer);
             this.setState({ showChart: false });
             const { address, marketId } = this.props?.selectedTracer ?? {
                 address: '',
                 marketId: 'ETH/USD',
             };
             if (this.state.tvWidgetReady) {
-                if (marketId === 'ETH/USD') {
-                    this.tvWidget?.setSymbol(
-                        `${address}:${marketId}`,
-                        '1D' as ChartingLibraryWidgetOptions['interval'],
-                        () => {
-                            this.setState({ showChart: true });
-                        },
-                    );
-                } else {
-                    this.tvWidget?.setSymbol(
-                        `${address}:BTC/USD`,
-                        '1D' as ChartingLibraryWidgetOptions['interval'],
-                        () => {
-                            this.setState({ showChart: true });
-                        },
-                    );
-                }
+                this.tvWidget?.setSymbol(
+                    `${address}:${marketId}`,
+                    '1D' as ChartingLibraryWidgetOptions['interval'],
+                    () => {
+                        this.setState({ showChart: true });
+                    },
+                );
             }
         }
     }

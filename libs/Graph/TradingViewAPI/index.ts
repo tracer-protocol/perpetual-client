@@ -8,11 +8,16 @@ import {
     Timezone,
 } from '@public/static/charting_library/charting_library';
 
-const supportedResolutions: ResolutionString[] = ['1D' as ChartingLibraryWidgetOptions['interval']];
+const supportedResolutions: ResolutionString[] = [
+    // these work if you set it as default but seem to fail when changing
+    // '5' as ChartingLibraryWidgetOptions['interval'],
+    '1D' as ChartingLibraryWidgetOptions['interval'],
+];
 
 const config = {
-    supported_resolutions: supportedResolutions,
+    supported_resolutions: [...supportedResolutions],
 };
+
 const dataFeed: IBasicDataFeed = {
     onReady: (cb) => {
         console.debug('=====onReady running');
@@ -41,6 +46,7 @@ const dataFeed: IBasicDataFeed = {
             minmov: 1,
             minmov2: 0,
             pricescale: 100000,
+            has_intraday: true,
             supported_resolutions: supportedResolutions,
         };
 
@@ -55,12 +61,12 @@ const dataFeed: IBasicDataFeed = {
 
     getBars: (symbolInfo, resolution, periodParams, onResult, onError) => {
         console.debug('=====getBars running');
-        const { to, from, firstDataRequest } = periodParams;
+        const { to, from, firstDataRequest, countBack } = periodParams;
+        console.debug(`Requires ${countBack} results to succeed for resolution ${resolution}`);
         historyProvider
             .getBars(symbolInfo, resolution, to, from, firstDataRequest)
             .then((bars) => {
-                console.log(bars, 'returned bars');
-                // if (bars.length && bars.length > periodParams.countBack) {
+                console.debug('Returned bars', bars);
                 if (bars.length) {
                     onResult(bars, { noData: false });
                 } else {
@@ -68,7 +74,7 @@ const dataFeed: IBasicDataFeed = {
                 }
             })
             .catch((err) => {
-                console.error({ err }, 'Failure to fetch bars');
+                console.error('Failure to fetch bars', { err });
                 onError(err);
             });
     },

@@ -35,7 +35,6 @@ export const getOrders: (market: string) => Promise<{
             if (res?.message === 'book_not_found') {
                 return {};
             }
-            console.debug('Fetched all orders', res?.data);
             return res?.data ?? {};
         })
         .catch((err) => {
