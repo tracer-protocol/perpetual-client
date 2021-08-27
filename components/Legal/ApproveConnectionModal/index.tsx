@@ -60,6 +60,7 @@ const ApproveConnectionModal: FC<ACMProps> = (props: ACMProps) => {
                             props.setProceed(!props.proceed);
                         }
                     }}
+                    height="medium"
                     disabled={!props.acceptTerms}
                 />
             </ProceedWrapper>
@@ -76,17 +77,10 @@ const ProceedWrapper = styled.div`
 `;
 
 const Proceed = styled(Button)`
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin: auto;
     width: 60px;
-    height: 30px;
-    border: 1px solid var(--color-primary);
-    border-radius: 50px;
     background: url('/img/reactour/arrow-right.svg') no-repeat center;
     background-size: 15px;
-    cursor: pointer;
     transition: background-color 0.3s;
 
     &:hover {
