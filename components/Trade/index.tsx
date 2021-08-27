@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { FC, useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext } from '@context/index';
 import { MarketSelect, AccountPanel } from './TradingPanel';
 import PlaceOrder from './TradingPanel/TradingInput/PlaceOrder';
@@ -15,7 +15,7 @@ import { Button } from '@components/General';
 
 const Tour = dynamic(import('reactour'), { ssr: false });
 
-const Advanced: React.FC = styled(({ className }) => {
+const Advanced: FC = styled(({ className }) => {
     const cookies = new Cookies();
     const { addToast } = useToasts();
     const [isTourOpen, setTourOpen] = useState(false);
