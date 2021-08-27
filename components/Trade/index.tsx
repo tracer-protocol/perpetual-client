@@ -7,16 +7,15 @@ import TradingView from './RightPanel';
 import { MARKET } from '@libs/types/OrderTypes';
 import dynamic from 'next/dynamic';
 import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
-import Cookies from 'universal-cookie';
 import { tourConfig } from './TourSteps';
 import { useWeb3 } from '@context/Web3Context/Web3Context';
 import { useToasts } from 'react-toast-notifications';
 import { Button } from '@components/General';
+import { useCookies } from 'react-cookie';
 
 const Tour = dynamic(import('reactour'), { ssr: false });
 
 const Advanced: FC = styled(({ className }) => {
-    const cookies = new Cookies();
     const { addToast } = useToasts();
     const [isTourOpen, setTourOpen] = useState(false);
     const [tourCompleted, setTutorialCompleted] = useState(false);
@@ -24,6 +23,7 @@ const Advanced: FC = styled(({ className }) => {
     const { account } = useWeb3();
     const { order, orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
     const { selectedTracer } = useContext(TracerContext);
+    const [cookies, setCookie] = useCookies(['tutorialIsComplete']);
 
     useEffect(() => {
         checkTutorialComplete();
@@ -55,8 +55,7 @@ const Advanced: FC = styled(({ className }) => {
     const triggerTutorial = async () => {
         // If cookie with flag does not exist,
         // start tutorial
-        const cookies = new Cookies();
-        if (cookies.get('tutorialCompleted') !== 'true') {
+        if (cookies.tutorialIsComplete !== 'true') {
             // eslint-disable-next-line react/jsx-key
             addToast(['Trading with Tracer', <ClickHere>Click here to learn how to trade with Tracer</ClickHere>], {
                 appearance: 'info',
@@ -80,8 +79,8 @@ const Advanced: FC = styled(({ className }) => {
     };
 
     const setCookies = () => {
-        if (cookies.get('tutorialCompleted') !== 'true') {
-            cookies.set('tutorialCompleted', 'true', { path: '/' });
+        if (cookies.tutorialIsComplete !== 'true') {
+            setCookie('tutorialIsComplete', 'true', { path: '/' });
         }
     };
 
@@ -94,7 +93,7 @@ const Advanced: FC = styled(({ className }) => {
     };
 
     const checkTutorialComplete = () => {
-        if (cookies.get('tutorialCompleted') === 'true') {
+        if (cookies.tutorialIsComplete === 'true') {
             setTutorialCompleted(true);
         }
     };
