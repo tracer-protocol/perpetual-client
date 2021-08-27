@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { Checkbox, CheckboxContainer, CheckboxTitle } from '@components/General';
+import { Button, Checkbox, CheckboxContainer, CheckboxTitle } from '@components/General';
 import TracerModal from '@components/General/TracerModal';
 import Link from 'next/link';
 
@@ -60,6 +60,7 @@ const ApproveConnectionModal: FC<ACMProps> = (props: ACMProps) => {
                             props.setProceed(!props.proceed);
                         }
                     }}
+                    disabled={!props.acceptTerms}
                 />
             </ProceedWrapper>
         </LegalModal>
@@ -74,7 +75,7 @@ const ProceedWrapper = styled.div`
     justify-content: space-between;
 `;
 
-const Proceed = styled.div`
+const Proceed = styled(Button)`
     display: flex;
     justify-content: center;
     align-items: center;
@@ -83,16 +84,19 @@ const Proceed = styled.div`
     height: 30px;
     border: 1px solid var(--color-primary);
     border-radius: 50px;
-    background-image: url('/img/reactour/arrow-right.svg');
+    background: url('/img/reactour/arrow-right.svg') no-repeat center;
     background-size: 15px;
-    background-position: center;
-    background-repeat: no-repeat;
     cursor: pointer;
     transition: background-color 0.3s;
 
     &:hover {
-        background-color: var(--color-primary);
-        background-image: url('/img/reactour/arrow-right-white.svg');
+        &[disabled] {
+            background: url('/img/reactour/arrow-right.svg') no-repeat center;
+            background-size: 15px;
+        }
+
+        background: url('/img/reactour/arrow-right-white.svg') no-repeat center var(--color-primary);
+        background-size: 15px;
     }
 `;
 
