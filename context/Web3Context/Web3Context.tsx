@@ -57,7 +57,8 @@ const Web3Store: React.FC<Web3ContextProps> = ({
     const [isReady, setIsReady] = useState<boolean>(false);
     const [config, setConfig] = useState<Network>(networkConfig[0]);
     const [showTerms, setShowTerms] = useState<boolean>(false);
-    const [acceptedTerms, acceptTerms] = useState(false);
+    const [acceptTerms, setAcceptTerms] = useState<boolean>(false);
+    const [proceed, setProceed] = useState<boolean>(false);
 
     // Initialize OnboardJS
     useEffect(() => {
@@ -128,12 +129,15 @@ const Web3Store: React.FC<Web3ContextProps> = ({
 
     useEffect(() => {
         const cookies = new Cookies();
-        if (acceptedTerms) {
+        if (acceptTerms && isReady) {
             cookies.set('acceptedTerms', 'true', { path: '/' });
+            setShowTerms(false);
+        }
+        if (acceptTerms && proceed) {
             handleConnect();
             setShowTerms(false);
         }
-    }, [acceptedTerms]);
+    }, [acceptTerms, proceed, isReady]);
 
     const checkIsReady = async () => {
         const isReady = await onboard?.walletCheck();
@@ -156,16 +160,16 @@ const Web3Store: React.FC<Web3ContextProps> = ({
             setShowTerms(true);
         } else {
             setShowTerms(false);
-            acceptTerms(true);
+            setAcceptTerms(true);
         }
-        return acceptedTerms;
+        return acceptTerms;
     };
 
     const handleConnect = async () => {
         if (onboard) {
             try {
                 const accepted = acceptLegalTerms();
-                if (accepted) {
+                if (accepted && proceed) {
                     await onboard?.walletSelect();
                     await checkIsReady();
                 }
@@ -197,10 +201,12 @@ const Web3Store: React.FC<Web3ContextProps> = ({
                 {children}
             </Web3Context.Provider>
             <ApproveConnectionModal
-                acceptedTerms={acceptedTerms}
                 show={showTerms}
                 setShow={setShowTerms}
                 acceptTerms={acceptTerms}
+                setAcceptTerms={setAcceptTerms}
+                proceed={proceed}
+                setProceed={setProceed}
             />
         </>
     );

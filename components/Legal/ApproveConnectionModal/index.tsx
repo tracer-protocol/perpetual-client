@@ -1,24 +1,27 @@
-import { Checkbox, CheckboxContainer, CheckboxTitle } from '@components/General';
+import React, { FC } from 'react';
+import styled from 'styled-components';
+import { Button, Checkbox, CheckboxContainer, CheckboxTitle } from '@components/General';
 import TracerModal from '@components/General/TracerModal';
 import Link from 'next/link';
-import styled from 'styled-components';
-import React from 'react';
 
 interface ACMProps {
-    acceptedTerms: boolean;
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
-    acceptTerms: React.Dispatch<React.SetStateAction<boolean>>;
+    acceptTerms: boolean;
+    setAcceptTerms: React.Dispatch<React.SetStateAction<boolean>>;
+    proceed: boolean;
+    setProceed: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ApproveConnectionModal: React.FC<ACMProps> = (props: ACMProps) => {
+const ApproveConnectionModal: FC<ACMProps> = (props: ACMProps) => {
     return (
         <LegalModal
             loading={false}
             show={props.show}
             onClose={() => {
-                props.acceptTerms(false);
                 props.setShow(false);
+                props.setAcceptTerms(false);
+                props.setProceed(false);
             }}
             title="Connect Wallet"
         >
@@ -39,21 +42,57 @@ const ApproveConnectionModal: React.FC<ACMProps> = (props: ACMProps) => {
                     </a>
                 </Link>
             </Terms>
-            <CheckboxContainer
-                onClick={(e: any) => {
-                    e.preventDefault();
-                    props.acceptTerms(!props.acceptedTerms);
-                }}
-                id="checkbox-container"
-            >
-                <Checkbox checked={props.acceptedTerms} />
-                <CheckboxTitle>I agree to Tracer’s Terms of use</CheckboxTitle>
-            </CheckboxContainer>
+            <ProceedWrapper>
+                <CheckboxContainer
+                    onClick={(e: any) => {
+                        e.preventDefault();
+                        props.setAcceptTerms(!props.acceptTerms);
+                    }}
+                    id="checkbox-container"
+                >
+                    <Checkbox checked={props.acceptTerms} />
+                    <CheckboxTitle>I agree to Tracer’s Terms of use</CheckboxTitle>
+                </CheckboxContainer>
+                <Proceed
+                    onClick={(e: any) => {
+                        e.preventDefault();
+                        if (props.acceptTerms) {
+                            props.setProceed(!props.proceed);
+                        }
+                    }}
+                    height="medium"
+                    disabled={!props.acceptTerms}
+                />
+            </ProceedWrapper>
         </LegalModal>
     );
 };
 
 export default ApproveConnectionModal;
+
+const ProceedWrapper = styled.div`
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+`;
+
+const Proceed = styled(Button)`
+    margin: auto;
+    width: 60px;
+    background: url('/img/reactour/arrow-right.svg') no-repeat center;
+    background-size: 15px;
+    transition: background-color 0.3s;
+
+    &:hover {
+        &[disabled] {
+            background: url('/img/reactour/arrow-right.svg') no-repeat center;
+            background-size: 15px;
+        }
+
+        background: url('/img/reactour/arrow-right-white.svg') no-repeat center var(--color-primary);
+        background-size: 15px;
+    }
+`;
 
 const LegalModal = styled(TracerModal)`
     max-width: 422px;
