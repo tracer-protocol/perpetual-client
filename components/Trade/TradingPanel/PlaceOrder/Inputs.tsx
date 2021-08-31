@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, Dispatch } from 'react';
 import SmallInput, { InputContainer } from '@components/General/Input/SmallInput';
 import Tracer from '@libs/Tracer';
 import { OrderAction, OrderState } from '@context/OrderContext';
@@ -11,7 +11,7 @@ import { Inc, Dec } from '@components/General/Input/NumberInput';
 import { MARKET, LONG, SHORT } from '@libs/types/OrderTypes';
 
 export const Exposure: FC<{
-    orderDispatch: React.Dispatch<OrderAction> | undefined;
+    orderDispatch: Dispatch<OrderAction> | undefined;
     selectedTracer: Tracer | undefined;
     order: OrderState;
     closeInput?: boolean; // optional boolean if it is for closing defaults to false
@@ -37,12 +37,6 @@ export const Exposure: FC<{
                     console.error('No dispatch function set');
                 }
             }}
-            // setMax={(e) => {
-            //     e.preventDefault();
-            //     orderDispatch
-            //         ? orderDispatch({ type: closeInput ? 'setMaxClosure' : 'setMaxExposure' })
-            //         : console.error('No dispatch function set');
-            // }}
             unit={selectedTracer?.baseTicker ?? ''}
             amount={parseFloat(order.exposure.toFixed(8))}
         />
@@ -50,7 +44,7 @@ export const Exposure: FC<{
 };
 
 export const Price: FC<{
-    orderDispatch: React.Dispatch<OrderAction> | undefined;
+    orderDispatch: Dispatch<OrderAction> | undefined;
     selectedTracer: Tracer | undefined;
     price: number;
     className?: string;
@@ -83,24 +77,8 @@ export const Price: FC<{
     );
 };
 
-const StyledSmallInput = styled(SmallInput)`
-    justify-content: flex-start;
-    ${InputContainer} {
-        margin-left: 1rem;
-        width: 80px;
-    }
-    * ${Inc}, * ${Dec} {
-        display: none;
-    }
-
-    > * input {
-        text-align: center;
-        padding-left: 0;
-    }
-`;
-
 export const LeverageInput: FC<{
-    orderDispatch: React.Dispatch<OrderAction> | undefined;
+    orderDispatch: Dispatch<OrderAction> | undefined;
     position: typeof LONG | typeof SHORT;
     selectedTracer: Tracer | undefined;
     leverage: number;
@@ -136,37 +114,12 @@ export const LeverageInput: FC<{
     );
 };
 
-export const Closure: React.FC<{
-    orderDispatch: React.Dispatch<OrderAction> | undefined;
-    selectedTracer: Tracer | undefined;
-    exposure: number;
-    className?: string;
-}> = ({ selectedTracer, orderDispatch, exposure, className }) => {
-    return (
-        <SmallInput
-            title={'Amount'}
-            className={className ?? ''}
-            onChange={(e) => {
-                orderDispatch
-                    ? orderDispatch({ type: 'setExposure', value: parseFloat(e.target.value) })
-                    : console.error('No dispatch function set');
-            }}
-            setMax={(e) => {
-                e.preventDefault();
-                orderDispatch ? orderDispatch({ type: 'setMaxClosure' }) : console.error('No dispatch function set');
-            }}
-            unit={selectedTracer?.baseTicker ?? ''}
-            amount={exposure}
-        />
-    );
-};
-
 type LProps = {
     leverage: number;
     className?: string;
     min?: BigNumber;
     max?: BigNumber;
-    orderDispatch: React.Dispatch<OrderAction> | undefined;
+    orderDispatch: Dispatch<OrderAction> | undefined;
 };
 
 export const Leverage: FC<LProps> = styled(({ orderDispatch, leverage, className, min, max }: LProps) => {
@@ -198,5 +151,21 @@ export const Leverage: FC<LProps> = styled(({ orderDispatch, leverage, className
         font-size: var(--font-size-small);
         letter-spacing: var(--letter-spacing-small);
         color: var(--color-primary);
+    }
+`;
+
+const StyledSmallInput = styled(SmallInput)`
+    justify-content: flex-start;
+    ${InputContainer} {
+        margin-left: 1rem;
+        width: 80px;
+    }
+    * ${Inc}, * ${Dec} {
+        display: none;
+    }
+
+    > * input {
+        text-align: center;
+        padding-left: 0;
     }
 `;
