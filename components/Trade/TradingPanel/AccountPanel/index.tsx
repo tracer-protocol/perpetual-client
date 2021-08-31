@@ -14,7 +14,7 @@ import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import { CalculatorStore1 } from '@context/CalculatorContext1';
 import { CalculatorStore2 } from '@context/CalculatorContext2';
 import CalculatorModal1 from './CalculatorModal1';
-import CalculatorModal2 from '@components/Trade/TradingPanel/Account/CalculatorModal2';
+import CalculatorModal2 from '@components/Trade/TradingPanel/AccountPanel/CalculatorModal2';
 
 type InfoProps = {
     order: OrderState | undefined;

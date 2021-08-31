@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import SmallInput, { InputContainer } from '@components/General/Input/SmallInput';
 import Tracer from '@libs/Tracer';
 import { OrderAction, OrderState } from '@context/OrderContext';
@@ -10,7 +10,7 @@ import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import { Inc, Dec } from '@components/General/Input/NumberInput';
 import { MARKET, LONG, SHORT } from '@libs/types/OrderTypes';
 
-export const Exposure: React.FC<{
+export const Exposure: FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
     selectedTracer: Tracer | undefined;
     order: OrderState;
@@ -49,7 +49,7 @@ export const Exposure: React.FC<{
     );
 };
 
-export const Price: React.FC<{
+export const Price: FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
     selectedTracer: Tracer | undefined;
     price: number;
@@ -99,7 +99,7 @@ const StyledSmallInput = styled(SmallInput)`
     }
 `;
 
-export const LeverageInput: React.FC<{
+export const LeverageInput: FC<{
     orderDispatch: React.Dispatch<OrderAction> | undefined;
     position: typeof LONG | typeof SHORT;
     selectedTracer: Tracer | undefined;
@@ -169,7 +169,7 @@ type LProps = {
     orderDispatch: React.Dispatch<OrderAction> | undefined;
 };
 
-export const Leverage: React.FC<LProps> = styled(({ orderDispatch, leverage, className, min, max }: LProps) => {
+export const Leverage: FC<LProps> = styled(({ orderDispatch, leverage, className, min, max }: LProps) => {
     return (
         <div className={`${className} m-3`}>
             <TooltipSelector tooltip={{ key: 'leverage' }}>Leverage</TooltipSelector>

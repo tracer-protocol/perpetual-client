@@ -113,7 +113,7 @@ const TooltipSelector: React.FC<{ tooltip: TooltipSelectorProps }> = ({ tooltip,
                 </InsuranceFundingRateTip>
             );
 
-        // Account details section
+        // AccountPanel details section
         case 'realised-pnl':
             return (
                 <RealisedPnLTip baseTicker={tooltip?.props?.baseTicker ?? ''} className="label">

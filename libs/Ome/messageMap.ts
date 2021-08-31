@@ -6,7 +6,7 @@ export const errors: Record<string, string> = {
     [API_CODES.UNDER_MARGIN]: 'Not enough margin',
     [API_CODES.INVALID_CREATED_TIMESTAMP]: 'Invalid creation timestamp',
     [API_CODES.INVALID_EXPIRY_TIMESTAMP]: 'Invalid expiry timestamp',
-    [API_CODES.NOT_WHITELISTED]: 'Account not whitelisted',
+    [API_CODES.NOT_WHITELISTED]: 'AccountPanel not whitelisted',
 };
 
 export const ok: Record<string, string> = {

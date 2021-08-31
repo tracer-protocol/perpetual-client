@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { FC, useContext, useState, useEffect } from 'react';
 import { FactoryContext, TracerContext } from '@context/index';
 import Tracer from '@libs/Tracer';
 import { Box, Logo } from '@components/General';
@@ -147,11 +147,7 @@ const SBox = styled(Box)<{ $display: boolean; color: string }>`
     }
 `;
 
-type MSProps = {
-    className?: string;
-    account: string;
-};
-export default styled(({ className }: MSProps) => {
+const MarketSelect: FC = () => {
     const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const { selectedTracer, setTracerId } = useContext(TracerContext);
     const [popup, setPopup] = useState(false);
@@ -173,32 +169,30 @@ export default styled(({ className }: MSProps) => {
     }, [popup]);
 
     return (
-        <div className={`${className}`}>
-            <SBox color={popup ? '#011772' : '#000240'} $display={popup} onMouseLeave={() => setPopup(false)}>
-                <MarketContainer>
-                    <SLogo ticker={selectedTracer?.baseTicker} />
-                    <div className="my-auto">{selectedTracer?.marketId}</div>
-                </MarketContainer>
-                <div className="ml-auto flex" onMouseEnter={() => setPopup(true)}>
-                    <MarketSelectDropdownButton arrowUp={popup} />
-                </div>
-                <MarketSelectDropdown
-                    tracers={tracers ?? {}}
-                    display={popup}
-                    onMarketSelect={(tracerId: string) => {
-                        if (setTracerId) {
-                            setTracerId(tracerId);
-                            setPopup(false);
-                            setCookie('tracerIDIsSet', 'true', { path: '/' });
-                            setCookie('tracerID', tracerId, { path: '/' });
-                        } else {
-                            console.error('Failed to set tracer, setTracerId undefined');
-                        }
-                    }}
-                />
-            </SBox>
-        </div>
+        <SBox color={popup ? '#011772' : '#000240'} $display={popup} onMouseLeave={() => setPopup(false)}>
+            <MarketContainer>
+                <SLogo ticker={selectedTracer?.baseTicker} />
+                <div className="my-auto">{selectedTracer?.marketId}</div>
+            </MarketContainer>
+            <div className="ml-auto flex" onMouseEnter={() => setPopup(true)}>
+                <MarketSelectDropdownButton arrowUp={popup} />
+            </div>
+            <MarketSelectDropdown
+                tracers={tracers ?? {}}
+                display={popup}
+                onMarketSelect={(tracerId: string) => {
+                    if (setTracerId) {
+                        setTracerId(tracerId);
+                        setPopup(false);
+                        setCookie('tracerIDIsSet', 'true', { path: '/' });
+                        setCookie('tracerID', tracerId, { path: '/' });
+                    } else {
+                        console.error('Failed to set tracer, setTracerId undefined');
+                    }
+                }}
+            />
+        </SBox>
     );
-})`
-    width: 100%;
-` as React.FC<MSProps>;
+};
+
+export default MarketSelect;

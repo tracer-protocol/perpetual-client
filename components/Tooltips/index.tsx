@@ -190,7 +190,7 @@ export const InsuranceFundingRateTip: React.FC<BTProps> = ({ baseTicker, classNa
     );
 };
 
-// Account details section
+// AccountPanel details section
 export const RealisedPnLTip: React.FC<BTProps> = ({ baseTicker, className, children }: BTProps) => {
     const tooltip = (
         <p>
