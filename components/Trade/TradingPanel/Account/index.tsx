@@ -11,10 +11,8 @@ import { LIMIT } from '@libs/types/OrderTypes';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import { UserBalance } from '@libs/types';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
-import { CalculatorStore1 } from '@context/CalculatorContext1';
-import { CalculatorStore2 } from '@context/CalculatorContext2';
-import CalculatorModal1 from './CalculatorModal1';
-import CalculatorModal2 from '@components/Trade/TradingPanel/Account/CalculatorModal2';
+import { CalculatorStore2 } from '@context/CalculatorContext';
+import CalculatorModal from '@components/General/TracerModal/CalculatorModal';
 
 type InfoProps = {
     order: OrderState | undefined;
@@ -82,7 +80,6 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
-    const [showCalculator1, setShowCalculator1] = useState(false);
     const [showCalculator2, setShowCalculator2] = useState(false);
 
     const handleClick = (popup: boolean, deposit: boolean) => {
@@ -94,7 +91,7 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title hide={!!order?.exposureBN.toNumber() ?? false}>
                 <span>Margin Account</span>
-                <Button id="calculator-button" onClick={() => setShowCalculator1(true)}>
+                <Button id="calculator-button" onClick={() => setShowCalculator2(true)}>
                     Calculator
                 </Button>
             </Title>
@@ -151,18 +148,8 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
                 maxLeverage={maxLeverage}
                 fairPrice={fairPrice}
             />
-            <CalculatorStore1>
-                <CalculatorModal1
-                    display={showCalculator1}
-                    close={() => setShowCalculator1(false)}
-                    baseTicker={selectedTracer?.baseTicker ?? 'NO_ID'}
-                    quoteTicker={selectedTracer?.quoteTicker ?? 'NO_ID'}
-                    balances={balances}
-                    fairPrice={fairPrice}
-                />
-            </CalculatorStore1>
             <CalculatorStore2>
-                <CalculatorModal2
+                <CalculatorModal
                     display={showCalculator2}
                     close={() => setShowCalculator2(false)}
                     baseTicker={selectedTracer?.baseTicker ?? 'NO_ID'}

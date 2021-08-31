@@ -5,19 +5,19 @@ import { BigNumber } from 'bignumber.js';
 import DefaultSlider from '@components/General/Slider';
 import { UserBalance } from '@libs/types';
 import SlideSelect, { Option } from '@components/General/SlideSelect';
-import TracerModal, { ModalAction, modalReducer, ModalState } from '@components/General/TracerModal';
+import TracerModal, { ModalAction, modalReducer, ModalState } from '@components/General/TracerModal/index';
 import { Button, HiddenExpand, LockContainer, NumberSelect } from '@components/General';
 import ErrorComponent, { CalculatorErrors, ErrorKey } from '@components/General/Error';
 import { NumberSelectHeader } from '@components/General/Input/NumberSelect';
 import {
-    CalculatorContext1,
+    CalculatorContext,
     ContextProps,
     LOCK_EXPOSURE,
     LOCK_MARGIN,
     LOCK_LEVERAGE,
     LOCK_LIQUIDATION,
     CalculatorAction,
-} from '@context/CalculatorContext1';
+} from '@context/CalculatorContext';
 import { defaults } from '@libs/Tracer';
 import { InfoCircleOutlined, LockOutlined, UnlockOutlined } from '@ant-design/icons';
 import { toApproxCurrency } from '@libs/utils';
@@ -40,7 +40,7 @@ interface CMProps {
     balances: UserBalance;
     fairPrice: BigNumber;
 }
-const CalculatorModal1: FC<CMProps> = styled(
+const CalculatorModal: FC<CMProps> = styled(
     ({ className, close, baseTicker, quoteTicker, balances, display, fairPrice }: CMProps) => {
         const {
             selectedTracer,
@@ -48,19 +48,9 @@ const CalculatorModal1: FC<CMProps> = styled(
             approve = () => console.error('Approve is not defined'),
         } = useContext(TracerContext);
         const {
-            calculatorState: {
-                exposure,
-                margin,
-                liquidationPrice,
-                leverage,
-                position,
-                displayLocks,
-                showResult,
-                error,
-                locked,
-            },
+            calculatorState: { exposure, margin, liquidationPrice, leverage, position, displayLocks, error, locked },
             calculatorDispatch,
-        } = useContext(CalculatorContext1) as ContextProps;
+        } = useContext(CalculatorContext) as ContextProps;
         const { orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
         const [modalState, modalDispatch] = useReducer(modalReducer, initialState);
 
@@ -198,7 +188,7 @@ const CalculatorModal1: FC<CMProps> = styled(
                         </NumberSelectHeader>
                     }
                 />
-                <StyledHiddenExpand defaultHeight={0} open={showResult}>
+                <StyledHiddenExpand defaultHeight={0} open={locked.length >= 2}>
                     <p className="title">Calculator Summary</p>
                     <p>
                         {error === 'NO_ERROR' || CalculatorErrors[error].severity
@@ -228,15 +218,6 @@ const CalculatorModal1: FC<CMProps> = styled(
                     <SButton
                         onClick={(e) => {
                             e.preventDefault();
-                            calculatorDispatch({ type: 'setShowResult', value: true });
-                            calculatorDispatch({ type: 'calculate' });
-                        }}
-                    >
-                        Calculate
-                    </SButton>
-                    <SButton
-                        onClick={(e) => {
-                            e.preventDefault();
                             calculatorDispatch({ type: 'reset' });
                         }}
                     >
@@ -251,7 +232,7 @@ const CalculatorModal1: FC<CMProps> = styled(
     max-width: 434px !important;
 `;
 
-export default CalculatorModal1;
+export default CalculatorModal;
 
 const InfoBox = styled(InfoCircleOutlined)`
     vertical-align: 0.125rem;
