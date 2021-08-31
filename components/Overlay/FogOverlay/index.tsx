@@ -3,6 +3,7 @@ import Overlay from '@components/Overlay';
 import styled from 'styled-components';
 import { Button } from '@components/General';
 import { OrderContext } from '@context/OrderContext';
+import { TracerContext } from '@context/TracerContext';
 
 interface FOProps {
     buttonName: string;
@@ -10,8 +11,9 @@ interface FOProps {
 }
 const FogOverlay: FC<FOProps> = ({ buttonName, onClick }: FOProps) => {
     const { order } = useContext(OrderContext);
+    const { selectedTracer } = useContext(TracerContext);
     return (
-        <StyledOverlay show={!!order?.exposureBN.toNumber()}>
+        <StyledOverlay show={!!order?.exposureBN.toNumber() || !!selectedTracer?.getBalance()?.quote.eq(0)}>
             <ShowButton onClick={onClick}>{buttonName}</ShowButton>
         </StyledOverlay>
     );
