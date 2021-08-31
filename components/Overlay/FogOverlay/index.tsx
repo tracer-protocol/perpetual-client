@@ -1,17 +1,16 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import Overlay from '@components/Overlay';
 import styled from 'styled-components';
 import { Button } from '@components/General';
-import { OrderContext } from '@context/OrderContext';
 
 interface FOProps {
     buttonName: string;
     onClick: () => void;
+    show: boolean;
 }
-const FogOverlay: FC<FOProps> = ({ buttonName, onClick }: FOProps) => {
-    const { order } = useContext(OrderContext);
+const FogOverlay: FC<FOProps> = ({ buttonName, onClick, show }: FOProps) => {
     return (
-        <StyledOverlay show={!!order?.exposureBN.toNumber()}>
+        <StyledOverlay show={show}>
             <ShowButton onClick={onClick}>{buttonName}</ShowButton>
         </StyledOverlay>
     );
