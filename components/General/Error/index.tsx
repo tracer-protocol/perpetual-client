@@ -28,7 +28,7 @@ export const OrderErrors: Record<string, ErrorBox> = {
         message: 'No open orders for this market',
     },
     ACCOUNT_DISCONNECTED: {
-        name: 'AccountPanel Disconnected',
+        name: 'Account Disconnected',
         message: 'Please connect your wallet',
     },
     INVALID_FUNDS: {
