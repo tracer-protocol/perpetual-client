@@ -11,7 +11,7 @@ import { LIMIT } from '@libs/types/OrderTypes';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import { UserBalance } from '@libs/types';
 import ConnectOverlay from '@components/Overlay/ConnectOverlay';
-import { CalculatorStore2 } from '@context/CalculatorContext';
+import { CalculatorStore } from '@context/CalculatorContext';
 import CalculatorModal from '@components/General/TracerModal/CalculatorModal';
 
 type InfoProps = {
@@ -148,7 +148,7 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
                 maxLeverage={maxLeverage}
                 fairPrice={fairPrice}
             />
-            <CalculatorStore2>
+            <CalculatorStore>
                 <CalculatorModal
                     display={showCalculator2}
                     close={() => setShowCalculator2(false)}
@@ -157,7 +157,7 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
                     balances={balances}
                     fairPrice={fairPrice}
                 />
-            </CalculatorStore2>
+            </CalculatorStore>
             {!account ? <ConnectOverlay /> : null}
         </AccountInfo>
     );

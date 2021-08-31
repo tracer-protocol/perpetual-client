@@ -67,7 +67,7 @@ const defaultState: CalculatorState = {
     locked: [],
     error: 'NO_ERROR',
 };
-export const CalculatorStore2: React.FC<StoreProps> = ({ children }: StoreProps) => {
+export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) => {
     const { selectedTracer } = useContext(TracerContext);
 
     const initialState: CalculatorState = {
