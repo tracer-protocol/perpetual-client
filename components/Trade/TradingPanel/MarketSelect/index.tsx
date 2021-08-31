@@ -17,35 +17,33 @@ const SLogo = styled(Logo)`
     }
 `;
 
-type MarketSelectDropdownProps = {
+interface MSDProps {
     tracers: Record<string, Tracer>;
     onMarketSelect: (tracerId: string) => any;
     display: boolean;
     className?: string;
-};
-const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
-    ({ className, tracers, onMarketSelect }: MarketSelectDropdownProps) => {
-        return (
-            <div className={className}>
-                {Object.values(tracers).map((tracer) => (
-                    <Box
-                        className="market"
-                        key={`tracer-market-${tracer.marketId}`}
-                        onClick={() => onMarketSelect(tracer.address)}
-                    >
-                        <MarketContainer className="w-1/4">
-                            <SLogo ticker={tracer.baseTicker} />
-                            <div className="my-auto">{tracer.marketId}</div>
-                        </MarketContainer>
-                        <div className="info">
-                            <div>{toApproxCurrency(tracer.getOraclePrice())}</div>
-                        </div>
-                    </Box>
-                ))}
-            </div>
-        );
-    },
-)`
+}
+const MarketSelectDropdown: React.FC<MSDProps> = styled(({ className, tracers, onMarketSelect }: MSDProps) => {
+    return (
+        <div className={className}>
+            {Object.values(tracers).map((tracer) => (
+                <Box
+                    className="market"
+                    key={`tracer-market-${tracer.marketId}`}
+                    onClick={() => onMarketSelect(tracer.address)}
+                >
+                    <MarketContainer className="w-1/4">
+                        <SLogo ticker={tracer.baseTicker} />
+                        <div className="my-auto">{tracer.marketId}</div>
+                    </MarketContainer>
+                    <div className="info">
+                        <div>{toApproxCurrency(tracer.getOraclePrice())}</div>
+                    </div>
+                </Box>
+            ))}
+        </div>
+    );
+})`
     transition: 0.5s;
     position: absolute;
     top: 100%;
@@ -81,20 +79,18 @@ const MarketSelectDropdown: React.FC<MarketSelectDropdownProps> = styled(
     }
 `;
 
-type MarketSelectDropdownButtonProps = {
+interface MSDBProps {
     className?: string;
     arrowUp?: boolean;
-};
-const MarketSelectDropdownButton: React.FC<MarketSelectDropdownButtonProps> = styled(
-    ({ className, arrowUp }: MarketSelectDropdownButtonProps) => {
-        return (
-            <div className={className}>
-                <span>{arrowUp ? 'Hide Markets' : 'View Markets'}</span>
-                <img className="down-arrow" src="/img/general/triangle_down.svg" alt="Down Arrow" />
-            </div>
-        );
-    },
-)<MarketSelectDropdownButtonProps>`
+}
+const MarketSelectDropdownButton: FC<MSDBProps> = styled(({ className, arrowUp }: MSDBProps) => {
+    return (
+        <div className={className}>
+            <span>{arrowUp ? 'Hide Markets' : 'View Markets'}</span>
+            <img className="down-arrow" src="/img/general/triangle_down.svg" alt="Down Arrow" />
+        </div>
+    );
+})`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -135,18 +131,6 @@ const MarketContainer = styled.div`
     height: var(--height-small-container);
 `;
 
-const SBox = styled(Box)<{ $display: boolean; color: string }>`
-    background-color: ${(props) => props.color as string}!important;
-    position: relative;
-    z-index: ${(props) => (props.$display ? 4 : 1)};
-    height: var(--height-small-container);
-    border-bottom: 1px solid var(--color-accent);
-    padding: 0 16px;
-    @media (min-width: 1800px) {
-        padding: 0 12px;
-    }
-`;
-
 const MarketSelect: FC = () => {
     const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const { selectedTracer, setTracerId } = useContext(TracerContext);
@@ -169,7 +153,11 @@ const MarketSelect: FC = () => {
     }, [popup]);
 
     return (
-        <SBox color={popup ? '#011772' : '#000240'} $display={popup} onMouseLeave={() => setPopup(false)}>
+        <MarketSelectContainer
+            color={popup ? '#011772' : '#000240'}
+            display={popup}
+            onMouseLeave={() => setPopup(false)}
+        >
             <MarketContainer>
                 <SLogo ticker={selectedTracer?.baseTicker} />
                 <div className="my-auto">{selectedTracer?.marketId}</div>
@@ -191,8 +179,25 @@ const MarketSelect: FC = () => {
                     }
                 }}
             />
-        </SBox>
+        </MarketSelectContainer>
     );
 };
 
 export default MarketSelect;
+
+interface MSCProps {
+    display: boolean;
+    color: string;
+}
+const MarketSelectContainer = styled.div<MSCProps>`
+    display: flex;
+    background-color: ${(props: MSCProps) => props.color as string} !important;
+    position: relative;
+    z-index: ${(props: MSCProps) => (props.display ? 4 : 1)};
+    height: var(--height-small-container);
+    border-bottom: 1px solid var(--color-accent);
+    padding: 0 16px;
+    @media (min-width: 1800px) {
+        padding: 0 12px;
+    }
+`;
