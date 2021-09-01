@@ -59,18 +59,13 @@ export const SlideOption = styled.div`
     font-size: var(--font-size-small);
     text-align: center;
     width: 100%;
-    padding: 0px 0.8rem;
+    padding: 0 0.8rem;
     z-index: 1;
 
     &:hover {
         cursor: pointer;
     }
 `;
-
-SlideSelect.defaultProps = {
-    onClick: () => undefined,
-    value: 0,
-};
 
 export * from './Options';
 export default SlideSelect;
