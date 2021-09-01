@@ -1,7 +1,8 @@
 import React, { FC, useContext, useEffect, useState } from 'react';
 import { OrderContext, TracerContext } from '@context/index';
-import { MarketSelect, AccountPanel } from './TradingPanel';
-import PlaceOrder from './TradingPanel/TradingInput/PlaceOrder';
+import AccountPanel from '@components/Trade/TradingPanel/AccountPanel';
+import MarketSelect from '@components/Trade/TradingPanel/MarketSelect';
+import PlaceOrder from './TradingPanel/PlaceOrder';
 import styled from 'styled-components';
 import TradingView from './RightPanel';
 import { MARKET } from '@libs/types/OrderTypes';
@@ -173,6 +174,9 @@ const Advanced: FC = styled(({ className }) => {
         <>
             <div className={`container ${className}`}>
                 <TradingPanel>
+                    <MarketSelect />
+                    <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
+                    <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} order={order} />
                     <MarketSelect account={account ?? ''} />
                     <TradeWrapper>
                         <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
