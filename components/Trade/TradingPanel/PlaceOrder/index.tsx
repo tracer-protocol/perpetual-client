@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { FC, useContext } from 'react';
 import { OrderContext } from '@context/index';
 import { orderDefaults } from '@context/OrderContext';
 import Tracer, { defaults } from '@libs/Tracer';
@@ -12,6 +12,7 @@ import { OrderTypeSelect, PositionSelect } from './Selects';
 import DoubleSidedSlider from './DoubleSidedSlider';
 import Divider from '@components/General/Divider';
 import { LIMIT, LONG, MARKET } from '@libs/types/OrderTypes';
+import PlaceOrderOverlay from '@components/Overlay/PlaceOrderOverlay';
 
 const Section = styled.div`
     margin: 12px 0;
@@ -32,10 +33,10 @@ type TIProps = {
     className?: string;
 };
 
-export default (({ selectedTracer, account }: TIProps) => {
+const PlaceOrder: FC<TIProps> = ({ selectedTracer, account }: TIProps) => {
     const { order, orderDispatch } = useContext(OrderContext);
     return (
-        <>
+        <PlaceOrderWrapper>
             <StyledBox id="open-position">
                 {/* Order type select */}
                 <OrderTypeSelect selected={order?.orderType ?? 0} />
@@ -116,10 +117,19 @@ export default (({ selectedTracer, account }: TIProps) => {
                     </div>
                 ) : null}
             </StyledBox>
+
             <SError error={order?.error ?? 'NO_ERROR'} account={account} context={'orders'} />
-        </>
+
+            {selectedTracer?.getBalance()?.quote.eq(0) ? <PlaceOrderOverlay /> : null}
+        </PlaceOrderWrapper>
     );
-}) as React.FC<TIProps>;
+};
+
+export default PlaceOrder;
+
+const PlaceOrderWrapper = styled.div`
+    position: relative;
+`;
 
 const StyledBox = styled(Box)`
     position: relative;

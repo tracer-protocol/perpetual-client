@@ -20,7 +20,7 @@ type InfoProps = {
     maxLeverage: BigNumber;
     fairPrice: BigNumber;
 };
-const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }: InfoProps) => {
+const BuyingPower: FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }: InfoProps) => {
     if (balances.quote.eq(0)) {
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
@@ -44,7 +44,7 @@ const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPr
     }
 };
 
-export const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }: InfoProps) => {
+export const AvailableMargin: FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }: InfoProps) => {
     if (balances.quote.eq(0)) {
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
@@ -80,7 +80,7 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
-    const [showCalculator2, setShowCalculator2] = useState(false);
+    const [showCalculator, setShowCalculator] = useState(false);
 
     const handleClick = (popup: boolean, deposit: boolean) => {
         setPopup(popup);
@@ -91,7 +91,7 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
         <AccountInfo zeroBalance={balances.quote.eq(0)}>
             <Title hide={!!order?.exposureBN.toNumber() ?? false}>
                 <span>Margin Account</span>
-                <Button id="calculator-button" onClick={() => setShowCalculator2(true)}>
+                <Button id="calculator-button" onClick={() => setShowCalculator(true)}>
                     Calculator
                 </Button>
             </Title>
@@ -150,8 +150,8 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
             />
             <CalculatorStore>
                 <CalculatorModal
-                    display={showCalculator2}
-                    close={() => setShowCalculator2(false)}
+                    display={showCalculator}
+                    close={() => setShowCalculator(false)}
                     baseTicker={selectedTracer?.baseTicker ?? 'NO_ID'}
                     quoteTicker={selectedTracer?.quoteTicker ?? 'NO_ID'}
                     balances={balances}
