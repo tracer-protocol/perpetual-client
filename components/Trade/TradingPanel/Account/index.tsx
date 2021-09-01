@@ -10,7 +10,6 @@ import { OrderState } from '@context/OrderContext';
 import { LIMIT } from '@libs/types/OrderTypes';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import { UserBalance } from '@libs/types';
-import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 import { CalculatorStore } from '@context/CalculatorContext';
 import CalculatorModal from '@components/General/TracerModal/CalculatorModal';
 
@@ -71,10 +70,9 @@ export const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLever
 
 interface APProps {
     selectedTracer: Tracer | undefined;
-    account: string;
     order: OrderState | undefined;
 }
-const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) => {
+const AccountPanel: FC<APProps> = ({ selectedTracer, order }: APProps) => {
     const [popup, setPopup] = useState(false);
     const [deposit, setDeposit] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
@@ -158,7 +156,6 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
                     fairPrice={fairPrice}
                 />
             </CalculatorStore>
-            {!account ? <ConnectOverlay /> : null}
         </AccountInfo>
     );
 };
@@ -198,7 +195,6 @@ const DepositWithdraw = styled.div`
 `;
 
 const AccountInfo = styled(Box)<{ zeroBalance: boolean }>`
-    position: relative;
     box-sizing: border-box;
     flex-direction: column;
     overflow: auto;

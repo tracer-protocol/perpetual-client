@@ -12,6 +12,7 @@ import { useWeb3 } from '@context/Web3Context/Web3Context';
 import { useToasts } from 'react-toast-notifications';
 import { Button } from '@components/General';
 import { useCookies } from 'react-cookie';
+import ConnectOverlay from '@components/Overlay/ConnectOverlay';
 
 const Tour = dynamic(import('reactour'), { ssr: false });
 
@@ -173,8 +174,11 @@ const Advanced: FC = styled(({ className }) => {
             <div className={`container ${className}`}>
                 <TradingPanel>
                     <MarketSelect account={account ?? ''} />
-                    <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
-                    <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} order={order} />
+                    <TradeWrapper>
+                        <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
+                        <AccountPanel selectedTracer={selectedTracer} order={order} />
+                        {!account ? <ConnectOverlay /> : null}
+                    </TradeWrapper>
                 </TradingPanel>
                 <RightPanel>
                     <TradingView selectedTracer={selectedTracer} />
@@ -211,10 +215,13 @@ const TradingPanel = styled.div`
     display: flex;
     flex-direction: column;
     height: var(--height-content);
-    position: relative;
     border-left: 1px solid #0c3586;
     border-right: 1px solid #0c3586;
     border-bottom: 1px solid #0c3586;
+`;
+
+const TradeWrapper = styled.div`
+    position: relative;
 `;
 
 const RightPanel = styled.div`
