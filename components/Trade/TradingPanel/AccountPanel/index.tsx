@@ -20,7 +20,7 @@ type InfoProps = {
     maxLeverage: BigNumber;
     fairPrice: BigNumber;
 };
-const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }: InfoProps) => {
+const BuyingPower: FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }: InfoProps) => {
     if (balances.quote.eq(0)) {
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
@@ -44,7 +44,7 @@ const BuyingPower: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPr
     }
 };
 
-export const AvailableMargin: React.FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }: InfoProps) => {
+export const AvailableMargin: FC<InfoProps> = ({ order, balances, maxLeverage, fairPrice }: InfoProps) => {
     if (balances.quote.eq(0)) {
         return <NoBalance>-</NoBalance>;
     } else if (!order?.exposure || !order.price) {
