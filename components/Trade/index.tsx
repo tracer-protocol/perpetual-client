@@ -175,9 +175,6 @@ const Advanced: FC = styled(({ className }) => {
             <div className={`container ${className}`}>
                 <TradingPanel>
                     <MarketSelect />
-                    <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
-                    <AccountPanel selectedTracer={selectedTracer} account={account ?? ''} order={order} />
-                    <MarketSelect account={account ?? ''} />
                     <TradeWrapper>
                         <PlaceOrder selectedTracer={selectedTracer} account={account ?? ''} />
                         <AccountPanel selectedTracer={selectedTracer} order={order} />
