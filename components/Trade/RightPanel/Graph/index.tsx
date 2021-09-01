@@ -22,7 +22,12 @@ const Graph: FC<GProps> = styled(({ className }: GProps) => {
     return (
         <div className={className}>
             <GraphContent>
-                <TVChartContainer />
+                <TVChartContainer
+                    selectedTracer={{
+                        address: selectedTracer?.address,
+                        marketId: selectedTracer?.marketId,
+                    }}
+                />
             </GraphContent>
             {showOverlay ? (
                 <FogOverlay
