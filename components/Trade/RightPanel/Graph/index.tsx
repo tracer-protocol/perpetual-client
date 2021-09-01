@@ -5,6 +5,7 @@ import FogOverlay from '@components/Overlay/FogOverlay';
 import TVChartContainer from '@components/Charts/AdvancedTrading';
 import { TracerContext } from '@context/TracerContext';
 import { OrderContext } from '@context/OrderContext';
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 const GraphContent = styled.div`
     height: 45vh;
@@ -16,6 +17,7 @@ interface GProps {
 }
 const Graph: FC<GProps> = styled(({ className }: GProps) => {
     // const { candles } = useCandles(selectedTracerAddress);
+    const { account } = useWeb3();
     const { selectedTracer } = useContext(TracerContext);
     const { order } = useContext(OrderContext);
     const [showOverlay, setOverlay] = useState(true);
@@ -33,7 +35,7 @@ const Graph: FC<GProps> = styled(({ className }: GProps) => {
                 <FogOverlay
                     buttonName="Show Chart"
                     onClick={() => setOverlay(false)}
-                    show={!!order?.exposureBN.toNumber() || !!selectedTracer?.getBalance()?.quote.eq(0)}
+                    show={!!order?.exposureBN.toNumber() || !!selectedTracer?.getBalance()?.quote.eq(0) || !account}
                 />
             ) : null}
         </div>

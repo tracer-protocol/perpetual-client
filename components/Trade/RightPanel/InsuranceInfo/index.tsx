@@ -8,12 +8,14 @@ import BigNumber from 'bignumber.js';
 import FogOverlay from '@components/Overlay/FogOverlay';
 import { TracerContext } from '@context/TracerContext';
 import { OrderContext } from '@context/OrderContext';
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 interface IIProps {
     className?: string;
     fundingRate: BigNumber;
 }
 const InsuranceInfo: FC<IIProps> = styled(({ className, fundingRate }: IIProps) => {
+    const { account } = useWeb3();
     const { poolInfo } = useContext(InsuranceContext);
     const { selectedTracer } = useContext(TracerContext);
     const { order } = useContext(OrderContext);
@@ -67,7 +69,7 @@ const InsuranceInfo: FC<IIProps> = styled(({ className, fundingRate }: IIProps) 
                 <FogOverlay
                     buttonName="Show Insurance Health"
                     onClick={() => setOverlay(false)}
-                    show={!!order?.exposureBN.toNumber() || !!selectedTracer?.getBalance()?.quote.eq(0)}
+                    show={!!order?.exposureBN.toNumber() || !!selectedTracer?.getBalance()?.quote.eq(0) || !account}
                 />
             ) : null}
         </div>

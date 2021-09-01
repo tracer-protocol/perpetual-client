@@ -14,6 +14,7 @@ import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
 import { OrderContext } from '@context/OrderContext';
 import { LIMIT, SHORT, LONG } from '@libs/types/OrderTypes';
 import { TracerContext } from '@context/TracerContext';
+import { useWeb3 } from '@context/Web3Context/Web3Context';
 
 const decimalKeyMap: Record<number, number> = {
     1: 0.01,
@@ -43,6 +44,7 @@ interface OProps {
 
 const OrderBook: FC<OProps> = styled(
     ({ askOrders, bidOrders, lastTradePrice, marketUp, decimals, setDecimals, className }: OProps) => {
+        const { account } = useWeb3();
         const { selectedTracer } = useContext(TracerContext);
         const { order } = useContext(OrderContext);
         const { orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
@@ -218,7 +220,7 @@ const OrderBook: FC<OProps> = styled(
                     <FogOverlay
                         buttonName="Show Order Book"
                         onClick={() => setOverlay(false)}
-                        show={!!order?.exposureBN.toNumber() || !!selectedTracer?.getBalance()?.quote.eq(0)}
+                        show={!!order?.exposureBN.toNumber() || !!selectedTracer?.getBalance()?.quote.eq(0) || !account}
                     />
                 ) : null}
             </div>
