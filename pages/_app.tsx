@@ -13,6 +13,7 @@ import { FactoryStore } from '@context/FactoryContext';
 import GlobalStyles from '@public/styles/GlobalStyles';
 import styled from 'styled-components';
 import { Web3Store } from '@context/Web3Context/Web3Context';
+import { CookiesProvider } from 'react-cookie';
 
 const USERSNAP_GLOBAL_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_GLOBAL_API_KEY;
 const USERSNAP_API_KEY = process.env.NEXT_PUBLIC_USERSNAP_API_KEY;
@@ -94,7 +95,9 @@ const App = ({ Component, pageProps }: AppProps) => {
                         <GraphProvider>
                             <FactoryStore>
                                 <TransactionStore>
-                                    <Component {...pageProps} />
+                                    <CookiesProvider>
+                                        <Component {...pageProps} />
+                                    </CookiesProvider>
                                 </TransactionStore>
                             </FactoryStore>
                         </GraphProvider>

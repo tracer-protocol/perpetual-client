@@ -15,14 +15,16 @@ import {
     TableRow,
 } from '@components/General/Table';
 import { TracerContext } from '@context/TracerContext';
+import { OrderContext } from '@context/OrderContext';
 
 interface RTProps {
     trades: FilledOrder[];
     displayTrades: boolean;
 }
 const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => {
-    const [showOverlay, setOverlay] = useState(true);
     const { selectedTracer } = useContext(TracerContext);
+    const { order } = useContext(OrderContext);
+    const [showOverlay, setOverlay] = useState(true);
 
     return (
         <RecentTradesContainer displayTrades={displayTrades}>
@@ -56,7 +58,13 @@ const RecentTrades: React.FC<RTProps> = ({ trades, displayTrades }: RTProps) => 
             ) : (
                 <Icon component={TracerLoading} className="tracer-loading" />
             )}
-            {showOverlay ? <FogOverlay buttonName="Show Recent Trades" onClick={() => setOverlay(false)} /> : null}
+            {showOverlay ? (
+                <FogOverlay
+                    buttonName="Show Recent Trades"
+                    onClick={() => setOverlay(false)}
+                    show={!!order?.exposureBN.toNumber() || !!selectedTracer?.getBalance()?.quote.eq(0)}
+                />
+            ) : null}
         </RecentTradesContainer>
     );
 };

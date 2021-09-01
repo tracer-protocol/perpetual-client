@@ -6,6 +6,8 @@ import { InsuranceContext, defaults } from '@context/InsuranceContext';
 import TooltipSelector from '@components/Tooltips/TooltipSelector';
 import BigNumber from 'bignumber.js';
 import FogOverlay from '@components/Overlay/FogOverlay';
+import { TracerContext } from '@context/TracerContext';
+import { OrderContext } from '@context/OrderContext';
 
 interface IIProps {
     className?: string;
@@ -13,6 +15,8 @@ interface IIProps {
 }
 const InsuranceInfo: FC<IIProps> = styled(({ className, fundingRate }: IIProps) => {
     const { poolInfo } = useContext(InsuranceContext);
+    const { selectedTracer } = useContext(TracerContext);
+    const { order } = useContext(OrderContext);
     const poolHealth = poolInfo?.health ?? defaults.health;
     const poolLiquidity = poolInfo?.liquidity ?? defaults.liquidity;
     const poolTarget = poolInfo?.target ?? defaults.target;
@@ -59,7 +63,13 @@ const InsuranceInfo: FC<IIProps> = styled(({ className, fundingRate }: IIProps) 
                     {(fundingRate.toNumber() * 100).toFixed(5)}%
                 </Section>
             </InfoContent>
-            {showOverlay ? <FogOverlay buttonName="Show Insurance Health" onClick={() => setOverlay(false)} /> : null}
+            {showOverlay ? (
+                <FogOverlay
+                    buttonName="Show Insurance Health"
+                    onClick={() => setOverlay(false)}
+                    show={!!order?.exposureBN.toNumber() || !!selectedTracer?.getBalance()?.quote.eq(0)}
+                />
+            ) : null}
         </div>
     );
 })`

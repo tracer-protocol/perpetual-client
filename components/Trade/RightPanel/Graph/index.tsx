@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import FogOverlay from '@components/Overlay/FogOverlay';
 import TVChartContainer from '@components/Charts/AdvancedTrading';
 import { TracerContext } from '@context/TracerContext';
+import { OrderContext } from '@context/OrderContext';
 
 const GraphContent = styled.div`
     height: 45vh;
@@ -14,8 +15,9 @@ interface GProps {
     className?: string;
 }
 const Graph: FC<GProps> = styled(({ className }: GProps) => {
-    const { selectedTracer } = useContext(TracerContext);
     // const { candles } = useCandles(selectedTracerAddress);
+    const { selectedTracer } = useContext(TracerContext);
+    const { order } = useContext(OrderContext);
     const [showOverlay, setOverlay] = useState(true);
     return (
         <div className={className}>
@@ -27,7 +29,13 @@ const Graph: FC<GProps> = styled(({ className }: GProps) => {
                     }}
                 />
             </GraphContent>
-            {showOverlay ? <FogOverlay buttonName="Show Chart" onClick={() => setOverlay(false)} /> : null}
+            {showOverlay ? (
+                <FogOverlay
+                    buttonName="Show Chart"
+                    onClick={() => setOverlay(false)}
+                    show={!!order?.exposureBN.toNumber() || !!selectedTracer?.getBalance()?.quote.eq(0)}
+                />
+            ) : null}
         </div>
     );
 })`

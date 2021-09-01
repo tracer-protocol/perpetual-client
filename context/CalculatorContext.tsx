@@ -20,7 +20,7 @@ export interface ContextProps {
     calculatorDispatch: React.Dispatch<CalculatorAction>;
 }
 
-export const CalculatorContext1 = React.createContext<Partial<ContextProps>>({} as ContextProps);
+export const CalculatorContext = React.createContext<Partial<ContextProps>>({} as ContextProps);
 
 // Implemented like this as addition of any two of these values is unique
 //  this makes it easier when calculating and keeping track of which inputs are locked
@@ -36,7 +36,6 @@ type CalculatorState = {
     leverage: number;
     position: typeof LONG | typeof SHORT;
     displayLocks: boolean;
-    showResult: boolean;
     locked: number[]; // functions like a stack
     error: ErrorKey;
 };
@@ -48,7 +47,6 @@ export type CalculatorAction =
     | { type: 'setLeverage'; value: number }
     | { type: 'setMargin'; value: number }
     | { type: 'setError'; value: ErrorKey }
-    | { type: 'setShowResult'; value: boolean }
     | { type: 'lockValue'; value: number }
     | { type: 'unlockValue'; value: number }
     | { type: 'setPosition' }
@@ -66,11 +64,10 @@ const defaultState: CalculatorState = {
     liquidationPrice: NaN,
     position: LONG,
     displayLocks: true,
-    showResult: false,
     locked: [],
     error: 'NO_ERROR',
 };
-export const CalculatorStore1: React.FC<StoreProps> = ({ children }: StoreProps) => {
+export const CalculatorStore: React.FC<StoreProps> = ({ children }: StoreProps) => {
     const { selectedTracer } = useContext(TracerContext);
 
     const initialState: CalculatorState = {
@@ -80,7 +77,6 @@ export const CalculatorStore1: React.FC<StoreProps> = ({ children }: StoreProps)
         liquidationPrice: NaN,
         position: LONG,
         displayLocks: true,
-        showResult: false,
         locked: [],
         error: 'NO_ERROR',
     };
@@ -119,8 +115,6 @@ export const CalculatorStore1: React.FC<StoreProps> = ({ children }: StoreProps)
                     locked[0] = locked[1];
                     locked[1] = action.value;
                 }
-                if (state.showResult) {
-                }
                 return {
                     ...state,
                     locked: locked,
@@ -132,47 +126,37 @@ export const CalculatorStore1: React.FC<StoreProps> = ({ children }: StoreProps)
                     ...state,
                     locked: filteredLocked,
                 };
-            case 'setShowResult':
-                return {
-                    ...state,
-                    showResult: action.value,
-                };
             case 'calculate': {
-                if (state.showResult) {
-                    if (state.locked.length < 2) {
-                        return {
-                            ...state,
-                            error: 'INVALID_INPUTS',
-                        };
-                    } else if (isLockedAndFalsey(state.locked, state.exposure, state.margin, state.liquidationPrice)) {
-                        return {
-                            ...state,
-                            error: 'ZEROED_INPUTS',
-                        };
-                    }
-                    const result = getResult(
-                        state,
-                        selectedTracer?.getFairPrice() ?? defaults.fairPrice,
-                        selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
-                    );
-                    const error = checkErrors(
-                        state,
-                        result,
-                        selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
-                        selectedTracer?.getFairPrice() ?? defaults.fairPrice,
-                        selectedTracer?.getBalance().tokenBalance ?? defaults.balances.tokenBalance,
-                    );
+                if (state.locked.length < 2) {
                     return {
                         ...state,
-                        exposure: parseFloat(result.exposure.toFixed(5)),
-                        liquidationPrice: parseFloat(result.liquidationPrice.toFixed(5)),
-                        leverage: parseFloat(result.leverage.toFixed(1)),
-                        margin: parseFloat(result.margin.toFixed(5)),
-                        error: error,
+                        error: 'INVALID_INPUTS_2',
+                    };
+                } else if (isLockedAndFalsey(state.locked, state.exposure, state.margin, state.liquidationPrice)) {
+                    return {
+                        ...state,
+                        error: 'ZEROED_INPUTS',
                     };
                 }
+                const result = getResult(
+                    state,
+                    selectedTracer?.getFairPrice() ?? defaults.fairPrice,
+                    selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
+                );
+                const error = checkErrors(
+                    state,
+                    result,
+                    selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage,
+                    selectedTracer?.getFairPrice() ?? defaults.fairPrice,
+                    selectedTracer?.getBalance().tokenBalance ?? defaults.balances.tokenBalance,
+                );
                 return {
                     ...state,
+                    exposure: parseFloat(result.exposure.toFixed(5)),
+                    liquidationPrice: parseFloat(result.liquidationPrice.toFixed(5)),
+                    leverage: parseFloat(result.leverage.toFixed(1)),
+                    margin: parseFloat(result.margin.toFixed(5)),
+                    error: error,
                 };
             }
             case 'reset': {
@@ -186,14 +170,14 @@ export const CalculatorStore1: React.FC<StoreProps> = ({ children }: StoreProps)
     const [calculatorState, calculatorDispatch] = useReducer(reducer, initialState);
 
     return (
-        <CalculatorContext1.Provider
+        <CalculatorContext.Provider
             value={{
                 calculatorState,
                 calculatorDispatch,
             }}
         >
             {children}
-        </CalculatorContext1.Provider>
+        </CalculatorContext.Provider>
     );
 };
 

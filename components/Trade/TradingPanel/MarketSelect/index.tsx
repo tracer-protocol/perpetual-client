@@ -5,6 +5,7 @@ import { Box, Logo } from '@components/General';
 import styled from 'styled-components';
 import { initialFactoryState } from '@context/FactoryContext';
 import { toApproxCurrency } from '@libs/utils';
+import { useCookies } from 'react-cookie';
 
 const SLogo = styled(Logo)`
     margin-top: 0;
@@ -154,6 +155,15 @@ export default styled(({ className }: MSProps) => {
     const { factoryState: { tracers } = initialFactoryState } = useContext(FactoryContext);
     const { selectedTracer, setTracerId } = useContext(TracerContext);
     const [popup, setPopup] = useState(false);
+    const [cookies, setCookie] = useCookies(['tracerIDIsSet', 'tracerID']);
+
+    useEffect(() => {
+        if (cookies.tracerIDIsSet === 'true') {
+            if (setTracerId) {
+                setTracerId(cookies.tracerID);
+            }
+        }
+    }, [selectedTracer]);
 
     useEffect(() => {
         const overlay = document.getElementById('trading-overlay');
@@ -179,6 +189,8 @@ export default styled(({ className }: MSProps) => {
                         if (setTracerId) {
                             setTracerId(tracerId);
                             setPopup(false);
+                            setCookie('tracerIDIsSet', 'true', { path: '/' });
+                            setCookie('tracerID', tracerId, { path: '/' });
                         } else {
                             console.error('Failed to set tracer, setTracerId undefined');
                         }

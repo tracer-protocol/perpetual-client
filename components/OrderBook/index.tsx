@@ -13,6 +13,7 @@ import Icon from '@ant-design/icons';
 import TracerLoading from '@public/img/logos/tracer/tracer_loading.svg';
 import { OrderContext } from '@context/OrderContext';
 import { LIMIT, SHORT, LONG } from '@libs/types/OrderTypes';
+import { TracerContext } from '@context/TracerContext';
 
 const decimalKeyMap: Record<number, number> = {
     1: 0.01,
@@ -42,6 +43,8 @@ interface OProps {
 
 const OrderBook: FC<OProps> = styled(
     ({ askOrders, bidOrders, lastTradePrice, marketUp, decimals, setDecimals, className }: OProps) => {
+        const { selectedTracer } = useContext(TracerContext);
+        const { order } = useContext(OrderContext);
         const { orderDispatch = () => console.error('Order dispatch not set') } = useContext(OrderContext);
         const [showOverlay, setOverlay] = useState(true);
 
@@ -211,7 +214,13 @@ const OrderBook: FC<OProps> = styled(
                         <Icon component={TracerLoading} className="tracer-loading" />
                     )}
                 </OrderBookContainer>
-                {showOverlay ? <FogOverlay buttonName="Show Order Book" onClick={() => setOverlay(false)} /> : null}
+                {showOverlay ? (
+                    <FogOverlay
+                        buttonName="Show Order Book"
+                        onClick={() => setOverlay(false)}
+                        show={!!order?.exposureBN.toNumber() || !!selectedTracer?.getBalance()?.quote.eq(0)}
+                    />
+                ) : null}
             </div>
         );
     },
