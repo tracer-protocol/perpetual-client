@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { InsuranceContext, defaults } from '@context/InsuranceContext';
 import { Children } from '@libs/types';
 import { toApproxCurrency } from '@libs/utils';
-import SlideSelect from '@components/General/SlideSelect';
-import { Option } from '@components/General/SlideSelect/Options';
+import SlideSelect, { Option } from '@components/General/SlideSelect';
 import {
     Button,
     Checkbox,

@@ -27,21 +27,21 @@ type TSSProps = {
 
 const SlideSelect: FC<TSSProps> = styled(({ onClick, value, children, className }: TSSProps) => {
     const [numChildren, setNumChildren] = useState(0);
-    const [startTransition, setStartTransition] = useState(false);
     const calcPosition = (numChildren: number) => value * (1 / numChildren) * 100;
     useEffect(() => {
         const numChildren = React.Children.toArray(children).length;
         setNumChildren(numChildren);
     }, []);
 
+    const [transition, setTransition] = useState(false);
     const ref = useRef(null);
     useEffect(() => {
         function handleClickOutside(event: any) {
             // @ts-ignore
             if (ref.current && ref.current.contains(event.target)) {
-                setStartTransition(true);
+                setTransition(true);
             } else {
-                setStartTransition(false);
+                setTransition(false);
             }
         }
         document.addEventListener('mousedown', handleClickOutside);
@@ -67,7 +67,7 @@ const SlideSelect: FC<TSSProps> = styled(({ onClick, value, children, className 
                 className="bg-slider"
                 position={calcPosition(numChildren)}
                 width={(1 / numChildren) * 100}
-                startTransition={startTransition}
+                startTransition={transition}
             />
         </div>
     );
@@ -94,5 +94,9 @@ export const SlideOption = styled.div`
     }
 `;
 
-export * from './Options';
+export const Option = styled.a`
+    margin: auto 0;
+    width: 100%;
+`;
+
 export default SlideSelect;
