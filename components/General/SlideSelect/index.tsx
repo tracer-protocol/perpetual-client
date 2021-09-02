@@ -1,17 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import { Children } from 'libs/types';
 import styled from 'styled-components';
 
-const BGSlider = styled.div<{ position: number; width: number }>`
-    transition: 0.5s;
-    background-color: var(--color-primary);
-    height: 100%;
-    width: ${(props) => props.width}%;
-    border-radius: 18px;
+interface BGSProps {
+    position: number;
+    width: number;
+    startTransition: boolean;
+}
+const BGSlider = styled.div<BGSProps>`
     position: absolute;
     top: 0;
     left: 0;
-    margin-left: ${(props) => props.position}%;
+    border-radius: 18px;
+    background-color: var(--color-primary);
+    height: 100%;
+    width: ${(props: BGSProps) => props.width}%;
+    margin-left: ${(props: BGSProps) => props.position}%;
+    transition: ${(props: BGSProps) => (props.startTransition ? '0.5s' : 'none')};
 `;
 
 type TSSProps = {
@@ -20,16 +25,33 @@ type TSSProps = {
     className?: string;
 } & Children;
 
-const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, className }: TSSProps) => {
+const SlideSelect: FC<TSSProps> = styled(({ onClick, value, children, className }: TSSProps) => {
     const [numChildren, setNumChildren] = useState(0);
+    const [startTransition, setStartTransition] = useState(false);
     const calcPosition = (numChildren: number) => value * (1 / numChildren) * 100;
     useEffect(() => {
-        // on init
         const numChildren = React.Children.toArray(children).length;
         setNumChildren(numChildren);
     }, []);
+
+    const ref = useRef(null);
+    useEffect(() => {
+        function handleClickOutside(event: any) {
+            // @ts-ignore
+            if (ref.current && ref.current.contains(event.target)) {
+                setStartTransition(true);
+            } else {
+                setStartTransition(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [ref]);
+
     return (
-        <div className={className}>
+        <div ref={ref} className={className}>
             {React.Children.toArray(children).map((child, index) => {
                 return (
                     <SlideOption
@@ -41,7 +63,12 @@ const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, clas
                     </SlideOption>
                 );
             })}
-            <BGSlider className="bg-slider" position={calcPosition(numChildren)} width={(1 / numChildren) * 100} />
+            <BGSlider
+                className="bg-slider"
+                position={calcPosition(numChildren)}
+                width={(1 / numChildren) * 100}
+                startTransition={startTransition}
+            />
         </div>
     );
 })`
