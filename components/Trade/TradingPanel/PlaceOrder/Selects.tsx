@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import SlideSelect from '@components/General/SlideSelect';
 import { Option } from '@components/General/SlideSelect';
 import { OrderContext } from '@context/index';
-import { LIMIT, LONG, MARKET, OrderType, Position } from '@libs/types/OrderTypes';
+import { LIMIT, MARKET, OrderType, Position } from '@libs/types/OrderTypes';
 
 type SProps = {
     selected: number;
@@ -33,7 +33,7 @@ export const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
                     console.error('Order dispatch function not set');
                 }
             }}
-            initialisationValue={LONG}
+            initialisationValue={2}
             value={selected}
         >
             <Option>Short</Option>
