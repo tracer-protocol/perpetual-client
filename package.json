@@ -10,7 +10,7 @@
         "@ensdomains/react-ens-address": "^0.0.27",
         "@portis/web3": "^4.0.0",
         "@tracer-protocol/contracts": "^0.2.12",
-        "@tracer-protocol/onboard": "^1.29.3",
+        "@tracer-protocol/onboard": "^1.30.0",
         "@tracer-protocol/tracer-utils": "^0.2.29",
         "@walletconnect/web3-provider": "^1.1.0",
         "@xstate/react": "^1.3.1",
