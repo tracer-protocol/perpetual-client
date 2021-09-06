@@ -76,7 +76,7 @@ interface APProps {
 }
 const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) => {
     const [popup, setPopup] = useState(false);
-    const [deposit, setDeposit] = useState(false);
+    const [isDeposit, setIsDeposit] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
@@ -84,7 +84,7 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
 
     const openModal = (isDeposit: boolean) => {
         setPopup(true);
-        setDeposit(isDeposit);
+        setIsDeposit(isDeposit);
     };
 
     return (
@@ -141,8 +141,8 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
             <AccountModal
                 display={popup}
                 close={() => setPopup(false)}
-                isDeposit={deposit}
-                setDeposit={setDeposit}
+                isDeposit={isDeposit}
+                setDeposit={setIsDeposit}
                 unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}
                 maxLeverage={maxLeverage}
