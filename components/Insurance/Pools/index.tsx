@@ -84,10 +84,11 @@ const Secondary = styled.div`
 
 const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
     const [show, setShow] = useState(false);
-    const [type, setType] = useState('Deposit');
-    const openModal: (type: 'Deposit' | 'Withdraw') => void = (type: 'Deposit' | 'Withdraw') => {
-        setType(type);
+    const [isDeposit, setIsDeposit] = useState(false);
+
+    const openModal = (isDeposit: boolean) => {
         setShow(true);
+        setIsDeposit(isDeposit);
     };
 
     return (
@@ -96,18 +97,15 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
                 {parseFloat(pool.userBalance.toFixed(2))} {pool.iPoolTokenName}
             </span>
             <TooltipSelector tooltip={{ key: 'etherscan-link' }}>
-                <StyledLinkOutlined onClick={() => window.open(pool.iPoolTokenURL, '_blank', 'noopener')} />
+                <StyledLinkOutlined onClick={() => window.open(pool.iPoolTokenURL, '_blank')} />
             </TooltipSelector>
             <Secondary>{toPercent(pool.userBalance.div(pool.liquidity).toNumber())}</Secondary>
             <Hidden>
                 <ButtonContainer>
-                    <Button
-                        className={pool.userBalance.eq(0) ? 'primary' : ''}
-                        onClick={(_e: any) => openModal('Deposit')}
-                    >
+                    <Button className={pool.userBalance.eq(0) ? 'primary' : ''} onClick={(_e: any) => openModal(true)}>
                         Deposit
                     </Button>
-                    <Button className="ml-3" onClick={(_e: any) => openModal('Withdraw')}>
+                    <Button className="ml-3" onClick={(_e: any) => openModal(false)}>
                         Withdraw
                     </Button>
                     <InsuranceModal
@@ -116,7 +114,8 @@ const OwnershipCell: React.FC<CProps> = ({ pool, className }: CProps) => {
                         show={show}
                         belowTarget={pool.liquidity < pool.target}
                         setShow={setShow}
-                        type={type as 'Deposit' | 'Withdraw'}
+                        isDeposit={isDeposit}
+                        setIsDeposit={setIsDeposit}
                     />
                 </ButtonContainer>
             </Hidden>

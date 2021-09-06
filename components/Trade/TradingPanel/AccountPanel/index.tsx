@@ -82,9 +82,9 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
     const [showCalculator, setShowCalculator] = useState(false);
 
-    const handleClick = (popup: boolean, deposit: boolean) => {
-        setPopup(popup);
-        setDeposit(deposit);
+    const openModal = (isDeposit: boolean) => {
+        setPopup(true);
+        setDeposit(isDeposit);
     };
 
     return (
@@ -129,12 +129,12 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
             <DepositWithdraw>
                 <Button
                     className={balances.quote.eq(0) ? 'primary' : ''}
-                    onClick={(_e: any) => handleClick(true, true)}
+                    onClick={(_e: any) => openModal(true)}
                     id="deposit-button"
                 >
                     Deposit
                 </Button>
-                <Button onClick={(_e: any) => handleClick(true, false)} id="withdraw-button">
+                <Button onClick={(_e: any) => openModal(false)} id="withdraw-button">
                     Withdraw
                 </Button>
             </DepositWithdraw>

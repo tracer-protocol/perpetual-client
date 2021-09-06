@@ -126,36 +126,34 @@ const WithdrawalNote = styled.div`
 `;
 
 type BProps = {
-    type: 'Deposit' | 'Withdraw';
     show: boolean;
     setShow: React.Dispatch<React.SetStateAction<boolean>>;
     tracer: Tracer | undefined;
     belowTarget: boolean;
     poolUserBalance: BigNumber;
+    isDeposit: boolean;
+    setIsDeposit: React.Dispatch<React.SetStateAction<boolean>>;
 } & Children;
 export const InsuranceModal: React.FC<BProps> = ({
-    type,
     show,
     setShow,
     tracer,
     poolUserBalance,
     belowTarget,
+    isDeposit,
+    setIsDeposit,
 }: BProps) => {
     const {
         deposit = () => console.error('Deposit is not defined'),
         withdraw = () => console.error('Withdraw is not defined'),
         approve = () => console.error('Approve is not defined'),
     } = useContext(InsuranceContext);
-    const [isDeposit, setIsDeposit] = useState(true);
     const poolBalance = poolUserBalance ?? defaults.userBalance;
     const balance = isDeposit ? tracer?.getBalance()?.tokenBalance?.toNumber() ?? 0 : poolBalance.toNumber();
     const [valid, setValid] = useState(false);
     const [amount, setAmount] = useState(NaN); // The amount within the input
     const [acceptedTerms, acceptTerms] = useState(false);
     const fee = 0; // TODO update this to not be 0
-    useEffect(() => {
-        setIsDeposit(type === 'Deposit');
-    }, [type]);
     const amount_ = !Number.isNaN(amount) ? amount : 0;
     const newBalance = isDeposit ? poolBalance.plus(amount_) : poolBalance.minus(amount_);
 
@@ -190,7 +188,6 @@ export const InsuranceModal: React.FC<BProps> = ({
             show={show}
             id="insurance-modal"
             onClose={() => {
-                setIsDeposit(type === 'Deposit');
                 acceptTerms(false);
                 setShow(false);
                 setAmount(NaN);
