@@ -76,15 +76,15 @@ interface APProps {
 }
 const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) => {
     const [popup, setPopup] = useState(false);
-    const [deposit, setDeposit] = useState(false);
+    const [isDeposit, setIsDeposit] = useState(false);
     const balances = selectedTracer?.getBalance() ?? defaults.balances;
     const fairPrice = selectedTracer?.getFairPrice() ?? defaults.fairPrice;
     const maxLeverage = selectedTracer?.getMaxLeverage() ?? new BigNumber(1);
     const [showCalculator, setShowCalculator] = useState(false);
 
-    const handleClick = (popup: boolean, deposit: boolean) => {
-        setPopup(popup);
-        setDeposit(deposit);
+    const openModal = (isDeposit: boolean) => {
+        setPopup(true);
+        setIsDeposit(isDeposit);
     };
 
     return (
@@ -129,20 +129,20 @@ const AccountPanel: FC<APProps> = ({ selectedTracer, account, order }: APProps) 
             <DepositWithdraw>
                 <Button
                     className={balances.quote.eq(0) ? 'primary' : ''}
-                    onClick={(_e: any) => handleClick(true, true)}
+                    onClick={(_e: any) => openModal(true)}
                     id="deposit-button"
                 >
                     Deposit
                 </Button>
-                <Button onClick={(_e: any) => handleClick(true, false)} id="withdraw-button">
+                <Button onClick={(_e: any) => openModal(false)} id="withdraw-button">
                     Withdraw
                 </Button>
             </DepositWithdraw>
             <AccountModal
                 display={popup}
                 close={() => setPopup(false)}
-                isDeposit={deposit}
-                setDeposit={setDeposit}
+                isDeposit={isDeposit}
+                setDeposit={setIsDeposit}
                 unit={selectedTracer?.marketId?.split('/')[1] ?? 'NO_ID'}
                 balances={balances}
                 maxLeverage={maxLeverage}

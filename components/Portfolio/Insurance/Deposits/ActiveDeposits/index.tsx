@@ -29,9 +29,10 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, pools }: ADProps) => {
     const [showButton, setShowButton] = useState(-1);
     const [showModal, setShowModal] = useState(false);
     const [pool, setPool] = useState<InsurancePoolInfo>();
+    const [isDeposit, setIsDeposit] = useState(false);
 
-    const handleClick = (popup: boolean, pool: InsurancePoolInfo) => {
-        setShowModal(popup);
+    const openModal = (pool: InsurancePoolInfo) => {
+        setShowModal(true);
         setPool(pool);
     };
 
@@ -62,7 +63,7 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, pools }: ADProps) => {
                                         <Button
                                             height="extra-small"
                                             className={show ? 'ml-5' : 'hide'}
-                                            onClick={() => handleClick(true, pool)}
+                                            onClick={() => openModal(pool)}
                                         >
                                             Withdraw
                                         </Button>
@@ -74,7 +75,7 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, pools }: ADProps) => {
                                         <Button
                                             height="extra-small"
                                             className={show ? 'ml-5' : 'hide'}
-                                            onClick={() => handleClick(true, pool)}
+                                            onClick={() => openModal(pool)}
                                         >
                                             Withdraw
                                         </Button>
@@ -91,7 +92,8 @@ const ActiveDeposits: FC<ADProps> = ({ parentHeight, pools }: ADProps) => {
                 show={showModal}
                 belowTarget={pool?.liquidity && pool?.target ? pool?.liquidity < pool?.target : false}
                 setShow={setShowModal}
-                type="Withdraw"
+                isDeposit={isDeposit}
+                setIsDeposit={setIsDeposit}
             />
         </>
     );

@@ -20,9 +20,10 @@ const ActiveWithdrawals: FC<AWProps> = ({ parentHeight, pools }: AWProps) => {
 
     const [showModal, setShowModal] = useState(false);
     const [pool, setPool] = useState<InsurancePoolInfo>();
+    const [isDeposit, setIsDeposit] = useState(false);
 
-    const handleClick = (popup: boolean, pool: InsurancePoolInfo) => {
-        setShowModal(popup);
+    const openModal = (pool: InsurancePoolInfo) => {
+        setShowModal(true);
         setPool(pool);
     };
 
@@ -43,7 +44,7 @@ const ActiveWithdrawals: FC<AWProps> = ({ parentHeight, pools }: AWProps) => {
                                 <TableCell>-</TableCell>
                                 <TableCell>-</TableCell>
                                 <TableCell>
-                                    <Button onClick={() => handleClick(true, pool)}>Claim</Button>
+                                    <Button onClick={() => openModal(pool)}>Claim</Button>
                                 </TableCell>
                             </TableRow>
                         );
@@ -56,7 +57,8 @@ const ActiveWithdrawals: FC<AWProps> = ({ parentHeight, pools }: AWProps) => {
                 show={showModal}
                 belowTarget={pool?.liquidity && pool?.target ? pool?.liquidity < pool?.target : false}
                 setShow={setShowModal}
-                type="Withdraw"
+                isDeposit={isDeposit}
+                setIsDeposit={setIsDeposit}
             />
         </>
     );

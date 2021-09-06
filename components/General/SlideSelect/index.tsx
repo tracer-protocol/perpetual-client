@@ -1,33 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Children } from 'libs/types';
 import styled from 'styled-components';
 
-const BGSlider = styled.div<{ position: number; width: number }>`
-    transition: 0.5s;
-    background-color: var(--color-primary);
-    height: 100%;
-    width: ${(props) => props.width}%;
-    border-radius: 18px;
+interface BGSProps {
+    position: number;
+    width: number;
+}
+const BGSlider = styled.div<BGSProps>`
     position: absolute;
     top: 0;
     left: 0;
-    margin-left: ${(props) => props.position}%;
+    border-radius: 18px;
+    background-color: var(--color-primary);
+    height: 100%;
+    width: ${(props: BGSProps) => props.width}%;
+    margin-left: ${(props: BGSProps) => props.position}%;
+    transition: 0.5s;
 `;
 
 type TSSProps = {
     onClick: (index: number, e: any) => any;
     value: number;
+    initialisationValue?: number;
     className?: string;
 } & Children;
 
-const SlideSelect: React.FC<TSSProps> = styled(({ onClick, value, children, className }: TSSProps) => {
-    const [numChildren, setNumChildren] = useState(0);
+const SlideSelect: FC<TSSProps> = styled(({ onClick, value, initialisationValue, children, className }: TSSProps) => {
+    const [numChildren, setNumChildren] = useState(initialisationValue ?? 0);
     const calcPosition = (numChildren: number) => value * (1 / numChildren) * 100;
+
     useEffect(() => {
-        // on init
         const numChildren = React.Children.toArray(children).length;
         setNumChildren(numChildren);
     }, []);
+
     return (
         <div className={className}>
             {React.Children.toArray(children).map((child, index) => {
@@ -59,7 +65,7 @@ export const SlideOption = styled.div`
     font-size: var(--font-size-small);
     text-align: center;
     width: 100%;
-    padding: 0px 0.8rem;
+    padding: 0 0.8rem;
     z-index: 1;
 
     &:hover {
@@ -67,10 +73,9 @@ export const SlideOption = styled.div`
     }
 `;
 
-SlideSelect.defaultProps = {
-    onClick: () => undefined,
-    value: 0,
-};
+export const Option = styled.a`
+    margin: auto 0;
+    width: 100%;
+`;
 
-export * from './Options';
 export default SlideSelect;
