@@ -94,8 +94,8 @@ const CalculatorModal: FC<CMProps> = styled(
                             calculatorDispatch({ type: 'calculate' });
                         }}
                     >
-                        <Option>Long</Option>
                         <Option>Short</Option>
+                        <Option>Long</Option>
                     </CalcSlideSelect>
                 </CalcSelectContainer>
 
