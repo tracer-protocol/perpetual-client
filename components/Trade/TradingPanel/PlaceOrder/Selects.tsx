@@ -33,10 +33,11 @@ export const PositionSelect: React.FC<SProps> = ({ selected }: SProps) => {
                     console.error('Order dispatch function not set');
                 }
             }}
+            initialisationValue={2}
             value={selected}
         >
-            <Option>Long</Option>
             <Option>Short</Option>
+            <Option>Long</Option>
         </SSlideSelect>
     );
 };

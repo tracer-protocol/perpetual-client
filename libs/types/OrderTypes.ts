@@ -1,8 +1,8 @@
 import { BigNumber } from 'bignumber.js';
 
 // Position types
-export const LONG = 0;
-export const SHORT = 1;
+export const SHORT = 0;
+export const LONG = 1;
 export type Position = typeof LONG | typeof SHORT;
 
 // Adjust types
