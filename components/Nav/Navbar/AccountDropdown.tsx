@@ -27,7 +27,7 @@ export default (({ account, onboard, ensName, logout, handleConnect, tokenBalanc
             <MainButton>
                 <AccountDropdown
                     id="account-dropdown-button"
-                    className={!open ? 'show-hover' : ''}
+                    className={`${!account ? 'primary' : ''}`}
                     onClick={async () => {
                         if (!!account) {
                             setOpen(true);
@@ -130,8 +130,12 @@ const AccountDropdown = styled.button`
         outline: none;
     }
 
-    &.show-hover:hover {
-        background: var(--color-primary);
+    &.primary {
+        background-color: #3da8f5;
+
+        &:hover {
+            background-color: transparent;
+        }
     }
 `;
 
