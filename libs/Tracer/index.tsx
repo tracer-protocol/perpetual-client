@@ -18,13 +18,15 @@ import {
 import BigNumber from 'bignumber.js';
 
 import { AbiItem } from 'web3-utils';
-import { UserBalance } from 'libs/types';
+import { FundingRate, UserBalance } from 'libs/types';
 import { checkAllowance } from '../web3/utils';
 import PromiEvent from 'web3/promiEvent';
 // @ts-ignore
 import { Callback, TransactionReceipt } from 'web3/types';
 import {
     calcAvailableMarginPercent,
+    calcFundingRatePayment,
+    calcInsuranceFundingRatePayment,
     calcLeverage,
     calcMinimumMargin,
     calcTotalMargin,
@@ -37,8 +39,9 @@ export const defaults: Record<string, any> = {
         quote: new BigNumber(0),
         base: new BigNumber(0),
         tokenBalance: new BigNumber(0),
-        totalLeveragedValue: 0,
-        lastUpdatedGasPrice: 0,
+        totalLeveragedValue: new BigNumber(0),
+        lastUpdatedGasPrice: new BigNumber(0),
+        lastUpdatedIndex: new BigNumber(0),
         leverage: new BigNumber(0),
         totalMargin: new BigNumber(0),
         minimumMargin: new BigNumber(0),
@@ -51,7 +54,10 @@ export const defaults: Record<string, any> = {
     quoteTokenDecimals: new BigNumber(1),
     exposure: new BigNumber(0),
     feeRate: new BigNumber(0),
-    defaultFundingRate: new BigNumber(0),
+    defaultFundingRate: {
+        fundingRate: new BigNumber(0),
+        cumulativeFundingRate: new BigNumber(0),
+    },
     fundingRateSensitivity: new BigNumber(0),
     twentyFourHourChange: 0,
     baseTicker: '',
@@ -82,8 +88,8 @@ export default class Tracer {
     public fundingRateSensitivity: BigNumber; // rate at which the funding rate changes
     public feeRate: BigNumber; // fees paid per trade
     public leveragedNotionalValue: BigNumber; // total value held in the Tracer
-    public fundingRate: BigNumber; // current funding rate
-    public insuranceFundingRate: BigNumber; // current insurance funding rate
+    public fundingRate: FundingRate; // current funding rate
+    public insuranceFundingRate: FundingRate; // current insurance funding rate
     public balances: UserBalance; // user balances for this Tracer
     public oraclePrice: BigNumber; // current oracle price
     public fairPrice: BigNumber; // current fair price
@@ -221,13 +227,14 @@ export default class Tracer {
             }
             await this.initialised;
             // if accounts is undefined the catch should get it
-            const balance = await this._instance.methods.getBalance(account).call();
+            const balance = await this._instance.methods.balances(account).call();
             const walletBalance = await this.token?.methods.balanceOf(account).call();
             const parsedBalances = {
-                quote: new BigNumber(Web3.utils.fromWei(balance[0][0])),
-                base: new BigNumber(Web3.utils.fromWei(balance[0][1])),
-                totalLeveragedValue: new BigNumber(Web3.utils.fromWei(balance[1])),
-                lastUpdatedGasPrice: new BigNumber(Web3.utils.fromWei(balance[3])),
+                quote: new BigNumber(Web3.utils.fromWei(balance.position[0])),
+                base: new BigNumber(Web3.utils.fromWei(balance.position[1])),
+                totalLeveragedValue: new BigNumber(Web3.utils.fromWei(balance.totalLeveragedValue)),
+                lastUpdatedGasPrice: new BigNumber(Web3.utils.fromWei(balance.lastUpdatedGasPrice)),
+                lastUpdatedIndex: new BigNumber(balance.lastUpdatedIndex),
                 tokenBalance: walletBalance
                     ? new BigNumber(walletBalance).div(new BigNumber(10).pow(this.quoteTokenDecimals))
                     : new BigNumber(0),
@@ -238,8 +245,10 @@ export default class Tracer {
             const minimumMargin = calcMinimumMargin(quote, base, this.fairPrice, this.maxLeverage);
             const availableMarginPercent = calcAvailableMarginPercent(quote, base, this.fairPrice, this.maxLeverage);
             console.info(`Fetched user balances: ${JSON.stringify(parsedBalances)}`);
+            const paymentsOwed = await this.getAmountOwed(parsedBalances);
             this.balances = {
                 ...parsedBalances,
+                ...paymentsOwed,
                 leverage: !leverage.eq(0) && leverage ? leverage : defaults.balances.leverage,
                 totalMargin: !totalMargin.eq(0) && totalMargin.toNumber() ? totalMargin : defaults.balances.totalMargin,
                 minimumMargin:
@@ -294,24 +303,34 @@ export default class Tracer {
     updateFundingRates: () => Promise<void> = async () => {
         try {
             // fair price is needed. This avoids it being not set when this method is called.
-            // this could probably be optimised
             const fairPrice_ = await this._pricing?.methods.fairPrice().call();
             const fairPrice = new BigNumber(Web3.utils.fromWei(fairPrice_ ?? '0'));
             this.fairPrice = fairPrice;
-            const currentFundingIndex_ = await this._pricing?.methods.currentFundingIndex().call();
+            const currentFundingIndex_ = await this._pricing?.methods.lastUpdatedFundingIndex().call();
             if (currentFundingIndex_) {
                 const currentFundingIndex = parseFloat(currentFundingIndex_);
-                const fundingRates = await this._pricing?.methods.fundingRates(currentFundingIndex - 1).call();
+                const fundingRates = await this._pricing?.methods.fundingRates(currentFundingIndex).call();
                 const insuranceFundingRates = await this._pricing?.methods
-                    .insuranceFundingRates(currentFundingIndex - 1)
+                    .insuranceFundingRates(currentFundingIndex)
                     .call();
-                const fundingRate = new BigNumber(Web3.utils.fromWei(fundingRates?.fundingRate.toString() ?? '0'));
-                const insuranceFundingRate = new BigNumber(
-                    Web3.utils.fromWei(insuranceFundingRates?.fundingRate.toString() ?? '0'),
-                );
-                const oneHundred = new BigNumber(100);
-                this.fundingRate = fundingRate.div(fairPrice).multipliedBy(oneHundred);
-                this.insuranceFundingRate = insuranceFundingRate;
+
+                // const fundingRate = new BigNumber(Web3.utils.fromWei(fundingRates?.fundingRate.toString() ?? '0'));
+                // const oneHundred = new BigNumber(100);
+                // fundingRate: fundingRate.div(fairPrice).multipliedBy(oneHundred),
+
+                this.fundingRate = {
+                    fundingRate: new BigNumber(Web3.utils.fromWei(fundingRates?.fundingRate ?? '0')),
+                    cumulativeFundingRate: new BigNumber(
+                        Web3.utils.fromWei(fundingRates?.cumulativeFundingRate ?? '0'),
+                    ),
+                };
+
+                this.insuranceFundingRate = {
+                    fundingRate: new BigNumber(Web3.utils.fromWei(insuranceFundingRates?.fundingRate ?? '0')),
+                    cumulativeFundingRate: new BigNumber(
+                        Web3.utils.fromWei(insuranceFundingRates?.cumulativeFundingRate ?? '0'),
+                    ),
+                };
             } else {
                 console.error('Failed to update funding rate: Current funding index is 0');
             }
@@ -320,6 +339,54 @@ export default class Tracer {
             this.fundingRate = defaults.defaultFundingRate;
             this.insuranceFundingRate = defaults.defaultFundingRate;
         }
+    };
+
+    /**
+     * Gets the amount owed given a set of user balances
+     * @param balances of the account in question
+     * @returns an object containing the amount that will be owed by the funding rate
+     *  and an amount that will be paid to the inurance pool.
+     *  The fundingOwed can be either positive or negative depending on the users position
+     *  The insurance owed will always be <= 0 since the insurance will never pay the account
+     *      directly
+     */
+    getAmountOwed: (balances: { quote: BigNumber; base: BigNumber; lastUpdatedIndex: BigNumber }) => Promise<{
+        fundingOwed: BigNumber;
+        insuranceOwed: BigNumber;
+    }> = async (balances) => {
+        const { quote, base, lastUpdatedIndex } = balances;
+        const globalLastUpdated = await this._pricing?.methods.lastUpdatedFundingIndex().call();
+
+        const [fundingRate, userFundingRate, insuranceFundingRate, userInsuranceFundingRate] = await Promise.all([
+            this._pricing?.methods.fundingRates(globalLastUpdated ?? 0).call(),
+            this._pricing?.methods.fundingRates(lastUpdatedIndex.toNumber() ?? 0).call(),
+            this._pricing?.methods.fundingRates(globalLastUpdated ?? 0).call(),
+            this._pricing?.methods.fundingRates(lastUpdatedIndex.toNumber() ?? 0).call(),
+        ]);
+
+        const fundingOwed = calcFundingRatePayment(
+            base,
+            this.fundingRate.cumulativeFundingRate,
+            this.insuranceFundingRate.cumulativeFundingRate,
+        );
+        const insuranceOwed = calcInsuranceFundingRatePayment(
+            quote,
+            base,
+            this.fairPrice,
+            {
+                globalFundingRate: new BigNumber(fundingRate?.cumulativeFundingRate ?? 0),
+                userFundingRate: new BigNumber(userFundingRate?.cumulativeFundingRate ?? 0),
+            },
+            {
+                globalFundingRate: new BigNumber(insuranceFundingRate?.cumulativeFundingRate ?? 0),
+                userFundingRate: new BigNumber(userInsuranceFundingRate?.cumulativeFundingRate ?? 0),
+            },
+        );
+
+        return {
+            fundingOwed,
+            insuranceOwed,
+        };
     };
 
     /**
@@ -435,11 +502,11 @@ export default class Tracer {
         }
     };
 
-    getFundingRate: () => BigNumber = () => {
+    getFundingRate: () => FundingRate = () => {
         return this.fundingRate;
     };
 
-    getInsuranceFundingRate: () => BigNumber = () => {
+    getInsuranceFundingRate: () => FundingRate = () => {
         return this.insuranceFundingRate;
     };
 }

@@ -9,21 +9,22 @@ export type UserBalance = {
     base: BigNumber; // the position the user currently has
     totalLeveragedValue: BigNumber;
     lastUpdatedGasPrice: BigNumber;
+    lastUpdatedIndex: BigNumber;
     tokenBalance: BigNumber;
     leverage: BigNumber; // the users current leverage
     totalMargin: BigNumber; // the users current totalMargin
     minimumMargin: BigNumber; // the users current minimumMargin
     availableMarginPercent: BigNumber; // the users current minimumMargin
+    fundingOwed: BigNumber;
+    insuranceOwed: BigNumber;
 };
 
 /**
  * Funding Rate type
  */
 export type FundingRate = {
-    recordTime: number;
-    recordPrice: number;
-    fundingRate: number;
-    fundingRateValue: number;
+    fundingRate: BigNumber;
+    cumulativeFundingRate: BigNumber;
 };
 
 /**

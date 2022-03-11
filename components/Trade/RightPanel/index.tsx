@@ -116,7 +116,10 @@ const TradingView: FC<{
                     lastPrice={omeState?.lastTradePrice ?? new BigNumber(0)}
                     fairPrice={selectedTracer?.getFairPrice() ?? defaults.fairPrice}
                     oraclePrice={selectedTracer?.getOraclePrice() ?? defaults.oraclePrice}
-                    fundingRate={selectedTracer?.getFundingRate()?.toNumber() ?? defaults.defaultFundingRate.toNumber()}
+                    fundingRate={
+                        selectedTracer?.getFundingRate().fundingRate?.toNumber() ??
+                        defaults.defaultFundingRate.fundingRate.toNumber()
+                    }
                     // nextFunding={new Date()}
                     // tradingVolume={243512}
                     maxLeverage={selectedTracer?.getMaxLeverage() ?? defaults.maxLeverage}
@@ -125,7 +128,11 @@ const TradingView: FC<{
                 <AccountSummary selectedTracer={selectedTracer} />
             </SBox>
             <SBox className="sidePanel">
-                <InsuranceInfo fundingRate={selectedTracer?.getInsuranceFundingRate() ?? defaults.defaultFundingRate} />
+                <InsuranceInfo
+                    fundingRate={
+                        selectedTracer?.getInsuranceFundingRate().fundingRate ?? defaults.defaultFundingRate.fundingRate
+                    }
+                />
                 <TradesAndBook
                     askOrders={omeState?.orders.askOrders}
                     bidOrders={omeState?.orders.bidOrders}
